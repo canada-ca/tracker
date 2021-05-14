@@ -12,7 +12,7 @@ import { loadSpfConnectionsByDomainId, loadSpfByKey } from '../index'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('when given the load spf connection function', () => {
-  let query, drop, truncate, collections, user, domain, i18n
+  let query, drop, truncate, collections, user, domain, spfScan1, spfScan2, i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -20,16 +20,9 @@ describe('when given the load spf connection function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -43,35 +36,33 @@ describe('when given the load spf connection function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given a successful load', () => {
-    let spfScan1, spfScan2
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+        slug: 'test-domain-gc-ca',
+      })
       spfScan1 = await collections.spf.save({
         timestamp: '2020-10-02T12:43:39Z',
       })
@@ -87,7 +78,12 @@ describe('when given the load spf connection function', () => {
         _from: domain._id,
       })
     })
-
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns spf scan(s) after a given node id', async () => {
         const connectionLoader = loadSpfConnectionsByDomainId({

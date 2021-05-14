@@ -14,14 +14,7 @@ describe('given the loadSpfByKey function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,52 +29,64 @@ describe('given the loadSpfByKey function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.spf.save({})
-    await collections.spf.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single spf scan', async () => {
-      const expectedCursor = await query`
-      FOR spfScan IN spf
-        SORT spfScan._key ASC LIMIT 1
-        RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
-    `
-      const expectedSpf = await expectedCursor.next()
-
-      const loader = loadSpfByKey({ query, i18n })
-      const spf = await loader.load(expectedSpf._key)
-
-      expect(spf).toEqual(expectedSpf)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple spf scans', async () => {
-      const spfKeys = []
-      const expectedSpfScans = []
-      const expectedCursor = await query`
+    beforeEach(async () => {
+      await collections.spf.save({})
+      await collections.spf.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single spf scan', async () => {
+        const expectedCursor = await query`
         FOR spfScan IN spf
+          SORT spfScan._key ASC LIMIT 1
           RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
       `
+        const expectedSpf = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempSpf = await expectedCursor.next()
-        spfKeys.push(tempSpf._key)
-        expectedSpfScans.push(tempSpf)
-      }
+        const loader = loadSpfByKey({ query, i18n })
+        const spf = await loader.load(expectedSpf._key)
 
-      const loader = loadSpfByKey({ query, i18n })
-      const dkimScans = await loader.loadMany(spfKeys)
-      expect(dkimScans).toEqual(expectedSpfScans)
+        expect(spf).toEqual(expectedSpf)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple spf scans', async () => {
+        const spfKeys = []
+        const expectedSpfScans = []
+        const expectedCursor = await query`
+          FOR spfScan IN spf
+            RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempSpf = await expectedCursor.next()
+          spfKeys.push(tempSpf._key)
+          expectedSpfScans.push(tempSpf)
+        }
+
+        const loader = loadSpfByKey({ query, i18n })
+        const dkimScans = await loader.loadMany(spfKeys)
+        expect(dkimScans).toEqual(expectedSpfScans)
+      })
     })
   })
   describe('users language is set to english', () => {
