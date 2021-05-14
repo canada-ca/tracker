@@ -8,6 +8,7 @@ export const rawOrgUserListData = {
             id: 'testid==',
             permission: 'SUPER_ADMIN',
             user: {
+              id: 'userid',
               userName: 'test.user@email.com',
               __typename: 'SharedUser',
             },

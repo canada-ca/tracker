@@ -233,6 +233,25 @@ export const REMOVE_DOMAIN = gql`
   }
 `
 
+export const REMOVE_USER_FROM_ORG = gql`
+  mutation RemoveUserFromOrg($userId: ID!, $orgId: ID!) {
+    removeUserFromOrg(input: { userId: $userId, orgId: $orgId }) {
+      result {
+        ... on AffiliationError {
+          code
+          description
+        }
+        ... on RemoveUserFromOrgResult {
+          status
+          user {
+            userName
+          }
+        }
+      }
+    }
+  }
+`
+
 export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!

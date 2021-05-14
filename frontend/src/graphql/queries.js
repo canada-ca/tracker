@@ -530,6 +530,7 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
             id
             permission
             user {
+              id
               userName
             }
           }

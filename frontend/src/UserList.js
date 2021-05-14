@@ -10,13 +10,26 @@ import {
   useToast,
   Select,
   Box,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  SlideIn,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { UserCard } from './UserCard'
 import { number, string } from 'prop-types'
 import { useMutation } from '@apollo/client'
-import { INVITE_USER_TO_ORG, UPDATE_USER_ROLE } from './graphql/mutations'
+import {
+  INVITE_USER_TO_ORG,
+  REMOVE_USER_FROM_ORG,
+  UPDATE_USER_ROLE,
+} from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
 import { useUserState } from './UserState'
 import { Field, Formik } from 'formik'
@@ -32,6 +45,13 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
   const { currentUser } = useUserState()
   const [addedUserName, setAddedUserName] = useState()
+  const [selectedRemoveUser, setSelectedRemoveUser] = useState()
+
+  const {
+    isOpen: removeIsOpen,
+    onOpen: removeOnOpen,
+    onClose: removeOnClose,
+  } = useDisclosure()
 
   const addUserValidationSchema = object().shape({
     userName: yupString()
@@ -131,9 +151,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             isClosable: true,
             position: 'top-left',
           })
-        } else if (
-          inviteUserToOrg.result.__typename === 'AffiliationError'
-        ) {
+        } else if (inviteUserToOrg.result.__typename === 'AffiliationError') {
           toast({
             title: t`Unable to invite user.`,
             description: inviteUserToOrg.result.description,
@@ -157,6 +175,45 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     },
   )
 
+  const [removeUser, { loading: removeUserLoading }] = useMutation(
+    REMOVE_USER_FROM_ORG,
+    {
+      context: { headers: { authorization: currentUser.jwt } },
+      onError(error) {
+        toast({
+          title: t`An error occurred.`,
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onCompleted({ removeUserFromOrg }) {
+        if (removeUserFromOrg.result.__typename === 'RemoveUserFromOrgResult') {
+          removeOnClose()
+          toast({
+            title: t`User removed.`,
+            description: t`Successfully removed user ${removeUserFromOrg.result.user.userName}.`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (removeUserFromOrg.result.__typename === 'AffiliationError') {
+          toast({
+            title: t`Unable to remove user.`,
+            description: removeUserFromOrg.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        }
+      },
+    },
+  )
+
   if (loading)
     return (
       <LoadingMessage>
@@ -164,34 +221,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       </LoadingMessage>
     )
   if (error) return <ErrorFallbackMessage error={error} />
-
-  // TODO: Add mutation to this
-  // const removeUser = (user) => {
-  //   console.log(user)
-  //   const temp = userList.filter((c) => c.node.userId !== user.userId)
-  //   if (temp) {
-  //     setUserList(temp)
-  //     if (currentUsers.length <= 1 && userList.length > 1)
-  //       setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
-  //     toast({
-  //       title: 'User removed',
-  //       description: `${user.user.userName} was removed from ${orgName}`,
-  //       status: 'info',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-left',
-  //     })
-  //   } else {
-  //     toast({
-  //       title: 'An error occurred.',
-  //       description: `${user.displayName} could not be removed from ${orgName}`,
-  //       status: 'error',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-left',
-  //     })
-  //   }
-  // }
 
   const handleClick = (role, userName) => {
     updateUserRole({
@@ -293,14 +322,17 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           return (
             <Box key={`${node.user.userName}:${node.id}`}>
               <Stack isInline align="center">
-                {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
-                {/* <TrackerButton */}
-                {/*   variant="danger" */}
-                {/*   onClick={() => removeUser(node)} */}
-                {/*   px="3" */}
-                {/* > */}
-                {/*   <Icon name="minus" /> */}
-                {/* </TrackerButton> */}
+                <TrackerButton
+                  variant="danger"
+                  onClick={() => {
+                    setSelectedRemoveUser(node.user)
+                    removeOnOpen()
+                  }}
+                  px="2"
+                  fontSize="xs"
+                >
+                  <Icon name="minus" />
+                </TrackerButton>
                 <UserCard userName={node.user.userName} role={userRole} />
               </Stack>
               <Stack isInline justifyContent="flex-end" align="center">
@@ -349,6 +381,46 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
+
+      <SlideIn in={removeIsOpen}>
+        {(styles) => (
+          <Modal isOpen={true} onClose={removeOnClose}>
+            <ModalOverlay opacity={styles.opacity} />
+            <ModalContent pb={4} {...styles}>
+              <ModalHeader>
+                <Trans>Remove User</Trans>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Stack spacing={4} p={25}>
+                  <Text>
+                    <Trans>Confirm removal of user:</Trans>
+                  </Text>
+                  <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
+                </Stack>
+              </ModalBody>
+
+              <ModalFooter>
+                <TrackerButton
+                  variant="primary"
+                  isLoading={removeUserLoading}
+                  mr={4}
+                  onClick={() =>
+                    removeUser({
+                      variables: {
+                        userId: selectedRemoveUser.id,
+                        orgId: orgId,
+                      },
+                    })
+                  }
+                >
+                  <Trans>Confirm</Trans>
+                </TrackerButton>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        )}
+      </SlideIn>
     </Stack>
   )
 }
