@@ -35,7 +35,7 @@ restore:
 
 .PHONY: update-istio
 update-istio:
-		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
+		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set tag=1.9.5-distroless --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
 
 .PHONY: print-ingress
 print-ingress:
