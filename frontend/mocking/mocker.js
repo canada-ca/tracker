@@ -464,35 +464,35 @@ const schemaWithMocks = addMocksToSchema({
   mocks,
   resolvers: (store) => ({
     Query: {
-      findMyDmarcSummaries: (_, args, __, resolveInfo) => {
+      findMyDmarcSummaries: (_, args, _context, resolveInfo, ___) => {
         return getConnectionObject(store, args, resolveInfo)
       },
-      findMyDomains: (_, args, __, resolveInfo) => {
+      findMyDomains: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
-      findMyOrganizations: (_, args, __, resolveInfo) => {
+      findMyOrganizations: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
     },
     DetailTables: {
-      dkimFailure: (_, args, __, resolveInfo) => {
+      dkimFailure: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
-      dmarcFailure: (_, args, __, resolveInfo) => {
+      dmarcFailure: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
-      fullPass: (_, args, __, resolveInfo) => {
+      fullPass: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
-      spfFailure: (_, args, __, resolveInfo) => {
+      spfFailure: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
     },
     WebScan: {
-      https: (_, args, __, resolveInfo) => {
+      https: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
-      ssl: (_, args, __, resolveInfo) => {
+      ssl: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
     },
@@ -502,6 +502,11 @@ const schemaWithMocks = addMocksToSchema({
 
 const server = new ApolloServer({
   schema: schemaWithMocks,
+  context: ({ req }) => {
+    const token = req.headers.authorization
+
+    return { token }
+  },
 })
 
 server.listen().then(({ url }) => {
