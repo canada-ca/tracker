@@ -219,6 +219,7 @@
     'Unable to request a on time scan on an unknown domain.': 'todo',
     'Unable to reset password. Please request a new email.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
+    'Unable to retrieve DMARC report information for: {domain}': 'todo',
     'Unable to select DMARC report(s) for this period and year.': 'todo',
     'Unable to send authentication email. Please try again.': 'todo',
     'Unable to send authentication text message. Please try again.': 'todo',

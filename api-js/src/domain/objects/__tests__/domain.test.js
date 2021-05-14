@@ -1,28 +1,17 @@
-import moment from 'moment'
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { userRequired, tokenize } from '../../../auth'
-import { loadOrgConnectionsByDomainId } from '../../../organization/loaders'
+import { tokenize } from '../../../auth'
 import { organizationConnection } from '../../../organization/objects'
-import { loadUserByKey } from '../../../user'
 import { domainStatus } from '../domain-status'
 import { dmarcSummaryType } from '../../../dmarc-summaries/objects'
-import {
-  loadDmarcSummaryEdgeByDomainIdAndPeriod,
-  loadDmarcYearlySumEdge,
-  loadStartDateFromPeriod,
-} from '../../../dmarc-summaries/loaders'
 import { emailScanType } from '../../../email-scan/objects'
 import { webScanType } from '../../../web-scan/objects'
 import { domainType } from '../../index'
 import { Domain, Selectors } from '../../../scalars'
-import { i18n } from '@lingui/core'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+import englishMessages from '../../../locale/en/messages'
+import frenchMessages from '../../../locale/fr/messages'
 
 describe('given the domain object', () => {
   describe('testing its field definitions', () => {
@@ -98,155 +87,14 @@ describe('given the domain object', () => {
     })
   })
   describe('testing the field resolvers', () => {
-    let query,
-      drop,
-      truncate,
-      collections,
-      org,
-      user,
-      domainOne,
-      domainTwo,
-      dmarcSummary1,
-      dmarcSummary2
-
     const consoleOutput = []
     const mockedWarn = (output) => consoleOutput.push(output)
 
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
+    beforeAll(() => {
       console.warn = mockedWarn
-
-      org = await collections.organizations.save({
-        verified: true,
-        summaries: {
-          web: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-          mail: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-        },
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      user = await collections.users.save({})
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
-      })
-      domainOne = await collections.domains.save({
-        domain: 'test1.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        status: {
-          dkim: 'pass',
-          dmarc: 'pass',
-          https: 'info',
-          spf: 'fail',
-          ssl: 'fail',
-        },
-      })
-      domainTwo = await collections.domains.save({
-        domain: 'test2.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        status: {
-          dkim: 'pass',
-          dmarc: 'pass',
-          https: 'info',
-          spf: 'fail',
-          ssl: 'fail',
-        },
-      })
-      await collections.claims.save({
-        _to: domainOne._id,
-        _from: org._id,
-      })
-      await collections.claims.save({
-        _to: domainTwo._id,
-        _from: org._id,
-      })
-      dmarcSummary1 = await collections.dmarcSummaries.save({
-        detailTables: {
-          dkimFailure: [],
-          dmarcFailure: [],
-          fullPass: [],
-          spfFailure: [],
-        },
-        categoryTotals: {
-          pass: 0,
-          fail: 0,
-          passDkimOnly: 0,
-          passSpfOnly: 0,
-        },
-      })
-      dmarcSummary2 = await collections.dmarcSummaries.save({
-        detailTables: {
-          dkimFailure: [],
-          dmarcFailure: [],
-          fullPass: [],
-          spfFailure: [],
-        },
-        categoryTotals: {
-          pass: 0,
-          fail: 0,
-          passDkimOnly: 0,
-          passSpfOnly: 0,
-        },
-      })
-      await collections.domainsToDmarcSummaries.save({
-        _from: domainOne._id,
-        _to: dmarcSummary1._id,
-        startDate: '2021-01-01',
-      })
-      await collections.domainsToDmarcSummaries.save({
-        _from: domainOne._id,
-        _to: dmarcSummary2._id,
-        startDate: '2020-12-01',
-      })
     })
-
-    afterEach(async () => {
-      await truncate()
+    afterEach(() => {
       consoleOutput.length = 0
-    })
-
-    afterAll(async () => {
-      await drop()
     })
 
     describe('testing the id resolver', () => {
@@ -322,24 +170,16 @@ describe('given the domain object', () => {
       it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
-        const loader = loadOrgConnectionsByDomainId({
-          query,
-          language: 'en',
-          userKey: user._key,
-          cleanseInput,
-          i18n: {},
-        })
-
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('organizations', org._key),
+              cursor: toGlobalId('organizations', '1'),
               node: {
-                _id: org._id,
-                _key: org._key,
-                _rev: org._rev,
+                _id: 'organizations/`',
+                _key: '1',
+                _rev: 'rev',
                 _type: 'organization',
-                id: org._key,
+                id: '1',
                 verified: true,
                 summaries: {
                   web: {
@@ -369,16 +209,22 @@ describe('given the domain object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('organizations', org._key),
-            endCursor: toGlobalId('organizations', org._key),
+            startCursor: toGlobalId('organizations', '1'),
+            endCursor: toGlobalId('organizations', '1'),
           },
         }
 
         expect(
           demoType.organizations.resolve(
-            { _id: domainOne._id },
+            { _id: '1' },
             { first: 1 },
-            { loaders: { loadOrgConnectionsByDomainId: loader } },
+            {
+              loaders: {
+                loadOrgConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -404,30 +250,14 @@ describe('given the domain object', () => {
       })
     })
     describe('testing the dmarcSummaryByPeriod resolver', () => {
+      let i18n
       describe('user has domain ownership permission', () => {
-        let mockCheckDomainOwnership, mockUserRequired
-        beforeEach(() => {
-          mockCheckDomainOwnership = jest.fn().mockReturnValue(true)
-
-          mockUserRequired = userRequired({
-            i18n: {},
-            userKey: user._key,
-            loadUserByKey: loadUserByKey({ query }),
-          })
-        })
         it('returns the resolved value', async () => {
-          const expectedEdgeCursor = await query`
-            FOR edge IN domainsToDmarcSummaries
-              FILTER edge.startDate == "2021-01-01"
-              RETURN MERGE({ domainKey: ${domainOne._key}, startDate: edge.startDate, _id: edge._to })
-          `
-          const expectedEdge = await expectedEdgeCursor.next()
-
           const demoType = domainType.getFields()
 
           const data = {
-            _id: domainOne._id,
-            _key: domainOne._key,
+            _id: 'domains/1',
+            _key: '1',
             domain: 'test1.gc.ca',
           }
 
@@ -439,111 +269,152 @@ describe('given the domain object', () => {
                 year: '2021',
               },
               {
-                userKey: user._key,
+                userKey: '1',
                 loaders: {
-                  loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
-                    {
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    },
-                  ),
-                  loadStartDateFromPeriod: loadStartDateFromPeriod({
-                    moment,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadDmarcSummaryEdgeByDomainIdAndPeriod: jest
+                    .fn()
+                    .mockReturnValue({
+                      _to: 'dmarcSummaries/1',
+                    }),
+                  loadStartDateFromPeriod: jest
+                    .fn()
+                    .mockReturnValue('2021-01-01'),
                 },
                 auth: {
-                  checkDomainOwnership: mockCheckDomainOwnership,
-                  userRequired: mockUserRequired,
+                  checkDomainOwnership: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn(),
                   tokenize,
                 },
               },
             ),
-          ).resolves.toEqual(expectedEdge)
-        })
-      })
-      describe('user does not have domain ownership permission', () => {
-        let mockCheckDomainOwnership, mockUserRequired
-        beforeEach(() => {
-          mockCheckDomainOwnership = jest.fn().mockReturnValue(false)
-
-          mockUserRequired = userRequired({
-            i18n: {},
-            userKey: user._key,
-            loadUserByKey: loadUserByKey({ query }),
+          ).resolves.toEqual({
+            _id: 'dmarcSummaries/1',
+            domainKey: '1',
+            startDate: '2021-01-01',
           })
         })
-        it('returns the resolved value', async () => {
-          const demoType = domainType.getFields()
+      })
+      describe('users language is english', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'en',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
+          })
+        })
+        describe('user does not have domain ownership permission', () => {
+          it('returns the resolved value', async () => {
+            const demoType = domainType.getFields()
 
-          const data = {
-            _id: domainOne._id,
-            _key: domainOne._key,
-            domain: 'test1.gc.ca',
-          }
+            const data = {
+              _id: 'domains/1',
+              _key: '1',
+              domain: 'test1.gc.ca',
+            }
 
-          await expect(
-            demoType.dmarcSummaryByPeriod.resolve(
-              data,
-              {},
-              {
-                userKey: user._key,
-                loaders: {
-                  loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
-                    {
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    },
-                  ),
-                  loadStartDateFromPeriod: loadStartDateFromPeriod({
-                    moment,
-                    userKey: user._key,
-                    i18n,
-                  }),
+            await expect(
+              demoType.dmarcSummaryByPeriod.resolve(
+                data,
+                {},
+                {
+                  i18n,
+                  userKey: '1',
+                  loaders: {
+                    loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn(),
+                    loadStartDateFromPeriod: jest
+                      .fn()
+                      .mockReturnValue('2021-01-01'),
+                  },
+                  auth: {
+                    checkDomainOwnership: jest.fn().mockReturnValue(false),
+                    userRequired: jest.fn(),
+                  },
                 },
-                auth: {
-                  checkDomainOwnership: mockCheckDomainOwnership,
-                  userRequired: mockUserRequired,
-                },
-              },
-            ),
-          ).rejects.toEqual(
-            new Error(
-              'Unable to retrieve DMARC report information for: test1.gc.ca',
-            ),
-          )
+              ),
+            ).rejects.toEqual(
+              new Error(
+                'Unable to retrieve DMARC report information for: test1.gc.ca',
+              ),
+            )
 
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to access dmarc report period data for ${domainOne._key}, but does not belong to an org with ownership.`,
-          ])
+            expect(consoleOutput).toEqual([
+              `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
+            ])
+          })
+        })
+      })
+      describe('users language is french', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'fr',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
+          })
+        })
+        describe('user does not have domain ownership permission', () => {
+          it('returns the resolved value', async () => {
+            const demoType = domainType.getFields()
+  
+            const data = {
+              _id: 'domains/1',
+              _key: '1',
+              domain: 'test1.gc.ca',
+            }
+  
+            await expect(
+              demoType.dmarcSummaryByPeriod.resolve(
+                data,
+                {},
+                {
+                  i18n,
+                  userKey: '1',
+                  loaders: {
+                    loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn(),
+                    loadStartDateFromPeriod: jest
+                      .fn()
+                      .mockReturnValue('2021-01-01'),
+                  },
+                  auth: {
+                    checkDomainOwnership: jest.fn().mockReturnValue(false),
+                    userRequired: jest.fn(),
+                  },
+                },
+              ),
+            ).rejects.toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+  
+            expect(consoleOutput).toEqual([
+              `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
+            ])
+          })
         })
       })
     })
     describe('testing the yearlyDmarcSummaries resolver', () => {
+      let i18n
       describe('user has domain ownership permission', () => {
-        let mockCheckDomainOwnership, mockUserRequired
-        beforeEach(() => {
-          mockCheckDomainOwnership = jest.fn().mockReturnValue(true)
-          mockUserRequired = userRequired({
-            i18n: {},
-            userKey: user._key,
-            loadUserByKey: loadUserByKey({ query }),
-          })
-        })
         it('returns the resolved value', async () => {
-          const expectedEdgesCursor = await query`
-            FOR edge IN domainsToDmarcSummaries
-              RETURN MERGE({ domainKey: ${domainOne._key}, startDate: edge.startDate, _id: edge._to })
-          `
-          const expectedResult = await expectedEdgesCursor.all()
-
           const demoType = domainType.getFields()
           const data = {
-            _id: domainOne._id,
-            _key: domainOne._key,
+            _id: 'domains/1',
+            _key: '1',
             domain: 'test1.gc.ca',
           }
 
@@ -552,70 +423,136 @@ describe('given the domain object', () => {
               data,
               {},
               {
-                userKey: user._key,
+                userKey: '1',
                 loaders: {
-                  loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadDmarcYearlySumEdge: jest.fn().mockReturnValue([
+                    {
+                      domainKey: '1',
+                      _to: 'dmarcSummaries/1',
+                      startDate: '2021-01-01',
+                    },
+                  ]),
                 },
                 auth: {
-                  checkDomainOwnership: mockCheckDomainOwnership,
-                  userRequired: mockUserRequired,
+                  checkDomainOwnership: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn(),
                 },
               },
             ),
-          ).resolves.toEqual(expectedResult)
+          ).resolves.toEqual([
+            {
+              _id: 'dmarcSummaries/1',
+              domainKey: '1',
+              startDate: '2021-01-01',
+            },
+          ])
         })
       })
-      describe('user does not have domain ownership permission', () => {
-        let mockCheckDomainOwnership, mockUserRequired
-        beforeEach(() => {
-          mockCheckDomainOwnership = jest.fn().mockReturnValue(false)
-
-          mockUserRequired = userRequired({
-            i18n: {},
-            userKey: user._key,
-            loadUserByKey: loadUserByKey({ query }),
+      describe('users language is set to english', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'en',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
           })
         })
-        it('returns the resolved value', async () => {
-          const demoType = domainType.getFields()
-
-          const data = {
-            _id: domainOne._id,
-            _key: domainOne._key,
-            domain: 'test1.gc.ca',
-          }
-
-          await expect(
-            demoType.yearlyDmarcSummaries.resolve(
-              data,
-              {},
-              {
-                userKey: user._key,
-                loaders: {
-                  loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+        describe('user does not have domain ownership permission', () => {
+          it('returns the resolved value', async () => {
+            const demoType = domainType.getFields()
+  
+            const data = {
+              _id: 'domains/1',
+              _key: '1',
+              domain: 'test1.gc.ca',
+            }
+  
+            await expect(
+              demoType.yearlyDmarcSummaries.resolve(
+                data,
+                {},
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  userKey: '1',
+                  loaders: {
+                    loadDmarcYearlySumEdge: jest.fn(),
+                  },
+                  auth: {
+                    checkDomainOwnership: jest.fn().mockReturnValue(false),
+                    userRequired: jest.fn(),
+                  },
                 },
-                auth: {
-                  checkDomainOwnership: mockCheckDomainOwnership,
-                  userRequired: mockUserRequired,
+              ),
+            ).rejects.toEqual(
+              new Error(
+                'Unable to retrieve DMARC report information for: test1.gc.ca',
+              ),
+            )
+            expect(consoleOutput).toEqual([
+              `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
+            ])
+          })
+        })
+      })
+      describe('users language is set to french', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'fr',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
+          })
+        })
+        describe('user does not have domain ownership permission', () => {
+          it('returns the resolved value', async () => {
+            const demoType = domainType.getFields()
+  
+            const data = {
+              _id: 'domains/1',
+              _key: '1',
+              domain: 'test1.gc.ca',
+            }
+  
+            await expect(
+              demoType.yearlyDmarcSummaries.resolve(
+                data,
+                {},
+                {
+                  i18n,
+                  userKey: '1',
+                  loaders: {
+                    loadDmarcYearlySumEdge: jest.fn(),
+                  },
+                  auth: {
+                    checkDomainOwnership: jest.fn().mockReturnValue(false),
+                    userRequired: jest.fn(),
+                  },
                 },
-              },
-            ),
-          ).rejects.toEqual(
-            new Error(
-              'Unable to retrieve DMARC report information for: test1.gc.ca',
-            ),
-          )
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to access dmarc report period data for ${domainOne._key}, but does not belong to an org with ownership.`,
-          ])
+              ),
+            ).rejects.toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+            expect(consoleOutput).toEqual([
+              `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
+            ])
+          })
         })
       })
     })

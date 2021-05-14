@@ -411,6 +411,10 @@
       'Unable to reset password. Please request a new email.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
+    'Unable to retrieve DMARC report information for: {domain}': [
+      'Unable to retrieve DMARC report information for: ',
+      ['domain'],
+    ],
     'Unable to select DMARC report(s) for this period and year.':
       'Unable to select DMARC report(s) for this period and year.',
     'Unable to send authentication email. Please try again.':
