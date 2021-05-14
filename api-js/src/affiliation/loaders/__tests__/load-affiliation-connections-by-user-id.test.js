@@ -20,87 +20,81 @@ describe('given the load affiliations by user id function', () => {
   beforeAll(async () => {
     console.error = mockedError
     console.warn = mockedWarn
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-  })
-
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    orgOne = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    orgTwo = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'not-treasury-board-secretariat',
-          acronym: 'NTBS',
-          name: 'Not Treasury Board of Canada Secretariat',
-          zone: 'NFED',
-          sector: 'NTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'ne-pas-secretariat-conseil-tresor',
-          acronym: 'NPSCT',
-          name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-          zone: 'NPFED',
-          sector: 'NPTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-
-    consoleOutput.length = 0
   })
 
   afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
+    consoleOutput.length = 0
   })
 
   describe('given a successful load', () => {
     describe('given there are user affiliations to be returned', () => {
       let affOne, affTwo
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
       beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          tfaValidated: false,
+          emailValidated: false,
+        })
+        orgOne = await collections.organizations.save({
+          orgDetails: {
+            en: {
+              slug: 'treasury-board-secretariat',
+              acronym: 'TBS',
+              name: 'Treasury Board of Canada Secretariat',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'secretariat-conseil-tresor',
+              acronym: 'SCT',
+              name: 'Secrétariat du Conseil Trésor du Canada',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+        orgTwo = await collections.organizations.save({
+          orgDetails: {
+            en: {
+              slug: 'not-treasury-board-secretariat',
+              acronym: 'NTBS',
+              name: 'Not Treasury Board of Canada Secretariat',
+              zone: 'NFED',
+              sector: 'NTBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'ne-pas-secretariat-conseil-tresor',
+              acronym: 'NPSCT',
+              name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
+              zone: 'NPFED',
+              sector: 'NPTBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+
         affOne = await collections.affiliations.save({
           _from: orgOne._id,
           _to: user._id,
@@ -113,20 +107,10 @@ describe('given the load affiliations by user id function', () => {
         })
       })
       afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
+        await truncate()
+      })
+      afterAll(async () => {
+        await drop()
       })
       describe('using after cursor', () => {
         it('returns an affiliation', async () => {
@@ -3750,37 +3734,40 @@ describe('given the load affiliations by user id function', () => {
           })
         })
       })
-    })
-    describe('given there are no user affiliations to be returned', () => {
-      it('returns no affiliations', async () => {
-        const affiliationLoader = loadAffiliationConnectionsByUserId({
-          query,
-          language: 'en',
-          userKey: user._key,
-          cleanseInput,
-          i18n,
+      describe('given there are no user affiliations to be returned', () => {
+        beforeEach(async () => {
+          await truncate()
         })
+        it('returns no affiliations', async () => {
+          const affiliationLoader = loadAffiliationConnectionsByUserId({
+            query,
+            language: 'en',
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+          })
 
-        const connectionArgs = {
-          first: 5,
-        }
-        const affiliations = await affiliationLoader({
-          userId: user._id,
-          ...connectionArgs,
+          const connectionArgs = {
+            first: 5,
+          }
+          const affiliations = await affiliationLoader({
+            userId: user._id,
+            ...connectionArgs,
+          })
+
+          const expectedStructure = {
+            edges: [],
+            totalCount: 0,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: '',
+              endCursor: '',
+            },
+          }
+
+          expect(affiliations).toEqual(expectedStructure)
         })
-
-        const expectedStructure = {
-          edges: [],
-          totalCount: 0,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: '',
-            endCursor: '',
-          },
-        }
-
-        expect(affiliations).toEqual(expectedStructure)
       })
     })
   })
