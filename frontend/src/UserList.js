@@ -89,6 +89,11 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     updateUserRole,
     { loading: _updateLoading, error: _updateError },
   ] = useMutation(UPDATE_USER_ROLE, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
     onError(updateError) {
       toast({
         title: updateError.message,
@@ -420,7 +425,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 validateOnBlur={false}
                 initialValues={{
                   role: editingUserRole,
-                  userName: editingUserRole,
+                  userName: editingUserName,
                 }}
                 onSubmit={async (values) => {
                   // Submit update role mutation

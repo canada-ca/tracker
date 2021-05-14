@@ -39,7 +39,9 @@ const mocks = [
           rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
             .user.userName,
         orgId: rawOrgUserListData.findOrganizationBySlug.id,
-        role: 'SUPER_ADMIN',
+        role:
+          rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
+            .permission,
       },
     },
     result: {
@@ -49,6 +51,7 @@ const mocks = [
             status: 'string',
             __typename: 'UpdateUserRoleResult',
           },
+          __typename: 'UpdateUserRolePayload',
         },
       },
     },
@@ -129,14 +132,21 @@ describe('<UserList />', () => {
         </UserStateProvider>,
       )
 
+      const leftClick = { button: 0 }
+
+      const editUserButton = await findByLabelText('userEditButton')
+      fireEvent.click(editUserButton, leftClick)
+      await waitFor(() => {
+        expect(getByText(/Edit Role/i)).toBeInTheDocument()
+      })
+
       const userRole = await findByLabelText(/Role:/i)
-      // const userRole = await findByText('Role:')
       await waitFor(() => {
         expect(userRole.type).toEqual('select-one')
       })
 
       // change input on select to ADMIN
-      fireEvent.change(userRole, { target: { value: 'SUPER_ADMIN' } })
+      fireEvent.change(userRole, { target: { value: 'ADMIN' } })
 
       await waitFor(() => {
         const newRole = getByDisplayValue(/ADMIN/i)
@@ -144,9 +154,8 @@ describe('<UserList />', () => {
       })
 
       // Apply changes button
-      const updateButton = await waitFor(() => getAllByText(/Apply/i))
+      const updateButton = await waitFor(() => getAllByText(/Confirm/i))
 
-      const leftClick = { button: 0 }
       fireEvent.click(updateButton[0], leftClick)
       // default `button` property for click events is set to `0` which is a left click.
 
