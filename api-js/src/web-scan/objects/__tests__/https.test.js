@@ -1,17 +1,10 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLDate, GraphQLJSON } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { loadHttpsGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { httpsType } from '../index'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the https gql object', () => {
   describe('testing the field definitions', () => {
@@ -103,73 +96,6 @@ describe('given the https gql object', () => {
     })
   })
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, collections, user, domain, https, httpsGT
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      user = await collections.users.save({
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        tfaValidated: false,
-        emailValidated: false,
-      })
-      domain = await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-        slug: 'test-domain-gc-ca',
-      })
-      https = await collections.https.save({
-        timestamp: '2020-10-02T12:43:39Z',
-        implementation: 'Valid HTTPS',
-        enforced: 'Strict',
-        hsts: 'HSTS Max Age Too Short',
-        hstsAge: '31622400',
-        preloaded: 'HSTS Preloaded',
-        guidanceTags: ['https1'],
-        negativeTags: ['https1'],
-        neutralTags: ['https1'],
-        positiveTags: ['https1'],
-      })
-      await collections.domainsHTTPS.save({
-        _from: domain._id,
-        _to: https._id,
-      })
-      httpsGT = await collections.httpsGuidanceTags.save({
-        _key: 'https1',
-        tagName: 'HTTPS-TAG',
-        guidance: 'Some Interesting Guidance',
-        refLinksGuide: [
-          {
-            description: 'refLinksGuide Description',
-            ref_link: 'www.refLinksGuide.ca',
-          },
-        ],
-        refLinksTechnical: [
-          {
-            description: 'refLinksTechnical Description',
-            ref_link: 'www.refLinksTechnical.ca',
-          },
-        ],
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
@@ -183,23 +109,27 @@ describe('given the https gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
-        const loader = loadDomainByKey({ query, userKey: user._key, i18n: {} })
-
         const expectedResult = {
-          _id: domain._id,
-          _key: domain._key,
-          _rev: domain._rev,
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
           _type: 'domain',
-          id: domain._key,
+          id: '1',
           domain: 'test.domain.gc.ca',
           slug: 'test-domain-gc-ca',
         }
 
         await expect(
           demoType.domain.resolve(
-            { domainId: domain._id },
+            { domainId: 'domains/1' },
             {},
-            { loaders: { loadDomainByKey: loader } },
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -270,23 +200,16 @@ describe('given the https gql object', () => {
     describe('testing the guidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
-
-        const loader = loadHttpsGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const guidanceTags = ['https1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              cursor: toGlobalId('guidanceTags', 'https1'),
               node: {
-                _id: httpsGT._id,
-                _key: httpsGT._key,
-                _rev: httpsGT._rev,
+                _id: 'httpsGuidanceTags/https1',
+                _key: 'https1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'https1',
@@ -311,8 +234,8 @@ describe('given the https gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', httpsGT._key),
-            endCursor: toGlobalId('guidanceTags', httpsGT._key),
+            startCursor: toGlobalId('guidanceTags', 'https1'),
+            endCursor: toGlobalId('guidanceTags', 'https1'),
           },
         }
 
@@ -320,7 +243,13 @@ describe('given the https gql object', () => {
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadHttpsGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })
@@ -328,23 +257,16 @@ describe('given the https gql object', () => {
     describe('testing the negativeGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
-
-        const loader = loadHttpsGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const negativeTags = ['https1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              cursor: toGlobalId('guidanceTags', 'https1'),
               node: {
-                _id: httpsGT._id,
-                _key: httpsGT._key,
-                _rev: httpsGT._rev,
+                _id: 'httpsGuidanceTags/https1',
+                _key: 'https1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'https1',
@@ -369,8 +291,8 @@ describe('given the https gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', httpsGT._key),
-            endCursor: toGlobalId('guidanceTags', httpsGT._key),
+            startCursor: toGlobalId('guidanceTags', 'https1'),
+            endCursor: toGlobalId('guidanceTags', 'https1'),
           },
         }
 
@@ -378,7 +300,13 @@ describe('given the https gql object', () => {
           await demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadHttpsGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })
@@ -386,23 +314,16 @@ describe('given the https gql object', () => {
     describe('testing the neutralGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
-
-        const loader = loadHttpsGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const neutralTags = ['https1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              cursor: toGlobalId('guidanceTags', 'https1'),
               node: {
-                _id: httpsGT._id,
-                _key: httpsGT._key,
-                _rev: httpsGT._rev,
+                _id: 'httpsGuidanceTags/https1',
+                _key: 'https1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'https1',
@@ -427,8 +348,8 @@ describe('given the https gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', httpsGT._key),
-            endCursor: toGlobalId('guidanceTags', httpsGT._key),
+            startCursor: toGlobalId('guidanceTags', 'https1'),
+            endCursor: toGlobalId('guidanceTags', 'https1'),
           },
         }
 
@@ -436,7 +357,13 @@ describe('given the https gql object', () => {
           await demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadHttpsGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })
@@ -444,23 +371,16 @@ describe('given the https gql object', () => {
     describe('testing the positiveGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
-
-        const loader = loadHttpsGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const positiveTags = ['https1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              cursor: toGlobalId('guidanceTags', 'https1'),
               node: {
-                _id: httpsGT._id,
-                _key: httpsGT._key,
-                _rev: httpsGT._rev,
+                _id: 'httpsGuidanceTags/https1',
+                _key: 'https1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'https1',
@@ -485,8 +405,8 @@ describe('given the https gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', httpsGT._key),
-            endCursor: toGlobalId('guidanceTags', httpsGT._key),
+            startCursor: toGlobalId('guidanceTags', 'https1'),
+            endCursor: toGlobalId('guidanceTags', 'https1'),
           },
         }
 
@@ -494,7 +414,13 @@ describe('given the https gql object', () => {
           await demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadHttpsGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })
