@@ -14,14 +14,7 @@ describe('given the loadDkimGuidanceTagById function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,53 +29,65 @@ describe('given the loadDkimGuidanceTagById function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.dkimGuidanceTags.save({})
-    await collections.dkimGuidanceTags.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single dkim guidance tag', async () => {
-      // Get dkim tag from db
-      const expectedCursor = await query`
-        FOR tag IN dkimGuidanceTags
-          SORT tag._key ASC LIMIT 1
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
-      const expectedDkimTag = await expectedCursor.next()
-
-      const loader = loadDkimGuidanceTagById({ query, i18n })
-      const dkim = await loader.load(expectedDkimTag._key)
-
-      expect(dkim).toEqual(expectedDkimTag)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple dkim guidance tags', async () => {
-      const dkimTagKeys = []
-      const expectedDkimTags = []
-      const expectedCursor = await query`
-        FOR tag IN dkimGuidanceTags
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
+    beforeEach(async () => {
+      await collections.dkimGuidanceTags.save({})
+      await collections.dkimGuidanceTags.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single dkim guidance tag', async () => {
+        // Get dkim tag from db
+        const expectedCursor = await query`
+          FOR tag IN dkimGuidanceTags
+            SORT tag._key ASC LIMIT 1
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+        const expectedDkimTag = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempDkim = await expectedCursor.next()
-        dkimTagKeys.push(tempDkim._key)
-        expectedDkimTags.push(tempDkim)
-      }
+        const loader = loadDkimGuidanceTagById({ query, i18n })
+        const dkim = await loader.load(expectedDkimTag._key)
 
-      const loader = loadDkimGuidanceTagById({ query, i18n })
-      const dkimTags = await loader.loadMany(dkimTagKeys)
-      expect(dkimTags).toEqual(expectedDkimTags)
+        expect(dkim).toEqual(expectedDkimTag)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple dkim guidance tags', async () => {
+        const dkimTagKeys = []
+        const expectedDkimTags = []
+        const expectedCursor = await query`
+          FOR tag IN dkimGuidanceTags
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempDkim = await expectedCursor.next()
+          dkimTagKeys.push(tempDkim._key)
+          expectedDkimTags.push(tempDkim)
+        }
+
+        const loader = loadDkimGuidanceTagById({ query, i18n })
+        const dkimTags = await loader.loadMany(dkimTagKeys)
+        expect(dkimTags).toEqual(expectedDkimTags)
+      })
     })
   })
   describe('users language is set to english', () => {

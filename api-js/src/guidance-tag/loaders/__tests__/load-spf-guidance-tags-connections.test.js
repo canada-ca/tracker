@@ -23,16 +23,9 @@ describe('when given the load spf guidance tag connection function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -46,36 +39,47 @@ describe('when given the load spf guidance tag connection function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-
-    await collections.spfGuidanceTags.save({
-      _key: 'spf1',
-    })
-    await collections.spfGuidanceTags.save({
-      _key: 'spf2',
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+  
+      await collections.spfGuidanceTags.save({
+        _key: 'spf1',
+        tagName: 'a',
+        guidance: 'a',
+      })
+      await collections.spfGuidanceTags.save({
+        _key: 'spf2',
+        tagName: 'b',
+        guidance: 'b',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns spf result(s) after a given node id', async () => {
         const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
@@ -256,17 +260,6 @@ describe('when given the load spf guidance tag connection function', () => {
     })
     describe('using orderBy field', () => {
       beforeEach(async () => {
-        await truncate()
-        await collections.spfGuidanceTags.save({
-          _key: 'spf1',
-          tagName: 'a',
-          guidance: 'a',
-        })
-        await collections.spfGuidanceTags.save({
-          _key: 'spf2',
-          tagName: 'b',
-          guidance: 'b',
-        })
         await collections.spfGuidanceTags.save({
           _key: 'spf3',
           tagName: 'c',

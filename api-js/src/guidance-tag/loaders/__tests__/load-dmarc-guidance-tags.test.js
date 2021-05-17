@@ -15,13 +15,6 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
 
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,53 +29,65 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.dmarcGuidanceTags.save({})
-    await collections.dmarcGuidanceTags.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single dmarc guidance tag', async () => {
-      // Get dmarc tag from db
-      const expectedCursor = await query`
-        FOR tag IN dmarcGuidanceTags
-          SORT tag._key ASC LIMIT 1
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
-      const expectedDmarcTag = await expectedCursor.next()
-
-      const loader = loadDmarcGuidanceTagByTagId({ query, i18n })
-      const dmarcTag = await loader.load(expectedDmarcTag._key)
-
-      expect(dmarcTag).toEqual(expectedDmarcTag)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple dmarc guidance tags', async () => {
-      const dmarcTagKeys = []
-      const expectedDmarcTags = []
-      const expectedCursor = await query`
-        FOR tag IN dmarcGuidanceTags
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
+    beforeEach(async () => {
+      await collections.dmarcGuidanceTags.save({})
+      await collections.dmarcGuidanceTags.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single dmarc guidance tag', async () => {
+        // Get dmarc tag from db
+        const expectedCursor = await query`
+          FOR tag IN dmarcGuidanceTags
+            SORT tag._key ASC LIMIT 1
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+        const expectedDmarcTag = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempDkim = await expectedCursor.next()
-        dmarcTagKeys.push(tempDkim._key)
-        expectedDmarcTags.push(tempDkim)
-      }
+        const loader = loadDmarcGuidanceTagByTagId({ query, i18n })
+        const dmarcTag = await loader.load(expectedDmarcTag._key)
 
-      const loader = loadDmarcGuidanceTagByTagId({ query, i18n })
-      const dmarcTags = await loader.loadMany(dmarcTagKeys)
-      expect(dmarcTags).toEqual(expectedDmarcTags)
+        expect(dmarcTag).toEqual(expectedDmarcTag)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple dmarc guidance tags', async () => {
+        const dmarcTagKeys = []
+        const expectedDmarcTags = []
+        const expectedCursor = await query`
+          FOR tag IN dmarcGuidanceTags
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempDkim = await expectedCursor.next()
+          dmarcTagKeys.push(tempDkim._key)
+          expectedDmarcTags.push(tempDkim)
+        }
+
+        const loader = loadDmarcGuidanceTagByTagId({ query, i18n })
+        const dmarcTags = await loader.loadMany(dmarcTagKeys)
+        expect(dmarcTags).toEqual(expectedDmarcTags)
+      })
     })
   })
   describe('users language is set to english', () => {

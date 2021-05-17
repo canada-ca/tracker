@@ -20,16 +20,9 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
   const consoleOutput = []
   const mockedConsole = (output) => consoleOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
     console.error = mockedConsole
     console.warn = mockedConsole
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -43,43 +36,50 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
       },
     })
   })
-
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-
-    await collections.aggregateGuidanceTags.save({
-      _key: 'aggregate1',
-      tagName: 'a',
-      guidance: 'a',
-    })
-    await collections.aggregateGuidanceTags.save({
-      _key: 'aggregate2',
-      tagName: 'b',
-      guidance: 'b',
-    })
-    await collections.aggregateGuidanceTags.save({
-      _key: 'aggregate3',
-      tagName: 'c',
-      guidance: 'c',
-    })
-  })
-
-  afterEach(async () => {
+  afterEach(() => {
     consoleOutput.length = 0
-    await truncate()
   })
-
-  afterAll(async () => {
-    await drop()
-  })
-
   describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+  
+      await collections.aggregateGuidanceTags.save({
+        _key: 'aggregate1',
+        tagName: 'a',
+        guidance: 'a',
+      })
+      await collections.aggregateGuidanceTags.save({
+        _key: 'aggregate2',
+        tagName: 'b',
+        guidance: 'b',
+      })
+      await collections.aggregateGuidanceTags.save({
+        _key: 'aggregate3',
+        tagName: 'c',
+        guidance: 'c',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns the guidance tags', async () => {
         const connectionLoader = loadAggregateGuidanceTagConnectionsByTagId({
