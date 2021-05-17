@@ -20,12 +20,17 @@ services:
       - ./:/app
     expose:
       - "3000"
-  api: # available at localhost:3000/graphql
-    image: apisguru/graphql-faker
+  mocked_api: # available at localhost:3000/graphql
+    image: node:alpine
+    working_dir: /app
+    command: npm run mocker
     volumes:
-      - ./schema.faker.graphql:/workdir/schema.faker.graphql
+      - ./mocking/:/app/mocking
+      - ./node_modules/:/app/node_modules/
+      - ./package.json:/app/package.json
+      - ./.babelrc:/app/.babelrc
     expose:
-      - "9002"
+      - "4000"
 
 volumes:
   driver: {}
