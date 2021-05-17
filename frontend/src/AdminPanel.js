@@ -10,7 +10,7 @@ import UserList from './UserList'
 export default function AdminPanel({ orgSlug, permission, orgId }) {
   return (
     <Stack spacing={10}>
-      <Tabs isFitted>
+      <Tabs isFitted variant="enclosed">
         <TabList mb="2">
           <Tab>
             <Trans>Domains</Trans>

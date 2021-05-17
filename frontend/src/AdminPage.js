@@ -83,7 +83,7 @@ export default function AdminPage() {
     return (
       <Layout>
         <Stack spacing={10}>
-          <Text fontSize="4xl" fontWeight="bold">
+          <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
             <Trans>Welcome, Admin</Trans>
           </Text>
           <Stack isInline align="center">

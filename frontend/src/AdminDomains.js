@@ -21,6 +21,8 @@ import {
   ModalFooter,
   FormLabel,
   FormControl,
+  Divider,
+  Box,
 } from '@chakra-ui/core'
 import { Domain } from './Domain'
 import { string, number } from 'prop-types'
@@ -252,7 +254,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   return (
     <Stack mb="6" w="100%">
-      <Stack flexDirection={['column', 'row']} align="center">
+      <Stack flexDirection={['column', 'row']} align="center" isInline>
         <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
           <InputLeftElement>
             <Icon name="plus-square" color="gray.300" />
@@ -294,49 +296,48 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </TrackerButton>
       </Stack>
 
-      <Stack spacing={10} shouldWrapChildren width="100%">
-        <Stack direction="row" spacing={4}>
-          <Stack spacing={4} flexWrap="wrap">
-            <ListOf
-              elements={nodes}
-              ifEmpty={() => (
-                <Text fontSize="lg" fontWeight="bold">
-                  <Trans>No Domains</Trans>
-                </Text>
-              )}
-            >
-              {({ id: domainId, domain, lastRan }, index) => (
-                <Stack key={'admindomain' + index} isInline align="center">
-                  <Stack>
-                    <TrackerButton
-                      variant="primary"
-                      px="2"
-                      onClick={() => {
-                        setEditingDomainUrl(domain)
-                        setEditingDomainId(domainId)
-                        updateOnOpen()
-                      }}
-                    >
-                      <Icon name="edit" />
-                    </TrackerButton>
-                    <TrackerButton
-                      onClick={() => {
-                        setSelectedRemoveDomainUrl(domain)
-                        setSelectedRemoveDomainId(domainId)
-                        removeOnOpen()
-                      }}
-                      variant="danger"
-                      px="2"
-                    >
-                      <Icon name="minus" />
-                    </TrackerButton>
-                  </Stack>
-                  <Domain url={domain} lastRan={lastRan} />
+      <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => (
+            <Text fontSize="lg" fontWeight="bold">
+              <Trans>No Domains</Trans>
+            </Text>
+          )}
+        >
+          {({ id: domainId, domain, lastRan }, index) => (
+            <Box key={'admindomain' + index}>
+              <Stack isInline align="center">
+                <Stack>
+                  <TrackerButton
+                    variant="primary"
+                    px="2"
+                    onClick={() => {
+                      setEditingDomainUrl(domain)
+                      setEditingDomainId(domainId)
+                      updateOnOpen()
+                    }}
+                  >
+                    <Icon name="edit" />
+                  </TrackerButton>
+                  <TrackerButton
+                    onClick={() => {
+                      setSelectedRemoveDomainUrl(domain)
+                      setSelectedRemoveDomainId(domainId)
+                      removeOnOpen()
+                    }}
+                    variant="danger"
+                    px="2"
+                  >
+                    <Icon name="minus" />
+                  </TrackerButton>
                 </Stack>
-              )}
-            </ListOf>
-          </Stack>
-        </Stack>
+                <Domain url={domain} lastRan={lastRan} />
+              </Stack>
+              <Divider borderColor="gray.900" />
+            </Box>
+          )}
+        </ListOf>
       </Stack>
 
       <RelayPaginationControls

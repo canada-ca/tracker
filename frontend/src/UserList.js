@@ -267,16 +267,18 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         {({ handleSubmit, values, errors }) => (
           <form id="form" onSubmit={handleSubmit} noValidate>
             <Stack
-              alignItems="center"
+              align="center"
               w="100%"
               flexDirection={['column', 'row']}
+              isInline
+              mb="2"
             >
               <Stack
                 isInline
                 w="100%"
                 align="center"
-                mb={['4', '0']}
-                mr={['0', '4']}
+                mb={['2', '0']}
+                mr={['0', '2']}
               >
                 <InputGroup flexGrow={1} w="50%">
                   <InputLeftElement>
@@ -351,7 +353,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                       removeOnOpen()
                     }}
                     px="2"
-                    fontSize="xs"
                   >
                     <Icon name="minus" />
                   </TrackerButton>
