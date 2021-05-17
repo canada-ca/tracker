@@ -1,15 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
-import {
-  Divider,
-  Stack,
-  Box,
-  Link,
-  Icon,
-  Text,
-  ListItem,
-} from '@chakra-ui/core'
+import { Stack, Box, Link, Icon, Text, ListItem } from '@chakra-ui/core'
 import { sanitizeUrl } from './sanitizeUrl'
 import { Link as RouteLink } from 'react-router-dom'
 
@@ -22,6 +14,7 @@ export function Domain({ url, lastRan, ...rest }) {
             <Trans>Domain:</Trans>
           </Text>
           <Link
+            ml="auto"
             // TODO: have the API enforce a scheme
             // so we don't need to guess badly here.
             href={`http://${sanitizeUrl(url)}`}
@@ -34,8 +27,8 @@ export function Domain({ url, lastRan, ...rest }) {
           </Link>
         </Stack>
         {lastRan && (
-          <Stack isInline>
-            <Text fontWeight="bold">
+          <Stack isInline align="flex-end" mt="auto">
+            <Text fontWeight="bold" flexBasis="0px" flexGrow={1}>
               <Trans>Last scanned:</Trans>
             </Text>
             <Link as={RouteLink} to={`domains/${url}`}>
@@ -52,7 +45,6 @@ export function Domain({ url, lastRan, ...rest }) {
           </Box>
         )}
       </Stack>
-      <Divider borderColor="gray.900" />
     </ListItem>
   )
 }

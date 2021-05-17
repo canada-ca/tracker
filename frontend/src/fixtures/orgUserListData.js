@@ -6,7 +6,7 @@ export const rawOrgUserListData = {
         {
           node: {
             id: 'testid==',
-            permission: 'SUPER_ADMIN',
+            permission: 'USER',
             user: {
               id: 'userid',
               userName: 'test.user@email.com',

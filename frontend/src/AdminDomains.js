@@ -21,6 +21,8 @@ import {
   ModalFooter,
   FormLabel,
   FormControl,
+  Divider,
+  Box,
 } from '@chakra-ui/core'
 import { Domain } from './Domain'
 import { string, number } from 'prop-types'
@@ -102,7 +104,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         toast({
           title: t`Domain added`,
           description: t`${createDomain.domain.domain} was added to ${orgSlug}`,
-          status: 'info',
+          status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
@@ -156,7 +158,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           toast({
             title: t`Domain removed`,
             description: t`Domain removed from ${orgSlug}`,
-            status: 'info',
+            status: 'success',
             duration: 9000,
             isClosable: true,
             position: 'top-left',
@@ -207,7 +209,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         toast({
           title: t`Domain updated`,
           description: t`${editingDomainUrl} from ${orgSlug} successfully updated to ${updateDomain.result.domain}`,
-          status: 'info',
+          status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
@@ -252,86 +254,88 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   return (
     <Stack mb="6" w="100%">
-      <Text fontSize="2xl" fontWeight="bold">
-        <Trans>Domain List</Trans>
-      </Text>
-      <InputGroup width="100%" mb="8px">
-        <InputLeftElement>
-          <Icon name="add" color="gray.300" />
-        </InputLeftElement>
-        <Input
-          type="text"
-          placeholder={t`Add a domain`}
-          onChange={(e) => {
-            setDomainSearch(e.target.value)
+      <Stack flexDirection={['column', 'row']} align="center" isInline>
+        <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
+          <InputLeftElement>
+            <Icon name="plus-square" color="gray.300" />
+          </InputLeftElement>
+          <Input
+            type="text"
+            placeholder={t`Domain URL`}
+            onChange={(e) => {
+              setDomainSearch(e.target.value)
+            }}
+          />
+        </InputGroup>
+        <TrackerButton
+          width={['100%', '25%']}
+          onClick={() => {
+            if (!domainSearch) {
+              toast({
+                title: t`An error occurred.`,
+                description: t`New domain name cannot be empty`,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+                position: 'top-left',
+              })
+            } else {
+              createDomain({
+                variables: {
+                  orgId: orgId,
+                  domain: domainSearch,
+                  selectors: [],
+                },
+              })
+            }
           }}
-        />
-      </InputGroup>
-      <TrackerButton
-        width="100%"
-        onClick={() => {
-          if (!domainSearch) {
-            toast({
-              title: t`An error occurred.`,
-              description: t`New domain name cannot be empty`,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-              position: 'top-left',
-            })
-          } else {
-            createDomain({
-              variables: {
-                orgId: orgId,
-                domain: domainSearch,
-                selectors: [],
-              },
-            })
-          }
-        }}
-        variant="primary"
-      >
-        <Icon name="add" />
-        <Trans>Add Domain</Trans>
-      </TrackerButton>
+          variant="primary"
+        >
+          <Icon name="add" />
+          <Trans>Add Domain</Trans>
+        </TrackerButton>
+      </Stack>
 
-      <Stack flexWrap="wrap" spacing={4} shouldWrapChildren>
+      <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
         <ListOf
           elements={nodes}
           ifEmpty={() => (
-            <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+            <Text fontSize="lg" fontWeight="bold">
               <Trans>No Domains</Trans>
             </Text>
           )}
         >
           {({ id: domainId, domain, lastRan }, index) => (
-            <Stack key={'admindomain' + index} isInline align="center">
-              <TrackerButton
-                onClick={() => {
-                  setSelectedRemoveDomainUrl(domain)
-                  setSelectedRemoveDomainId(domainId)
-                  removeOnOpen()
-                }}
-                variant="danger"
-                px="2"
-                fontSize="xs"
-              >
-                <Icon name="minus" />
-              </TrackerButton>
-              <TrackerButton
-                variant="primary"
-                px="2"
-                fontSize="xs"
-                onClick={() => {
-                  setEditingDomainUrl(domain)
-                  setEditingDomainId(domainId)
-                  updateOnOpen()
-                }}
-              >
-                <Icon name="edit" />
-              </TrackerButton>
-              <Domain url={domain} lastRan={lastRan} />
-            </Stack>
+            <Box key={'admindomain' + index}>
+              <Stack isInline align="center">
+                <Stack>
+                  <TrackerButton
+                    variant="primary"
+                    px="2"
+                    onClick={() => {
+                      setEditingDomainUrl(domain)
+                      setEditingDomainId(domainId)
+                      updateOnOpen()
+                    }}
+                  >
+                    <Icon name="edit" />
+                  </TrackerButton>
+                  <TrackerButton
+                    onClick={() => {
+                      setSelectedRemoveDomainUrl(domain)
+                      setSelectedRemoveDomainId(domainId)
+                      removeOnOpen()
+                    }}
+                    variant="danger"
+                    px="2"
+                  >
+                    <Icon name="minus" />
+                  </TrackerButton>
+                </Stack>
+                <Domain url={domain} lastRan={lastRan} />
+              </Stack>
+              <Divider borderColor="gray.900" />
+            </Box>
           )}
         </ListOf>
       </Stack>

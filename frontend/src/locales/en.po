@@ -1663,7 +1663,11 @@ msgstr "Results for scans of web technologies (SSL, HTTPS)."
 msgid "Role updated"
 msgstr "Role updated"
 
-#: src/UserList.js:340
+#: src/UserList.js:380
+msgid "User:"
+msgstr "User:"
+
+#: src/UserList.js:308
 msgid "Role:"
 msgstr "Role:"
 
@@ -2092,6 +2096,9 @@ msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Use DKIM to validate outbound email sent from your custom domain"
 
 #: src/AdminPage.js:42
+msgid "Admin Affiliations"
+msgstr "Admin Affiliations"
+
 #: src/OrganizationAffiliations.js:39
 msgid "User Affiliations"
 msgstr "User Affiliations"
@@ -2416,3 +2423,12 @@ msgstr "View Details"
 #: src/DomainCard.js:142
 msgid "DMARC Guidance"
 msgstr "DMARC Guidance"
+
+#: src/UserList.js:261
+msgid "New user email"
+msgstr "New user email"
+
+#: src/UserList.js:261
+msgid "Edit Role"
+msgstr "Edit Role"
+
