@@ -14,14 +14,7 @@ describe('given the loadDkimResultByKey function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -37,52 +30,65 @@ describe('given the loadDkimResultByKey function', () => {
     })
   })
 
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.dkimResults.save({})
-    await collections.dkimResults.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single dkim result', async () => {
-      // Get dkim result from db
-      const expectedCursor = await query`
-        FOR dkimResult IN dkimResults
-          SORT dkimResult._key ASC LIMIT 1
-          RETURN MERGE({ id: dkimResult._key, _type: "dkimResult"  }, dkimResult)
-      `
-      const expectedDkimResult = await expectedCursor.next()
-
-      const loader = loadDkimResultByKey({ query, i18n })
-      const dkimResult = await loader.load(expectedDkimResult._key)
-
-      expect(dkimResult).toEqual(expectedDkimResult)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple dkim results', async () => {
-      const dkimResultKeys = []
-      const expectedDkimResults = []
-      const expectedCursor = await query`
-        FOR dkimResult IN dkimResults
-          RETURN MERGE({ id: dkimResult._key, _type: "dkimResult"  }, dkimResult)
-      `
+    beforeEach(async () => {
+      await collections.dkimResults.save({})
+      await collections.dkimResults.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single dkim result', async () => {
+        // Get dkim result from db
+        const expectedCursor = await query`
+          FOR dkimResult IN dkimResults
+            SORT dkimResult._key ASC LIMIT 1
+            RETURN MERGE({ id: dkimResult._key, _type: "dkimResult"  }, dkimResult)
+        `
+        const expectedDkimResult = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempDkimResult = await expectedCursor.next()
-        dkimResultKeys.push(tempDkimResult._key)
-        expectedDkimResults.push(tempDkimResult)
-      }
+        const loader = loadDkimResultByKey({ query, i18n })
+        const dkimResult = await loader.load(expectedDkimResult._key)
 
-      const loader = loadDkimResultByKey({ query, i18n })
-      const dkimResults = await loader.loadMany(dkimResultKeys)
-      expect(dkimResults).toEqual(expectedDkimResults)
+        expect(dkimResult).toEqual(expectedDkimResult)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple dkim results', async () => {
+        const dkimResultKeys = []
+        const expectedDkimResults = []
+        const expectedCursor = await query`
+          FOR dkimResult IN dkimResults
+            RETURN MERGE({ id: dkimResult._key, _type: "dkimResult"  }, dkimResult)
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempDkimResult = await expectedCursor.next()
+          dkimResultKeys.push(tempDkimResult._key)
+          expectedDkimResults.push(tempDkimResult)
+        }
+
+        const loader = loadDkimResultByKey({ query, i18n })
+        const dkimResults = await loader.loadMany(dkimResultKeys)
+        expect(dkimResults).toEqual(expectedDkimResults)
+      })
     })
   })
   describe('users language is set to english', () => {

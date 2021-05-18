@@ -22,7 +22,7 @@ describe('given findDomainByDomain query', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -31,78 +31,77 @@ describe('given findDomainByDomain query', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleOutput.length = 0
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-      lastRan: null,
-      selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      status: {
-        dkim: 'pass',
-        dmarc: 'pass',
-        https: 'info',
-        spf: 'fail',
-        ssl: 'fail',
-      },
-    })
-    await collections.claims.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given successful domain retrieval', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+        lastRan: null,
+        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        status: {
+          dkim: 'pass',
+          dmarc: 'pass',
+          https: 'info',
+          spf: 'fail',
+          ssl: 'fail',
+        },
+      })
+      await collections.claims.save({
+        _to: domain._id,
+        _from: org._id,
+      })
       await collections.affiliations.save({
         _from: org._id,
         _to: user._id,
         permission: 'user',
       })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
     })
     describe('authorized user queries domain by domain', () => {
       it('returns domain', async () => {
@@ -215,24 +214,21 @@ describe('given findDomainByDomain query', () => {
               null,
               {
                 i18n,
-                userKey: user._key,
+                userKey: 1,
                 query: query,
                 auth: {
-                  checkDomainPermission: checkDomainPermission({
-                    query,
-                    userKey: user._key,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  checkDomainPermission: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '1',
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadDomainByDomain: loadDomainByDomain({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByDomain: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
               },
             )
@@ -242,47 +238,10 @@ describe('given findDomainByDomain query', () => {
             ]
 
             expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User ${user._key} could not retrieve domain.`,
-            ])
+            expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
           })
         })
         describe('user does not belong to an org which claims domain', () => {
-          beforeEach(async () => {
-            org = await collections.organizations.save({
-              orgDetails: {
-                en: {
-                  slug: 'not-treasury-board-secretariat',
-                  acronym: 'NTBS',
-                  name: 'Not Treasury Board of Canada Secretariat',
-                  zone: 'NFED',
-                  sector: 'NTBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'ne-pas-secretariat-conseil-tresor',
-                  acronym: 'NPSCT',
-                  name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-                  zone: 'NPFED',
-                  sector: 'NPTBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-            domain = await collections.domains.save({
-              domain: 'not-test.gc.ca',
-              lastRan: null,
-              selectors: ['selector1', 'selector2'],
-            })
-            await collections.claims.save({
-              _to: domain._id,
-              _from: org._id,
-            })
-          })
           it('returns an appropriate error message', async () => {
             const response = await graphql(
               schema,
@@ -306,24 +265,21 @@ describe('given findDomainByDomain query', () => {
               null,
               {
                 i18n,
-                userKey: user._key,
-                query: query,
+                userKey: '1',
+                query: jest.fn(),
                 auth: {
-                  checkDomainPermission: checkDomainPermission({
-                    query,
-                    userKey: user._key,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  checkDomainPermission: jest.fn().mockReturnValue(false),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '1',
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadDomainByDomain: loadDomainByDomain({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByDomain: {
+                    load: jest.fn().mockReturnValue({ _id: '1' }),
+                  },
                 },
               },
             )
@@ -335,9 +291,7 @@ describe('given findDomainByDomain query', () => {
             ]
 
             expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User ${user._key} could not retrieve domain.`,
-            ])
+            expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
           })
         })
       })
@@ -374,24 +328,21 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userKey: user._key,
+              userKey: 1,
               query: query,
               auth: {
-                checkDomainPermission: checkDomainPermission({
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: '1',
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -399,47 +350,10 @@ describe('given findDomainByDomain query', () => {
           const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User ${user._key} could not retrieve domain.`,
-          ])
+          expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
         })
       })
       describe('user does not belong to an org which claims domain', () => {
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            orgDetails: {
-              en: {
-                slug: 'not-treasury-board-secretariat',
-                acronym: 'NTBS',
-                name: 'Not Treasury Board of Canada Secretariat',
-                zone: 'NFED',
-                sector: 'NTBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'ne-pas-secretariat-conseil-tresor',
-                acronym: 'NPSCT',
-                name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-                zone: 'NPFED',
-                sector: 'NPTBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          domain = await collections.domains.save({
-            domain: 'not-test.gc.ca',
-            lastRan: null,
-            selectors: ['selector1', 'selector2'],
-          })
-          await collections.claims.save({
-            _to: domain._id,
-            _from: org._id,
-          })
-        })
         it('returns an appropriate error message', async () => {
           const response = await graphql(
             schema,
@@ -463,24 +377,21 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userKey: user._key,
-              query: query,
+              userKey: '1',
+              query: jest.fn(),
               auth: {
-                checkDomainPermission: checkDomainPermission({
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                checkDomainPermission: jest.fn().mockReturnValue(false),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: '1',
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn().mockReturnValue({ _id: '1' }),
+                },
               },
             },
           )
@@ -488,9 +399,7 @@ describe('given findDomainByDomain query', () => {
           const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User ${user._key} could not retrieve domain.`,
-          ])
+          expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
         })
       })
     })

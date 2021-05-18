@@ -1,17 +1,10 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { GraphQLDate } from 'graphql-scalars'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { loadDkimResultConnectionsByDkimId } from '../../loaders'
 import { dkimType } from '../dkim'
 import { dkimResultConnection } from '../dkim-result-connection'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dkimType object', () => {
   describe('testing its field definitions', () => {
@@ -43,50 +36,6 @@ describe('given the dkimType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
-    let query, drop, truncate, collections, domain, dkim, dkimResult
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      domain = await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-        slug: 'test-domain-gc-ca',
-      })
-      dkim = await collections.dkim.save({
-        timestamp: '2020-10-02T12:43:39Z',
-      })
-      await collections.domainsDKIM.save({
-        _from: domain._id,
-        _to: dkim._id,
-      })
-      dkimResult = await collections.dkimResults.save({
-        selector: 'selector._dkim1',
-        record: 'txtRecord',
-        keyLength: '2048',
-        guidanceTags: ['dkim1'],
-      })
-      await collections.dkimToDkimResults.save({
-        _to: dkimResult._id,
-        _from: dkim._id,
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = dkimType.getFields()
@@ -97,24 +46,29 @@ describe('given the dkimType object', () => {
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimType.getFields()
-
-        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
+        const expectedResult = {
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
+          _type: 'domain',
+          id: '1',
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
 
         await expect(
           demoType.domain.resolve(
-            { domainId: domain._id },
+            { domainId: '1' },
             {},
-            { loaders: { loadDomainByKey: loader } },
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
           ),
-        ).resolves.toEqual({
-          _id: domain._id,
-          _key: domain._key,
-          _rev: domain._rev,
-          _type: 'domain',
-          id: domain._key,
-          domain: 'test.domain.gc.ca',
-          slug: 'test-domain-gc-ca',
-        })
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the timestamp resolver', () => {
@@ -130,24 +84,17 @@ describe('given the dkimType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimType.getFields()
 
-        const loader = loadDkimResultConnectionsByDkimId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
-
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('dkimResult', dkimResult._key),
+              cursor: toGlobalId('dkimResult', '1'),
               node: {
-                _id: dkimResult._id,
-                _key: dkimResult._key,
-                _rev: dkimResult._rev,
+                _id: 'dkimResults/1',
+                _key: '1',
+                _rev: 'rev',
                 _type: 'dkimResult',
-                id: dkimResult._key,
-                dkimId: dkim._id,
+                id: '1',
+                dkimId: 'dkimGuidanceTags/dkim1',
                 selector: 'selector._dkim1',
                 record: 'txtRecord',
                 keyLength: '2048',
@@ -159,16 +106,22 @@ describe('given the dkimType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('dkimResult', dkimResult._key),
-            endCursor: toGlobalId('dkimResult', dkimResult._key),
+            startCursor: toGlobalId('dkimResult', '1'),
+            endCursor: toGlobalId('dkimResult', '1'),
           },
         }
 
         await expect(
           demoType.results.resolve(
-            { _id: dkim._id },
+            { _id: '1' },
             { first: 1 },
-            { loaders: { loadDkimResultConnectionsByDkimId: loader } },
+            {
+              loaders: {
+                loadDkimResultConnectionsByDkimId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })

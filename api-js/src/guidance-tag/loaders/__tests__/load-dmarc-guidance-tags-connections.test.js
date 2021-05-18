@@ -26,13 +26,6 @@ describe('when given the load dmarc guidance tag connection function', () => {
   beforeAll(async () => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -46,36 +39,47 @@ describe('when given the load dmarc guidance tag connection function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-
-    await collections.dmarcGuidanceTags.save({
-      _key: 'dmarc1',
-    })
-    await collections.dmarcGuidanceTags.save({
-      _key: 'dmarc2',
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+
+      await collections.dmarcGuidanceTags.save({
+        _key: 'dmarc1',
+        tagName: 'a',
+        guidance: 'a',
+      })
+      await collections.dmarcGuidanceTags.save({
+        _key: 'dmarc2',
+        tagName: 'b',
+        guidance: 'b',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns dmarc result(s) after a given node id', async () => {
         const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
@@ -264,17 +268,6 @@ describe('when given the load dmarc guidance tag connection function', () => {
     })
     describe('using orderBy field', () => {
       beforeEach(async () => {
-        await truncate()
-        await collections.dmarcGuidanceTags.save({
-          _key: 'dmarc1',
-          tagName: 'a',
-          guidance: 'a',
-        })
-        await collections.dmarcGuidanceTags.save({
-          _key: 'dmarc2',
-          tagName: 'b',
-          guidance: 'b',
-        })
         await collections.dmarcGuidanceTags.save({
           _key: 'dmarc3',
           tagName: 'c',

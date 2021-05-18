@@ -16,86 +16,86 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load domain connection using org id function', () => {
   let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
-
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.error = mockedError
     console.warn = mockedWarn
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    org = await collections.organizations.save({
-      verified: true,
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'user',
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domain._id,
-    })
-    domainTwo = await collections.domains.save({
-      domain: 'test.domain.canada.ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domainTwo._id,
-    })
-  })
-
-  afterEach(async () => {
-    consoleOutput = []
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
   describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      org = await collections.organizations.save({
+        verified: true,
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      await collections.affiliations.save({
+        _from: org._id,
+        _to: user._id,
+        permission: 'user',
+      })
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+      })
+      await collections.claims.save({
+        _from: org._id,
+        _to: domain._id,
+      })
+      domainTwo = await collections.domains.save({
+        domain: 'test.domain.canada.ca',
+      })
+      await collections.claims.save({
+        _from: org._id,
+        _to: domainTwo._id,
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns a domain', async () => {
         const connectionLoader = loadVerifiedDomainConnections({

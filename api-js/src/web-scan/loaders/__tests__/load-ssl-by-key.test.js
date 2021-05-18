@@ -14,14 +14,7 @@ describe('given the loadSslByKey function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,165 +29,177 @@ describe('given the loadSslByKey function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
-    await collections.ssl.save({})
-    await collections.ssl.save({})
-  })
-
-  afterEach(async () => {
+  afterEach(() => {
     consoleErrorOutput.length = 0
-    await truncate()
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single ssl scan', async () => {
-      const expectedCursor = await query`
-      FOR sslScan IN ssl
-        SORT sslScan._key ASC LIMIT 1
-        RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
-      `
-      const expectedSsl = await expectedCursor.next()
-
-      const loader = loadSslByKey({ query, i18n })
-      const ssl = await loader.load(expectedSsl._key)
-
-      expect(ssl).toEqual(expectedSsl)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple ssl scans', async () => {
-      const sslKeys = []
-      const expectedSslScans = []
-
-      const expectedCursor = await query`
+    beforeEach(async () => {
+      await collections.ssl.save({})
+      await collections.ssl.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single ssl scan', async () => {
+        const expectedCursor = await query`
         FOR sslScan IN ssl
+          SORT sslScan._key ASC LIMIT 1
           RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
-      `
+        `
+        const expectedSsl = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempSsl = await expectedCursor.next()
-        sslKeys.push(tempSsl._key)
-        expectedSslScans.push(tempSsl)
-      }
+        const loader = loadSslByKey({ query, i18n })
+        const ssl = await loader.load(expectedSsl._key)
 
-      const loader = loadSslByKey({ query, i18n })
-      const sslScans = await loader.loadMany(sslKeys)
-
-      expect(sslScans).toEqual(expectedSslScans)
-    })
-  })
-  describe('language set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
+        expect(ssl).toEqual(expectedSsl)
       })
     })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = loadSslByKey({ query, userKey: '1234', i18n })
+    describe('given multiple ids', () => {
+      it('returns multiple ssl scans', async () => {
+        const sslKeys = []
+        const expectedSslScans = []
 
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find SSL scan(s). Please try again.'),
-          )
-        }
-        expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadSslByKey: Error: Database error occurred.`,
-        ])
-      })
-    })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const cursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
-          },
-        }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = loadSslByKey({ query, userKey: '1234', i18n })
+        const expectedCursor = await query`
+          FOR sslScan IN ssl
+            RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
+        `
 
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find SSL scan(s). Please try again.'),
-          )
+        while (expectedCursor.hasMore) {
+          const tempSsl = await expectedCursor.next()
+          sslKeys.push(tempSsl._key)
+          expectedSslScans.push(tempSsl)
         }
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadSslByKey: Error: Cursor error occurred.`,
-        ])
+
+        const loader = loadSslByKey({ query, i18n })
+        const sslScans = await loader.loadMany(sslKeys)
+
+        expect(sslScans).toEqual(expectedSslScans)
       })
     })
   })
-  describe('language set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = loadSslByKey({ query, userKey: '1234', i18n })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(new Error('todo'))
-        }
-        expect(consoleErrorOutput).toEqual([
-          'Database error occurred when user: 1234 running loadSslByKey: Error: Database error occurred.',
-        ])
-      })
-    })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const cursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
+  describe('given an unsuccessful load', () => {
+    describe('language set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-        }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = loadSslByKey({ query, userKey: '1234', i18n })
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadSslByKey({ query, userKey: '1234', i18n })
 
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(new Error('todo'))
-        }
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadSslByKey: Error: Cursor error occurred.`,
-        ])
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to find SSL scan(s). Please try again.'),
+            )
+          }
+          expect(consoleErrorOutput).toEqual([
+            `Database error occurred when user: 1234 running loadSslByKey: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const cursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          query = jest.fn().mockReturnValue(cursor)
+          const loader = loadSslByKey({ query, userKey: '1234', i18n })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to find SSL scan(s). Please try again.'),
+            )
+          }
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadSslByKey: Error: Cursor error occurred.`,
+          ])
+        })
+      })
+    })
+    describe('language set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadSslByKey({ query, userKey: '1234', i18n })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+          expect(consoleErrorOutput).toEqual([
+            'Database error occurred when user: 1234 running loadSslByKey: Error: Database error occurred.',
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const cursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          query = jest.fn().mockReturnValue(cursor)
+          const loader = loadSslByKey({ query, userKey: '1234', i18n })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadSslByKey: Error: Cursor error occurred.`,
+          ])
+        })
       })
     })
   })

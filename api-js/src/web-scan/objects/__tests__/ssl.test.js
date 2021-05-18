@@ -1,4 +1,3 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import {
   GraphQLNonNull,
   GraphQLID,
@@ -9,15 +8,9 @@ import {
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { loadSslGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { sslType } from '../index'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the ssl gql object', () => {
   describe('testing field definitions', () => {
@@ -146,61 +139,6 @@ describe('given the ssl gql object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, collections, domain, ssl, sslGT
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      domain = await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-        slug: 'test-domain-gc-ca',
-      })
-      ssl = await collections.ssl.save({
-        timestamp: '2020-10-02T12:43:39Z',
-        guidanceTags: ['ssl1'],
-        negativeTags: ['ssl1'],
-        neutralTags: ['ssl1'],
-        positiveTags: ['ssl1'],
-      })
-      await collections.domainsSSL.save({
-        _from: domain._id,
-        _to: ssl._id,
-      })
-      sslGT = await collections.sslGuidanceTags.save({
-        _key: 'ssl1',
-        tagName: 'SSL-TAG',
-        guidance: 'Some Interesting Guidance',
-        refLinksGuide: [
-          {
-            description: 'refLinksGuide Description',
-            ref_link: 'www.refLinksGuide.ca',
-          },
-        ],
-        refLinksTechnical: [
-          {
-            description: 'refLinksTechnical Description',
-            ref_link: 'www.refLinksTechnical.ca',
-          },
-        ],
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = sslType.getFields()
@@ -251,23 +189,27 @@ describe('given the ssl gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
 
-        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
-
         const expectedResult = {
-          _id: domain._id,
-          _key: domain._key,
-          _rev: domain._rev,
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
           _type: 'domain',
-          id: domain._key,
+          id: '1',
           domain: 'test.domain.gc.ca',
           slug: 'test-domain-gc-ca',
         }
 
         await expect(
           demoType.domain.resolve(
-            { domainId: domain._id },
+            { domainId: 'domains/1' },
             {},
-            { loaders: { loadDomainByKey: loader } },
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -373,26 +315,18 @@ describe('given the ssl gql object', () => {
     describe('testing the guidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
-
-        const loader = loadSslGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
-
         const guidanceTags = ['ssl1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', sslGT._key),
+              cursor: toGlobalId('guidanceTags', 'ssl1'),
               node: {
-                _id: sslGT._id,
-                _key: sslGT._key,
-                _rev: sslGT._rev,
+                _id: 'sslGuidanceTags/ssl1',
+                _key: 'ssl1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: sslGT._key,
+                id: 'ssl1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -415,8 +349,8 @@ describe('given the ssl gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', sslGT._key),
-            endCursor: toGlobalId('guidanceTags', sslGT._key),
+            startCursor: toGlobalId('guidanceTags', 'ssl1'),
+            endCursor: toGlobalId('guidanceTags', 'ssl1'),
           },
         }
 
@@ -424,7 +358,13 @@ describe('given the ssl gql object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadSslGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -432,26 +372,18 @@ describe('given the ssl gql object', () => {
     describe('testing the negativeGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
-
-        const loader = loadSslGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
-
         const negativeTags = ['ssl1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', sslGT._key),
+              cursor: toGlobalId('guidanceTags', 'ssl1'),
               node: {
-                _id: sslGT._id,
-                _key: sslGT._key,
-                _rev: sslGT._rev,
+                _id: 'sslGuidanceTags/ssl1',
+                _key: 'ssl1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: sslGT._key,
+                id: 'ssl1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -474,8 +406,8 @@ describe('given the ssl gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', sslGT._key),
-            endCursor: toGlobalId('guidanceTags', sslGT._key),
+            startCursor: toGlobalId('guidanceTags', 'ssl1'),
+            endCursor: toGlobalId('guidanceTags', 'ssl1'),
           },
         }
 
@@ -483,7 +415,13 @@ describe('given the ssl gql object', () => {
           demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadSslGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -491,26 +429,18 @@ describe('given the ssl gql object', () => {
     describe('testing the neutralGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
-
-        const loader = loadSslGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
-
         const neutralTags = ['ssl1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', sslGT._key),
+              cursor: toGlobalId('guidanceTags', 'ssl1'),
               node: {
-                _id: sslGT._id,
-                _key: sslGT._key,
-                _rev: sslGT._rev,
+                _id: 'sslGuidanceTags/ssl1',
+                _key: 'ssl1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: sslGT._key,
+                id: 'ssl1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -533,8 +463,8 @@ describe('given the ssl gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', sslGT._key),
-            endCursor: toGlobalId('guidanceTags', sslGT._key),
+            startCursor: toGlobalId('guidanceTags', 'ssl1'),
+            endCursor: toGlobalId('guidanceTags', 'ssl1'),
           },
         }
 
@@ -542,7 +472,13 @@ describe('given the ssl gql object', () => {
           demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadSslGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -550,26 +486,18 @@ describe('given the ssl gql object', () => {
     describe('testing the positiveGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
-
-        const loader = loadSslGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
-
         const positiveTags = ['ssl1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', sslGT._key),
+              cursor: toGlobalId('guidanceTags', 'ssl1'),
               node: {
-                _id: sslGT._id,
-                _key: sslGT._key,
-                _rev: sslGT._rev,
+                _id: 'sslGuidanceTags/ssl1',
+                _key: 'ssl1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: sslGT._key,
+                id: 'ssl1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -592,8 +520,8 @@ describe('given the ssl gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', sslGT._key),
-            endCursor: toGlobalId('guidanceTags', sslGT._key),
+            startCursor: toGlobalId('guidanceTags', 'ssl1'),
+            endCursor: toGlobalId('guidanceTags', 'ssl1'),
           },
         }
 
@@ -601,7 +529,13 @@ describe('given the ssl gql object', () => {
           demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadSslGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })

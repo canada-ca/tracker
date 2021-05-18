@@ -1,20 +1,14 @@
 import moment from 'moment'
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
 import { categoryTotalsType } from '../category-totals'
 import { categoryPercentagesType } from '../category-percentages'
 import { detailTablesType } from '../detail-tables'
 import { dmarcSummaryType } from '../dmarc-summary'
 import { PeriodEnums } from '../../../enums'
 import { Year } from '../../../scalars'
-import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { loadDmarcSummaryByKey } from '../../loaders'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('testing the period gql object', () => {
   describe('testing the field definitions', () => {
@@ -64,72 +58,35 @@ describe('testing the period gql object', () => {
     })
   })
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, collections, dmarcSummary
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-      })
-
-      dmarcSummary = await collections.dmarcSummaries.save({
-        categoryTotals: {
-          pass: 0,
-          fail: 63,
-          passDkimOnly: 0,
-          passSpfOnly: 1834,
-        },
-        categoryPercentages: {
-          pass: 5,
-          fail: 5,
-          passDkimOnly: 5,
-          passSpfOnly: 5,
-        },
-        totalMessages: 10,
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
-      const demoType = dmarcSummaryType.getFields()
+      it('returns the resolved value', () => {
+        const demoType = dmarcSummaryType.getFields()
 
-      expect(demoType.id.resolve({ id: '1' })).toEqual(
-        toGlobalId('dmarcSummaries', 1),
-      )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(
+          toGlobalId('dmarcSummaries', 1),
+        )
+      })
     })
     describe('testing the domain resolver', () => {
       it('returns the resolved field', async () => {
-        const domainCursor = await query`
-          FOR domain IN domains
-            RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-        `
-        const domain = await domainCursor.next()
-
         const demoType = dmarcSummaryType.getFields()
-
-        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
+        const domain = {
+          _id: 'domains/1',
+          _rev: 'rev',
+          _key: '1',
+          id: '1',
+          domain: 'test.domain.gc.ca',
+        }
 
         await expect(
           demoType.domain.resolve(
             { domainKey: domain._key },
             {},
-            { loaders: { loadDomainByKey: loader } },
+            {
+              loaders: {
+                loadDomainByKey: { load: jest.fn().mockReturnValue(domain) },
+              },
+            },
           ),
         ).resolves.toEqual(domain)
       })
@@ -207,24 +164,31 @@ describe('testing the period gql object', () => {
         const demoType = dmarcSummaryType.getFields()
 
         const expectedResult = {
-          pass: 5,
-          fail: 5,
-          passDkimOnly: 5,
-          passSpfOnly: 5,
+          categoryPercentages: {
+            pass: 5,
+            fail: 5,
+            passDkimOnly: 5,
+            passSpfOnly: 5,
+          },
           totalMessages: 10,
         }
 
         await expect(
           demoType.categoryPercentages.resolve(
-            { _id: dmarcSummary._id },
+            { _id: '1' },
             {},
             {
               loaders: {
-                loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query }),
+                loadDmarcSummaryByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
               },
             },
           ),
-        ).resolves.toEqual(expectedResult)
+        ).resolves.toEqual({
+          totalMessages: expectedResult.totalMessages,
+          ...expectedResult.categoryPercentages,
+        })
       })
     })
     describe('testing the categoryTotals resolver', () => {
@@ -232,23 +196,27 @@ describe('testing the period gql object', () => {
         const demoType = dmarcSummaryType.getFields()
 
         const expectedResult = {
-          pass: 0,
-          fail: 63,
-          passDkimOnly: 0,
-          passSpfOnly: 1834,
+          categoryTotals: {
+            pass: 0,
+            fail: 63,
+            passDkimOnly: 0,
+            passSpfOnly: 1834,
+          },
         }
 
         await expect(
           demoType.categoryTotals.resolve(
-            { _id: dmarcSummary._id },
+            { _id: 'something/1' },
             {},
             {
               loaders: {
-                loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query }),
+                loadDmarcSummaryByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
               },
             },
           ),
-        ).resolves.toEqual(expectedResult)
+        ).resolves.toEqual(expectedResult.categoryTotals)
       })
     })
     describe('testing the detailTables resolver', () => {

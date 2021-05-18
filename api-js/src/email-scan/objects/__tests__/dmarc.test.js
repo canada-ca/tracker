@@ -1,17 +1,10 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLInt } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { loadDmarcGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { dmarcType } from '../index'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dmarcType object', () => {
   describe('testing its field definitions', () => {
@@ -96,67 +89,7 @@ describe('given the dmarcType object', () => {
       )
     })
   })
-
   describe('testing its field resolvers', () => {
-    let query, drop, truncate, collections, domain, dmarc, dmarcGT
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      domain = await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-        slug: 'test-domain-gc-ca',
-      })
-      dmarc = await collections.dmarc.save({
-        timestamp: '2020-10-02T12:43:39Z',
-        record: 'txtRecord',
-        pPolicy: 'pPolicy',
-        spPolicy: 'spPolicy',
-        pct: 100,
-        guidanceTags: ['dmarc1'],
-        negativeTags: ['dmarc1'],
-        neutralTags: ['dmarc1'],
-        positiveTags: ['dmarc1'],
-      })
-      await collections.domainsDMARC.save({
-        _from: domain._id,
-        _to: dmarc._id,
-      })
-      dmarcGT = await collections.dmarcGuidanceTags.save({
-        _key: 'dmarc1',
-        tagName: 'DMARC-TAG',
-        guidance: 'Some Interesting Guidance',
-        refLinksGuide: [
-          {
-            description: 'refLinksGuide Description',
-            ref_link: 'www.refLinksGuide.ca',
-          },
-        ],
-        refLinksTechnical: [
-          {
-            description: 'refLinksTechnical Description',
-            ref_link: 'www.refLinksTechnical.ca',
-          },
-        ],
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id field resolver', () => {
       it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
@@ -167,24 +100,29 @@ describe('given the dmarcType object', () => {
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
-
-        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
+        const expectedResult = {
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
+          _type: 'domain',
+          id: '1',
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
 
         await expect(
           demoType.domain.resolve(
-            { domainId: domain._id },
+            { domainId: '1' },
             {},
-            { loaders: { loadDomainByKey: loader } },
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
           ),
-        ).resolves.toEqual({
-          _id: domain._id,
-          _key: domain._key,
-          _rev: domain._rev,
-          _type: 'domain',
-          id: domain._key,
-          domain: 'test.domain.gc.ca',
-          slug: 'test-domain-gc-ca',
-        })
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the timestamp resolver', () => {
@@ -244,26 +182,19 @@ describe('given the dmarcType object', () => {
     describe('testing the guidanceTag resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
-
-        const loader = loadDmarcGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const guidanceTags = ['dmarc1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              cursor: toGlobalId('guidanceTags', 'dmarc1'),
               node: {
-                _id: dmarcGT._id,
-                _key: dmarcGT._key,
-                _rev: dmarcGT._rev,
+                _id: 'dmarcGuidanceTags/dmarc1',
+                _key: 'dmarc1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
-                id: dmarcGT._key,
+                id: 'dmarc1',
                 refLinksGuide: [
                   {
                     description: 'refLinksGuide Description',
@@ -285,8 +216,8 @@ describe('given the dmarcType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
-            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            startCursor: toGlobalId('guidanceTags', 'dmarc1'),
+            endCursor: toGlobalId('guidanceTags', 'dmarc1'),
           },
         }
 
@@ -294,7 +225,13 @@ describe('given the dmarcType object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadDmarcGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -302,26 +239,19 @@ describe('given the dmarcType object', () => {
     describe('testing the negativeGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
-
-        const loader = loadDmarcGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const negativeTags = ['dmarc1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              cursor: toGlobalId('guidanceTags', 'dmarc1'),
               node: {
-                _id: dmarcGT._id,
-                _key: dmarcGT._key,
-                _rev: dmarcGT._rev,
+                _id: 'dmarcGuidanceTags/dmarc1',
+                _key: 'dmarc1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
-                id: dmarcGT._key,
+                id: 'dmarc1',
                 refLinksGuide: [
                   {
                     description: 'refLinksGuide Description',
@@ -343,8 +273,8 @@ describe('given the dmarcType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
-            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            startCursor: toGlobalId('guidanceTags', 'dmarc1'),
+            endCursor: toGlobalId('guidanceTags', 'dmarc1'),
           },
         }
 
@@ -352,7 +282,13 @@ describe('given the dmarcType object', () => {
           demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadDmarcGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -360,26 +296,19 @@ describe('given the dmarcType object', () => {
     describe('testing the neutralGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
-
-        const loader = loadDmarcGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const neutralTags = ['dmarc1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              cursor: toGlobalId('guidanceTags', 'dmarc1'),
               node: {
-                _id: dmarcGT._id,
-                _key: dmarcGT._key,
-                _rev: dmarcGT._rev,
+                _id: 'dmarcGuidanceTags/dmarc1',
+                _key: 'dmarc1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
-                id: dmarcGT._key,
+                id: 'dmarc1',
                 refLinksGuide: [
                   {
                     description: 'refLinksGuide Description',
@@ -401,8 +330,8 @@ describe('given the dmarcType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
-            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            startCursor: toGlobalId('guidanceTags', 'dmarc1'),
+            endCursor: toGlobalId('guidanceTags', 'dmarc1'),
           },
         }
 
@@ -410,7 +339,13 @@ describe('given the dmarcType object', () => {
           demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadDmarcGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -418,26 +353,19 @@ describe('given the dmarcType object', () => {
     describe('testing the positiveGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
-
-        const loader = loadDmarcGuidanceTagConnectionsByTagId({
-          query,
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
         const positiveTags = ['dmarc1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              cursor: toGlobalId('guidanceTags', 'dmarc1'),
               node: {
-                _id: dmarcGT._id,
-                _key: dmarcGT._key,
-                _rev: dmarcGT._rev,
+                _id: 'dmarcGuidanceTags/dmarc1',
+                _key: 'dmarc1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
-                id: dmarcGT._key,
+                id: 'dmarc1',
                 refLinksGuide: [
                   {
                     description: 'refLinksGuide Description',
@@ -459,8 +387,8 @@ describe('given the dmarcType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
-            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            startCursor: toGlobalId('guidanceTags', 'dmarc1'),
+            endCursor: toGlobalId('guidanceTags', 'dmarc1'),
           },
         }
 
@@ -468,7 +396,13 @@ describe('given the dmarcType object', () => {
           demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
+            {
+              loaders: {
+                loadDmarcGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })

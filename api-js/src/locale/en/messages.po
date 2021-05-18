@@ -164,7 +164,7 @@ msgstr "Passing both `first` and `last` to paginate the `dmarcSummaries` connect
 msgid "Passing both `first` and `last` to paginate the `domain` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `domain` connection is not supported."
 
-#: src/user/mutations/sign-up.js:76
+#: src/user/mutations/sign-up.js:78
 msgid "Password does not meet requirements."
 msgstr "Password does not meet requirements."
 
@@ -180,7 +180,7 @@ msgstr "Password was successfully reset."
 msgid "Password was successfully updated."
 msgstr "Password was successfully updated."
 
-#: src/user/mutations/sign-up.js:88
+#: src/user/mutations/sign-up.js:90
 msgid "Passwords do not match."
 msgstr "Passwords do not match."
 
@@ -196,7 +196,7 @@ msgstr "Permission Denied: Please contact organization admin for help with remov
 msgid "Permission Denied: Please contact organization admin for help with removing organization."
 msgstr "Permission Denied: Please contact organization admin for help with removing organization."
 
-#: src/affiliation/mutations/remove-user-from-org.js:194
+#: src/affiliation/mutations/remove-user-from-org.js:198
 msgid "Permission Denied: Please contact organization admin for help with removing users."
 msgstr "Permission Denied: Please contact organization admin for help with removing users."
 
@@ -777,6 +777,11 @@ msgstr "Unable to reset password. Please request a new email."
 msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
+#: src/domain/objects/domain.js:127
+#: src/domain/objects/domain.js:169
+msgid "Unable to retrieve DMARC report information for: {domain}"
+msgstr "Unable to retrieve DMARC report information for: {domain}"
+
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:49
 msgid "Unable to select DMARC report(s) for this period and year."
@@ -817,14 +822,14 @@ msgstr "Unable to set phone number, please try again."
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
-#: src/user/mutations/sign-up.js:159
-#: src/user/mutations/sign-up.js:173
+#: src/user/mutations/sign-up.js:161
+#: src/user/mutations/sign-up.js:175
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Unable to sign up, please contact org admin for a new invite."
 
-#: src/user/mutations/sign-up.js:137
-#: src/user/mutations/sign-up.js:190
-#: src/user/mutations/sign-up.js:200
+#: src/user/mutations/sign-up.js:139
+#: src/user/mutations/sign-up.js:192
+#: src/user/mutations/sign-up.js:202
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
@@ -936,7 +941,7 @@ msgstr "User could not be queried."
 msgid "User role was updated successfully."
 msgstr "User role was updated successfully."
 
-#: src/user/mutations/sign-up.js:102
+#: src/user/mutations/sign-up.js:104
 msgid "Username already in use."
 msgstr "Username already in use."
 

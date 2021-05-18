@@ -14,14 +14,7 @@ describe('given the loadSslGuidanceTagByTagId function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,53 +29,65 @@ describe('given the loadSslGuidanceTagByTagId function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.sslGuidanceTags.save({})
-    await collections.sslGuidanceTags.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single dkim guidance tag', async () => {
-      // Get ssl tag from db
-      const expectedCursor = await query`
-        FOR tag IN sslGuidanceTags
-          SORT tag._key ASC LIMIT 1
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
-      const expectedSslTag = await expectedCursor.next()
-
-      const loader = loadSslGuidanceTagByTagId({ query, i18n })
-      const sslTag = await loader.load(expectedSslTag._key)
-
-      expect(sslTag).toEqual(expectedSslTag)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple dkim guidance tags', async () => {
-      const sslTagKeys = []
-      const expectedSslTags = []
-      const expectedCursor = await query`
-        FOR tag IN sslGuidanceTags
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
+    beforeEach(async () => {
+      await collections.sslGuidanceTags.save({})
+      await collections.sslGuidanceTags.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single dkim guidance tag', async () => {
+        // Get ssl tag from db
+        const expectedCursor = await query`
+          FOR tag IN sslGuidanceTags
+            SORT tag._key ASC LIMIT 1
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+        const expectedSslTag = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempSsl = await expectedCursor.next()
-        sslTagKeys.push(tempSsl._key)
-        expectedSslTags.push(tempSsl)
-      }
+        const loader = loadSslGuidanceTagByTagId({ query, i18n })
+        const sslTag = await loader.load(expectedSslTag._key)
 
-      const loader = loadSslGuidanceTagByTagId({ query, i18n })
-      const sslTags = await loader.loadMany(sslTagKeys)
-      expect(sslTags).toEqual(expectedSslTags)
+        expect(sslTag).toEqual(expectedSslTag)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple dkim guidance tags', async () => {
+        const sslTagKeys = []
+        const expectedSslTags = []
+        const expectedCursor = await query`
+          FOR tag IN sslGuidanceTags
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempSsl = await expectedCursor.next()
+          sslTagKeys.push(tempSsl._key)
+          expectedSslTags.push(tempSsl)
+        }
+
+        const loader = loadSslGuidanceTagByTagId({ query, i18n })
+        const sslTags = await loader.loadMany(sslTagKeys)
+        expect(sslTags).toEqual(expectedSslTags)
+      })
     })
   })
   describe('users language is set to english', () => {

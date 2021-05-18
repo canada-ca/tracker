@@ -14,14 +14,7 @@ describe('given the loadChartSummaryByKey function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,175 +29,189 @@ describe('given the loadChartSummaryByKey function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.chartSummaries.save({
-      _key: 'web',
-      total: 1000,
-      fail: 500,
-      pass: 500,
-    })
-    await collections.chartSummaries.save({
-      _key: 'mail',
-      total: 1000,
-      fail: 500,
-      pass: 500,
-    })
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single summary', async () => {
-      const expectedCursor = await query`
-        FOR summary IN chartSummaries
-          FILTER summary._key == "web"
-          RETURN MERGE({ id: summary._key }, summary)
-      `
-      const expectedSummary = await expectedCursor.next()
-
-      const loader = loadChartSummaryByKey({ query, i18n })
-      const webSummary = await loader.load('web')
-
-      expect(webSummary).toEqual(expectedSummary)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple dkim scans', async () => {
-      const summaryKeys = []
-      const expectedSummaries = []
-      const expectedCursor = await query`
-        FOR summary IN chartSummaries
-          RETURN MERGE({ id: summary._key }, summary)
-      `
-
-      while (expectedCursor.hasMore) {
-        const tempSummary = await expectedCursor.next()
-        summaryKeys.push(tempSummary._key)
-        expectedSummaries.push(tempSummary)
-      }
-
-      const loader = loadChartSummaryByKey({ query, i18n })
-      const chartSummaries = await loader.loadMany(summaryKeys)
-      expect(chartSummaries).toEqual(expectedSummaries)
-    })
-  })
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
+    beforeEach(async () => {
+      await collections.chartSummaries.save({
+        _key: 'web',
+        total: 1000,
+        fail: 500,
+        pass: 500,
+      })
+      await collections.chartSummaries.save({
+        _key: 'mail',
+        total: 1000,
+        fail: 500,
+        pass: 500,
       })
     })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single summary', async () => {
+        const expectedCursor = await query`
+          FOR summary IN chartSummaries
+            FILTER summary._key == "web"
+            RETURN MERGE({ id: summary._key }, summary)
+        `
+        const expectedSummary = await expectedCursor.next()
 
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load summary. Please try again.'),
-          )
+        const loader = loadChartSummaryByKey({ query, i18n })
+        const webSummary = await loader.load('web')
+
+        expect(webSummary).toEqual(expectedSummary)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple dkim scans', async () => {
+        const summaryKeys = []
+        const expectedSummaries = []
+        const expectedCursor = await query`
+          FOR summary IN chartSummaries
+            RETURN MERGE({ id: summary._key }, summary)
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempSummary = await expectedCursor.next()
+          summaryKeys.push(tempSummary._key)
+          expectedSummaries.push(tempSummary)
         }
 
-        expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadChartSummaryByKey: Error: Database error occurred.`,
-        ])
+        const loader = loadChartSummaryByKey({ query, i18n })
+        const chartSummaries = await loader.loadMany(summaryKeys)
+        expect(chartSummaries).toEqual(expectedSummaries)
       })
     })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const cursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
+  })
+  describe('given an unsuccessful load', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-        }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load summary. Please try again.'),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadChartSummaryByKey: Error: Cursor error occurred.`,
-        ])
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(new Error('todo'))
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadChartSummaryByKey: Error: Database error occurred.`,
-        ])
-      })
-    })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const cursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
-        }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
+        })
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(new Error('todo'))
-        }
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load summary. Please try again.'),
+            )
+          }
 
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadChartSummaryByKey: Error: Cursor error occurred.`,
-        ])
+          expect(consoleErrorOutput).toEqual([
+            `Database error occurred when user: 1234 running loadChartSummaryByKey: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const cursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          query = jest.fn().mockReturnValue(cursor)
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load summary. Please try again.'),
+            )
+          }
+
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadChartSummaryByKey: Error: Cursor error occurred.`,
+          ])
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+
+          expect(consoleErrorOutput).toEqual([
+            `Database error occurred when user: 1234 running loadChartSummaryByKey: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const cursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          query = jest.fn().mockReturnValue(cursor)
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadChartSummaryByKey: Error: Cursor error occurred.`,
+          ])
+        })
       })
     })
   })

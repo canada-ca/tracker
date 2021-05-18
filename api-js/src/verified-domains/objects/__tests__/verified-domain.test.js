@@ -1,17 +1,11 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLDate } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { loadVerifiedOrgConnectionsByDomainId } from '../../../verified-organizations/loaders'
 import { verifiedOrganizationConnection } from '../../../verified-organizations/objects'
 import { verifiedDomainType } from '../index'
 import { domainStatus } from '../../../domain/objects'
 import { Domain } from '../../../scalars'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the verified domains object', () => {
   describe('testing the field definitions', () => {
@@ -50,83 +44,6 @@ describe('given the verified domains object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, collections, domain, org
-
-    beforeAll(async () => {
-      // Generate DB Items
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      org = await collections.organizations.save({
-        verified: true,
-        summaries: {
-          web: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-          mail: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-        },
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      domain = await collections.domains.save({
-        domain: 'test.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        status: {
-          dkim: 'pass',
-          dmarc: 'pass',
-          https: 'info',
-          spf: 'fail',
-          ssl: 'fail',
-        },
-      })
-      await collections.claims.save({
-        _to: domain._id,
-        _from: org._id,
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedDomainType.getFields()
@@ -179,24 +96,16 @@ describe('given the verified domains object', () => {
       it('returns the resolved value', async () => {
         const demoType = verifiedDomainType.getFields()
 
-        const loader = loadVerifiedOrgConnectionsByDomainId({
-          query,
-          language: 'en',
-          userKey: '1',
-          cleanseInput,
-          i18n: {},
-        })
-
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('verifiedOrganizations', org._key),
+              cursor: toGlobalId('verifiedOrganizations', '1'),
               node: {
-                _id: org._id,
-                _key: org._key,
-                _rev: org._rev,
+                _id: 'organizations/1',
+                _key: '1',
+                _rev: 'rev',
                 _type: 'verifiedOrganization',
-                id: org._key,
+                id: '1',
                 verified: true,
                 summaries: {
                   web: {
@@ -226,16 +135,22 @@ describe('given the verified domains object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('verifiedOrganizations', org._key),
-            endCursor: toGlobalId('verifiedOrganizations', org._key),
+            startCursor: toGlobalId('verifiedOrganizations', '1'),
+            endCursor: toGlobalId('verifiedOrganizations', '1'),
           },
         }
 
         expect(
           demoType.organizations.resolve(
-            { _id: domain._id },
+            { _id: 'domains/1' },
             { first: 1 },
-            { loaders: { loadVerifiedOrgConnectionsByDomainId: loader } },
+            {
+              loaders: {
+                loadVerifiedOrgConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })

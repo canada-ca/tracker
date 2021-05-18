@@ -14,14 +14,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,52 +29,64 @@ describe('given the loadAggregateGuidanceTagById function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.aggregateGuidanceTags.save({})
-    await collections.aggregateGuidanceTags.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single aggregate guidance tag', async () => {
-      const expectedCursor = await query`
-        FOR tag IN aggregateGuidanceTags
-          SORT tag._key ASC LIMIT 1
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
-      const expectedAggregateTag = await expectedCursor.next()
-
-      const loader = loadAggregateGuidanceTagById({ query, i18n })
-      const aggregateTag = await loader.load(expectedAggregateTag._key)
-
-      expect(aggregateTag).toEqual(expectedAggregateTag)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple aggregate guidance tags', async () => {
-      const aggregateTagKeys = []
-      const expectedAggregateTags = []
-      const expectedCursor = await query`
-        FOR tag IN aggregateGuidanceTags
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-      `
+    beforeEach(async () => {
+      await collections.aggregateGuidanceTags.save({})
+      await collections.aggregateGuidanceTags.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single aggregate guidance tag', async () => {
+        const expectedCursor = await query`
+          FOR tag IN aggregateGuidanceTags
+            SORT tag._key ASC LIMIT 1
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+        const expectedAggregateTag = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempAggregate = await expectedCursor.next()
-        aggregateTagKeys.push(tempAggregate._key)
-        expectedAggregateTags.push(tempAggregate)
-      }
+        const loader = loadAggregateGuidanceTagById({ query, i18n })
+        const aggregateTag = await loader.load(expectedAggregateTag._key)
 
-      const loader = loadAggregateGuidanceTagById({ query, i18n })
-      const aggregateTags = await loader.loadMany(aggregateTagKeys)
-      expect(aggregateTags).toEqual(expectedAggregateTags)
+        expect(aggregateTag).toEqual(expectedAggregateTag)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple aggregate guidance tags', async () => {
+        const aggregateTagKeys = []
+        const expectedAggregateTags = []
+        const expectedCursor = await query`
+          FOR tag IN aggregateGuidanceTags
+            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempAggregate = await expectedCursor.next()
+          aggregateTagKeys.push(tempAggregate._key)
+          expectedAggregateTags.push(tempAggregate)
+        }
+
+        const loader = loadAggregateGuidanceTagById({ query, i18n })
+        const aggregateTags = await loader.loadMany(aggregateTagKeys)
+        expect(aggregateTags).toEqual(expectedAggregateTags)
+      })
     })
   })
   describe('users language is set to english', () => {

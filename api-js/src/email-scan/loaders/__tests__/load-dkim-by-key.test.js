@@ -14,14 +14,7 @@ describe('given the loadDkimByKey function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,53 +29,65 @@ describe('given the loadDkimByKey function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(async () => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.dkim.save({})
-    await collections.dkim.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single dkim scan', async () => {
-      // Get dkim from db
-      const expectedCursor = await query`
-        FOR dkimScan IN dkim
-          SORT dkimScan._key ASC LIMIT 1
-          RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
-      `
-      const expectedDkim = await expectedCursor.next()
-
-      const loader = loadDkimByKey({ query, i18n })
-      const dkim = await loader.load(expectedDkim._key)
-
-      expect(dkim).toEqual(expectedDkim)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple dkim scans', async () => {
-      const dkimKeys = []
-      const expectedDkimScans = []
-      const expectedCursor = await query`
-        FOR dkimScan IN dkim
-          RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
-      `
+    beforeEach(async () => {
+      await collections.dkim.save({})
+      await collections.dkim.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single dkim scan', async () => {
+        // Get dkim from db
+        const expectedCursor = await query`
+          FOR dkimScan IN dkim
+            SORT dkimScan._key ASC LIMIT 1
+            RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
+        `
+        const expectedDkim = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempDkim = await expectedCursor.next()
-        dkimKeys.push(tempDkim._key)
-        expectedDkimScans.push(tempDkim)
-      }
+        const loader = loadDkimByKey({ query, i18n })
+        const dkim = await loader.load(expectedDkim._key)
 
-      const loader = loadDkimByKey({ query, i18n })
-      const dkimScans = await loader.loadMany(dkimKeys)
-      expect(dkimScans).toEqual(expectedDkimScans)
+        expect(dkim).toEqual(expectedDkim)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple dkim scans', async () => {
+        const dkimKeys = []
+        const expectedDkimScans = []
+        const expectedCursor = await query`
+          FOR dkimScan IN dkim
+            RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempDkim = await expectedCursor.next()
+          dkimKeys.push(tempDkim._key)
+          expectedDkimScans.push(tempDkim)
+        }
+
+        const loader = loadDkimByKey({ query, i18n })
+        const dkimScans = await loader.loadMany(dkimKeys)
+        expect(dkimScans).toEqual(expectedDkimScans)
+      })
     })
   })
   describe('users language is set to english', () => {
