@@ -363,7 +363,7 @@ export const loadDmarcSummaryConnectionsByUserId = ({
   let domainIdQueries
   if (isSuperAdmin) {
     domainIdQueries = aql`
-      WITH dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, domainSearch
+      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
