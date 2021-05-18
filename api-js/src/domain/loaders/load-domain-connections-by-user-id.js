@@ -268,7 +268,7 @@ export const loadDomainConnectionsByUserId = ({
   let domainKeysQuery
   if (isSuperAdmin) {
     domainKeysQuery = aql`
-      WITH domains, organizations, users, domainSearch, claims, ownership
+      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET domainKeys = UNIQUE(FLATTEN(
         LET keys = []
         LET orgIds = (FOR org IN organizations RETURN org._id)

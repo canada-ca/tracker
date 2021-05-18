@@ -51,8 +51,9 @@ export const signUp = new mutationWithClientMutationId({
     {
       i18n,
       collections,
-      request,
+      query,
       transaction,
+      request,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
       notify: { sendVerificationEmail },
@@ -129,15 +130,29 @@ export const signUp = new mutationWithClientMutationId({
     // Setup Transaction
     const trx = await transaction(collectionStrings)
 
-    let insertedUser
+    let insertedUserCursor
     try {
-      insertedUser = await trx.step(() => collections.users.save(user))
+      insertedUserCursor = await trx.step(
+        () => query`
+          WITH users
+          INSERT ${user} INTO users 
+          RETURN MERGE(
+            {
+              id: NEW._key,
+              _type: "user"
+            },
+            NEW
+          )
+        `,
+      )
     } catch (err) {
       console.error(
         `Transaction step error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
       )
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
+
+    const insertedUser = await insertedUserCursor.next()
 
     // Assign user to org
     if (signUpToken !== '') {
@@ -178,12 +193,16 @@ export const signUp = new mutationWithClientMutationId({
       }
 
       try {
-        await trx.step(() =>
-          collections.affiliations.save({
-            _from: checkOrg._id,
-            _to: insertedUser._id,
-            permission: tokenRequestedRole,
-          }),
+        await trx.step(
+          () =>
+            query`
+            WITH affiliations, organizations, users
+            INSERT {
+              _from: ${checkOrg._id},
+              _to: ${insertedUser._id},
+              permission: ${tokenRequestedRole}
+            } INTO affiliations
+          `,
         )
       } catch (err) {
         console.error(

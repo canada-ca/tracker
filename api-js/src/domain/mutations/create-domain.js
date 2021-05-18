@@ -112,6 +112,7 @@ export const createDomain = new mutationWithClientMutationId({
     let checkDomainCursor
     try {
       checkDomainCursor = await query`
+        WITH claims, domains, organizations
         LET domainIds = (FOR domain IN domains FILTER domain.domain == ${insertDomain.domain} RETURN { id: domain._id })
         FOR domainId IN domainIds 
           LET domainEdges = (FOR v, e IN 1..1 ANY domainId.id claims RETURN { _from: e._from })
@@ -154,11 +155,22 @@ export const createDomain = new mutationWithClientMutationId({
     // Setup Transaction
     const trx = await transaction(collectionStrings)
 
-    let insertedDomain
+    let insertedDomainCursor
     if (typeof checkDomain === 'undefined') {
       try {
-        insertedDomain = await trx.step(() =>
-          collections.domains.save(insertDomain),
+        insertedDomainCursor = await trx.step(
+          () =>
+            query`
+            WITH domains
+            INSERT ${insertDomain} INTO domains 
+            RETURN MERGE(
+              {
+                id: NEW._key,
+                _type: "domain"
+              },
+              NEW
+            )
+          `,
         )
       } catch (err) {
         console.error(
@@ -166,12 +178,19 @@ export const createDomain = new mutationWithClientMutationId({
         )
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
+
+      const insertedDomain = await insertedDomainCursor.next()
+
       try {
-        await trx.step(() =>
-          collections.claims.save({
-            _from: org._id,
-            _to: insertedDomain._id,
-          }),
+        await trx.step(
+          () =>
+            query`
+            WITH claims, domains, organizations
+            INSERT {
+              _from: ${org._id},
+              _to: ${insertedDomain._id}
+            } INTO claims
+          `,
         )
       } catch (err) {
         console.error(
@@ -192,11 +211,12 @@ export const createDomain = new mutationWithClientMutationId({
         await trx.step(
           () =>
             query`
-                UPSERT { _key: ${checkDomain._key} }
-                  INSERT ${insertDomain}
-                  UPDATE ${insertDomain}
-                  IN domains
-              `,
+              WITH claims, domains, organizations
+              UPSERT { _key: ${checkDomain._key} }
+                INSERT ${insertDomain}
+                UPDATE ${insertDomain}
+                IN domains
+            `,
         )
       } catch (err) {
         console.error(
@@ -206,8 +226,15 @@ export const createDomain = new mutationWithClientMutationId({
       }
 
       try {
-        await trx.step(() =>
-          collections.claims.save({ _from: org._id, _to: checkDomain._id }),
+        await trx.step(
+          () =>
+            query`
+            WITH claims, domains, organizations
+            INSERT {
+              _from: ${org._id},
+              _to: ${checkDomain._id}
+            } INTO claims
+          `,
         )
       } catch (err) {
         console.error(

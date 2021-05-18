@@ -99,6 +99,7 @@ export const verifyAccount = new mutationWithClientMutationId({
     // Verify users account
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT { emailValidated: true }
           UPDATE { emailValidated: true }

@@ -161,6 +161,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       let orgNameCheckCursor
       try {
         orgNameCheckCursor = await query`
+          WITH organizations
           FOR org IN organizations
             FILTER (org.orgDetails.en.name == ${nameEN}) OR (org.orgDetails.fr.name == ${nameFR})
             RETURN org
@@ -192,6 +193,7 @@ export const updateOrganization = new mutationWithClientMutationId({
     let orgCursor
     try {
       orgCursor = await query`
+        WITH organizations
         FOR org IN organizations
           FILTER org._key == ${orgKey}
           RETURN org
@@ -256,6 +258,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       await trx.step(
         async () =>
           await query`
+            WITH organizations
             UPSERT { _key: ${orgKey} }
               INSERT ${updatedOrgDetails}
               UPDATE ${updatedOrgDetails}

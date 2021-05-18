@@ -7,7 +7,7 @@ export const loadVerifiedDomainsById = ({ query, i18n }) =>
 
     try {
       cursor = await query`
-        WITH domains
+        WITH claims, domains, organizations
         FOR domain IN domains
           FILTER domain.domain IN ${domains}
           LET verifiedDomain = (LENGTH(

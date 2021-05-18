@@ -116,6 +116,7 @@ given organization.`,
     let affiliationCursor
     try {
       affiliationCursor = await query`
+      WITH affiliations, organizations, users
       FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations 
         FILTER e._from == ${org._id}
         RETURN { _key: e._key, permission: e.permission }
@@ -223,6 +224,7 @@ given organization.`,
     try {
       await trx.step(async () => {
         await query`
+          WITH affiliations, organizations, users
           UPSERT { _key: ${affiliation._key} }
             INSERT ${edge}
             UPDATE ${edge}

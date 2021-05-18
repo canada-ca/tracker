@@ -95,6 +95,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
 
     try {
       await query`
+        WITH users
         FOR user IN users
           UPDATE ${user._key} WITH { password: ${hashedPassword} } IN users
       `

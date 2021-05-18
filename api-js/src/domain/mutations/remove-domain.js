@@ -113,6 +113,7 @@ export const removeDomain = new mutationWithClientMutationId({
     let countCursor
     try {
       countCursor = await query`
+        WITH claims, domains, organizations
         FOR v, e IN 1..1 ANY ${domain._id} claims RETURN True
       `
     } catch (err) {

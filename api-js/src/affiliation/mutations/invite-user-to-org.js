@@ -41,6 +41,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     args,
     {
       i18n,
+      query,
       request,
       collections,
       transaction,
@@ -148,11 +149,14 @@ able to sign-up and be assigned to that organization in one mutation.`,
       // Create affiliation
       try {
         await trx.step(() =>
-          collections.affiliations.save({
-            _from: org._id,
-            _to: requestedUser._id,
-            permission: requestedRole,
-          }),
+          query`
+            WITH affiliations, organizations, users
+            INSERT {
+              _from: ${org._id},
+              _to: ${requestedUser._id},
+              permission: ${requestedRole}
+            } INTO affiliations
+          `,
         )
       } catch (err) {
         console.error(

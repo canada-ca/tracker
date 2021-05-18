@@ -1617,7 +1617,9 @@ describe('create a domain', () => {
             it('returns an error message', async () => {
               const mockedStep = jest
                 .fn()
-                .mockReturnValueOnce({})
+                .mockReturnValueOnce({
+                  next: jest.fn(),
+                })
                 .mockRejectedValue(
                   new Error('Transaction Step Error Occurred.'),
                 )
@@ -1929,7 +1931,9 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const mockedStep = jest.fn().mockReturnValueOnce({})
+            const mockedStep = jest.fn().mockReturnValueOnce({
+              next: jest.fn(),
+            })
 
             const mockedCommit = jest
               .fn()
@@ -2542,7 +2546,9 @@ describe('create a domain', () => {
             it('returns an error message', async () => {
               const mockedStep = jest
                 .fn()
-                .mockReturnValueOnce({})
+                .mockReturnValueOnce({
+                  next: jest.fn(),
+                })
                 .mockRejectedValue(
                   new Error('Transaction Step Error Occurred.'),
                 )
@@ -2848,7 +2854,9 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const mockedStep = jest.fn().mockReturnValueOnce({})
+            const mockedStep = jest.fn().mockReturnValueOnce({
+              next: jest.fn(),
+            })
 
             const mockedCommit = jest
               .fn()
