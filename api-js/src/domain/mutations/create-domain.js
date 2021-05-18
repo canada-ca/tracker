@@ -112,6 +112,7 @@ export const createDomain = new mutationWithClientMutationId({
     let checkDomainCursor
     try {
       checkDomainCursor = await query`
+        WITH claims, domains, organizations
         LET domainIds = (FOR domain IN domains FILTER domain.domain == ${insertDomain.domain} RETURN { id: domain._id })
         FOR domainId IN domainIds 
           LET domainEdges = (FOR v, e IN 1..1 ANY domainId.id claims RETURN { _from: e._from })
@@ -192,6 +193,7 @@ export const createDomain = new mutationWithClientMutationId({
         await trx.step(
           () =>
             query`
+                WITH claims, domains, organizations
                 UPSERT { _key: ${checkDomain._key} }
                   INSERT ${insertDomain}
                   UPDATE ${insertDomain}

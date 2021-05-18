@@ -116,6 +116,7 @@ export const updateDomain = new mutationWithClientMutationId({
     let countCursor
     try {
       countCursor = await query`
+        WITH claims, domains, organizations
         FOR v, e IN 1..1 ANY ${domain._id} claims 
           FILTER e._from == ${org._id}
           RETURN e
@@ -160,6 +161,7 @@ export const updateDomain = new mutationWithClientMutationId({
       await trx.step(
         async () =>
           await query`
+          WITH domains
           UPSERT { _key: ${domain._key} }
             INSERT ${domainToInsert}
             UPDATE ${domainToInsert}
