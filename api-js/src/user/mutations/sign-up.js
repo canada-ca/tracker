@@ -51,8 +51,9 @@ export const signUp = new mutationWithClientMutationId({
     {
       i18n,
       collections,
-      request,
+      query,
       transaction,
+      request,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
       notify: { sendVerificationEmail },
@@ -179,11 +180,14 @@ export const signUp = new mutationWithClientMutationId({
 
       try {
         await trx.step(() =>
-          collections.affiliations.save({
-            _from: checkOrg._id,
-            _to: insertedUser._id,
-            permission: tokenRequestedRole,
-          }),
+          query`
+            WITH affiliations, organizations, users
+            INSERT {
+              _from: ${checkOrg._id},
+              _to: ${insertedUser._id},
+              permission: ${tokenRequestedRole}
+            } INTO affiliations
+          `,
         )
       } catch (err) {
         console.error(
