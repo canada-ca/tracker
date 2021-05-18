@@ -112,11 +112,11 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
-              # implementation
-              # enforced
-              # hsts
-              # hstsAge
-              # preloaded
+              implementation
+              enforced
+              hsts
+              hstsAge
+              preloaded
               negativeGuidanceTags(first: 5) {
                 edges {
                   cursor
@@ -180,15 +180,15 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
-              # ccsInjectionVulnerable
-              # heartbleedVulnerable
-              # supportsEcdhKeyExchange
-              # acceptableCiphers
-              # acceptableCurves
-              # strongCiphers
-              # strongCurves
-              # weakCiphers
-              # weakCurves
+              ccsInjectionVulnerable
+              heartbleedVulnerable
+              supportsEcdhKeyExchange
+              acceptableCiphers
+              acceptableCurves
+              strongCiphers
+              strongCurves
+              weakCiphers
+              weakCurves
               negativeGuidanceTags(first: 5) {
                 edges {
                   cursor

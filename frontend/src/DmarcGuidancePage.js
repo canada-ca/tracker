@@ -2,7 +2,18 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
-import { Heading, Stack, Divider, Icon, Link, PseudoBox } from '@chakra-ui/core'
+import {
+  Heading,
+  Stack,
+  Icon,
+  Link,
+  PseudoBox,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from '@chakra-ui/core'
 import { useParams, Link as RouteLink } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
@@ -64,14 +75,32 @@ export default function DmarcGuidancePage() {
           <Icon name="link" ml="4px" />
         </Link>
       </PseudoBox>
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <ScanCard scanType="web" scanData={webScan} status={webStatus} />
-      </ErrorBoundary>
-      <Divider />
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <ScanCard scanType="email" scanData={emailScan} status={dmarcPhase} />
-      </ErrorBoundary>
-      <Divider />
+      <Tabs isFitted>
+        <TabList mb="4">
+          <Tab>
+            <Trans>Web Results</Trans>
+          </Tab>
+          <Tab>
+            <Trans>Email Results</Trans>
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <ScanCard scanType="web" scanData={webScan} status={webStatus} />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <ScanCard
+                scanType="email"
+                scanData={emailScan}
+                status={dmarcPhase}
+              />
+            </ErrorBoundary>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Stack>
   )
 }
