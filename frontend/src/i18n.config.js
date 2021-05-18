@@ -23,4 +23,6 @@ export async function activate(locale) {
   i18n.activate(locale)
 }
 
-activate('en')
+const defaultLanguage = navigator.language.substring(0, 2) === 'fr' ? 'fr' : 'en'
+
+activate(defaultLanguage)
