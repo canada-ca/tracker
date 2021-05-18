@@ -65,6 +65,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
     // Update phoneValidated to be true
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT { phoneValidated: true }
           UPDATE { phoneValidated: true }

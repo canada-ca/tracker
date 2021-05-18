@@ -40,6 +40,7 @@ export const removePhoneNumber = new mutationWithClientMutationId({
     try {
       await trx.step(
         () => query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT { 
             phoneDetails: null,

@@ -81,6 +81,7 @@ export const authenticate = new mutationWithClientMutationId({
       // Reset Failed Login attempts
       try {
         await query`
+          WITH users
           FOR u IN users
             UPDATE ${user._key} WITH { tfaCode: null } IN users
         `

@@ -79,6 +79,7 @@ export const signIn = new mutationWithClientMutationId({
         // Reset Failed Login attempts
         try {
           await query`
+            WITH users
             FOR u IN users
               UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
           `
@@ -96,10 +97,11 @@ export const signIn = new mutationWithClientMutationId({
           // Insert TFA code into DB
           try {
             await query`
-                UPSERT { _key: ${user._key} }
-                  INSERT { tfaCode: ${tfaCode} }
-                  UPDATE { tfaCode: ${tfaCode} }
-                  IN users
+              WITH users
+              UPSERT { _key: ${user._key} }
+                INSERT { tfaCode: ${tfaCode} }
+                UPDATE { tfaCode: ${tfaCode} }
+                IN users
               `
           } catch (err) {
             console.error(
@@ -155,6 +157,7 @@ export const signIn = new mutationWithClientMutationId({
         try {
           // Increase users failed login attempts
           await query`
+            WITH users
             FOR u IN users
               UPDATE ${user._key} WITH { failedLoginAttempts: ${
             user.failedLoginAttempts + 1

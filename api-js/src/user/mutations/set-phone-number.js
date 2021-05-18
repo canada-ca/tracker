@@ -72,6 +72,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     // Insert TFA code into DB
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT { 
             tfaCode: ${tfaCode},

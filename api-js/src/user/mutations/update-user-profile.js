@@ -97,6 +97,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT ${updatedUser}
           UPDATE ${updatedUser} 
