@@ -1085,7 +1085,7 @@ describe('testing user sign up', () => {
         it('throws an error', async () => {
           const mockedStep = jest
             .fn()
-            .mockReturnValueOnce({})
+            .mockReturnValueOnce({ next: jest.fn() })
             .mockRejectedValue('Transaction Step Error')
           const mockedTransaction = jest.fn().mockReturnValue({
             step: mockedStep,
@@ -1163,7 +1163,7 @@ describe('testing user sign up', () => {
       })
       describe('when committing transaction', () => {
         it('throws an error', async () => {
-          const mockedStep = jest.fn().mockReturnValue({})
+          const mockedStep = jest.fn().mockReturnValue({ next: jest.fn() })
           const mockedCommit = jest
             .fn()
             .mockRejectedValue('Transaction Commit Error')
@@ -2254,7 +2254,7 @@ describe('testing user sign up', () => {
         it('throws an error', async () => {
           const mockedStep = jest
             .fn()
-            .mockReturnValueOnce({})
+            .mockReturnValueOnce({ next: jest.fn() })
             .mockRejectedValue('Transaction Step Error')
           const mockedTransaction = jest.fn().mockReturnValue({
             step: mockedStep,
@@ -2330,7 +2330,9 @@ describe('testing user sign up', () => {
       })
       describe('when committing transaction', () => {
         it('throws an error', async () => {
-          const mockedStep = jest.fn().mockReturnValue({})
+          const mockedStep = jest.fn().mockReturnValue({
+            next: jest.fn(),
+          })
           const mockedCommit = jest
             .fn()
             .mockRejectedValue('Transaction Commit Error')
