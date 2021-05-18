@@ -7,7 +7,7 @@ export const loadAffiliationByKey = ({ query, userKey, i18n }) =>
 
     try {
       cursor = await query`
-        WITH affiliations
+        WITH affiliations, organizations, users
         FOR affiliation IN affiliations
           FILTER affiliation._key IN ${ids}
           LET orgKey = PARSE_IDENTIFIER(affiliation._from).key

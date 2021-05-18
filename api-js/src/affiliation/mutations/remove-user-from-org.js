@@ -93,6 +93,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     let affiliationCursor
     try {
       affiliationCursor = await query`
+        WITH affiliations, organizations, users
         FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations
           FILTER e._from == ${requestedOrg._id}
           RETURN { _key: e._key, permission: e.permission }
@@ -148,6 +149,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       try {
         await trx.step(async () => {
           await query`
+          WITH affiliations, organizations, users
           FOR aff IN affiliations
             FILTER aff._from == ${requestedOrg._id}
             FILTER aff._to == ${requestedUser._id}
