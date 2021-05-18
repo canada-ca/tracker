@@ -7,7 +7,7 @@ export const loadOrgByKey = ({ query, language, userKey, i18n }) =>
 
     try {
       cursor = await query`
-        WITH domains, claims, organizations
+        WITH claims, domains, organizations
         FOR org IN organizations
           FILTER org._key IN ${ids}
           LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)

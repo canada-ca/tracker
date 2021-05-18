@@ -370,12 +370,12 @@ export const loadOrgConnectionsByUserId = ({
   let orgKeysQuery
   if (isSuperAdmin) {
     orgKeysQuery = aql`
-      WITH claims, domains, organizations
+      WITH claims, domains, organizations, organizationSearch
       LET orgKeys = (FOR org IN organizations RETURN org._key)
     `
   } else if (isAdmin) {
     orgKeysQuery = aql`
-      WITH affiliations, claims, domains, organizations, users
+      WITH affiliations, claims, domains, organizations, organizationSearch, users
       LET orgKeys = (
         FOR v, e IN 1..1 
         INBOUND ${userDBId} affiliations 
@@ -386,7 +386,7 @@ export const loadOrgConnectionsByUserId = ({
     `
   } else {
     orgKeysQuery = aql`
-      WITH affiliations, claims, domains, organizations, users
+      WITH affiliations, claims, domains, organizations, organizationSearch, users
       LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
     `
   }

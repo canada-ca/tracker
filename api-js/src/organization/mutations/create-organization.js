@@ -179,6 +179,7 @@ export const createOrganization = new mutationWithClientMutationId({
       cursor = await trx.step(
         () =>
           query`
+            WITH organizations
             INSERT ${organizationDetails} INTO organizations
             RETURN MERGE(
               {
@@ -209,6 +210,7 @@ export const createOrganization = new mutationWithClientMutationId({
       await trx.step(
         () =>
           query`
+            WITH affiliations, organizations, users
             INSERT {
               _from: ${organization._id},
               _to: ${user._id},

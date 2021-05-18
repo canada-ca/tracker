@@ -182,6 +182,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.step(async () => {
           await query`
+            WITH organizations
             REMOVE ${organization._key} IN organizations
           `
         }),
