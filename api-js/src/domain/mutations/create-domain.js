@@ -226,8 +226,15 @@ export const createDomain = new mutationWithClientMutationId({
       }
 
       try {
-        await trx.step(() =>
-          collections.claims.save({ _from: org._id, _to: checkDomain._id }),
+        await trx.step(
+          () =>
+            query`
+            WITH claims, domains, organizations
+            INSERT {
+              _from: ${org._id},
+              _to: ${checkDomain._id}
+            } INTO claims
+          `,
         )
       } catch (err) {
         console.error(
