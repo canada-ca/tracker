@@ -148,13 +148,13 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
 
       try {
         await trx.step(async () => {
-          await query`
-          WITH affiliations, organizations, users
-          FOR aff IN affiliations
-            FILTER aff._from == ${requestedOrg._id}
-            FILTER aff._to == ${requestedUser._id}
-            REMOVE aff IN affiliations
-            RETURN true
+          query`
+            WITH affiliations, organizations, users
+            FOR aff IN affiliations
+              FILTER aff._from == ${requestedOrg._id}
+              FILTER aff._to == ${requestedUser._id}
+              REMOVE aff IN affiliations
+              RETURN true
         `
         })
       } catch (err) {
