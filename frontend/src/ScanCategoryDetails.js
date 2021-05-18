@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { object, string } from 'prop-types'
-import { Box, Heading, Collapse, Divider } from '@chakra-ui/core'
+import { Box, Heading, Collapse, Divider, Text, Stack } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
 import { GuidanceTagList } from './GuidanceTagList'
 import WithPseudoBox from './withPseudoBox'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 
 function ScanCategoryDetails({ categoryName, categoryData }) {
   const [showCategory, setShowCategory] = useState(true)
@@ -14,9 +14,11 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
   const [showCiphers, setShowCiphers] = useState(true)
   const handleShowCiphers = () => setShowCiphers(!showCiphers)
 
+  const data = categoryData.edges[0]?.node
+
   const tagDetails =
     categoryName === 'dkim' ? (
-      categoryData.edges[0]?.node.results.edges.map(({ node }, idx) => (
+      data.results.edges.map(({ node }, idx) => (
         <GuidanceTagList
           negativeTags={node.negativeGuidanceTags.edges}
           positiveTags={node.positiveGuidanceTags.edges}
@@ -27,41 +29,54 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
       ))
     ) : (
       <GuidanceTagList
-        negativeTags={categoryData.edges[0]?.node.negativeGuidanceTags.edges}
-        positiveTags={categoryData.edges[0]?.node.positiveGuidanceTags.edges}
-        neutralTags={categoryData.edges[0]?.node.neutralGuidanceTags.edges}
+        negativeTags={data.negativeGuidanceTags.edges}
+        positiveTags={data.positiveGuidanceTags.edges}
+        neutralTags={data.neutralGuidanceTags.edges}
         key={categoryName}
       />
     )
 
   const webSummary =
-    categoryName === 'https'
-      ? {
-          implementation: categoryData.edges[0]?.node.implementation,
-          enforced: categoryData.edges[0]?.node.enforced,
-          hsts: categoryData.edges[0]?.node.hsts,
-          hstsAge: categoryData.edges[0]?.node.hstsAge,
-          preloaded: categoryData.edges[0]?.node.preloaded,
-        }
-      : categoryName === 'ssl'
-      ? {
-          ccsInjectionVulnerable:
-            categoryData.edges[0]?.node.ccsInjectionVulnerable,
-          heartbleedVulnerable:
-            categoryData.edges[0]?.node.heartbleedVulnerable,
-          supportsEcdhKeyExchange:
-            categoryData.edges[0]?.node.supportsEcdhKeyExchange,
-        }
-      : null
+    categoryName === 'https' ? (
+      <Box>
+        <Text>Implementation: {data?.implementation}</Text>
+        <Text>Enforced: {data?.enforced}</Text>
+        <Text>HSTS: {data?.hsts}</Text>
+        <Text>HSTS Age: {data?.hstsAge}</Text>
+        <Text>Preloaded: {data?.preloaded}</Text>
+      </Box>
+    ) : categoryName === 'ssl' ? (
+      <Box>
+        <Text>
+          CCS Injection Vulnerability:{' '}
+          {data?.ccsInjectionVulnerable ? t`VULNERABLE` : t`SECURE`}
+        </Text>
+        <Text>
+          Heartbleed Vulnerability:{' '}
+          {data?.heartbleedVulnerable ? t`VULNERABLE` : t`SECURE`}
+        </Text>
+        <Text>
+          Supports ECDH Key ExchangeL{' '}
+          {data?.supportsEcdhKeyExchange ? t`YES` : t`NO`}
+        </Text>
+      </Box>
+    ) : null
 
-  const ciphers = categoryName === 'ssl' && {
-    acceptableCiphers: categoryData.edges[0]?.node.acceptableCiphers,
-    acceptableCurves: categoryData.edges[0]?.node.acceptableCurves,
-    strongCiphers: categoryData.edges[0]?.node.strongCiphers,
-    strongCurves: categoryData.edges[0]?.node.strongCurves,
-    weakCiphers: categoryData.edges[0]?.node.weakCiphers,
-    weakCurves: categoryData.edges[0]?.node.weakCurves,
-  }
+  const ciphers = categoryName === 'ssl' && (
+    <Box>
+      <Stack>
+        <Text>Strong Ciphers: {data?.strongCiphers}</Text>
+        <Text>Acceptable Ciphers: {data?.acceptableCiphers}</Text>
+        <Text>Weak Ciphers: {data?.weakCiphers}</Text>
+      </Stack>
+      <Divider borderColor="gray.900" />
+      <Stack>
+        <Text>Strong Curves: {data?.strongCurves}</Text>
+        <Text>Acceptable Curves: {data?.acceptableCurves}</Text>
+        <Text>Weak Curves: {data?.weakCurves}</Text>
+      </Stack>
+    </Box>
+  )
 
   return (
     <Box pb="2">
@@ -85,9 +100,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
             >
               <Trans>Summary</Trans>
             </TrackerButton>
-            <Collapse isOpen={showSummary}>
-              {JSON.stringify(webSummary)}
-            </Collapse>
+            <Collapse isOpen={showSummary}>{webSummary}</Collapse>
             <Divider />
           </Box>
         )}
@@ -100,9 +113,9 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               onClick={handleShowCiphers}
               w="100%"
             >
-              <Trans>Ciphers</Trans>
+              <Trans>Ciphers & Curves</Trans>
             </TrackerButton>
-            <Collapse isOpen={showCiphers}>{JSON.stringify(ciphers)}</Collapse>
+            <Collapse isOpen={showCiphers}>{ciphers}</Collapse>
           </Box>
         )}
       </Collapse>
