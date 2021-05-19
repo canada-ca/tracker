@@ -10,6 +10,19 @@ import { nodeInterface } from '../../node'
 
 const { CIPHER_KEY } = process.env
 
+export const decryptPhoneNumber = ({iv, tag, phoneNumber: encrypted}) => {
+  const decipher = crypto.createDecipheriv(
+    'aes-256-ccm',
+    String(CIPHER_KEY),
+    Buffer.from(iv, 'hex'),
+    { authTagLength: 16 },
+  )
+  decipher.setAuthTag(Buffer.from(tag, 'hex'))
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+  decrypted += decipher.final('utf8')
+  return decrypted
+}
+
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
   fields: () => ({
@@ -31,17 +44,7 @@ export const userPersonalType = new GraphQLObjectType({
         if (typeof phoneDetails === 'undefined' || phoneDetails === null) {
           return null
         }
-        const { iv, tag, phoneNumber: encrypted } = phoneDetails
-        const decipher = crypto.createDecipheriv(
-          'aes-256-ccm',
-          String(CIPHER_KEY),
-          Buffer.from(iv, 'hex'),
-          { authTagLength: 16 },
-        )
-        decipher.setAuthTag(Buffer.from(tag, 'hex'))
-        let decrypted = decipher.update(encrypted, 'hex', 'utf8')
-        decrypted += decipher.final('utf8')
-        return decrypted
+        return decryptPhoneNumber(phoneDetails)
       },
     },
     preferredLang: {
@@ -88,6 +91,6 @@ export const userPersonalType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: `This object is used for showing personal user details, 
+  description: `This object is used for showing personal user details,
 and is used for only showing the details of the querying user.`,
 })
