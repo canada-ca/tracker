@@ -778,7 +778,7 @@ msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
 #: src/domain/objects/domain.js:127
-#: src/domain/objects/domain.js:169
+#: src/domain/objects/domain.js:170
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Unable to retrieve DMARC report information for: {domain}"
 
@@ -1143,13 +1143,11 @@ msgstr "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgid "`{argSet}` on the `domain` connection cannot be less than zero."
 msgstr "`{argSet}` on the `domain` connection cannot be less than zero."
 
-#: src/organization/objects/organization-summary.js:7
 #: src/summaries/queries/mail-summary.js:22
 #: src/summaries/queries/web-summary.js:23
 msgid "fail"
 msgstr "fail"
 
-#: src/organization/objects/organization-summary.js:6
 #: src/summaries/queries/mail-summary.js:17
 #: src/summaries/queries/web-summary.js:18
 msgid "pass"
