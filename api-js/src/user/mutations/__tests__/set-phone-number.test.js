@@ -162,7 +162,7 @@ describe('user sets a new phone number', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully set phone number.`,
           ])
-          expect(user.phoneDetails).toEqual(newPhoneNumber)
+          expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
         })
       })
       describe('user is phone validated', () => {
