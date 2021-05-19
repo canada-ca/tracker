@@ -2456,6 +2456,14 @@ msgstr "Vulnérabilité Heartbleed:"
 msgid "Supports ECDH Key Exchange:"
 msgstr "Supporte l'échange de clés ECDH:"
 
+#: src/ScanCategoryDetails.js:79
+msgid "Yes"
+msgstr "Oui"
+
+#: src/ScanCategoryDetails.js:79
+msgid "No"
+msgstr "Non"
+
 #: src/ScanCategoryDetails.js:107
 msgid "None"
 msgstr "Aucun"
