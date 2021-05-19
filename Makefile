@@ -27,7 +27,7 @@ endif
 
 .PHONY: backup
 backup:
-		arangodump --include-system-collections true --server.database track_dmarc --output-directory ~/tracker-backup-$(date --iso-8601)
+		arangodump --include-system-collections true --server.database track_dmarc --output-directory $(to)
 
 .PHONY: restore
 restore:
