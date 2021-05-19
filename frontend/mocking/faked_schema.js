@@ -4330,6 +4330,8 @@ export const getTypeNames = () => gql`
     Informs the user if their phone code was successfully sent.
     """
     status: String
+
+    user: PersonalUser
   }
 
   input SetPhoneNumberInput {
