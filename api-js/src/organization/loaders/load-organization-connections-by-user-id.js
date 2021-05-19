@@ -17,6 +17,7 @@ export const loadOrgConnectionsByUserId = ({
   isSuperAdmin,
   search,
   isAdmin,
+  includeSuperAdminOrg,
 }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
@@ -367,27 +368,42 @@ export const loadOrgConnectionsByUserId = ({
     sortString = aql`ASC`
   }
 
+  let includeSuperAdminOrgQuery = aql``
+  if (!includeSuperAdminOrg) {
+    includeSuperAdminOrgQuery = aql`FILTER org.orgDetails.en.slug != "sa"`
+  }
+
   let orgKeysQuery
   if (isSuperAdmin) {
     orgKeysQuery = aql`
       WITH claims, domains, organizations, organizationSearch
-      LET orgKeys = (FOR org IN organizations RETURN org._key)
+      LET orgKeys = (
+        FOR org IN organizations
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
     `
   } else if (isAdmin) {
     orgKeysQuery = aql`
       WITH affiliations, claims, domains, organizations, organizationSearch, users
       LET orgKeys = (
-        FOR v, e IN 1..1 
+        FOR org, e IN 1..1 
         INBOUND ${userDBId} affiliations 
-        FILTER e.permission == "admin" 
+        FILTER e.permission == "admin"
         OR e.permission == "super_admin" 
-        RETURN v._key
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
       )
     `
   } else {
     orgKeysQuery = aql`
       WITH affiliations, claims, domains, organizations, organizationSearch, users
-      LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+      LET orgKeys = (
+        FOR org, e IN 1..1 
+        INBOUND ${userDBId} affiliations 
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
     `
   }
 
