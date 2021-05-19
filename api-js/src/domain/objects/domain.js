@@ -59,6 +59,11 @@ export const domainType = new GraphQLObjectType({
           type: GraphQLString,
           description: 'String argument used to search for organizations.',
         },
+        isAdmin: {
+          type: GraphQLBoolean,
+          description:
+            'Filter orgs based off of the user being an admin of them.',
+        },
         includeSuperAdminOrg: {
           type: GraphQLBoolean,
           description:
@@ -70,10 +75,16 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { loadOrgConnectionsByDomainId } },
+        {
+          auth: { checkSuperAdmin },
+          loaders: { loadOrgConnectionsByDomainId },
+        },
       ) => {
+        const isSuperAdmin = await checkSuperAdmin()
+
         const orgs = await loadOrgConnectionsByDomainId({
           domainId: _id,
+          isSuperAdmin,
           ...args,
         })
         return orgs
