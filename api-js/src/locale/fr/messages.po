@@ -1144,13 +1144,11 @@ msgstr "todo"
 msgid "`{argSet}` on the `domain` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/organization/objects/organization-summary.js:7
 #: src/summaries/queries/mail-summary.js:22
 #: src/summaries/queries/web-summary.js:23
 msgid "fail"
 msgstr "todo"
 
-#: src/organization/objects/organization-summary.js:6
 #: src/summaries/queries/mail-summary.js:17
 #: src/summaries/queries/web-summary.js:18
 msgid "pass"
