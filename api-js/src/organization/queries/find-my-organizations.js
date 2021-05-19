@@ -20,6 +20,11 @@ export const findMyOrganizations = {
       type: GraphQLBoolean,
       description: 'Filter orgs based off of the user being an admin of them.',
     },
+    includeSuperAdminOrg: {
+      type: GraphQLBoolean,
+      description:
+        'Filter org list to either include or exclude the super admin org.',
+    },
     ...connectionArgs,
   },
   resolve: async (
