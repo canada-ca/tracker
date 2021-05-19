@@ -57,12 +57,14 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
           </Text>
           <Text>{data?.hsts}</Text>
         </Stack>
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>HSTS Age:</Trans>
-          </Text>
-          <Text>{data?.hstsAge}</Text>
-        </Stack>
+        {data?.hstsAge && (
+          <Stack isInline>
+            <Text fontWeight="bold">
+              <Trans>HSTS Age:</Trans>
+            </Text>
+            <Text>{data?.hstsAge}</Text>
+          </Stack>
+        )}
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Preloaded Status:</Trans>
