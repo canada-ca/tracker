@@ -8,7 +8,18 @@ export const loadOrgConnectionsByDomainId = ({
   userKey,
   cleanseInput,
   i18n,
-}) => async ({ domainId, after, before, first, last, orderBy, search }) => {
+}) => async ({
+  domainId,
+  after,
+  before,
+  first,
+  last,
+  orderBy,
+  search,
+  isSuperAdmin,
+  isAdmin,
+  includeSuperAdminOrg,
+}) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -358,6 +369,51 @@ export const loadOrgConnectionsByDomainId = ({
     sortString = aql`ASC`
   }
 
+  let includeSuperAdminOrgQuery = aql``
+  if (!includeSuperAdminOrg) {
+    includeSuperAdminOrgQuery = aql`FILTER org.orgDetails.en.slug != "sa" OR org.orgDetails.fr.slug != "sa"`
+  }
+
+  let orgKeysQuery
+  if (isSuperAdmin) {
+    orgKeysQuery = aql`
+      WITH affiliations, claims, domains, organizations, organizationSearch, users
+      LET keys = (
+        FOR org IN organizations
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
+      LET claimKeys = (FOR v, e IN 1..1 INBOUND ${domainId} claims RETURN v._key)
+      LET orgKeys = INTERSECTION(keys, claimKeys)
+    `
+  } else if (isAdmin) {
+    orgKeysQuery = aql`
+      WITH affiliations, claims, domains, organizations, organizationSearch, users
+      LET keys = (
+        FOR org, e IN 1..1
+        INBOUND ${userDBId} affiliations
+        FILTER e.permission == "admin"
+        OR e.permission == "super_admin"
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
+      LET claimKeys = (FOR v, e IN 1..1 INBOUND ${domainId} claims RETURN v._key)
+      LET orgKeys = INTERSECTION(keys, claimKeys)
+    `
+  } else {
+    orgKeysQuery = aql`
+      WITH affiliations, claims, domains, organizations, organizationSearch, users
+      LET keys = (
+        FOR org, e IN 1..1
+        INBOUND ${userDBId} affiliations
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
+      LET claimKeys = (FOR v, e IN 1..1 INBOUND ${domainId} claims RETURN v._key)
+      LET orgKeys = INTERSECTION(keys, claimKeys)
+    `
+  }
+
   let orgQuery = aql``
   let filterString = aql`FILTER org._key IN orgKeys`
   let totalCount = aql`LENGTH(orgKeys)`
@@ -397,14 +453,7 @@ export const loadOrgConnectionsByDomainId = ({
   let organizationInfoCursor
   try {
     organizationInfoCursor = await query`
-      WITH affiliations, claims, domains, organizations, organizationSearch, users
-
-      LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
-      LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
-      LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
-      LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
-      LET claimKeys = (FOR v, e IN 1..1 INBOUND ${domainId} claims RETURN v._key)
-      LET orgKeys = INTERSECTION(keys, claimKeys)
+      ${orgKeysQuery}
 
       ${orgQuery}
 

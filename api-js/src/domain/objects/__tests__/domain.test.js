@@ -224,6 +224,9 @@ describe('given the domain object', () => {
                   .fn()
                   .mockReturnValue(expectedResult),
               },
+              auth: {
+                checkSuperAdmin: jest.fn().mockReturnValue(false),
+              },
             },
           ),
         ).resolves.toEqual(expectedResult)
@@ -368,13 +371,13 @@ describe('given the domain object', () => {
         describe('user does not have domain ownership permission', () => {
           it('returns the resolved value', async () => {
             const demoType = domainType.getFields()
-  
+
             const data = {
               _id: 'domains/1',
               _key: '1',
               domain: 'test1.gc.ca',
             }
-  
+
             await expect(
               demoType.dmarcSummaryByPeriod.resolve(
                 data,
@@ -394,12 +397,8 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(
-              new Error(
-                'todo',
-              ),
-            )
-  
+            ).rejects.toEqual(new Error('todo'))
+
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
             ])
@@ -466,13 +465,13 @@ describe('given the domain object', () => {
         describe('user does not have domain ownership permission', () => {
           it('returns the resolved value', async () => {
             const demoType = domainType.getFields()
-  
+
             const data = {
               _id: 'domains/1',
               _key: '1',
               domain: 'test1.gc.ca',
             }
-  
+
             await expect(
               demoType.yearlyDmarcSummaries.resolve(
                 data,
@@ -521,13 +520,13 @@ describe('given the domain object', () => {
         describe('user does not have domain ownership permission', () => {
           it('returns the resolved value', async () => {
             const demoType = domainType.getFields()
-  
+
             const data = {
               _id: 'domains/1',
               _key: '1',
               domain: 'test1.gc.ca',
             }
-  
+
             await expect(
               demoType.yearlyDmarcSummaries.resolve(
                 data,
@@ -544,11 +543,7 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            ).rejects.toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
             ])

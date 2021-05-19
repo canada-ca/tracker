@@ -130,7 +130,7 @@ describe('given the load organizations connection function', () => {
       await collections.affiliations.save({
         _from: org._id,
         _to: user._id,
-        permission: 'user',
+        permission: 'admin',
       })
       await collections.affiliations.save({
         _from: orgTwo._id,
@@ -194,13 +194,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               first: 5,
               after: toGlobalId('organizations', expectedOrgs[0].id),
@@ -209,7 +212,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -227,7 +230,7 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
           })
         })
@@ -240,13 +243,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               first: 5,
               before: toGlobalId('organizations', expectedOrgs[1].id),
@@ -255,7 +261,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -273,7 +279,7 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
           })
         })
@@ -286,13 +292,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               first: 1,
             }
@@ -300,7 +309,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -318,7 +327,7 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
           })
         })
@@ -331,13 +340,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               last: 1,
             }
@@ -345,7 +357,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -363,7 +375,7 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
           })
         })
@@ -385,10 +397,10 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const orgLoader = loadOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(org._key)
-  
+
               const connectionArgs = {
                 domainId: domain._id,
                 first: 5,
@@ -397,7 +409,7 @@ describe('given the load organizations connection function', () => {
               const orgs = await connectionLoader({
                 ...connectionArgs,
               })
-  
+
               const expectedStructure = {
                 edges: [
                   {
@@ -415,7 +427,7 @@ describe('given the load organizations connection function', () => {
                   endCursor: toGlobalId('organizations', expectedOrg._key),
                 },
               }
-  
+
               expect(orgs).toEqual(expectedStructure)
             })
           })
@@ -428,10 +440,10 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const orgLoader = loadOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(org._key)
-  
+
               const connectionArgs = {
                 domainId: domain._id,
                 first: 5,
@@ -440,7 +452,7 @@ describe('given the load organizations connection function', () => {
               const orgs = await connectionLoader({
                 ...connectionArgs,
               })
-  
+
               const expectedStructure = {
                 edges: [
                   {
@@ -458,7 +470,7 @@ describe('given the load organizations connection function', () => {
                   endCursor: toGlobalId('organizations', expectedOrg._key),
                 },
               }
-  
+
               expect(orgs).toEqual(expectedStructure)
             })
           })
@@ -471,13 +483,13 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const orgLoader = loadOrgByKey({ query, language: 'en' })
               const expectedOrgs = await orgLoader.loadMany([
                 org._key,
                 orgTwo._key,
               ])
-  
+
               const connectionArgs = {
                 domainId: domain._id,
                 first: 5,
@@ -486,7 +498,7 @@ describe('given the load organizations connection function', () => {
               const orgs = await connectionLoader({
                 ...connectionArgs,
               })
-  
+
               const expectedStructure = {
                 edges: [
                   {
@@ -506,11 +518,14 @@ describe('given the load organizations connection function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  startCursor: toGlobalId(
+                    'organizations',
+                    expectedOrgs[0]._key,
+                  ),
                   endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
                 },
               }
-  
+
               expect(orgs).toEqual(expectedStructure)
             })
           })
@@ -574,7 +589,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -595,7 +610,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -613,7 +628,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -621,7 +636,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -642,7 +657,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -660,7 +675,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -670,7 +685,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -691,7 +706,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -709,7 +724,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -717,7 +732,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -738,7 +753,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -756,7 +771,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -766,7 +781,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -787,7 +802,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -805,7 +820,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -813,7 +828,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -834,7 +849,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -852,7 +867,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -862,7 +877,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -883,7 +898,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -901,7 +916,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -909,7 +924,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -930,7 +945,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -948,7 +963,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -958,7 +973,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -979,7 +994,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -997,7 +1012,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1005,7 +1020,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1026,7 +1041,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1044,7 +1059,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1054,7 +1069,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1075,7 +1090,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1093,7 +1108,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1101,7 +1116,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1122,7 +1137,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1140,7 +1155,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1150,7 +1165,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1171,7 +1186,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1189,7 +1204,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1197,7 +1212,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1218,7 +1233,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1236,7 +1251,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1246,7 +1261,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1267,7 +1282,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1285,7 +1300,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1293,7 +1308,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1314,7 +1329,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1332,7 +1347,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1342,7 +1357,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1363,7 +1378,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1381,7 +1396,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1389,7 +1404,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1410,7 +1425,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1428,7 +1443,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1438,7 +1453,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1459,7 +1474,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1477,7 +1492,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1485,7 +1500,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1506,7 +1521,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1524,7 +1539,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1534,7 +1549,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1555,7 +1570,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1573,7 +1588,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1581,7 +1596,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1602,7 +1617,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1620,7 +1635,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1630,7 +1645,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1651,7 +1666,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1669,7 +1684,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1677,7 +1692,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1698,7 +1713,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1716,7 +1731,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1726,7 +1741,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1747,7 +1762,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1765,7 +1780,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1773,7 +1788,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1794,7 +1809,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1812,7 +1827,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1822,7 +1837,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1843,7 +1858,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1861,7 +1876,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1869,7 +1884,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1890,7 +1905,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1908,7 +1923,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1918,7 +1933,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1939,7 +1954,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -1957,7 +1972,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -1965,7 +1980,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -1986,7 +2001,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2004,7 +2019,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2014,7 +2029,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -2035,7 +2050,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2053,7 +2068,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2061,7 +2076,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -2082,7 +2097,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2100,7 +2115,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2115,7 +2130,7 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               last: 1,
             }
@@ -2123,7 +2138,7 @@ describe('given the load organizations connection function', () => {
               domainId: 'domains/1',
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [],
               totalCount: 0,
@@ -2134,8 +2149,278 @@ describe('given the load organizations connection function', () => {
                 endCursor: '',
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('isSuperAdmin field is set', () => {
+          it('returns all orgs', async () => {
+            const connectionLoader = loadOrgConnectionsByDomainId({
+              query,
+              language: 'en',
+              userKey: user._key,
+              cleanseInput,
+              i18n,
+            })
+
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
+            expectedOrgs[0].id = expectedOrgs[0]._key
+            expectedOrgs[1].id = expectedOrgs[1]._key
+
+            const connectionArgs = {
+              first: 5,
+              isSuperAdmin: true,
+            }
+            const orgs = await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  node: {
+                    ...expectedOrgs[0],
+                  },
+                },
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  node: {
+                    ...expectedOrgs[1],
+                  },
+                },
+              ],
+              totalCount: 2,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('isAdmin field is set', () => {
+          it('returns orgs that the user is only admin to', async () => {
+            const connectionLoader = loadOrgConnectionsByDomainId({
+              query,
+              language: 'en',
+              userKey: user._key,
+              cleanseInput,
+              i18n,
+            })
+
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
+            const connectionArgs = {
+              first: 5,
+              isAdmin: true,
+            }
+            const orgs = await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  node: {
+                    ...expectedOrgs[0],
+                  },
+                },
+              ],
+              totalCount: 1,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('using the includeSuperAdminOrg field', () => {
+          let saOrg
+          beforeEach(async () => {
+            saOrg = await collections.organizations.save({
+              verified: false,
+              summaries: {
+                web: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+                mail: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+              },
+              orgDetails: {
+                en: {
+                  slug: 'sa',
+                  acronym: 'SA',
+                  name: 'Super Admin',
+                  zone: 'zone sa',
+                  sector: 'sector sa',
+                  country: 'country sa',
+                  province: 'province sa',
+                  city: 'city two',
+                },
+                fr: {
+                  slug: 'sa',
+                  acronym: 'SA',
+                  name: 'Super Admin',
+                  zone: 'zone sa',
+                  sector: 'sector sa',
+                  country: 'country sa',
+                  province: 'province sa',
+                  city: 'city sa',
+                },
+              },
+            })
+            await collections.affiliations.save({
+              _from: saOrg._id,
+              _to: user._id,
+              permission: 'super_admin',
+            })
+            await collections.claims.save({
+              _from: saOrg._id,
+              _to: domain._id,
+            })
+          })
+          describe('includeSuperAdminOrg is set to true', () => {
+            it('contains the super admin org', async () => {
+              const connectionLoader = loadOrgConnectionsByDomainId({
+                query,
+                language: 'en',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const orgLoader = loadOrgByKey({ query, language: 'en' })
+              const expectedOrgs = await orgLoader.loadMany([
+                org._key,
+                orgTwo._key,
+                saOrg._key,
+              ])
+
+              const connectionArgs = {
+                first: 5,
+                includeSuperAdminOrg: true,
+              }
+              const orgs = await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    node: {
+                      ...expectedOrgs[0],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    node: {
+                      ...expectedOrgs[1],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[2]._key),
+                    node: {
+                      ...expectedOrgs[2],
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'organizations',
+                    expectedOrgs[0]._key,
+                  ),
+                  endCursor: toGlobalId('organizations', expectedOrgs[2]._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('includeSuperAdminOrg is set to false', () => {
+            it('does not contain the super admin org', async () => {
+              const connectionLoader = loadOrgConnectionsByDomainId({
+                query,
+                language: 'en',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const orgLoader = loadOrgByKey({ query, language: 'en' })
+              const expectedOrgs = await orgLoader.loadMany([
+                org._key,
+                orgTwo._key,
+                saOrg._key,
+              ])
+
+              const connectionArgs = {
+                first: 5,
+                includeSuperAdminOrg: false,
+              }
+              const orgs = await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    node: {
+                      ...expectedOrgs[0],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    node: {
+                      ...expectedOrgs[1],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'organizations',
+                    expectedOrgs[0]._key,
+                  ),
+                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
           })
         })
       })
@@ -2165,13 +2450,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               first: 5,
               after: toGlobalId('organizations', expectedOrgs[0].id),
@@ -2180,7 +2468,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -2198,7 +2486,7 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
           })
         })
@@ -2211,13 +2499,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               first: 5,
               before: toGlobalId('organizations', expectedOrgs[1].id),
@@ -2226,7 +2517,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -2244,7 +2535,7 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
           })
         })
@@ -2257,13 +2548,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               first: 1,
             }
@@ -2271,7 +2565,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -2289,7 +2583,7 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
           })
         })
@@ -2302,13 +2596,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-  
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
-  
+
             const connectionArgs = {
               last: 1,
             }
@@ -2316,7 +2613,7 @@ describe('given the load organizations connection function', () => {
               domainId: domain._id,
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [
                 {
@@ -2334,8 +2631,159 @@ describe('given the load organizations connection function', () => {
                 endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('using the search argument', () => {
+          beforeEach(async () => {
+            await query`
+              FOR org IN organizationSearch
+                SEARCH org._key == 1
+                OPTIONS { waitForSync: true }
+                RETURN org
+            `
+          })
+          describe('search using name', () => {
+            it('returns the filtered organizations', async () => {
+              const connectionLoader = loadOrgConnectionsByDomainId({
+                query,
+                language: 'fr',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const orgLoader = loadOrgByKey({ query, language: 'fr' })
+              const expectedOrg = await orgLoader.load(org._key)
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                search: 'one',
+              }
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrg._key),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('organizations', expectedOrg._key),
+                  endCursor: toGlobalId('organizations', expectedOrg._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('search using acronym', () => {
+            it('returns the filtered organizations', async () => {
+              const connectionLoader = loadOrgConnectionsByDomainId({
+                query,
+                language: 'fr',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const orgLoader = loadOrgByKey({ query, language: 'fr' })
+              const expectedOrg = await orgLoader.load(org._key)
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                search: 'ONE',
+              }
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrg._key),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('organizations', expectedOrg._key),
+                  endCursor: toGlobalId('organizations', expectedOrg._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('search argument is empty', () => {
+            it('returns unfiltered organizations', async () => {
+              const connectionLoader = loadOrgConnectionsByDomainId({
+                query,
+                language: 'fr',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const orgLoader = loadOrgByKey({ query, language: 'fr' })
+              const expectedOrgs = await orgLoader.loadMany([
+                org._key,
+                orgTwo._key,
+              ])
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                search: '',
+              }
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    node: {
+                      ...expectedOrgs[0],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    node: {
+                      ...expectedOrgs[1],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'organizations',
+                    expectedOrgs[0]._key,
+                  ),
+                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
           })
         })
         describe('using the orderBy field', () => {
@@ -2397,7 +2845,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2418,7 +2866,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2436,7 +2884,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2444,7 +2892,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2465,7 +2913,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2483,7 +2931,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2493,7 +2941,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2514,7 +2962,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2532,7 +2980,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2540,7 +2988,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2561,7 +3009,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2579,7 +3027,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2589,7 +3037,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2610,7 +3058,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2628,7 +3076,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2636,7 +3084,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2657,7 +3105,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2675,7 +3123,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2685,7 +3133,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2706,7 +3154,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2724,7 +3172,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2732,7 +3180,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2753,7 +3201,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2771,7 +3219,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2781,7 +3229,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2802,7 +3250,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2820,7 +3268,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2828,7 +3276,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2849,7 +3297,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2867,7 +3315,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2877,7 +3325,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2898,7 +3346,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2916,7 +3364,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2924,7 +3372,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2945,7 +3393,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -2963,7 +3411,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -2973,7 +3421,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -2994,7 +3442,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3012,7 +3460,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3020,7 +3468,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3041,7 +3489,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3059,7 +3507,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3069,7 +3517,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3090,7 +3538,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3108,7 +3556,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3116,7 +3564,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3137,7 +3585,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3155,7 +3603,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3165,7 +3613,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3186,7 +3634,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3204,7 +3652,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3212,7 +3660,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3233,7 +3681,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3251,7 +3699,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3261,7 +3709,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3282,7 +3730,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3300,7 +3748,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3308,7 +3756,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3329,7 +3777,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3347,7 +3795,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3357,7 +3805,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3378,7 +3826,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3396,7 +3844,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3404,7 +3852,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3425,7 +3873,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3443,7 +3891,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3453,7 +3901,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3474,7 +3922,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3492,7 +3940,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3500,7 +3948,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3521,7 +3969,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3539,7 +3987,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3549,7 +3997,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3570,7 +4018,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3588,7 +4036,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3596,7 +4044,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3617,7 +4065,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3635,7 +4083,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3645,7 +4093,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3666,7 +4114,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3684,7 +4132,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3692,7 +4140,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3713,7 +4161,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3731,7 +4179,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3741,7 +4189,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3762,7 +4210,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3780,7 +4228,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3788,7 +4236,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3809,7 +4257,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3827,7 +4275,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3837,7 +4285,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3858,7 +4306,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3876,7 +4324,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3884,7 +4332,7 @@ describe('given the load organizations connection function', () => {
               it('returns organization', async () => {
                 const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
-  
+
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -3905,7 +4353,7 @@ describe('given the load organizations connection function', () => {
                   domainId: domain._id,
                   ...connectionArgs,
                 })
-  
+
                 const expectedStructure = {
                   edges: [
                     {
@@ -3923,7 +4371,7 @@ describe('given the load organizations connection function', () => {
                     endCursor: toGlobalId('organizations', expectedOrg._key),
                   },
                 }
-  
+
                 expect(orgs).toEqual(expectedStructure)
               })
             })
@@ -3938,7 +4386,7 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               last: 1,
             }
@@ -3946,7 +4394,7 @@ describe('given the load organizations connection function', () => {
               domainId: 'domains/1',
               ...connectionArgs,
             })
-  
+
             const expectedStructure = {
               edges: [],
               totalCount: 0,
@@ -3957,8 +4405,278 @@ describe('given the load organizations connection function', () => {
                 endCursor: '',
               },
             }
-  
+
             expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('isSuperAdmin field is set', () => {
+          it('returns all orgs', async () => {
+            const connectionLoader = loadOrgConnectionsByDomainId({
+              query,
+              language: 'fr',
+              userKey: user._key,
+              cleanseInput,
+              i18n,
+            })
+
+            const orgLoader = loadOrgByKey({ query, language: 'fr' })
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
+            expectedOrgs[0].id = expectedOrgs[0]._key
+            expectedOrgs[1].id = expectedOrgs[1]._key
+
+            const connectionArgs = {
+              first: 5,
+              isSuperAdmin: true,
+            }
+            const orgs = await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  node: {
+                    ...expectedOrgs[0],
+                  },
+                },
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  node: {
+                    ...expectedOrgs[1],
+                  },
+                },
+              ],
+              totalCount: 2,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('isAdmin field is set', () => {
+          it('returns orgs that the user is only admin to', async () => {
+            const connectionLoader = loadOrgConnectionsByDomainId({
+              query,
+              language: 'fr',
+              userKey: user._key,
+              cleanseInput,
+              i18n,
+            })
+
+            const orgLoader = loadOrgByKey({ query, language: 'fr' })
+            const expectedOrgs = await orgLoader.loadMany([
+              org._key,
+              orgTwo._key,
+            ])
+
+            const connectionArgs = {
+              first: 5,
+              isAdmin: true,
+            }
+            const orgs = await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  node: {
+                    ...expectedOrgs[0],
+                  },
+                },
+              ],
+              totalCount: 1,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('using the includeSuperAdminOrg field', () => {
+          let saOrg
+          beforeEach(async () => {
+            saOrg = await collections.organizations.save({
+              verified: false,
+              summaries: {
+                web: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+                mail: {
+                  pass: 52,
+                  fail: 1002,
+                  total: 1054,
+                },
+              },
+              orgDetails: {
+                en: {
+                  slug: 'sa',
+                  acronym: 'SA',
+                  name: 'Super Admin',
+                  zone: 'zone sa',
+                  sector: 'sector sa',
+                  country: 'country sa',
+                  province: 'province sa',
+                  city: 'city two',
+                },
+                fr: {
+                  slug: 'sa',
+                  acronym: 'SA',
+                  name: 'Super Admin',
+                  zone: 'zone sa',
+                  sector: 'sector sa',
+                  country: 'country sa',
+                  province: 'province sa',
+                  city: 'city sa',
+                },
+              },
+            })
+            await collections.affiliations.save({
+              _from: saOrg._id,
+              _to: user._id,
+              permission: 'super_admin',
+            })
+            await collections.claims.save({
+              _from: saOrg._id,
+              _to: domain._id,
+            })
+          })
+          describe('includeSuperAdminOrg is set to true', () => {
+            it('contains the super admin org', async () => {
+              const connectionLoader = loadOrgConnectionsByDomainId({
+                query,
+                language: 'fr',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const orgLoader = loadOrgByKey({ query, language: 'fr' })
+              const expectedOrgs = await orgLoader.loadMany([
+                org._key,
+                orgTwo._key,
+                saOrg._key,
+              ])
+
+              const connectionArgs = {
+                first: 5,
+                includeSuperAdminOrg: true,
+              }
+              const orgs = await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    node: {
+                      ...expectedOrgs[0],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    node: {
+                      ...expectedOrgs[1],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[2]._key),
+                    node: {
+                      ...expectedOrgs[2],
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'organizations',
+                    expectedOrgs[0]._key,
+                  ),
+                  endCursor: toGlobalId('organizations', expectedOrgs[2]._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('includeSuperAdminOrg is set to false', () => {
+            it('does not contain the super admin org', async () => {
+              const connectionLoader = loadOrgConnectionsByDomainId({
+                query,
+                language: 'fr',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const orgLoader = loadOrgByKey({ query, language: 'fr' })
+              const expectedOrgs = await orgLoader.loadMany([
+                org._key,
+                orgTwo._key,
+                saOrg._key,
+              ])
+
+              const connectionArgs = {
+                first: 5,
+                includeSuperAdminOrg: false,
+              }
+              const orgs = await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    node: {
+                      ...expectedOrgs[0],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    node: {
+                      ...expectedOrgs[1],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'organizations',
+                    expectedOrgs[0]._key,
+                  ),
+                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
           })
         })
       })
@@ -3990,10 +4708,13 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             try {
               const connectionArgs = {}
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
@@ -4001,7 +4722,7 @@ describe('given the load organizations connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByDomainId.`,
             ])
@@ -4016,13 +4737,16 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             try {
               const connectionArgs = {
                 first: 1,
                 last: 1,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
@@ -4030,7 +4754,7 @@ describe('given the load organizations connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByDomainId.`,
             ])
@@ -4046,7 +4770,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   first: -1,
@@ -4062,7 +4786,7 @@ describe('given the load organizations connection function', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` set below zero for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4077,7 +4801,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   last: -1,
@@ -4093,7 +4817,7 @@ describe('given the load organizations connection function', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` set below zero for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4110,7 +4834,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   first: 101,
@@ -4126,7 +4850,7 @@ describe('given the load organizations connection function', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` to 101 for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4141,7 +4865,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   last: 101,
@@ -4157,7 +4881,7 @@ describe('given the load organizations connection function', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` to 101 for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4177,11 +4901,11 @@ describe('given the load organizations connection function', () => {
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   first: invalidInput,
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
@@ -4213,11 +4937,11 @@ describe('given the load organizations connection function', () => {
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   last: invalidInput,
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
@@ -4245,7 +4969,7 @@ describe('given the load organizations connection function', () => {
             const query = jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
-  
+
             const connectionLoader = loadOrgConnectionsByDomainId({
               query,
               language: 'en',
@@ -4253,18 +4977,21 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             try {
               const connectionArgs = {
                 first: 5,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(
                 new Error('Unable to load organization(s). Please try again.'),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `Database error occurred while user: ${user._key} was trying to gather orgs in loadOrgConnectionsByDomainId, error: Error: Database error occurred.`,
             ])
@@ -4279,7 +5006,7 @@ describe('given the load organizations connection function', () => {
                 },
               }
               const query = jest.fn().mockReturnValueOnce(cursor)
-  
+
               const connectionLoader = loadOrgConnectionsByDomainId({
                 query,
                 language: 'en',
@@ -4287,7 +5014,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   first: 5,
@@ -4298,10 +5025,12 @@ describe('given the load organizations connection function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error('Unable to load organization(s). Please try again.'),
+                  new Error(
+                    'Unable to load organization(s). Please try again.',
+                  ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadOrgConnectionsByDomainId, error: Error: Cursor error occurred.`,
               ])
@@ -4335,14 +5064,17 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             try {
               const connectionArgs = {}
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByDomainId.`,
             ])
@@ -4357,17 +5089,20 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             try {
               const connectionArgs = {
                 first: 1,
                 last: 1,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByDomainId.`,
             ])
@@ -4383,7 +5118,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   first: -1,
@@ -4395,7 +5130,7 @@ describe('given the load organizations connection function', () => {
               } catch (err) {
                 expect(err).toEqual(new Error('todo'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` set below zero for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4410,7 +5145,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   last: -1,
@@ -4422,7 +5157,7 @@ describe('given the load organizations connection function', () => {
               } catch (err) {
                 expect(err).toEqual(new Error('todo'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` set below zero for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4439,7 +5174,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   first: 101,
@@ -4451,7 +5186,7 @@ describe('given the load organizations connection function', () => {
               } catch (err) {
                 expect(err).toEqual(new Error('todo'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` to 101 for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4466,7 +5201,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   last: 101,
@@ -4478,7 +5213,7 @@ describe('given the load organizations connection function', () => {
               } catch (err) {
                 expect(err).toEqual(new Error('todo'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` to 101 for: loadOrgConnectionsByDomainId.`,
               ])
@@ -4498,11 +5233,11 @@ describe('given the load organizations connection function', () => {
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   first: invalidInput,
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
@@ -4530,11 +5265,11 @@ describe('given the load organizations connection function', () => {
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   last: invalidInput,
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
@@ -4558,7 +5293,7 @@ describe('given the load organizations connection function', () => {
             const query = jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
-  
+
             const connectionLoader = loadOrgConnectionsByDomainId({
               query,
               language: 'fr',
@@ -4566,16 +5301,19 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             })
-  
+
             try {
               const connectionArgs = {
                 first: 5,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `Database error occurred while user: ${user._key} was trying to gather orgs in loadOrgConnectionsByDomainId, error: Error: Database error occurred.`,
             ])
@@ -4590,7 +5328,7 @@ describe('given the load organizations connection function', () => {
                 },
               }
               const query = jest.fn().mockReturnValueOnce(cursor)
-  
+
               const connectionLoader = loadOrgConnectionsByDomainId({
                 query,
                 language: 'fr',
@@ -4598,7 +5336,7 @@ describe('given the load organizations connection function', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               try {
                 const connectionArgs = {
                   first: 5,
@@ -4610,7 +5348,7 @@ describe('given the load organizations connection function', () => {
               } catch (err) {
                 expect(err).toEqual(new Error('todo'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadOrgConnectionsByDomainId, error: Error: Cursor error occurred.`,
               ])
