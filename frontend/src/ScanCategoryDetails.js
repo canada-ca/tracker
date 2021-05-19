@@ -39,42 +39,105 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
   const webSummary =
     categoryName === 'https' ? (
       <Box>
-        <Text>Implementation: {data?.implementation}</Text>
-        <Text>Enforced: {data?.enforced}</Text>
-        <Text>HSTS: {data?.hsts}</Text>
-        <Text>HSTS Age: {data?.hstsAge}</Text>
-        <Text>Preloaded: {data?.preloaded}</Text>
+        <Stack isInline>
+          <Text fontWeight="bold">Implementation:</Text>
+          <Text>{data?.implementation}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">Enforcement: </Text>
+          <Text>{data?.enforced}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">HSTS Status:</Text>
+          <Text>{data?.hsts}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">HSTS Age:</Text>
+          <Text>{data?.hstsAge}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">Preloaded Status:</Text>
+          <Text> {data?.preloaded}</Text>
+        </Stack>
       </Box>
     ) : categoryName === 'ssl' ? (
       <Box>
-        <Text>
-          CCS Injection Vulnerability:{' '}
-          {data?.ccsInjectionVulnerable ? t`VULNERABLE` : t`SECURE`}
-        </Text>
-        <Text>
-          Heartbleed Vulnerability:{' '}
-          {data?.heartbleedVulnerable ? t`VULNERABLE` : t`SECURE`}
-        </Text>
-        <Text>
-          Supports ECDH Key ExchangeL{' '}
-          {data?.supportsEcdhKeyExchange ? t`YES` : t`NO`}
-        </Text>
+        <Stack isInline>
+          <Text fontWeight="bold">CCS Injection Vulnerability:</Text>
+          <Text>
+            {data?.ccsInjectionVulnerable ? t`Vulnerable` : t`Secure`}
+          </Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">Heartbleed Vulnerability:</Text>
+          <Text>{data?.heartbleedVulnerable ? t`Vulnerable` : t`Secure`}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">Supports ECDH Key Exchange:</Text>
+          <Text>{data?.supportsEcdhKeyExchange ? t`Yes` : t`No`}</Text>
+        </Stack>
       </Box>
     ) : null
+
+  const mapCiphers = (cipherList) => {
+    return (
+      <Box px="2">
+        {cipherList.length > 0 ? (
+          cipherList.map((cipher, id) => {
+            return <Text key={id}>{cipher}</Text>
+          })
+        ) : (
+          <Text>None</Text>
+        )}
+      </Box>
+    )
+  }
 
   const ciphers = categoryName === 'ssl' && (
     <Box>
       <Stack>
-        <Text>Strong Ciphers: {data?.strongCiphers}</Text>
-        <Text>Acceptable Ciphers: {data?.acceptableCiphers}</Text>
-        <Text>Weak Ciphers: {data?.weakCiphers}</Text>
+        <Box bg="strongMuted">
+          <Box bg="strong" color="white" px="2">
+            <Text fontWeight="bold">Strong Ciphers:</Text>
+          </Box>
+          {mapCiphers(data?.strongCiphers)}
+        </Box>
+        <Divider />
+        <Box bg="moderateMuted">
+          <Box bg="moderate" color="white" px="2">
+            <Text fontWeight="bold">Acceptable Ciphers:</Text>
+          </Box>
+          {mapCiphers(data?.acceptableCiphers)}
+        </Box>
+        <Divider />
+        <Box bg="weakMuted">
+          <Box bg="weak" color="white" px="2">
+            <Text fontWeight="bold">Weak Ciphers:</Text>
+          </Box>
+          {mapCiphers(data?.weakCiphers)}
+        </Box>
       </Stack>
-      <Divider borderColor="gray.900" />
+      {/* <Divider />
       <Stack>
-        <Text>Strong Curves: {data?.strongCurves}</Text>
-        <Text>Acceptable Curves: {data?.acceptableCurves}</Text>
-        <Text>Weak Curves: {data?.weakCurves}</Text>
-      </Stack>
+        <Box bg="strongMuted">
+          <Box bg="strong" color="white" px="2">
+            <Text fontWeight="bold">Strong Curves:</Text>
+          </Box>
+          {mapCiphers(data?.strongCurves)}
+        </Box>
+        <Box bg="moderateMuted">
+          <Box bg="moderate" color="white" px="2">
+            <Text fontWeight="bold">Acceptable Curves:</Text>
+          </Box>
+          {mapCiphers(data?.acceptableCurves)}
+        </Box>
+        <Box bg="weakMuted">
+          <Box bg="weak" color="white" px="2">
+            <Text fontWeight="bold">Weak Curves:</Text>
+          </Box>
+          {mapCiphers(data?.weakCurves)}
+        </Box>
+      </Stack> */}
     </Box>
   )
 
@@ -97,6 +160,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               variant="primary"
               onClick={handleShowSummary}
               w="100%"
+              mb="2"
             >
               <Trans>Summary</Trans>
             </TrackerButton>
@@ -112,6 +176,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               variant="primary"
               onClick={handleShowCiphers}
               w="100%"
+              mb="2"
             >
               <Trans>Ciphers & Curves</Trans>
             </TrackerButton>

@@ -78,10 +78,10 @@ export default function DmarcGuidancePage() {
       <Tabs isFitted>
         <TabList mb="4">
           <Tab>
-            <Trans>Web Results</Trans>
+            <Trans>Web Guidance</Trans>
           </Tab>
           <Tab>
-            <Trans>Email Results</Trans>
+            <Trans>Email Guidance</Trans>
           </Tab>
         </TabList>
         <TabPanels>
