@@ -85,15 +85,19 @@ describe('user sets a new phone number', () => {
             emailValidated: false,
           })
         })
-        it('returns status text', async () => {
+        it('returns status text and updated user', async () => {
+          const newPhoneNumber = '+12345678901'
           const response = await graphql(
             schema,
             `
               mutation {
-                setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
                     ... on SetPhoneNumberResult {
                       status
+                      user {
+                        phoneNumber
+                      }
                     }
                     ... on SetPhoneNumberError {
                       code
@@ -135,6 +139,9 @@ describe('user sets a new phone number', () => {
                 result: {
                   status:
                     'Phone number has been successfully set, you will receive a verification text message shortly.',
+                  user: {
+                    phoneNumber: newPhoneNumber,
+                  },
                 },
               },
             },
@@ -148,12 +155,13 @@ describe('user sets a new phone number', () => {
 
           expect(response).toEqual(expectedResult)
           expect(mockNotify).toHaveBeenCalledWith({
-            phoneNumber: '+12345678901',
+            phoneNumber: newPhoneNumber,
             user,
           })
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully set phone number.`,
           ])
+          expect(user.phoneNumber).toEqual(newPhoneNumber)
         })
       })
       describe('user is phone validated', () => {
@@ -170,15 +178,19 @@ describe('user sets a new phone number', () => {
               tfaSendMethod: 'none',
             })
           })
-          it('returns status text', async () => {
+          it('returns status text and updated user', async () => {
+            const newPhoneNumber = '+12345678901'
             const response = await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -220,6 +232,9 @@ describe('user sets a new phone number', () => {
                   result: {
                     status:
                       'Phone number has been successfully set, you will receive a verification text message shortly.',
+                    user: {
+                      phoneNumber: newPhoneNumber,
+                    },
                   },
                 },
               },
@@ -233,22 +248,27 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: '+12345678901',
+              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
+            expect(user.phoneNumber).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as none', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -291,14 +311,18 @@ describe('user sets a new phone number', () => {
             expect(user.tfaSendMethod).toEqual('none')
           })
           it('sets phoneValidated to false', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -354,15 +378,19 @@ describe('user sets a new phone number', () => {
               tfaSendMethod: 'email',
             })
           })
-          it('returns status text', async () => {
+          it('returns status text and update user', async () => {
+            const newPhoneNumber = '+12345678901'
             const response = await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -404,6 +432,9 @@ describe('user sets a new phone number', () => {
                   result: {
                     status:
                       'Phone number has been successfully set, you will receive a verification text message shortly.',
+                    user: {
+                      phoneNumber: newPhoneNumber,
+                    },
                   },
                 },
               },
@@ -417,22 +448,27 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: '+12345678901',
+              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
+            expect(user.phoneNumber).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as email', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -475,14 +511,18 @@ describe('user sets a new phone number', () => {
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -538,15 +578,19 @@ describe('user sets a new phone number', () => {
               tfaSendMethod: 'email',
             })
           })
-          it('returns status text', async () => {
+          it('returns status text and updated user', async () => {
+            const newPhoneNumber = '+12345678901'
             const response = await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -588,6 +632,9 @@ describe('user sets a new phone number', () => {
                   result: {
                     status:
                       'Phone number has been successfully set, you will receive a verification text message shortly.',
+                    user: {
+                      phoneNumber: newPhoneNumber,
+                    },
                   },
                 },
               },
@@ -601,22 +648,27 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: '+12345678901',
+              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
+            expect(user.phoneNumber).toEqual(newPhoneNumber)
           })
           it('sets tfaSendMethod to email', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -659,14 +711,18 @@ describe('user sets a new phone number', () => {
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -730,14 +786,19 @@ describe('user sets a new phone number', () => {
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
+          const newPhoneNumber = '+12345678901'
+
           const response = await graphql(
             schema,
             `
               mutation {
-                setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                setPhoneNumber(input: { phoneNumber: ${newPhoneNumber} }) {
                   result {
                     ... on SetPhoneNumberResult {
                       status
+                      user {
+                        phoneNumber
+                      }
                     }
                     ... on SetPhoneNumberError {
                       code
@@ -812,15 +873,19 @@ describe('user sets a new phone number', () => {
             emailValidated: false,
           })
         })
-        it('returns status text', async () => {
+        it('returns status text and updated user', async () => {
+          const newPhoneNumber = '+12345678901'
           const response = await graphql(
             schema,
             `
               mutation {
-                setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
                     ... on SetPhoneNumberResult {
                       status
+                      user {
+                        phoneNumber
+                      }
                     }
                     ... on SetPhoneNumberError {
                       code
@@ -861,6 +926,9 @@ describe('user sets a new phone number', () => {
               setPhoneNumber: {
                 result: {
                   status: 'todo',
+                  user: {
+                    phoneNumber: newPhoneNumber,
+                  },
                 },
               },
             },
@@ -874,12 +942,13 @@ describe('user sets a new phone number', () => {
 
           expect(response).toEqual(expectedResult)
           expect(mockNotify).toHaveBeenCalledWith({
-            phoneNumber: '+12345678901',
+            phoneNumber: newPhoneNumber,
             user,
           })
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully set phone number.`,
           ])
+          expect(user.phoneNumber).toEqual(newPhoneNumber)
         })
       })
       describe('user is phone validated', () => {
@@ -896,15 +965,19 @@ describe('user sets a new phone number', () => {
               tfaSendMethod: 'none',
             })
           })
-          it('returns status text', async () => {
+          it('returns status text and updated user', async () => {
+            const newPhoneNumber = '+12345678901'
             const response = await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: ${newPhoneNumber} }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -945,6 +1018,9 @@ describe('user sets a new phone number', () => {
                 setPhoneNumber: {
                   result: {
                     status: 'todo',
+                    user: {
+                      phoneNumber: newPhoneNumber,
+                    },
                   },
                 },
               },
@@ -958,22 +1034,27 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: '+12345678901',
+              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
+            expect(user.phoneNumber).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as none', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1016,14 +1097,18 @@ describe('user sets a new phone number', () => {
             expect(user.tfaSendMethod).toEqual('none')
           })
           it('sets phoneValidated to false', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1080,14 +1165,18 @@ describe('user sets a new phone number', () => {
             })
           })
           it('returns status text', async () => {
+            const newPhoneNumber = '+12345678901'
             const response = await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1128,6 +1217,9 @@ describe('user sets a new phone number', () => {
                 setPhoneNumber: {
                   result: {
                     status: 'todo',
+                    user: {
+                      phoneNumber: newPhoneNumber,
+                    },
                   },
                 },
               },
@@ -1141,22 +1233,27 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: '+12345678901',
+              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
+            expect(user.phoneNumber).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as email', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1199,14 +1296,18 @@ describe('user sets a new phone number', () => {
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1263,14 +1364,18 @@ describe('user sets a new phone number', () => {
             })
           })
           it('returns status text', async () => {
+            const newPhoneNumber = '+12345678901'
             const response = await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1311,6 +1416,9 @@ describe('user sets a new phone number', () => {
                 setPhoneNumber: {
                   result: {
                     status: 'todo',
+                    user: {
+                      phoneNumber: newPhoneNumber,
+                    },
                   },
                 },
               },
@@ -1324,22 +1432,27 @@ describe('user sets a new phone number', () => {
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
-              phoneNumber: '+12345678901',
+              phoneNumber: newPhoneNumber,
               user,
             })
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
+            expect(user.phoneNumber).toEqual(newPhoneNumber)
           })
           it('sets tfaSendMethod to email', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1382,14 +1495,18 @@ describe('user sets a new phone number', () => {
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
+            const newPhoneNumber = '+12345678901'
             await graphql(
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
+                        user {
+                          phoneNumber
+                        }
                       }
                       ... on SetPhoneNumberError {
                         code
@@ -1453,11 +1570,13 @@ describe('user sets a new phone number', () => {
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
+          const newPhoneNumber = '+12345678901'
+
           const response = await graphql(
             schema,
             `
               mutation {
-                setPhoneNumber(input: { phoneNumber: "+12345678901" }) {
+                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
                     ... on SetPhoneNumberResult {
                       status
