@@ -793,7 +793,7 @@ describe('user sets a new phone number', () => {
             schema,
             `
               mutation {
-                setPhoneNumber(input: { phoneNumber: ${newPhoneNumber} }) {
+                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
                     ... on SetPhoneNumberResult {
                       status
@@ -972,7 +972,7 @@ describe('user sets a new phone number', () => {
               schema,
               `
                 mutation {
-                  setPhoneNumber(input: { phoneNumber: ${newPhoneNumber} }) {
+                  setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
                       ... on SetPhoneNumberResult {
                         status
