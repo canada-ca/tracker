@@ -40,40 +40,56 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
     categoryName === 'https' ? (
       <Box>
         <Stack isInline>
-          <Text fontWeight="bold">Implementation:</Text>
+          <Text fontWeight="bold">
+            <Trans>Implementation:</Trans>
+          </Text>
           <Text>{data?.implementation}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">Enforcement: </Text>
+          <Text fontWeight="bold">
+            <Trans>Enforcement:</Trans>
+          </Text>
           <Text>{data?.enforced}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">HSTS Status:</Text>
+          <Text fontWeight="bold">
+            <Trans>HSTS Status:</Trans>
+          </Text>
           <Text>{data?.hsts}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">HSTS Age:</Text>
+          <Text fontWeight="bold">
+            <Trans>HSTS Age:</Trans>
+          </Text>
           <Text>{data?.hstsAge}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">Preloaded Status:</Text>
+          <Text fontWeight="bold">
+            <Trans>Preloaded Status:</Trans>
+          </Text>
           <Text> {data?.preloaded}</Text>
         </Stack>
       </Box>
     ) : categoryName === 'ssl' ? (
       <Box>
         <Stack isInline>
-          <Text fontWeight="bold">CCS Injection Vulnerability:</Text>
+          <Text fontWeight="bold">
+            <Trans>CCS Injection Vulnerability:</Trans>
+          </Text>
           <Text>
             {data?.ccsInjectionVulnerable ? t`Vulnerable` : t`Secure`}
           </Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">Heartbleed Vulnerability:</Text>
+          <Text fontWeight="bold">
+            <Trans>Heartbleed Vulnerability:</Trans>
+          </Text>
           <Text>{data?.heartbleedVulnerable ? t`Vulnerable` : t`Secure`}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">Supports ECDH Key Exchange:</Text>
+          <Text fontWeight="bold">
+            <Trans>Supports ECDH Key Exchange:</Trans>
+          </Text>
           <Text>{data?.supportsEcdhKeyExchange ? t`Yes` : t`No`}</Text>
         </Stack>
       </Box>
@@ -87,7 +103,9 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
             return <Text key={id}>{cipher}</Text>
           })
         ) : (
-          <Text>None</Text>
+          <Text>
+            <Trans>None</Trans>
+          </Text>
         )}
       </Box>
     )
@@ -98,46 +116,31 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
       <Stack>
         <Box bg="strongMuted">
           <Box bg="strong" color="white" px="2">
-            <Text fontWeight="bold">Strong Ciphers:</Text>
+            <Text fontWeight="bold">
+              <Trans>Strong Ciphers:</Trans>
+            </Text>
           </Box>
           {mapCiphers(data?.strongCiphers)}
         </Box>
         <Divider />
         <Box bg="moderateMuted">
           <Box bg="moderate" color="white" px="2">
-            <Text fontWeight="bold">Acceptable Ciphers:</Text>
+            <Text fontWeight="bold">
+              <Trans>Acceptable Ciphers:</Trans>
+            </Text>
           </Box>
           {mapCiphers(data?.acceptableCiphers)}
         </Box>
         <Divider />
         <Box bg="weakMuted">
           <Box bg="weak" color="white" px="2">
-            <Text fontWeight="bold">Weak Ciphers:</Text>
+            <Text fontWeight="bold">
+              <Trans>Weak Ciphers:</Trans>
+            </Text>
           </Box>
           {mapCiphers(data?.weakCiphers)}
         </Box>
       </Stack>
-      {/* <Divider />
-      <Stack>
-        <Box bg="strongMuted">
-          <Box bg="strong" color="white" px="2">
-            <Text fontWeight="bold">Strong Curves:</Text>
-          </Box>
-          {mapCiphers(data?.strongCurves)}
-        </Box>
-        <Box bg="moderateMuted">
-          <Box bg="moderate" color="white" px="2">
-            <Text fontWeight="bold">Acceptable Curves:</Text>
-          </Box>
-          {mapCiphers(data?.acceptableCurves)}
-        </Box>
-        <Box bg="weakMuted">
-          <Box bg="weak" color="white" px="2">
-            <Text fontWeight="bold">Weak Curves:</Text>
-          </Box>
-          {mapCiphers(data?.weakCurves)}
-        </Box>
-      </Stack> */}
     </Box>
   )
 
@@ -178,7 +181,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               w="100%"
               mb="2"
             >
-              <Trans>Ciphers & Curves</Trans>
+              <Trans>Ciphers</Trans>
             </TrackerButton>
             <Collapse isOpen={showCiphers}>{ciphers}</Collapse>
           </Box>
