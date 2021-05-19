@@ -9,8 +9,8 @@ import { Trans, t } from '@lingui/macro'
 function ScanCategoryDetails({ categoryName, categoryData }) {
   const [showCategory, setShowCategory] = useState(true)
   const handleShowCategory = () => setShowCategory(!showCategory)
-  const [showSummary, setShowSummary] = useState(true)
-  const handleShowSummary = () => setShowSummary(!showSummary)
+  // const [showSummary, setShowSummary] = useState(true)
+  // const handleShowSummary = () => setShowSummary(!showSummary)
   const [showCiphers, setShowCiphers] = useState(true)
   const handleShowCiphers = () => setShowCiphers(!showCiphers)
 
@@ -155,20 +155,8 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         </Heading>
       </TrackerButton>
       <Collapse isOpen={showCategory}>
-        {webSummary && (
-          <Box>
-            <TrackerButton
-              variant="primary"
-              onClick={handleShowSummary}
-              w="100%"
-              mb="2"
-            >
-              <Trans>Summary</Trans>
-            </TrackerButton>
-            <Collapse isOpen={showSummary}>{webSummary}</Collapse>
-            <Divider />
-          </Box>
-        )}
+        {webSummary}
+        <Divider />
         {tagDetails}
         {ciphers && (
           <Box>
