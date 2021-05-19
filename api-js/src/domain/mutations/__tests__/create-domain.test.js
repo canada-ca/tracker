@@ -1,5 +1,4 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
@@ -10,13 +9,13 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
+import { checkPermission, userRequired, checkSuperAdmin } from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import {
   loadOrgByKey,
   loadOrgConnectionsByDomainId,
 } from '../../../organization/loaders'
-import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -46,53 +45,9 @@ describe('create a domain', () => {
   })
 
   beforeEach(async () => {
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            result {
-              ... on AuthResult {
-                user {
-                  id
-                }
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        collections,
-        transaction,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          loadUserByUserName: loadUserByUserName({ query }),
-        },
-        notify: {
-          sendVerificationEmail: jest.fn(),
-        },
-        request: {
-          protocol: 'https',
-          get: (text) => text,
-        },
-      },
-    )
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -117,12 +72,6 @@ describe('create a domain', () => {
         },
       },
     })
-
-    const userCursor = await query`
-      FOR user IN users
-        RETURN user
-    `
-    user = await userCursor.next()
     consoleOutput.length = 0
   })
 
@@ -201,6 +150,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -349,6 +299,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -474,6 +425,7 @@ describe('create a domain', () => {
                 userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
               }),
+              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
             },
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
@@ -598,6 +550,7 @@ describe('create a domain', () => {
                 userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
               }),
+              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
             },
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
@@ -757,6 +710,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -890,6 +844,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1023,6 +978,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1040,9 +996,9 @@ describe('create a domain', () => {
           )
 
           const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
+            FOR domain IN domains
+              RETURN domain
+          `
           const domain = await domainCursor.next()
 
           const expectedResponse = {
