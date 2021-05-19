@@ -83,7 +83,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   })
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
-    refetchQueries: ['AdminPanel'],
+    refetchQueries: ['PaginatedOrgDomains'],
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -141,7 +141,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           authorization: currentUser.jwt,
         },
       },
-      refetchQueries: ['AdminPanel'],
+      refetchQueries: ['PaginatedOrgDomains'],
       onError(error) {
         toast({
           title: t`An error occurred.`,
@@ -188,7 +188,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   )
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
-    refetchQueries: ['AdminPanel'],
+    refetchQueries: ['PaginatedOrgDomains'],
     context: {
       headers: {
         authorization: currentUser.jwt,
