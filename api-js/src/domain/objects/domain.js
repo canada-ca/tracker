@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro'
 import {
+  GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -57,6 +58,11 @@ export const domainType = new GraphQLObjectType({
         search: {
           type: GraphQLString,
           description: 'String argument used to search for organizations.',
+        },
+        includeSuperAdminOrg: {
+          type: GraphQLBoolean,
+          description:
+            'Filter org list to either include or exclude the super admin org.',
         },
         ...connectionArgs,
       },
