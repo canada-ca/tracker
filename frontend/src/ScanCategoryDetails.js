@@ -100,7 +100,11 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
       <Box px="2">
         {cipherList.length > 0 ? (
           cipherList.map((cipher, id) => {
-            return <Text key={id}>{cipher}</Text>
+            return (
+              <Text key={id} isTruncated fontSize={['sm', 'md']}>
+                {cipher}
+              </Text>
+            )
           })
         ) : (
           <Text>
