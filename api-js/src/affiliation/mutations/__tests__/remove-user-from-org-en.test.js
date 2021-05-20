@@ -1429,7 +1429,7 @@ describe('removing a user from an organization', () => {
         beforeEach(async () => {
           ;({ query, drop, truncate, collections, transaction } = await ensure({
             type: 'database',
-            name: 'not_an_admin_' + dbNameFromFile(__filename),
+            name: 'not_found_' + dbNameFromFile(__filename),
             url,
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
@@ -1559,7 +1559,7 @@ describe('removing a user from an organization', () => {
         beforeEach(async () => {
           ;({ query, drop, truncate, collections, transaction } = await ensure({
             type: 'database',
-            name: 'not_an_admin_' + dbNameFromFile(__filename),
+            name: 'ck_user_perms_' + dbNameFromFile(__filename),
             url,
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
@@ -1692,7 +1692,7 @@ describe('removing a user from an organization', () => {
         beforeEach(async () => {
           ;({ query, drop, truncate, collections } = await ensure({
             type: 'database',
-            name: 'not_an_admin_' + dbNameFromFile(__filename),
+            name: 'running_txn_' + dbNameFromFile(__filename),
             url,
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
@@ -1823,7 +1823,7 @@ describe('removing a user from an organization', () => {
         beforeEach(async () => {
           ;({ query, drop, truncate, collections } = await ensure({
             type: 'database',
-            name: 'not_an_admin_' + dbNameFromFile(__filename),
+            name: 'commit_txn_' + dbNameFromFile(__filename),
             url,
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
