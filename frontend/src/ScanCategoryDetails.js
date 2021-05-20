@@ -9,8 +9,6 @@ import { Trans, t } from '@lingui/macro'
 function ScanCategoryDetails({ categoryName, categoryData }) {
   const [showCategory, setShowCategory] = useState(true)
   const handleShowCategory = () => setShowCategory(!showCategory)
-  // const [showSummary, setShowSummary] = useState(true)
-  // const handleShowSummary = () => setShowSummary(!showSummary)
   const [showCiphers, setShowCiphers] = useState(true)
   const handleShowCiphers = () => setShowCiphers(!showCiphers)
 
