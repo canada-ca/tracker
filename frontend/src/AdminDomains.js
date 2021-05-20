@@ -103,7 +103,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       if (createDomain.result.__typename === 'Domain') {
         toast({
           title: t`Domain added`,
-          description: t`${createDomain.domain.domain} was added to ${orgSlug}`,
+          description: t`${createDomain.result.domain} was added to ${orgSlug}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
