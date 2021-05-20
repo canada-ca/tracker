@@ -807,7 +807,7 @@ describe('removing a user from an organization', () => {
 
     describe('given an unsuccessful removal', () => {
       describe('org is not found', () => {
-        let query, drop, truncate, collections, transaction, orgOne, admin, user
+        let query, drop, truncate, collections, transaction, admin, user
 
         beforeEach(async () => {
           ;({ query, drop, truncate, collections, transaction } = await ensure({
