@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Stack, Text, Select, useToast } from '@chakra-ui/core'
+import { Stack, Text, Select, useToast, Icon } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
@@ -8,6 +8,8 @@ import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
+import { TrackerButton } from './TrackerButton'
+import { Link as RouteLink } from 'react-router-dom'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
@@ -86,7 +88,7 @@ export default function AdminPage() {
           <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
             <Trans>Welcome, Admin</Trans>
           </Text>
-          <Stack isInline align="center">
+          <Stack flexDirection={['column', 'row']} align="center">
             <Text fontWeight="bold" fontSize="2xl">
               <Trans>Organization: </Trans>
             </Text>
@@ -101,6 +103,16 @@ export default function AdminPage() {
             >
               {options}
             </Select>
+            <TrackerButton
+              ml={['0', 'auto']}
+              w={['100%', 'auto']}
+              variant="primary"
+              as={RouteLink}
+              to="/create-organization"
+            >
+              <Icon name="add" />
+              <Trans>Create Organization</Trans>
+            </TrackerButton>
           </Stack>
           {options.length > 1 && orgDetails ? (
             <Stack>

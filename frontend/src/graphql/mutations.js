@@ -372,4 +372,52 @@ export const VERIFY_ACCOUNT = gql`
   }
 `
 
+export const CREATE_ORGANIZATION = gql`
+  mutation CreateOrganization(
+    $acronymEN: Acronym!
+    $acronymFR: Acronym!
+    $nameEN: String!
+    $nameFR: String!
+    $zoneEN: String!
+    $zoneFR: String!
+    $sectorEN: String!
+    $sectorFR: String!
+    $countryEN: String!
+    $countryFR: String!
+    $provinceEN: String!
+    $provinceFR: String!
+    $cityEN: String!
+    $cityFR: String!
+  ) {
+    createOrganization(
+      input: {
+        acronymEN: $acronymEN
+        acronymFR: $acronymFR
+        nameEN: $nameEN
+        nameFR: $nameFR
+        zoneEN: $zoneEN
+        zoneFR: $zoneFR
+        sectorEN: $sectorEN
+        sectorFR: $sectorFR
+        countryEN: $countryEN
+        countryFR: $countryFR
+        provinceEN: $provinceEN
+        provinceFR: $provinceFR
+        cityEN: $cityEN
+        cityFR: $cityFR
+      }
+    ) {
+      result {
+        ... on Organization {
+          slug
+        }
+        ... on OrganizationError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''

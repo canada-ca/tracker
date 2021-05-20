@@ -36,6 +36,7 @@ const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
 const EmailValidationPage = lazy(() => import('./EmailValidationPage'))
+const CreateOrganizationPage = lazy(() => import('./CreateOrganizationPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -202,6 +203,13 @@ export default function App() {
               <Page path="/validate/:verifyToken" title={t`Email Verification`}>
                 <EmailValidationPage />
               </Page>
+
+              <PrivatePage
+                path="/create-organization"
+                title={t`Create Organization`}
+              >
+                <CreateOrganizationPage />
+              </PrivatePage>
 
               <Page component={PageNotFound} title="404" />
             </Switch>
