@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Stack, Text, Select, useToast, Icon } from '@chakra-ui/core'
+import { Stack, Text, Select, useToast, Icon, Divider } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
@@ -133,20 +133,23 @@ export default function AdminPage() {
     )
   } else {
     return (
-      <Stack align="center">
-        <Text fontSize="3xl" fontWeight="bold" textAlign="center">
-          <Trans>You do not have admin permissions in any organization</Trans>
-        </Text>
-        <TrackerButton
-          w={['100%', 'auto']}
-          variant="primary"
-          as={RouteLink}
-          to="/create-organization"
-        >
-          <Icon name="add" />
-          <Trans>Create Organization</Trans>
-        </TrackerButton>
-      </Stack>
+      <Layout>
+        <Stack align="center">
+          <Text fontSize="3xl" fontWeight="bold" textAlign="center">
+            <Trans>You do not have admin permissions in any organization</Trans>
+          </Text>
+          <Divider />
+          <TrackerButton
+            w={['100%', 'auto']}
+            variant="primary"
+            as={RouteLink}
+            to="/create-organization"
+          >
+            <Icon name="add" />
+            <Trans>Create Organization</Trans>
+          </TrackerButton>
+        </Stack>
+      </Layout>
     )
   }
 }

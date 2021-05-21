@@ -124,25 +124,24 @@ export default function CreateOrganizationPage() {
             countryFR: '',
           }}
           onSubmit={async (values) => {
-            // createOrganization({
-            //   variables: {
-            //     acronymEN: values.acronymEN,
-            //     acronymFR: values.acronymFR,
-            //     nameEN: values.nameEN,
-            //     nameFR: values.nameFR,
-            //     zoneEN: values.zoneEN,
-            //     zoneFR: values.zoneFR,
-            //     sectorEN: values.sectorEN,
-            //     sectorFR: values.sectorFR,
-            //     countryEN: values.countryEN,
-            //     countryFR: values.countryFR,
-            //     provinceEN: values.provinceEN,
-            //     provinceFR: values.provinceFR,
-            //     cityEN: values.cityEN,
-            //     cityFR: values.cityFR,
-            //   },
-            // })
-            window.alert(JSON.stringify(values))
+            createOrganization({
+              variables: {
+                acronymEN: values.acronymEN,
+                acronymFR: values.acronymFR,
+                nameEN: values.nameEN,
+                nameFR: values.nameFR,
+                zoneEN: values.zoneEN,
+                zoneFR: values.zoneFR,
+                sectorEN: values.sectorEN,
+                sectorFR: values.sectorFR,
+                countryEN: values.countryEN,
+                countryFR: values.countryFR,
+                provinceEN: values.provinceEN,
+                provinceFR: values.provinceFR,
+                cityEN: values.cityEN,
+                cityFR: values.cityFR,
+              },
+            })
           }}
         >
           {({
