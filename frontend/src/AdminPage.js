@@ -133,9 +133,20 @@ export default function AdminPage() {
     )
   } else {
     return (
-      <Text fontSize="3xl" fontWeight="bold" textAlign="center">
-        <Trans>You do not have admin permissions in any organization</Trans>
-      </Text>
+      <Stack align="center">
+        <Text fontSize="3xl" fontWeight="bold" textAlign="center">
+          <Trans>You do not have admin permissions in any organization</Trans>
+        </Text>
+        <TrackerButton
+          w={['100%', 'auto']}
+          variant="primary"
+          as={RouteLink}
+          to="/create-organization"
+        >
+          <Icon name="add" />
+          <Trans>Create Organization</Trans>
+        </TrackerButton>
+      </Stack>
     )
   }
 }

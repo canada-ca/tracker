@@ -7,6 +7,9 @@ import {
   Heading,
   Input,
   Text,
+  // FormLabel,
+  FormControl,
+  FormErrorMessage,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -19,6 +22,7 @@ import { useHistory, Link as RouteLink } from 'react-router-dom'
 import { TrackerButton } from './TrackerButton'
 import { object, string } from 'yup'
 import { i18n } from '@lingui/core'
+import { fieldRequirements } from './fieldRequirements'
 
 export default function CreateOrganizationPage() {
   const { currentUser } = useUserState()
@@ -26,7 +30,24 @@ export default function CreateOrganizationPage() {
   const history = useHistory()
 
   const validationSchema = object().shape({
-    nameEN: string(),
+    acronymEN: string()
+      .matches(
+        fieldRequirements.acronym.matches.regex,
+        i18n._(fieldRequirements.acronym.matches.message),
+      )
+      .max(
+        fieldRequirements.acronym.max.maxLength,
+        i18n._(fieldRequirements.acronym.max.message),
+      ),
+    acronymFR: string()
+      .matches(
+        fieldRequirements.acronym.matches.regex,
+        i18n._(fieldRequirements.acronym.matches.message),
+      )
+      .max(
+        fieldRequirements.acronym.max.maxLength,
+        i18n._(fieldRequirements.acronym.max.message),
+      ),
   })
 
   const [createOrganization, { loading }] = useMutation(CREATE_ORGANIZATION, {
@@ -85,6 +106,7 @@ export default function CreateOrganizationPage() {
     <Layout>
       <Box px="4" mx="auto" overflow="hidden">
         <Formik
+          validationSchema={validationSchema}
           initialValues={{
             nameEN: '',
             nameFR: '',
@@ -133,162 +155,207 @@ export default function CreateOrganizationPage() {
             <form id="form" onSubmit={handleSubmit}>
               <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
                 <Trans>
-                  Create an account by entering an email and password.
+                  Create an organization by filling out the following info in
+                  both English and French
                 </Trans>
               </Heading>
 
               <Stack mb="4">
                 <Text fontSize="lg" fontWeight="bold">
-                  <Trans>Name:</Trans>
+                  <Trans>Name</Trans>
                 </Text>
-                <Input
-                  type="nameEN"
-                  name="nameEN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.nameEN}
-                  placeholder="Name EN"
-                />
-                <Input
-                  type="nameFR"
-                  name="nameFR"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.nameFR}
-                  placeholder="Name FR"
-                />
+                <FormControl isRequired>
+                  <Input
+                    type="nameEN"
+                    name="nameEN"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.nameEN}
+                    placeholder={t`Name EN`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
+                <FormControl isRequired>
+                  <Input
+                    type="nameFR"
+                    name="nameFR"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.nameFR}
+                    placeholder={t`Name FR`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
               </Stack>
 
               <Stack mb="4">
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>Acronym:</Trans>
                 </Text>
-                <Input
-                  type="acronymEN"
-                  name="acronymEN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.acronymEN}
-                  placeholder="Acronym EN"
-                />
-                <Input
-                  type="acronymFR"
-                  name="acronymFR"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.acronymFR}
-                  placeholder="Acronym FR"
-                />
+                <FormControl isRequired>
+                  <Input
+                    type="acronymEN"
+                    name="acronymEN"
+                    id="acronymEN"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.acronymEN}
+                    placeholder={t`Acronym EN`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
+                <FormControl isRequired>
+                  <Input
+                    type="acronymFR"
+                    name="acronymFR"
+                    id="acronymFR"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.acronymFR}
+                    placeholder={t`Acronym FR`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
               </Stack>
 
               <Stack mb="4">
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>Zone:</Trans>
                 </Text>
-                <Input
-                  type="zoneEN"
-                  name="zoneEN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.zoneEN}
-                  placeholder="Zone EN"
-                />
-                <Input
-                  type="zoneFR"
-                  name="zoneFR"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.zoneFR}
-                  placeholder="Zone FR"
-                />
+                <FormControl isRequired>
+                  <Input
+                    type="zoneEN"
+                    name="zoneEN"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.zoneEN}
+                    placeholder={t`Zone EN`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
+                <FormControl isRequired>
+                  <Input
+                    type="zoneFR"
+                    name="zoneFR"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.zoneFR}
+                    placeholder={t`Zone FR`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
               </Stack>
 
               <Stack mb="4">
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>Sector:</Trans>
                 </Text>
-                <Input
-                  type="sectorEN"
-                  name="sectorEN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.sectorEN}
-                  placeholder="Sector EN"
-                />
-                <Input
-                  type="sectorFR"
-                  name="sectorFR"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.sectorFR}
-                  placeholder="Sector FR"
-                />
+                <FormControl>
+                  <Input
+                    type="sectorEN"
+                    name="sectorEN"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.sectorEN}
+                    placeholder={t`Sector EN`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
+                <FormControl>
+                  <Input
+                    type="sectorFR"
+                    name="sectorFR"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.sectorFR}
+                    placeholder={t`Sector FR`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
               </Stack>
 
               <Stack mb="4">
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>City:</Trans>
                 </Text>
-                <Input
-                  type="cityEN"
-                  name="cityEN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.cityEN}
-                  placeholder="City EN"
-                />
-                <Input
-                  type="cityFR"
-                  name="cityFR"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.cityFR}
-                  placeholder="City FR"
-                />
+                <FormControl>
+                  <Input
+                    type="cityEN"
+                    name="cityEN"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.cityEN}
+                    placeholder={t`City EN`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
+                <FormControl>
+                  <Input
+                    type="cityFR"
+                    name="cityFR"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.cityFR}
+                    placeholder={t`City FR`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
               </Stack>
 
               <Stack mb="4">
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>Province:</Trans>
                 </Text>
-                <Input
-                  type="provinceEN"
-                  name="provinceEN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.provinceEN}
-                  placeholder="Province EN"
-                />
-                <Input
-                  type="provinceFR"
-                  name="provinceFR"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.provinceFR}
-                  placeholder="Province FR"
-                />
+                <FormControl>
+                  <Input
+                    type="provinceEN"
+                    name="provinceEN"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.provinceEN}
+                    placeholder={t`Province EN`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
+                <FormControl>
+                  <Input
+                    type="provinceFR"
+                    name="provinceFR"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.provinceFR}
+                    placeholder={t`Province FR`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
               </Stack>
 
               <Stack mb="4">
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>Country:</Trans>
                 </Text>
-                <Input
-                  type="countryEN"
-                  name="countryEN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.countryEN}
-                  placeholder="Country EN"
-                />
-                <Input
-                  type="countryFR"
-                  name="countryFR"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.countryFR}
-                  placeholder="Country FR"
-                />
+                <FormControl>
+                  <Input
+                    type="countryEN"
+                    name="countryEN"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.countryEN}
+                    placeholder={t`Country EN`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
+                <FormControl>
+                  <Input
+                    type="countryFR"
+                    name="countryFR"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.countryFR}
+                    placeholder={t`Country FR`}
+                  />
+                  <FormErrorMessage>Error!</FormErrorMessage>
+                </FormControl>
               </Stack>
 
               <Stack spacing={4} isInline justifyContent="space-between" mb="4">
