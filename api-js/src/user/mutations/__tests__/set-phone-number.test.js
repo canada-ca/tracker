@@ -8,10 +8,9 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
+import { cleanseInput, decryptPhoneNumber } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
-import { decryptPhoneNumber } from '../../objects'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
@@ -255,7 +254,9 @@ describe('user sets a new phone number', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
+              newPhoneNumber,
+            )
           })
           it('tfaSendMethod stays as none', async () => {
             const newPhoneNumber = '+12345678901'
@@ -455,7 +456,9 @@ describe('user sets a new phone number', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
+              newPhoneNumber,
+            )
           })
           it('tfaSendMethod stays as email', async () => {
             const newPhoneNumber = '+12345678901'
@@ -655,7 +658,9 @@ describe('user sets a new phone number', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
+              newPhoneNumber,
+            )
           })
           it('sets tfaSendMethod to email', async () => {
             const newPhoneNumber = '+12345678901'
@@ -1041,7 +1046,9 @@ describe('user sets a new phone number', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
+              newPhoneNumber,
+            )
           })
           it('tfaSendMethod stays as none', async () => {
             const newPhoneNumber = '+12345678901'
@@ -1240,7 +1247,9 @@ describe('user sets a new phone number', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
+              newPhoneNumber,
+            )
           })
           it('tfaSendMethod stays as email', async () => {
             const newPhoneNumber = '+12345678901'
@@ -1439,7 +1448,9 @@ describe('user sets a new phone number', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully set phone number.`,
             ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
+              newPhoneNumber,
+            )
           })
           it('sets tfaSendMethod to email', async () => {
             const newPhoneNumber = '+12345678901'
