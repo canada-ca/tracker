@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: db
 
 resources:
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.5/manifests/arango-crd.yaml
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.5/manifests/arango-deployment.yaml
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.5/manifests/arango-storage.yaml
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.5/manifests/arango-deployment-replication.yaml
+- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.6/manifests/arango-crd.yaml
+- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.6/manifests/arango-deployment.yaml
+- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.6/manifests/arango-storage.yaml
+- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.1.6/manifests/arango-deployment-replication.yaml

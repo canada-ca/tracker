@@ -17,7 +17,7 @@ export const findVerifiedDomainByDomain = {
     args,
     {
       i18n,
-      loaders: { verifiedDomainLoaderByDomain },
+      loaders: { loadVerifiedDomainsById },
       validators: { cleanseInput },
     },
   ) => {
@@ -25,7 +25,7 @@ export const findVerifiedDomainByDomain = {
     const domainInput = cleanseInput(args.domain)
 
     // Retrieve domain by domain
-    const domain = await verifiedDomainLoaderByDomain.load(domainInput)
+    const domain = await loadVerifiedDomainsById.load(domainInput)
 
     if (typeof domain === 'undefined') {
       console.warn(`User could not retrieve verified domain.`)

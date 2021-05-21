@@ -6,6 +6,7 @@ import { Box, Flex, List, Image, ListItem } from '@chakra-ui/core'
 
 export const Footer = (props) => {
   const { i18n } = useLingui()
+  const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
   return (
     <Flex
@@ -28,17 +29,19 @@ export const Footer = (props) => {
             <ListItem>{child}</ListItem>
           ))}
         </List>
-        <Box py={4} width={{ base: 147.2 }} ml="auto">
-          <Image
-            src={wordmark}
-            width="100%"
-            alt={
-              i18n.locale === 'en'
-                ? 'Symbol of the Government of Canada'
-                : 'Symbole du gouvernement du Canada'
-            }
-          />
-        </Box>
+        {!smallDevice && (
+          <Box py={4} width={{ base: 147.2 }} ml="auto">
+            <Image
+              src={wordmark}
+              width="100%"
+              alt={
+                i18n.locale === 'en'
+                  ? 'Symbol of the Government of Canada'
+                  : 'Symbole du gouvernement du Canada'
+              }
+            />
+          </Box>
+        )}
       </Flex>
     </Flex>
   )

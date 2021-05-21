@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs'
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
-import request from 'supertest'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -12,12 +11,12 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('user sign up', () => {
+describe('testing user sign up', () => {
   let query,
     drop,
     truncate,
@@ -25,7 +24,9 @@ describe('user sign up', () => {
     transaction,
     schema,
     i18n,
-    mockTokenize
+    mockTokenize,
+    mockNotify,
+    request
 
   beforeAll(async () => {
     schema = new GraphQLSchema({
@@ -40,6 +41,10 @@ describe('user sign up', () => {
       options: databaseOptions({ rootPass }),
     }))
     mockTokenize = jest.fn().mockReturnValue('token')
+    request = {
+      protocol: 'https',
+      get: (text) => text,
+    }
   })
 
   let consoleOutput = []
@@ -50,6 +55,8 @@ describe('user sign up', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
+
+    mockNotify = jest.fn()
   })
 
   afterEach(async () => {
@@ -61,9 +68,23 @@ describe('user sign up', () => {
     await drop()
   })
 
-  describe('given successful sign up', () => {
-    describe('when user is not signing up without an invite token', () => {
-      describe('when the users preferred language is english', () => {
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        locale: 'en',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
+        locales: ['en', 'fr'],
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
+        },
+      })
+    })
+    describe('given a successful sign up', () => {
+      describe('when user is not signing up without an invite token', () => {
         it('returns auth result with user info', async () => {
           const response = await graphql(
             schema,
@@ -112,17 +133,20 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
 
           const cursor = await query`
-                      FOR user IN users
-                          FILTER user.userName == "test.account@istio.actually.exists"
-                          RETURN user
-                  `
+              FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+            `
           const users = await cursor.all()
 
           const expectedResult = {
@@ -148,10 +172,8 @@ describe('user sign up', () => {
             'User: test.account@istio.actually.exists successfully created a new account.',
           ])
         })
-      })
-      describe('when the users preferred language is french', () => {
-        it('returns auth result with user info', async () => {
-          const response = await graphql(
+        it('sends verification email', async () => {
+          await graphql(
             schema,
             `
               mutation {
@@ -161,7 +183,7 @@ describe('user sign up', () => {
                     userName: "test.account@istio.actually.exists"
                     password: "testpassword123"
                     confirmPassword: "testpassword123"
-                    preferredLang: FRENCH
+                    preferredLang: ENGLISH
                   }
                 ) {
                   result {
@@ -186,6 +208,7 @@ describe('user sign up', () => {
             `,
             null,
             {
+              request,
               query,
               collections,
               transaction,
@@ -197,80 +220,66 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
 
-          const cursor = await query`
-                      FOR user IN users
-                          FILTER user.userName == "test.account@istio.actually.exists"
-                          RETURN user
-                  `
-          const user = await cursor.next()
+          const user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
 
-          const expectedResult = {
-            data: {
-              signUp: {
-                result: {
-                  authToken: 'token',
-                  user: {
-                    id: `${toGlobalId('users', user._key)}`,
-                    userName: 'test.account@istio.actually.exists',
-                    displayName: 'Test Account',
-                    preferredLang: 'FRENCH',
-                    phoneValidated: false,
-                    emailValidated: false,
-                  },
-                },
+          const verifyUrl = `${request.protocol}://${request.get(
+            'host',
+          )}/validate/token`
+
+          expect(mockNotify).toHaveBeenCalledWith({
+            returnUser: user,
+            verifyUrl,
+          })
+        })
+      })
+      describe('when the user is signing up with an invite token', () => {
+        let org, token
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
               },
             },
-          }
-
-          expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            'User: test.account@istio.actually.exists successfully created a new account.',
-          ])
-        })
-      })
-    })
-    describe('when the user is signing up with an invite token', () => {
-      let org, token
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
+          })
+          token = tokenize({
+            parameters: {
+              userName: 'test.account@istio.actually.exists',
+              orgKey: org._key,
+              requestedRole: 'admin',
             },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
+          })
         })
-        token = tokenize({
-          parameters: {
-            userName: 'test.account@istio.actually.exists',
-            orgKey: org._key,
-            requestedRole: 'admin',
-          },
-        })
-      })
-      describe('when the users preferred language is english', () => {
         it('returns auth result with user info', async () => {
           const response = await graphql(
             schema,
@@ -321,9 +330,12 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -408,9 +420,12 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -437,95 +452,7 @@ describe('user sign up', () => {
 
           expect(checkAffiliation).toMatchObject(expectedAffiliation)
         })
-      })
-      describe('when the users preferred language is french', () => {
-        it('returns auth result with user info', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                signUp(
-                  input: {
-                    displayName: "Test Account"
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                    confirmPassword: "testpassword123"
-                    preferredLang: FRENCH
-                    signUpToken: "${token}"
-                  }
-                ) {
-                  result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
-                      }
-                    }
-                    ... on SignUpError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              auth: {
-                bcrypt,
-                tokenize: mockTokenize,
-                verifyToken: verifyToken({ i18n: {} }),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-              },
-            },
-          )
-
-          const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-          `
-          const user = await cursor.next()
-
-          const expectedResult = {
-            data: {
-              signUp: {
-                result: {
-                  authToken: 'token',
-                  user: {
-                    id: `${toGlobalId('users', user._key)}`,
-                    userName: 'test.account@istio.actually.exists',
-                    displayName: 'Test Account',
-                    preferredLang: 'FRENCH',
-                    phoneValidated: false,
-                    emailValidated: false,
-                  },
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            'User: test.account@istio.actually.exists successfully created a new account.',
-          ])
-        })
-        it('creates affiliation', async () => {
+        it('sends verification email', async () => {
           await graphql(
             schema,
             `
@@ -575,51 +502,31 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
 
-          const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-          `
-          const user = await cursor.next()
+          const user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
 
-          const affiliationCursor = await query`
-            FOR affiliation IN affiliations
-              FILTER affiliation._to == ${user._id}
-              RETURN affiliation
-          `
-          const checkAffiliation = await affiliationCursor.next()
+          const verifyUrl = `${request.protocol}://${request.get(
+            'host',
+          )}/validate/token`
 
-          const expectedAffiliation = {
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          }
-
-          expect(checkAffiliation).toMatchObject(expectedAffiliation)
+          expect(mockNotify).toHaveBeenCalledWith({
+            returnUser: user,
+            verifyUrl,
+          })
         })
-      })
-    })
-  })
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
       })
     })
     describe('given unsuccessful sign up', () => {
@@ -672,8 +579,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -744,8 +654,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -825,8 +738,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -936,9 +852,12 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                },
+                notify: {
+                  sendVerificationEmail: mockNotify,
                 },
               },
             )
@@ -1021,9 +940,12 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                },
+                notify: {
+                  sendVerificationEmail: mockNotify,
                 },
               },
             )
@@ -1105,8 +1027,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1160,7 +1085,7 @@ describe('user sign up', () => {
         it('throws an error', async () => {
           const mockedStep = jest
             .fn()
-            .mockReturnValueOnce({})
+            .mockReturnValueOnce({ next: jest.fn() })
             .mockRejectedValue('Transaction Step Error')
           const mockedTransaction = jest.fn().mockReturnValue({
             step: mockedStep,
@@ -1215,9 +1140,12 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1235,7 +1163,7 @@ describe('user sign up', () => {
       })
       describe('when committing transaction', () => {
         it('throws an error', async () => {
-          const mockedStep = jest.fn().mockReturnValue({})
+          const mockedStep = jest.fn().mockReturnValue({ next: jest.fn() })
           const mockedCommit = jest
             .fn()
             .mockRejectedValue('Transaction Commit Error')
@@ -1291,8 +1219,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1323,6 +1254,452 @@ describe('user sign up', () => {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
         },
+      })
+    })
+    describe('given successful sign up', () => {
+      describe('when user is not signing up without an invite token', () => {
+        it('returns auth result with user info', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signUp(
+                  input: {
+                    displayName: "Test Account"
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              request,
+              query,
+              collections,
+              transaction,
+              auth: {
+                bcrypt,
+                tokenize: mockTokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
+              },
+            },
+          )
+
+          const cursor = await query`
+                        FOR user IN users
+                            FILTER user.userName == "test.account@istio.actually.exists"
+                            RETURN user
+                    `
+          const user = await cursor.next()
+
+          const expectedResult = {
+            data: {
+              signUp: {
+                result: {
+                  authToken: 'token',
+                  user: {
+                    id: `${toGlobalId('users', user._key)}`,
+                    userName: 'test.account@istio.actually.exists',
+                    displayName: 'Test Account',
+                    preferredLang: 'FRENCH',
+                    phoneValidated: false,
+                    emailValidated: false,
+                  },
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            'User: test.account@istio.actually.exists successfully created a new account.',
+          ])
+        })
+        it('sends verification email', async () => {
+          await graphql(
+            schema,
+            `
+              mutation {
+                signUp(
+                  input: {
+                    displayName: "Test Account"
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    preferredLang: ENGLISH
+                  }
+                ) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              request,
+              query,
+              collections,
+              transaction,
+              auth: {
+                bcrypt,
+                tokenize: mockTokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
+              },
+            },
+          )
+
+          const user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
+
+          const verifyUrl = `${request.protocol}://${request.get(
+            'host',
+          )}/validate/token`
+
+          expect(mockNotify).toHaveBeenCalledWith({
+            returnUser: user,
+            verifyUrl,
+          })
+        })
+      })
+      describe('when the user is signing up with an invite token', () => {
+        let org, token
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          token = tokenize({
+            parameters: {
+              userName: 'test.account@istio.actually.exists',
+              orgKey: org._key,
+              requestedRole: 'admin',
+            },
+          })
+        })
+        it('returns auth result with user info', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  signUp(
+                    input: {
+                      displayName: "Test Account"
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
+                      preferredLang: FRENCH
+                      signUpToken: "${token}"
+                    }
+                  ) {
+                    result {
+                      ... on AuthResult {
+                        authToken
+                        user {
+                          id
+                          userName
+                          displayName
+                          preferredLang
+                          phoneValidated
+                          emailValidated
+                        }
+                      }
+                      ... on SignUpError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              request,
+              query,
+              collections,
+              transaction,
+              auth: {
+                bcrypt,
+                tokenize: mockTokenize,
+                verifyToken: verifyToken({ i18n: {} }),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
+              },
+            },
+          )
+
+          const cursor = await query`
+              FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+            `
+          const user = await cursor.next()
+
+          const expectedResult = {
+            data: {
+              signUp: {
+                result: {
+                  authToken: 'token',
+                  user: {
+                    id: `${toGlobalId('users', user._key)}`,
+                    userName: 'test.account@istio.actually.exists',
+                    displayName: 'Test Account',
+                    preferredLang: 'FRENCH',
+                    phoneValidated: false,
+                    emailValidated: false,
+                  },
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            'User: test.account@istio.actually.exists successfully created a new account.',
+          ])
+        })
+        it('creates affiliation', async () => {
+          await graphql(
+            schema,
+            `
+                mutation {
+                  signUp(
+                    input: {
+                      displayName: "Test Account"
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
+                      preferredLang: ENGLISH
+                      signUpToken: "${token}"
+                    }
+                  ) {
+                    result {
+                      ... on AuthResult {
+                        authToken
+                        user {
+                          id
+                          userName
+                          displayName
+                          preferredLang
+                          phoneValidated
+                          emailValidated
+                        }
+                      }
+                      ... on SignUpError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              request,
+              query,
+              collections,
+              transaction,
+              auth: {
+                bcrypt,
+                tokenize: mockTokenize,
+                verifyToken: verifyToken({ i18n: {} }),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
+              },
+            },
+          )
+
+          const cursor = await query`
+              FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+            `
+          const user = await cursor.next()
+
+          const affiliationCursor = await query`
+              FOR affiliation IN affiliations
+                FILTER affiliation._to == ${user._id}
+                RETURN affiliation
+            `
+          const checkAffiliation = await affiliationCursor.next()
+
+          const expectedAffiliation = {
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          }
+
+          expect(checkAffiliation).toMatchObject(expectedAffiliation)
+        })
+        it('sends verification email', async () => {
+          await graphql(
+            schema,
+            `
+                mutation {
+                  signUp(
+                    input: {
+                      displayName: "Test Account"
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
+                      preferredLang: ENGLISH
+                      signUpToken: "${token}"
+                    }
+                  ) {
+                    result {
+                      ... on AuthResult {
+                        authToken
+                        user {
+                          id
+                          userName
+                          displayName
+                          preferredLang
+                          phoneValidated
+                          emailValidated
+                        }
+                      }
+                      ... on SignUpError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              request,
+              query,
+              collections,
+              transaction,
+              auth: {
+                bcrypt,
+                tokenize: mockTokenize,
+                verifyToken: verifyToken({ i18n: {} }),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
+              },
+            },
+          )
+
+          const user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
+
+          const verifyUrl = `${request.protocol}://${request.get(
+            'host',
+          )}/validate/token`
+
+          expect(mockNotify).toHaveBeenCalledWith({
+            returnUser: user,
+            verifyUrl,
+          })
+        })
       })
     })
     describe('given unsuccessful sign up', () => {
@@ -1375,8 +1752,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1447,8 +1827,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1528,8 +1911,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1639,9 +2025,12 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                },
+                notify: {
+                  sendVerificationEmail: mockNotify,
                 },
               },
             )
@@ -1723,9 +2112,12 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                },
+                notify: {
+                  sendVerificationEmail: mockNotify,
                 },
               },
             )
@@ -1806,8 +2198,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1859,7 +2254,7 @@ describe('user sign up', () => {
         it('throws an error', async () => {
           const mockedStep = jest
             .fn()
-            .mockReturnValueOnce({})
+            .mockReturnValueOnce({ next: jest.fn() })
             .mockRejectedValue('Transaction Step Error')
           const mockedTransaction = jest.fn().mockReturnValue({
             step: mockedStep,
@@ -1914,9 +2309,12 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )
@@ -1932,7 +2330,9 @@ describe('user sign up', () => {
       })
       describe('when committing transaction', () => {
         it('throws an error', async () => {
-          const mockedStep = jest.fn().mockReturnValue({})
+          const mockedStep = jest.fn().mockReturnValue({
+            next: jest.fn(),
+          })
           const mockedCommit = jest
             .fn()
             .mockRejectedValue('Transaction Commit Error')
@@ -1988,8 +2388,11 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              notify: {
+                sendVerificationEmail: mockNotify,
               },
             },
           )

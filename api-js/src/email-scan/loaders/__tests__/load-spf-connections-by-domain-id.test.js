@@ -7,12 +7,12 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { spfLoaderConnectionsByDomainId, spfLoaderByKey } from '../index'
+import { loadSpfConnectionsByDomainId, loadSpfByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('when given the load spf connection function', () => {
-  let query, drop, truncate, collections, user, domain, i18n
+  let query, drop, truncate, collections, user, domain, spfScan1, spfScan2, i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -20,16 +20,9 @@ describe('when given the load spf connection function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -43,35 +36,33 @@ describe('when given the load spf connection function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given a successful load', () => {
-    let spfScan1, spfScan2
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+        slug: 'test-domain-gc-ca',
+      })
       spfScan1 = await collections.spf.save({
         timestamp: '2020-10-02T12:43:39Z',
       })
@@ -87,17 +78,22 @@ describe('when given the load spf connection function', () => {
         _from: domain._id,
       })
     })
-
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns spf scan(s) after a given node id', async () => {
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -142,14 +138,14 @@ describe('when given the load spf connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns spf scan(s) before a given node id', async () => {
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -194,14 +190,14 @@ describe('when given the load spf connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -245,14 +241,14 @@ describe('when given the load spf connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -307,14 +303,14 @@ describe('when given the load spf connection function', () => {
       })
       describe('using start date filter', () => {
         it('returns spf scans at and after the start date', async () => {
-          const connectionLoader = spfLoaderConnectionsByDomainId(
+          const connectionLoader = loadSpfConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
-          const spfLoader = spfLoaderByKey(query)
+          const spfLoader = loadSpfByKey({ query })
           const expectedSpfScans = await spfLoader.loadMany([
             spfScan2._key,
             spfScan3._key,
@@ -365,14 +361,14 @@ describe('when given the load spf connection function', () => {
       })
       describe('using end date filter', () => {
         it('returns spf scans at and before the end date', async () => {
-          const connectionLoader = spfLoaderConnectionsByDomainId(
+          const connectionLoader = loadSpfConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
-          const spfLoader = spfLoaderByKey(query)
+          const spfLoader = loadSpfByKey({ query })
           const expectedSpfScans = await spfLoader.loadMany([
             spfScan1._key,
             spfScan2._key,
@@ -423,14 +419,14 @@ describe('when given the load spf connection function', () => {
       })
       describe('using start and end filters', () => {
         it('returns a scan on a specific date', async () => {
-          const connectionLoader = spfLoaderConnectionsByDomainId(
+          const connectionLoader = loadSpfConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
-          const spfLoader = spfLoaderByKey(query)
+          const spfLoader = loadSpfByKey({ query })
           const expectedSpfScans = await spfLoader.loadMany([spfScan2._key])
 
           expectedSpfScans[0].id = expectedSpfScans[0]._key
@@ -510,15 +506,15 @@ describe('when given the load spf connection function', () => {
       describe('ordering on TIMESTAMP', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -557,15 +553,15 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -606,15 +602,15 @@ describe('when given the load spf connection function', () => {
       describe('ordering on LOOKUPS', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -653,15 +649,15 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -702,15 +698,15 @@ describe('when given the load spf connection function', () => {
       describe('ordering on RECORD', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -749,15 +745,15 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -798,15 +794,15 @@ describe('when given the load spf connection function', () => {
       describe('ordering on SPF_DEFAULT', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -845,15 +841,15 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -895,12 +891,12 @@ describe('when given the load spf connection function', () => {
     describe('no spf scans are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -944,12 +940,12 @@ describe('when given the load spf connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfLoaderConnectionsByDomainId(
+          const connectionLoader = loadSpfConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
 
@@ -966,18 +962,18 @@ describe('when given the load spf connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSpfConnectionsByDomainId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfLoaderConnectionsByDomainId(
+          const connectionLoader = loadSpfConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -997,19 +993,19 @@ describe('when given the load spf connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSpfConnectionsByDomainId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -1028,18 +1024,18 @@ describe('when given the load spf connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -1058,7 +1054,7 @@ describe('when given the load spf connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
@@ -1066,12 +1062,12 @@ describe('when given the load spf connection function', () => {
       describe('limits are set above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -1090,18 +1086,18 @@ describe('when given the load spf connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 500,
@@ -1120,7 +1116,7 @@ describe('when given the load spf connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
@@ -1131,12 +1127,12 @@ describe('when given the load spf connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfLoaderConnectionsByDomainId(
+              const connectionLoader = loadSpfConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1156,7 +1152,7 @@ describe('when given the load spf connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSpfConnectionsByDomainId.`,
               ])
             })
           })
@@ -1166,12 +1162,12 @@ describe('when given the load spf connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfLoaderConnectionsByDomainId(
+              const connectionLoader = loadSpfConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1191,7 +1187,7 @@ describe('when given the load spf connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSpfConnectionsByDomainId.`,
               ])
             })
           })
@@ -1204,12 +1200,12 @@ describe('when given the load spf connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1240,12 +1236,12 @@ describe('when given the load spf connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1286,12 +1282,12 @@ describe('when given the load spf connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfLoaderConnectionsByDomainId(
+          const connectionLoader = loadSpfConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
 
@@ -1304,18 +1300,18 @@ describe('when given the load spf connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSpfConnectionsByDomainId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfLoaderConnectionsByDomainId(
+          const connectionLoader = loadSpfConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -1331,19 +1327,19 @@ describe('when given the load spf connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSpfConnectionsByDomainId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -1358,18 +1354,18 @@ describe('when given the load spf connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -1384,7 +1380,7 @@ describe('when given the load spf connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
@@ -1392,12 +1388,12 @@ describe('when given the load spf connection function', () => {
       describe('limits are set above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -1412,18 +1408,18 @@ describe('when given the load spf connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfLoaderConnectionsByDomainId(
+            const connectionLoader = loadSpfConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 500,
@@ -1438,7 +1434,7 @@ describe('when given the load spf connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: spfLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadSpfConnectionsByDomainId.`,
             ])
           })
         })
@@ -1449,12 +1445,12 @@ describe('when given the load spf connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfLoaderConnectionsByDomainId(
+              const connectionLoader = loadSpfConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1470,7 +1466,7 @@ describe('when given the load spf connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSpfConnectionsByDomainId.`,
               ])
             })
           })
@@ -1480,12 +1476,12 @@ describe('when given the load spf connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfLoaderConnectionsByDomainId(
+              const connectionLoader = loadSpfConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1501,7 +1497,7 @@ describe('when given the load spf connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSpfConnectionsByDomainId.`,
               ])
             })
           })
@@ -1514,12 +1510,12 @@ describe('when given the load spf connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1548,12 +1544,12 @@ describe('when given the load spf connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = spfLoaderConnectionsByDomainId(
+        const connectionLoader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,

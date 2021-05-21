@@ -8,14 +8,22 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
-  dkimResultsLoaderConnectionByDkimId,
-  dkimResultLoaderByKey,
+  loadDkimResultConnectionsByDkimId,
+  loadDkimResultByKey,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('when given the load dkim results connection function', () => {
-  let query, drop, truncate, collections, user, dkimScan, i18n
+  let query,
+    drop,
+    truncate,
+    collections,
+    user,
+    dkimScan,
+    dkimResult1,
+    dkimResult2,
+    i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -23,16 +31,9 @@ describe('when given the load dkim results connection function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -46,37 +47,34 @@ describe('when given the load dkim results connection function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    dkimScan = await collections.dkim.save({
-      timestamp: '2020-10-02T12:43:39Z',
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given a successful load', () => {
-    let dkimResult1, dkimResult2
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
       dkimResult1 = await collections.dkimResults.save({})
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      dkimScan = await collections.dkim.save({
+        timestamp: '2020-10-02T12:43:39Z',
+      })
       dkimResult2 = await collections.dkimResults.save({})
-
       await collections.dkimToDkimResults.save({
         _from: dkimScan._id,
         _to: dkimResult1._id,
@@ -86,17 +84,22 @@ describe('when given the load dkim results connection function', () => {
         _to: dkimResult2._id,
       })
     })
-
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns dkim result(s) after a given node id', async () => {
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -141,14 +144,14 @@ describe('when given the load dkim results connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns dkim result(s) before a given node id', async () => {
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -193,14 +196,14 @@ describe('when given the load dkim results connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -244,14 +247,14 @@ describe('when given the load dkim results connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -328,15 +331,19 @@ describe('when given the load dkim results connection function', () => {
       describe('ordering on SELECTOR', () => {
         describe('direction set to ASC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimId: dkimScan._id,
@@ -375,15 +382,19 @@ describe('when given the load dkim results connection function', () => {
         })
         describe('direction set to DESC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimId: dkimScan._id,
@@ -424,15 +435,19 @@ describe('when given the load dkim results connection function', () => {
       describe('ordering on RECORD', () => {
         describe('direction set to ASC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimId: dkimScan._id,
@@ -471,15 +486,19 @@ describe('when given the load dkim results connection function', () => {
         })
         describe('direction set to DESC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimId: dkimScan._id,
@@ -520,15 +539,19 @@ describe('when given the load dkim results connection function', () => {
       describe('ordering on KEY_LENGTH', () => {
         describe('direction set to ASC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimId: dkimScan._id,
@@ -567,15 +590,19 @@ describe('when given the load dkim results connection function', () => {
         })
         describe('direction set to DESC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimId: dkimScan._id,
@@ -617,12 +644,12 @@ describe('when given the load dkim results connection function', () => {
     describe('no dkim results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -666,12 +693,12 @@ describe('when given the load dkim results connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+          const connectionLoader = loadDkimResultConnectionsByDkimId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
 
@@ -688,18 +715,18 @@ describe('when given the load dkim results connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+          const connectionLoader = loadDkimResultConnectionsByDkimId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -719,19 +746,19 @@ describe('when given the load dkim results connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -750,18 +777,18 @@ describe('when given the load dkim results connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -780,7 +807,7 @@ describe('when given the load dkim results connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
@@ -788,12 +815,12 @@ describe('when given the load dkim results connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -812,18 +839,18 @@ describe('when given the load dkim results connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 500,
@@ -842,7 +869,7 @@ describe('when given the load dkim results connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
@@ -853,12 +880,12 @@ describe('when given the load dkim results connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              const connectionLoader = loadDkimResultConnectionsByDkimId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -878,7 +905,7 @@ describe('when given the load dkim results connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDkimResultConnectionsByDkimId.`,
               ])
             })
           })
@@ -888,12 +915,12 @@ describe('when given the load dkim results connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              const connectionLoader = loadDkimResultConnectionsByDkimId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -913,7 +940,7 @@ describe('when given the load dkim results connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDkimResultConnectionsByDkimId.`,
               ])
             })
           })
@@ -926,12 +953,12 @@ describe('when given the load dkim results connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -961,12 +988,12 @@ describe('when given the load dkim results connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1006,12 +1033,12 @@ describe('when given the load dkim results connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+          const connectionLoader = loadDkimResultConnectionsByDkimId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
 
@@ -1024,18 +1051,18 @@ describe('when given the load dkim results connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+          const connectionLoader = loadDkimResultConnectionsByDkimId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -1051,19 +1078,19 @@ describe('when given the load dkim results connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -1078,18 +1105,18 @@ describe('when given the load dkim results connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -1104,7 +1131,7 @@ describe('when given the load dkim results connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
@@ -1112,12 +1139,12 @@ describe('when given the load dkim results connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -1132,18 +1159,18 @@ describe('when given the load dkim results connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            const connectionLoader = loadDkimResultConnectionsByDkimId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 500,
@@ -1158,7 +1185,7 @@ describe('when given the load dkim results connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimResultsLoaderConnectionByDkimId.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadDkimResultConnectionsByDkimId.`,
             ])
           })
         })
@@ -1169,12 +1196,12 @@ describe('when given the load dkim results connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              const connectionLoader = loadDkimResultConnectionsByDkimId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1190,7 +1217,7 @@ describe('when given the load dkim results connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDkimResultConnectionsByDkimId.`,
               ])
             })
           })
@@ -1200,12 +1227,12 @@ describe('when given the load dkim results connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              const connectionLoader = loadDkimResultConnectionsByDkimId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1221,7 +1248,7 @@ describe('when given the load dkim results connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDkimResultConnectionsByDkimId.`,
               ])
             })
           })
@@ -1234,12 +1261,12 @@ describe('when given the load dkim results connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1267,12 +1294,12 @@ describe('when given the load dkim results connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+        const connectionLoader = loadDkimResultConnectionsByDkimId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,

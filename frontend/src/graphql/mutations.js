@@ -233,6 +233,25 @@ export const REMOVE_DOMAIN = gql`
   }
 `
 
+export const REMOVE_USER_FROM_ORG = gql`
+  mutation RemoveUserFromOrg($userId: ID!, $orgId: ID!) {
+    removeUserFromOrg(input: { userId: $userId, orgId: $orgId }) {
+      result {
+        ... on AffiliationError {
+          code
+          description
+        }
+        ... on RemoveUserFromOrgResult {
+          status
+          user {
+            userName
+          }
+        }
+      }
+    }
+  }
+`
+
 export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!
@@ -321,6 +340,30 @@ export const VERIFY_PHONE_NUMBER = gql`
           status
         }
         ... on VerifyPhoneNumberError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const SEND_EMAIL_VERIFICATION = gql`
+  mutation SendEmailVerification($userName: EmailAddress!) {
+    sendEmailVerification(input: { userName: $userName }) {
+      status
+    }
+  }
+`
+
+export const VERIFY_ACCOUNT = gql`
+  mutation VerifyAccount($verifyToken: String!) {
+    verifyAccount(input: { verifyTokenString: $verifyToken }) {
+      result {
+        ... on VerifyAccountResult {
+          status
+        }
+        ... on VerifyAccountError {
           code
           description
         }

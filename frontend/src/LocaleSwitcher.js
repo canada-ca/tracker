@@ -3,32 +3,42 @@ import { useLingui } from '@lingui/react'
 import { locales, activate } from './i18n.config'
 import svgGlobe from './images/vector-globe.svg'
 import { Box, PseudoBox, VisuallyHidden, Image } from '@chakra-ui/core'
+import { useApolloClient } from '@apollo/client'
 
 const Toggler = props => {
   const { locale } = props // eslint-disable-line
+
+  const client = useApolloClient()
+
   return (
     <PseudoBox
-      as="button"
+      as='button'
       key={locale}
       padding={0}
-      onClick={() => activate(locale)}
+      onClick={() => {
+        activate(locale).then(() => client.resetStore())
+      }}
       _focus={{
         outline: `3px solid accent`,
       }}
-      bg="primary"
-      color="#fff"
+      bg='primary'
+      color='#fff'
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
       <PseudoBox
         aria-hidden
-        fontSize="sm"
+        fontSize='sm'
         pl={2}
         py={1}
-        textTransform="uppercase"
+        textTransform='uppercase'
         d={{ base: 'none', md: 'flex' }}
-        alignItems="center"
-        justifyContent="center"
-        _hover={{ color: 'accent', border: '1px solid', borderColor: 'accent' }}
+        alignItems='center'
+        justifyContent='center'
+        _hover={{
+          color: 'accent',
+          border: '1px solid',
+          borderColor: 'accent',
+        }}
       >
         {locales[locale]}
         <Image src={svgGlobe} px={2} alt={'SVG Globe'} />
@@ -36,27 +46,26 @@ const Toggler = props => {
       <PseudoBox
         aria-hidden
         d={{ base: 'flex', md: 'none' }}
-        bg="gray.100"
-        color="primary"
-        textTransform="uppercase"
-        fontWeight="bold"
-        fontSize="lg"
+        bg='gray.100'
+        color='primary'
+        textTransform='uppercase'
+        fontWeight='bold'
+        fontSize='lg'
         size={10}
-        alignItems="center"
-        justifyContent="center"
+        alignItems='center'
+        justifyContent='center'
       >
         {locale}
       </PseudoBox>
-    </PseudoBox>
-  )
+    </PseudoBox>)
 }
 
 export function LocaleSwitcher() {
   const { i18n } = useLingui()
   return (
     <Box>
-      {i18n.locale === 'en' && <Toggler locale="fr" />}
-      {i18n.locale === 'fr' && <Toggler locale="en" />}
+      {i18n.locale === 'en' && <Toggler locale='fr' />}
+      {i18n.locale === 'fr' && <Toggler locale='en' />}
     </Box>
   )
 }

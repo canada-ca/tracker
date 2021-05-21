@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const verifiedOrgLoaderByKey = (query, language, i18n) =>
+export const loadVerifiedOrgByKey = ({ query, language, i18n }) =>
   new DataLoader(async (keys) => {
     let cursor
 
@@ -27,9 +27,7 @@ export const verifiedOrgLoaderByKey = (query, language, i18n) =>
           )
       `
     } catch (err) {
-      console.error(
-        `Database error when running verifiedOrgLoaderByKey: ${err}`,
-      )
+      console.error(`Database error when running loadVerifiedOrgByKey: ${err}`)
       throw new Error(
         i18n._(t`Unable to find verified organization(s). Please try again.`),
       )
@@ -41,9 +39,7 @@ export const verifiedOrgLoaderByKey = (query, language, i18n) =>
         orgMap[org._key] = org
       })
     } catch (err) {
-      console.error(
-        `Cursor error occurred during verifiedOrgLoaderByKey: ${err}`,
-      )
+      console.error(`Cursor error occurred during loadVerifiedOrgByKey: ${err}`)
       throw new Error(
         i18n._(t`Unable to find verified organization(s). Please try again.`),
       )

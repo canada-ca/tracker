@@ -1,10 +1,10 @@
 import { t } from '@lingui/macro'
 
-export const dmarcSummaryEdgeLoaderByDomainIdPeriod = (
+export const loadDmarcSummaryEdgeByDomainIdAndPeriod = ({
   query,
   userKey,
   i18n,
-) => async ({ domainId, startDate }) => {
+}) => async ({ domainId, startDate }) => {
   let summaryEdgeCursor
   try {
     summaryEdgeCursor = await query`

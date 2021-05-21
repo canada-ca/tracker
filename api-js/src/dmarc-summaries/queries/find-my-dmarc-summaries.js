@@ -1,4 +1,4 @@
-import { GraphQLNonNull } from 'graphql'
+import { GraphQLNonNull, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { dmarcSummaryOrder } from '../inputs'
@@ -22,6 +22,11 @@ export const findMyDmarcSummaries = {
       type: GraphQLNonNull(Year),
       description: 'The year in which the returned data is relevant to.',
     },
+    search: {
+      type: GraphQLString,
+      description:
+        'An optional string used to filter the results based on domains.',
+    },
     ...connectionArgs,
   },
   resolve: async (
@@ -30,14 +35,14 @@ export const findMyDmarcSummaries = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired },
-      loaders: { dmarcSumLoaderConnectionsByUserId },
+      loaders: { loadDmarcSummaryConnectionsByUserId },
     },
   ) => {
     await userRequired()
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    const dmarcSummaries = await dmarcSumLoaderConnectionsByUserId({
+    const dmarcSummaries = await loadDmarcSummaryConnectionsByUserId({
       period: args.month,
       isSuperAdmin,
       ...args,

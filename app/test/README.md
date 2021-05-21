@@ -2,61 +2,48 @@
 
 The purpose of this overlay is to bring up a "non-prod" copy of the full application on GKE, for... you guessed it, testing purposes! This configuration will come up using a self signed certificate, but other than that it should be almost identical to production.
 
-Since testing usually involves trying stuff that isn't commited to master yet, the commands to get things working are a little different from a normal deployment.
+Since testing usually involves trying stuff that isn't committed to master yet, the commands to get things working are a little different from a normal deployment.
 
+If you need some dev credentials for this test cluster, you can generate them with `make credentials mode=dev`.
 
-## Bringing up a cluster
+## Bringing up a test cluster on GKE
 
 Currently we are just creating the cluster with the following command.
 
+
 ```sh
-gcloud beta container --project "track-compliance" clusters create "testing" \
- --region "northamerica-northeast1" --no-enable-basic-auth \
- --cluster-version "1.18.9-gke.801" --release-channel "rapid" \
- --machine-type "e2-standard-2" --image-type "COS_CONTAINERD" \
- --disk-type "pd-standard" --disk-size "100" \
- --metadata disable-legacy-endpoints=true \
- --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com" \
- --num-nodes "2" --enable-stackdriver-kubernetes --enable-ip-alias \
- --network "projects/track-compliance/global/networks/default" \
- --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" \
- --default-max-pods-per-node "110" --no-enable-master-authorized-networks \
- --addons HorizontalPodAutoscaling,HttpLoadBalancing,CloudRun --enable-autoupgrade \
- --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 \
- --workload-pool "track-compliance.svc.id.goog" \
- --enable-shielded-nodes --shielded-secure-boot
+make cluster
+make secrets env=test
+# If either of these fail, just run them again
+make platform env=test
+make app env=test
 ```
 
-With the cluster up and running, you will need to provide the env files as
-described in the minikube setup:
+If you want to watch the pod creation process, you can do it with this:
 
 ```sh
-api.env
-kiali.env
-kiali.yaml
-postgres.env
-scanners.env
+watch kubectl get po -A
 ```
-With those in place, the config can now be generated.
+
+That will bring the cluster up with a self-signed certificate. To connect to it, we just need the external IP.
 
 ```sh
-# Create namespaces and secrets
-kustomize build app/creds/dev | kubectl apply -f -
-kustomize build platform/creds/dev | kubectl apply -f -
+kubectl get svc -n istio-system istio-ingressgateway
+```
 
-# create platform CRDs and pods
-kustomize build platform/test | kubectl apply -f -
+Connecting to both `https://<externalip>` and `https://<externalip>/graphql` should succeed. Reaching the frontend and API respectively.
 
-kustomize build overlays/seed/test | kubectl apply -f -
-# Watch until istio is ready
-watch kubectl get po -A
+## Loading data
 
-# create the app
-kustomize build app/test | kubectl apply -f -
+The database isn't exposed to the outside world, so loading data requires you to forward the database ports to your local machine.
 
-# Watch until everything is running
-watch kubectl get po -A
+```sh
+kubectl port-forward -n db svc/arangodb 8529:8529
+```
 
-# Get the IP of the app
-kubectl get svc -n istio-system istio-ingressgateway -o json | jq '.status.loadBalancer.ingress'
+With that port forwarding in place, you can now load/dump with the following commands:
+
+```sh
+arangodump --server.database track_dmarc --output-directory track_dmarc-$(date --iso-8601)
+arangorestore --create-database --server.database track_dmarc --input-directory track_dmarc-2021-05-12
 ```

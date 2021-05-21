@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 
-export const dmarcYearlySumEdgeLoader = (query, userKey, i18n) => async ({
+export const loadDmarcYearlySumEdge = ({ query, userKey, i18n }) => async ({
   domainId,
 }) => {
   let dmarcSummaryEdgeCursor

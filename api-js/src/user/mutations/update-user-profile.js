@@ -45,7 +45,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       query,
       userKey,
       auth: { userRequired },
-      loaders: { userLoaderByKey, userLoaderByUserName },
+      loaders: { loadUserByKey, loadUserByUserName },
       validators: { cleanseInput },
     },
   ) => {
@@ -60,7 +60,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     // Check to see if user name is already in use
     if (userName !== '') {
-      const checkUser = await userLoaderByUserName.load(userName)
+      const checkUser = await loadUserByUserName.load(userName)
       if (typeof checkUser !== 'undefined') {
         console.warn(
           `User: ${userKey} attempted to update their username, but the username is already in use.`,
@@ -97,6 +97,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT ${updatedUser}
           UPDATE ${updatedUser} 
@@ -109,8 +110,8 @@ export const updateUserProfile = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
-    await userLoaderByKey.clear(user._key)
-    const returnUser = await userLoaderByKey.load(userKey)
+    await loadUserByKey.clear(user._key)
+    const returnUser = await loadUserByKey.load(userKey)
 
     console.info(`User: ${user._key} successfully updated their profile.`)
     return {

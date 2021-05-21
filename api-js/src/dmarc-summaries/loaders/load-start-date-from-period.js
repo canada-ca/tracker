@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 
-export const loadStartDateFromPeriod = (moment, userKey, i18n) => ({
+export const loadStartDateFromPeriod = ({ moment, userKey, i18n }) => ({
   period,
   year,
 }) => {

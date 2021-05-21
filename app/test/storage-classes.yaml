@@ -1,0 +1,49 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: slow-retain
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-retain
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: slow-delete
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-delete
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer

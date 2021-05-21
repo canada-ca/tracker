@@ -51,7 +51,7 @@ export function ScanDomain() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="8" mx="auto" overflow="hidden">
+    <Box px="2" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ domain: '' }}

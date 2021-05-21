@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
+export const loadDmarcSummaryByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (keys) => {
     let cursor
 
@@ -31,7 +31,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running dmarcSumLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadDmarcSummaryByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DMARC summary data. Please try again.`),
@@ -45,7 +45,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running dmarcSumLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadDmarcSummaryByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DMARC summary data. Please try again.`),

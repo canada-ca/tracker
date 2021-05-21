@@ -1,5 +1,6 @@
 import React from 'react'
-import { Stack, SimpleGrid } from '@chakra-ui/core'
+import { Stack, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/core'
+import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
 import { AdminDomains } from './AdminDomains'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -9,19 +10,38 @@ import UserList from './UserList'
 export default function AdminPanel({ orgSlug, permission, orgId }) {
   return (
     <Stack spacing={10}>
-      <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
-        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-          <AdminDomains orgSlug={orgSlug} domainsPerPage={4} orgId={orgId} />
-        </ErrorBoundary>
-        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-          <UserList
-            permission={permission}
-            orgSlug={orgSlug}
-            usersPerPage={4}
-            orgId={orgId}
-          />
-        </ErrorBoundary>
-      </SimpleGrid>
+      <Tabs isFitted variant="enclosed">
+        <TabList mb="2">
+          <Tab>
+            <Trans>Domains</Trans>
+          </Tab>
+          <Tab>
+            <Trans>Users</Trans>
+          </Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <AdminDomains
+                orgSlug={orgSlug}
+                domainsPerPage={10}
+                orgId={orgId}
+              />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <UserList
+                permission={permission}
+                orgSlug={orgSlug}
+                usersPerPage={10}
+                orgId={orgId}
+              />
+            </ErrorBoundary>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Stack>
   )
 }

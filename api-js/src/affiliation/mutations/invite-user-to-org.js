@@ -41,12 +41,13 @@ able to sign-up and be assigned to that organization in one mutation.`,
     args,
     {
       i18n,
+      query,
       request,
       collections,
       transaction,
       userKey,
       auth: { checkPermission, tokenize, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByUserName },
+      loaders: { loadOrgByKey, loadUserByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
     },
@@ -72,7 +73,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Check to see if requested org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -106,7 +107,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Check to see if requested user exists
-    const requestedUser = await userLoaderByUserName.load(userName)
+    const requestedUser = await loadUserByUserName.load(userName)
 
     // If there is not associated account with that user name send invite to org with create account
     if (typeof requestedUser === 'undefined') {
@@ -148,11 +149,14 @@ able to sign-up and be assigned to that organization in one mutation.`,
       // Create affiliation
       try {
         await trx.step(() =>
-          collections.affiliations.save({
-            _from: org._id,
-            _to: requestedUser._id,
-            permission: requestedRole,
-          }),
+          query`
+            WITH affiliations, organizations, users
+            INSERT {
+              _from: ${org._id},
+              _to: ${requestedUser._id},
+              permission: ${requestedRole}
+            } INTO affiliations
+          `,
         )
       } catch (err) {
         console.error(

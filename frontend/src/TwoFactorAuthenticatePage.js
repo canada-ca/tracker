@@ -12,6 +12,8 @@ import AuthenticateField from './AuthenticateField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { activate } from './i18n.config'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function TwoFactorAuthenticatePage() {
   const { login } = useUserState()
@@ -38,6 +40,7 @@ export default function TwoFactorAuthenticatePage() {
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'top-left',
       })
     },
     onCompleted({ authenticate }) {
@@ -48,8 +51,7 @@ export default function TwoFactorAuthenticatePage() {
           tfaSendMethod: authenticate.result.user.tfaSendMethod,
           userName: authenticate.result.user.userName,
         })
-        if (authenticate.result.user.preferredLang === 'ENGLISH')
-          activate('en')
+        if (authenticate.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (authenticate.result.user.preferredLang === 'FRENCH')
           activate('fr')
         // // redirect to the home page.
@@ -61,6 +63,7 @@ export default function TwoFactorAuthenticatePage() {
           status: 'success',
           duration: 9000,
           isClosable: true,
+          position: 'top-left',
         })
       }
       // Non server error occurs
@@ -73,9 +76,9 @@ export default function TwoFactorAuthenticatePage() {
           status: 'error',
           duration: 9000,
           isClosable: true,
+          position: 'top-left',
         })
-      }
-      else {
+      } else {
         toast({
           title: t`Incorrect send method received.`,
           description: t`Incorrect authenticate.result typename.`,
@@ -89,13 +92,8 @@ export default function TwoFactorAuthenticatePage() {
     },
   })
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
-  if (error) return <p>{String(error)}</p>
+  if (loading) return <LoadingMessage />
+  if (error) return <ErrorFallbackMessage error={error} />
 
   return (
     <Box w="100%">

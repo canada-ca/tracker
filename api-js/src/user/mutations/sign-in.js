@@ -35,7 +35,7 @@ export const signIn = new mutationWithClientMutationId({
       i18n,
       query,
       auth: { tokenize, bcrypt },
-      loaders: { userLoaderByUserName },
+      loaders: { loadUserByUserName },
       validators: { cleanseInput },
       notify: { sendAuthEmail, sendAuthTextMsg },
     },
@@ -45,7 +45,7 @@ export const signIn = new mutationWithClientMutationId({
     const password = cleanseInput(args.password)
 
     // Gather user who just signed in
-    let user = await userLoaderByUserName.load(userName)
+    let user = await loadUserByUserName.load(userName)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
@@ -79,6 +79,7 @@ export const signIn = new mutationWithClientMutationId({
         // Reset Failed Login attempts
         try {
           await query`
+            WITH users
             FOR u IN users
               UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
           `
@@ -96,10 +97,11 @@ export const signIn = new mutationWithClientMutationId({
           // Insert TFA code into DB
           try {
             await query`
-                UPSERT { _key: ${user._key} }
-                  INSERT { tfaCode: ${tfaCode} }
-                  UPDATE { tfaCode: ${tfaCode} }
-                  IN users
+              WITH users
+              UPSERT { _key: ${user._key} }
+                INSERT { tfaCode: ${tfaCode} }
+                UPDATE { tfaCode: ${tfaCode} }
+                IN users
               `
           } catch (err) {
             console.error(
@@ -109,8 +111,8 @@ export const signIn = new mutationWithClientMutationId({
           }
 
           // Get newly updated user
-          await userLoaderByUserName.clear(userName)
-          user = await userLoaderByUserName.load(userName)
+          await loadUserByUserName.clear(userName)
+          user = await loadUserByUserName.load(userName)
 
           // Check to see if user has phone validated
           let sendMethod
@@ -155,6 +157,7 @@ export const signIn = new mutationWithClientMutationId({
         try {
           // Increase users failed login attempts
           await query`
+            WITH users
             FOR u IN users
               UPDATE ${user._key} WITH { failedLoginAttempts: ${
             user.failedLoginAttempts + 1

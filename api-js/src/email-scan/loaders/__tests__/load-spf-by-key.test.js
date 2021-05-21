@@ -4,24 +4,17 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { spfLoaderByKey } from '../index'
+import { loadSpfByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the spfLoaderByKey function', () => {
+describe('given the loadSpfByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -36,52 +29,64 @@ describe('given the spfLoaderByKey function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleErrorOutput.length = 0
-
-    await truncate()
-    await collections.spf.save({})
-    await collections.spf.save({})
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single id', () => {
-    it('returns a single spf scan', async () => {
-      const expectedCursor = await query`
-      FOR spfScan IN spf
-        SORT spfScan._key ASC LIMIT 1
-        RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
-    `
-      const expectedSpf = await expectedCursor.next()
-
-      const loader = spfLoaderByKey(query, i18n)
-      const spf = await loader.load(expectedSpf._key)
-
-      expect(spf).toEqual(expectedSpf)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given multiple ids', () => {
-    it('returns multiple spf scans', async () => {
-      const spfKeys = []
-      const expectedSpfScans = []
-      const expectedCursor = await query`
+    beforeEach(async () => {
+      await collections.spf.save({})
+      await collections.spf.save({})
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single id', () => {
+      it('returns a single spf scan', async () => {
+        const expectedCursor = await query`
         FOR spfScan IN spf
+          SORT spfScan._key ASC LIMIT 1
           RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
       `
+        const expectedSpf = await expectedCursor.next()
 
-      while (expectedCursor.hasMore) {
-        const tempSpf = await expectedCursor.next()
-        spfKeys.push(tempSpf._key)
-        expectedSpfScans.push(tempSpf)
-      }
+        const loader = loadSpfByKey({ query, i18n })
+        const spf = await loader.load(expectedSpf._key)
 
-      const loader = spfLoaderByKey(query, i18n)
-      const dkimScans = await loader.loadMany(spfKeys)
-      expect(dkimScans).toEqual(expectedSpfScans)
+        expect(spf).toEqual(expectedSpf)
+      })
+    })
+    describe('given multiple ids', () => {
+      it('returns multiple spf scans', async () => {
+        const spfKeys = []
+        const expectedSpfScans = []
+        const expectedCursor = await query`
+          FOR spfScan IN spf
+            RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
+        `
+
+        while (expectedCursor.hasMore) {
+          const tempSpf = await expectedCursor.next()
+          spfKeys.push(tempSpf._key)
+          expectedSpfScans.push(tempSpf)
+        }
+
+        const loader = loadSpfByKey({ query, i18n })
+        const dkimScans = await loader.loadMany(spfKeys)
+        expect(dkimScans).toEqual(expectedSpfScans)
+      })
     })
   })
   describe('users language is set to english', () => {
@@ -104,7 +109,7 @@ describe('given the spfLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -115,7 +120,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadSpfByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -127,7 +132,7 @@ describe('given the spfLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -138,7 +143,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSpfByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -163,7 +168,7 @@ describe('given the spfLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -172,7 +177,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadSpfByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -184,7 +189,7 @@ describe('given the spfLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -193,7 +198,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSpfByKey: Error: Cursor error occurred.`,
         ])
       })
     })

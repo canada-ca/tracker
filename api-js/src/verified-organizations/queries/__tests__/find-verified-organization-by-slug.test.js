@@ -9,8 +9,8 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { verifiedDomainLoaderConnectionsByOrgId } from '../../../verified-domains/loaders'
-import { verifiedOrgLoaderBySlug } from '../../loaders'
+import { loadVerifiedDomainConnectionsByOrgId } from '../../../verified-domains/loaders'
+import { loadVerifiedOrgBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -120,15 +120,17 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'en',
+                  language: 'en',
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -168,15 +170,17 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'en',
+                  language: 'en',
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -230,15 +234,17 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -292,15 +298,17 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },

@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const httpsGuidanceTagLoader = (query, userKey, i18n) =>
+export const loadHttpsGuidanceTagByTagId = ({ query, userKey, i18n }) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -13,7 +13,7 @@ export const httpsGuidanceTagLoader = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running httpsGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userKey} running loadHttpsGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find HTTPS guidance tag(s). Please try again.`),
@@ -27,7 +27,7 @@ export const httpsGuidanceTagLoader = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running httpsGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadHttpsGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find HTTPS guidance tag(s). Please try again.`),

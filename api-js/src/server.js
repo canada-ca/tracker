@@ -44,6 +44,7 @@ export const Server = ({
   scalarCost,
   objectCost,
   listFactor,
+  tracing,
   context = {},
 }) => {
   const app = express()
@@ -76,6 +77,7 @@ export const Server = ({
     ),
     introspection: true,
     playground: true,
+    tracing,
   })
 
   server.applyMiddleware({ app })

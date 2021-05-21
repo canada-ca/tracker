@@ -1,8 +1,5 @@
 import { GraphQLUnionType } from 'graphql'
-import {
-  affiliationError,
-  removeUserFromOrgResultType,
-} from '../objects'
+import { affiliationError, removeUserFromOrgResultType } from '../objects'
 
 export const removeUserFromOrgUnion = new GraphQLUnionType({
   name: 'RemoveUserFromOrgUnion',

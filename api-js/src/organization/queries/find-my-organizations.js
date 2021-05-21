@@ -1,9 +1,8 @@
+import { GraphQLBoolean, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
-import { t } from '@lingui/macro'
 
 import { organizationOrder } from '../inputs'
 import { organizationConnection } from '../objects'
-import { GraphQLString } from 'graphql'
 
 export const findMyOrganizations = {
   type: organizationConnection.connectionType,
@@ -17,37 +16,34 @@ export const findMyOrganizations = {
       type: GraphQLString,
       description: 'String argument used to search for organizations.',
     },
+    isAdmin: {
+      type: GraphQLBoolean,
+      description: 'Filter orgs based off of the user being an admin of them.',
+    },
+    includeSuperAdminOrg: {
+      type: GraphQLBoolean,
+      description:
+        'Filter org list to either include or exclude the super admin org.',
+    },
     ...connectionArgs,
   },
   resolve: async (
     _,
     args,
     {
-      i18n,
       userKey,
       auth: { checkSuperAdmin, userRequired },
-      loaders: { orgLoaderConnectionsByUserId },
+      loaders: { loadOrgConnectionsByUserId },
     },
   ) => {
-    let orgConnections
-
     await userRequired()
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    try {
-      orgConnections = await orgLoaderConnectionsByUserId({
-        isSuperAdmin,
-        ...args,
-      })
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userKey} was trying to gather organization connections in findMyOrganizations.`,
-      )
-      throw new Error(
-        i18n._(t`Unable to load organizations. Please try again.`),
-      )
-    }
+    const orgConnections = await loadOrgConnectionsByUserId({
+      isSuperAdmin,
+      ...args,
+    })
 
     console.info(`User ${userKey} successfully retrieved their organizations.`)
 

@@ -4,7 +4,7 @@ metadata:
   name: arangodb
   namespace: db
 spec:
-  image: arangodb/arangodb:3.7.7
+  image: arangodb/arangodb:3.7.10
   environment: Production
   # environment: Development
   mode: Cluster
@@ -19,14 +19,28 @@ spec:
     enabled: true
   agents:
     count: 3
-    resources:
-      requests:
-        storage: 8Gi
+    volumeClaimTemplate:
+      spec:
+        storageClassName: slow-delete
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
+        volumeMode: Filesystem
+        persistentVolumeReclaimPolicy: Delete
   dbservers:
     count: 3
-    resources:
-      requests:
-        storage: 10Gi
+    volumeClaimTemplate:
+      spec:
+        storageClassName: fast-delete
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 80Gi
+        volumeMode: Filesystem
+        persistentVolumeReclaimPolicy: Delete
   coordinators:
     count: 3
   single:

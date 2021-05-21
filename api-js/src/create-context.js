@@ -27,75 +27,77 @@ import {
 } from './notify'
 
 import {
-  affiliationLoaderByKey,
-  affiliationConnectionLoaderByUserId,
-  affiliationConnectionLoaderByOrgId,
+  loadAffiliationByKey,
+  loadAffiliationConnectionsByUserId,
+  loadAffiliationConnectionsByOrgId,
 } from './affiliation/loaders'
 import {
-  dkimFailureLoaderConnectionsBySumId,
-  dmarcFailureLoaderConnectionsBySumId,
-  dmarcSumLoaderConnectionsByUserId,
-  dmarcSummaryEdgeLoaderByDomainIdPeriod,
-  dmarcSumLoaderByKey,
-  fullPassLoaderConnectionsBySumId,
-  spfFailureLoaderConnectionsBySumId,
+  loadDkimFailConnectionsBySumId,
+  loadDmarcFailConnectionsBySumId,
+  loadDmarcSummaryConnectionsByUserId,
+  loadDmarcSummaryEdgeByDomainIdAndPeriod,
+  loadDmarcSummaryByKey,
+  loadFullPassConnectionsBySumId,
+  loadSpfFailureConnectionsBySumId,
   loadStartDateFromPeriod,
-  dmarcYearlySumEdgeLoader,
+  loadDmarcYearlySumEdge,
 } from './dmarc-summaries/loaders'
 import {
-  domainLoaderByKey,
-  domainLoaderByDomain,
-  domainLoaderConnectionsByOrgId,
-  domainLoaderConnectionsByUserId,
+  loadDomainByKey,
+  loadDomainByDomain,
+  loadDomainConnectionsByOrgId,
+  loadDomainConnectionsByUserId,
 } from './domain/loaders'
 import {
-  dkimLoaderByKey,
-  dkimResultLoaderByKey,
-  dmarcLoaderByKey,
-  spfLoaderByKey,
-  dkimLoaderConnectionsByDomainId,
-  dkimResultsLoaderConnectionByDkimId,
-  dmarcLoaderConnectionsByDomainId,
-  spfLoaderConnectionsByDomainId,
+  loadDkimByKey,
+  loadDkimResultByKey,
+  loadDmarcByKey,
+  loadSpfByKey,
+  loadDkimConnectionsByDomainId,
+  loadDkimResultConnectionsByDkimId,
+  loadDmarcConnectionsByDomainId,
+  loadSpfConnectionsByDomainId,
 } from './email-scan/loaders'
 import {
-  dkimGuidanceTagLoader,
-  dkimGuidanceTagConnectionsLoader,
-  dmarcGuidanceTagLoader,
-  dmarcGuidanceTagConnectionsLoader,
-  httpsGuidanceTagLoader,
-  httpsGuidanceTagConnectionsLoader,
-  spfGuidanceTagLoader,
-  spfGuidanceTagConnectionsLoader,
-  sslGuidanceTagLoader,
-  sslGuidanceTagConnectionsLoader,
+  loadAggregateGuidanceTagById,
+  loadAggregateGuidanceTagConnectionsByTagId,
+  loadDkimGuidanceTagById,
+  loadDkimGuidanceTagConnectionsByTagId,
+  loadDmarcGuidanceTagByTagId,
+  loadDmarcGuidanceTagConnectionsByTagId,
+  loadHttpsGuidanceTagByTagId,
+  loadHttpsGuidanceTagConnectionsByTagId,
+  loadSpfGuidanceTagByTagId,
+  loadSpfGuidanceTagConnectionsByTagId,
+  loadSslGuidanceTagByTagId,
+  loadSslGuidanceTagConnectionsByTagId,
 } from './guidance-tag/loaders'
 import {
-  orgLoaderByKey,
-  orgLoaderBySlug,
-  orgLoaderConnectionArgsByDomainId,
-  orgLoaderConnectionsByUserId,
+  loadOrgByKey,
+  loadOrgBySlug,
+  loadOrgConnectionsByDomainId,
+  loadOrgConnectionsByUserId,
 } from './organization/loaders'
-import { userLoaderByUserName, userLoaderByKey } from './user/loaders'
+import { loadUserByUserName, loadUserByKey } from './user/loaders'
 import {
-  httpsLoaderByKey,
-  httpsLoaderConnectionsByDomainId,
-  sslLoaderByKey,
-  sslLoaderConnectionsByDomainId,
+  loadHttpsByKey,
+  loadHttpsConnectionsByDomainId,
+  loadSslByKey,
+  loadSslConnectionByDomainId,
 } from './web-scan/loaders'
 import {
-  verifiedDomainLoaderByDomain,
-  verifiedDomainLoaderByKey,
-  verifiedDomainLoaderConnections,
-  verifiedDomainLoaderConnectionsByOrgId,
+  loadVerifiedDomainsById,
+  loadVerifiedDomainByKey,
+  loadVerifiedDomainConnections,
+  loadVerifiedDomainConnectionsByOrgId,
 } from './verified-domains/loaders'
 import {
-  verifiedOrgLoaderByKey,
-  verifiedOrgLoaderBySlug,
-  verifiedOrgLoaderConnectionsByDomainId,
-  verifiedOrgLoaderConnections,
+  loadVerifiedOrgByKey,
+  loadVerifiedOrgBySlug,
+  loadVerifiedOrgConnectionsByDomainId,
+  loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
-import { chartSummaryLoaderByKey } from './summaries/loaders'
+import { loadChartSummaryByKey } from './summaries/loaders'
 
 export const createContext = ({ context, req: request, res: response }) => {
   const { query } = context
@@ -135,7 +137,7 @@ export const createContext = ({ context, req: request, res: response }) => {
       userRequired: userRequired({
         i18n,
         userKey,
-        userLoaderByKey: userLoaderByKey(query),
+        loadUserByKey: loadUserByKey({ query, userKey, i18n }),
       }),
       verifyToken: verifyToken({ i18n }),
     },
@@ -156,201 +158,263 @@ export const createContext = ({ context, req: request, res: response }) => {
       sendVerificationEmail: sendVerificationEmail({ notifyClient, i18n }),
     },
     loaders: {
-      chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userKey, i18n),
-      dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
+      loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
+      loadAggregateGuidanceTagById: loadAggregateGuidanceTagById({
+        query,
+        userKey,
+        i18n,
+      }),
+      loadAggregateGuidanceTagConnectionsByTagId: loadAggregateGuidanceTagConnectionsByTagId(
+        { query, userKey, i18n, cleanseInput },
+      ),
+      loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
+      }),
+      loadDmarcFailConnectionsBySumId: loadDmarcFailConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
+      }),
+      loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
         query,
         userKey,
         cleanseInput,
         i18n,
-        loadStartDateFromPeriod(moment, userKey, i18n),
+        loadStartDateFromPeriod: loadStartDateFromPeriod({
+          moment,
+          userKey,
+          i18n,
+        }),
+      }),
+      loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
+        {
+          query,
+          userKey,
+          i18n,
+        },
       ),
-      dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
-        query,
-        userKey,
-        i18n,
-      ),
-      dmarcSumLoaderByKey: dmarcSumLoaderByKey(query, userKey, i18n),
-      fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-      ),
-      spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-      ),
-      loadStartDateFromPeriod: loadStartDateFromPeriod(moment, userKey, i18n),
-      dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(query, userKey, i18n),
-      domainLoaderByDomain: domainLoaderByDomain(query, userKey, i18n),
-      domainLoaderByKey: domainLoaderByKey(query, userKey, i18n),
-      domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
+      loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query, userKey, i18n }),
+      loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+      }),
+      loadSpfFailureConnectionsBySumId: loadSpfFailureConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      dkimLoaderByKey: dkimLoaderByKey(query, userKey, i18n),
-      dkimResultLoaderByKey: dkimResultLoaderByKey(query, userKey, i18n),
-      dmarcLoaderByKey: dmarcLoaderByKey(query, userKey, i18n),
-      spfLoaderByKey: spfLoaderByKey(query, userKey, i18n),
-      dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
+      }),
+      loadStartDateFromPeriod: loadStartDateFromPeriod({
+        moment,
+        userKey,
+        i18n,
+      }),
+      loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({ query, userKey, i18n }),
+      loadDomainByDomain: loadDomainByDomain({ query, userKey, i18n }),
+      loadDomainByKey: loadDomainByKey({ query, userKey, i18n }),
+      loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
+      }),
+      loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
+      }),
+      loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
+      loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
+      loadDmarcByKey: loadDmarcByKey({ query, userKey, i18n }),
+      loadSpfByKey: loadSpfByKey({ query, userKey, i18n }),
+      loadDkimConnectionsByDomainId: loadDkimConnectionsByDomainId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
+      }),
+      loadDkimResultConnectionsByDkimId: loadDkimResultConnectionsByDkimId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      httpsLoaderByKey: httpsLoaderByKey(query, userKey, i18n),
-      httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
-        query,
-        userKey,
-        cleanseInput,
-      ),
-      sslLoaderByKey: sslLoaderByKey(query, userKey, i18n),
-      sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
-        query,
-        userKey,
-        cleanseInput,
-      ),
-      dkimGuidanceTagLoader: dkimGuidanceTagLoader(query, userKey, i18n),
-      dkimGuidanceTagConnectionsLoader: dkimGuidanceTagConnectionsLoader(
+      }),
+      loadDmarcConnectionsByDomainId: loadDmarcConnectionsByDomainId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      dmarcGuidanceTagLoader: dmarcGuidanceTagLoader(query, userKey, i18n),
-      dmarcGuidanceTagConnectionsLoader: dmarcGuidanceTagConnectionsLoader(
+      }),
+      loadSpfConnectionsByDomainId: loadSpfConnectionsByDomainId({
         query,
         userKey,
         cleanseInput,
         i18n,
+      }),
+      loadHttpsByKey: loadHttpsByKey({ query, userKey, i18n }),
+      loadHttpsConnectionsByDomainId: loadHttpsConnectionsByDomainId({
+        query,
+        userKey,
+        cleanseInput,
+      }),
+      loadSslByKey: loadSslByKey({ query, userKey, i18n }),
+      loadSslConnectionByDomainId: loadSslConnectionByDomainId({
+        query,
+        userKey,
+        cleanseInput,
+      }),
+      loadDkimGuidanceTagById: loadDkimGuidanceTagById({
+        query,
+        userKey,
+        i18n,
+      }),
+      loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId(
+        {
+          query,
+          userKey,
+          cleanseInput,
+          i18n,
+        },
       ),
-      httpsGuidanceTagLoader: httpsGuidanceTagLoader(query, userKey, i18n),
-      httpsGuidanceTagConnectionsLoader: httpsGuidanceTagConnectionsLoader(
+      loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
+        query,
+        userKey,
+        i18n,
+      }),
+      loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId(
+        {
+          query,
+          userKey,
+          cleanseInput,
+          i18n,
+        },
+      ),
+      loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
+        query,
+        userKey,
+        i18n,
+      }),
+      loadHttpsGuidanceTagConnectionsByTagId: loadHttpsGuidanceTagConnectionsByTagId(
+        {
+          query,
+          userKey,
+          cleanseInput,
+          i18n,
+        },
+      ),
+      loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
+        query,
+        userKey,
+        i18n,
+      }),
+      loadSpfGuidanceTagConnectionsByTagId: loadSpfGuidanceTagConnectionsByTagId(
+        {
+          query,
+          userKey,
+          cleanseInput,
+          i18n,
+        },
+      ),
+      loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
+        query,
+        userKey,
+        i18n,
+      }),
+      loadSslGuidanceTagConnectionsByTagId: loadSslGuidanceTagConnectionsByTagId(
+        {
+          query,
+          userKey,
+          cleanseInput,
+          i18n,
+        },
+      ),
+      loadOrgByKey: loadOrgByKey({
+        query,
+        language: request.language,
+        userKey,
+        i18n,
+      }),
+      loadOrgBySlug: loadOrgBySlug({
+        query,
+        language: request.language,
+        userKey,
+        i18n,
+      }),
+      loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+        query,
+        language: request.language,
+        userKey,
+        cleanseInput,
+        i18n,
+      }),
+      loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+        query,
+        userKey,
+        cleanseInput,
+        language: request.language,
+        i18n,
+      }),
+      loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
+      loadUserByKey: loadUserByKey({ query, userKey, i18n }),
+      loadAffiliationByKey: loadAffiliationByKey({ query, userKey, i18n }),
+      loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({
+        query,
+        language: request.language,
+        userKey,
+        cleanseInput,
+        i18n,
+      }),
+      loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      spfGuidanceTagLoader: spfGuidanceTagLoader(query, userKey, i18n),
-      spfGuidanceTagConnectionsLoader: spfGuidanceTagConnectionsLoader(
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-      ),
-      sslGuidanceTagLoader: sslGuidanceTagLoader(query, userKey, i18n),
-      sslGuidanceTagConnectionsLoader: sslGuidanceTagConnectionsLoader(
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-      ),
-      orgLoaderByKey: orgLoaderByKey(query, request.language, userKey, i18n),
-      orgLoaderBySlug: orgLoaderBySlug(query, request.language, userKey, i18n),
-      orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
-        query,
-        request.language,
-        userKey,
-        cleanseInput,
-        i18n,
-      ),
-      orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
-        query,
-        userKey,
-        cleanseInput,
-        request.language,
-        i18n,
-      ),
-      userLoaderByUserName: userLoaderByUserName(query, userKey, i18n),
-      userLoaderByKey: userLoaderByKey(query, userKey, i18n),
-      affiliationLoaderByKey: affiliationLoaderByKey(query, userKey, i18n),
-      affiliationConnectionLoaderByUserId: affiliationConnectionLoaderByUserId(
-        query,
-        request.language,
-        userKey,
-        cleanseInput,
-        i18n,
-      ),
-      affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-      ),
-      verifiedDomainLoaderByDomain: verifiedDomainLoaderByDomain(query, i18n),
-      verifiedDomainLoaderByKey: verifiedDomainLoaderByKey(query, i18n),
-      verifiedDomainLoaderConnections: verifiedDomainLoaderConnections(
+      }),
+      loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
+      loadVerifiedDomainByKey: loadVerifiedDomainByKey({ query, i18n }),
+      loadVerifiedDomainConnections: loadVerifiedDomainConnections({
         query,
         cleanseInput,
         i18n,
+      }),
+      loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+        {
+          query,
+          cleanseInput,
+          i18n,
+        },
       ),
-      verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
+      loadVerifiedOrgByKey: loadVerifiedOrgByKey({
         query,
+        language: request.language,
+        i18n,
+      }),
+      loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
+        query,
+        language: request.language,
+        i18n,
+      }),
+      loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
+        {
+          query,
+          language: request.language,
+          cleanseInput,
+          i18n,
+        },
+      ),
+      loadVerifiedOrgConnections: loadVerifiedOrgConnections({
+        query,
+        language: request.language,
         cleanseInput,
         i18n,
-      ),
-      verifiedOrgLoaderByKey: verifiedOrgLoaderByKey(
-        query,
-        request.language,
-        i18n,
-      ),
-      verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
-        query,
-        request.language,
-        i18n,
-      ),
-      verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
-        query,
-        request.language,
-        cleanseInput,
-        i18n,
-      ),
-      verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
-        query,
-        request.language,
-        cleanseInput,
-        i18n,
-      ),
+      }),
     },
   }
 }

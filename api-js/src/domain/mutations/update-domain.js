@@ -47,7 +47,7 @@ export const updateDomain = new mutationWithClientMutationId({
       userKey,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { domainLoaderByKey, orgLoaderByKey },
+      loaders: { loadDomainByKey, loadOrgByKey },
     },
   ) => {
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
@@ -65,7 +65,7 @@ export const updateDomain = new mutationWithClientMutationId({
     await userRequired()
 
     // Check to see if domain exists
-    const domain = await domainLoaderByKey.load(domainId)
+    const domain = await loadDomainByKey.load(domainId)
 
     if (typeof domain === 'undefined') {
       console.warn(
@@ -79,7 +79,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -116,6 +116,7 @@ export const updateDomain = new mutationWithClientMutationId({
     let countCursor
     try {
       countCursor = await query`
+        WITH claims, domains, organizations
         FOR v, e IN 1..1 ANY ${domain._id} claims 
           FILTER e._from == ${org._id}
           RETURN e
@@ -151,7 +152,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     // Update domain
     const domainToInsert = {
-      domain: updatedDomain || domain.domain,
+      domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
       lastRan: domain.lastRan,
       selectors: selectors || domain.selectors,
     }
@@ -160,6 +161,7 @@ export const updateDomain = new mutationWithClientMutationId({
       await trx.step(
         async () =>
           await query`
+          WITH domains
           UPSERT { _key: ${domain._key} }
             INSERT ${domainToInsert}
             UPDATE ${domainToInsert}
@@ -184,8 +186,8 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Clear dataloader and load updated domain
-    await domainLoaderByKey.clear(domain._key)
-    const returnDomain = await domainLoaderByKey.load(domain._key)
+    await loadDomainByKey.clear(domain._key)
+    const returnDomain = await loadDomainByKey.load(domain._key)
 
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
     returnDomain.id = returnDomain._key

@@ -28,7 +28,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       userKey,
       query,
       auth: { userRequired },
-      loaders: { userLoaderByKey },
+      loaders: { loadUserByKey },
     },
   ) => {
     // Cleanse Input
@@ -65,6 +65,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
     // Update phoneValidated to be true
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT { phoneValidated: true }
           UPDATE { phoneValidated: true }
@@ -83,8 +84,8 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       `User: ${user._key} successfully two factor authenticated their account.`,
     )
 
-    await userLoaderByKey.clear(userKey)
-    const updatedUser = await userLoaderByKey.load(userKey)
+    await loadUserByKey.clear(userKey)
+    const updatedUser = await loadUserByKey.load(userKey)
 
     return {
       _type: 'success',

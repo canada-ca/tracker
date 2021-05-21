@@ -14,9 +14,9 @@ export const dmarcType = new GraphQLObjectType({
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,
-      resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
+      resolve: async ({ domainId }, _, { loaders: { loadDomainByKey } }) => {
         const domainKey = domainId.split('/')[1]
-        const domain = await domainLoaderByKey.load(domainKey)
+        const domain = await loadDomainByKey.load(domainKey)
         domain.id = domain._key
         return domain
       },
@@ -68,9 +68,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { guidanceTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: guidanceTags,
           ...args,
         })
@@ -90,9 +90,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { negativeTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: negativeTags,
           ...args,
         })
@@ -112,9 +112,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { neutralTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: neutralTags,
           ...args,
         })
@@ -134,9 +134,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { positiveTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: positiveTags,
           ...args,
         })

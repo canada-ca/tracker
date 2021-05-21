@@ -19,7 +19,7 @@ spec:
         app: tracker-api
     spec:
       containers:
-      - image: gcr.io/track-compliance/api-js:master-98e4b33-1617874600 # {"$imagepolicy": "flux-system:api"}
+      - image: gcr.io/track-compliance/api-js:master-49f6ba5-1621548871 # {"$imagepolicy": "flux-system:api"}
         name: api
         ports:
         - containerPort: 4000
@@ -184,6 +184,11 @@ spec:
             secretKeyRef:
               name: api
               key: NOTIFICATION_VERIFICATION_EMAIL_FR
+        - name: TRACING_ENABLED
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: TRACING_ENABLED
         resources:
           limits:
             cpu: 300m

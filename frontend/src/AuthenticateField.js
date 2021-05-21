@@ -47,8 +47,13 @@ const AuthenticateField = WithPseudoBox(function AuthenticateField({
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <Stack align="center">
-        <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
-          {codeSendMessage}{' '}
+        <FormLabel
+          htmlFor="twoFactorCode"
+          fontWeight="bold"
+          mb="2"
+          textAlign={['center', 'left']}
+        >
+          {codeSendMessage}
           <Trans>Please enter your two factor code below.</Trans>
         </FormLabel>
         <InputGroup width="fit-content">

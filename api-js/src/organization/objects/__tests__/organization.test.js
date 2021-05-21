@@ -1,4 +1,3 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import {
   GraphQLNonNull,
   GraphQLID,
@@ -11,18 +10,13 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
 import { Acronym, Slug } from '../../../scalars'
-import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
 import { domainConnection } from '../../../domain/objects'
-import { affiliationConnectionLoaderByOrgId } from '../../../affiliation/loaders'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { organizationType, organizationSummaryType } from '../../objects'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
-
 describe('given the organization object', () => {
+  let i18n
   describe('testing the field definitions', () => {
     it('has an id field', () => {
       const demoType = organizationType.getFields()
@@ -113,87 +107,7 @@ describe('given the organization object', () => {
       )
     })
   })
-
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, collections, org, user, domain, affiliation, i18n
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      user = await collections.users.save({
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        tfaValidated: false,
-        emailValidated: false,
-      })
-      org = await collections.organizations.save({
-        verified: false,
-        summaries: {
-          web: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-          mail: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-        },
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      affiliation = await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'admin',
-      })
-      domain = await collections.domains.save({
-        domain: 'test.gc.ca',
-      })
-      await collections.claims.save({
-        _from: org._id,
-        _to: domain._id,
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = organizationType.getFields()
@@ -318,23 +232,16 @@ describe('given the organization object', () => {
       it('returns the resolved value', async () => {
         const demoType = organizationType.getFields()
 
-        const loader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-          {},
-        )
-
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('domains', domain._key),
+              cursor: toGlobalId('domains', '1'),
               node: {
-                _id: domain._id,
-                _key: domain._key,
-                _rev: domain._rev,
+                _id: 'domains/1',
+                _key: '1',
+                _rev: 'rev',
                 _type: 'domain',
-                id: domain._key,
+                id: '1',
                 domain: 'test.gc.ca',
               },
             },
@@ -343,16 +250,22 @@ describe('given the organization object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('domains', domain._key),
-            endCursor: toGlobalId('domains', domain._key),
+            startCursor: toGlobalId('domains', '1'),
+            endCursor: toGlobalId('domains', '1'),
           },
         }
 
         await expect(
           demoType.domains.resolve(
-            { _id: org._id },
+            { _id: 'organizations/1' },
             { first: 1 },
-            { loaders: { domainLoaderConnectionsByOrgId: loader } },
+            {
+              loaders: {
+                loadDomainConnectionsByOrgId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -362,29 +275,22 @@ describe('given the organization object', () => {
         it('returns the resolved value', async () => {
           const demoType = organizationType.getFields()
 
-          const loader = affiliationConnectionLoaderByOrgId(
-            query,
-            user._key,
-            cleanseInput,
-            {},
-          )
-
           const checkPermission = jest.fn().mockReturnValue('admin')
 
           const expectedResults = {
             edges: [
               {
-                cursor: toGlobalId('affiliations', affiliation._key),
+                cursor: toGlobalId('affiliations', '1'),
                 node: {
-                  _from: org._id,
-                  _to: user._id,
-                  _id: affiliation._id,
-                  _rev: affiliation._rev,
-                  _key: affiliation._key,
+                  _from: 'organizations/1',
+                  _to: 'users/1',
+                  _id: 'affiliations/1',
+                  _rev: 'rev',
+                  _key: '1',
                   _type: 'affiliation',
-                  id: affiliation._key,
-                  orgKey: org._key,
-                  userKey: user._key,
+                  id: '1',
+                  orgKey: '1',
+                  userKey: '1',
                   permission: 'admin',
                 },
               },
@@ -393,18 +299,22 @@ describe('given the organization object', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('affiliations', affiliation._key),
-              endCursor: toGlobalId('affiliations', affiliation._key),
+              startCursor: toGlobalId('affiliations', '1'),
+              endCursor: toGlobalId('affiliations', '1'),
             },
           }
 
           await expect(
             demoType.affiliations.resolve(
-              { _id: org._id },
+              { _id: 'organizations/1' },
               { first: 5 },
               {
                 auth: { checkPermission },
-                loaders: { affiliationConnectionLoaderByOrgId: loader },
+                loaders: {
+                  loadAffiliationConnectionsByOrgId: jest
+                    .fn()
+                    .mockReturnValue(expectedResults),
+                },
               },
             ),
           ).resolves.toEqual(expectedResults)
@@ -429,23 +339,16 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const loader = affiliationConnectionLoaderByOrgId(
-              query,
-              user._key,
-              cleanseInput,
-              {},
-            )
-
             const checkPermission = jest.fn().mockReturnValue('user')
 
             try {
               await demoType.affiliations.resolve(
-                { _id: org._id },
+                { _id: '1' },
                 { first: 5 },
                 {
                   i18n,
                   auth: { checkPermission },
-                  loaders: { affiliationConnectionLoaderByOrgId: loader },
+                  loaders: { loadAffiliationConnectionsByOrgId: jest.fn() },
                 },
               )
             } catch (err) {
@@ -475,23 +378,16 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const loader = affiliationConnectionLoaderByOrgId(
-              query,
-              user._key,
-              cleanseInput,
-              {},
-            )
-
             const checkPermission = jest.fn().mockReturnValue('user')
 
             try {
               await demoType.affiliations.resolve(
-                { _id: org._id },
+                { _id: '1' },
                 { first: 5 },
                 {
                   i18n,
                   auth: { checkPermission },
-                  loaders: { affiliationConnectionLoaderByOrgId: loader },
+                  loaders: { loadAffiliationConnectionsByOrgId: jest.fn() },
                 },
               )
             } catch (err) {

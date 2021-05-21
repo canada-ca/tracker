@@ -35,7 +35,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByKey },
+      loaders: { loadOrgByKey, loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -47,7 +47,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     await userRequired()
 
     // Get requested org
-    const requestedOrg = await orgLoaderByKey.load(requestedOrgKey)
+    const requestedOrg = await loadOrgByKey.load(requestedOrgKey)
     if (typeof requestedOrg === 'undefined') {
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrgKey}, however no org with that id could be found.`,
@@ -75,7 +75,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     }
 
     // Get requested user
-    const requestedUser = await userLoaderByKey.load(requestedUserKey)
+    const requestedUser = await loadUserByKey.load(requestedUserKey)
     if (typeof requestedUser === 'undefined') {
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however no user with that id could be found.`,
@@ -93,6 +93,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     let affiliationCursor
     try {
       affiliationCursor = await query`
+        WITH affiliations, organizations, users
         FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations
           FILTER e._from == ${requestedOrg._id}
           RETURN { _key: e._key, permission: e.permission }
@@ -147,12 +148,13 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
 
       try {
         await trx.step(async () => {
-          await query`
-          FOR aff IN affiliations
-            FILTER aff._from == ${requestedOrg._id}
-            FILTER aff._to == ${requestedUser._id}
-            REMOVE aff IN affiliations
-            RETURN true
+          query`
+            WITH affiliations, organizations, users
+            FOR aff IN affiliations
+              FILTER aff._from == ${requestedOrg._id}
+              FILTER aff._to == ${requestedUser._id}
+              REMOVE aff IN affiliations
+              RETURN true
         `
         })
       } catch (err) {
@@ -182,6 +184,10 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       return {
         _type: 'regular',
         status: i18n._(t`Successfully removed user from organization.`),
+        user: {
+          id: requestedUser.id,
+          userName: requestedUser.userName,
+        },
       }
     } else {
       console.warn(

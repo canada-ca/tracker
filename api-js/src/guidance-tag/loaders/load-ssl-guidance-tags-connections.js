@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const sslGuidanceTagConnectionsLoader = (
+export const loadSslGuidanceTagConnectionsByTagId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ sslGuidanceTags, after, before, first, last, orderBy }) => {
+}) => async ({ sslGuidanceTags, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -79,7 +79,7 @@ export const sslGuidanceTagConnectionsLoader = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadSslGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -88,7 +88,7 @@ export const sslGuidanceTagConnectionsLoader = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadSslGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -100,7 +100,7 @@ export const sslGuidanceTagConnectionsLoader = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadSslGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -111,7 +111,7 @@ export const sslGuidanceTagConnectionsLoader = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: sslGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadSslGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -127,7 +127,7 @@ export const sslGuidanceTagConnectionsLoader = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: sslGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadSslGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -237,7 +237,7 @@ export const sslGuidanceTagConnectionsLoader = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in loadSslGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load SSL guidance tag(s). Please try again.`),
@@ -249,7 +249,7 @@ export const sslGuidanceTagConnectionsLoader = (
     sslGuidanceTagInfo = await sslGuidanceTagInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in loadSslGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load SSL guidance tag(s). Please try again.`),

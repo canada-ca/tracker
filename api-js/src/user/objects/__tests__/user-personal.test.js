@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import { ensure, dbNameFromFile } from 'arango-tools'
 import {
   GraphQLNonNull,
   GraphQLID,
@@ -9,14 +8,11 @@ import {
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
-import { affiliationConnectionLoaderByUserId } from '../../../affiliation/loaders'
-import { cleanseInput } from '../../../validators'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { userPersonalType } from '../index'
 import { LanguageEnums, TfaSendMethodEnum } from '../../../enums'
 
-const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
+const { CIPHER_KEY } = process.env
 
 describe('given the user object', () => {
   describe('testing the field definitions', () => {
@@ -77,81 +73,7 @@ describe('given the user object', () => {
       )
     })
   })
-
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, collections, user, org, affiliation
-
-    beforeAll(async () => {
-      // Generate DB Items
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      user = await collections.users.save({
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        tfaValidated: false,
-        emailValidated: false,
-      })
-      org = await collections.organizations.save({
-        verified: false,
-        summaries: {
-          web: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-          mail: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-        },
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      affiliation = await collections.affiliations.save({
-        _to: user._id,
-        _from: org._id,
-        permission: 'user',
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
       it('returns the resolved field', () => {
         const demoType = userPersonalType.getFields()
@@ -278,28 +200,21 @@ describe('given the user object', () => {
       it('returns the resolved value', async () => {
         const demoType = userPersonalType.getFields()
 
-        const loader = affiliationConnectionLoaderByUserId(
-          query,
-          user._key,
-          cleanseInput,
-          {},
-        )
-
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('affiliations', affiliation._key),
+              cursor: toGlobalId('affiliations', '1'),
               node: {
-                _from: org._id,
-                _id: affiliation._id,
-                _key: affiliation._key,
-                _rev: affiliation._rev,
-                _to: user._id,
+                _from: 'organizations/1',
+                _id: 'affiliations/1',
+                _key: '1',
+                _rev: 'rev',
+                _to: 'users/1',
                 _type: 'affiliation',
-                id: affiliation._key,
-                orgKey: org._key,
+                id: '1',
+                orgKey: '1',
                 permission: 'user',
-                userKey: user._key,
+                userKey: '1',
               },
             },
           ],
@@ -307,16 +222,22 @@ describe('given the user object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('affiliations', affiliation._key),
-            endCursor: toGlobalId('affiliations', affiliation._key),
+            startCursor: toGlobalId('affiliations', '1'),
+            endCursor: toGlobalId('affiliations', '1'),
           },
         }
 
         await expect(
           demoType.affiliations.resolve(
-            { _id: user._id },
+            { _id: '1' },
             { first: 1 },
-            { loaders: { affiliationConnectionLoaderByUserId: loader } },
+            {
+              loaders: {
+                loadAffiliationConnectionsByUserId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })

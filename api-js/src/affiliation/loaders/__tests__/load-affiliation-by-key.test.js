@@ -1,6 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { databaseOptions } from '../../../../database-options'
-import { affiliationLoaderByKey } from '..'
+import { loadAffiliationByKey } from '..'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -8,100 +8,107 @@ import frenchMessages from '../../../locale/fr/messages'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a affiliationLoaderByKey dataloader', () => {
-  let query, drop, truncate, collections, orgOne, orgTwo, affOne, user, i18n
-
-  let consoleOutput = []
+describe('given a loadAffiliationByKey dataloader', () => {
+  let i18n
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
 
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    orgOne = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    orgTwo = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'not-treasury-board-secretariat',
-          acronym: 'NTBS',
-          name: 'Not Treasury Board of Canada Secretariat',
-          zone: 'NFED',
-          sector: 'NTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'ne-pas-secretariat-conseil-tresor',
-          acronym: 'NPSCT',
-          name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-          zone: 'NPFED',
-          sector: 'NPTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    affOne = await collections.affiliations.save({
-      _from: orgOne._id,
-      _to: user._id,
-      permission: 'user',
-    })
-    await collections.affiliations.save({
-      _from: orgTwo._id,
-      _to: user._id,
-      permission: 'user',
-    })
-    consoleOutput = []
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
   describe('given a successful load', () => {
+    let query, drop, truncate, collections, orgOne, orgTwo, affOne, user
+
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      orgOne = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      orgTwo = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'not-treasury-board-secretariat',
+            acronym: 'NTBS',
+            name: 'Not Treasury Board of Canada Secretariat',
+            zone: 'NFED',
+            sector: 'NTBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'ne-pas-secretariat-conseil-tresor',
+            acronym: 'NPSCT',
+            name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
+            zone: 'NPFED',
+            sector: 'NPTBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      affOne = await collections.affiliations.save({
+        _from: orgOne._id,
+        _to: user._id,
+        permission: 'user',
+      })
+      await collections.affiliations.save({
+        _from: orgTwo._id,
+        _to: user._id,
+        permission: 'user',
+      })
+    })
+
+    afterEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
     describe('given a single id', () => {
       it('returns a single user affiliation', async () => {
         // Get affiliation From db
@@ -114,7 +121,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         `
         const expectedAffiliation = await expectedCursor.next()
 
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = loadAffiliationByKey({ query, i18n })
         const affiliation = await loader.load(expectedAffiliation._key)
 
         expect(affiliation).toEqual(expectedAffiliation)
@@ -137,7 +144,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           expectedAffiliations.push(tempAff)
         }
 
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = loadAffiliationByKey({ query, i18n })
         const affiliations = await loader.loadMany(affiliationIds)
         expect(affiliations).toEqual(expectedAffiliations)
       })
@@ -161,22 +168,17 @@ describe('given a affiliationLoaderByKey dataloader', () => {
     })
     describe('database error is raised', () => {
       it('throws an error', async () => {
-        const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
-        const expectedAffiliation = await expectedCursor.next()
-
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
-          await loader.load(expectedAffiliation._key)
+          await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to find user affiliation(s). Please try again.'),
@@ -184,31 +186,26 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running affiliationLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadAffiliationByKey: Error: Database error occurred.`,
         ])
       })
     })
     describe('cursor error is raised', () => {
       it('throws an error', async () => {
-        const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
-        const expectedAffiliation = await expectedCursor.next()
-
         const cursor = {
           forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
-          await loader.load(expectedAffiliation._key)
+          await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to find user affiliation(s). Please try again.'),
@@ -216,7 +213,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running affiliationLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadAffiliationByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -238,58 +235,48 @@ describe('given a affiliationLoaderByKey dataloader', () => {
     })
     describe('database error is raised', () => {
       it('throws an error', async () => {
-        const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
-        const expectedAffiliation = await expectedCursor.next()
-
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
-          await loader.load(expectedAffiliation._key)
+          await loader.load('1')
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running affiliationLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadAffiliationByKey: Error: Database error occurred.`,
         ])
       })
     })
     describe('cursor error is raised', () => {
       it('throws an error', async () => {
-        const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
-        const expectedAffiliation = await expectedCursor.next()
-
         const cursor = {
           forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
-          await loader.load(expectedAffiliation._key)
+          await loader.load('1')
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running affiliationLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadAffiliationByKey: Error: Cursor error occurred.`,
         ])
       })
     })

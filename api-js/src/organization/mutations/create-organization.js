@@ -95,7 +95,7 @@ export const createOrganization = new mutationWithClientMutationId({
       query,
       userKey,
       auth: { userRequired },
-      loaders: { orgLoaderBySlug },
+      loaders: { loadOrgBySlug },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -123,7 +123,7 @@ export const createOrganization = new mutationWithClientMutationId({
     const user = await userRequired()
 
     // Check to see if org already exists
-    const [orgEN, orgFR] = await orgLoaderBySlug.loadMany([slugEN, slugFR])
+    const [orgEN, orgFR] = await loadOrgBySlug.loadMany([slugEN, slugFR])
 
     if (typeof orgEN !== 'undefined' || typeof orgFR !== 'undefined') {
       console.warn(
@@ -179,6 +179,7 @@ export const createOrganization = new mutationWithClientMutationId({
       cursor = await trx.step(
         () =>
           query`
+            WITH organizations
             INSERT ${organizationDetails} INTO organizations
             RETURN MERGE(
               {
@@ -209,6 +210,7 @@ export const createOrganization = new mutationWithClientMutationId({
       await trx.step(
         () =>
           query`
+            WITH affiliations, organizations, users
             INSERT {
               _from: ${organization._id},
               _to: ${user._id},

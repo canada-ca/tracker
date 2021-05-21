@@ -37,11 +37,6 @@ const { databaseOptions } = require('../../database-options')
 const { superAdminService } = require('../index')
 
 describe('given the superAdminService function', () => {
-  const consoleErrorOutput = []
-  const consoleInfoOutput = []
-  const mockedError = (output) => consoleErrorOutput.push(output)
-  const mockedInfo = (output) => consoleInfoOutput.push(output)
-
   let query, drop, truncate, collections, transaction
 
   beforeAll(async () => {
@@ -56,11 +51,6 @@ describe('given the superAdminService function', () => {
   })
 
   beforeEach(async () => {
-    console.error = mockedError
-    console.info = mockedInfo
-    consoleErrorOutput.length = 0
-    consoleInfoOutput.length = 0
-
     await truncate()
   })
 
@@ -71,7 +61,14 @@ describe('given the superAdminService function', () => {
   describe('given the super admin account does not exist', () => {
     describe('given the super admin org does not exist', () => {
       it('creates a new admin account, org, and affiliation', async () => {
-        await superAdminService({ query, collections, transaction, bcrypt })
+        const mockLog = jest.fn()
+        await superAdminService({
+          query,
+          collections,
+          transaction,
+          bcrypt,
+          log: mockLog,
+        })
 
         const expectedOrgCursor = await query`
           FOR org IN organizations
@@ -111,7 +108,7 @@ describe('given the superAdminService function', () => {
 
         const expectedAdminCursor = await query`
           FOR user IN users
-            RETURN user  
+            RETURN user
         `
 
         const expectedAdmin = await expectedAdminCursor.next()
@@ -132,7 +129,7 @@ describe('given the superAdminService function', () => {
 
         const expectedAffiliationCursor = await query`
           FOR aff IN affiliations
-            RETURN aff  
+            RETURN aff
         `
         const expectedAffiliation = await expectedAffiliationCursor.next()
         const affiliation = {
@@ -146,11 +143,11 @@ describe('given the superAdminService function', () => {
         }
         expect(affiliation).toEqual(expectedAffiliation)
 
-        expect(consoleInfoOutput).toEqual([
-          'Checking for super admin account.',
-          'Super admin account, and org not found, creating new account.',
-          'Super admin account, org, and affiliation creation successful.',
-          'Exiting now.',
+        expect(mockLog.mock.calls).toEqual([
+          ['Checking for super admin account.'],
+          ['Super admin account, and org not found, creating new account.'],
+          ['Super admin account, org, and affiliation creation successful.'],
+          ['Exiting now.'],
         ])
       })
     })
@@ -161,13 +158,21 @@ describe('given the superAdminService function', () => {
       await createSuperAdminAccount({ collections, transaction, bcrypt })
       const expectedAdminCursor = await query`
         FOR user IN users
-          RETURN user  
+          RETURN user
       `
       expectedAdmin = await expectedAdminCursor.next()
     })
+
     describe('given the super admin org does not exist', () => {
       it('creates a new super admin org and affiliation', async () => {
-        await superAdminService({ query, collections, transaction, bcrypt })
+        const mockLog = jest.fn()
+        await superAdminService({
+          query,
+          collections,
+          transaction,
+          bcrypt,
+          log: mockLog,
+        })
 
         const expectedOrgCursor = await query`
           FOR org IN organizations
@@ -222,7 +227,7 @@ describe('given the superAdminService function', () => {
 
         const expectedAffiliationCursor = await query`
           FOR aff IN affiliations
-            RETURN aff  
+            RETURN aff
         `
         const expectedAffiliation = await expectedAffiliationCursor.next()
         const affiliation = {
@@ -236,17 +241,20 @@ describe('given the superAdminService function', () => {
         }
         expect(affiliation).toEqual(expectedAffiliation)
 
-        expect(consoleInfoOutput).toEqual([
-          'Checking for super admin account.',
-          'Super admin org not found, Super admin account found. Creating super admin org.',
-          'Removing old super admin affiliation.',
-          'Creating new super admin affiliation',
-          'Super admin org, and affiliation creation successful.',
-          'Exiting now.',
+        expect(mockLog.mock.calls).toEqual([
+          ['Checking for super admin account.'],
+          [
+            'Super admin org not found, Super admin account found. Creating super admin org.',
+          ],
+          ['Removing old super admin affiliation.'],
+          ['Creating new super admin affiliation'],
+          ['Super admin org, and affiliation creation successful.'],
+          ['Exiting now.'],
         ])
       })
     })
   })
+
   describe('given the super admin org exists', () => {
     let expectedOrg
     beforeEach(async () => {
@@ -259,7 +267,14 @@ describe('given the superAdminService function', () => {
     })
     describe('given the super admin account does not exist', () => {
       it('creates a new super admin account and affiliation', async () => {
-        await superAdminService({ query, collections, transaction, bcrypt })
+        const mockLog = jest.fn()
+        await superAdminService({
+          query,
+          collections,
+          transaction,
+          bcrypt,
+          log: mockLog,
+        })
 
         const org = {
           _id: expectedOrg._id,
@@ -293,7 +308,7 @@ describe('given the superAdminService function', () => {
 
         const expectedAdminCursor = await query`
           FOR user IN users
-            RETURN user  
+            RETURN user
         `
 
         const expectedAdmin = await expectedAdminCursor.next()
@@ -314,7 +329,7 @@ describe('given the superAdminService function', () => {
 
         const expectedAffiliationCursor = await query`
           FOR aff IN affiliations
-            RETURN aff  
+            RETURN aff
         `
         const expectedAffiliation = await expectedAffiliationCursor.next()
         const affiliation = {
@@ -328,17 +343,20 @@ describe('given the superAdminService function', () => {
         }
         expect(affiliation).toEqual(expectedAffiliation)
 
-        expect(consoleInfoOutput).toEqual([
-          'Checking for super admin account.',
-          'Super admin account not found, Super admin org found. Creating account.',
-          'Removing old super admin affiliation.',
-          'Creating new super admin affiliation',
-          'Super admin account, and affiliation creation successful.',
-          'Exiting now.',
+        expect(mockLog.mock.calls).toEqual([
+          ['Checking for super admin account.'],
+          [
+            'Super admin account not found, Super admin org found. Creating account.',
+          ],
+          ['Removing old super admin affiliation.'],
+          ['Creating new super admin affiliation'],
+          ['Super admin account, and affiliation creation successful.'],
+          ['Exiting now.'],
         ])
       })
     })
   })
+
   describe('given the super admin account and org exists', () => {
     describe('given the super admin affiliation does not exist', () => {
       let expectedOrg, expectedAdmin
@@ -353,12 +371,19 @@ describe('given the superAdminService function', () => {
         await createSuperAdminAccount({ collections, transaction, bcrypt })
         const expectedAdminCursor = await query`
         FOR user IN users
-          RETURN user  
+          RETURN user
       `
         expectedAdmin = await expectedAdminCursor.next()
       })
       it('creates a new affiliation', async () => {
-        await superAdminService({ query, collections, transaction, bcrypt })
+        const mockLog = jest.fn()
+        await superAdminService({
+          query,
+          collections,
+          transaction,
+          bcrypt,
+          log: mockLog,
+        })
 
         const org = {
           _id: expectedOrg._id,
@@ -407,7 +432,7 @@ describe('given the superAdminService function', () => {
 
         const expectedAffiliationCursor = await query`
           FOR aff IN affiliations
-            RETURN aff  
+            RETURN aff
         `
         const expectedAffiliation = await expectedAffiliationCursor.next()
         const affiliation = {
@@ -421,15 +446,16 @@ describe('given the superAdminService function', () => {
         }
         expect(affiliation).toEqual(expectedAffiliation)
 
-        expect(consoleInfoOutput).toEqual([
-          'Checking for super admin account.',
-          'Found super admin account, and org. Checking for affiliation.',
-          'Super admin affiliation not found, creating new affiliation.',
-          'Super admin affiliation creation successful.',
-          'Exiting now.',
+        expect(mockLog.mock.calls).toEqual([
+          ['Checking for super admin account.'],
+          ['Found super admin account, and org. Checking for affiliation.'],
+          ['Super admin affiliation not found, creating new affiliation.'],
+          ['Super admin affiliation creation successful.'],
+          ['Exiting now.'],
         ])
       })
     })
+
     describe('given that the super admin affiliation exists', () => {
       let expectedOrg, expectedAdmin, expectedAffiliation
       beforeEach(async () => {
@@ -443,7 +469,7 @@ describe('given the superAdminService function', () => {
         await createSuperAdminAccount({ collections, transaction, bcrypt })
         const expectedAdminCursor = await query`
           FOR user IN users
-            RETURN user  
+            RETURN user
         `
         expectedAdmin = await expectedAdminCursor.next()
 
@@ -455,12 +481,19 @@ describe('given the superAdminService function', () => {
         })
         const expectedAffiliationCursor = await query`
           FOR aff IN affiliations
-            RETURN aff  
+            RETURN aff
         `
         expectedAffiliation = await expectedAffiliationCursor.next()
       })
       it('exits the script', async () => {
-        await superAdminService({ query, collections, transaction, bcrypt })
+        const mockLog = jest.fn()
+        await superAdminService({
+          query,
+          collections,
+          transaction,
+          bcrypt,
+          log: mockLog,
+        })
 
         const org = {
           _id: expectedOrg._id,
@@ -518,11 +551,11 @@ describe('given the superAdminService function', () => {
         }
         expect(affiliation).toEqual(expectedAffiliation)
 
-        expect(consoleInfoOutput).toEqual([
-          'Checking for super admin account.',
-          'Found super admin account, and org. Checking for affiliation.',
-          'Super admin affiliation found.',
-          'Exiting now.',
+        expect(mockLog.mock.calls).toEqual([
+          ['Checking for super admin account.'],
+          ['Found super admin account, and org. Checking for affiliation.'],
+          ['Super admin affiliation found.'],
+          ['Exiting now.'],
         ])
       })
     })

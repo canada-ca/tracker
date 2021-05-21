@@ -7,7 +7,10 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { sslGuidanceTagConnectionsLoader, sslGuidanceTagLoader } from '../index'
+import {
+  loadSslGuidanceTagConnectionsByTagId,
+  loadSslGuidanceTagByTagId,
+} from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -20,16 +23,9 @@ describe('when given the load ssl guidance tag connection function', () => {
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -43,48 +39,59 @@ describe('when given the load ssl guidance tag connection function', () => {
       },
     })
   })
-
-  beforeEach(async () => {
+  afterEach(() => {
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-
-    await collections.sslGuidanceTags.save({
-      _key: 'ssl1',
-    })
-    await collections.sslGuidanceTags.save({
-      _key: 'ssl2',
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+  
+      await collections.sslGuidanceTags.save({
+        _key: 'ssl1',
+        tagName: 'a',
+        guidance: 'a',
+      })
+      await collections.sslGuidanceTags.save({
+        _key: 'ssl2',
+        tagName: 'b',
+        guidance: 'b',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('using after cursor', () => {
       it('returns ssl result(s) after a given node id', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -120,16 +127,16 @@ describe('when given the load ssl guidance tag connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns ssl result(s) before a given node id', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -165,16 +172,16 @@ describe('when given the load ssl guidance tag connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -209,16 +216,16 @@ describe('when given the load ssl guidance tag connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -253,17 +260,6 @@ describe('when given the load ssl guidance tag connection function', () => {
     })
     describe('using orderBy field', () => {
       beforeEach(async () => {
-        await truncate()
-        await collections.sslGuidanceTags.save({
-          _key: 'ssl1',
-          tagName: 'a',
-          guidance: 'a',
-        })
-        await collections.sslGuidanceTags.save({
-          _key: 'ssl2',
-          tagName: 'b',
-          guidance: 'b',
-        })
         await collections.sslGuidanceTags.save({
           _key: 'ssl3',
           tagName: 'c',
@@ -273,15 +269,15 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('ordering on TAG_ID', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
@@ -318,15 +314,15 @@ describe('when given the load ssl guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
@@ -365,15 +361,15 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('ordering on TAG_NAME', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
@@ -410,15 +406,15 @@ describe('when given the load ssl guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
@@ -457,15 +453,15 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('ordering on GUIDANCE', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
@@ -502,15 +498,15 @@ describe('when given the load ssl guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
@@ -550,12 +546,12 @@ describe('when given the load ssl guidance tag connection function', () => {
     describe('no ssl results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -600,12 +596,12 @@ describe('when given the load ssl guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const sslGuidanceTags = ['ssl1', 'ssl2']
           const connectionArgs = {}
@@ -623,18 +619,18 @@ describe('when given the load ssl guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSslGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const sslGuidanceTags = ['ssl1', 'ssl2']
           const connectionArgs = {
@@ -655,19 +651,19 @@ describe('when given the load ssl guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSslGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -687,18 +683,18 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -718,7 +714,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -726,12 +722,12 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -751,18 +747,18 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -782,7 +778,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -793,12 +789,12 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const sslGuidanceTags = ['ssl1', 'ssl2']
               const connectionArgs = {
@@ -820,7 +816,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSslGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -830,12 +826,12 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const sslGuidanceTags = ['ssl1', 'ssl2']
               const connectionArgs = {
@@ -857,7 +853,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSslGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -870,12 +866,12 @@ describe('when given the load ssl guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
         const connectionArgs = {
@@ -893,7 +889,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadSslGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -906,12 +902,12 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
         const connectionArgs = {
@@ -929,7 +925,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadSslGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -952,12 +948,12 @@ describe('when given the load ssl guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const sslGuidanceTags = ['ssl1', 'ssl2']
           const connectionArgs = {}
@@ -971,18 +967,18 @@ describe('when given the load ssl guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSslGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const sslGuidanceTags = ['ssl1', 'ssl2']
           const connectionArgs = {
@@ -999,19 +995,19 @@ describe('when given the load ssl guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSslGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -1027,18 +1023,18 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -1054,7 +1050,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1062,12 +1058,12 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -1083,18 +1079,18 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const sslGuidanceTags = ['ssl1', 'ssl2']
             const connectionArgs = {
@@ -1110,7 +1106,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadSslGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1121,12 +1117,12 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const sslGuidanceTags = ['ssl1', 'ssl2']
               const connectionArgs = {
@@ -1144,7 +1140,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSslGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1154,12 +1150,12 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const sslGuidanceTags = ['ssl1', 'ssl2']
               const connectionArgs = {
@@ -1177,7 +1173,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSslGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1190,12 +1186,12 @@ describe('when given the load ssl guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
         const connectionArgs = {
@@ -1211,7 +1207,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadSslGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -1224,12 +1220,12 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
         const connectionArgs = {
@@ -1245,7 +1241,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadSslGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

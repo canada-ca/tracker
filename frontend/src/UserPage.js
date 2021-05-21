@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { string } from 'prop-types'
-import { Stack, SimpleGrid, Divider } from '@chakra-ui/core'
-import { useQuery } from '@apollo/client'
+import { Stack, SimpleGrid, Divider, useToast, Icon } from '@chakra-ui/core'
+import { useMutation, useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { QUERY_CURRENT_USER } from './graphql/queries'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
@@ -13,9 +13,39 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import EditableUserTFAMethod from './EditableUserTFAMethod'
 import EditableUserPhoneNumber from './EditableUserPhoneNumber'
+import { TrackerButton } from './TrackerButton'
+import { SEND_EMAIL_VERIFICATION } from './graphql/mutations'
 
 export default function UserPage() {
   const { currentUser } = useUserState()
+  const toast = useToast()
+  const [emailSent, setEmailSent] = useState(false)
+  const [sendEmailVerification, { error }] = useMutation(
+    SEND_EMAIL_VERIFICATION,
+    {
+      onError() {
+        toast({
+          title: error.message,
+          description: t`Unable to send verification email`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onCompleted() {
+        toast({
+          title: t`Email successfully sent`,
+          description: t`Check your associated Tracker email for the verification link`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        setEmailSent(true)
+      },
+    },
+  )
 
   const {
     loading: queryUserLoading,
@@ -52,8 +82,8 @@ export default function UserPage() {
   } = queryUserData?.userPage
 
   return (
-    <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
-      <Stack p={25} spacing={4}>
+    <SimpleGrid columns={{ md: 1, lg: 2 }} width="100%">
+      <Stack py={25} px="4">
         <EditableUserDisplayName detailValue={displayName} />
 
         <Divider />
@@ -79,6 +109,19 @@ export default function UserPage() {
           emailValidated={emailValidated}
           phoneValidated={phoneValidated}
         />
+
+        {!emailValidated && (
+          <TrackerButton
+            variant="primary"
+            onClick={() => {
+              sendEmailVerification({ variables: { userName: userName } })
+            }}
+            disabled={emailSent}
+          >
+            <Icon name="email" />
+            <Trans>Verify Email</Trans>
+          </TrackerButton>
+        )}
       </Stack>
     </SimpleGrid>
   )

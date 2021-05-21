@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dmarcSummaryEdgeLoaderByDomainIdPeriod } from '../index'
+import { loadDmarcSummaryEdgeByDomainIdAndPeriod } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dmarcSummaryEdgeLoaderByDomainIdPeriod loader', () => {
+describe('given the loadDmarcSummaryEdgeByDomainIdAndPeriod loader', () => {
   let query, drop, truncate, collections, i18n, user, dmarcSummary
 
   const consoleOutput = []
@@ -74,11 +74,11 @@ describe('given the dmarcSummaryEdgeLoaderByDomainIdPeriod loader', () => {
       `
       const expectedEdges = await expectedEdgesCursor.next()
 
-      const loader = dmarcSummaryEdgeLoaderByDomainIdPeriod(
+      const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
         query,
-        user._key,
+        userKey: user._key,
         i18n,
-      )
+      })
 
       const dmarcEdges = await loader({
         domainId: 'domains/1',
@@ -109,11 +109,11 @@ describe('given the dmarcSummaryEdgeLoaderByDomainIdPeriod loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred'))
 
-        const loader = dmarcSummaryEdgeLoaderByDomainIdPeriod(
-          mockedQuery,
-          user._key,
+        const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
+          query: mockedQuery,
+          userKey: user._key,
           i18n,
-        )
+        })
 
         try {
           await loader({
@@ -140,11 +140,11 @@ describe('given the dmarcSummaryEdgeLoaderByDomainIdPeriod loader', () => {
         }
         const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
 
-        const loader = dmarcSummaryEdgeLoaderByDomainIdPeriod(
-          mockedQuery,
-          user._key,
+        const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
+          query: mockedQuery,
+          userKey: user._key,
           i18n,
-        )
+        })
 
         try {
           await loader({
@@ -184,11 +184,11 @@ describe('given the dmarcSummaryEdgeLoaderByDomainIdPeriod loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred'))
 
-        const loader = dmarcSummaryEdgeLoaderByDomainIdPeriod(
-          mockedQuery,
-          user._key,
+        const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
+          query: mockedQuery,
+          userKey: user._key,
           i18n,
-        )
+        })
 
         try {
           await loader({
@@ -213,11 +213,11 @@ describe('given the dmarcSummaryEdgeLoaderByDomainIdPeriod loader', () => {
         }
         const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
 
-        const loader = dmarcSummaryEdgeLoaderByDomainIdPeriod(
-          mockedQuery,
-          user._key,
+        const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
+          query: mockedQuery,
+          userKey: user._key,
           i18n,
-        )
+        })
 
         try {
           await loader({

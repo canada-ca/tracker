@@ -77,9 +77,9 @@ export const userPersonalType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { affiliationConnectionLoaderByUserId } },
+        { loaders: { loadAffiliationConnectionsByUserId } },
       ) => {
-        const affiliations = await affiliationConnectionLoaderByUserId({
+        const affiliations = await loadAffiliationConnectionsByUserId({
           userId: _id,
           ...args,
         })

@@ -70,8 +70,8 @@ describe('<AdminPanel />', () => {
       </UserStateProvider>,
     )
     await waitFor(() => {
-      expect(getByText('Domain List')).toBeInTheDocument()
-      expect(getByText('User List')).toBeInTheDocument()
+      expect(getByText('Domains')).toBeInTheDocument()
+      expect(getByText('Users')).toBeInTheDocument()
     })
   })
 })

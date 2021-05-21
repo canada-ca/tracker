@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const dkimResultsLoaderConnectionByDkimId = (
+export const loadDkimResultConnectionsByDkimId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ dkimId, after, before, first, last, orderBy }) => {
+}) => async ({ dkimId, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -79,7 +79,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
     )
     throw new Error(
       i18n._(
@@ -88,7 +88,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
     )
     throw new Error(
       i18n._(
@@ -100,7 +100,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDkimResultConnectionsByDkimId.`,
       )
       throw new Error(
         i18n._(
@@ -111,7 +111,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dkimResultsLoaderConnectionByDkimId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadDkimResultConnectionsByDkimId.`,
       )
       throw new Error(
         i18n._(
@@ -127,7 +127,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimResultsLoaderConnectionByDkimId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDkimResultConnectionsByDkimId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),

@@ -6,6 +6,7 @@ export const Authorization = {
       fragment RequiredAuthResultFields on AuthResult {
         authToken
         user {
+          id
           userName
           tfaSendMethod
           preferredLang

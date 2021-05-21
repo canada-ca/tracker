@@ -594,7 +594,7 @@ type DmarcSummaryConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
   # A list of edges.
-  edges: [DmarcSummaryEdge] @listLength(min: 0, max: 5)
+  edges: [DmarcSummaryEdge] @listLength(min: 5, max: 10)
   # The total amount of dmarc summaries the user has access to.
   totalCount: Int @fake(
     type: number
@@ -621,23 +621,25 @@ input DmarcSummaryOrder {
 # Properties by which dmarc summary connections can be ordered.
 enum DmarcSummaryOrderField {
   # Order dmarc summaries by fail count.
-  FAIL_COUNT
+  FAIL
   # Order dmarc summaries by pass count.
-  PASS_COUNT
+  FULL_PASS
   # Order dmarc summaries by pass dkim only count.
-  PASS_DKIM_COUNT
+  PASS_DKIM_ONLY
   # Order dmarc summaries by pass spf only count.
-  PASS_SPF_COUNT
+  PASS_SPF_ONLY
   # Order dmarc summaries by fail percentage.
   FAIL_PERCENTAGE
   # Order dmarc summaries by pass percentage.
-  PASS_PERCENTAGE
+  FULL_PASS_PERCENTAGE
   # Order dmarc summaries by pass dkim only percentage.
-  PASS_DKIM_PERCENTAGE
+  PASS_DKIM_ONLY_PERCENTAGE
   # Order dmarc summaries by spf only percentage.
-  PASS_SPF_PERCENTAGE
+  PASS_SPF_ONLY_PERCENTAGE
   # Order dmarc summaries by total messages
   TOTAL_MESSAGES
+  # Order dmarc summaries by their respective domains.
+  DOMAIN
 }
 
 # Domain object containing information for a given domain.
@@ -1383,6 +1385,8 @@ type Query {
     month: PeriodEnums!
     # The year in which the returned data is relevant to.
     year: Year!
+    # An optional string used to filter the results based on domains.
+    search: String
     after: String
     first: Int
     before: String
@@ -1502,6 +1506,8 @@ union RemoveDomainUnion = DomainError | DomainResult
 type DomainResult {
   # Informs the user if the domain removal was successful.
   status: String
+  # Removed Domain
+  domain: Domain
 }
 
 input RemoveDomainInput {
@@ -1527,6 +1533,8 @@ union RemoveOrganizationUnion = OrganizationError | OrganizationResult
 type OrganizationResult {
   # Informs the user if the organization mutation was successful.
   status: String
+  # Removed Organization
+  organization: Organization
 }
 
 input RemoveOrganizationInput {
@@ -1576,6 +1584,8 @@ union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 type RemoveUserFromOrgResult {
   # Informs the user if the user was successfully removed.
   status: String
+  # Removed user
+  user: SharedUser
 }
 
 input RemoveUserFromOrgInput {
@@ -1930,12 +1940,30 @@ type SpfFailureTableEdge {
 type SSL implements Node {
   # The ID of an object
   id: ID!
+  # List of ciphers in use by the server deemed to be "acceptable".
+  acceptableCiphers: [String]
+  # List of curves in use by the server deemed to be "acceptable".
+  acceptableCurves: [String]
+  # Denotes vulnerability to OpenSSL CCS Injection.
+  ccsInjectionVulnerable: Boolean
   # The domain the scan was ran on.
   domain: Domain
-  # The time when the scan was initiated.
-  timestamp: Date @fake(type: pastDate)
+  # Denotes vulnerability to "Heartbleed" exploit.
+  heartbleedVulnerable: Boolean
   # Raw scan result.
   rawJson: JSON
+  # List of ciphers in use by the server deemed to be "strong".
+  strongCiphers: [String]
+  # List of curves in use by the server deemed to be "strong".
+  strongCurves: [String]
+  # Denotes support for elliptic curve key pairs.
+  supportsEcdhKeyExchange: Boolean
+  # The time when the scan was initiated.
+  timestamp: Date
+  # List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+  weakCiphers: [String]
+  # List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+  weakCurves: [String]
   # Guidance tags found during scan.
   guidanceTags(
     # Ordering options for guidance tag connections

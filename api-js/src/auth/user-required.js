@@ -1,10 +1,6 @@
 import { t } from '@lingui/macro'
 
-export const userRequired = ({
-  i18n,
-  userKey,
-  userLoaderByKey,
-}) => async () => {
+export const userRequired = ({ i18n, userKey, loadUserByKey }) => async () => {
   if (typeof userKey === 'undefined') {
     console.warn(
       `User attempted to access controlled content, but userKey was undefined.`,
@@ -14,7 +10,7 @@ export const userRequired = ({
 
   let user, userDoesNotExist
   try {
-    user = await userLoaderByKey.load(userKey)
+    user = await loadUserByKey.load(userKey)
     if (typeof user === 'undefined') {
       userDoesNotExist = true
     }

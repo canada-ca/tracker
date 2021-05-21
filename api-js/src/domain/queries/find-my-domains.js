@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { GraphQLBoolean, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
@@ -28,29 +27,19 @@ export const findMyDomains = {
     _,
     args,
     {
-      i18n,
       userKey,
       auth: { checkSuperAdmin, userRequired },
-      loaders: { domainLoaderConnectionsByUserId },
+      loaders: { loadDomainConnectionsByUserId },
     },
   ) => {
-    let domainConnections
-
     await userRequired()
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    try {
-      domainConnections = await domainLoaderConnectionsByUserId({
-        isSuperAdmin,
-        ...args,
-      })
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userKey} was trying to gather domain connections in findMyDomains.`,
-      )
-      throw new Error(i18n._(t`Unable to load domains. Please try again.`))
-    }
+    const domainConnections = await loadDomainConnectionsByUserId({
+      isSuperAdmin,
+      ...args,
+    })
 
     console.info(`User: ${userKey} successfully retrieved their domains.`)
 

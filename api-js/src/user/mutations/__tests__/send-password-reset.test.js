@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { userLoaderByUserName } from '../../loaders'
+import { loadUserByUserName } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
@@ -107,7 +107,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendPasswordResetEmail: mockNotify,
@@ -123,9 +123,11 @@ describe('user send password reset email', () => {
             },
           }
 
-          const user = await userLoaderByUserName(query, '1', {}).load(
-            'test.account@istio.actually.exists',
-          )
+          const user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
 
           const token = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
@@ -173,7 +175,7 @@ describe('user send password reset email', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 notify: {
                   sendPasswordResetEmail: mockNotify,
@@ -247,7 +249,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendPasswordResetEmail: mockNotify,
@@ -264,9 +266,11 @@ describe('user send password reset email', () => {
             },
           }
 
-          const user = await userLoaderByUserName(query, '1', {}).load(
-            'test.account@istio.actually.exists',
-          )
+          const user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
 
           const token = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
@@ -314,7 +318,7 @@ describe('user send password reset email', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 notify: {
                   sendPasswordResetEmail: mockNotify,

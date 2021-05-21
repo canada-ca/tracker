@@ -1,4 +1,6 @@
+import { t } from '@lingui/macro'
 import {
+  GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -57,16 +59,32 @@ export const domainType = new GraphQLObjectType({
           type: GraphQLString,
           description: 'String argument used to search for organizations.',
         },
+        isAdmin: {
+          type: GraphQLBoolean,
+          description:
+            'Filter orgs based off of the user being an admin of them.',
+        },
+        includeSuperAdminOrg: {
+          type: GraphQLBoolean,
+          description:
+            'Filter org list to either include or exclude the super admin org.',
+        },
         ...connectionArgs,
       },
       description: 'The organization that this domain belongs to.',
       resolve: async (
         { _id },
         args,
-        { loaders: { orgLoaderConnectionArgsByDomainId } },
+        {
+          auth: { checkSuperAdmin },
+          loaders: { loadOrgConnectionsByDomainId },
+        },
       ) => {
-        const orgs = await orgLoaderConnectionArgsByDomainId({
+        const isSuperAdmin = await checkSuperAdmin()
+
+        const orgs = await loadOrgConnectionsByDomainId({
           domainId: _id,
+          isSuperAdmin,
           ...args,
         })
         return orgs
@@ -103,9 +121,10 @@ export const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         { month, year },
         {
+          i18n,
           userKey,
           loaders: {
-            dmarcSummaryEdgeLoaderByDomainIdPeriod,
+            loadDmarcSummaryEdgeByDomainIdAndPeriod,
             loadStartDateFromPeriod,
           },
           auth: { checkDomainOwnership, userRequired },
@@ -121,13 +140,15 @@ export const domainType = new GraphQLObjectType({
             `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
-            `Unable to retrieve DMARC report information for: ${domain}`,
+            i18n._(
+              t`Unable to retrieve DMARC report information for: ${domain}`,
+            ),
           )
         }
 
         const startDate = loadStartDateFromPeriod({ period: month, year })
 
-        const dmarcSummaryEdge = await dmarcSummaryEdgeLoaderByDomainIdPeriod({
+        const dmarcSummaryEdge = await loadDmarcSummaryEdgeByDomainIdAndPeriod({
           domainId: _id,
           startDate,
         })
@@ -146,8 +167,9 @@ export const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
+          i18n,
           userKey,
-          loaders: { dmarcYearlySumEdgeLoader },
+          loaders: { loadDmarcYearlySumEdge },
           auth: { checkDomainOwnership, userRequired },
         },
       ) => {
@@ -161,11 +183,13 @@ export const domainType = new GraphQLObjectType({
             `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
-            `Unable to retrieve DMARC report information for: ${domain}`,
+            i18n._(
+              t`Unable to retrieve DMARC report information for: ${domain}`,
+            ),
           )
         }
 
-        const dmarcSummaryEdges = await dmarcYearlySumEdgeLoader({
+        const dmarcSummaryEdges = await loadDmarcYearlySumEdge({
           domainId: _id,
         })
 

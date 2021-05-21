@@ -10,8 +10,8 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
-import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderByKey } from '../../loaders'
+import { loadUserByKey } from '../../../user/loaders'
+import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -136,7 +136,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -144,8 +144,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -215,7 +215,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -223,8 +223,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -294,7 +294,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -302,8 +302,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -373,7 +373,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -381,8 +381,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -452,7 +452,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -460,8 +460,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -531,7 +531,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -539,8 +539,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -610,7 +610,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -618,8 +618,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -702,7 +702,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -710,8 +710,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -783,7 +783,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -791,8 +791,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -862,7 +862,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -870,8 +870,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -941,7 +941,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -949,8 +949,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1020,7 +1020,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1028,8 +1028,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1099,7 +1099,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1107,8 +1107,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1178,7 +1178,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1186,8 +1186,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1257,7 +1257,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1265,8 +1265,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1349,7 +1349,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1357,8 +1357,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1439,7 +1439,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1447,8 +1447,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1518,7 +1518,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1526,8 +1526,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1597,7 +1597,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1605,8 +1605,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1676,7 +1676,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1684,8 +1684,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1755,7 +1755,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1763,8 +1763,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1834,7 +1834,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1842,8 +1842,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1913,7 +1913,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1921,8 +1921,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2005,7 +2005,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2013,8 +2013,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2086,7 +2086,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2094,8 +2094,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2165,7 +2165,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2173,8 +2173,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2244,7 +2244,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2252,8 +2252,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2323,7 +2323,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2331,8 +2331,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2402,7 +2402,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2410,8 +2410,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2481,7 +2481,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2489,8 +2489,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2560,7 +2560,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2568,8 +2568,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2652,7 +2652,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2660,8 +2660,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2788,7 +2788,7 @@ describe('updating an organization', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -2796,8 +2796,8 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -2807,12 +2807,13 @@ describe('updating an organization', () => {
                   updateOrganization: {
                     result: {
                       code: 403,
-                      description: 'Permission Denied: Please contact organization admin for help with updating organization.',
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating organization.',
                     },
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
@@ -2863,7 +2864,7 @@ describe('updating an organization', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -2871,8 +2872,8 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -2882,12 +2883,13 @@ describe('updating an organization', () => {
                   updateOrganization: {
                     result: {
                       code: 403,
-                      description: 'Permission Denied: Please contact organization admin for help with updating organization.',
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating organization.',
                     },
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
@@ -2941,7 +2943,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -2949,8 +2951,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -3050,7 +3052,7 @@ describe('updating an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -3058,8 +3060,8 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -3069,7 +3071,8 @@ describe('updating an organization', () => {
               updateOrganization: {
                 result: {
                   code: 400,
-                  description: 'Organization name already in use, please choose another and try again.',
+                  description:
+                    'Organization name already in use, please choose another and try again.',
                 },
               },
             },
@@ -3116,8 +3119,8 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockQuery = jest.fn().mockReturnValue({
               next() {
@@ -3168,7 +3171,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -3176,8 +3179,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -3230,8 +3233,8 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockQuery = jest
               .fn()
@@ -3280,7 +3283,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -3288,8 +3291,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -3308,8 +3311,8 @@ describe('updating an organization', () => {
         })
         describe('when checking to see if orgName is already in use', () => {
           it('throws an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockQuery = jest
               .fn()
@@ -3358,7 +3361,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -3366,8 +3369,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -3420,8 +3423,8 @@ describe('updating an organization', () => {
         })
         describe('when updating/inserting new org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockQuery = jest
               .fn()
@@ -3503,7 +3506,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -3511,8 +3514,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -3531,8 +3534,8 @@ describe('updating an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             transaction = jest.fn().mockReturnValue({
               step() {
@@ -3612,7 +3615,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -3620,8 +3623,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -3735,7 +3738,7 @@ describe('updating an organization', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -3743,8 +3746,8 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -3759,7 +3762,7 @@ describe('updating an organization', () => {
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
@@ -3810,7 +3813,7 @@ describe('updating an organization', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -3818,8 +3821,8 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -3834,7 +3837,7 @@ describe('updating an organization', () => {
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
@@ -3920,7 +3923,7 @@ describe('updating an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -3928,8 +3931,8 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -3996,7 +3999,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -4004,8 +4007,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -4063,8 +4066,8 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockQuery = jest.fn().mockReturnValue({
               next() {
@@ -4115,7 +4118,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -4123,8 +4126,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -4173,8 +4176,8 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockQuery = jest
               .fn()
@@ -4223,7 +4226,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -4231,8 +4234,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -4247,8 +4250,8 @@ describe('updating an organization', () => {
         })
         describe('when checking to see if orgName is already in use', () => {
           it('throws an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockQuery = jest
               .fn()
@@ -4297,7 +4300,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -4305,8 +4308,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -4355,8 +4358,8 @@ describe('updating an organization', () => {
         })
         describe('when updating/inserting new org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
@@ -4407,7 +4410,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -4415,8 +4418,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )
@@ -4431,8 +4434,8 @@ describe('updating an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
@@ -4512,7 +4515,7 @@ describe('updating an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -4520,8 +4523,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgByKey: orgLoader,
+                  loadUserByKey: userLoader,
                 },
               },
             )

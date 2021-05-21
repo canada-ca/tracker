@@ -10,7 +10,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -20,11 +20,9 @@ spec:
       timeoutSeconds: 600
       containerConcurrency: 8
       containers:
-        - name: https-scanner
-          image: gcr.io/track-compliance/scanners/https:master-36359cc # {"$imagepolicy": "flux-system:https-scanner"}
-
+      - name: https-scanner
+        image: gcr.io/track-compliance/services/scanners/https:master-40d93dd-1620670722 # {"$imagepolicy": "flux-system:https-scanner"}
 ---
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -37,7 +35,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -47,45 +45,43 @@ spec:
       timeoutSeconds: 600
       containerConcurrency: 1
       containers:
-        - name: result-processor
-          image: gcr.io/track-compliance/scanners/results:master-bd31de0 # {"$imagepolicy": "flux-system:result-processor"}
-          env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "8529"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
-            - name: REPO_NAME
-              value: "ITSP.40.062"
-            - name: REPO_OWNER
-              value: "CybercentreCanada"
-            - name: GUIDANCE_DIR
-              value: "transport-layer-security"
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: GITHUB_TOKEN
-
+      - name: result-processor
+        image: gcr.io/track-compliance/services/scanners/results:master-cbfd007-1617737145 # {"$imagepolicy": "flux-system:result-processor"}
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_PASS
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_HOST
+        - name: DB_PORT
+          value: "8529"
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_NAME
+        - name: REPO_NAME
+          value: "ITSP.40.062"
+        - name: REPO_OWNER
+          value: "CybercentreCanada"
+        - name: GUIDANCE_DIR
+          value: "transport-layer-security"
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: GITHUB_TOKEN
 ---
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -98,7 +94,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -108,11 +104,9 @@ spec:
       timeoutSeconds: 600
       containerConcurrency: 8
       containers:
-        - name: ssl-scanner
-          image: gcr.io/track-compliance/scanners/ssl:master-36359cc # {"$imagepolicy": "flux-system:ssl-scanner"}
-
+      - name: ssl-scanner
+        image: gcr.io/track-compliance/services/scanners/ssl:master-cbfd007-1617737121 # {"$imagepolicy": "flux-system:ssl-scanner"}
 ---
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -125,7 +119,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -135,11 +129,9 @@ spec:
       timeoutSeconds: 600
       containerConcurrency: 8
       containers:
-        - name: dns-scanner
-          image: gcr.io/track-compliance/scanners/dns:master-36359cc # {"$imagepolicy": "flux-system:dns-scanner"}
-
+      - name: dns-scanner
+        image: gcr.io/track-compliance/services/scanners/dns:master-9c662ba-1618317412 # {"$imagepolicy": "flux-system:dns-scanner"}
 ---
-
 # K8s Service Account that runs `src`'s container.
 
 apiVersion: v1
@@ -147,9 +139,7 @@ kind: ServiceAccount
 metadata:
   name: service-account
   namespace: scanners
-
 ---
-
 # The permissions that `src` needs.
 
 apiVersion: rbac.authorization.k8s.io/v1
@@ -159,17 +149,15 @@ metadata:
   name: event-watcher
   namespace: scanners
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - get
-      - list
-      - watch
-
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - get
+  - list
+  - watch
 ---
-
 # Give `src`'s service account the necessary permissions.
 
 apiVersion: rbac.authorization.k8s.io/v1
@@ -183,8 +171,6 @@ roleRef:
   kind: Role
   name: event-watcher
 subjects:
-  - kind: ServiceAccount
-    name: service-account
-    namespace: scanners
-
----
+- kind: ServiceAccount
+  name: service-account
+  namespace: scanners

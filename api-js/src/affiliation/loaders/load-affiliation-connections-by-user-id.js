@@ -2,13 +2,13 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const affiliationConnectionLoaderByUserId = (
+export const loadAffiliationConnectionsByUserId = ({
   query,
   language,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ userId, after, before, first, last, orderBy }) => {
+}) => async ({ userId, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -158,7 +158,7 @@ export const affiliationConnectionLoaderByUserId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: affiliationConnectionLoaderByUserId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadAffiliationConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -167,7 +167,7 @@ export const affiliationConnectionLoaderByUserId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: affiliationConnectionLoaderByUserId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadAffiliationConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -179,7 +179,7 @@ export const affiliationConnectionLoaderByUserId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: affiliationConnectionLoaderByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadAffiliationConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -190,7 +190,7 @@ export const affiliationConnectionLoaderByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: affiliationConnectionLoaderByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadAffiliationConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -206,7 +206,7 @@ export const affiliationConnectionLoaderByUserId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationConnectionLoaderByUserId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadAffiliationConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -399,7 +399,7 @@ export const affiliationConnectionLoaderByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to query affiliations in affiliationConnectionLoaderByUserId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to query affiliations in loadAffiliationConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to query affiliation(s). Please try again.`),
@@ -411,7 +411,7 @@ export const affiliationConnectionLoaderByUserId = (
     filteredAffiliations = await filteredAffiliationCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather affiliations in affiliationConnectionLoaderByUserId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather affiliations in loadAffiliationConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load affiliation(s). Please try again.`))
   }

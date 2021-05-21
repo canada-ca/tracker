@@ -31,14 +31,14 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
       request,
       auth: { tokenize },
       validators: { cleanseInput },
-      loaders: { userLoaderByUserName },
+      loaders: { loadUserByUserName },
       notify: { sendPasswordResetEmail },
     },
   ) => {
     // Cleanse Input
     const userName = cleanseInput(args.userName).toLowerCase()
 
-    const user = await userLoaderByUserName.load(userName)
+    const user = await loadUserByUserName.load(userName)
 
     if (typeof user !== 'undefined') {
       const token = tokenize({

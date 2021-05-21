@@ -1,22 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+
 import { domainType } from '../../../domain/objects'
-import {
-  dkimLoaderConnectionsByDomainId,
-  dmarcLoaderConnectionsByDomainId,
-  spfLoaderConnectionsByDomainId,
-} from '../../loaders'
 import {
   emailScanType,
   dkimConnection,
   dmarcConnection,
   spfConnection,
 } from '../index'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the email gql object', () => {
   describe('testing its field definitions', () => {
@@ -46,126 +36,31 @@ describe('given the email gql object', () => {
     })
   })
   describe('testing field resolvers', () => {
-    let query, drop, truncate, collections, user, domain, org, dkim, dmarc, spf
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      user = await collections.users.save({
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        tfaValidated: false,
-        emailValidated: false,
-      })
-
-      org = await collections.organizations.save({
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'admin',
-      })
-      domain = await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-        slug: 'test-domain-gc-ca',
-      })
-      await collections.claims.save({
-        _from: org._id,
-        _to: domain._id,
-      })
-      dkim = await collections.dkim.save({
-        timestamp: '2020-10-02T12:43:39Z',
-      })
-      await collections.domainsDKIM.save({
-        _from: domain._id,
-        _to: dkim._id,
-      })
-      dmarc = await collections.dmarc.save({
-        timestamp: '2020-10-02T12:43:39Z',
-        dmarcPhase: 1,
-        record: 'txtRecord',
-        pPolicy: 'pPolicy',
-        spPolicy: 'spPolicy',
-        pct: 100,
-        guidanceTags: ['dmarc1'],
-      })
-      await collections.domainsDMARC.save({
-        _from: domain._id,
-        _to: dmarc._id,
-      })
-      spf = await collections.spf.save({
-        timestamp: '2020-10-02T12:43:39Z',
-        lookups: 5,
-        record: 'txtRecord',
-        spfDefault: 'default',
-        guidanceTags: ['spf1'],
-      })
-      await collections.domainsSPF.save({
-        _from: domain._id,
-        _to: spf._id,
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = emailScanType.getFields()
 
-        const loader = domainLoaderByKey(query, user._key, {})
-
         const expectedResult = {
-          _id: domain._id,
-          _key: domain._key,
-          _rev: domain._rev,
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
           _type: 'domain',
-          id: domain._key,
+          id: '1',
           domain: 'test.domain.gc.ca',
           slug: 'test-domain-gc-ca',
         }
 
         await expect(
           demoType.domain.resolve(
-            { _key: domain._key },
+            { _key: '1' },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -177,14 +72,14 @@ describe('given the email gql object', () => {
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('dkim', dkim._key),
+              cursor: toGlobalId('dkim', 'dkim1'),
               node: {
-                _id: dkim._id,
-                _key: dkim._key,
-                _rev: dkim._rev,
+                _id: 'dkimGuidanceTags/dkim1',
+                _key: 'dkim1',
+                _rev: 'rev',
                 _type: 'dkim',
-                id: dkim._key,
-                domainId: domain._id,
+                id: 'dkim1',
+                domainId: 'domains/1',
                 timestamp: '2020-10-02T12:43:39Z',
               },
             },
@@ -193,23 +88,22 @@ describe('given the email gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('dkim', dkim._key),
-            endCursor: toGlobalId('dkim', dkim._key),
+            startCursor: toGlobalId('dkim', 'dkim1'),
+            endCursor: toGlobalId('dkim', 'dkim1'),
           },
         }
 
-        const loader = dkimLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          {},
-        )
-
         await expect(
           demoType.dkim.resolve(
-            { _id: domain._id },
+            { _id: 'domains/1' },
             { first: 1 },
-            { loaders: { dkimLoaderConnectionsByDomainId: loader } },
+            {
+              loaders: {
+                loadDkimConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -221,14 +115,14 @@ describe('given the email gql object', () => {
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('dmarc', dmarc._key),
+              cursor: toGlobalId('dmarc', 'dmarc1'),
               node: {
-                _id: dmarc._id,
-                _key: dmarc._key,
-                _rev: dmarc._rev,
+                _id: 'dmarcGuidanceTags/dmarc1',
+                _key: 'dmarc1',
+                _rev: 'rev',
                 _type: 'dmarc',
-                id: dmarc._key,
-                domainId: domain._id,
+                id: 'dmarc1',
+                domainId: 'domains/1',
                 dmarcPhase: 1,
                 timestamp: '2020-10-02T12:43:39Z',
                 pPolicy: 'pPolicy',
@@ -243,23 +137,22 @@ describe('given the email gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('dmarc', dmarc._key),
-            endCursor: toGlobalId('dmarc', dmarc._key),
+            startCursor: toGlobalId('dmarc', 'dmarc1'),
+            endCursor: toGlobalId('dmarc', 'dmarc1'),
           },
         }
 
-        const loader = dmarcLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          {},
-        )
-
         await expect(
           demoType.dmarc.resolve(
-            { _id: domain._id },
+            { _id: 'domains/1' },
             { first: 1 },
-            { loaders: { dmarcLoaderConnectionsByDomainId: loader } },
+            {
+              loaders: {
+                loadDmarcConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -271,14 +164,14 @@ describe('given the email gql object', () => {
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('spf', spf._key),
+              cursor: toGlobalId('spf', 'spf1'),
               node: {
-                _id: spf._id,
-                _key: spf._key,
-                _rev: spf._rev,
+                _id: 'spfGuidanceTags/spf1',
+                _key: 'spf1',
+                _rev: 'rev',
                 _type: 'spf',
-                id: spf._key,
-                domainId: domain._id,
+                id: 'spf1',
+                domainId: 'domains/1',
                 lookups: 5,
                 record: 'txtRecord',
                 spfDefault: 'default',
@@ -291,23 +184,21 @@ describe('given the email gql object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('spf', spf._key),
-            endCursor: toGlobalId('spf', spf._key),
+            startCursor: toGlobalId('spf', 'spf1'),
+            endCursor: toGlobalId('spf', 'spf1'),
           },
         }
-
-        const loader = spfLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          {},
-        )
-
         await expect(
           demoType.spf.resolve(
-            { _id: domain._id },
+            { _id: 'domains/1' },
             { first: 1 },
-            { loaders: { spfLoaderConnectionsByDomainId: loader } },
+            {
+              loaders: {
+                loadSpfConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })

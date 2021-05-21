@@ -10,84 +10,76 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
-import { domainLoaderConnectionsByUserId } from '../../loaders'
-import { userLoaderByKey } from '../../../user'
+import { loadDomainConnectionsByUserId } from '../../loaders'
+import { loadUserByKey } from '../../../user'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findMyDomainsQuery', () => {
   let query, drop, truncate, schema, collections, org, i18n, user
 
-  beforeAll(async () => {
-    // Create GQL Schema
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
-    })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-  })
-
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    consoleOutput.length = 0
-
-    user = await collections.users.save({
-      displayName: 'Test Account',
-      userName: 'test.account@istio.actually.exists',
-      preferredLang: 'french',
-    })
-
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
+    // Create GQL Schema
+    schema = new GraphQLSchema({
+      query: createQuerySchema(),
+      mutation: createMutationSchema(),
     })
   })
-
   afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
+    consoleOutput.length = 0
   })
 
   describe('given successful retrieval of domains', () => {
     let domainOne, domainTwo
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
+      user = await collections.users.save({
+        displayName: 'Test Account',
+        userName: 'test.account@istio.actually.exists',
+        preferredLang: 'french',
+      })
+
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
       await collections.affiliations.save({
         _from: org._id,
         _to: user._id,
@@ -125,6 +117,12 @@ describe('given findMyDomainsQuery', () => {
         _to: domainTwo._id,
         _from: org._id,
       })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
     })
     describe('user queries for their domains', () => {
       it('returns domains', async () => {
@@ -165,15 +163,19 @@ describe('given findMyDomainsQuery', () => {
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               }),
             },
             loaders: {
-              domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+              loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              ),
+              }),
             },
           },
         )
@@ -236,7 +238,7 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedLoader = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred'))
 
@@ -273,18 +275,23 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn(),
               },
               loaders: {
-                domainLoaderConnectionsByUserId: mockedLoader,
+                loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+                  query: mockedQuery,
+                  userKey: 1,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
           )
 
           const error = [
-            new GraphQLError(`Unable to load domains. Please try again.`),
+            new GraphQLError(`Unable to query domain(s). Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: 1 was trying to gather domain connections in findMyDomains.`,
+            `Database error occurred while user: 1 was trying to query domains in loadDomainsByUser, error: Error: Database error occurred`,
           ])
         })
       })
@@ -308,7 +315,7 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedLoader = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred'))
 
@@ -345,7 +352,12 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn(),
               },
               loaders: {
-                domainLoaderConnectionsByUserId: mockedLoader,
+                loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+                  query: mockedQuery,
+                  userKey: 1,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
           )
@@ -354,7 +366,7 @@ describe('given findMyDomainsQuery', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: 1 was trying to gather domain connections in findMyDomains.`,
+            `Database error occurred while user: 1 was trying to query domains in loadDomainsByUser, error: Error: Database error occurred`,
           ])
         })
       })

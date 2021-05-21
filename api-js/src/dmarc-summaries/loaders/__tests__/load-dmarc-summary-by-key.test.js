@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dmarcSumLoaderByKey } from '../index'
+import { loadDmarcSummaryByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dmarcSumLoaderByKey dataloader', () => {
+describe('given the loadDmarcSummaryByKey dataloader', () => {
   let query,
     drop,
     truncate,
@@ -125,8 +125,9 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
       const expectedSummary = await expectedCursor.next()
       expectedSummary.domainKey = domain._key
 
-      const loader = dmarcSumLoaderByKey(query)
-      const summary = await loader.load(expectedSummary._key)
+      const summary = await loadDmarcSummaryByKey({ query }).load(
+        expectedSummary._key,
+      )
 
       expect(summary).toEqual(expectedSummary)
     })
@@ -162,8 +163,9 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         expectedSummaries.push(temp)
       }
 
-      const loader = dmarcSumLoaderByKey(query)
-      const summaries = await loader.loadMany(summaryKeys)
+      const summaries = await loadDmarcSummaryByKey({ query }).loadMany(
+        summaryKeys,
+      )
 
       expect(summaries).toEqual(expectedSummaries)
     })
@@ -188,17 +190,18 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dmarcSumLoaderByKey(query, '1234', i18n)
 
         try {
-          await loader.load('1234')
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
+            '1234',
+          )
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to find DMARC summary data. Please try again.'),
           )
         }
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running dmarcSumLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDmarcSummaryByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -210,10 +213,11 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dmarcSumLoaderByKey(query, '1234', i18n)
 
         try {
-          await loader.load('1234')
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
+            '1234',
+          )
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to find DMARC summary data. Please try again.'),
@@ -221,7 +225,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dmarcSumLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDmarcSummaryByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -246,15 +250,16 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dmarcSumLoaderByKey(query, '1234', i18n)
 
         try {
-          await loader.load('1234')
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
+            '1234',
+          )
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running dmarcSumLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDmarcSummaryByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -266,16 +271,17 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dmarcSumLoaderByKey(query, '1234', i18n)
 
         try {
-          await loader.load('1234')
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
+            '1234',
+          )
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dmarcSumLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDmarcSummaryByKey: Error: Cursor error occurred.`,
         ])
       })
     })

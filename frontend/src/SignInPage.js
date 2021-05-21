@@ -71,6 +71,7 @@ export default function SignInPage() {
           status: 'success',
           duration: 9000,
           isClosable: true,
+          position: 'top-left',
         })
       }
       // 2FA enabled
@@ -110,7 +111,7 @@ export default function SignInPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="8" mx="auto" overflow="hidden">
+    <Box px="4" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}

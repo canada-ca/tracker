@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: core-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: scan
+        image: gcr.io/track-compliance/services/core
+        env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: DB_USER
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: DB_PASS
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: DB_HOST
+          - name: DB_PORT
+            value: "8529"
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: DB_NAME
+          - name: REPO_NAME
+            value: "tracker"
+          - name: REPO_OWNER
+            value: "canada-ca"
+          - name: GUIDANCE_DIR
+            value: "guidance"
+          - name: GITHUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: GITHUB_TOKEN
+      restartPolicy: Never
+  backoffLimit: 4

@@ -2,13 +2,23 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const orgLoaderConnectionsByUserId = (
+export const loadOrgConnectionsByUserId = ({
   query,
   userKey,
   cleanseInput,
   language,
   i18n,
-) => async ({ after, before, first, last, orderBy, isSuperAdmin, search }) => {
+}) => async ({
+  after,
+  before,
+  first,
+  last,
+  orderBy,
+  isSuperAdmin,
+  search,
+  isAdmin,
+  includeSuperAdminOrg,
+}) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -163,7 +173,7 @@ export const orgLoaderConnectionsByUserId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -172,7 +182,7 @@ export const orgLoaderConnectionsByUserId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -184,7 +194,7 @@ export const orgLoaderConnectionsByUserId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadOrgConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -195,7 +205,7 @@ export const orgLoaderConnectionsByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: loadOrgConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -211,7 +221,7 @@ export const orgLoaderConnectionsByUserId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: orgLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadOrgConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -358,16 +368,42 @@ export const orgLoaderConnectionsByUserId = (
     sortString = aql`ASC`
   }
 
+  let includeSuperAdminOrgQuery = aql``
+  if (!includeSuperAdminOrg) {
+    includeSuperAdminOrgQuery = aql`FILTER org.orgDetails.en.slug != "sa" OR org.orgDetails.fr.slug != "sa"`
+  }
+
   let orgKeysQuery
   if (isSuperAdmin) {
     orgKeysQuery = aql`
-      WITH claims, domains, organizations
-      LET orgKeys = (FOR org IN organizations RETURN org._key)
+      WITH claims, domains, organizations, organizationSearch
+      LET orgKeys = (
+        FOR org IN organizations
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
+    `
+  } else if (isAdmin) {
+    orgKeysQuery = aql`
+      WITH affiliations, claims, domains, organizations, organizationSearch, users
+      LET orgKeys = (
+        FOR org, e IN 1..1 
+        INBOUND ${userDBId} affiliations 
+        FILTER e.permission == "admin"
+        OR e.permission == "super_admin" 
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
     `
   } else {
     orgKeysQuery = aql`
-      WITH affiliations, claims, domains, organizations, users
-      LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+      WITH affiliations, claims, domains, organizations, organizationSearch, users
+      LET orgKeys = (
+        FOR org, e IN 1..1 
+        INBOUND ${userDBId} affiliations 
+        ${includeSuperAdminOrgQuery}
+        RETURN org._key
+      )
     `
   }
 
@@ -465,7 +501,7 @@ export const orgLoaderConnectionsByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to query organizations in orgLoaderConnectionsByUserId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to query organizations in loadOrgConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load organization(s). Please try again.`),
@@ -477,7 +513,7 @@ export const orgLoaderConnectionsByUserId = (
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather organizations in orgLoaderConnectionsByUserId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather organizations in loadOrgConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load organization(s). Please try again.`),

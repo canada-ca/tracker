@@ -17,10 +17,10 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
 import PrivatePage from './PrivatePage'
 import { Page } from './Page'
+import { LoadingMessage } from './LoadingMessage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
-const QRcodePage = lazy(() => import('./QRcodePage'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
 const UserPage = lazy(() => import('./UserPage'))
 const SignInPage = lazy(() => import('./SignInPage'))
@@ -35,12 +35,14 @@ const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
 const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
+const EmailValidationPage = lazy(() => import('./EmailValidationPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
   const toast = useToast()
   const { currentUser, isLoggedIn, logout } = useUserState()
+  const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
   return (
     <>
@@ -118,7 +120,7 @@ export default function App() {
 
         {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
         <Main>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>
                 <LandingPage />
@@ -197,47 +199,49 @@ export default function App() {
                 <UserPage username={currentUser.userName} />
               </PrivatePage>
 
-              <PrivatePage
-                path="/two-factor-code"
-                title={t`Authentication QR Code`}
-              >
-                <QRcodePage userName={currentUser.userName} />
-              </PrivatePage>
+              <Page path="/validate/:verifyToken" title={t`Email Verification`}>
+                <EmailValidationPage />
+              </Page>
 
               <Page component={PageNotFound} title="404" />
             </Switch>
           </Suspense>
         </Main>
         <FloatingMenu />
+
         <Footer>
-          <Link
-            isExternal={true}
-            href={
-              i18n.locale === 'en'
-                ? 'https://www.canada.ca/en/transparency/privacy.html'
-                : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-            }
-          >
-            <Trans>Privacy</Trans>
-          </Link>
-          <Link
-            ml={4}
-            isExternal={true}
-            href={
-              i18n.locale === 'en'
-                ? 'https://www.canada.ca/en/transparency/terms.html'
-                : 'https://www.canada.ca/fr/transparence/avis.html'
-            }
-          >
-            <Trans>Terms & conditions</Trans>
-          </Link>
-          <Link
-            ml={4}
-            href={'https://github.com/canada-ca/tracker/issues'}
-            isExternal={true}
-          >
-            <Trans>Report an Issue</Trans>
-          </Link>
+          {!smallDevice && (
+            <div>
+              <Link
+                isExternal={true}
+                href={
+                  i18n.locale === 'en'
+                    ? 'https://www.canada.ca/en/transparency/privacy.html'
+                    : 'https://www.canada.ca/fr/transparence/confidentialite.html'
+                }
+              >
+                <Trans>Privacy</Trans>
+              </Link>
+              <Link
+                ml={4}
+                isExternal={true}
+                href={
+                  i18n.locale === 'en'
+                    ? 'https://www.canada.ca/en/transparency/terms.html'
+                    : 'https://www.canada.ca/fr/transparence/avis.html'
+                }
+              >
+                <Trans>Terms & conditions</Trans>
+              </Link>
+              <Link
+                ml={4}
+                href={'https://github.com/canada-ca/tracker/issues'}
+                isExternal={true}
+              >
+                <Trans>Report an Issue</Trans>
+              </Link>
+            </div>
+          )}
         </Footer>
       </Flex>
     </>

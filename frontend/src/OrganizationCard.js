@@ -9,9 +9,10 @@ import {
   Divider,
   Icon,
 } from '@chakra-ui/core'
-import { useRouteMatch, useHistory } from 'react-router-dom'
+import { useRouteMatch, Link as RouteLink } from 'react-router-dom'
 import { string, number, bool, object } from 'prop-types'
 import { Trans } from '@lingui/macro'
+import { TrackerButton } from './TrackerButton'
 
 export function OrganizationCard({
   name,
@@ -23,7 +24,7 @@ export function OrganizationCard({
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
-  const history = useHistory()
+  const smallDevice = window.matchMedia('(max-width: 500px)').matches
   let webValue = 0
   let mailValue = 0
   const webSummary = summaries.web.categories.filter((cat) => {
@@ -53,13 +54,11 @@ export function OrganizationCard({
         width="100%"
         display={{ md: 'flex' }}
         alignItems="center"
-        onClick={() => {
-          history.push(`${path}/${slug}`)
-        }}
-        _hover={{ bg: 'gray.100' }}
-        p="8"
+        _hover={{ bg: ['', 'gray.100'] }}
+        p="4"
         mx="auto"
-        as="button"
+        as={!smallDevice ? RouteLink : ''}
+        to={`${path}/${slug}`}
       >
         <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
           <Stack isInline align="center">
@@ -117,6 +116,18 @@ export function OrganizationCard({
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
+        <Stack mt="4" fontSize="xl" w="100%">
+          <TrackerButton
+            variant="primary"
+            as={RouteLink}
+            to={`${path}/${slug}`}
+            display={{ md: 'none' }}
+          >
+            <Text whiteSpace="noWrap">
+              <Trans>View Details</Trans>
+            </Text>
+          </TrackerButton>
+        </Stack>
       </PseudoBox>
     </ListItem>
   )

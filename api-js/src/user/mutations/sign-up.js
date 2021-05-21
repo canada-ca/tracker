@@ -51,9 +51,12 @@ export const signUp = new mutationWithClientMutationId({
     {
       i18n,
       collections,
+      query,
       transaction,
+      request,
       auth: { bcrypt, tokenize, verifyToken },
-      loaders: { orgLoaderByKey, userLoaderByUserName, userLoaderByKey },
+      loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
+      notify: { sendVerificationEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -90,7 +93,7 @@ export const signUp = new mutationWithClientMutationId({
     }
 
     // Check to see if user already exists
-    const checkUser = await userLoaderByUserName.load(userName)
+    const checkUser = await loadUserByUserName.load(userName)
 
     if (typeof checkUser !== 'undefined') {
       console.warn(
@@ -127,15 +130,29 @@ export const signUp = new mutationWithClientMutationId({
     // Setup Transaction
     const trx = await transaction(collectionStrings)
 
-    let insertedUser
+    let insertedUserCursor
     try {
-      insertedUser = await trx.step(() => collections.users.save(user))
+      insertedUserCursor = await trx.step(
+        () => query`
+          WITH users
+          INSERT ${user} INTO users 
+          RETURN MERGE(
+            {
+              id: NEW._key,
+              _type: "user"
+            },
+            NEW
+          )
+        `,
+      )
     } catch (err) {
       console.error(
         `Transaction step error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
       )
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
+
+    const insertedUser = await insertedUserCursor.next()
 
     // Assign user to org
     if (signUpToken !== '') {
@@ -161,7 +178,7 @@ export const signUp = new mutationWithClientMutationId({
         }
       }
 
-      const checkOrg = await orgLoaderByKey.load(tokenOrgKey)
+      const checkOrg = await loadOrgByKey.load(tokenOrgKey)
       if (typeof checkOrg === 'undefined') {
         console.warn(
           `User: ${userName} attempted to sign up with an invite token, however the org could not be found.`,
@@ -176,12 +193,16 @@ export const signUp = new mutationWithClientMutationId({
       }
 
       try {
-        await trx.step(() =>
-          collections.affiliations.save({
-            _from: checkOrg._id,
-            _to: insertedUser._id,
-            permission: tokenRequestedRole,
-          }),
+        await trx.step(
+          () =>
+            query`
+            WITH affiliations, organizations, users
+            INSERT {
+              _from: ${checkOrg._id},
+              _to: ${insertedUser._id},
+              permission: ${tokenRequestedRole}
+            } INTO affiliations
+          `,
         )
       } catch (err) {
         console.error(
@@ -200,10 +221,16 @@ export const signUp = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
+    const returnUser = await loadUserByKey.load(insertedUser._key)
+
     // Generate JWT
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
 
-    const returnUser = await userLoaderByKey.load(insertedUser._key)
+    const verifyUrl = `${request.protocol}://${request.get(
+      'host',
+    )}/validate/${token}`
+
+    await sendVerificationEmail({ returnUser, verifyUrl })
 
     console.info(`User: ${userName} successfully created a new account.`)
 

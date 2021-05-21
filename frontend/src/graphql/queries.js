@@ -7,12 +7,14 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $field: OrganizationOrderField!
     $direction: OrderDirection!
     $search: String
+    $includeSuperAdminOrg: Boolean
   ) {
     findMyOrganizations(
       after: $after
       first: $first
       orderBy: { field: $field, direction: $direction }
       search: $search
+      includeSuperAdminOrg: $includeSuperAdminOrg
     ) {
       edges {
         cursor
@@ -112,6 +114,11 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
+              # implementation
+              # enforced
+              # hsts
+              # hstsAge
+              # preloaded
               negativeGuidanceTags(first: 5) {
                 edges {
                   cursor
@@ -175,6 +182,15 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
+              # ccsInjectionVulnerable
+              # heartbleedVulnerable
+              # supportsEcdhKeyExchange
+              # acceptableCiphers
+              # acceptableCurves
+              # strongCiphers
+              # strongCurves
+              # weakCiphers
+              # weakCurves
               negativeGuidanceTags(first: 5) {
                 edges {
                   cursor
@@ -516,6 +532,7 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
             id
             permission
             user {
+              id
               userName
             }
           }
@@ -1276,35 +1293,41 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
   query PaginatedDmarcReportSummaryTable(
     $month: PeriodEnums!
     $year: Year!
-    $after: String
     $first: Int
+    $after: String
+    $orderBy: DmarcSummaryOrder
+    $search: String
   ) {
-    findMyDomains(after: $after, first: $first, ownership: true) {
+    findMyDmarcSummaries(
+      month: $month
+      year: $year
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+    ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
       edges {
         node {
           id
-          domain
-          dmarcSummaryByPeriod(month: $month, year: $year) {
-            month
-            year
-            domain {
-              domain
-            }
-            categoryPercentages {
-              failPercentage
-              fullPassPercentage
-              passDkimOnlyPercentage
-              passSpfOnlyPercentage
-              totalMessages
-            }
+          month
+          year
+          domain {
+            domain
+          }
+          categoryPercentages {
+            failPercentage
+            fullPassPercentage
+            passDkimOnlyPercentage
+            passSpfOnlyPercentage
+            totalMessages
           }
         }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-        hasPreviousPage
-        startCursor
       }
     }
   }
@@ -1318,6 +1341,7 @@ export const USER_AFFILIATIONS = gql`
     $last: Int
   ) {
     findMe {
+      id
       affiliations(after: $after, first: $first, before: $before, last: $last) {
         edges {
           node {

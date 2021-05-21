@@ -1,13 +1,13 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const orgLoaderByKey = (query, language, userKey, i18n) =>
+export const loadOrgByKey = ({ query, language, userKey, i18n }) =>
   new DataLoader(async (ids) => {
     let cursor
 
     try {
       cursor = await query`
-        WITH domains, claims, organizations
+        WITH claims, domains, organizations
         FOR org IN organizations
           FILTER org._key IN ${ids}
           LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
@@ -27,7 +27,7 @@ export const orgLoaderByKey = (query, language, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running orgLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadOrgByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load organization(s). Please try again.`),
@@ -41,7 +41,7 @@ export const orgLoaderByKey = (query, language, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} during orgLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} during loadOrgByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load organization(s). Please try again.`),

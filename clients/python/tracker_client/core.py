@@ -6,10 +6,26 @@ from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
 
 from queries import SIGNIN_MUTATION, TFA_AUTH
+from __version__ import __version__
 
 
 _JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 """Regex to validate a JWT"""
+
+
+def generate_headers(auth_token, language):
+    """Returns HTTP header dict with "authorization", "accept-language", and "user-agent" set.
+
+    :param str auth_token: JWT auth token.
+    :param str language: value to set the http "accept-language" header to.
+    :return: a dict with the HTTP headers the client will use.
+    :rtype: dict
+    """
+    return {
+        "authorization": auth_token,
+        "accept-language": language.lower(),
+        "user-agent": f"TRACKER-API-PYTHON-CLIENT/{__version__}",
+    }
 
 
 def _create_transport(url, auth_token, language):
@@ -41,7 +57,7 @@ def _create_transport(url, auth_token, language):
 
         transport = AIOHTTPTransport(
             url=url,
-            headers={"authorization": auth_token, "accept-language": language.lower()},
+            headers=generate_headers(auth_token, language),
         )
 
     return transport

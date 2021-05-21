@@ -19,7 +19,7 @@ export const findDomainByDomain = {
     {
       i18n,
       auth: { checkDomainPermission, userRequired },
-      loaders: { domainLoaderByDomain },
+      loaders: { loadDomainByDomain },
       validators: { cleanseInput },
     },
   ) => {
@@ -30,7 +30,7 @@ export const findDomainByDomain = {
     const user = await userRequired()
 
     // Retrieve domain by domain
-    const domain = await domainLoaderByDomain.load(domainInput)
+    const domain = await loadDomainByDomain.load(domainInput)
 
     if (typeof domain === 'undefined') {
       console.warn(`User ${user._key} could not retrieve domain.`)
@@ -52,7 +52,7 @@ export const findDomainByDomain = {
     console.info(
       `User ${user._key} successfully retrieved domain ${domain._key}.`,
     )
-    domain.id = domain._key
+    
     return domain
   },
 }

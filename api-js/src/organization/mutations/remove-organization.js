@@ -31,7 +31,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       userKey,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { orgLoaderByKey },
+      loaders: { loadOrgByKey },
     },
   ) => {
     // Cleanse Input
@@ -41,7 +41,7 @@ export const removeOrganization = new mutationWithClientMutationId({
     await userRequired()
 
     // Get org from db
-    const organization = await orgLoaderByKey.load(orgId)
+    const organization = await loadOrgByKey.load(orgId)
 
     // Check to see if org exists
     if (typeof organization === 'undefined') {
@@ -182,6 +182,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.step(async () => {
           await query`
+            WITH organizations
             REMOVE ${organization._key} IN organizations
           `
         }),
@@ -215,6 +216,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       status: i18n._(
         t`Successfully removed organization: ${organization.slug}.`,
       ),
+      organization,
     }
   },
 })

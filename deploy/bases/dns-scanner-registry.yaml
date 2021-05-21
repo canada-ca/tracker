@@ -1,10 +1,10 @@
 ---
-apiVersion: image.toolkit.fluxcd.io/v1alpha1
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
 kind: ImageRepository
 metadata:
   name: dns-scanner
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/scanners/dns
+  image: gcr.io/track-compliance/services/scanners/dns
   interval: 1m0s
 

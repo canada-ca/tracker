@@ -30,7 +30,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey },
+      loaders: { loadOrgByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -40,7 +40,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
     await userRequired()
 
     // Check to see if org exists
-    const currentOrg = await orgLoaderByKey.load(orgKey)
+    const currentOrg = await loadOrgByKey.load(orgKey)
 
     if (typeof currentOrg === 'undefined') {
       console.warn(
@@ -98,6 +98,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       await trx.step(
         async () =>
           await query`
+            WITH organizations
             UPSERT { _key: ${orgKey} }
               INSERT ${currentOrg}
               UPDATE ${currentOrg}
@@ -131,6 +132,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       status: i18n._(
         t`Successfully verified organization: ${currentOrg.slug}.`,
       ),
+      organization: currentOrg,
     }
   },
 })

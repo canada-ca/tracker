@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const dmarcGuidanceTagLoader = (query, userKey, i18n) =>
+export const loadDmarcGuidanceTagByTagId = ({ query, userKey, i18n }) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -13,7 +13,7 @@ export const dmarcGuidanceTagLoader = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running dmarcGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userKey} running loadDmarcGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DMARC guidance tag(s). Please try again.`),
@@ -27,7 +27,7 @@ export const dmarcGuidanceTagLoader = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running dmarcGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadDmarcGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DMARC guidance tag(s). Please try again.`),

@@ -32,7 +32,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       i18n,
       query,
       auth: { userRequired },
-      loaders: { userLoaderByKey },
+      loaders: { loadUserByKey },
       validators: { cleanseInput },
       notify: { sendTfaTextMsg },
     },
@@ -72,6 +72,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     // Insert TFA code into DB
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT { 
             tfaCode: ${tfaCode},
@@ -95,8 +96,8 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     }
 
     // Get newly updated user
-    await userLoaderByKey.clear(user._key)
-    user = await userLoaderByKey.load(user._key)
+    await loadUserByKey.clear(user._key)
+    user = await loadUserByKey.load(user._key)
 
     await sendTfaTextMsg({ phoneNumber, user })
 

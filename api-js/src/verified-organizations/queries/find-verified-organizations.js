@@ -13,8 +13,8 @@ export const findVerifiedOrganizations = {
     },
     ...connectionArgs,
   },
-  resolve: async (_, args, { loaders: { verifiedOrgLoaderConnections } }) => {
-    const orgConnections = await verifiedOrgLoaderConnections(args)
+  resolve: async (_, args, { loaders: { loadVerifiedOrgConnections } }) => {
+    const orgConnections = await loadVerifiedOrgConnections(args)
     return orgConnections
   },
 }

@@ -7,11 +7,11 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { spfFailureLoaderConnectionsBySumId } from '../index'
+import { loadSpfFailureConnectionsBySumId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
+describe('given the loadSpfFailureConnectionsBySumId loader', () => {
   let query,
     drop,
     truncate,
@@ -106,12 +106,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
   describe('given there are spf failures to load', () => {
     describe('using after cursor', () => {
       it('returns spf failure', async () => {
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 100,
@@ -145,12 +145,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
     })
     describe('using the before cursor', () => {
       it('returns spf failure', async () => {
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 100,
@@ -184,12 +184,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
     })
     describe('using the first limit', () => {
       it('returns spf failure', async () => {
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 1,
@@ -222,12 +222,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
     })
     describe('using the last limit', () => {
       it('returns spf failure', async () => {
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           last: 1,
@@ -263,12 +263,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
     it('returns no spf failure connections', async () => {
       await truncate()
 
-      const connectionLoader = spfFailureLoaderConnectionsBySumId(
+      const connectionLoader = loadSpfFailureConnectionsBySumId({
         query,
-        user._key,
+        userKey: user._key,
         cleanseInput,
         i18n,
-      )
+      })
 
       const connectionArgs = {
         first: 1,
@@ -309,12 +309,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadSpfFailureConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             summaryId: '',
@@ -332,18 +332,18 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSpfFailureConnectionsBySumId.`,
           ])
         })
       })
       describe('first and last arguments are both set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadSpfFailureConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -363,19 +363,19 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSpfFailureConnectionsBySumId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -394,18 +394,18 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -424,7 +424,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
@@ -432,12 +432,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -456,18 +456,18 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -486,7 +486,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
@@ -497,12 +497,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadSpfFailureConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -523,7 +523,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSpfFailureConnectionsBySumId.`,
               ])
             })
           })
@@ -533,12 +533,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadSpfFailureConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -559,7 +559,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSpfFailureConnectionsBySumId.`,
               ])
             })
           })
@@ -567,12 +567,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
       })
       describe('summaryId is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadSpfFailureConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 10,
@@ -588,7 +588,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `SummaryId was undefined when user: ${user._key} attempted to load spf failures in spfFailureLoaderConnectionsBySumId.`,
+            `SummaryId was undefined when user: ${user._key} attempted to load spf failures in loadSpfFailureConnectionsBySumId.`,
           ])
         })
       })
@@ -599,12 +599,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -621,7 +621,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: Error: Database error occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather spf failures in loadSpfFailureConnectionsBySumId, error: Error: Database error occurred.`,
         ])
       })
     })
@@ -634,12 +634,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -656,7 +656,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: Error: Cursor error occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather spf failures in loadSpfFailureConnectionsBySumId, error: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -679,12 +679,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadSpfFailureConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             summaryId: '',
@@ -698,18 +698,18 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSpfFailureConnectionsBySumId.`,
           ])
         })
       })
       describe('first and last arguments are both set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadSpfFailureConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -725,19 +725,19 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSpfFailureConnectionsBySumId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -752,18 +752,18 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -778,7 +778,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
@@ -786,12 +786,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -806,18 +806,18 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadSpfFailureConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -832,7 +832,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: spfFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSpfFailureConnectionsBySumId.`,
             ])
           })
         })
@@ -843,12 +843,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadSpfFailureConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -865,7 +865,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSpfFailureConnectionsBySumId.`,
               ])
             })
           })
@@ -875,12 +875,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadSpfFailureConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -897,7 +897,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSpfFailureConnectionsBySumId.`,
               ])
             })
           })
@@ -905,12 +905,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
       })
       describe('summaryId is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadSpfFailureConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 10,
@@ -924,7 +924,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `SummaryId was undefined when user: ${user._key} attempted to load spf failures in spfFailureLoaderConnectionsBySumId.`,
+            `SummaryId was undefined when user: ${user._key} attempted to load spf failures in loadSpfFailureConnectionsBySumId.`,
           ])
         })
       })
@@ -935,12 +935,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -955,7 +955,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: Error: Database error occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather spf failures in loadSpfFailureConnectionsBySumId, error: Error: Database error occurred.`,
         ])
       })
     })
@@ -968,12 +968,12 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = spfFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadSpfFailureConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -988,7 +988,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: Error: Cursor error occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather spf failures in loadSpfFailureConnectionsBySumId, error: Error: Cursor error occurred.`,
         ])
       })
     })

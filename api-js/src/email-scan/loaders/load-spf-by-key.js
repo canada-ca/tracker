@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const spfLoaderByKey = (query, userKey, i18n) =>
+export const loadSpfByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (keys) => {
     let cursor
 
@@ -14,7 +14,7 @@ export const spfLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running spfLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadSpfByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find SPF scan(s). Please try again.`))
     }
@@ -26,7 +26,7 @@ export const spfLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running spfLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadSpfByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find SPF scan(s). Please try again.`))
     }

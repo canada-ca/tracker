@@ -41,6 +41,9 @@ function ScanCard({ scanType, scanData, status }) {
         </Box>
       )
     } else if (scanType === 'email') {
+      if (status === null) {
+        status = 'UNKNOWN'
+      }
       return (
         <Box pb="1">
           <Stack isInline align="center" px="2">

@@ -7,10 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import {
-  verifiedOrgLoaderConnections,
-  verifiedOrgLoaderByKey,
-} from '../../loaders'
+import { loadVerifiedOrgConnections, loadVerifiedOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -26,158 +23,159 @@ describe('given the load organizations connection function', () => {
     domainTwo,
     domainThree
 
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.error = mockedError
     console.warn = mockedWarn
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  })
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
-  beforeEach(async () => {
-    org = await collections.organizations.save({
-      verified: true,
-      summaries: {
-        web: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
-        },
-        mail: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
-        },
-      },
-      orgDetails: {
-        en: {
-          slug: 'slug-org-one',
-          acronym: 'ONE',
-          name: 'org One',
-          zone: 'zone one',
-          sector: 'sector one',
-          country: 'country one',
-          province: 'province one',
-          city: 'city one',
-        },
-        fr: {
-          slug: 'slug-org-one',
-          acronym: 'ONE',
-          name: 'org One',
-          zone: 'zone one',
-          sector: 'sector one',
-          country: 'country one',
-          province: 'province one',
-          city: 'city one',
-        },
-      },
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-    orgTwo = await collections.organizations.save({
-      verified: true,
-      summaries: {
-        web: {
-          pass: 52,
-          fail: 1002,
-          total: 1054,
+    beforeEach(async () => {
+      org = await collections.organizations.save({
+        verified: true,
+        summaries: {
+          web: {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          },
+          mail: {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          },
         },
-        mail: {
-          pass: 52,
-          fail: 1002,
-          total: 1054,
-        },
-      },
-      orgDetails: {
-        en: {
-          slug: 'slug-org-two',
-          acronym: 'TWO',
-          name: 'org two',
-          zone: 'zone two',
-          sector: 'sector two',
-          country: 'country two',
-          province: 'province two',
-          city: 'city two',
-        },
-        fr: {
-          slug: 'slug-org-two',
-          acronym: 'TWO',
-          name: 'org two',
-          zone: 'zone two',
-          sector: 'sector two',
-          country: 'country two',
-          province: 'province two',
-          city: 'city two',
-        },
-      },
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-    })
-    domainThree = await collections.domains.save({
-      domain: 'test.domain.canada.gc.ca',
-    })
-    domainTwo = await collections.domains.save({
-      domain: 'test.domain.canada.ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domain._id,
-    })
-    await collections.claims.save({
-      _from: orgTwo._id,
-      _to: domain._id,
-    })
-    await collections.claims.save({
-      _from: orgTwo._id,
-      _to: domainTwo._id,
-    })
-    await collections.claims.save({
-      _from: orgTwo._id,
-      _to: domainThree._id,
-    })
-  })
-
-  afterEach(async () => {
-    consoleOutput = []
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('users language is english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
+        orgDetails: {
+          en: {
+            slug: 'slug-org-one',
+            acronym: 'ONE',
+            name: 'org One',
+            zone: 'zone one',
+            sector: 'sector one',
+            country: 'country one',
+            province: 'province one',
+            city: 'city one',
+          },
+          fr: {
+            slug: 'slug-org-one',
+            acronym: 'ONE',
+            name: 'org One',
+            zone: 'zone one',
+            sector: 'sector one',
+            country: 'country one',
+            province: 'province one',
+            city: 'city one',
+          },
         },
       })
+      orgTwo = await collections.organizations.save({
+        verified: true,
+        summaries: {
+          web: {
+            pass: 52,
+            fail: 1002,
+            total: 1054,
+          },
+          mail: {
+            pass: 52,
+            fail: 1002,
+            total: 1054,
+          },
+        },
+        orgDetails: {
+          en: {
+            slug: 'slug-org-two',
+            acronym: 'TWO',
+            name: 'org two',
+            zone: 'zone two',
+            sector: 'sector two',
+            country: 'country two',
+            province: 'province two',
+            city: 'city two',
+          },
+          fr: {
+            slug: 'slug-org-two',
+            acronym: 'TWO',
+            name: 'org two',
+            zone: 'zone two',
+            sector: 'sector two',
+            country: 'country two',
+            province: 'province two',
+            city: 'city two',
+          },
+        },
+      })
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+      })
+      domainThree = await collections.domains.save({
+        domain: 'test.domain.canada.gc.ca',
+      })
+      domainTwo = await collections.domains.save({
+        domain: 'test.domain.canada.ca',
+      })
+      await collections.claims.save({
+        _from: org._id,
+        _to: domain._id,
+      })
+      await collections.claims.save({
+        _from: orgTwo._id,
+        _to: domain._id,
+      })
+      await collections.claims.save({
+        _from: orgTwo._id,
+        _to: domainTwo._id,
+      })
+      await collections.claims.save({
+        _from: orgTwo._id,
+        _to: domainThree._id,
+      })
     })
-    describe('given a successful load', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('using after cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -223,14 +221,14 @@ describe('given the load organizations connection function', () => {
       })
       describe('using before cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -276,14 +274,14 @@ describe('given the load organizations connection function', () => {
       })
       describe('using first limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -328,14 +326,14 @@ describe('given the load organizations connection function', () => {
       })
       describe('using last limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -430,15 +428,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by ACRONYM', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -486,15 +487,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -544,15 +548,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by NAME', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -600,15 +607,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -658,15 +668,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by ZONE', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -714,15 +727,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -772,15 +788,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SECTOR', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -828,15 +847,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -886,15 +908,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by COUNTRY', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -942,15 +967,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1000,15 +1028,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_MAIL_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1056,15 +1087,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1114,15 +1148,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_MAIL_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1170,15 +1207,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1228,15 +1268,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_MAIL_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1284,15 +1327,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1342,15 +1388,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_WEB_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1398,15 +1447,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1456,15 +1508,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_WEB_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1512,15 +1567,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1570,15 +1628,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_WEB_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1626,15 +1687,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1684,15 +1748,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by DOMAIN_COUNT', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1740,15 +1807,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'en',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1799,12 +1869,12 @@ describe('given the load organizations connection function', () => {
       describe('no organizations are found', () => {
         it('returns empty structure', async () => {
           await truncate()
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             last: 1,
@@ -1829,347 +1899,31 @@ describe('given the load organizations connection function', () => {
         })
       })
     })
-    describe('given an unsuccessful load', () => {
-      describe('limits are not set', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
-            query,
-            'en',
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {}
-            await connectionLoader({ ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.',
-              ),
-            )
-          }
-
-          expect(consoleOutput).toEqual([
-            'User did not have either `first` or `last` arguments set for: verifiedOrgLoaderConnections.',
-          ])
+    describe('users language is french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('user has first and last arguments set at the same time', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
-            query,
-            'en',
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {
-              first: 1,
-              last: 1,
-            }
-            await connectionLoader({ ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.',
-              ),
-            )
-          }
-
-          expect(consoleOutput).toEqual([
-            'User attempted to have `first` and `last` arguments set for: verifiedOrgLoaderConnections.',
-          ])
-        })
-      })
-      describe('limits are set below minimum', () => {
-        describe('first is set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
-              query,
-              'en',
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {
-                first: -1,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`first` on the `VerifiedOrganization` connection cannot be less than zero.',
-                ),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              'User attempted to have `first` set below zero for: verifiedOrgLoaderConnections.',
-            ])
-          })
-        })
-        describe('last is set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
-              query,
-              'en',
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {
-                last: -1,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`last` on the `VerifiedOrganization` connection cannot be less than zero.',
-                ),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              'User attempted to have `last` set below zero for: verifiedOrgLoaderConnections.',
-            ])
-          })
-        })
-      })
-      describe('limits are set above maximum', () => {
-        describe('first is set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
-              query,
-              'en',
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {
-                first: 101,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'Requesting `101` records on the `VerifiedOrganization` connection exceeds the `first` limit of 100 records.',
-                ),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              'User attempted to have `first` to 101 for: verifiedOrgLoaderConnections.',
-            ])
-          })
-        })
-        describe('last is set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
-              query,
-              'en',
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {
-                last: 101,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'Requesting `101` records on the `VerifiedOrganization` connection exceeds the `last` limit of 100 records.',
-                ),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              'User attempted to have `last` to 101 for: verifiedOrgLoaderConnections.',
-            ])
-          })
-        })
-      })
-      describe('limits are not set to numbers', () => {
-        describe('first limit is set', () => {
-          ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when first set to ${stringify(
-              invalidInput,
-            )}`, async () => {
-              const connectionLoader = verifiedOrgLoaderConnections(
-                query,
-                'en',
-                cleanseInput,
-                i18n,
-              )
-
-              const connectionArgs = {
-                first: invalidInput,
-              }
-
-              try {
-                await connectionLoader({
-                  ...connectionArgs,
-                })
-              } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                  ),
-                )
-              }
-              expect(consoleOutput).toEqual([
-                `User attempted to have \`first\` set as a ${typeof invalidInput} for: verifiedOrgLoaderConnections.`,
-              ])
-            })
-          })
-        })
-        describe('last limit is set', () => {
-          ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when last set to ${stringify(
-              invalidInput,
-            )}`, async () => {
-              const connectionLoader = verifiedOrgLoaderConnections(
-                query,
-                'en',
-                cleanseInput,
-                i18n,
-              )
-
-              const connectionArgs = {
-                last: invalidInput,
-              }
-
-              try {
-                await connectionLoader({
-                  ...connectionArgs,
-                })
-              } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                  ),
-                )
-              }
-              expect(consoleOutput).toEqual([
-                `User attempted to have \`last\` set as a ${typeof invalidInput} for: verifiedOrgLoaderConnections.`,
-              ])
-            })
-          })
-        })
-      })
-    })
-    describe('given a database error', () => {
-      describe('when gathering organizations', () => {
-        it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const connectionLoader = verifiedOrgLoaderConnections(
-            query,
-            'en',
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {
-              first: 5,
-            }
-            await connectionLoader({ ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Unable to load verified organization(s). Please try again.',
-              ),
-            )
-          }
-
-          expect(consoleOutput).toEqual([
-            `Database error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('given a cursor error', () => {
-        describe('when gathering organizations', () => {
-          it('returns an error message', async () => {
-            const cursor = {
-              next() {
-                throw new Error('Cursor error occurred.')
-              },
-            }
-            const query = jest.fn().mockReturnValueOnce(cursor)
-
-            const connectionLoader = verifiedOrgLoaderConnections(
-              query,
-              'en',
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {
-                first: 5,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'Unable to load verified organization(s). Please try again.',
-                ),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              `Cursor error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: Error: Cursor error occurred.`,
-            ])
-          })
-        })
-      })
-    })
-  })
-  describe('users language is french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a successful load', () => {
       describe('using after cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2215,14 +1969,14 @@ describe('given the load organizations connection function', () => {
       })
       describe('using before cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2268,14 +2022,14 @@ describe('given the load organizations connection function', () => {
       })
       describe('using first limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2320,14 +2074,14 @@ describe('given the load organizations connection function', () => {
       })
       describe('using last limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
-          const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+          const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2422,15 +2176,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by ACRONYM', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2478,15 +2235,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2536,15 +2296,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by NAME', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2592,15 +2355,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2650,15 +2416,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by ZONE', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2706,15 +2475,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2764,15 +2536,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SECTOR', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2820,15 +2595,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2878,15 +2656,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by COUNTRY', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2934,15 +2715,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2992,15 +2776,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_MAIL_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3048,15 +2835,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3106,15 +2896,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_MAIL_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3162,15 +2955,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3220,15 +3016,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_MAIL_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3276,15 +3075,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3334,15 +3136,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_WEB_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3390,15 +3195,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3448,15 +3256,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_WEB_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3504,15 +3315,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3562,15 +3376,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by SUMMARY_WEB_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3618,15 +3435,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3676,15 +3496,18 @@ describe('given the load organizations connection function', () => {
         describe('ordering by DOMAIN_COUNT', () => {
           describe('direction is set to ASC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3732,15 +3555,18 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organizations', async () => {
-              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const orgLoader = loadVerifiedOrgByKey({
+                query,
+                language: 'fr',
+              })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = verifiedOrgLoaderConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3791,12 +3617,12 @@ describe('given the load organizations connection function', () => {
       describe('no organizations are found', () => {
         it('returns empty structure', async () => {
           await truncate()
-          const connectionLoader = verifiedOrgLoaderConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             last: 1,
@@ -3820,276 +3646,624 @@ describe('given the load organizations connection function', () => {
         })
       })
     })
-    describe('given an unsuccessful load', () => {
-      describe('limits are not set', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
-            query,
-            'fr',
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {}
-            await connectionLoader({ ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(new Error('todo'))
-          }
-
-          expect(consoleOutput).toEqual([
-            'User did not have either `first` or `last` arguments set for: verifiedOrgLoaderConnections.',
-          ])
+  })
+  describe('given an unsuccessful load', () => {
+    describe('users language is english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('user has first and last arguments set at the same time', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = verifiedOrgLoaderConnections(
-            query,
-            'fr',
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {
-              first: 1,
-              last: 1,
-            }
-            await connectionLoader({ ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(new Error('todo'))
-          }
-
-          expect(consoleOutput).toEqual([
-            'User attempted to have `first` and `last` arguments set for: verifiedOrgLoaderConnections.',
-          ])
-        })
-      })
-      describe('limits are set below minimum', () => {
-        describe('first is set', () => {
+      describe('given an unsuccessful load', () => {
+        describe('limits are not set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'en',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
-              const connectionArgs = {
-                first: -1,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
+              const connectionArgs = {}
+              await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
-              'User attempted to have `first` set below zero for: verifiedOrgLoaderConnections.',
+              'User did not have either `first` or `last` arguments set for: loadVerifiedOrgConnections.',
             ])
           })
         })
-        describe('last is set', () => {
+        describe('user has first and last arguments set at the same time', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'en',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
-                last: -1,
+                first: 1,
+                last: 1,
               }
-              await connectionLoader({
-                ...connectionArgs,
-              })
+              await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
-              'User attempted to have `last` set below zero for: verifiedOrgLoaderConnections.',
+              'User attempted to have `first` and `last` arguments set for: loadVerifiedOrgConnections.',
             ])
           })
         })
-      })
-      describe('limits are set above maximum', () => {
-        describe('first is set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
-              query,
-              'fr',
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {
-                first: 101,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(new Error('todo'))
-            }
-
-            expect(consoleOutput).toEqual([
-              'User attempted to have `first` to 101 for: verifiedOrgLoaderConnections.',
-            ])
-          })
-        })
-        describe('last is set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = verifiedOrgLoaderConnections(
-              query,
-              'fr',
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {
-                last: 101,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(new Error('todo'))
-            }
-
-            expect(consoleOutput).toEqual([
-              'User attempted to have `last` to 101 for: verifiedOrgLoaderConnections.',
-            ])
-          })
-        })
-      })
-      describe('limits are not set to numbers', () => {
-        describe('first limit is set', () => {
-          ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when first set to ${stringify(
-              invalidInput,
-            )}`, async () => {
-              const connectionLoader = verifiedOrgLoaderConnections(
+        describe('limits are set below minimum', () => {
+          describe('first is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
-
-              const connectionArgs = {
-                first: invalidInput,
-              }
+              })
 
               try {
+                const connectionArgs = {
+                  first: -1,
+                }
                 await connectionLoader({
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    '`first` on the `VerifiedOrganization` connection cannot be less than zero.',
+                  ),
+                )
               }
+
               expect(consoleOutput).toEqual([
-                `User attempted to have \`first\` set as a ${typeof invalidInput} for: verifiedOrgLoaderConnections.`,
+                'User attempted to have `first` set below zero for: loadVerifiedOrgConnections.',
+              ])
+            })
+          })
+          describe('last is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'en',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  last: -1,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    '`last` on the `VerifiedOrganization` connection cannot be less than zero.',
+                  ),
+                )
+              }
+
+              expect(consoleOutput).toEqual([
+                'User attempted to have `last` set below zero for: loadVerifiedOrgConnections.',
               ])
             })
           })
         })
-        describe('last limit is set', () => {
-          ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when last set to ${stringify(
-              invalidInput,
-            )}`, async () => {
-              const connectionLoader = verifiedOrgLoaderConnections(
+        describe('limits are set above maximum', () => {
+          describe('first is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
-
-              const connectionArgs = {
-                last: invalidInput,
-              }
+              })
 
               try {
+                const connectionArgs = {
+                  first: 101,
+                }
                 await connectionLoader({
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    'Requesting `101` records on the `VerifiedOrganization` connection exceeds the `first` limit of 100 records.',
+                  ),
+                )
               }
+
               expect(consoleOutput).toEqual([
-                `User attempted to have \`last\` set as a ${typeof invalidInput} for: verifiedOrgLoaderConnections.`,
+                'User attempted to have `first` to 101 for: loadVerifiedOrgConnections.',
+              ])
+            })
+          })
+          describe('last is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'en',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  last: 101,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    'Requesting `101` records on the `VerifiedOrganization` connection exceeds the `last` limit of 100 records.',
+                  ),
+                )
+              }
+
+              expect(consoleOutput).toEqual([
+                'User attempted to have `last` to 101 for: loadVerifiedOrgConnections.',
+              ])
+            })
+          })
+        })
+        describe('limits are not set to numbers', () => {
+          describe('first limit is set', () => {
+            ;['123', {}, [], null, true].forEach((invalidInput) => {
+              it(`returns an error when first set to ${stringify(
+                invalidInput,
+              )}`, async () => {
+                const connectionLoader = loadVerifiedOrgConnections({
+                  query,
+                  language: 'en',
+                  cleanseInput,
+                  i18n,
+                })
+
+                const connectionArgs = {
+                  first: invalidInput,
+                }
+
+                try {
+                  await connectionLoader({
+                    ...connectionArgs,
+                  })
+                } catch (err) {
+                  expect(err).toEqual(
+                    new Error(
+                      `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                    ),
+                  )
+                }
+                expect(consoleOutput).toEqual([
+                  `User attempted to have \`first\` set as a ${typeof invalidInput} for: loadVerifiedOrgConnections.`,
+                ])
+              })
+            })
+          })
+          describe('last limit is set', () => {
+            ;['123', {}, [], null, true].forEach((invalidInput) => {
+              it(`returns an error when last set to ${stringify(
+                invalidInput,
+              )}`, async () => {
+                const connectionLoader = loadVerifiedOrgConnections({
+                  query,
+                  language: 'en',
+                  cleanseInput,
+                  i18n,
+                })
+
+                const connectionArgs = {
+                  last: invalidInput,
+                }
+
+                try {
+                  await connectionLoader({
+                    ...connectionArgs,
+                  })
+                } catch (err) {
+                  expect(err).toEqual(
+                    new Error(
+                      `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                    ),
+                  )
+                }
+                expect(consoleOutput).toEqual([
+                  `User attempted to have \`last\` set as a ${typeof invalidInput} for: loadVerifiedOrgConnections.`,
+                ])
+              })
+            })
+          })
+        })
+      })
+      describe('given a database error', () => {
+        describe('when gathering organizations', () => {
+          it('returns an error message', async () => {
+            const query = jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const connectionLoader = loadVerifiedOrgConnections({
+              query,
+              language: 'en',
+              cleanseInput,
+              i18n,
+            })
+
+            try {
+              const connectionArgs = {
+                first: 5,
+              }
+              await connectionLoader({ ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Unable to load verified organization(s). Please try again.',
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `Database error occurred while user was trying to gather orgs in loadVerifiedOrgConnections, error: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('given a cursor error', () => {
+          describe('when gathering organizations', () => {
+            it('returns an error message', async () => {
+              const cursor = {
+                next() {
+                  throw new Error('Cursor error occurred.')
+                },
+              }
+              const query = jest.fn().mockReturnValueOnce(cursor)
+
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'en',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  first: 5,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    'Unable to load verified organization(s). Please try again.',
+                  ),
+                )
+              }
+
+              expect(consoleOutput).toEqual([
+                `Cursor error occurred while user was trying to gather orgs in loadVerifiedOrgConnections, error: Error: Cursor error occurred.`,
               ])
             })
           })
         })
       })
     })
-    describe('given a database error', () => {
-      describe('when gathering organizations', () => {
-        it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const connectionLoader = verifiedOrgLoaderConnections(
-            query,
-            'fr',
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {
-              first: 5,
-            }
-            await connectionLoader({ ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(new Error('todo'))
-          }
-
-          expect(consoleOutput).toEqual([
-            `Database error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: Error: Database error occurred.`,
-          ])
+    describe('users language is french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('given a cursor error', () => {
-        describe('when gathering organizations', () => {
+      describe('given an unsuccessful load', () => {
+        describe('limits are not set', () => {
           it('returns an error message', async () => {
-            const cursor = {
-              next() {
-                throw new Error('Cursor error occurred.')
-              },
-            }
-            const query = jest.fn().mockReturnValueOnce(cursor)
-
-            const connectionLoader = verifiedOrgLoaderConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'fr',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
-              const connectionArgs = {
-                first: 5,
-              }
-              await connectionLoader({
-                ...connectionArgs,
-              })
+              const connectionArgs = {}
+              await connectionLoader({ ...connectionArgs })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: Error: Cursor error occurred.`,
+              'User did not have either `first` or `last` arguments set for: loadVerifiedOrgConnections.',
             ])
+          })
+        })
+        describe('user has first and last arguments set at the same time', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = loadVerifiedOrgConnections({
+              query,
+              language: 'fr',
+              cleanseInput,
+              i18n,
+            })
+
+            try {
+              const connectionArgs = {
+                first: 1,
+                last: 1,
+              }
+              await connectionLoader({ ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+
+            expect(consoleOutput).toEqual([
+              'User attempted to have `first` and `last` arguments set for: loadVerifiedOrgConnections.',
+            ])
+          })
+        })
+        describe('limits are set below minimum', () => {
+          describe('first is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'fr',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  first: -1,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error('todo'))
+              }
+
+              expect(consoleOutput).toEqual([
+                'User attempted to have `first` set below zero for: loadVerifiedOrgConnections.',
+              ])
+            })
+          })
+          describe('last is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'fr',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  last: -1,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error('todo'))
+              }
+
+              expect(consoleOutput).toEqual([
+                'User attempted to have `last` set below zero for: loadVerifiedOrgConnections.',
+              ])
+            })
+          })
+        })
+        describe('limits are set above maximum', () => {
+          describe('first is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'fr',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  first: 101,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error('todo'))
+              }
+
+              expect(consoleOutput).toEqual([
+                'User attempted to have `first` to 101 for: loadVerifiedOrgConnections.',
+              ])
+            })
+          })
+          describe('last is set', () => {
+            it('returns an error message', async () => {
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'fr',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  last: 101,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error('todo'))
+              }
+
+              expect(consoleOutput).toEqual([
+                'User attempted to have `last` to 101 for: loadVerifiedOrgConnections.',
+              ])
+            })
+          })
+        })
+        describe('limits are not set to numbers', () => {
+          describe('first limit is set', () => {
+            ;['123', {}, [], null, true].forEach((invalidInput) => {
+              it(`returns an error when first set to ${stringify(
+                invalidInput,
+              )}`, async () => {
+                const connectionLoader = loadVerifiedOrgConnections({
+                  query,
+                  language: 'fr',
+                  cleanseInput,
+                  i18n,
+                })
+
+                const connectionArgs = {
+                  first: invalidInput,
+                }
+
+                try {
+                  await connectionLoader({
+                    ...connectionArgs,
+                  })
+                } catch (err) {
+                  expect(err).toEqual(new Error(`todo`))
+                }
+                expect(consoleOutput).toEqual([
+                  `User attempted to have \`first\` set as a ${typeof invalidInput} for: loadVerifiedOrgConnections.`,
+                ])
+              })
+            })
+          })
+          describe('last limit is set', () => {
+            ;['123', {}, [], null, true].forEach((invalidInput) => {
+              it(`returns an error when last set to ${stringify(
+                invalidInput,
+              )}`, async () => {
+                const connectionLoader = loadVerifiedOrgConnections({
+                  query,
+                  language: 'fr',
+                  cleanseInput,
+                  i18n,
+                })
+
+                const connectionArgs = {
+                  last: invalidInput,
+                }
+
+                try {
+                  await connectionLoader({
+                    ...connectionArgs,
+                  })
+                } catch (err) {
+                  expect(err).toEqual(new Error(`todo`))
+                }
+                expect(consoleOutput).toEqual([
+                  `User attempted to have \`last\` set as a ${typeof invalidInput} for: loadVerifiedOrgConnections.`,
+                ])
+              })
+            })
+          })
+        })
+      })
+      describe('given a database error', () => {
+        describe('when gathering organizations', () => {
+          it('returns an error message', async () => {
+            const query = jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const connectionLoader = loadVerifiedOrgConnections({
+              query,
+              language: 'fr',
+              cleanseInput,
+              i18n,
+            })
+
+            try {
+              const connectionArgs = {
+                first: 5,
+              }
+              await connectionLoader({ ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+
+            expect(consoleOutput).toEqual([
+              `Database error occurred while user was trying to gather orgs in loadVerifiedOrgConnections, error: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('given a cursor error', () => {
+          describe('when gathering organizations', () => {
+            it('returns an error message', async () => {
+              const cursor = {
+                next() {
+                  throw new Error('Cursor error occurred.')
+                },
+              }
+              const query = jest.fn().mockReturnValueOnce(cursor)
+
+              const connectionLoader = loadVerifiedOrgConnections({
+                query,
+                language: 'fr',
+                cleanseInput,
+                i18n,
+              })
+
+              try {
+                const connectionArgs = {
+                  first: 5,
+                }
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error('todo'))
+              }
+
+              expect(consoleOutput).toEqual([
+                `Cursor error occurred while user was trying to gather orgs in loadVerifiedOrgConnections, error: Error: Cursor error occurred.`,
+              ])
+            })
           })
         })
       })

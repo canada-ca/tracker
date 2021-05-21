@@ -30,7 +30,7 @@ export const sendEmailVerification = new mutationWithClientMutationId({
       request,
       auth: { tokenize },
       validators: { cleanseInput },
-      loaders: { userLoaderByUserName },
+      loaders: { loadUserByUserName },
       notify: { sendVerificationEmail },
     },
   ) => {
@@ -38,7 +38,7 @@ export const sendEmailVerification = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
 
     // Get user from db
-    const user = await userLoaderByUserName.load(userName)
+    const user = await loadUserByUserName.load(userName)
 
     if (typeof user !== 'undefined') {
       const token = tokenize({

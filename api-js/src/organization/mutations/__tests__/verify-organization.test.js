@@ -11,8 +11,8 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
-import { orgLoaderByKey } from '../../loaders'
+import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
+import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -81,7 +81,14 @@ describe('removing an organization', () => {
           cleanseInput,
         },
         loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
+          loadUserByUserName: loadUserByUserName({ query }),
+        },
+        notify: {
+          sendVerificationEmail: jest.fn(),
+        },
+        request: {
+          protocol: 'https',
+          get: (text) => text,
         },
       },
     )
@@ -120,7 +127,7 @@ describe('removing an organization', () => {
           },
         },
       })
-      user = await userLoaderByUserName(query).load(
+      user = await loadUserByUserName({ query }).load(
         'test.account@istio.actually.exists',
       )
       await collections.affiliations.save({
@@ -158,6 +165,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -182,14 +192,27 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: user._key,
+                  i18n,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -200,6 +223,9 @@ describe('removing an organization', () => {
                 result: {
                   status:
                     'Successfully verified organization: treasury-board-secretariat.',
+                    organization: {
+                      name: 'Treasury Board of Canada Secretariat',
+                    },
                 },
               },
             },
@@ -210,7 +236,12 @@ describe('removing an organization', () => {
             `User: ${user._key}, successfully verified org: ${org._key}.`,
           ])
 
-          const orgLoader = orgLoaderByKey(query, 'en', user._key, i18n)
+          const orgLoader = loadOrgByKey({
+            query,
+            language: 'en',
+            userKey: user._key,
+            i18n,
+          })
           const verifiedOrg = await orgLoader.load(org._key)
           expect(verifiedOrg.verified).toEqual(true)
         })
@@ -245,6 +276,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -269,14 +303,27 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', user._key, i18n),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: user._key,
+                  i18n,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -286,6 +333,9 @@ describe('removing an organization', () => {
               verifyOrganization: {
                 result: {
                   status: 'todo',
+                  organization: {
+                    name: 'Secrétariat du Conseil Trésor du Canada',
+                  },
                 },
               },
             },
@@ -296,7 +346,12 @@ describe('removing an organization', () => {
             `User: ${user._key}, successfully verified org: ${org._key}.`,
           ])
 
-          const orgLoader = orgLoaderByKey(query, 'fr', user._key, i18n)
+          const orgLoader = loadOrgByKey({
+            query,
+            language: 'fr',
+            userKey: user._key,
+            i18n,
+          })
           const verifiedOrg = await orgLoader.load(org._key)
           expect(verifiedOrg.verified).toEqual(true)
         })
@@ -347,7 +402,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -369,6 +424,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -393,14 +451,27 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: user._key,
+                  i18n,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -450,7 +521,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -472,6 +543,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -496,14 +570,27 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: user._key,
+                  i18n,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -554,7 +641,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -576,6 +663,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -600,14 +690,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -657,7 +760,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -679,6 +782,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -703,14 +809,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -762,7 +881,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -794,6 +913,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -818,14 +940,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -866,6 +1001,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -890,14 +1028,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -960,7 +1111,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -982,6 +1133,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -1006,14 +1160,27 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: user._key,
+                  i18n,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -1063,7 +1230,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -1085,6 +1252,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -1109,14 +1279,27 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: user._key,
+                  i18n,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -1167,7 +1350,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -1189,6 +1372,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1213,14 +1399,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -1270,7 +1469,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -1292,6 +1491,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1316,14 +1518,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -1374,7 +1589,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -1406,6 +1621,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1430,14 +1648,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -1474,6 +1705,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1498,14 +1732,27 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', user._key, i18n),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: user._key,
+                    i18n,
+                  }),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )

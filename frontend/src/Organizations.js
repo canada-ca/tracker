@@ -51,6 +51,7 @@ export default function Organisations() {
       field: orderField,
       direction: orderDirection,
       search: searchTerm,
+      includeSuperAdminOrg: false,
     },
     recordsPerPage: orgsPerPage,
     relayRoot: 'findMyOrganizations',
@@ -71,7 +72,11 @@ export default function Organisations() {
     orgList = (
       <ListOf
         elements={nodes}
-        ifEmpty={() => <Trans>No Organizations</Trans>}
+        ifEmpty={() => (
+          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+            <Trans>No Organizations</Trans>
+          </Text>
+        )}
         mb="4"
       >
         {({ name, slug, acronym, domainCount, verified, summaries }, index) => (
@@ -165,7 +170,7 @@ export default function Organisations() {
           onlyPagination={false}
           selectedDisplayLimit={orgsPerPage}
           setSelectedDisplayLimit={setOrgsPerPage}
-          displayLimitOptions={[10, 20, 40, 80]}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
           resetToFirstPage={resetToFirstPage}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}

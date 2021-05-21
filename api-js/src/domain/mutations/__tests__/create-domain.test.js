@@ -1,5 +1,4 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
@@ -10,13 +9,13 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { domainLoaderByDomain } from '../../loaders'
+import { checkPermission, userRequired, checkSuperAdmin } from '../../../auth'
+import { loadDomainByDomain } from '../../loaders'
 import {
-  orgLoaderByKey,
-  orgLoaderConnectionArgsByDomainId,
+  loadOrgByKey,
+  loadOrgConnectionsByDomainId,
 } from '../../../organization/loaders'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -46,46 +45,9 @@ describe('create a domain', () => {
   })
 
   beforeEach(async () => {
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            result {
-              ... on AuthResult {
-                user {
-                  id
-                }
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        collections,
-        transaction,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -110,12 +72,6 @@ describe('create a domain', () => {
         },
       },
     })
-
-    const userCursor = await query`
-      FOR user IN users
-        RETURN user
-    `
-    user = await userCursor.next()
     consoleOutput.length = 0
   })
 
@@ -192,19 +148,20 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -340,19 +297,20 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -465,19 +423,20 @@ describe('create a domain', () => {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
+              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
             },
             loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+              loadDomainByDomain: loadDomainByDomain({ query }),
+              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                 query,
-                'en',
-                user._key,
+                language: 'en',
+                userKey: user._key,
                 cleanseInput,
-              ),
-              userLoaderByKey: userLoaderByKey(query),
+              }),
+              loadUserByKey: loadUserByKey({ query }),
             },
             validators: { cleanseInput, slugify },
           },
@@ -589,19 +548,20 @@ describe('create a domain', () => {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
+              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
             },
             loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+              loadDomainByDomain: loadDomainByDomain({ query }),
+              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                 query,
-                'en',
-                user._key,
+                language: 'en',
+                userKey: user._key,
                 cleanseInput,
-              ),
-              userLoaderByKey: userLoaderByKey(query),
+              }),
+              loadUserByKey: loadUserByKey({ query }),
             },
             validators: { cleanseInput, slugify },
           },
@@ -748,19 +708,20 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -881,19 +842,20 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1014,28 +976,29 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
           )
 
           const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
+            FOR domain IN domains
+              RETURN domain
+          `
           const domain = await domainCursor.next()
 
           const expectedResponse = {
@@ -1162,19 +1125,19 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1255,19 +1218,19 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1362,19 +1325,19 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1470,19 +1433,19 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'en',
-                    user._key,
+                    language: 'en',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
-                  userLoaderByKey: userLoaderByKey(query),
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1578,19 +1541,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1610,7 +1573,9 @@ describe('create a domain', () => {
             it('returns an error message', async () => {
               const mockedStep = jest
                 .fn()
-                .mockReturnValueOnce({})
+                .mockReturnValueOnce({
+                  next: jest.fn(),
+                })
                 .mockRejectedValue(
                   new Error('Transaction Step Error Occurred.'),
                 )
@@ -1677,19 +1642,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1783,19 +1748,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1882,19 +1847,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1922,7 +1887,9 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const mockedStep = jest.fn().mockReturnValueOnce({})
+            const mockedStep = jest.fn().mockReturnValueOnce({
+              next: jest.fn(),
+            })
 
             const mockedCommit = jest
               .fn()
@@ -1992,19 +1959,19 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'en',
-                    user._key,
+                    language: 'en',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
-                  userLoaderByKey: userLoaderByKey(query),
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -2094,19 +2061,19 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -2186,19 +2153,19 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -2292,19 +2259,19 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
-                userLoaderByKey: userLoaderByKey(query),
+                }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -2399,19 +2366,19 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'fr',
-                    user._key,
+                    language: 'en',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
-                  userLoaderByKey: userLoaderByKey(query),
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -2505,19 +2472,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2535,7 +2502,9 @@ describe('create a domain', () => {
             it('returns an error message', async () => {
               const mockedStep = jest
                 .fn()
-                .mockReturnValueOnce({})
+                .mockReturnValueOnce({
+                  next: jest.fn(),
+                })
                 .mockRejectedValue(
                   new Error('Transaction Step Error Occurred.'),
                 )
@@ -2602,19 +2571,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2706,19 +2675,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2803,19 +2772,19 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadDomainByDomain: loadDomainByDomain({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
-                    userLoaderByKey: userLoaderByKey(query),
+                    }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2841,7 +2810,9 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const mockedStep = jest.fn().mockReturnValueOnce({})
+            const mockedStep = jest.fn().mockReturnValueOnce({
+              next: jest.fn(),
+            })
 
             const mockedCommit = jest
               .fn()
@@ -2911,19 +2882,19 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'fr',
-                    user._key,
+                    language: 'fr',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
-                  userLoaderByKey: userLoaderByKey(query),
+                  }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },

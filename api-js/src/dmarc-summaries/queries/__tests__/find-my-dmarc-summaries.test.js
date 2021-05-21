@@ -11,8 +11,8 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
-import { dmarcSumLoaderConnectionsByUserId } from '../../loaders'
-import { userLoaderByKey } from '../../../user/loaders'
+import { loadDmarcSummaryConnectionsByUserId } from '../../loaders'
+import { loadUserByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -46,14 +46,6 @@ describe('given the findMyDmarcSummaries query', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
 
   const consoleOutput = []
@@ -66,94 +58,101 @@ describe('given the findMyDmarcSummaries query', () => {
     console.warn = mockedWarn
     console.error = mockedError
     consoleOutput.length = 0
-
-    user = await collections.users.save({
-      displayName: 'Test Account',
-      userName: 'test.account@istio.actually.exists',
-      preferredLang: 'english',
-    })
-
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-    })
-
-    await collections.ownership.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'user',
-    })
-
-    dmarcSummary1 = await collections.dmarcSummaries.save({
-      detailTables: {
-        dkimFailure: [],
-        dmarcFailure: [],
-        fullPass: [],
-        spfFailure: [],
-      },
-      categoryTotals: {
-        pass: 1,
-        fail: 1,
-        passDkimOnly: 1,
-        passSpfOnly: 1,
-      },
-      categoryPercentages: {
-        pass: 1,
-        fail: 1,
-        passDkimOnly: 1,
-        passSpfOnly: 1,
-      },
-      totalMessages: 4,
-    })
-
-    await collections.domainsToDmarcSummaries.save({
-      _from: domain._id,
-      _to: dmarcSummary1._id,
-      startDate: '2021-01-01',
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
   })
 
   describe('given a successful query', () => {
     let mockedStartDateLoader
-    beforeEach(() => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
       mockedStartDateLoader = jest.fn().mockReturnValue('2021-01-01')
+      user = await collections.users.save({
+        displayName: 'Test Account',
+        userName: 'test.account@istio.actually.exists',
+        preferredLang: 'english',
+      })
+
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+      })
+
+      await collections.ownership.save({
+        _to: domain._id,
+        _from: org._id,
+      })
+
+      await collections.affiliations.save({
+        _from: org._id,
+        _to: user._id,
+        permission: 'user',
+      })
+
+      dmarcSummary1 = await collections.dmarcSummaries.save({
+        detailTables: {
+          dkimFailure: [],
+          dmarcFailure: [],
+          fullPass: [],
+          spfFailure: [],
+        },
+        categoryTotals: {
+          pass: 1,
+          fail: 1,
+          passDkimOnly: 1,
+          passSpfOnly: 1,
+        },
+        categoryPercentages: {
+          pass: 1,
+          fail: 1,
+          passDkimOnly: 1,
+          passSpfOnly: 1,
+        },
+        totalMessages: 4,
+      })
+
+      await collections.domainsToDmarcSummaries.save({
+        _from: domain._id,
+        _to: dmarcSummary1._id,
+        startDate: '2021-01-01',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
     })
     it('returns my dmarc summaries', async () => {
       const response = await graphql(
@@ -193,16 +192,18 @@ describe('given the findMyDmarcSummaries query', () => {
             userRequired: userRequired({
               i18n,
               userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
             }),
           },
           loaders: {
-            dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-              mockedStartDateLoader,
+            loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+              {
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                loadStartDateFromPeriod: mockedStartDateLoader,
+              },
             ),
           },
         },
@@ -289,17 +290,13 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 }),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
-                ),
+                loadDmarcSummaryConnectionsByUserId: jest.fn(),
               },
             },
           )
@@ -345,21 +342,19 @@ describe('given the findMyDmarcSummaries query', () => {
               userKey: user._key,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
-                }),
+                userRequired: jest.fn(),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  jest
-                    .fn()
-                    .mockRejectedValue(new Error('Database error occurred.')),
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
+                    query: jest
+                      .fn()
+                      .mockRejectedValue(new Error('Database error occurred.')),
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  },
                 ),
               },
             },
@@ -372,7 +367,7 @@ describe('given the findMyDmarcSummaries query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Database error occurred.`,
+            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -427,17 +422,13 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 }),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
-                ),
+                loadDmarcSummaryConnectionsByUserId: jest.fn(),
               },
             },
           )
@@ -481,21 +472,19 @@ describe('given the findMyDmarcSummaries query', () => {
               userKey: user._key,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
-                }),
+                userRequired: jest.fn(),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  jest
-                    .fn()
-                    .mockRejectedValue(new Error('Database error occurred.')),
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
+                    query: jest
+                      .fn()
+                      .mockRejectedValue(new Error('Database error occurred.')),
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  },
                 ),
               },
             },
@@ -504,7 +493,7 @@ describe('given the findMyDmarcSummaries query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Database error occurred.`,
+            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Database error occurred.`,
           ])
         })
       })

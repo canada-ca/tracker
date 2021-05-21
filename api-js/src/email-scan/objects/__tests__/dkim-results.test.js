@@ -1,16 +1,10 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { dkimLoaderByKey } from '../../loaders'
 import { dkimType, dkimResultType } from '../index'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
-import { dkimGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dkim result object', () => {
   describe('testing its field definitions', () => {
@@ -84,58 +78,6 @@ describe('given the dkim result object', () => {
     })
   })
   describe('testing its field resolvers', () => {
-    let query, drop, truncate, collections, dkim, dkimResult, dkimGT
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      await truncate()
-      dkim = await collections.dkim.save({
-        timestamp: '2020-10-02T12:43:39Z',
-      })
-      dkimResult = await collections.dkimResults.save({
-        selector: 'selector._dkim1',
-        record: 'txtRecord',
-        keyLength: '2048',
-        guidanceTags: ['dkim1'],
-        negativeTags: ['dkim1'],
-        neutralTags: ['dkim1'],
-        positiveTags: ['dkim1'],
-      })
-      await collections.dkimToDkimResults.save({
-        _to: dkimResult._id,
-        _from: dkim._id,
-      })
-      dkimGT = await collections.dkimGuidanceTags.save({
-        _key: 'dkim1',
-        tagName: 'DKIM-TAG',
-        guidance: 'Some Interesting Guidance',
-        refLinksGuide: [
-          {
-            description: 'refLinksGuide Description',
-            ref_link: 'www.refLinksGuide.ca',
-          },
-        ],
-        refLinksTechnical: [
-          {
-            description: 'refLinksTechnical Description',
-            ref_link: 'www.refLinksTechnical.ca',
-          },
-        ],
-      })
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
 
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
@@ -150,22 +92,28 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimLoaderByKey(query, '1', {})
+        const expectedResult = {
+          _id: 'dkim/1',
+          _key: '1',
+          _rev: 'rev',
+          _type: 'dkim',
+          id: '1',
+          timestamp: '2020-10-02T12:43:39Z',
+        }
 
         expect(
           await demoType.dkim.resolve(
-            { dkimId: dkim._id },
+            { dkimId: 'dkim/1' },
             {},
-            { loaders: { dkimLoaderByKey: loader } },
+            {
+              loaders: {
+                loadDkimByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
           ),
-        ).toEqual({
-          _id: dkim._id,
-          _key: dkim._key,
-          _rev: dkim._rev,
-          _type: 'dkim',
-          id: dkim._key,
-          timestamp: '2020-10-02T12:43:39Z',
-        })
+        ).toEqual(expectedResult)
       })
     })
     describe('testing the selector field', () => {
@@ -210,22 +158,16 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
         const guidanceTags = ['dkim1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dkimGT._key),
+              cursor: toGlobalId('guidanceTags', 'dkim1'),
               node: {
-                _id: dkimGT._id,
-                _key: dkimGT._key,
-                _rev: dkimGT._rev,
+                _id: 'dkimGuidanceTags/dkim1',
+                _key: 'dkim1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'dkim1',
@@ -259,7 +201,13 @@ describe('given the dkim result object', () => {
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadDkimGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })
@@ -267,23 +215,16 @@ describe('given the dkim result object', () => {
     describe('testing the negativeGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
-
-        const loader = dkimGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
         const negativeTags = ['dkim1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dkimGT._key),
+              cursor: toGlobalId('guidanceTags', 'dkim1'),
               node: {
-                _id: dkimGT._id,
-                _key: dkimGT._key,
-                _rev: dkimGT._rev,
+                _id: 'dkimGuidanceTags/dkim1',
+                _key: 'dkim1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'dkim1',
@@ -317,7 +258,13 @@ describe('given the dkim result object', () => {
           await demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadDkimGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })
@@ -325,23 +272,16 @@ describe('given the dkim result object', () => {
     describe('testing the neutralGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
-
-        const loader = dkimGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
         const neutralTags = ['dkim1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dkimGT._key),
+              cursor: toGlobalId('guidanceTags', 'dkim1'),
               node: {
-                _id: dkimGT._id,
-                _key: dkimGT._key,
-                _rev: dkimGT._rev,
+                _id: 'dkimGuidanceTags/dkim1',
+                _key: 'dkim1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'dkim1',
@@ -375,7 +315,13 @@ describe('given the dkim result object', () => {
           await demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadDkimGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })
@@ -383,23 +329,16 @@ describe('given the dkim result object', () => {
     describe('testing the positiveGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
-
-        const loader = dkimGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
         const positiveTags = ['dkim1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dkimGT._key),
+              cursor: toGlobalId('guidanceTags', 'dkim1'),
               node: {
-                _id: dkimGT._id,
-                _key: dkimGT._key,
-                _rev: dkimGT._rev,
+                _id: 'dkimGuidanceTags/dkim1',
+                _key: 'dkim1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'dkim1',
@@ -433,7 +372,13 @@ describe('given the dkim result object', () => {
           await demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadDkimGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).toEqual(expectedResult)
       })

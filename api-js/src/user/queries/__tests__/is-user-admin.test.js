@@ -6,7 +6,7 @@ import { databaseOptions } from '../../../../database-options'
 import { checkPermission, userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { userLoaderByKey } from '../../loaders'
+import { loadUserByKey } from '../../loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 
@@ -115,11 +115,11 @@ describe('given the isUserAdmin query', () => {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -158,11 +158,11 @@ describe('given the isUserAdmin query', () => {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -201,11 +201,11 @@ describe('given the isUserAdmin query', () => {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -257,11 +257,11 @@ describe('given the isUserAdmin query', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -317,11 +317,11 @@ describe('given the isUserAdmin query', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )

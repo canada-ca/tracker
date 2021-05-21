@@ -44,7 +44,7 @@ given organization.`,
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByUserName },
+      loaders: { loadOrgByKey, loadUserByUserName },
       validators: { cleanseInput },
     },
   ) => {
@@ -69,7 +69,7 @@ given organization.`,
     }
 
     // Check to see if requested user exists
-    const requestedUser = await userLoaderByUserName.load(userName)
+    const requestedUser = await loadUserByUserName.load(userName)
 
     if (typeof requestedUser === 'undefined') {
       console.warn(
@@ -83,7 +83,7 @@ given organization.`,
     }
 
     // Check to see if org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -116,6 +116,7 @@ given organization.`,
     let affiliationCursor
     try {
       affiliationCursor = await query`
+      WITH affiliations, organizations, users
       FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations 
         FILTER e._from == ${org._id}
         RETURN { _key: e._key, permission: e.permission }
@@ -223,6 +224,7 @@ given organization.`,
     try {
       await trx.step(async () => {
         await query`
+          WITH affiliations, organizations, users
           UPSERT { _key: ${affiliation._key} }
             INSERT ${edge}
             UPDATE ${edge}

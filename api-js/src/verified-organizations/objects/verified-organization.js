@@ -85,9 +85,9 @@ export const verifiedOrganizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { verifiedDomainLoaderConnectionsByOrgId } },
+        { loaders: { loadVerifiedDomainConnectionsByOrgId } },
       ) => {
-        const domains = await verifiedDomainLoaderConnectionsByOrgId({
+        const domains = await loadVerifiedDomainConnectionsByOrgId({
           orgId: _id,
           ...args,
         })

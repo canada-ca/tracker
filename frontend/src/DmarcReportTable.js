@@ -7,10 +7,9 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import { array, bool, func, number, shape, string } from 'prop-types'
+import { array, bool, func, number, string } from 'prop-types'
 import {
   Box,
-  Button,
   Collapse,
   Icon,
   IconButton,
@@ -24,7 +23,7 @@ import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
-import { RelayPaginationControls } from './RelayPaginationControls'
+import { TrackerButton } from './TrackerButton'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -128,14 +127,14 @@ function DmarcReportTable({ ...props }) {
     prependLink,
     appendLink,
     frontendPagination,
-    paginationConfig,
     selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)')
       .matches
       ? 5
       : 10,
-    setSelectedDisplayLimit,
-    currentPage,
-    setCurrentPage,
+    onSort,
+    manualSort,
+    manualFilters,
+    ...rest
   } = props
   const [show, setShow] = React.useState(true)
   const [firstRender, setFirstRender] = React.useState(true)
@@ -163,7 +162,7 @@ function DmarcReportTable({ ...props }) {
     previousPage,
     setPageSize,
     flatHeaders,
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize, sortBy },
     preGlobalFilteredRows,
     setGlobalFilter,
     state,
@@ -171,6 +170,10 @@ function DmarcReportTable({ ...props }) {
     {
       columns,
       data,
+      manualSortBy: manualSort,
+      manualFilters: manualFilters,
+      disableMultiSort: manualSort,
+      disableSortRemove: manualSort,
       initialState: {
         sortBy: initialSort,
         pageSize: selectedDisplayLimit,
@@ -181,6 +184,12 @@ function DmarcReportTable({ ...props }) {
     useSortBy,
     usePagination,
   )
+
+  useEffect(() => {
+    if (onSort && !firstRender) {
+      onSort(sortBy)
+    }
+  }, [sortBy])
 
   const [goToPageValue, setGoToPageNumber] = useState(pageIndex + 1)
 
@@ -204,9 +213,9 @@ function DmarcReportTable({ ...props }) {
   const wrapperRef = useRef(null)
 
   const titleButtonElement = !hideTitleButton ? (
-    <Button bg="primary" color="white" onClick={handleShow} width="100%">
-      {title}
-    </Button>
+    <TrackerButton variant="primary" onClick={handleShow} width="100%">
+      <Text>{title}</Text>
+    </TrackerButton>
   ) : (
     ''
   )
@@ -321,99 +330,85 @@ function DmarcReportTable({ ...props }) {
       </Stack>
     </Box>
   ) : (
-    <RelayPaginationControls
-      previous={() => {
-        paginationConfig.previous()
-      }}
-      hasPreviousPage={paginationConfig.hasPreviousPage}
-      next={() => {
-        if (paginationConfig.hasNextPage && !canNextPage)
-          paginationConfig.next()
-        else {
-          setCurrentPage(currentPage + 1)
-        }
-      }}
-      hasNextPage={paginationConfig.hasNextPage}
-      selectedDisplayLimit={selectedDisplayLimit}
-      setSelectedDisplayLimit={setSelectedDisplayLimit}
-      displayLimitOptions={paginationConfig.displayLimitOptions}
-      gotoPage={gotoPage}
-      isLoadingMore={paginationConfig.isLoadingMore}
-      mt="10px"
-    />
+    ''
   )
 
   return (
     <Box ref={wrapperRef}>
       {titleButtonElement}
       <Collapse isOpen={show}>
-        <ReactTableGlobalFilter
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          mt="4px"
-          mb="4px"
-        />
-        <Table {...getTableProps()} flatHeaders={flatHeaders}>
-          <thead>
-            {headerGroups.map((headerGroup, index) => {
-              return (
-                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => {
-                    // Using column.Header since column.id _sometimes_ has appended numbers
-                    const key =
-                      column.depth === 0
-                        ? `${title}:${column.Header}`
-                        : `${column.parent.Header}:${column.Header}`
-                    return (
-                      <th
-                        key={key}
-                        className={column.hidden ? 'visually-hidden' : ''}
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps(),
-                        )}
-                        style={{ textAlign: 'center' }}
-                      >
-                        {column.render('Header')}
-                        <span>
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <Icon name="chevron-down" />
-                            ) : (
-                              <Icon name="chevron-up" />
-                            )
-                          ) : (
-                            ''
+        {!manualFilters && (
+          <ReactTableGlobalFilter
+            preGlobalFilteredRows={preGlobalFilteredRows}
+            globalFilter={state.globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            mt="4px"
+            mb="4px"
+          />
+        )}
+
+        <Box {...rest}>
+          <Table {...getTableProps()} flatHeaders={flatHeaders}>
+            <thead>
+              {headerGroups.map((headerGroup, index) => {
+                return (
+                  <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => {
+                      // Using column.Header since column.id _sometimes_ has appended numbers
+                      const key =
+                        column.depth === 0
+                          ? `${title}:${column.Header}`
+                          : `${column.parent.Header}:${column.Header}`
+                      return (
+                        <th
+                          key={key}
+                          className={column.hidden ? 'visually-hidden' : ''}
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps(),
                           )}
-                        </span>
-                      </th>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, rowIndex) => {
-              prepareRow(row)
-              return (
-                <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
-                  {row.cells.map((cell, cellIndex) => {
-                    return (
-                      <td
-                        key={`${title}:${rowIndex}:${cellIndex}`}
-                        {...cell.getCellProps()}
-                        style={cell.column.style}
-                      >
-                        {renderLinkableCell(cell)}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
+                          style={{ textAlign: 'center' }}
+                        >
+                          {column.render('Header')}
+                          <span>
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <Icon name="chevron-down" />
+                              ) : (
+                                <Icon name="chevron-up" />
+                              )
+                            ) : (
+                              ''
+                            )}
+                          </span>
+                        </th>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row, rowIndex) => {
+                prepareRow(row)
+                return (
+                  <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
+                    {row.cells.map((cell, cellIndex) => {
+                      return (
+                        <td
+                          key={`${title}:${rowIndex}:${cellIndex}`}
+                          {...cell.getCellProps()}
+                          style={cell.column.style}
+                        >
+                          {renderLinkableCell(cell)}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </Box>
         {paginationControls}
       </Collapse>
     </Box>
@@ -430,18 +425,10 @@ DmarcReportTable.propTypes = {
   prependLink: string,
   appendLink: string,
   frontendPagination: bool,
-  paginationConfig: shape({
-    previous: func,
-    hasPreviousPage: bool,
-    next: func,
-    hasNextPage: bool,
-    displayLimitOptions: array,
-    isLoadingMore: bool,
-  }),
   selectedDisplayLimit: number,
-  setSelectedDisplayLimit: func,
-  currentPage: number,
-  setCurrentPage: func,
+  onSort: func,
+  manualSort: bool,
+  manualFilters: bool,
 }
 
 DmarcReportTable.defaultProps = {

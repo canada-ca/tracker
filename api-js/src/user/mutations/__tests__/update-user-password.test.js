@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -80,7 +80,14 @@ describe('authenticate user account', () => {
           cleanseInput,
         },
         loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
+          loadUserByUserName: loadUserByUserName({ query }),
+        },
+        notify: {
+          sendVerificationEmail: jest.fn(),
+        },
+        request: {
+          protocol: 'https',
+          get: (text) => text,
         },
       },
     )
@@ -153,15 +160,15 @@ describe('authenticate user account', () => {
               tokenize,
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             validators: {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByUserName: loadUserByUserName({ query }),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -213,7 +220,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendAuthEmail: mockNotfiy,
@@ -273,15 +280,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -339,15 +346,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -405,15 +412,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -438,8 +445,8 @@ describe('authenticate user account', () => {
       })
       describe('database error occurs when updating password', () => {
         it('returns an error message', async () => {
-          const userNameLoader = userLoaderByUserName(query)
-          const idLoader = userLoaderByKey(query)
+          const userNameLoader = loadUserByUserName({ query })
+          const idLoader = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -478,15 +485,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
-                userLoaderByKey: idLoader,
+                loadUserByUserName: userNameLoader,
+                loadUserByKey: idLoader,
               },
             },
           )
@@ -553,15 +560,15 @@ describe('authenticate user account', () => {
               tokenize,
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             validators: {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByUserName: loadUserByUserName({ query }),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -613,7 +620,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendAuthEmail: mockNotfiy,
@@ -673,15 +680,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -738,15 +745,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -803,15 +810,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -835,8 +842,8 @@ describe('authenticate user account', () => {
       })
       describe('database error occurs when updating password', () => {
         it('returns an error message', async () => {
-          const userNameLoader = userLoaderByUserName(query)
-          const idLoader = userLoaderByKey(query)
+          const userNameLoader = loadUserByUserName({ query })
+          const idLoader = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -875,15 +882,15 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
-                userLoaderByKey: idLoader,
+                loadUserByUserName: userNameLoader,
+                loadUserByKey: idLoader,
               },
             },
           )

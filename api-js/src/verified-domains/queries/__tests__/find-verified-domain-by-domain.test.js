@@ -9,8 +9,8 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { verifiedOrgLoaderConnectionsByDomainId } from '../../../verified-organizations/loaders'
-import { verifiedDomainLoaderByDomain } from '../../loaders'
+import { loadVerifiedOrgConnectionsByDomainId } from '../../../verified-organizations/loaders'
+import { loadVerifiedDomainsById } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -125,8 +125,8 @@ describe('given findVerifiedDomainByDomain query', () => {
             cleanseInput,
           },
           loaders: {
-            verifiedDomainLoaderByDomain: verifiedDomainLoaderByDomain(query),
-            verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
+            loadVerifiedDomainsById: loadVerifiedDomainsById({ query }),
+            loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
               query,
               'en',
               cleanseInput,
@@ -181,10 +181,8 @@ describe('given findVerifiedDomainByDomain query', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedDomainLoaderByDomain: verifiedDomainLoaderByDomain(
-                  query,
-                ),
-                verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
+                loadVerifiedDomainsById: loadVerifiedDomainsById({ query }),
+                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
                   query,
                   'en',
                   cleanseInput,
@@ -239,10 +237,8 @@ describe('given findVerifiedDomainByDomain query', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedDomainLoaderByDomain: verifiedDomainLoaderByDomain(
-                  query,
-                ),
-                verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
+                loadVerifiedDomainsById: loadVerifiedDomainsById({ query }),
+                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
                   query,
                   'en',
                   cleanseInput,

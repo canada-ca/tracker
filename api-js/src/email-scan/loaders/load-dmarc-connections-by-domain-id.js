@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const dmarcLoaderConnectionsByDomainId = (
+export const loadDmarcConnectionsByDomainId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({
+}) => async ({
   domainId,
   startDate,
   endDate,
@@ -128,7 +128,7 @@ export const dmarcLoaderConnectionsByDomainId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -137,7 +137,7 @@ export const dmarcLoaderConnectionsByDomainId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -150,7 +150,7 @@ export const dmarcLoaderConnectionsByDomainId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
 
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDmarcConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -161,7 +161,7 @@ export const dmarcLoaderConnectionsByDomainId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dmarcLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadDmarcConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -177,7 +177,7 @@ export const dmarcLoaderConnectionsByDomainId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dmarcLoaderConnectionsByDomainId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDmarcConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),

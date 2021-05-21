@@ -37,7 +37,7 @@ export const resetPassword = new mutationWithClientMutationId({
       i18n,
       query,
       auth: { verifyToken, bcrypt },
-      loaders: { userLoaderByKey },
+      loaders: { loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -67,7 +67,7 @@ export const resetPassword = new mutationWithClientMutationId({
     }
 
     // Check if user exists
-    const user = await userLoaderByKey.load(tokenParameters.userKey)
+    const user = await loadUserByKey.load(tokenParameters.userKey)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
@@ -126,6 +126,7 @@ export const resetPassword = new mutationWithClientMutationId({
 
     try {
       await query`
+        WITH users
         FOR user IN users
           UPDATE ${user._key} WITH { password: ${hashedPassword}, failedLoginAttempts: 0 } IN users
       `

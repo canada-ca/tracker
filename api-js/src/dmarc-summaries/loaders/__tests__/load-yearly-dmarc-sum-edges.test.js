@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dmarcYearlySumEdgeLoader } from '../index'
+import { loadDmarcYearlySumEdge } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dmarcYearlySumEdgeLoader loader', () => {
+describe('given the loadDmarcYearlySumEdge loader', () => {
   let query,
     drop,
     truncate,
@@ -121,7 +121,7 @@ describe('given the dmarcYearlySumEdgeLoader loader', () => {
       `
       const expectedEdges = await expectedEdgesCursor.all()
 
-      const loader = dmarcYearlySumEdgeLoader(query, user._key, i18n)
+      const loader = loadDmarcYearlySumEdge({ query, userKey: user._key, i18n })
 
       const dmarcEdges = await loader({
         domainId: 'domains/1',
@@ -151,7 +151,11 @@ describe('given the dmarcYearlySumEdgeLoader loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred'))
 
-        const loader = dmarcYearlySumEdgeLoader(mockedQuery, user._key, i18n)
+        const loader = loadDmarcYearlySumEdge({
+          query: mockedQuery,
+          userKey: user._key,
+          i18n,
+        })
 
         try {
           await loader({
@@ -178,7 +182,11 @@ describe('given the dmarcYearlySumEdgeLoader loader', () => {
         }
         const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
 
-        const loader = dmarcYearlySumEdgeLoader(mockedQuery, user._key, i18n)
+        const loader = loadDmarcYearlySumEdge({
+          query: mockedQuery,
+          userKey: user._key,
+          i18n,
+        })
 
         try {
           await loader({
@@ -218,7 +226,11 @@ describe('given the dmarcYearlySumEdgeLoader loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred'))
 
-        const loader = dmarcYearlySumEdgeLoader(mockedQuery, user._key, i18n)
+        const loader = loadDmarcYearlySumEdge({
+          query: mockedQuery,
+          userKey: user._key,
+          i18n,
+        })
 
         try {
           await loader({
@@ -243,7 +255,11 @@ describe('given the dmarcYearlySumEdgeLoader loader', () => {
         }
         const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
 
-        const loader = dmarcYearlySumEdgeLoader(mockedQuery, user._key, i18n)
+        const loader = loadDmarcYearlySumEdge({
+          query: mockedQuery,
+          userKey: user._key,
+          i18n,
+        })
 
         try {
           await loader({

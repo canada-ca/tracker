@@ -8,6 +8,7 @@ import {
 import { toGlobalId } from 'graphql-relay'
 
 import { dkimFailureTableType } from '../dkim-failure-table'
+import { guidanceTagType } from '../../../guidance-tag/objects'
 
 describe('given the dkimFailureTable gql object', () => {
   describe('testing the field definitions', () => {
@@ -59,6 +60,12 @@ describe('given the dkimFailureTable gql object', () => {
       expect(demoType).toHaveProperty('guidance')
       expect(demoType.guidance.type).toMatchObject(GraphQLString)
     })
+    it('has a guidanceTag field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('guidanceTag')
+      expect(demoType.guidanceTag.type).toMatchObject(guidanceTagType)
+    })
     it('has a headerFrom field', () => {
       const demoType = dkimFailureTableType.getFields()
 
@@ -78,7 +85,6 @@ describe('given the dkimFailureTable gql object', () => {
       expect(demoType.totalMessages.type).toMatchObject(GraphQLInt)
     })
   })
-
   describe('testing field resolvers', () => {
     describe('testing the id resolver', () => {
       it('returns resolved value', () => {
@@ -150,6 +156,45 @@ describe('given the dkimFailureTable gql object', () => {
         expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual(
           'guidance',
         )
+      })
+    })
+    describe('testing the guidanceTag resolver', () => {
+      it('returns resolved value', async () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        const expectedResults = {
+          _id: 'aggregateGuidanceTags/agg1',
+          _key: 'agg1',
+          _rev: 'rev',
+          _type: 'guidanceTag',
+          guidance: 'cool guidance for issue',
+          id: 'agg1',
+          refLinksGuide: [
+            { description: 'Link Description', ref_link: 'www.link.ca' },
+          ],
+          refLinksTechnical: [
+            {
+              description: 'Tech link description',
+              tech_link: 'www.tech.link.ca',
+            },
+          ],
+          tagId: 'agg1',
+          tagName: 'cool-tag-name',
+        }
+
+        expect(
+          await demoType.guidanceTag.resolve(
+            { guidance: 'agg1' },
+            {},
+            {
+              loaders: {
+                loadAggregateGuidanceTagById: {
+                  load: jest.fn().mockReturnValue(expectedResults),
+                },
+              },
+            },
+          ),
+        ).toEqual(expectedResults)
       })
     })
     describe('testing the headerFrom resolver', () => {

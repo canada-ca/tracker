@@ -1,106 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
-import {
-  dkimFailureLoaderConnectionsBySumId,
-  dmarcFailureLoaderConnectionsBySumId,
-  fullPassLoaderConnectionsBySumId,
-  spfFailureLoaderConnectionsBySumId,
-} from '../../loaders'
 import { detailTablesType } from '../detail-tables'
 import { dkimFailureConnection } from '../dkim-failure-table-connection'
 import { dmarcFailureConnection } from '../dmarc-failure-table-connection'
 import { fullPassConnection } from '../full-pass-table-connection'
 import { spfFailureConnection } from '../spf-failure-table-connection'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
-
 describe('testing the detailTables gql object', () => {
-  let query, drop, truncate, collections, dmarcSummary
-
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-  })
-
-  beforeEach(async () => {
-    dmarcSummary = await collections.dmarcSummaries.save({
-      categoryTotals: {},
-      detailTables: {
-        dkimFailure: [
-          {
-            id: '1',
-            dkimAligned: false,
-            dkimDomains: 'dkimDomains',
-            dkimResults: 'dkimResults',
-            dkimSelectors: 'dkimSelectors',
-            dnsHost: 'dnsHost',
-            envelopeFrom: 'envelopeFrom',
-            guidance: 'guidance',
-            headerFrom: 'headerFrom',
-            sourceIpAddress: 'sourceIpAddress',
-            totalMessages: 1000,
-          },
-        ],
-        dmarcFailure: [
-          {
-            id: '1',
-            dkimDomains: 'dkimDomains',
-            dkimSelectors: 'dkimSelectors',
-            disposition: 'disposition',
-            dnsHost: 'dnsHost',
-            envelopeFrom: 'envelopeFrom',
-            headerFrom: 'headerFrom',
-            sourceIpAddress: 'sourceIpAddress',
-            spfDomains: 'spfDomains',
-            totalMessages: 1000,
-          },
-        ],
-        fullPass: [
-          {
-            id: '1',
-            dkimDomains: 'dkimDomains',
-            dkimSelectors: 'dkimSelectors',
-            dnsHost: 'dnsHost',
-            envelopeFrom: 'envelopeFrom',
-            headerFrom: 'headerFrom',
-            sourceIpAddress: 'sourceIpAddress',
-            spfDomains: 'spfDomains',
-            totalMessages: 1000,
-          },
-        ],
-        spfFailure: [
-          {
-            id: '1',
-            dnsHost: 'dnsHost',
-            envelopeFrom: 'envelopeFrom',
-            guidance: 'guidance',
-            headerFrom: 'headerFrom',
-            sourceIpAddress: 'sourceIpAddress',
-            spfAligned: true,
-            spfDomains: 'spfDomains',
-            spfResults: 'spfResults',
-            totalMessages: 1000,
-          },
-        ],
-      },
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
   describe('testing the field definitions', () => {
     it('has a dkimFailure field', () => {
       const demoType = detailTablesType.getFields()
@@ -171,13 +77,13 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.dkimFailure.resolve(
-            { _id: dmarcSummary._id },
+            { _id: '1' },
             { first: 1 },
             {
               loaders: {
-                dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
-                  query,
-                ),
+                loadDkimFailConnectionsBySumId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
               },
             },
           ),
@@ -218,13 +124,13 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.dmarcFailure.resolve(
-            { _id: dmarcSummary._id },
+            { _id: '1' },
             { first: 1 },
             {
               loaders: {
-                dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
-                  query,
-                ),
+                loadDmarcFailConnectionsBySumId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
               },
             },
           ),
@@ -264,13 +170,13 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.fullPass.resolve(
-            { _id: dmarcSummary._id },
+            { _id: '1' },
             { first: 1 },
             {
               loaders: {
-                fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
-                  query,
-                ),
+                loadFullPassConnectionsBySumId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
               },
             },
           ),
@@ -311,13 +217,13 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.spfFailure.resolve(
-            { _id: dmarcSummary._id },
+            { _id: '1' },
             { first: 1 },
             {
               loaders: {
-                spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
-                  query,
-                ),
+                loadSpfFailureConnectionsBySumId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
               },
             },
           ),

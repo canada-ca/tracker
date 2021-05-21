@@ -13,6 +13,7 @@ const {
   SCALAR_COST: scalarCost,
   OBJECT_COST: objectCost,
   LIST_FACTOR: listFactor,
+  TRACING_ENABLED: tracing,
 } = process.env
 
 ;(async () => {
@@ -30,6 +31,7 @@ const {
     scalarCost,
     objectCost,
     listFactor,
+    tracing,
     context: {
       query,
       collections,

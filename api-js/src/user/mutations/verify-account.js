@@ -29,7 +29,7 @@ export const verifyAccount = new mutationWithClientMutationId({
       query,
       userKey,
       auth: { verifyToken },
-      loaders: { userLoaderByKey },
+      loaders: { loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -49,7 +49,7 @@ export const verifyAccount = new mutationWithClientMutationId({
 
     // Auth shouldn't be needed with this
     // Check if user exists
-    const user = await userLoaderByKey.load(userKey)
+    const user = await loadUserByKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
@@ -99,6 +99,7 @@ export const verifyAccount = new mutationWithClientMutationId({
     // Verify users account
     try {
       await query`
+        WITH users
         UPSERT { _key: ${user._key} }
           INSERT { emailValidated: true }
           UPDATE { emailValidated: true }

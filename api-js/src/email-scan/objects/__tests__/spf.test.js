@@ -1,17 +1,10 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID, GraphQLInt, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
-import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { spfGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { spfType } from '../index'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the spfType object', () => {
   describe('testing the field definitions', () => {
@@ -84,64 +77,6 @@ describe('given the spfType object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, collections, domain, spf, spfGT
-
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-
-    beforeEach(async () => {
-      domain = await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-        slug: 'test-domain-gc-ca',
-      })
-      spf = await collections.spf.save({
-        timestamp: '2020-10-02T12:43:39Z',
-        lookups: 5,
-        record: 'txtRecord',
-        spfDefault: 'default',
-        guidanceTags: ['spf1'],
-        negativeTags: ['spf1'],
-        neutralTags: ['spf1'],
-        positiveTags: ['spf1'],
-      })
-      await collections.domainsSPF.save({
-        _from: domain._id,
-        _to: spf._id,
-      })
-      spfGT = await collections.spfGuidanceTags.save({
-        _key: 'spf1',
-        tagName: 'SPF-TAG',
-        guidance: 'Some Interesting Guidance',
-        refLinksGuide: [
-          {
-            description: 'refLinksGuide Description',
-            ref_link: 'www.refLinksGuide.ca',
-          },
-        ],
-        refLinksTechnical: [
-          {
-            description: 'refLinksTechnical Description',
-            ref_link: 'www.refLinksTechnical.ca',
-          },
-        ],
-      })
-    })
-
-    afterEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfType.getFields()
@@ -153,23 +88,27 @@ describe('given the spfType object', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
 
-        const loader = domainLoaderByKey(query, '1', {})
-
         const expectedResult = {
-          _id: domain._id,
-          _key: domain._key,
-          _rev: domain._rev,
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
           _type: 'domain',
-          id: domain._key,
+          id: '1',
           domain: 'test.domain.gc.ca',
           slug: 'test-domain-gc-ca',
         }
 
         await expect(
           demoType.domain.resolve(
-            { domainId: domain._id },
+            { domainId: 'domains/1' },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -222,26 +161,18 @@ describe('given the spfType object', () => {
     describe('testing the guidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
-
-        const loader = spfGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
-
         const guidanceTags = ['spf1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', spfGT._key),
+              cursor: toGlobalId('guidanceTags', 'spf1'),
               node: {
-                _id: spfGT._id,
-                _key: spfGT._key,
-                _rev: spfGT._rev,
+                _id: 'spfGuidanceTags/spf1',
+                _key: 'spf1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: spfGT._key,
+                id: 'spf1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -264,8 +195,8 @@ describe('given the spfType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', spfGT._key),
-            endCursor: toGlobalId('guidanceTags', spfGT._key),
+            startCursor: toGlobalId('guidanceTags', 'spf1'),
+            endCursor: toGlobalId('guidanceTags', 'spf1'),
           },
         }
 
@@ -273,7 +204,13 @@ describe('given the spfType object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadSpfGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -281,26 +218,18 @@ describe('given the spfType object', () => {
     describe('testing the negativeGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
-
-        const loader = spfGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
-
         const negativeTags = ['spf1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', spfGT._key),
+              cursor: toGlobalId('guidanceTags', 'spf1'),
               node: {
-                _id: spfGT._id,
-                _key: spfGT._key,
-                _rev: spfGT._rev,
+                _id: 'spfGuidanceTags/spf1',
+                _key: 'spf1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: spfGT._key,
+                id: 'spf1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -323,8 +252,8 @@ describe('given the spfType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', spfGT._key),
-            endCursor: toGlobalId('guidanceTags', spfGT._key),
+            startCursor: toGlobalId('guidanceTags', 'spf1'),
+            endCursor: toGlobalId('guidanceTags', 'spf1'),
           },
         }
 
@@ -332,7 +261,13 @@ describe('given the spfType object', () => {
           demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadSpfGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -340,26 +275,18 @@ describe('given the spfType object', () => {
     describe('testing the neutralGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
-
-        const loader = spfGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
-
         const neutralTags = ['spf1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', spfGT._key),
+              cursor: toGlobalId('guidanceTags', 'spf1'),
               node: {
-                _id: spfGT._id,
-                _key: spfGT._key,
-                _rev: spfGT._rev,
+                _id: 'spfGuidanceTags/spf1',
+                _key: 'spf1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: spfGT._key,
+                id: 'spf1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -382,8 +309,8 @@ describe('given the spfType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', spfGT._key),
-            endCursor: toGlobalId('guidanceTags', spfGT._key),
+            startCursor: toGlobalId('guidanceTags', 'spf1'),
+            endCursor: toGlobalId('guidanceTags', 'spf1'),
           },
         }
 
@@ -391,7 +318,13 @@ describe('given the spfType object', () => {
           demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadSpfGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -399,26 +332,18 @@ describe('given the spfType object', () => {
     describe('testing the positiveGuidanceTags resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
-
-        const loader = spfGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
-
         const positiveTags = ['spf1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', spfGT._key),
+              cursor: toGlobalId('guidanceTags', 'spf1'),
               node: {
-                _id: spfGT._id,
-                _key: spfGT._key,
-                _rev: spfGT._rev,
+                _id: 'spfGuidanceTags/spf1',
+                _key: 'spf1',
+                _rev: 'rev',
                 _type: 'guidanceTag',
-                id: spfGT._key,
+                id: 'spf1',
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [
                   {
@@ -441,8 +366,8 @@ describe('given the spfType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', spfGT._key),
-            endCursor: toGlobalId('guidanceTags', spfGT._key),
+            startCursor: toGlobalId('guidanceTags', 'spf1'),
+            endCursor: toGlobalId('guidanceTags', 'spf1'),
           },
         }
 
@@ -450,7 +375,13 @@ describe('given the spfType object', () => {
           demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            {
+              loaders: {
+                loadSpfGuidanceTagConnectionsByTagId: jest
+                  .fn()
+                  .mockReturnValue(expectedResult),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })

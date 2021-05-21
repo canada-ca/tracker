@@ -5,8 +5,8 @@ import { categorizedSummaryType } from '../objects'
 export const webSummary = {
   type: categorizedSummaryType,
   description: 'Web summary computed values, used to build summary cards.',
-  resolve: async (_, __, { i18n, loaders: { chartSummaryLoaderByKey } }) => {
-    const summary = await chartSummaryLoaderByKey.load('web')
+  resolve: async (_, __, { i18n, loaders: { loadChartSummaryByKey } }) => {
+    const summary = await loadChartSummaryByKey.load('web')
 
     if (typeof summary === 'undefined') {
       console.warn(`User could not retrieve web summary.`)

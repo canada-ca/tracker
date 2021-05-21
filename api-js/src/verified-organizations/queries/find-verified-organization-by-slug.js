@@ -16,17 +16,13 @@ export const findVerifiedOrganizationBySlug = {
   resolve: async (
     _,
     args,
-    {
-      i18n,
-      loaders: { verifiedOrgLoaderBySlug },
-      validators: { cleanseInput },
-    },
+    { i18n, loaders: { loadVerifiedOrgBySlug }, validators: { cleanseInput } },
   ) => {
     // Cleanse input
     const orgSlug = cleanseInput(args.orgSlug)
 
     // Retrieve organization by slug
-    const org = await verifiedOrgLoaderBySlug.load(orgSlug)
+    const org = await loadVerifiedOrgBySlug.load(orgSlug)
 
     if (typeof org === 'undefined') {
       console.warn(`User could not retrieve verified organization.`)

@@ -3,11 +3,11 @@ import { toGlobalId } from 'graphql-relay'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import {
-  httpsLoaderConnectionsByDomainId,
-  sslLoaderConnectionsByDomainId,
+  loadHttpsConnectionsByDomainId,
+  loadSslConnectionByDomainId,
 } from '../../loaders'
 
 import { webScanType, httpsConnection, sslConnection } from '../index'
@@ -89,7 +89,7 @@ describe('given the web scan gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = webScanType.getFields()
 
-        const loader = domainLoaderByKey(query, '1', {})
+        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
 
         const expectedResult = {
           _id: domain._id,
@@ -105,7 +105,7 @@ describe('given the web scan gql object', () => {
           demoType.domain.resolve(
             { _key: domain._key },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -114,12 +114,12 @@ describe('given the web scan gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = webScanType.getFields()
 
-        const loader = httpsLoaderConnectionsByDomainId(
+        const loader = loadHttpsConnectionsByDomainId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -155,7 +155,7 @@ describe('given the web scan gql object', () => {
           demoType.https.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { httpsLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadHttpsConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -164,12 +164,12 @@ describe('given the web scan gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = webScanType.getFields()
 
-        const loader = sslLoaderConnectionsByDomainId(
+        const loader = loadSslConnectionByDomainId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -200,7 +200,7 @@ describe('given the web scan gql object', () => {
           demoType.ssl.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { sslLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadSslConnectionByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

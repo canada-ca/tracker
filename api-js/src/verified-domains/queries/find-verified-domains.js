@@ -13,12 +13,8 @@ export const findVerifiedDomains = {
     },
     ...connectionArgs,
   },
-  resolve: async (
-    _,
-    args,
-    { loaders: { verifiedDomainLoaderConnections } },
-  ) => {
-    const domainConnections = await verifiedDomainLoaderConnections(args)
+  resolve: async (_, args, { loaders: { loadVerifiedDomainConnections } }) => {
+    const domainConnections = await loadVerifiedDomainConnections(args)
     return domainConnections
   },
 }

@@ -68,7 +68,15 @@ export default function DomainsPage() {
       <Trans>Domains</Trans>
     </LoadingMessage>
   ) : (
-    <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
+    <ListOf
+      elements={nodes}
+      ifEmpty={() => (
+        <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+          <Trans>No Domains</Trans>
+        </Text>
+      )}
+      mb="4"
+    >
       {({ id, domain, lastRan, status }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
@@ -166,7 +174,7 @@ export default function DomainsPage() {
                 onlyPagination={false}
                 selectedDisplayLimit={domainsPerPage}
                 setSelectedDisplayLimit={setDomainsPerPage}
-                displayLimitOptions={[10, 20, 40, 80]}
+                displayLimitOptions={[5, 10, 20, 50, 100]}
                 resetToFirstPage={resetToFirstPage}
                 hasNextPage={hasNextPage}
                 hasPreviousPage={hasPreviousPage}
