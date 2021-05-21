@@ -8,6 +8,8 @@ import { DOMAINS } from '../graphql/queries'
 import App from '../App'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { ApolloProvider } from '@apollo/client'
+import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -32,7 +34,9 @@ describe('<App/>', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <App />
+                  <ApolloProvider client={client}>
+                    <App />
+                  </ApolloProvider>
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>

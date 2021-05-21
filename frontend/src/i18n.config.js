@@ -1,5 +1,6 @@
 import { i18n } from '@lingui/core'
 import { fr, en } from 'make-plural/plurals'
+
 i18n.loadLocaleData('en', { plurals: en })
 i18n.loadLocaleData('fr', { plurals: fr })
 
@@ -23,4 +24,25 @@ export async function activate(locale) {
   i18n.activate(locale)
 }
 
-activate('en')
+let defaultLanguage
+const acceptedLanguageCodeRegex = /^(fr|en).*/i
+
+if (navigator.languages) {
+  // check navigator.languages for supported languages
+  navigator.languages.find((lang) => {
+    const found = lang.match(acceptedLanguageCodeRegex)
+
+    if (found) defaultLanguage = found[1].toLowerCase()
+
+    return found
+  })
+} else if (navigator.language) {
+  // IE doesn't support navigator.languages, check navigator.language
+  const found = navigator.language.match(acceptedLanguageCodeRegex)
+  if (found) defaultLanguage = found[1].toLowerCase()
+} else {
+  // default to 'en'
+  defaultLanguage = 'en'
+}
+
+activate(defaultLanguage)
