@@ -372,8 +372,8 @@ describe('removing a user from an organization', () => {
             orgOne,
             orgTwo,
             admin,
-            user,
-            affiliation
+            user
+
           beforeEach(async () => {
             ;({
               query,
@@ -383,7 +383,7 @@ describe('removing a user from an organization', () => {
               transaction,
             } = await ensure({
               type: 'database',
-              name: 'sa_rm_usr_fr_' + dbNameFromFile(__filename),
+              name: 'sa_rm_msg_fr_' + dbNameFromFile(__filename),
               url,
               rootPassword: rootPass,
               options: databaseOptions({ rootPass }),
@@ -394,17 +394,19 @@ describe('removing a user from an organization', () => {
             admin = await collections.users.save(adminData)
             user = await collections.users.save(userData)
 
-            await collections.affiliations.save({
-              _from: orgTwo._id,
-              _to: admin._id,
-              permission: 'super_admin',
-            })
+            await collections.affiliations.save([
+              {
+                _from: orgTwo._id,
+                _to: admin._id,
+                permission: 'super_admin',
+              },
 
-            affiliation = await collections.affiliations.save({
-              _from: orgOne._id,
-              _to: user._id,
-              permission: 'user',
-            })
+              {
+                _from: orgOne._id,
+                _to: user._id,
+                permission: 'user',
+              },
+            ])
           })
 
           afterEach(async () => {
@@ -501,6 +503,61 @@ describe('removing a user from an organization', () => {
             expect(consoleOutput).toEqual([
               `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
             ])
+          })
+        })
+
+        describe('super admin can remove a user from any org', () => {
+          let query,
+            drop,
+            truncate,
+            collections,
+            transaction,
+            orgOne,
+            orgTwo,
+            admin,
+            user,
+            affiliation
+
+          beforeEach(async () => {
+            ;({
+              query,
+              drop,
+              truncate,
+              collections,
+              transaction,
+            } = await ensure({
+              type: 'database',
+              name: 'sa_rm_usr_fr_' + dbNameFromFile(__filename),
+              url,
+              rootPassword: rootPass,
+              options: databaseOptions({ rootPass }),
+            }))
+
+            orgOne = await collections.organizations.save(orgOneData)
+            orgTwo = await collections.organizations.save(orgTwoData)
+            admin = await collections.users.save(adminData)
+            user = await collections.users.save(userData)
+
+            await collections.affiliations.save({
+              _from: orgTwo._id,
+              _to: admin._id,
+              permission: 'super_admin',
+            })
+
+            affiliation = await collections.affiliations.save({
+              _from: orgOne._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+
+          afterEach(async () => {
+            await truncate()
+            consoleOutput.length = 0
+          })
+
+          afterAll(async () => {
+            await drop()
           })
 
           it('removes the user from the org', async () => {
