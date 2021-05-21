@@ -90,10 +90,10 @@ def process_https(results, domain_key, db):
                     preload_status = preload_status.lower()
 
                     if preload_status == "hsts preload ready":
-                        negative_tags.append("https11")
-                        
+                        neutral_tags.append("https11")
+
                     elif preload_status == "hsts not preloaded":
-                        negative_tags.append("https12")
+                        neutral_tags.append("https12")
 
         else:
             negative_tags.append("https9")
