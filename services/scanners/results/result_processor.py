@@ -67,7 +67,7 @@ def process_https(results, domain_key, db):
         if hsts is not None:
             if isinstance(hsts, str):
                 hsts = hsts.lower()
-                
+
                 if hsts == "hsts max age too short":
                     negative_tags.append("https10")
 
