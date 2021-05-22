@@ -1,0 +1,17 @@
+{
+  "name": "loadtesting",
+  "version": "1.0.0",
+  "description": "Load testing scripts for Tracker",
+  "main": "frontend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mike Williamson",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.3.0"
+  },
+  "dependencies": {
+    "k6": "*"
+  }
+}
