@@ -42,7 +42,7 @@ export const fieldRequirements = {
     },
     max: {
       maxLength: 50,
-      message: t`Acronyms must be max 50 characters`,
+      message: t`Acronyms must be at most 50 characters`,
     },
   },
 }

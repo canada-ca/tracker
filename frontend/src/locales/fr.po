@@ -2423,3 +2423,61 @@ msgstr "Courriel du nouvel utilisateur"
 #: src/UserList.js:261
 msgid "Edit Role"
 msgstr "Rôle d'édition"
+
+#: src/AdminPage.js:114
+#: src/AdminPage.js:149
+#: src/CreateOrganizationPage.js:367
+msgid "Create Organization"
+msgstr "Créer une organisation"
+
+#: src/fieldRequirements.js:41
+msgid "Acronyms can only use upper case letters and underscores"
+msgstr "Les acronymes ne peuvent utiliser que des lettres majuscules et des caractères de soulignement."
+
+#: src/fieldRequirements.js:45
+msgid "Acronyms must be at most 50 characters"
+msgstr "Les acronymes doivent comporter au maximum 50 caractères."
+
+#: src/CreateOrganizationPage.js:72
+msgid "Organization created"
+msgstr "Organisation créée"
+
+#: src/CreateOrganizationPage.js:82
+msgid "Unable to create new organization."
+msgstr "Impossible de créer une nouvelle organisation."
+
+#: src/CreateOrganizationPage.js:92
+msgid "Incorrect createOrganization.result typename."
+msgstr "createOrganization.result incorrecte typename."
+
+#: src/CreateOrganizationPage.js:157
+msgid "Create an organization by filling out the following info in both English and French"
+msgstr "Créez une organisation en remplissant les informations suivantes en anglais et en français"
+
+#: src/CreateOrganizationPage.js:164
+msgid "Name:"
+msgstr "Nom:"
+
+#: src/CreateOrganizationPage.js:192
+msgid "Acronym:"
+msgstr "Acronyme:"
+
+#: src/CreateOrganizationPage.js:222
+msgid "Zone:"
+msgstr "Zone:"
+
+#: src/CreateOrganizationPage.js:250
+msgid "Sector:"
+msgstr "Secteur:"
+
+#: src/CreateOrganizationPage.js:278
+msgid "City:"
+msgstr "Ville:"
+
+#: src/CreateOrganizationPage.js:306
+msgid "Province:"
+msgstr "Province:"
+
+#: src/CreateOrganizationPage.js:334
+msgid "Country:"
+msgstr "Pays:"
