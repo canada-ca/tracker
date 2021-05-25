@@ -1339,10 +1339,17 @@ export const USER_AFFILIATIONS = gql`
     $first: Int
     $before: String
     $last: Int
+    $orderBy: AffiliationOrgOrder
   ) {
     findMe {
       id
-      affiliations(after: $after, first: $first, before: $before, last: $last) {
+      affiliations(
+        after: $after
+        first: $first
+        before: $before
+        last: $last
+        orderBy: $orderBy
+      ) {
         edges {
           node {
             organization {
