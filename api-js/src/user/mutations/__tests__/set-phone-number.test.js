@@ -123,6 +123,7 @@ describe('user sets a new phone number', () => {
               },
               validators: {
                 cleanseInput,
+                decryptPhoneNumber,
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
@@ -216,6 +217,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -296,6 +298,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -350,6 +353,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -418,6 +422,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -498,6 +503,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -552,6 +558,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -620,6 +627,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -700,6 +708,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -754,6 +763,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -830,6 +840,7 @@ describe('user sets a new phone number', () => {
               },
               validators: {
                 cleanseInput,
+                decryptPhoneNumber,
               },
               loaders: {
                 loadUserByKey: loaderById,
@@ -917,6 +928,7 @@ describe('user sets a new phone number', () => {
               },
               validators: {
                 cleanseInput,
+                decryptPhoneNumber,
               },
               loaders: {
                 loadUserByKey: loadUserByKey({ query }),
@@ -1009,6 +1021,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1088,6 +1101,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1142,6 +1156,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1210,6 +1225,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1289,6 +1305,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1343,6 +1360,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1411,6 +1429,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1490,6 +1509,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
@@ -1544,6 +1564,7 @@ describe('user sets a new phone number', () => {
                 },
                 validators: {
                   cleanseInput,
+                  decryptPhoneNumber,
                 },
                 loaders: {
                   loadUserByKey: loadUserByKey({ query }),
