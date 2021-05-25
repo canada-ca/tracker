@@ -49,7 +49,7 @@ given organization.`,
     },
   ) => {
     // Cleanse Input
-    const userName = cleanseInput(args.userName)
+    const userName = cleanseInput(args.userName).toLowerCase()
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const role = cleanseInput(args.role)
 

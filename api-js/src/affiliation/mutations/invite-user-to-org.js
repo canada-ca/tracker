@@ -52,7 +52,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       validators: { cleanseInput },
     },
   ) => {
-    const userName = cleanseInput(args.userName)
+    const userName = cleanseInput(args.userName).toLowerCase()
     const requestedRole = cleanseInput(args.requestedRole)
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const preferredLang = cleanseInput(args.preferredLang)
