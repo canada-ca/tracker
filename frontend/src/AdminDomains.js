@@ -34,7 +34,7 @@ import {
   REMOVE_DOMAIN,
   UPDATE_DOMAIN,
 } from './graphql/mutations'
-import { Field, Formik } from 'formik'
+import { Field, Formik, useFormik } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
 import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
@@ -46,7 +46,6 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
-  const [domainSearch, setDomainSearch] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const [editingDomainId, setEditingDomainId] = useState()
   const toast = useToast()
@@ -64,6 +63,26 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
+
+  const domainForm = useFormik({
+    initialValues: {
+      domain: '',
+    },
+    validationSchema: yupObject().shape({
+      domain: yupString().required(
+        i18n._(fieldRequirements.domainUrl.required.message),
+      ),
+    }),
+    onSubmit: async (values) => {
+      createDomain({
+        variables: {
+          orgId: orgId,
+          domain: values.domain,
+          selectors: [],
+        },
+      })
+    },
+  })
 
   const {
     loading,
@@ -109,7 +128,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           isClosable: true,
           position: 'top-left',
         })
-        setDomainSearch('')
+        domainForm.setFieldValue('domain', '')
       } else if (createDomain.result.__typename === 'DomainError') {
         toast({
           title: t`Unable to create new domain.`,
@@ -254,47 +273,44 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   return (
     <Stack mb="6" w="100%">
-      <Stack flexDirection={['column', 'row']} align="center" isInline>
-        <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
-          <InputLeftElement>
-            <Icon name="plus-square" color="gray.300" />
-          </InputLeftElement>
-          <Input
-            type="text"
-            placeholder={t`Domain URL`}
-            onChange={(e) => {
-              setDomainSearch(e.target.value)
-            }}
-          />
-        </InputGroup>
-        <TrackerButton
-          width={['100%', '25%']}
-          onClick={() => {
-            if (!domainSearch) {
-              toast({
-                title: t`An error occurred.`,
-                description: t`New domain name cannot be empty`,
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-                position: 'top-left',
-              })
-            } else {
-              createDomain({
-                variables: {
-                  orgId: orgId,
-                  domain: domainSearch,
-                  selectors: [],
-                },
-              })
-            }
-          }}
-          variant="primary"
-        >
-          <Icon name="add" />
-          <Trans>Add Domain</Trans>
-        </TrackerButton>
-      </Stack>
+      <form
+        onSubmit={(e) => {
+          // Manually handle submit
+          // if error exist, show toast. Only submit if no errors
+          e.preventDefault()
+          if (domainForm.errors.domain) {
+            toast({
+              title: t`An error occurred.`,
+              description: domainForm.errors.domain,
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+              position: 'top-left',
+            })
+          } else domainForm.handleSubmit()
+        }}
+      >
+        <Stack flexDirection={['column', 'row']} align="center" isInline>
+          <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
+            <InputLeftElement>
+              <Icon name="plus-square" color="gray.300" />
+            </InputLeftElement>
+            <Input
+              type="text"
+              placeholder={t`Domain URL`}
+              {...domainForm.getFieldProps('domain')}
+            />
+          </InputGroup>
+          <TrackerButton
+            type="submit"
+            width={['100%', '25%']}
+            variant="primary"
+          >
+            <Icon name="add" />
+            <Trans>Add Domain</Trans>
+          </TrackerButton>
+        </Stack>
+      </form>
 
       <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
         <ListOf
@@ -339,7 +355,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           )}
         </ListOf>
       </Stack>
-
       <RelayPaginationControls
         onlyPagination={true}
         hasNextPage={hasNextPage}
@@ -348,7 +363,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
-
       <SlideIn in={updateIsOpen}>
         {(styles) => (
           <Modal
@@ -440,7 +454,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           </Modal>
         )}
       </SlideIn>
-
       <SlideIn in={removeIsOpen}>
         {(styles) => (
           <Modal isOpen={true} onClose={removeOnClose}>
