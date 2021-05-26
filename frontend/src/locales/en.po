@@ -2452,6 +2452,10 @@ msgstr "Acronyms must be at most 50 characters"
 msgid "Organization created"
 msgstr "Organization created"
 
+#: src/CreateOrganizationPage.js:73
+msgid "{0} was created"
+msgstr "{0} was created"
+
 #: src/CreateOrganizationPage.js:82
 msgid "Unable to create new organization."
 msgstr "Unable to create new organization."

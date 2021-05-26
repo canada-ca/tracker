@@ -68,7 +68,7 @@ export default function CreateOrganizationPage() {
       if (createOrganization.result.__typename === 'Organization') {
         toast({
           title: t`Organization created`,
-          description: t`${createOrganization.result.slug} was created`,
+          description: t`${createOrganization.result.name} was created`,
           status: 'success',
           duration: 9000,
           isClosable: true,

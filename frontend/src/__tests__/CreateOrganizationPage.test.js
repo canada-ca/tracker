@@ -27,7 +27,7 @@ const mocks = [
     result: {
       data: {
         organization: {
-          slug: 'new-org-slug',
+          name: 'New Test Org',
         },
       },
     },

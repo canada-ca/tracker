@@ -409,7 +409,7 @@ export const CREATE_ORGANIZATION = gql`
     ) {
       result {
         ... on Organization {
-          slug
+          name
         }
         ... on OrganizationError {
           code
