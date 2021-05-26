@@ -15,15 +15,15 @@ ReactDOM.render(
   <UserStateProvider
     initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
   >
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={canada}>
-        <I18nProvider i18n={i18n}>
+    <ThemeProvider theme={canada}>
+      <I18nProvider i18n={i18n}>
+        <ApolloProvider client={client}>
           <Router>
             <App />
           </Router>
-        </I18nProvider>
-      </ThemeProvider>
-    </ApolloProvider>
+        </ApolloProvider>
+      </I18nProvider>
+    </ThemeProvider>
   </UserStateProvider>,
   document.getElementById('root'),
 )

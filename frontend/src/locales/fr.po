@@ -2390,3 +2390,127 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
+
+#: src/EmailValidationPage.js:76
+msgid "Your account email was successfully verified"
+msgstr "L'email de votre compte a été vérifié avec succès"
+
+#: src/EmailValidationPage.js:86
+msgid "Your account email could not be verified at this time. Please try again."
+msgstr "L'email de votre compte n'a pas pu être vérifié pour le moment. Veuillez réessayer."
+
+#: src/EmailValidationPage.js:96
+msgid "Email Validation Page"
+msgstr "Page de validation des e-mails"
+
+#: src/UserPage.js:29
+msgid "Unable to send verification email"
+msgstr "Impossible d'envoyer l'e-mail de vérification"
+
+#: src/UserPage.js:38
+msgid "Email successfully sent"
+msgstr "Courriel envoyé avec succès"
+
+#: src/UserPage.js:39
+msgid "Check your associated Tracker email for the verification link"
+msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
+
+#: src/UserPage.js:124
+msgid "Verify Email"
+msgstr "Vérifier l'e-mail"
+
+#: src/GuidanceTagList.js:132
+msgid "Positive Tags"
+msgstr "Étiquettes positives"
+
+#: src/GuidanceTagList.js:147
+msgid "Neutral Tags"
+msgstr "Étiquettes neutres"
+
+#: src/GuidanceTagList.js:162
+msgid "Negative Tags"
+msgstr "Étiquettes négatives"
+
+#: src/OrganizationCard.js:132
+msgid "View Details"
+msgstr "Voir les détails"
+
+#: src/DomainCard.js:142
+msgid "Guidance"
+msgstr "Conseils"
+
+#: src/UserList.js:261
+msgid "New user email"
+msgstr "Courriel du nouvel utilisateur"
+
+#: src/UserList.js:261
+msgid "Edit Role"
+msgstr "Rôle d'édition"
+
+#: src/ScanCategoryDetails.js:44
+msgid "Implementation:"
+msgstr "Mise en œuvre:"
+
+#: src/ScanCategoryDetails.js:50
+msgid "Enforcement:"
+msgstr "Application de la loi:"
+
+#: src/ScanCategoryDetails.js:56
+msgid "HSTS Status:"
+msgstr "Statut HSTS:"
+
+#: src/ScanCategoryDetails.js:62
+msgid "HSTS Age:"
+msgstr "Âge du HSTS:"
+
+#: src/ScanCategoryDetails.js:68
+msgid "Preloaded Status:"
+msgstr "Statut préchargé:"
+
+#: src/ScanCategoryDetails.js:77
+msgid "CCS Injection Vulnerability:"
+msgstr "Vulnérabilité d'injection de CCS:"
+
+#: src/ScanCategoryDetails.js:85
+msgid "Heartbleed Vulnerability:"
+msgstr "Vulnérabilité Heartbleed:"
+
+#: src/ScanCategoryDetails.js:91
+msgid "Supports ECDH Key Exchange:"
+msgstr "Supporte l'échange de clés ECDH:"
+
+#: src/ScanCategoryDetails.js:79
+msgid "Yes"
+msgstr "Oui"
+
+#: src/ScanCategoryDetails.js:79
+msgid "No"
+msgstr "Non"
+
+#: src/ScanCategoryDetails.js:107
+msgid "None"
+msgstr "Aucun"
+
+#: src/ScanCategoryDetails.js:120
+msgid "Strong Ciphers:"
+msgstr "Ciphers forts:"
+
+#: src/ScanCategoryDetails.js:129
+msgid "Acceptable Ciphers:"
+msgstr "Ciphers acceptés:"
+
+#: src/ScanCategoryDetails.js:138
+msgid "Weak Ciphers:"
+msgstr "Ciphers faibles:"
+
+#: src/ScanCategoryDetails.js:184
+msgid "Ciphers"
+msgstr "Ciphers"
+
+#: src/DmarcGuidancePage.js:81
+msgid "Web Guidance"
+msgstr "Conseils sur le Web"
+
+#: src/DmarcGuidancePage.js:84
+msgid "Email Guidance"
+msgstr "Conseils par courriel"

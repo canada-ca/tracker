@@ -77,7 +77,7 @@ export default function OrganizationDetails() {
           aria-label="back to organizations"
         />
         <Heading as="h1" textAlign={['center', 'left']}>
-          <Trans>{orgName}</Trans>
+          {orgName}
         </Heading>
         {data?.organization?.verified && (
           <Icon name="check-circle" color="blue.500" size="icons.lg" />
