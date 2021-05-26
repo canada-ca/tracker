@@ -20,6 +20,8 @@ import { useHistory, Link as RouteLink } from 'react-router-dom'
 import { TrackerButton } from './TrackerButton'
 import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
+import AcronymField from './AcronymField'
+import { i18n } from '@lingui/core'
 
 export default function CreateOrganizationPage() {
   const { currentUser } = useUserState()
@@ -30,20 +32,20 @@ export default function CreateOrganizationPage() {
     acronymEN: string()
       .matches(
         fieldRequirements.acronym.matches.regex,
-        fieldRequirements.acronym.matches.message,
+        i18n._(fieldRequirements.acronym.matches.message),
       )
       .max(
         fieldRequirements.acronym.max.maxLength,
-        fieldRequirements.acronym.max.message,
+        i18n._(fieldRequirements.acronym.max.message),
       ),
     acronymFR: string()
       .matches(
         fieldRequirements.acronym.matches.regex,
-        fieldRequirements.acronym.matches.message,
+        i18n._(fieldRequirements.acronym.matches.message),
       )
       .max(
         fieldRequirements.acronym.max.maxLength,
-        fieldRequirements.acronym.max.message,
+        i18n._(fieldRequirements.acronym.max.message),
       ),
   })
 
@@ -104,20 +106,20 @@ export default function CreateOrganizationPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{
-          nameEN: '',
-          nameFR: '',
+          nameEN: 'a',
+          nameFR: 'a',
           acronymEN: '',
           acronymFR: '',
-          zoneEN: '',
-          zoneFR: '',
-          sectorEN: '',
-          sectorFR: '',
-          cityEN: '',
-          cityFR: '',
-          provinceEN: '',
-          provinceFR: '',
-          countryEN: '',
-          countryFR: '',
+          zoneEN: 'a',
+          zoneFR: 'a',
+          sectorEN: 'a',
+          sectorFR: 'a',
+          cityEN: 'a',
+          cityFR: 'a',
+          provinceEN: 'a',
+          provinceFR: 'a',
+          countryEN: 'a',
+          countryFR: 'a',
         }}
         onSubmit={async (values) => {
           createOrganization({
@@ -155,7 +157,7 @@ export default function CreateOrganizationPage() {
               </Text>
               <FormControl isRequired>
                 <Input
-                  type="nameEN"
+                  id="nameEN"
                   name="nameEN"
                   onChange={handleChange}
                   value={values.nameEN}
@@ -165,7 +167,7 @@ export default function CreateOrganizationPage() {
               </FormControl>
               <FormControl isRequired>
                 <Input
-                  type="nameFR"
+                  id="nameFR"
                   name="nameFR"
                   onChange={handleChange}
                   value={values.nameFR}
@@ -179,28 +181,8 @@ export default function CreateOrganizationPage() {
               <Text fontSize="lg" fontWeight="bold">
                 <Trans>Acronym:</Trans>
               </Text>
-              <FormControl isRequired>
-                <Input
-                  type="acronymEN"
-                  name="acronymEN"
-                  id="acronymEN"
-                  onChange={handleChange}
-                  value={values.acronymEN}
-                  placeholder={t`Acronym EN`}
-                />
-                <FormErrorMessage>Error!</FormErrorMessage>
-              </FormControl>
-              <FormControl isRequired>
-                <Input
-                  type="acronymFR"
-                  name="acronymFR"
-                  id="acronymFR"
-                  onChange={handleChange}
-                  value={values.acronymFR}
-                  placeholder={t`Acronym FR`}
-                />
-                <FormErrorMessage>Error!</FormErrorMessage>
-              </FormControl>
+              <AcronymField name="acronymEN" placeholder={t`Acronym EN`} />
+              <AcronymField name="acronymFR" placeholder={t`Acronym FR`} />
             </Stack>
 
             <Stack mb="4">
@@ -209,7 +191,7 @@ export default function CreateOrganizationPage() {
               </Text>
               <FormControl isRequired>
                 <Input
-                  type="zoneEN"
+                  id="zoneEN"
                   name="zoneEN"
                   onChange={handleChange}
                   value={values.zoneEN}
@@ -219,7 +201,7 @@ export default function CreateOrganizationPage() {
               </FormControl>
               <FormControl isRequired>
                 <Input
-                  type="zoneFR"
+                  id="zoneFR"
                   name="zoneFR"
                   onChange={handleChange}
                   value={values.zoneFR}
@@ -235,7 +217,7 @@ export default function CreateOrganizationPage() {
               </Text>
               <FormControl>
                 <Input
-                  type="sectorEN"
+                  id="sectorEN"
                   name="sectorEN"
                   onChange={handleChange}
                   value={values.sectorEN}
@@ -245,7 +227,7 @@ export default function CreateOrganizationPage() {
               </FormControl>
               <FormControl>
                 <Input
-                  type="sectorFR"
+                  id="sectorFR"
                   name="sectorFR"
                   onChange={handleChange}
                   value={values.sectorFR}
@@ -261,7 +243,7 @@ export default function CreateOrganizationPage() {
               </Text>
               <FormControl>
                 <Input
-                  type="cityEN"
+                  id="cityEN"
                   name="cityEN"
                   onChange={handleChange}
                   value={values.cityEN}
@@ -271,7 +253,7 @@ export default function CreateOrganizationPage() {
               </FormControl>
               <FormControl>
                 <Input
-                  type="cityFR"
+                  id="cityFR"
                   name="cityFR"
                   onChange={handleChange}
                   value={values.cityFR}
@@ -287,7 +269,7 @@ export default function CreateOrganizationPage() {
               </Text>
               <FormControl>
                 <Input
-                  type="provinceEN"
+                  id="provinceEN"
                   name="provinceEN"
                   onChange={handleChange}
                   //
@@ -298,7 +280,7 @@ export default function CreateOrganizationPage() {
               </FormControl>
               <FormControl>
                 <Input
-                  type="provinceFR"
+                  id="provinceFR"
                   name="provinceFR"
                   onChange={handleChange}
                   value={values.provinceFR}
@@ -314,7 +296,7 @@ export default function CreateOrganizationPage() {
               </Text>
               <FormControl>
                 <Input
-                  type="countryEN"
+                  id="countryEN"
                   name="countryEN"
                   onChange={handleChange}
                   value={values.countryEN}
@@ -324,7 +306,7 @@ export default function CreateOrganizationPage() {
               </FormControl>
               <FormControl>
                 <Input
-                  type="countryFR"
+                  id="countryFR"
                   name="countryFR"
                   onChange={handleChange}
                   value={values.countryFR}
