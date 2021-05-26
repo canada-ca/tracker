@@ -634,9 +634,9 @@ export const getTypeNames = () => gql`
     Guidance for any issues that were found from the report.
     """
     guidance: String
-    @deprecated(
-      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
-    )
+      @deprecated(
+        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+      )
 
     """
     Guidance for any issues that were found from the report.
@@ -766,9 +766,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -946,9 +946,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during DMARC Scan.
@@ -1897,9 +1897,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -2139,22 +2139,30 @@ export const getTypeNames = () => gql`
     """
     This mutation allows the creation of an organization inside the database.
     """
-    createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
+    createOrganization(
+      input: CreateOrganizationInput!
+    ): CreateOrganizationPayload
 
     """
     This mutation allows the removal of unused organizations.
     """
-    removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
+    removeOrganization(
+      input: RemoveOrganizationInput!
+    ): RemoveOrganizationPayload
 
     """
     Mutation allows the modification of organizations if any changes to the organization may occur.
     """
-    updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
+    updateOrganization(
+      input: UpdateOrganizationInput!
+    ): UpdateOrganizationPayload
 
     """
     Mutation allows the verification of an organization.
     """
-    verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
+    verifyOrganization(
+      input: VerifyOrganizationInput!
+    ): VerifyOrganizationPayload
 
     """
     This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
@@ -2205,7 +2213,9 @@ export const getTypeNames = () => gql`
     """
     This mutation allows the user to update their account password.
     """
-    updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
+    updateUserPassword(
+      input: UpdateUserPasswordInput!
+    ): UpdateUserPasswordPayload
 
     """
     This mutation allows the user to update their user profile to change various details of their current profile.
@@ -3001,7 +3011,9 @@ export const getTypeNames = () => gql`
   This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to
   remove their phone number, and support any errors that may occur
   """
-  union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
+  union RemovePhoneNumberUnion =
+      RemovePhoneNumberError
+    | RemovePhoneNumberResult
 
   input RemoveUserFromOrgInput {
     """
@@ -3219,6 +3231,8 @@ export const getTypeNames = () => gql`
     Informs the user if their phone code was successfully sent.
     """
     status: String
+
+    user: PersonalUser
   }
 
   """
@@ -3409,9 +3423,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -3514,9 +3528,9 @@ export const getTypeNames = () => gql`
     Guidance for any issues that were found from the report.
     """
     guidance: String
-    @deprecated(
-      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
-    )
+      @deprecated(
+        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+      )
 
     """
     Guidance for any issues that were found from the report.
@@ -3711,9 +3725,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -4121,7 +4135,7 @@ export const getTypeNames = () => gql`
   update their password, and support any errors that may occur
   """
   union UpdateUserPasswordUnion =
-    UpdateUserPasswordError
+      UpdateUserPasswordError
     | UpdateUserPasswordResultType
 
   """
@@ -4189,7 +4203,9 @@ export const getTypeNames = () => gql`
   This union is used with the \`updateUserProfile\` mutation, allowing for users to
   update their profile, and support any errors that may occur
   """
-  union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
+  union UpdateUserProfileUnion =
+      UpdateUserProfileError
+    | UpdateUserProfileResult
 
   input UpdateUserRoleInput {
     """
@@ -4676,7 +4692,9 @@ export const getTypeNames = () => gql`
   This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to
   verify their phone number, and support any errors that may occur
   """
-  union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
+  union VerifyPhoneNumberUnion =
+      VerifyPhoneNumberError
+    | VerifyPhoneNumberResult
 
   """
   Results of HTTPS, and SSL scan on the given domain.
@@ -4740,5 +4758,4 @@ export const getTypeNames = () => gql`
   A field that conforms to a 4 digit integer.
   """
   scalar Year
-
 `

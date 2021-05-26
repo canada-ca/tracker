@@ -11,6 +11,7 @@ import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { userPersonalType } from '../index'
 import { LanguageEnums, TfaSendMethodEnum } from '../../../enums'
+import { decryptPhoneNumber } from '../../../validators'
 
 const { CIPHER_KEY } = process.env
 
@@ -109,9 +110,13 @@ describe('given the user object', () => {
           const phoneDetails = undefined
 
           expect(
-            demoType.phoneNumber.resolve({
-              phoneDetails,
-            }),
+            demoType.phoneNumber.resolve(
+              {
+                phoneDetails,
+              },
+              {},
+              { validators: { decryptPhoneNumber } },
+            ),
           ).toEqual(null)
         })
       })
@@ -122,9 +127,13 @@ describe('given the user object', () => {
           const phoneDetails = null
 
           expect(
-            demoType.phoneNumber.resolve({
-              phoneDetails,
-            }),
+            demoType.phoneNumber.resolve(
+              {
+                phoneDetails,
+              },
+              {},
+              { validators: { decryptPhoneNumber } },
+            ),
           ).toEqual(null)
         })
       })
@@ -149,13 +158,17 @@ describe('given the user object', () => {
           encrypted += cipher.final('hex')
 
           expect(
-            demoType.phoneNumber.resolve({
-              phoneDetails: {
-                phoneNumber: encrypted,
-                iv: phoneDetails.iv,
-                tag: cipher.getAuthTag().toString('hex'),
+            demoType.phoneNumber.resolve(
+              {
+                phoneDetails: {
+                  phoneNumber: encrypted,
+                  iv: phoneDetails.iv,
+                  tag: cipher.getAuthTag().toString('hex'),
+                },
               },
-            }),
+              {},
+              { validators: { decryptPhoneNumber } },
+            ),
           ).toEqual(phoneDetails.phoneNumber)
         })
       })

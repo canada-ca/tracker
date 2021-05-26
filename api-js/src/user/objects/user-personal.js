@@ -1,4 +1,3 @@
-import crypto from 'crypto'
 import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
@@ -7,8 +6,6 @@ import { affiliationOrgOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
 import { nodeInterface } from '../../node'
-
-const { CIPHER_KEY } = process.env
 
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
@@ -27,21 +24,15 @@ export const userPersonalType = new GraphQLObjectType({
     phoneNumber: {
       type: GraphQLPhoneNumber,
       description: 'The phone number the user has setup with tfa.',
-      resolve: ({ phoneDetails }) => {
+      resolve: (
+        { phoneDetails },
+        _args,
+        { validators: { decryptPhoneNumber } },
+      ) => {
         if (typeof phoneDetails === 'undefined' || phoneDetails === null) {
           return null
         }
-        const { iv, tag, phoneNumber: encrypted } = phoneDetails
-        const decipher = crypto.createDecipheriv(
-          'aes-256-ccm',
-          String(CIPHER_KEY),
-          Buffer.from(iv, 'hex'),
-          { authTagLength: 16 },
-        )
-        decipher.setAuthTag(Buffer.from(tag, 'hex'))
-        let decrypted = decipher.update(encrypted, 'hex', 'utf8')
-        decrypted += decipher.final('utf8')
-        return decrypted
+        return decryptPhoneNumber(phoneDetails)
       },
     },
     preferredLang: {
@@ -88,6 +79,6 @@ export const userPersonalType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: `This object is used for showing personal user details, 
+  description: `This object is used for showing personal user details,
 and is used for only showing the details of the querying user.`,
 })
