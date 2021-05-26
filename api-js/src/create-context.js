@@ -4,7 +4,7 @@ import fetch from 'isomorphic-fetch'
 import { v4 as uuidv4 } from 'uuid'
 
 import { createI18n } from './create-i18n'
-import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
+import { cleanseInput, slugify } from './validators'
 import {
   checkDomainOwnership,
   checkDomainPermission,
@@ -143,7 +143,6 @@ export const createContext = ({ context, req: request, res: response }) => {
     },
     validators: {
       cleanseInput,
-      decryptPhoneNumber,
       slugify,
     },
     notify: {

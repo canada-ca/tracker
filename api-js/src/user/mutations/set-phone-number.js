@@ -74,7 +74,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       await query`
         WITH users
         UPSERT { _key: ${user._key} }
-          INSERT {
+          INSERT { 
             tfaCode: ${tfaCode},
             phoneDetails: ${phoneDetails},
             phoneValidated: false,
@@ -104,7 +104,6 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     console.info(`User: ${user._key} successfully set phone number.`)
     return {
       _type: 'regular',
-      user: user,
       status: i18n._(
         t`Phone number has been successfully set, you will receive a verification text message shortly.`,
       ),

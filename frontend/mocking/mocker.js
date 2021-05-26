@@ -464,9 +464,6 @@ const schemaWithMocks = addMocksToSchema({
   mocks,
   resolvers: (store) => ({
     Query: {
-      findMe: (_, _args, context, _resolveInfo, ___) => {
-        return store.get('PersonalUser', context.token)
-      },
       findMyDmarcSummaries: (_, args, _context, resolveInfo, ___) => {
         return getConnectionObject(store, args, resolveInfo)
       },
@@ -499,40 +496,7 @@ const schemaWithMocks = addMocksToSchema({
         return getConnectionObject(store, args, resolveInfo)
       },
     },
-    Mutation: {
-      setPhoneNumber: (_, args, context, _resolveInfo) => {
-        store.set('PersonalUser', context.token, 'phoneNumber', args.input.phoneNumber)
-        return {
-          result: {
-            status: 'Phone number has been successfully set, you will receive a verification text message shortly.',
-            user: store.get('PersonalUser', context.token),
-            type: 'SetPhoneNumberResult',
-          },
-        }
-      },
-      signIn: (_, _args, _context, _resolveInfo) => {
-        const uuid = faker.datatype.uuid()
-        const user = store.get('PersonalUser', uuid)
-
-        return {
-          result: {
-            authToken: uuid,
-            user,
-          },
-        }
-      },
-    },
-    SetPhoneNumberUnion: {
-      __resolveType: ({ type }) => {
-        return type
-      },
-    },
-    SignInUnion: {
-      __resolveType: (obj, _context, _resolveInfo) => {
-        if (obj.authToken) return 'AuthResult'
-      },
-    },
-
+    Mutation: {},
   }),
 })
 
