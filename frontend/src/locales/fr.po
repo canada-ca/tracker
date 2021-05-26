@@ -2413,8 +2413,8 @@ msgid "View Details"
 msgstr "Voir les détails"
 
 #: src/DomainCard.js:142
-msgid "DMARC Guidance"
-msgstr "Conseils sur le DMARC"
+msgid "Guidance"
+msgstr "Conseils"
 
 #: src/UserList.js:261
 msgid "New user email"
@@ -2493,3 +2493,71 @@ msgstr "Anglais"
 #: src/CreateOrganizationPage.js:172
 msgid "French"
 msgstr "Français"
+
+#: src/ScanCategoryDetails.js:44
+msgid "Implementation:"
+msgstr "Mise en œuvre:"
+
+#: src/ScanCategoryDetails.js:50
+msgid "Enforcement:"
+msgstr "Application de la loi:"
+
+#: src/ScanCategoryDetails.js:56
+msgid "HSTS Status:"
+msgstr "Statut HSTS:"
+
+#: src/ScanCategoryDetails.js:62
+msgid "HSTS Age:"
+msgstr "Âge du HSTS:"
+
+#: src/ScanCategoryDetails.js:68
+msgid "Preloaded Status:"
+msgstr "Statut préchargé:"
+
+#: src/ScanCategoryDetails.js:77
+msgid "CCS Injection Vulnerability:"
+msgstr "Vulnérabilité d'injection de CCS:"
+
+#: src/ScanCategoryDetails.js:85
+msgid "Heartbleed Vulnerability:"
+msgstr "Vulnérabilité Heartbleed:"
+
+#: src/ScanCategoryDetails.js:91
+msgid "Supports ECDH Key Exchange:"
+msgstr "Supporte l'échange de clés ECDH:"
+
+#: src/ScanCategoryDetails.js:79
+msgid "Yes"
+msgstr "Oui"
+
+#: src/ScanCategoryDetails.js:79
+msgid "No"
+msgstr "Non"
+
+#: src/ScanCategoryDetails.js:107
+msgid "None"
+msgstr "Aucun"
+
+#: src/ScanCategoryDetails.js:120
+msgid "Strong Ciphers:"
+msgstr "Ciphers forts:"
+
+#: src/ScanCategoryDetails.js:129
+msgid "Acceptable Ciphers:"
+msgstr "Ciphers acceptés:"
+
+#: src/ScanCategoryDetails.js:138
+msgid "Weak Ciphers:"
+msgstr "Ciphers faibles:"
+
+#: src/ScanCategoryDetails.js:184
+msgid "Ciphers"
+msgstr "Ciphers"
+
+#: src/DmarcGuidancePage.js:81
+msgid "Web Guidance"
+msgstr "Conseils sur le Web"
+
+#: src/DmarcGuidancePage.js:84
+msgid "Email Guidance"
+msgstr "Conseils par courriel"

@@ -24,6 +24,10 @@ export default function AdminPage() {
     },
     variables: {
       first: 100,
+      orderBy: {
+        field: 'ORG_ACRONYM',
+        direction: 'ASC',
+      },
     },
     onError: (error) => {
       const [_, message] = error.message.split(': ')

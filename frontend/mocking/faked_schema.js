@@ -1,217 +1,51 @@
 import { gql } from '@apollo/client/core'
 
 export const getTypeNames = () => gql`
-  type Query {
+  """
+  Exposes a URL that specifies the behaviour of this scalar.
+  """
+  directive @specifiedBy(
     """
-    Fetches an object given its ID
+    The URL that specifies the behaviour of this scalar.
     """
-    node(
-      """
-      The ID of an object
-      """
-      id: ID!
-    ): Node
-
-    """
-    Fetches objects given their IDs
-    """
-    nodes(
-      """
-      The IDs of objects
-      """
-      ids: [ID!]!
-    ): [Node]!
-
-    """
-    Query for dmarc summaries the user has access to.
-    """
-    findMyDmarcSummaries(
-      """
-      Ordering options for dmarc summaries connections
-      """
-      orderBy: DmarcSummaryOrder
-
-      """
-      The month in which the returned data is relevant to.
-      """
-      month: PeriodEnums!
-
-      """
-      The year in which the returned data is relevant to.
-      """
-      year: Year!
-
-      """
-      An optional string used to filter the results based on domains.
-      """
-      search: String
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): DmarcSummaryConnection
-
-    """
-    Retrieve a specific domain by providing a domain.
-    """
-    findDomainByDomain(
-      """
-      The domain you wish to retrieve information for.
-      """
-      domain: DomainScalar!
-    ): Domain
-
-    """
-    Select domains a user has access to.
-    """
-    findMyDomains(
-      """
-      Ordering options for domain connections.
-      """
-      orderBy: DomainOrder
-
-      """
-      Limit domains to those that belong to an organization that has ownership.
-      """
-      ownership: Boolean
-
-      """
-      String used to search for domains.
-      """
-      search: String
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): DomainConnection
-
-    """
-    Select organizations a user has access to.
-    """
-    findMyOrganizations(
-      """
-      Ordering options for organization connections
-      """
-      orderBy: OrganizationOrder
-
-      """
-      String argument used to search for organizations.
-      """
-      search: String
-
-      """
-      Filter orgs based off of the user being an admin of them.
-      """
-      isAdmin: Boolean
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): OrganizationConnection
-
-    """
-    Select all information on a selected organization that a user has access to.
-    """
-    findOrganizationBySlug(
-      """
-      The slugified organization name you want to retrieve data for.
-      """
-      orgSlug: Slug!
-    ): Organization
-
-    """
-    Email summary computed values, used to build summary cards.
-    """
-    mailSummary: CategorizedSummary
-
-    """
-    Web summary computed values, used to build summary cards.
-    """
-    webSummary: CategorizedSummary
-
-    """
-    Query the currently logged in user.
-    """
-    findMe: PersonalUser
-
-    """
-    Query a specific user by user name.
-    """
-    findUserByUsername(
-      """
-      Email address of user you wish to gather data for.
-      """
-      userName: EmailAddress!
-    ): SharedUser
-
-    """
-    Query used to check if the user has an admin role.
-    """
-    isUserAdmin: Boolean
-
-    """
-    Retrieve a specific verified domain by providing a domain.
-    """
-    findVerifiedDomainByDomain(
-      """
-      The domain you wish to retrieve information for.
-      """
-      domain: DomainScalar!
-    ): VerifiedDomain
-
-    """
-    Select verified check domains
-    """
-    findVerifiedDomains(
-      """
-      Ordering options for verified domain connections.
-      """
-      orderBy: VerifiedDomainOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): VerifiedDomainConnection
-
-    """
-    Select all information on a selected verified organization.
-    """
-    findVerifiedOrganizationBySlug(
-      """
-      The slugified organization name you want to retrieve data for.
-      """
-      orgSlug: Slug!
-    ): VerifiedOrganization
-
-    """
-    Select organizations a user has access to.
-    """
-    findVerifiedOrganizations(
-      """
-      Ordering options for verified organization connections.
-      """
-      orderBy: VerifiedOrganizationOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): VerifiedOrganizationConnection
-  }
+    url: String!
+  ) on SCALAR
 
   """
-  An object with an ID
+  A field whose value is an upper case letter or an under score that has a length between 1 and 50.
   """
-  interface Node {
+  scalar Acronym
+
+  """
+  User Affiliations containing the permission level for the given organization,
+  the users information, and the organizations information.
+  """
+  type Affiliation implements Node {
     """
-    The id of the object.
+    The ID of an object
     """
     id: ID!
+
+    """
+    User's level of access to a given organization.
+    """
+    permission: RoleEnums
+
+    """
+    The affiliated users information.
+    """
+    user: SharedUser
+
+    """
+    The affiliated organizations information.
+    """
+    organization: Organization
   }
 
   """
   A connection to a list of items.
   """
-  type DmarcSummaryConnection {
+  type AffiliationConnection {
     """
     Information to aid in pagination.
     """
@@ -220,52 +54,1113 @@ export const getTypeNames = () => gql`
     """
     A list of edges.
     """
-    edges: [DmarcSummaryEdge]
+    edges: [AffiliationEdge]
 
     """
-    The total amount of dmarc summaries the user has access to.
+    The total amount of affiliations the user has access to.
     """
     totalCount: Int
   }
 
   """
-  Information about pagination in a connection.
-  """
-  type PageInfo {
-    """
-    When paginating forwards, are there more items?
-    """
-    hasNextPage: Boolean!
-
-    """
-    When paginating backwards, are there more items?
-    """
-    hasPreviousPage: Boolean!
-
-    """
-    When paginating backwards, the cursor to continue.
-    """
-    startCursor: String
-
-    """
-    When paginating forwards, the cursor to continue.
-    """
-    endCursor: String
-  }
-
-  """
   An edge in a connection.
   """
-  type DmarcSummaryEdge {
+  type AffiliationEdge {
     """
     The item at the end of the edge
     """
-    node: DmarcSummary
+    node: Affiliation
 
     """
     A cursor for use in pagination
     """
     cursor: String!
+  }
+
+  """
+  This object is used to inform the user if any errors occurred while executing affiliation mutations.
+  """
+  type AffiliationError {
+    """
+    Error code to inform user what the issue is related to.
+    """
+    code: Int
+
+    """
+    Description of the issue that was encountered.
+    """
+    description: String
+  }
+
+  """
+  Ordering options for affiliation connections.
+  """
+  input AffiliationOrgOrder {
+    """
+    The field to order affiliations by.
+    """
+    field: AffiliationOrgOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which affiliation connections can be ordered.
+  """
+  enum AffiliationOrgOrderField {
+    """
+    Order affiliations by org acronym.
+    """
+    ORG_ACRONYM
+
+    """
+    Order affiliations by org name.
+    """
+    ORG_NAME
+
+    """
+    Order affiliations by org slug.
+    """
+    ORG_SLUG
+
+    """
+    Order affiliations by org zone.
+    """
+    ORG_ZONE
+
+    """
+    Order affiliations by org sector.
+    """
+    ORG_SECTOR
+
+    """
+    Order affiliations by org country.
+    """
+    ORG_COUNTRY
+
+    """
+    Order affiliations by org province.
+    """
+    ORG_PROVINCE
+
+    """
+    Order affiliations by org city.
+    """
+    ORG_CITY
+
+    """
+    Order affiliations by org verification.
+    """
+    ORG_VERIFIED
+
+    """
+    Order affiliations by org summary mail pass count.
+    """
+    ORG_SUMMARY_MAIL_PASS
+
+    """
+    Order affiliations by org summary mail fail count.
+    """
+    ORG_SUMMARY_MAIL_FAIL
+
+    """
+    Order affiliations by org summary mail total count.
+    """
+    ORG_SUMMARY_MAIL_TOTAL
+
+    """
+    Order affiliations by org summary web pass count.
+    """
+    ORG_SUMMARY_WEB_PASS
+
+    """
+    Order affiliations by org summary web fail count.
+    """
+    ORG_SUMMARY_WEB_FAIL
+
+    """
+    Order affiliations by org summary web total count.
+    """
+    ORG_SUMMARY_WEB_TOTAL
+
+    """
+    Order affiliations by org domain count.
+    """
+    ORG_DOMAIN_COUNT
+  }
+
+  """
+  Ordering options for affiliation connections.
+  """
+  input AffiliationUserOrder {
+    """
+    The field to order affiliations by.
+    """
+    field: AffiliationUserOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which affiliation connections can be ordered.
+  """
+  enum AffiliationUserOrderField {
+    """
+    Order affiliation edges by username.
+    """
+    USER_USERNAME
+  }
+
+  """
+  This object is used to inform the user if any errors occurred during authentication.
+  """
+  type AuthenticateError {
+    """
+    Error code to inform user what the issue is related to.
+    """
+    code: Int
+
+    """
+    Description of the issue that was encountered.
+    """
+    description: String
+  }
+
+  input AuthenticateInput {
+    """
+    Security code found in text msg, or email inbox.
+    """
+    authenticationCode: Int!
+
+    """
+    The JWT that is retrieved from the sign in mutation.
+    """
+    authenticateToken: String!
+    clientMutationId: String
+  }
+
+  type AuthenticatePayload {
+    """
+    Authenticate union returning either a \`authResult\` or \`authenticateError\` object.
+    """
+    result: AuthenticateUnion
+    clientMutationId: String
+  }
+
+  """
+  This union is used with the \`authenticate\` mutation, allowing for the user to
+  authenticate, and support any errors that may occur
+  """
+  union AuthenticateUnion = AuthResult | AuthenticateError
+
+  """
+  An object used to return information when users sign up or authenticate.
+  """
+  type AuthResult {
+    """
+    JWT used for accessing controlled content.
+    """
+    authToken: String
+
+    """
+    User that has just been created or signed in.
+    """
+    user: PersonalUser
+  }
+
+  """
+  This object contains the list of different categories for pre-computed
+  summary data with the computed total for how many domains in total are
+  being compared.
+  """
+  type CategorizedSummary {
+    """
+    List of SummaryCategory objects with data for different computed categories.
+    """
+    categories: [SummaryCategory]
+
+    """
+    Total domains that were check under this summary.
+    """
+    total: Int
+  }
+
+  """
+  This object displays the percentages of the category totals.
+  """
+  type CategoryPercentages {
+    """
+    Percentage of messages that are failing all checks.
+    """
+    failPercentage: Int
+
+    """
+    Percentage of messages that are passing all checks.
+    """
+    fullPassPercentage: Int
+
+    """
+    Percentage of messages that are passing only dkim.
+    """
+    passDkimOnlyPercentage: Int
+
+    """
+    Percentage of messages that are passing only spf.
+    """
+    passSpfOnlyPercentage: Int
+
+    """
+    The total amount of messages sent by this domain.
+    """
+    totalMessages: Int
+  }
+
+  """
+  This object displays the total amount of messages that fit into each category.
+  """
+  type CategoryTotals {
+    """
+    Amount of messages that are passing SPF, but failing DKIM.
+    """
+    passSpfOnly: Int
+
+    """
+    Amount of messages that are passing DKIM, but failing SPF.
+    """
+    passDkimOnly: Int
+
+    """
+    Amount of messages that are passing SPF and DKIM.
+    """
+    fullPass: Int
+
+    """
+    Amount of messages that fail both SPF and DKIM.
+    """
+    fail: Int
+  }
+
+  input CreateDomainInput {
+    """
+    The global id of the organization you wish to assign this domain to.
+    """
+    orgId: ID!
+
+    """
+    Url that you would like to be added to the database.
+    """
+    domain: DomainScalar!
+
+    """
+    DKIM selector strings corresponding to this domain.
+    """
+    selectors: [Selector]
+    clientMutationId: String
+  }
+
+  type CreateDomainPayload {
+    """
+    \`CreateDomainUnion\` returning either a \`Domain\`, or \`CreateDomainError\` object.
+    """
+    result: CreateDomainUnion
+    clientMutationId: String
+  }
+
+  """
+  This union is used with the \`CreateDomain\` mutation,
+  allowing for users to create a domain and add it to their org,
+  and support any errors that may occur
+  """
+  union CreateDomainUnion = DomainError | Domain
+
+  input CreateOrganizationInput {
+    """
+    The English acronym of the organization.
+    """
+    acronymEN: Acronym!
+
+    """
+    The French acronym of the organization.
+    """
+    acronymFR: Acronym!
+
+    """
+    The English name of the organization.
+    """
+    nameEN: String!
+
+    """
+    The French name of the organization.
+    """
+    nameFR: String!
+
+    """
+    The English translation of the zone the organization belongs to.
+    """
+    zoneEN: String!
+
+    """
+    The English translation of the zone the organization belongs to.
+    """
+    zoneFR: String!
+
+    """
+    The English translation of the sector the organization belongs to.
+    """
+    sectorEN: String!
+
+    """
+    The French translation of the sector the organization belongs to.
+    """
+    sectorFR: String!
+
+    """
+    The English translation of the country the organization resides in.
+    """
+    countryEN: String!
+
+    """
+    The French translation of the country the organization resides in.
+    """
+    countryFR: String!
+
+    """
+    The English translation of the province the organization resides in.
+    """
+    provinceEN: String!
+
+    """
+    The French translation of the province the organization resides in.
+    """
+    provinceFR: String!
+
+    """
+    The English translation of the city the organization resides in.
+    """
+    cityEN: String!
+
+    """
+    The French translation of the city the organization resides in.
+    """
+    cityFR: String!
+    clientMutationId: String
+  }
+
+  type CreateOrganizationPayload {
+    """
+    \`CreateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
+    """
+    result: CreateOrganizationUnion
+    clientMutationId: String
+  }
+
+  """
+  This union is used with the \`CreateOrganization\` mutation,
+  allowing for users to create an organization, and support any errors that may occur
+  """
+  union CreateOrganizationUnion = OrganizationError | Organization
+
+  """
+  A date string, such as 2007-12-03, compliant with the \`full-date\` format
+  outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for
+  representation of dates and times using the Gregorian calendar.
+  """
+  scalar Date
+
+  """
+  Object that contains the various senders and details for each category.
+  """
+  type DetailTables {
+    """
+    List of senders that are failing DKIM checks.
+    """
+    dkimFailure(
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): DkimFailureTableConnection
+
+    """
+    List of senders that are failing DMARC checks.
+    """
+    dmarcFailure(
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): DmarcFailureTableConnection
+
+    """
+    List of senders that are passing all checks.
+    """
+    fullPass(
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): FullPassTableConnection
+
+    """
+    List of senders that are failing SPF checks.
+    """
+    spfFailure(
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): SpfFailureTableConnection
+  }
+
+  """
+  DomainKeys Identified Mail (DKIM) permits a person, role, or
+  organization that owns the signing domain to claim some
+  responsibility for a message by associating the domain with the
+  message.  This can be an author's organization, an operational relay,
+  or one of their agents.
+  """
+  type DKIM implements Node {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    The domain the scan was ran on.
+    """
+    domain: Domain
+
+    """
+    The time when the scan was initiated.
+    """
+    timestamp: Date
+
+    """
+    Individual scans results for each DKIM selector.
+    """
+    results(
+      """
+      Ordering options for DKIM result connections.
+      """
+      orderBy: DKIMResultOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): DKIMResultConnection
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type DKIMConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [DKIMEdge]
+
+    """
+    The total amount of dkim scans related to a given domain.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type DKIMEdge {
+    """
+    The item at the end of the edge
+    """
+    node: DKIM
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  This table contains the data fields for senders who are in the DKIM fail category.
+  """
+  type DkimFailureTable {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    Is DKIM aligned.
+    """
+    dkimAligned: Boolean
+
+    """
+    Domains used for DKIM validation
+    """
+    dkimDomains: String
+
+    """
+    The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.
+    """
+    dkimResults: String
+
+    """
+    Pointer to a DKIM public key record in DNS.
+    """
+    dkimSelectors: String
+
+    """
+    Host from reverse DNS of source IP address.
+    """
+    dnsHost: String
+
+    """
+    Domain from SMTP banner message.
+    """
+    envelopeFrom: String
+
+    """
+    Guidance for any issues that were found from the report.
+    """
+    guidance: String
+    @deprecated(
+      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+    )
+
+    """
+    Guidance for any issues that were found from the report.
+    """
+    guidanceTag: GuidanceTag
+
+    """
+    The address/domain used in the "From" field.
+    """
+    headerFrom: String
+
+    """
+    IP address of sending server.
+    """
+    sourceIpAddress: String
+
+    """
+    Total messages from this sender.
+    """
+    totalMessages: Int
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type DkimFailureTableConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [DkimFailureTableEdge]
+
+    """
+    The total amount of dkim failure the user has access to.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type DkimFailureTableEdge {
+    """
+    The item at the end of the edge
+    """
+    node: DkimFailureTable
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  Ordering options for DKIM connections.
+  """
+  input DKIMOrder {
+    """
+    The field to order DKIM scans by.
+    """
+    field: DKIMOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which DKIM connections can be ordered.
+  """
+  enum DKIMOrderField {
+    """
+    Order DKIM edges by timestamp.
+    """
+    TIMESTAMP
+  }
+
+  """
+  Individual scans results for the given DKIM selector.
+  """
+  type DKIMResult implements Node {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    The DKIM scan information that this result belongs to.
+    """
+    dkim: DKIM
+
+    """
+    The selector the scan was ran on.
+    """
+    selector: String
+
+    """
+    DKIM record retrieved during the scan of the domain.
+    """
+    record: String
+
+    """
+    Size of the Public Key in bits
+    """
+    keyLength: String
+
+    """
+    Raw scan result.
+    """
+    rawJson: JSON
+
+    """
+    Guidance tags found during scan.
+    """
+    guidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+
+    """
+    Negative guidance tags found during scan.
+    """
+    negativeGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+
+    """
+    Neutral guidance tags found during scan.
+    """
+    neutralGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+
+    """
+    Positive guidance tags found during scan.
+    """
+    positiveGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type DKIMResultConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [DKIMResultEdge]
+
+    """
+    The total amount of dkim results related to a given domain.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type DKIMResultEdge {
+    """
+    The item at the end of the edge
+    """
+    node: DKIMResult
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  Ordering options for DKIM Result connections.
+  """
+  input DKIMResultOrder {
+    """
+    The field to order DKIM Results by.
+    """
+    field: DKIMResultOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which DKIM Result connections can be ordered.
+  """
+  enum DKIMResultOrderField {
+    """
+    Order DKIM Result edges by timestamp.
+    """
+    SELECTOR
+
+    """
+    Order DKIM Result edges by record.
+    """
+    RECORD
+
+    """
+    Order DKIM Result edges by key length.
+    """
+    KEY_LENGTH
+  }
+
+  """
+  Domain-based Message Authentication, Reporting, and Conformance
+  (DMARC) is a scalable mechanism by which a mail-originating
+  organization can express domain-level policies and preferences for
+  message validation, disposition, and reporting, that a mail-receiving
+  organization can use to improve mail handling.
+  """
+  type DMARC implements Node {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    The domain the scan was ran on.
+    """
+    domain: Domain
+
+    """
+    The time when the scan was initiated.
+    """
+    timestamp: Date
+
+    """
+    DMARC record retrieved during scan.
+    """
+    record: String
+
+    """
+    The requested policy you wish mailbox providers to apply
+    when your email fails DMARC authentication and alignment checks.
+    """
+    pPolicy: String
+
+    """
+    This tag is used to indicate a requested policy for all
+    subdomains where mail is failing the DMARC authentication and alignment checks.
+    """
+    spPolicy: String
+
+    """
+    The percentage of messages to which the DMARC policy is to be applied.
+    """
+    pct: Int
+
+    """
+    Raw scan result.
+    """
+    rawJson: JSON
+
+    """
+    Guidance tags found during DMARC Scan.
+    """
+    guidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+
+    """
+    Negative guidance tags found during DMARC Scan.
+    """
+    negativeGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+
+    """
+    Neutral guidance tags found during DMARC Scan.
+    """
+    neutralGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+
+    """
+    Positive guidance tags found during DMARC Scan.
+    """
+    positiveGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type DMARCConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [DMARCEdge]
+
+    """
+    The total amount of dmarc scans related to a given domain.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type DMARCEdge {
+    """
+    The item at the end of the edge
+    """
+    node: DMARC
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  This table contains the data fields for senders who are in the DMARC failure category.
+  """
+  type DmarcFailureTable {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    Domains used for DKIM validation
+    """
+    dkimDomains: String
+
+    """
+    Pointer to a DKIM public key record in DNS.
+    """
+    dkimSelectors: String
+
+    """
+    The DMARC enforcement action that the receiver took, either none, quarantine, or reject.
+    """
+    disposition: String
+
+    """
+    Host from reverse DNS of source IP address.
+    """
+    dnsHost: String
+
+    """
+    Domain from SMTP banner message.
+    """
+    envelopeFrom: String
+
+    """
+    The address/domain used in the "From" field.
+    """
+    headerFrom: String
+
+    """
+    IP address of sending server.
+    """
+    sourceIpAddress: String
+
+    """
+    Domains used for SPF validation.
+    """
+    spfDomains: String
+
+    """
+    Total messages from this sender.
+    """
+    totalMessages: Int
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type DmarcFailureTableConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [DmarcFailureTableEdge]
+
+    """
+    The total amount of dmarc failures the user has access to.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type DmarcFailureTableEdge {
+    """
+    The item at the end of the edge
+    """
+    node: DmarcFailureTable
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  Ordering options for DMARC connections.
+  """
+  input DMARCOrder {
+    """
+    The field to order DMARC scans by.
+    """
+    field: DmarcOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which dmarc connections can be ordered.
+  """
+  enum DmarcOrderField {
+    """
+    Order dmarc summaries by timestamp.
+    """
+    TIMESTAMP
+
+    """
+    Order dmarc summaries by record.
+    """
+    RECORD
+
+    """
+    Order dmarc summaries by p policy.
+    """
+    P_POLICY
+
+    """
+    Order dmarc summaries by sp policy.
+    """
+    SP_POLICY
+
+    """
+    Order dmarc summaries by percentage.
+    """
+    PCT
   }
 
   """
@@ -306,6 +1201,111 @@ export const getTypeNames = () => gql`
     Various senders for each category.
     """
     detailTables: DetailTables
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type DmarcSummaryConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [DmarcSummaryEdge]
+
+    """
+    The total amount of dmarc summaries the user has access to.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type DmarcSummaryEdge {
+    """
+    The item at the end of the edge
+    """
+    node: DmarcSummary
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  Ordering options for dmarc summary connections.
+  """
+  input DmarcSummaryOrder {
+    """
+    The field to order dmarc summaries by.
+    """
+    field: DmarcSummaryOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which dmarc summary connections can be ordered.
+  """
+  enum DmarcSummaryOrderField {
+    """
+    Order dmarc summaries by fail count.
+    """
+    FAIL
+
+    """
+    Order dmarc summaries by pass count.
+    """
+    FULL_PASS
+
+    """
+    Order dmarc summaries by pass dkim only count.
+    """
+    PASS_DKIM_ONLY
+
+    """
+    Order dmarc summaries by pass spf only count.
+    """
+    PASS_SPF_ONLY
+
+    """
+    Order dmarc summaries by fail percentage.
+    """
+    FAIL_PERCENTAGE
+
+    """
+    Order dmarc summaries by pass percentage.
+    """
+    FULL_PASS_PERCENTAGE
+
+    """
+    Order dmarc summaries by pass dkim only percentage.
+    """
+    PASS_DKIM_ONLY_PERCENTAGE
+
+    """
+    Order dmarc summaries by spf only percentage.
+    """
+    PASS_SPF_ONLY_PERCENTAGE
+
+    """
+    Order dmarc summaries by total messages
+    """
+    TOTAL_MESSAGES
+
+    """
+    Order dmarc summaries by their respective domains.
+    """
+    DOMAIN
   }
 
   """
@@ -355,6 +1355,16 @@ export const getTypeNames = () => gql`
       String argument used to search for organizations.
       """
       search: String
+
+      """
+      Filter orgs based off of the user being an admin of them.
+      """
+      isAdmin: Boolean
+
+      """
+      Filter org list to either include or exclude the super admin org.
+      """
+      includeSuperAdminOrg: Boolean
       after: String
       first: Int
       before: String
@@ -393,14 +1403,129 @@ export const getTypeNames = () => gql`
   }
 
   """
+  A connection to a list of items.
+  """
+  type DomainConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [DomainEdge]
+
+    """
+    The total amount of domains the user has access to.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type DomainEdge {
+    """
+    The item at the end of the edge
+    """
+    node: Domain
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  This object is used to inform the user if any errors occurred while using a domain mutation.
+  """
+  type DomainError {
+    """
+    Error code to inform user what the issue is related to.
+    """
+    code: Int
+
+    """
+    Description of the issue that was encountered.
+    """
+    description: String
+  }
+
+  """
+  Ordering options for domain connections.
+  """
+  input DomainOrder {
+    """
+    The field to order domains by.
+    """
+    field: DomainOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which domain connections can be ordered.
+  """
+  enum DomainOrderField {
+    """
+    Order domains by domain.
+    """
+    DOMAIN
+
+    """
+    Order domains by last ran.
+    """
+    LAST_RAN
+
+    """
+    Order domains by dkim status.
+    """
+    DKIM_STATUS
+
+    """
+    Order domains by dmarc status.
+    """
+    DMARC_STATUS
+
+    """
+    Order domains by https status.
+    """
+    HTTPS_STATUS
+
+    """
+    Order domains by spf status.
+    """
+    SPF_STATUS
+
+    """
+    Order domains by ssl status.
+    """
+    SSL_STATUS
+  }
+
+  """
+  This object is used to inform the user that no errors were encountered while removing a domain.
+  """
+  type DomainResult {
+    """
+    Informs the user if the domain removal was successful.
+    """
+    status: String
+
+    """
+    The domain that is being mutated.
+    """
+    domain: Domain
+  }
+
+  """
   String that conforms to a domain structure.
   """
   scalar DomainScalar
-
-  """
-  A field that conforms to a string, with strings ending in ._domainkey.
-  """
-  scalar Selector
 
   """
   This object contains how the domain is doing on the various scans we preform, based on the latest scan data.
@@ -433,29 +1558,147 @@ export const getTypeNames = () => gql`
   }
 
   """
-  Enum used to inform front end if there are any issues, info, or the domain passes a given check.
+  A field whose value conforms to the standard internet email address format as
+  specified in RFC822: https://www.w3.org/Protocols/rfc822/.
   """
-  enum StatusEnum {
+  scalar EmailAddress
+
+  """
+  Results of DKIM, DMARC, and SPF scans on the given domain.
+  """
+  type EmailScan {
     """
-    If the given check meets the passing requirements.
+    The domain the scan was ran on.
     """
-    PASS
+    domain: Domain
 
     """
-    If the given check has flagged something that can provide information on the domain that aren't scan related.
+    DomainKeys Identified Mail (DKIM) Signatures scan results.
     """
-    INFO
+    dkim(
+      """
+      Start date for date filter.
+      """
+      startDate: Date
+
+      """
+      End date for date filter.
+      """
+      endDate: Date
+
+      """
+      Ordering options for dkim connections.
+      """
+      orderBy: DKIMOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): DKIMConnection
 
     """
-    If the given check does not meet the passing requirements
+    Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
     """
-    FAIL
+    dmarc(
+      """
+      Start date for date filter.
+      """
+      startDate: Date
+
+      """
+      End date for date filter.
+      """
+      endDate: Date
+
+      """
+      Ordering options for dmarc connections.
+      """
+      orderBy: DMARCOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): DMARCConnection
+
+    """
+    Sender Policy Framework (SPF) scan results.
+    """
+    spf(
+      """
+      Start date for date filter.
+      """
+      startDate: Date
+
+      """
+      End date for date filter.
+      """
+      endDate: Date
+
+      """
+      Ordering options for spf connections.
+      """
+      orderBy: SPFOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): SPFConnection
+  }
+
+  """
+  This table contains the data fields for senders who are in the Full Pass category.
+  """
+  type FullPassTable {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    Domains used for DKIM validation
+    """
+    dkimDomains: String
+
+    """
+    Pointer to a DKIM public key record in DNS.
+    """
+    dkimSelectors: String
+
+    """
+    Host from reverse DNS of source IP address.
+    """
+    dnsHost: String
+
+    """
+    Domain from SMTP banner message.
+    """
+    envelopeFrom: String
+
+    """
+    The address/domain used in the "From" field.
+    """
+    headerFrom: String
+
+    """
+    IP address of sending server.
+    """
+    sourceIpAddress: String
+
+    """
+    Domains used for SPF validation.
+    """
+    spfDomains: String
+
+    """
+    Total messages from this sender.
+    """
+    totalMessages: Int
   }
 
   """
   A connection to a list of items.
   """
-  type OrganizationConnection {
+  type FullPassTableConnection {
     """
     Information to aid in pagination.
     """
@@ -464,10 +1707,10 @@ export const getTypeNames = () => gql`
     """
     A list of edges.
     """
-    edges: [OrganizationEdge]
+    edges: [FullPassTableEdge]
 
     """
-    The total amount of organizations the user has access to.
+    The total amount of full passes the user has access to.
     """
     totalCount: Int
   }
@@ -475,16 +1718,534 @@ export const getTypeNames = () => gql`
   """
   An edge in a connection.
   """
-  type OrganizationEdge {
+  type FullPassTableEdge {
     """
     The item at the end of the edge
     """
-    node: Organization
+    node: FullPassTable
 
     """
     A cursor for use in pagination
     """
     cursor: String!
+  }
+
+  """
+  Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+  """
+  type GuidanceTag implements Node {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    The guidance tag ID.
+    """
+    tagId: String
+
+    """
+    The guidance tag name.
+    """
+    tagName: String
+
+    """
+    Guidance for changes to record, or to maintain current stance.
+    """
+    guidance: String
+
+    """
+    Links to implementation guidance for a given tag.
+    """
+    refLinks: [RefLinks]
+
+    """
+    Links to technical information for a given tag.
+    """
+    refLinksTech: [RefLinks]
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type GuidanceTagConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [GuidanceTagEdge]
+
+    """
+    The total amount of guidance tags for a given scan type.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type GuidanceTagEdge {
+    """
+    The item at the end of the edge
+    """
+    node: GuidanceTag
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  Ordering options for guidance tag connections.
+  """
+  input GuidanceTagOrder {
+    """
+    The field to order guidance tags by.
+    """
+    field: GuidanceTagOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which Guidance Tag connections can be ordered.
+  """
+  enum GuidanceTagOrderField {
+    """
+    Order guidance tag edges by tag id.
+    """
+    TAG_ID
+
+    """
+    Order guidance tag edges by tag name.
+    """
+    TAG_NAME
+
+    """
+    Order guidance tag edges by tag guidance.
+    """
+    GUIDANCE
+  }
+
+  """
+  Hyper Text Transfer Protocol Secure scan results.
+  """
+  type HTTPS implements Node {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    The domain the scan was ran on.
+    """
+    domain: Domain
+
+    """
+    The time the scan was initiated.
+    """
+    timestamp: Date
+
+    """
+    State of the HTTPS implementation on the server and any issues therein.
+    """
+    implementation: String
+
+    """
+    Degree to which HTTPS is enforced on the server based on behaviour.
+    """
+    enforced: String
+
+    """
+    Presence and completeness of HSTS implementation.
+    """
+    hsts: String
+
+    """
+    Denotes how long the domain should only be accessed using HTTPS
+    """
+    hstsAge: String
+
+    """
+    Denotes whether the domain has been submitted and included within HSTS preload list.
+    """
+    preloaded: String
+
+    """
+    Raw scan result.
+    """
+    rawJson: JSON
+
+    """
+    Guidance tags found during scan.
+    """
+    guidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+
+    """
+    Negative guidance tags found during scan.
+    """
+    negativeGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+
+    """
+    Neutral guidance tags found during scan.
+    """
+    neutralGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+
+    """
+    Positive guidance tags found during scan.
+    """
+    positiveGuidanceTags(
+      """
+      Ordering options for guidance tag connections
+      """
+      orderBy: GuidanceTagOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): GuidanceTagConnection
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type HTTPSConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [HTTPSEdge]
+
+    """
+    The total amount of https scans for a given domain.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type HTTPSEdge {
+    """
+    The item at the end of the edge
+    """
+    node: HTTPS
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  Ordering options for HTTPS connections.
+  """
+  input HTTPSOrder {
+    """
+    The field to order HTTPS edges by.
+    """
+    field: HTTPSOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which HTTPS connections can be ordered.
+  """
+  enum HTTPSOrderField {
+    """
+    Order HTTPS edges by timestamp.
+    """
+    TIMESTAMP
+
+    """
+    Order HTTPS edges by implementation.
+    """
+    IMPLEMENTATION
+
+    """
+    Order HTTPS edges by enforced.
+    """
+    ENFORCED
+
+    """
+    Order HTTPS edges by hsts.
+    """
+    HSTS
+
+    """
+    Order HTTPS edges by hsts age.
+    """
+    HSTS_AGE
+
+    """
+    Order HTTPS edges by preloaded.
+    """
+    PRELOADED
+  }
+
+  input InviteUserToOrgInput {
+    """
+    Users email that you would like to invite to your org.
+    """
+    userName: EmailAddress!
+
+    """
+    The role which you would like this user to have.
+    """
+    requestedRole: RoleEnums!
+
+    """
+    The organization you wish to invite the user to.
+    """
+    orgId: ID!
+
+    """
+    The language in which the email will be sent in.
+    """
+    preferredLang: LanguageEnums!
+    clientMutationId: String
+  }
+
+  type InviteUserToOrgPayload {
+    """
+    \`InviteUserToOrgUnion\` returning either a \`InviteUserToOrgResult\`, or \`InviteUserToOrgError\` object.
+    """
+    result: InviteUserToOrgUnion
+    clientMutationId: String
+  }
+
+  """
+  This object is used to inform the user of the invitation status.
+  """
+  type InviteUserToOrgResult {
+    """
+    Informs the user if the invite or invite email was successfully sent.
+    """
+    status: String
+  }
+
+  """
+  This union is used with the \`InviteUserToOrg\` mutation, allowing for users to
+  invite user to their org, and support any errors that may occur
+  """
+  union InviteUserToOrgUnion = AffiliationError | InviteUserToOrgResult
+
+  """
+  The \`JSON\` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+  """
+  scalar JSON
+
+  """
+  An enum used to define user's language.
+  """
+  enum LanguageEnums {
+    """
+    Used for defining if English is the preferred language.
+    """
+    ENGLISH
+
+    """
+    Used for defining if French is the preferred language.
+    """
+    FRENCH
+  }
+
+  type Mutation {
+    """
+    This mutation allows admins and higher to invite users to any of their
+    organizations, if the invited user does not have an account, they will be
+    able to sign-up and be assigned to that organization in one mutation.
+    """
+    inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
+
+    """
+    This mutation allows admins or higher to remove users from any organizations they belong to.
+    """
+    removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
+
+    """
+    This mutation allows super admins, and admins of the given organization to
+    update the permission level of a given user that already belongs to the
+    given organization.
+    """
+    updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
+
+    """
+    Mutation used to create a new domain for an organization.
+    """
+    createDomain(input: CreateDomainInput!): CreateDomainPayload
+
+    """
+    This mutation allows the removal of unused domains.
+    """
+    removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
+
+    """
+    This mutation is used to step a manual scan on a requested domain.
+    """
+    requestScan(input: RequestScanInput!): RequestScanPayload
+
+    """
+    Mutation allows the modification of domains if domain is updated through out its life-cycle
+    """
+    updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
+
+    """
+    This mutation allows the creation of an organization inside the database.
+    """
+    createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
+
+    """
+    This mutation allows the removal of unused organizations.
+    """
+    removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
+
+    """
+    Mutation allows the modification of organizations if any changes to the organization may occur.
+    """
+    updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
+
+    """
+    Mutation allows the verification of an organization.
+    """
+    verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
+
+    """
+    This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
+    """
+    authenticate(input: AuthenticateInput!): AuthenticatePayload
+
+    """
+    This mutation allows for users to remove a phone number from their account.
+    """
+    removePhoneNumber(input: RemovePhoneNumberInput!): RemovePhoneNumberPayload
+
+    """
+    This mutation allows the user to take the token they received in their email to reset their password.
+    """
+    resetPassword(input: ResetPasswordInput!): ResetPasswordPayload
+
+    """
+    This mutation is used for re-sending a verification email if it failed during user creation.
+    """
+    sendEmailVerification(
+      input: SendEmailVerificationInput!
+    ): SendEmailVerificationPayload
+
+    """
+    This mutation allows a user to provide their username and request that a
+    password reset email be sent to their account with a reset token in a url.
+    """
+    sendPasswordResetLink(
+      input: SendPasswordResetLinkInput!
+    ): SendPasswordResetLinkPayload
+
+    """
+    This mutation is used for setting a new phone number for a user, and sending a code for verifying the new number.
+    """
+    setPhoneNumber(input: SetPhoneNumberInput!): SetPhoneNumberPayload
+
+    """
+    This mutation allows users to give their credentials and either signed in,
+    re-directed to the tfa auth page, or given an error.
+    """
+    signIn(input: SignInInput!): SignInPayload
+
+    """
+    This mutation allows for new users to sign up for our sites services.
+    """
+    signUp(input: SignUpInput!): SignUpPayload
+
+    """
+    This mutation allows the user to update their account password.
+    """
+    updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
+
+    """
+    This mutation allows the user to update their user profile to change various details of their current profile.
+    """
+    updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfilePayload
+
+    """
+    This mutation allows the user to verify their account through a token sent in an email.
+    """
+    verifyAccount(input: VerifyAccountInput!): VerifyAccountPayload
+
+    """
+    This mutation allows the user to two factor authenticate.
+    """
+    verifyPhoneNumber(input: verifyPhoneNumberInput!): verifyPhoneNumberPayload
+  }
+
+  """
+  An object with an ID
+  """
+  interface Node {
+    """
+    The id of the object.
+    """
+    id: ID!
+  }
+
+  """
+  Possible directions in which to order a list of items when provided an \`orderBy\` argument.
+  """
+  enum OrderDirection {
+    """
+    Specifies an ascending order for a given \`orderBy\` argument.
+    """
+    ASC
+
+    """
+    Specifies a descending order for a given \`orderBy\` argument.
+    """
+    DESC
   }
 
   """
@@ -591,71 +2352,9 @@ export const getTypeNames = () => gql`
   }
 
   """
-  A field whose value is an upper case letter or an under score that has a length between 1 and 50.
-  """
-  scalar Acronym
-
-  """
-  A field whos values contain numbers, letters, dashes, and underscores.
-  """
-  scalar Slug
-
-  """
-  Summaries based on domains that the organization has claimed.
-  """
-  type OrganizationSummary {
-    """
-    Summary based on mail scan results for a given organization.
-    """
-    mail: CategorizedSummary
-
-    """
-    Summary based on web scan results for a given organization.
-    """
-    web: CategorizedSummary
-  }
-
-  """
-  This object contains the list of different categories for pre-computed
-  summary data with the computed total for how many domains in total are
-  being compared.
-  """
-  type CategorizedSummary {
-    """
-    List of SummaryCategory objects with data for different computed categories.
-    """
-    categories: [SummaryCategory]
-
-    """
-    Total domains that were check under this summary.
-    """
-    total: Int
-  }
-
-  """
-  This object contains the information for each type of summary that has been pre-computed
-  """
-  type SummaryCategory {
-    """
-    Category of computed summary which the other fields relate to.
-    """
-    name: String
-
-    """
-    Total count of domains that fall into this category.
-    """
-    count: Int
-
-    """
-    Percentage compared to other categories.
-    """
-    percentage: Float
-  }
-
-  """
   A connection to a list of items.
   """
-  type DomainConnection {
+  type OrganizationConnection {
     """
     Information to aid in pagination.
     """
@@ -664,10 +2363,10 @@ export const getTypeNames = () => gql`
     """
     A list of edges.
     """
-    edges: [DomainEdge]
+    edges: [OrganizationEdge]
 
     """
-    The total amount of domains the user has access to.
+    The total amount of organizations the user has access to.
     """
     totalCount: Int
   }
@@ -675,11 +2374,11 @@ export const getTypeNames = () => gql`
   """
   An edge in a connection.
   """
-  type DomainEdge {
+  type OrganizationEdge {
     """
     The item at the end of the edge
     """
-    node: Domain
+    node: Organization
 
     """
     A cursor for use in pagination
@@ -688,199 +2387,18 @@ export const getTypeNames = () => gql`
   }
 
   """
-  Ordering options for domain connections.
+  This object is used to inform the user if any errors occurred while using an organization mutation.
   """
-  input DomainOrder {
+  type OrganizationError {
     """
-    The field to order domains by.
+    Error code to inform user what the issue is related to.
     """
-    field: DomainOrderField!
+    code: Int
 
     """
-    The ordering direction.
+    Description of the issue that was encountered.
     """
-    direction: OrderDirection!
-  }
-
-  """
-  Properties by which domain connections can be ordered.
-  """
-  enum DomainOrderField {
-    """
-    Order domains by domain.
-    """
-    DOMAIN
-
-    """
-    Order domains by last ran.
-    """
-    LAST_RAN
-
-    """
-    Order domains by dkim status.
-    """
-    DKIM_STATUS
-
-    """
-    Order domains by dmarc status.
-    """
-    DMARC_STATUS
-
-    """
-    Order domains by https status.
-    """
-    HTTPS_STATUS
-
-    """
-    Order domains by spf status.
-    """
-    SPF_STATUS
-
-    """
-    Order domains by ssl status.
-    """
-    SSL_STATUS
-  }
-
-  """
-  Possible directions in which to order a list of items when provided an \`orderBy\` argument.
-  """
-  enum OrderDirection {
-    """
-    Specifies an ascending order for a given \`orderBy\` argument.
-    """
-    ASC
-
-    """
-    Specifies a descending order for a given \`orderBy\` argument.
-    """
-    DESC
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type AffiliationConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [AffiliationEdge]
-
-    """
-    The total amount of affiliations the user has access to.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type AffiliationEdge {
-    """
-    The item at the end of the edge
-    """
-    node: Affiliation
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  User Affiliations containing the permission level for the given organization, the users information, and the organizations information.
-  """
-  type Affiliation implements Node {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    User's level of access to a given organization.
-    """
-    permission: RoleEnums
-
-    """
-    The affiliated users information.
-    """
-    user: SharedUser
-
-    """
-    The affiliated organizations information.
-    """
-    organization: Organization
-  }
-
-  """
-  An enum used to assign, and test users roles.
-  """
-  enum RoleEnums {
-    """
-    A user who has been given access to view an organization.
-    """
-    USER
-
-    """
-    A user who has the same access as a user write account, but can define new user read/write accounts.
-    """
-    ADMIN
-
-    """
-    A user who has the same access as an admin, but can define new admins.
-    """
-    SUPER_ADMIN
-  }
-
-  """
-  This object is used for showing none personal user details,
-  and is used for limiting admins to the personal details of users.
-  """
-  type SharedUser implements Node {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    Users email address.
-    """
-    userName: EmailAddress
-  }
-
-  """
-  A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
-  """
-  scalar EmailAddress
-
-  """
-  Ordering options for affiliation connections.
-  """
-  input AffiliationUserOrder {
-    """
-    The field to order affiliations by.
-    """
-    field: AffiliationUserOrderField!
-
-    """
-    The ordering direction.
-    """
-    direction: OrderDirection!
-  }
-
-  """
-  Properties by which affiliation connections can be ordered.
-  """
-  enum AffiliationUserOrderField {
-    """
-    Order affiliation edges by username.
-    """
-    USER_USERNAME
+    description: String
   }
 
   """
@@ -984,367 +2502,396 @@ export const getTypeNames = () => gql`
   }
 
   """
-  Results of DKIM, DMARC, and SPF scans on the given domain.
+  This object is used to inform the user that no errors were encountered while running organization mutations.
   """
-  type EmailScan {
+  type OrganizationResult {
     """
-    The domain the scan was ran on.
+    Informs the user if the organization mutation was successful.
     """
-    domain: Domain
-
-    """
-    DomainKeys Identified Mail (DKIM) Signatures scan results.
-    """
-    dkim(
-      """
-      Start date for date filter.
-      """
-      startDate: Date
-
-      """
-      End date for date filter.
-      """
-      endDate: Date
-
-      """
-      Ordering options for dkim connections.
-      """
-      orderBy: DKIMOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): DKIMConnection
+    status: String
 
     """
-    Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
+    The organization that was being affected by the mutation.
     """
-    dmarc(
-      """
-      Start date for date filter.
-      """
-      startDate: Date
-
-      """
-      End date for date filter.
-      """
-      endDate: Date
-
-      """
-      Ordering options for dmarc connections.
-      """
-      orderBy: DMARCOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): DMARCConnection
-
-    """
-    Sender Policy Framework (SPF) scan results.
-    """
-    spf(
-      """
-      Start date for date filter.
-      """
-      startDate: Date
-
-      """
-      End date for date filter.
-      """
-      endDate: Date
-
-      """
-      Ordering options for spf connections.
-      """
-      orderBy: SPFOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): SPFConnection
+    organization: Organization
   }
 
   """
-  A connection to a list of items.
+  Summaries based on domains that the organization has claimed.
   """
-  type DKIMConnection {
+  type OrganizationSummary {
     """
-    Information to aid in pagination.
+    Summary based on mail scan results for a given organization.
     """
-    pageInfo: PageInfo!
+    mail: CategorizedSummary
 
     """
-    A list of edges.
+    Summary based on web scan results for a given organization.
     """
-    edges: [DKIMEdge]
-
-    """
-    The total amount of dkim scans related to a given domain.
-    """
-    totalCount: Int
+    web: CategorizedSummary
   }
 
   """
-  An edge in a connection.
+  Information about pagination in a connection.
   """
-  type DKIMEdge {
+  type PageInfo {
     """
-    The item at the end of the edge
+    When paginating forwards, are there more items?
     """
-    node: DKIM
+    hasNextPage: Boolean!
 
     """
-    A cursor for use in pagination
+    When paginating backwards, are there more items?
     """
-    cursor: String!
+    hasPreviousPage: Boolean!
+
+    """
+    When paginating backwards, the cursor to continue.
+    """
+    startCursor: String
+
+    """
+    When paginating forwards, the cursor to continue.
+    """
+    endCursor: String
   }
 
   """
-  DomainKeys Identified Mail (DKIM) permits a person, role, or
-  organization that owns the signing domain to claim some
-  responsibility for a message by associating the domain with the
-  message.  This can be an author's organization, an operational relay,
-  or one of their agents.
+  An enum used to select information from the dmarc-report-api.
   """
-  type DKIM implements Node {
+  enum PeriodEnums {
+    """
+    The month of January.
+    """
+    JANUARY
+
+    """
+    The month of February.
+    """
+    FEBRUARY
+
+    """
+    The month of March.
+    """
+    MARCH
+
+    """
+    The month of April.
+    """
+    APRIL
+
+    """
+    The month of May.
+    """
+    MAY
+
+    """
+    The month of June.
+    """
+    JUNE
+
+    """
+    The month of July.
+    """
+    JULY
+
+    """
+    The month of August.
+    """
+    AUGUST
+
+    """
+    The month of September.
+    """
+    SEPTEMBER
+
+    """
+    The month of October.
+    """
+    OCTOBER
+
+    """
+    The month of November.
+    """
+    NOVEMBER
+
+    """
+    The month of December.
+    """
+    DECEMBER
+
+    """
+    The last 30 days.
+    """
+    LAST30DAYS
+  }
+
+  """
+  This object is used for showing personal user details,
+  and is used for only showing the details of the querying user.
+  """
+  type PersonalUser implements Node {
     """
     The ID of an object
     """
     id: ID!
 
     """
-    The domain the scan was ran on.
+    Users email address.
     """
-    domain: Domain
+    userName: EmailAddress
 
     """
-    The time when the scan was initiated.
+    Name displayed to other users.
     """
-    timestamp: Date
+    displayName: String
 
     """
-    Individual scans results for each DKIM selector.
+    The phone number the user has setup with tfa.
     """
-    results(
+    phoneNumber: PhoneNumber
+
+    """
+    Users preferred language.
+    """
+    preferredLang: LanguageEnums
+
+    """
+    Has the user completed phone validation.
+    """
+    phoneValidated: Boolean
+
+    """
+    Has the user email verified their account.
+    """
+    emailValidated: Boolean
+
+    """
+    The method in which TFA codes are sent.
+    """
+    tfaSendMethod: TFASendMethodEnum
+
+    """
+    Users affiliations to various organizations.
+    """
+    affiliations(
       """
-      Ordering options for DKIM result connections.
+      Ordering options for affiliation connections.
       """
-      orderBy: DKIMResultOrder
+      orderBy: AffiliationOrgOrder
       after: String
       first: Int
       before: String
       last: Int
-    ): DKIMResultConnection
+    ): AffiliationConnection
   }
 
   """
-  A date string, such as 2007-12-03, compliant with the \`full-date\` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+  A field whose value conforms to the standard E.164 format as specified in:
+  https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234.
   """
-  scalar Date
+  scalar PhoneNumber
 
-  """
-  A connection to a list of items.
-  """
-  type DKIMResultConnection {
+  type Query {
     """
-    Information to aid in pagination.
+    Fetches an object given its ID
     """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [DKIMResultEdge]
-
-    """
-    The total amount of dkim results related to a given domain.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type DKIMResultEdge {
-    """
-    The item at the end of the edge
-    """
-    node: DKIMResult
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  Individual scans results for the given DKIM selector.
-  """
-  type DKIMResult implements Node {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    The DKIM scan information that this result belongs to.
-    """
-    dkim: DKIM
-
-    """
-    The selector the scan was ran on.
-    """
-    selector: String
-
-    """
-    DKIM record retrieved during the scan of the domain.
-    """
-    record: String
-
-    """
-    Size of the Public Key in bits
-    """
-    keyLength: String
-
-    """
-    Raw scan result.
-    """
-    rawJson: JSON
-
-    """
-    Guidance tags found during scan.
-    """
-    guidanceTags(
+    node(
       """
-      Ordering options for guidance tag connections
+      The ID of an object
       """
-      orderBy: GuidanceTagOrder
+      id: ID!
+    ): Node
+
+    """
+    Fetches objects given their IDs
+    """
+    nodes(
+      """
+      The IDs of objects
+      """
+      ids: [ID!]!
+    ): [Node]!
+
+    """
+    Query for dmarc summaries the user has access to.
+    """
+    findMyDmarcSummaries(
+      """
+      Ordering options for dmarc summaries connections
+      """
+      orderBy: DmarcSummaryOrder
+
+      """
+      The month in which the returned data is relevant to.
+      """
+      month: PeriodEnums!
+
+      """
+      The year in which the returned data is relevant to.
+      """
+      year: Year!
+
+      """
+      An optional string used to filter the results based on domains.
+      """
+      search: String
       after: String
       first: Int
       before: String
       last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    ): DmarcSummaryConnection
 
     """
-    Negative guidance tags found during scan.
+    Retrieve a specific domain by providing a domain.
     """
-    negativeGuidanceTags(
+    findDomainByDomain(
       """
-      Ordering options for guidance tag connections
+      The domain you wish to retrieve information for.
       """
-      orderBy: GuidanceTagOrder
+      domain: DomainScalar!
+    ): Domain
+
+    """
+    Select domains a user has access to.
+    """
+    findMyDomains(
+      """
+      Ordering options for domain connections.
+      """
+      orderBy: DomainOrder
+
+      """
+      Limit domains to those that belong to an organization that has ownership.
+      """
+      ownership: Boolean
+
+      """
+      String used to search for domains.
+      """
+      search: String
       after: String
       first: Int
       before: String
       last: Int
-    ): GuidanceTagConnection
+    ): DomainConnection
 
     """
-    Neutral guidance tags found during scan.
+    Select organizations a user has access to.
     """
-    neutralGuidanceTags(
+    findMyOrganizations(
       """
-      Ordering options for guidance tag connections
+      Ordering options for organization connections
       """
-      orderBy: GuidanceTagOrder
+      orderBy: OrganizationOrder
+
+      """
+      String argument used to search for organizations.
+      """
+      search: String
+
+      """
+      Filter orgs based off of the user being an admin of them.
+      """
+      isAdmin: Boolean
+
+      """
+      Filter org list to either include or exclude the super admin org.
+      """
+      includeSuperAdminOrg: Boolean
       after: String
       first: Int
       before: String
       last: Int
-    ): GuidanceTagConnection
+    ): OrganizationConnection
 
     """
-    Positive guidance tags found during scan.
+    Select all information on a selected organization that a user has access to.
     """
-    positiveGuidanceTags(
+    findOrganizationBySlug(
       """
-      Ordering options for guidance tag connections
+      The slugified organization name you want to retrieve data for.
       """
-      orderBy: GuidanceTagOrder
+      orgSlug: Slug!
+    ): Organization
+
+    """
+    Email summary computed values, used to build summary cards.
+    """
+    mailSummary: CategorizedSummary
+
+    """
+    Web summary computed values, used to build summary cards.
+    """
+    webSummary: CategorizedSummary
+
+    """
+    Query the currently logged in user.
+    """
+    findMe: PersonalUser
+
+    """
+    Query a specific user by user name.
+    """
+    findUserByUsername(
+      """
+      Email address of user you wish to gather data for.
+      """
+      userName: EmailAddress!
+    ): SharedUser
+
+    """
+    Query used to check if the user has an admin role.
+    """
+    isUserAdmin: Boolean
+
+    """
+    Retrieve a specific verified domain by providing a domain.
+    """
+    findVerifiedDomainByDomain(
+      """
+      The domain you wish to retrieve information for.
+      """
+      domain: DomainScalar!
+    ): VerifiedDomain
+
+    """
+    Select verified check domains
+    """
+    findVerifiedDomains(
+      """
+      Ordering options for verified domain connections.
+      """
+      orderBy: VerifiedDomainOrder
       after: String
       first: Int
       before: String
       last: Int
-    ): GuidanceTagConnection
-  }
-
-  """
-  The \`JSON\` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-  """
-  scalar JSON
-
-  """
-  A connection to a list of items.
-  """
-  type GuidanceTagConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
+    ): VerifiedDomainConnection
 
     """
-    A list of edges.
+    Select all information on a selected verified organization.
     """
-    edges: [GuidanceTagEdge]
+    findVerifiedOrganizationBySlug(
+      """
+      The slugified organization name you want to retrieve data for.
+      """
+      orgSlug: Slug!
+    ): VerifiedOrganization
 
     """
-    The total amount of guidance tags for a given scan type.
+    Select organizations a user has access to.
     """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type GuidanceTagEdge {
-    """
-    The item at the end of the edge
-    """
-    node: GuidanceTag
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags
-  """
-  type GuidanceTag implements Node {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    The guidance tag ID.
-    """
-    tagId: String
-
-    """
-    The guidance tag name.
-    """
-    tagName: String
-
-    """
-    Guidance for changes to record, or to maintain current stance.
-    """
-    guidance: String
-
-    """
-    Links to implementation guidance for a given tag.
-    """
-    refLinks: [RefLinks]
-
-    """
-    Links to technical information for a given tag.
-    """
-    refLinksTech: [RefLinks]
+    findVerifiedOrganizations(
+      """
+      Ordering options for verified organization connections.
+      """
+      orderBy: VerifiedOrganizationOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): VerifiedOrganizationConnection
   }
 
   """
@@ -1362,325 +2909,447 @@ export const getTypeNames = () => gql`
     refLink: String
   }
 
-  """
-  Ordering options for guidance tag connections.
-  """
-  input GuidanceTagOrder {
+  input RemoveDomainInput {
     """
-    The field to order guidance tags by.
+    The global id of the domain you wish to remove.
     """
-    field: GuidanceTagOrderField!
+    domainId: ID!
 
     """
-    The ordering direction.
+    The organization you wish to remove the domain from.
     """
-    direction: OrderDirection!
+    orgId: ID!
+    clientMutationId: String
+  }
+
+  type RemoveDomainPayload {
+    """
+    \`RemoveDomainUnion\` returning either a \`DomainResultType\`, or \`DomainErrorType\` object.
+    """
+    result: RemoveDomainUnion!
+    clientMutationId: String
   }
 
   """
-  Properties by which Guidance Tag connections can be ordered.
+  This union is used with the \`RemoveDomain\` mutation,
+  allowing for users to remove a domain belonging to their org,
+  and support any errors that may occur
   """
-  enum GuidanceTagOrderField {
-    """
-    Order guidance tag edges by tag id.
-    """
-    TAG_ID
+  union RemoveDomainUnion = DomainError | DomainResult
 
+  input RemoveOrganizationInput {
     """
-    Order guidance tag edges by tag name.
+    The global id of the organization you wish you remove.
     """
-    TAG_NAME
+    orgId: ID!
+    clientMutationId: String
+  }
 
+  type RemoveOrganizationPayload {
     """
-    Order guidance tag edges by tag guidance.
+    \`RemoveOrganizationUnion\` returning either an \`OrganizationResult\`, or \`OrganizationError\` object.
     """
-    GUIDANCE
+    result: RemoveOrganizationUnion!
+    clientMutationId: String
   }
 
   """
-  Ordering options for DKIM Result connections.
+  This union is used with the \`RemoveOrganization\` mutation,
+  allowing for users to remove an organization they belong to,
+  and support any errors that may occur
   """
-  input DKIMResultOrder {
+  union RemoveOrganizationUnion = OrganizationError | OrganizationResult
+
+  """
+  This object is used to inform the user if any errors occurred while removing their phone number.
+  """
+  type RemovePhoneNumberError {
     """
-    The field to order DKIM Results by.
+    Error code to inform user what the issue is related to.
     """
-    field: DKIMResultOrderField!
+    code: Int
 
     """
-    The ordering direction.
+    Description of the issue that was encountered.
     """
-    direction: OrderDirection!
+    description: String
+  }
+
+  input RemovePhoneNumberInput {
+    clientMutationId: String
+  }
+
+  type RemovePhoneNumberPayload {
+    """
+    \`RemovePhoneNumberUnion\` returning either a \`RemovePhoneNumberResult\`, or \`RemovePhoneNumberError\` object.
+    """
+    result: RemovePhoneNumberUnion
+    clientMutationId: String
   }
 
   """
-  Properties by which DKIM Result connections can be ordered.
+  This object is used to inform the user that no errors were encountered while removing their phone number.
   """
-  enum DKIMResultOrderField {
+  type RemovePhoneNumberResult {
     """
-    Order DKIM Result edges by timestamp.
+    Informs the user if the phone number removal was successful.
     """
-    SELECTOR
-
-    """
-    Order DKIM Result edges by record.
-    """
-    RECORD
-
-    """
-    Order DKIM Result edges by key length.
-    """
-    KEY_LENGTH
+    status: String
   }
 
   """
-  Ordering options for DKIM connections.
+  This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to
+  remove their phone number, and support any errors that may occur
   """
-  input DKIMOrder {
+  union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
+
+  input RemoveUserFromOrgInput {
     """
-    The field to order DKIM scans by.
+    The user id of the user to be removed.
     """
-    field: DKIMOrderField!
+    userId: ID!
 
     """
-    The ordering direction.
+    The organization that the user is to be removed from.
     """
-    direction: OrderDirection!
+    orgId: ID!
+    clientMutationId: String
+  }
+
+  type RemoveUserFromOrgPayload {
+    """
+    \`RemoveUserFromOrgUnion\` returning either a \`RemoveUserFromOrgResult\`, or \`RemoveUserFromOrgError\` object.
+    """
+    result: RemoveUserFromOrgUnion
+    clientMutationId: String
   }
 
   """
-  Properties by which DKIM connections can be ordered.
+  This object is used to inform the user of the removal status.
   """
-  enum DKIMOrderField {
+  type RemoveUserFromOrgResult {
     """
-    Order DKIM edges by timestamp.
+    Informs the user if the user was successfully removed.
     """
-    TIMESTAMP
+    status: String
+
+    """
+    The user that was just removed.
+    """
+    user: SharedUser
   }
 
   """
-  A connection to a list of items.
+  This union is used with the \`RemoveUserFromOrg\` mutation, allowing for users to
+  remove a user from their org, and support any errors that may occur
   """
-  type DMARCConnection {
+  union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
+
+  input RequestScanInput {
     """
-    Information to aid in pagination.
+    The domain that the scan will be ran on.
     """
-    pageInfo: PageInfo!
+    domain: DomainScalar
+    clientMutationId: String
+  }
+
+  type RequestScanPayload {
+    """
+    The id used to specify the channel in the various subscriptions.
+    """
+    subscriptionId: String
 
     """
-    A list of edges.
+    Informs the user if the scan was dispatched successfully.
     """
-    edges: [DMARCEdge]
-
-    """
-    The total amount of dmarc scans related to a given domain.
-    """
-    totalCount: Int
+    status: String
+    clientMutationId: String
   }
 
   """
-  An edge in a connection.
+  This object is used to inform the user if any errors occurred while resetting their password.
   """
-  type DMARCEdge {
+  type ResetPasswordError {
     """
-    The item at the end of the edge
+    Error code to inform user what the issue is related to.
     """
-    node: DMARC
+    code: Int
 
     """
-    A cursor for use in pagination
+    Description of the issue that was encountered.
     """
-    cursor: String!
+    description: String
+  }
+
+  input ResetPasswordInput {
+    """
+    The users new password.
+    """
+    password: String!
+
+    """
+    A confirmation password to confirm the new password.
+    """
+    confirmPassword: String!
+
+    """
+    The JWT found in the url, redirected from the email they received.
+    """
+    resetToken: String!
+    clientMutationId: String
+  }
+
+  type ResetPasswordPayload {
+    """
+    \`ResetPasswordUnion\` returning either a \`ResetPasswordResult\`, or \`ResetPasswordError\` object.
+    """
+    result: ResetPasswordUnion
+    clientMutationId: String
   }
 
   """
-  Domain-based Message Authentication, Reporting, and Conformance
-  (DMARC) is a scalable mechanism by which a mail-originating
-  organization can express domain-level policies and preferences for
-  message validation, disposition, and reporting, that a mail-receiving
-  organization can use to improve mail handling.
+  This object is used to inform the user that no errors were encountered while resetting their password.
   """
-  type DMARC implements Node {
+  type ResetPasswordResult {
+    """
+    Informs the user if the password reset was successful, and to redirect to sign in page.
+    """
+    status: String
+  }
+
+  """
+  This union is used with the \`ResetPassword\` mutation, allowing for users to
+  reset their password, and support any errors that may occur
+  """
+  union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
+
+  """
+  An enum used to assign, and test users roles.
+  """
+  enum RoleEnums {
+    """
+    A user who has been given access to view an organization.
+    """
+    USER
+
+    """
+    A user who has the same access as a user write account, but can define new user read/write accounts.
+    """
+    ADMIN
+
+    """
+    A user who has the same access as an admin, but can define new admins.
+    """
+    SUPER_ADMIN
+  }
+
+  """
+  A field that conforms to a string, with strings ending in ._domainkey.
+  """
+  scalar Selector
+
+  input SendEmailVerificationInput {
+    """
+    The users email address used for sending the verification email.
+    """
+    userName: EmailAddress!
+    clientMutationId: String
+  }
+
+  type SendEmailVerificationPayload {
+    """
+    Informs the user if the email was sent successfully.
+    """
+    status: String
+    clientMutationId: String
+  }
+
+  input SendPasswordResetLinkInput {
+    """
+    User name for the account you would like to receive a password reset link for.
+    """
+    userName: EmailAddress!
+    clientMutationId: String
+  }
+
+  type SendPasswordResetLinkPayload {
+    """
+    Informs the user if the password reset email was sent successfully.
+    """
+    status: String
+    clientMutationId: String
+  }
+
+  """
+  This object is used to inform the user if any errors occurred while setting a new phone number.
+  """
+  type SetPhoneNumberError {
+    """
+    Error code to inform user what the issue is related to.
+    """
+    code: Int
+
+    """
+    Description of the issue that was encountered.
+    """
+    description: String
+  }
+
+  input SetPhoneNumberInput {
+    """
+    The phone number that the text message will be sent to.
+    """
+    phoneNumber: PhoneNumber!
+    clientMutationId: String
+  }
+
+  type SetPhoneNumberPayload {
+    """
+    \`SetPhoneNumberUnion\` returning either a \`SetPhoneNumberResult\`, or \`SetPhoneNumberError\` object.
+    """
+    result: SetPhoneNumberUnion
+    clientMutationId: String
+  }
+
+  """
+  This object is used to inform the user that no errors were encountered while setting a new phone number.
+  """
+  type SetPhoneNumberResult {
+    """
+    Informs the user if their phone code was successfully sent.
+    """
+    status: String
+  }
+
+  """
+  This union is used with the \`setPhoneNumber\` mutation, allowing for users to
+  send a verification code to their phone, and support any errors that may occur
+  """
+  union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
+
+  """
+  This object is used for showing none personal user details,
+  and is used for limiting admins to the personal details of users.
+  """
+  type SharedUser implements Node {
     """
     The ID of an object
     """
     id: ID!
 
     """
-    The domain the scan was ran on.
+    Users email address.
     """
-    domain: Domain
-
-    """
-    The time when the scan was initiated.
-    """
-    timestamp: Date
-
-    """
-    DMARC record retrieved during scan.
-    """
-    record: String
-
-    """
-    The requested policy you wish mailbox providers to apply
-    when your email fails DMARC authentication and alignment checks.
-    """
-    pPolicy: String
-
-    """
-    This tag is used to indicate a requested policy for all
-    subdomains where mail is failing the DMARC authentication and alignment checks.
-    """
-    spPolicy: String
-
-    """
-    The percentage of messages to which the DMARC policy is to be applied.
-    """
-    pct: Int
-
-    """
-    Raw scan result.
-    """
-    rawJson: JSON
-
-    """
-    Guidance tags found during DMARC Scan.
-    """
-    guidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
-
-    """
-    Negative guidance tags found during DMARC Scan.
-    """
-    negativeGuidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
-
-    """
-    Neutral guidance tags found during DMARC Scan.
-    """
-    neutralGuidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
-
-    """
-    Positive guidance tags found during DMARC Scan.
-    """
-    positiveGuidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
+    userName: EmailAddress
   }
 
   """
-  Ordering options for DMARC connections.
+  This object is used to inform the user if any errors occurred during sign in.
   """
-  input DMARCOrder {
+  type SignInError {
     """
-    The field to order DMARC scans by.
+    Error code to inform user what the issue is related to.
     """
-    field: DmarcOrderField!
+    code: Int
 
     """
-    The ordering direction.
+    Description of the issue that was encountered.
     """
-    direction: OrderDirection!
+    description: String
+  }
+
+  input SignInInput {
+    """
+    The email the user signed up with.
+    """
+    userName: EmailAddress!
+
+    """
+    The password the user signed up with
+    """
+    password: String!
+    clientMutationId: String
+  }
+
+  type SignInPayload {
+    """
+    \`SignInUnion\` returning either a \`regularSignInResult\`, \`tfaSignInResult\`, or \`signInError\` object.
+    """
+    result: SignInUnion
+    clientMutationId: String
   }
 
   """
-  Properties by which dmarc connections can be ordered.
+  This union is used with the \`SignIn\` mutation, allowing for multiple styles of
+  logging in, and support any errors that may occur
   """
-  enum DmarcOrderField {
+  union SignInUnion = AuthResult | SignInError | TFASignInResult
+
+  """
+  This object is used to inform the user if any errors occurred during sign up.
+  """
+  type SignUpError {
     """
-    Order dmarc summaries by timestamp.
+    Error code to inform user what the issue is related to.
     """
-    TIMESTAMP
+    code: Int
 
     """
-    Order dmarc summaries by record.
+    Description of the issue that was encountered.
     """
-    RECORD
+    description: String
+  }
+
+  input SignUpInput {
+    """
+    The name that will be displayed to other users.
+    """
+    displayName: String!
 
     """
-    Order dmarc summaries by p policy.
+    Email address that the user will use to authenticate with.
     """
-    P_POLICY
+    userName: EmailAddress!
 
     """
-    Order dmarc summaries by sp policy.
+    The password the user will authenticate with.
     """
-    SP_POLICY
+    password: String!
 
     """
-    Order dmarc summaries by percentage.
+    A secondary password field used to confirm the user entered the correct password.
     """
-    PCT
+    confirmPassword: String!
+
+    """
+    The users preferred language.
+    """
+    preferredLang: LanguageEnums!
+
+    """
+    A token sent by email, that will assign a user to an organization with a pre-determined role.
+    """
+    signUpToken: String
+    clientMutationId: String
+  }
+
+  type SignUpPayload {
+    """
+    \`SignUpUnion\` returning either a \`AuthResult\`, or \`SignUpError\` object.
+    """
+    result: SignUpUnion
+    clientMutationId: String
   }
 
   """
-  A connection to a list of items.
+  This union is used with the \`signUp\` mutation, allowing for the user to sign up, and support any errors that may occur.
   """
-  type SPFConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [SPFEdge]
-
-    """
-    The total amount of spf scans related to a given domain.
-    """
-    totalCount: Int
-  }
+  union SignUpUnion = AuthResult | SignUpError
 
   """
-  An edge in a connection.
+  A field whos values contain numbers, letters, dashes, and underscores.
   """
-  type SPFEdge {
-    """
-    The item at the end of the edge
-    """
-    node: SPF
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
+  scalar Slug
 
   """
   Email on the Internet can be forged in a number of ways.  In
@@ -1740,9 +3409,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
 
     """
     Negative guidance tags found during scan.
@@ -1785,6 +3454,139 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type SPFConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [SPFEdge]
+
+    """
+    The total amount of spf scans related to a given domain.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type SPFEdge {
+    """
+    The item at the end of the edge
+    """
+    node: SPF
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
+  This table contains the data fields for senders who are in the SPF fail category.
+  """
+  type SpfFailureTable {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    Host from reverse DNS of source IP address.
+    """
+    dnsHost: String
+
+    """
+    Domain from SMTP banner message.
+    """
+    envelopeFrom: String
+
+    """
+    Guidance for any issues that were found from the report.
+    """
+    guidance: String
+    @deprecated(
+      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+    )
+
+    """
+    Guidance for any issues that were found from the report.
+    """
+    guidanceTag: GuidanceTag
+
+    """
+    The address/domain used in the "From" field.
+    """
+    headerFrom: String
+
+    """
+    IP address of sending server.
+    """
+    sourceIpAddress: String
+
+    """
+    Is SPF aligned.
+    """
+    spfAligned: Boolean
+
+    """
+    Domains used for SPF validation.
+    """
+    spfDomains: String
+
+    """
+    The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.
+    """
+    spfResults: String
+
+    """
+    Total messages from this sender.
+    """
+    totalMessages: Int
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type SpfFailureTableConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [SpfFailureTableEdge]
+
+    """
+    The total amount of spf failures the user has access to.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type SpfFailureTableEdge {
+    """
+    The item at the end of the edge
+    """
+    node: SpfFailureTable
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
   }
 
   """
@@ -1825,293 +3627,6 @@ export const getTypeNames = () => gql`
     Order SPF edges by spf-default.
     """
     SPF_DEFAULT
-  }
-
-  """
-  Results of HTTPS, and SSL scan on the given domain.
-  """
-  type WebScan {
-    """
-    The domain the scan was ran on.
-    """
-    domain: Domain
-
-    """
-    Hyper Text Transfer Protocol Secure scan results.
-    """
-    https(
-      """
-      Start date for date filter.
-      """
-      startDate: Date
-
-      """
-      End date for date filter.
-      """
-      endDate: Date
-
-      """
-      Ordering options for https connections.
-      """
-      orderBy: HTTPSOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): HTTPSConnection
-
-    """
-    Secure Socket Layer scan results.
-    """
-    ssl(
-      """
-      Start date for date filter.
-      """
-      startDate: Date
-
-      """
-      End date for date filter.
-      """
-      endDate: Date
-
-      """
-      Ordering options for ssl connections.
-      """
-      orderBy: SSLOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): SSLConnection
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type HTTPSConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [HTTPSEdge]
-
-    """
-    The total amount of https scans for a given domain.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type HTTPSEdge {
-    """
-    The item at the end of the edge
-    """
-    node: HTTPS
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  Hyper Text Transfer Protocol Secure scan results.
-  """
-  type HTTPS implements Node {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    The domain the scan was ran on.
-    """
-    domain: Domain
-
-    """
-    The time the scan was initiated.
-    """
-    timestamp: Date
-
-    """
-    State of the HTTPS implementation on the server and any issues therein.
-    """
-    implementation: String
-
-    """
-    Degree to which HTTPS is enforced on the server based on behaviour.
-    """
-    enforced: String
-
-    """
-    Presence and completeness of HSTS implementation.
-    """
-    hsts: String
-
-    """
-    Denotes how long the domain should only be accessed using HTTPS
-    """
-    hstsAge: String
-
-    """
-    Denotes whether the domain has been submitted and included within HSTS preload list.
-    """
-    preloaded: String
-
-    """
-    Raw scan result.
-    """
-    rawJson: JSON
-
-    """
-    Guidance tags found during scan.
-    """
-    guidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
-
-    """
-    Negative guidance tags found during scan.
-    """
-    negativeGuidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
-
-    """
-    Neutral guidance tags found during scan.
-    """
-    neutralGuidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
-
-    """
-    Positive guidance tags found during scan.
-    """
-    positiveGuidanceTags(
-      """
-      Ordering options for guidance tag connections
-      """
-      orderBy: GuidanceTagOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): GuidanceTagConnection
-  }
-
-  """
-  Ordering options for HTTPS connections.
-  """
-  input HTTPSOrder {
-    """
-    The field to order HTTPS edges by.
-    """
-    field: HTTPSOrderField!
-
-    """
-    The ordering direction.
-    """
-    direction: OrderDirection!
-  }
-
-  """
-  Properties by which HTTPS connections can be ordered.
-  """
-  enum HTTPSOrderField {
-    """
-    Order HTTPS edges by timestamp.
-    """
-    TIMESTAMP
-
-    """
-    Order HTTPS edges by implementation.
-    """
-    IMPLEMENTATION
-
-    """
-    Order HTTPS edges by enforced.
-    """
-    ENFORCED
-
-    """
-    Order HTTPS edges by hsts.
-    """
-    HSTS
-
-    """
-    Order HTTPS edges by hsts age.
-    """
-    HSTS_AGE
-
-    """
-    Order HTTPS edges by preloaded.
-    """
-    PRELOADED
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type SSLConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [SSLEdge]
-
-    """
-    The total amount of https scans for a given domain.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type SSLEdge {
-    """
-    The item at the end of the edge
-    """
-    node: SSL
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
   }
 
   """
@@ -2196,9 +3711,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
 
     """
     Negative guidance tags found during scan.
@@ -2241,6 +3756,41 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type SSLConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [SSLEdge]
+
+    """
+    The total amount of https scans for a given domain.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type SSLEdge {
+    """
+    The item at the end of the edge
+    """
+    node: SSL
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
   }
 
   """
@@ -2314,688 +3864,43 @@ export const getTypeNames = () => gql`
   }
 
   """
-  An enum used to select information from the dmarc-report-api.
+  Enum used to inform front end if there are any issues, info, or the domain passes a given check.
   """
-  enum PeriodEnums {
+  enum StatusEnum {
     """
-    The month of January.
+    If the given check meets the passing requirements.
     """
-    JANUARY
+    PASS
 
     """
-    The month of February.
+    If the given check has flagged something that can provide information on the domain that aren't scan related.
     """
-    FEBRUARY
+    INFO
 
     """
-    The month of March.
-    """
-    MARCH
-
-    """
-    The month of April.
-    """
-    APRIL
-
-    """
-    The month of May.
-    """
-    MAY
-
-    """
-    The month of June.
-    """
-    JUNE
-
-    """
-    The month of July.
-    """
-    JULY
-
-    """
-    The month of August.
-    """
-    AUGUST
-
-    """
-    The month of September.
-    """
-    SEPTEMBER
-
-    """
-    The month of October.
-    """
-    OCTOBER
-
-    """
-    The month of November.
-    """
-    NOVEMBER
-
-    """
-    The month of December.
-    """
-    DECEMBER
-
-    """
-    The last 30 days.
-    """
-    LAST30DAYS
-  }
-
-  """
-  A field that conforms to a 4 digit integer.
-  """
-  scalar Year
-
-  """
-  This object displays the percentages of the category totals.
-  """
-  type CategoryPercentages {
-    """
-    Percentage of messages that are failing all checks.
-    """
-    failPercentage: Int
-
-    """
-    Percentage of messages that are passing all checks.
-    """
-    fullPassPercentage: Int
-
-    """
-    Percentage of messages that are passing only dkim.
-    """
-    passDkimOnlyPercentage: Int
-
-    """
-    Percentage of messages that are passing only spf.
-    """
-    passSpfOnlyPercentage: Int
-
-    """
-    The total amount of messages sent by this domain.
-    """
-    totalMessages: Int
-  }
-
-  """
-  This object displays the total amount of messages that fit into each category.
-  """
-  type CategoryTotals {
-    """
-    Amount of messages that are passing SPF, but failing DKIM.
-    """
-    passSpfOnly: Int
-
-    """
-    Amount of messages that are passing DKIM, but failing SPF.
-    """
-    passDkimOnly: Int
-
-    """
-    Amount of messages that are passing SPF and DKIM.
-    """
-    fullPass: Int
-
-    """
-    Amount of messages that fail both SPF and DKIM.
-    """
-    fail: Int
-  }
-
-  """
-  Object that contains the various senders and details for each category.
-  """
-  type DetailTables {
-    """
-    List of senders that are failing DKIM checks.
-    """
-    dkimFailure(
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): DkimFailureTableConnection
-
-    """
-    List of senders that are failing DMARC checks.
-    """
-    dmarcFailure(
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): DmarcFailureTableConnection
-
-    """
-    List of senders that are passing all checks.
-    """
-    fullPass(
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): FullPassTableConnection
-
-    """
-    List of senders that are failing SPF checks.
-    """
-    spfFailure(
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): SpfFailureTableConnection
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type DkimFailureTableConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [DkimFailureTableEdge]
-
-    """
-    The total amount of dkim failure the user has access to.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type DkimFailureTableEdge {
-    """
-    The item at the end of the edge
-    """
-    node: DkimFailureTable
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  This table contains the data fields for senders who are in the DKIM fail category.
-  """
-  type DkimFailureTable {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    Is DKIM aligned.
-    """
-    dkimAligned: Boolean
-
-    """
-    Domains used for DKIM validation
-    """
-    dkimDomains: String
-
-    """
-    The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.
-    """
-    dkimResults: String
-
-    """
-    Pointer to a DKIM public key record in DNS.
-    """
-    dkimSelectors: String
-
-    """
-    Host from reverse DNS of source IP address.
-    """
-    dnsHost: String
-
-    """
-    Domain from SMTP banner message.
-    """
-    envelopeFrom: String
-
-    """
-    Guidance for any issues that were found from the report.
-    """
-    guidance: String
-
-    """
-    The address/domain used in the "From" field.
-    """
-    headerFrom: String
-
-    """
-    IP address of sending server.
-    """
-    sourceIpAddress: String
-
-    """
-    Total messages from this sender.
-    """
-    totalMessages: Int
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type DmarcFailureTableConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [DmarcFailureTableEdge]
-
-    """
-    The total amount of dmarc failures the user has access to.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type DmarcFailureTableEdge {
-    """
-    The item at the end of the edge
-    """
-    node: DmarcFailureTable
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  This table contains the data fields for senders who are in the DMARC failure category.
-  """
-  type DmarcFailureTable {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    Domains used for DKIM validation
-    """
-    dkimDomains: String
-
-    """
-    Pointer to a DKIM public key record in DNS.
-    """
-    dkimSelectors: String
-
-    """
-    The DMARC enforcement action that the receiver took, either none, quarantine, or reject.
-    """
-    disposition: String
-
-    """
-    Host from reverse DNS of source IP address.
-    """
-    dnsHost: String
-
-    """
-    Domain from SMTP banner message.
-    """
-    envelopeFrom: String
-
-    """
-    The address/domain used in the "From" field.
-    """
-    headerFrom: String
-
-    """
-    IP address of sending server.
-    """
-    sourceIpAddress: String
-
-    """
-    Domains used for SPF validation.
-    """
-    spfDomains: String
-
-    """
-    Total messages from this sender.
-    """
-    totalMessages: Int
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type FullPassTableConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [FullPassTableEdge]
-
-    """
-    The total amount of full passes the user has access to.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type FullPassTableEdge {
-    """
-    The item at the end of the edge
-    """
-    node: FullPassTable
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  This table contains the data fields for senders who are in the Full Pass category.
-  """
-  type FullPassTable {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    Domains used for DKIM validation
-    """
-    dkimDomains: String
-
-    """
-    Pointer to a DKIM public key record in DNS.
-    """
-    dkimSelectors: String
-
-    """
-    Host from reverse DNS of source IP address.
-    """
-    dnsHost: String
-
-    """
-    Domain from SMTP banner message.
-    """
-    envelopeFrom: String
-
-    """
-    The address/domain used in the "From" field.
-    """
-    headerFrom: String
-
-    """
-    IP address of sending server.
-    """
-    sourceIpAddress: String
-
-    """
-    Domains used for SPF validation.
-    """
-    spfDomains: String
-
-    """
-    Total messages from this sender.
-    """
-    totalMessages: Int
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type SpfFailureTableConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [SpfFailureTableEdge]
-
-    """
-    The total amount of spf failures the user has access to.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type SpfFailureTableEdge {
-    """
-    The item at the end of the edge
-    """
-    node: SpfFailureTable
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  This table contains the data fields for senders who are in the SPF fail category.
-  """
-  type SpfFailureTable {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    Host from reverse DNS of source IP address.
-    """
-    dnsHost: String
-
-    """
-    Domain from SMTP banner message.
-    """
-    envelopeFrom: String
-
-    """
-    Guidance for any issues that were found from the report.
-    """
-    guidance: String
-
-    """
-    The address/domain used in the "From" field.
-    """
-    headerFrom: String
-
-    """
-    IP address of sending server.
-    """
-    sourceIpAddress: String
-
-    """
-    Is SPF aligned.
-    """
-    spfAligned: Boolean
-
-    """
-    Domains used for SPF validation.
-    """
-    spfDomains: String
-
-    """
-    The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.
-    """
-    spfResults: String
-
-    """
-    Total messages from this sender.
-    """
-    totalMessages: Int
-  }
-
-  """
-  Ordering options for dmarc summary connections.
-  """
-  input DmarcSummaryOrder {
-    """
-    The field to order dmarc summaries by.
-    """
-    field: DmarcSummaryOrderField!
-
-    """
-    The ordering direction.
-    """
-    direction: OrderDirection!
-  }
-
-  """
-  Properties by which dmarc summary connections can be ordered.
-  """
-  enum DmarcSummaryOrderField {
-    """
-    Order dmarc summaries by fail count.
+    If the given check does not meet the passing requirements
     """
     FAIL
-
-    """
-    Order dmarc summaries by pass count.
-    """
-    FULL_PASS
-
-    """
-    Order dmarc summaries by pass dkim only count.
-    """
-    PASS_DKIM_ONLY
-
-    """
-    Order dmarc summaries by pass spf only count.
-    """
-    PASS_SPF_ONLY
-
-    """
-    Order dmarc summaries by fail percentage.
-    """
-    FAIL_PERCENTAGE
-
-    """
-    Order dmarc summaries by pass percentage.
-    """
-    FULL_PASS_PERCENTAGE
-
-    """
-    Order dmarc summaries by pass dkim only percentage.
-    """
-    PASS_DKIM_ONLY_PERCENTAGE
-
-    """
-    Order dmarc summaries by spf only percentage.
-    """
-    PASS_SPF_ONLY_PERCENTAGE
-
-    """
-    Order dmarc summaries by total messages
-    """
-    TOTAL_MESSAGES
-
-    """
-    Order dmarc summaries by their respective domains.
-    """
-    DOMAIN
   }
 
   """
-  This object is used for showing personal user details,
-  and is used for only showing the details of the querying user.
+  This object contains the information for each type of summary that has been pre-computed
   """
-  type PersonalUser implements Node {
+  type SummaryCategory {
     """
-    The ID of an object
+    Category of computed summary which the other fields relate to.
     """
-    id: ID!
+    name: String
 
     """
-    Users email address.
+    Total count of domains that fall into this category.
     """
-    userName: EmailAddress
+    count: Int
 
     """
-    Name displayed to other users.
+    Percentage compared to other categories.
     """
-    displayName: String
-
-    """
-    The phone number the user has setup with tfa.
-    """
-    phoneNumber: PhoneNumber
-
-    """
-    Users preferred language.
-    """
-    preferredLang: LanguageEnums
-
-    """
-    Has the user completed phone validation.
-    """
-    phoneValidated: Boolean
-
-    """
-    Has the user email verified their account.
-    """
-    emailValidated: Boolean
-
-    """
-    The method in which TFA codes are sent.
-    """
-    tfaSendMethod: TFASendMethodEnum
-
-    """
-    Users affiliations to various organizations.
-    """
-    affiliations(
-      """
-      Ordering options for affiliation connections.
-      """
-      orderBy: AffiliationOrgOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): AffiliationConnection
-  }
-
-  """
-  A field whose value conforms to the standard E.164 format as specified in: https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234.
-  """
-  scalar PhoneNumber
-
-  """
-  An enum used to define user's language.
-  """
-  enum LanguageEnums {
-    """
-    Used for defining if English is the preferred language.
-    """
-    ENGLISH
-
-    """
-    Used for defining if French is the preferred language.
-    """
-    FRENCH
+    percentage: Float
   }
 
   enum TFASendMethodEnum {
@@ -3016,104 +3921,317 @@ export const getTypeNames = () => gql`
   }
 
   """
-  Ordering options for affiliation connections.
+  This object is used when the user signs in and has validated either their email or phone.
   """
-  input AffiliationOrgOrder {
+  type TFASignInResult {
     """
-    The field to order affiliations by.
+    Token used to verify during authentication.
     """
-    field: AffiliationOrgOrderField!
+    authenticateToken: String
 
     """
-    The ordering direction.
+    Wether the authentication code was sent through text, or email.
     """
-    direction: OrderDirection!
+    sendMethod: String
+  }
+
+  input UpdateDomainInput {
+    """
+    The global id of the domain that is being updated.
+    """
+    domainId: ID!
+
+    """
+    The global ID of the organization used for permission checks.
+    """
+    orgId: ID!
+
+    """
+    The new url of the of the old domain.
+    """
+    domain: DomainScalar
+
+    """
+    The updated DKIM selector strings corresponding to this domain.
+    """
+    selectors: [Selector]
+    clientMutationId: String
+  }
+
+  type UpdateDomainPayload {
+    """
+    \`UpdateDomainUnion\` returning either a \`Domain\`, or \`DomainError\` object.
+    """
+    result: UpdateDomainUnion
+    clientMutationId: String
   }
 
   """
-  Properties by which affiliation connections can be ordered.
+  This union is used with the \`UpdateDomain\` mutation,
+  allowing for users to update a domain belonging to their org,
+  and support any errors that may occur
   """
-  enum AffiliationOrgOrderField {
+  union UpdateDomainUnion = DomainError | Domain
+
+  input UpdateOrganizationInput {
     """
-    Order affiliations by org acronym.
+    The global id of the organization to be updated.
     """
-    ORG_ACRONYM
+    id: ID!
 
     """
-    Order affiliations by org name.
+    The English acronym of the organization.
     """
-    ORG_NAME
+    acronymEN: Acronym
 
     """
-    Order affiliations by org slug.
+    The French acronym of the organization.
     """
-    ORG_SLUG
+    acronymFR: Acronym
 
     """
-    Order affiliations by org zone.
+    The English name of the organization.
     """
-    ORG_ZONE
+    nameEN: String
 
     """
-    Order affiliations by org sector.
+    The French name of the organization.
     """
-    ORG_SECTOR
+    nameFR: String
 
     """
-    Order affiliations by org country.
+    The English translation of the zone the organization belongs to.
     """
-    ORG_COUNTRY
+    zoneEN: String
 
     """
-    Order affiliations by org province.
+    The English translation of the zone the organization belongs to.
     """
-    ORG_PROVINCE
+    zoneFR: String
 
     """
-    Order affiliations by org city.
+    The English translation of the sector the organization belongs to.
     """
-    ORG_CITY
+    sectorEN: String
 
     """
-    Order affiliations by org verification.
+    The French translation of the sector the organization belongs to.
     """
-    ORG_VERIFIED
+    sectorFR: String
 
     """
-    Order affiliations by org summary mail pass count.
+    The English translation of the country the organization resides in.
     """
-    ORG_SUMMARY_MAIL_PASS
+    countryEN: String
 
     """
-    Order affiliations by org summary mail fail count.
+    The French translation of the country the organization resides in.
     """
-    ORG_SUMMARY_MAIL_FAIL
+    countryFR: String
 
     """
-    Order affiliations by org summary mail total count.
+    The English translation of the province the organization resides in.
     """
-    ORG_SUMMARY_MAIL_TOTAL
+    provinceEN: String
 
     """
-    Order affiliations by org summary web pass count.
+    The French translation of the province the organization resides in.
     """
-    ORG_SUMMARY_WEB_PASS
+    provinceFR: String
 
     """
-    Order affiliations by org summary web fail count.
+    The English translation of the city the organization resides in.
     """
-    ORG_SUMMARY_WEB_FAIL
+    cityEN: String
 
     """
-    Order affiliations by org summary web total count.
+    The French translation of the city the organization resides in.
     """
-    ORG_SUMMARY_WEB_TOTAL
-
-    """
-    Order affiliations by org domain count.
-    """
-    ORG_DOMAIN_COUNT
+    cityFR: String
+    clientMutationId: String
   }
+
+  type UpdateOrganizationPayload {
+    """
+    \`UpdateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
+    """
+    result: UpdateOrganizationUnion!
+    clientMutationId: String
+  }
+
+  """
+  This union is used with the \`UpdateOrganization\` mutation,
+  allowing for users to update an organization, and support any errors that may occur
+  """
+  union UpdateOrganizationUnion = OrganizationError | Organization
+
+  """
+  This object is used to inform the user if any errors occurred while updating their password.
+  """
+  type UpdateUserPasswordError {
+    """
+    Error code to inform user what the issue is related to.
+    """
+    code: Int
+
+    """
+    Description of the issue that was encountered.
+    """
+    description: String
+  }
+
+  input UpdateUserPasswordInput {
+    """
+    The users current password to verify it is the current user.
+    """
+    currentPassword: String!
+
+    """
+    The new password the user wishes to change to.
+    """
+    updatedPassword: String!
+
+    """
+    A password confirmation of their new password.
+    """
+    updatedPasswordConfirm: String!
+    clientMutationId: String
+  }
+
+  type UpdateUserPasswordPayload {
+    """
+    \`UpdateUserPasswordUnion\` returning either a \`UpdateUserPasswordResultType\`, or \`UpdateUserPasswordError\` object.
+    """
+    result: UpdateUserPasswordUnion
+    clientMutationId: String
+  }
+
+  """
+  This object is used to inform the user that no errors were encountered while updating their password.
+  """
+  type UpdateUserPasswordResultType {
+    """
+    Informs the user if their password was successfully updated.
+    """
+    status: String
+  }
+
+  """
+  This union is used with the \`updateUserPassword\` mutation, allowing for users to
+  update their password, and support any errors that may occur
+  """
+  union UpdateUserPasswordUnion =
+    UpdateUserPasswordError
+    | UpdateUserPasswordResultType
+
+  """
+  This object is used to inform the user if any errors occurred while updating their profile.
+  """
+  type UpdateUserProfileError {
+    """
+    Error code to inform user what the issue is related to.
+    """
+    code: Int
+
+    """
+    Description of the issue that was encountered.
+    """
+    description: String
+  }
+
+  input UpdateUserProfileInput {
+    """
+    The updated display name the user wishes to change to.
+    """
+    displayName: String
+
+    """
+    The updated user name the user wishes to change to.
+    """
+    userName: EmailAddress
+
+    """
+    The updated preferred language the user wishes to change to.
+    """
+    preferredLang: LanguageEnums
+
+    """
+    The method in which the user wishes to have their TFA code sent via.
+    """
+    tfaSendMethod: TFASendMethodEnum
+    clientMutationId: String
+  }
+
+  type UpdateUserProfilePayload {
+    """
+    \`UpdateUserProfileUnion\` returning either a \`UpdateUserProfileResult\`, or \`UpdateUserProfileError\` object.
+    """
+    result: UpdateUserProfileUnion
+    clientMutationId: String
+  }
+
+  """
+  This object is used to inform the user that no errors were encountered while resetting their password.
+  """
+  type UpdateUserProfileResult {
+    """
+    Informs the user if the password reset was successful, and to redirect to sign in page.
+    """
+    status: String
+
+    """
+    Return the newly updated user information.
+    """
+    user: PersonalUser
+  }
+
+  """
+  This union is used with the \`updateUserProfile\` mutation, allowing for users to
+  update their profile, and support any errors that may occur
+  """
+  union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
+
+  input UpdateUserRoleInput {
+    """
+    The username of the user you wish to update their role to.
+    """
+    userName: EmailAddress!
+
+    """
+    The organization that the admin, and the user both belong to.
+    """
+    orgId: ID!
+
+    """
+    The role that the admin wants to give to the selected user.
+    """
+    role: RoleEnums!
+    clientMutationId: String
+  }
+
+  type UpdateUserRolePayload {
+    """
+    \`UpdateUserRoleUnion\` returning either a \`UpdateUserRoleResult\`, or \`UpdateUserRoleError\` object.
+    """
+    result: UpdateUserRoleUnion
+    clientMutationId: String
+  }
+
+  """
+  This object is used to inform the user of the status of the role update.
+  """
+  type UpdateUserRoleResult {
+    """
+    Informs the user if the user was successfully removed.
+    """
+    status: String
+  }
+
+  """
+  This union is used with the \`UpdateUserRole\` mutation, allowing for users to
+  update a users role in an org, and support any errors that may occur
+  """
+  union UpdateUserRoleUnion = AffiliationError | UpdateUserRoleResult
 
   """
   Domain object containing information for a given domain.
@@ -3152,120 +4270,6 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): VerifiedOrganizationConnection
-  }
-
-  """
-  A connection to a list of items.
-  """
-  type VerifiedOrganizationConnection {
-    """
-    Information to aid in pagination.
-    """
-    pageInfo: PageInfo!
-
-    """
-    A list of edges.
-    """
-    edges: [VerifiedOrganizationEdge]
-
-    """
-    The total amount of verified organizations.
-    """
-    totalCount: Int
-  }
-
-  """
-  An edge in a connection.
-  """
-  type VerifiedOrganizationEdge {
-    """
-    The item at the end of the edge
-    """
-    node: VerifiedOrganization
-
-    """
-    A cursor for use in pagination
-    """
-    cursor: String!
-  }
-
-  """
-  Verified Organization object containing information for a given Organization.
-  """
-  type VerifiedOrganization implements Node {
-    """
-    The ID of an object
-    """
-    id: ID!
-
-    """
-    The organizations acronym.
-    """
-    acronym: Acronym
-
-    """
-    The full name of the organization.
-    """
-    name: String
-
-    """
-    Slugified name of the organization.
-    """
-    slug: Slug
-
-    """
-    The zone which the organization belongs to.
-    """
-    zone: String
-
-    """
-    The sector which the organization belongs to.
-    """
-    sector: String
-
-    """
-    The country in which the organization resides.
-    """
-    country: String
-
-    """
-    The province in which the organization resides.
-    """
-    province: String
-
-    """
-    The city in which the organization resides.
-    """
-    city: String
-
-    """
-    Wether the organization is a verified organization.
-    """
-    verified: Boolean
-
-    """
-    Summaries based on scan types that are preformed on the given organizations domains.
-    """
-    summaries: OrganizationSummary
-
-    """
-    The number of domains associated with this organization.
-    """
-    domainCount: Int
-
-    """
-    The domains which are associated with this organization.
-    """
-    domains(
-      """
-      Ordering options for verified domain connections.
-      """
-      orderBy: VerifiedDomainOrder
-      after: String
-      first: Int
-      before: String
-      last: Int
-    ): VerifiedDomainConnection
   }
 
   """
@@ -3359,6 +4363,120 @@ export const getTypeNames = () => gql`
   }
 
   """
+  Verified Organization object containing information for a given Organization.
+  """
+  type VerifiedOrganization implements Node {
+    """
+    The ID of an object
+    """
+    id: ID!
+
+    """
+    The organizations acronym.
+    """
+    acronym: Acronym
+
+    """
+    The full name of the organization.
+    """
+    name: String
+
+    """
+    Slugified name of the organization.
+    """
+    slug: Slug
+
+    """
+    The zone which the organization belongs to.
+    """
+    zone: String
+
+    """
+    The sector which the organization belongs to.
+    """
+    sector: String
+
+    """
+    The country in which the organization resides.
+    """
+    country: String
+
+    """
+    The province in which the organization resides.
+    """
+    province: String
+
+    """
+    The city in which the organization resides.
+    """
+    city: String
+
+    """
+    Wether the organization is a verified organization.
+    """
+    verified: Boolean
+
+    """
+    Summaries based on scan types that are preformed on the given organizations domains.
+    """
+    summaries: OrganizationSummary
+
+    """
+    The number of domains associated with this organization.
+    """
+    domainCount: Int
+
+    """
+    The domains which are associated with this organization.
+    """
+    domains(
+      """
+      Ordering options for verified domain connections.
+      """
+      orderBy: VerifiedDomainOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): VerifiedDomainConnection
+  }
+
+  """
+  A connection to a list of items.
+  """
+  type VerifiedOrganizationConnection {
+    """
+    Information to aid in pagination.
+    """
+    pageInfo: PageInfo!
+
+    """
+    A list of edges.
+    """
+    edges: [VerifiedOrganizationEdge]
+
+    """
+    The total amount of verified organizations.
+    """
+    totalCount: Int
+  }
+
+  """
+  An edge in a connection.
+  """
+  type VerifiedOrganizationEdge {
+    """
+    The item at the end of the edge
+    """
+    node: VerifiedOrganization
+
+    """
+    A cursor for use in pagination
+    """
+    cursor: String!
+  }
+
+  """
   Ordering options for verified organization connections.
   """
   input VerifiedOrganizationOrder {
@@ -3438,158 +4556,10 @@ export const getTypeNames = () => gql`
     DOMAIN_COUNT
   }
 
-  type Mutation {
-    """
-    This mutation allows admins and higher to invite users to any of their
-    organizations, if the invited user does not have an account, they will be
-    able to sign-up and be assigned to that organization in one mutation.
-    """
-    inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
-
-    """
-    This mutation allows admins or higher to remove users from any organizations they belong to.
-    """
-    removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
-
-    """
-    This mutation allows super admins, and admins of the given organization to
-    update the permission level of a given user that already belongs to the
-    given organization.
-    """
-    updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
-
-    """
-    Mutation used to create a new domain for an organization.
-    """
-    createDomain(input: CreateDomainInput!): CreateDomainPayload
-
-    """
-    This mutation allows the removal of unused domains.
-    """
-    removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
-
-    """
-    This mutation is used to step a manual scan on a requested domain.
-    """
-    requestScan(input: RequestScanInput!): RequestScanPayload
-
-    """
-    Mutation allows the modification of domains if domain is updated through out its life-cycle
-    """
-    updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
-
-    """
-    This mutation allows the creation of an organization inside the database.
-    """
-    createOrganization(
-      input: CreateOrganizationInput!
-    ): CreateOrganizationPayload
-
-    """
-    This mutation allows the removal of unused organizations.
-    """
-    removeOrganization(
-      input: RemoveOrganizationInput!
-    ): RemoveOrganizationPayload
-
-    """
-    Mutation allows the modification of organizations if any changes to the organization may occur.
-    """
-    updateOrganization(
-      input: UpdateOrganizationInput!
-    ): UpdateOrganizationPayload
-
-    """
-    Mutation allows the verification of an organization.
-    """
-    verifyOrganization(
-      input: VerifyOrganizationInput!
-    ): VerifyOrganizationPayload
-
-    """
-    This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
-    """
-    authenticate(input: AuthenticateInput!): AuthenticatePayload
-
-    """
-    This mutation allows for users to remove a phone number from their account.
-    """
-    removePhoneNumber(input: RemovePhoneNumberInput!): RemovePhoneNumberPayload
-
-    """
-    This mutation allows the user to take the token they received in their email to reset their password.
-    """
-    resetPassword(input: ResetPasswordInput!): ResetPasswordPayload
-
-    """
-    This mutation is used for re-sending a verification email if it failed during user creation.
-    """
-    sendEmailVerification(
-      input: SendEmailVerificationInput!
-    ): SendEmailVerificationPayload
-
-    """
-    This mutation allows a user to provide their username and request that a password reset email be sent to their account with a reset token in a url.
-    """
-    sendPasswordResetLink(
-      input: SendPasswordResetLinkInput!
-    ): SendPasswordResetLinkPayload
-
-    """
-    This mutation is used for setting a new phone number for a user, and sending a code for verifying the new number.
-    """
-    setPhoneNumber(input: SetPhoneNumberInput!): SetPhoneNumberPayload
-
-    """
-    This mutation allows users to give their credentials and either signed in, re-directed to the tfa auth page, or given an error.
-    """
-    signIn(input: SignInInput!): SignInPayload
-
-    """
-    This mutation allows for new users to sign up for our sites services.
-    """
-    signUp(input: SignUpInput!): SignUpPayload
-
-    """
-    This mutation allows the user to update their account password.
-    """
-    updateUserPassword(
-      input: UpdateUserPasswordInput!
-    ): UpdateUserPasswordPayload
-
-    """
-    This mutation allows the user to update their user profile to change various details of their current profile.
-    """
-    updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfilePayload
-
-    """
-    This mutation allows the user to verify their account through a token sent in an email.
-    """
-    verifyAccount(input: VerifyAccountInput!): VerifyAccountPayload
-
-    """
-    This mutation allows the user to two factor authenticate.
-    """
-    verifyPhoneNumber(input: verifyPhoneNumberInput!): verifyPhoneNumberPayload
-  }
-
-  type InviteUserToOrgPayload {
-    """
-    \`InviteUserToOrgUnion\` returning either a \`InviteUserToOrgResult\`, or \`InviteUserToOrgError\` object.
-    """
-    result: InviteUserToOrgUnion
-    clientMutationId: String
-  }
-
   """
-  This union is used with the \`InviteUserToOrg\` mutation, allowing for users to invite user to their org, and support any errors that may occur
+  This object is used to inform the user if any errors occurred while verifying their account.
   """
-  union InviteUserToOrgUnion = AffiliationError | InviteUserToOrgResult
-
-  """
-  This object is used to inform the user if any errors occurred while executing affiliation mutations.
-  """
-  type AffiliationError {
+  type VerifyAccountError {
     """
     Error code to inform user what the issue is related to.
     """
@@ -3601,485 +4571,43 @@ export const getTypeNames = () => gql`
     description: String
   }
 
-  """
-  This object is used to inform the user of the invitation status.
-  """
-  type InviteUserToOrgResult {
+  input VerifyAccountInput {
     """
-    Informs the user if the invite or invite email was successfully sent.
+    Token sent via email, and located in url.
+    """
+    verifyTokenString: String!
+    clientMutationId: String
+  }
+
+  type VerifyAccountPayload {
+    """
+    \`VerifyAccountUnion\` returning either a \`VerifyAccountResult\`, or \`VerifyAccountError\` object.
+    """
+    result: VerifyAccountUnion
+    clientMutationId: String
+  }
+
+  """
+  This object is used to inform the user that no errors were encountered while verifying their account.
+  """
+  type VerifyAccountResult {
+    """
+    Informs the user if their account was successfully verified.
     """
     status: String
   }
 
-  input InviteUserToOrgInput {
-    """
-    Users email that you would like to invite to your org.
-    """
-    userName: EmailAddress!
+  """
+  This union is used with the \`verifyAccount\` mutation, allowing for users to
+  verify their account, and support any errors that may occur
+  """
+  union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
 
+  input VerifyOrganizationInput {
     """
-    The role which you would like this user to have.
-    """
-    requestedRole: RoleEnums!
-
-    """
-    The organization you wish to invite the user to.
+    The global id of the organization to be verified.
     """
     orgId: ID!
-
-    """
-    The language in which the email will be sent in.
-    """
-    preferredLang: LanguageEnums!
-    clientMutationId: String
-  }
-
-  type RemoveUserFromOrgPayload {
-    """
-    \`RemoveUserFromOrgUnion\` returning either a \`RemoveUserFromOrgResult\`, or \`RemoveUserFromOrgError\` object.
-    """
-    result: RemoveUserFromOrgUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`RemoveUserFromOrg\` mutation, allowing for users to remove a user from their org, and support any errors that may occur
-  """
-  union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
-
-  """
-  This object is used to inform the user of the removal status.
-  """
-  type RemoveUserFromOrgResult {
-    """
-    Informs the user if the user was successfully removed.
-    """
-    status: String
-  }
-
-  input RemoveUserFromOrgInput {
-    """
-    The user id of the user to be removed.
-    """
-    userId: ID!
-
-    """
-    The organization that the user is to be removed from.
-    """
-    orgId: ID!
-    clientMutationId: String
-  }
-
-  type UpdateUserRolePayload {
-    """
-    \`UpdateUserRoleUnion\` returning either a \`UpdateUserRoleResult\`, or \`UpdateUserRoleError\` object.
-    """
-    result: UpdateUserRoleUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`UpdateUserRole\` mutation, allowing for users to update a users role in an org, and support any errors that may occur
-  """
-  union UpdateUserRoleUnion = AffiliationError | UpdateUserRoleResult
-
-  """
-  This object is used to inform the user of the status of the role update.
-  """
-  type UpdateUserRoleResult {
-    """
-    Informs the user if the user was successfully removed.
-    """
-    status: String
-  }
-
-  input UpdateUserRoleInput {
-    """
-    The username of the user you wish to update their role to.
-    """
-    userName: EmailAddress!
-
-    """
-    The organization that the admin, and the user both belong to.
-    """
-    orgId: ID!
-
-    """
-    The role that the admin wants to give to the selected user.
-    """
-    role: RoleEnums!
-    clientMutationId: String
-  }
-
-  type CreateDomainPayload {
-    """
-    \`CreateDomainUnion\` returning either a \`Domain\`, or \`CreateDomainError\` object.
-    """
-    result: CreateDomainUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`CreateDomain\` mutation,
-  allowing for users to create a domain and add it to their org,
-  and support any errors that may occur
-  """
-  union CreateDomainUnion = DomainError | Domain
-
-  """
-  This object is used to inform the user if any errors occurred while using a domain mutation.
-  """
-  type DomainError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  input CreateDomainInput {
-    """
-    The global id of the organization you wish to assign this domain to.
-    """
-    orgId: ID!
-
-    """
-    Url that you would like to be added to the database.
-    """
-    domain: DomainScalar!
-
-    """
-    DKIM selector strings corresponding to this domain.
-    """
-    selectors: [Selector]
-    clientMutationId: String
-  }
-
-  type RemoveDomainPayload {
-    """
-    \`RemoveDomainUnion\` returning either a \`DomainResultType\`, or \`DomainErrorType\` object.
-    """
-    result: RemoveDomainUnion!
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`RemoveDomain\` mutation,
-  allowing for users to remove a domain belonging to their org,
-  and support any errors that may occur
-  """
-  union RemoveDomainUnion = DomainError | DomainResult
-
-  """
-  This object is used to inform the user that no errors were encountered while removing a domain.
-  """
-  type DomainResult {
-    """
-    Informs the user if the domain removal was successful.
-    """
-    status: String
-  }
-
-  input RemoveDomainInput {
-    """
-    The global id of the domain you wish to remove.
-    """
-    domainId: ID!
-
-    """
-    The organization you wish to remove the domain from.
-    """
-    orgId: ID!
-    clientMutationId: String
-  }
-
-  type RequestScanPayload {
-    """
-    The id used to specify the channel in the various subscriptions.
-    """
-    subscriptionId: String
-
-    """
-    Informs the user if the scan was dispatched successfully.
-    """
-    status: String
-    clientMutationId: String
-  }
-
-  input RequestScanInput {
-    """
-    The domain that the scan will be ran on.
-    """
-    domain: DomainScalar
-    clientMutationId: String
-  }
-
-  type UpdateDomainPayload {
-    """
-    \`UpdateDomainUnion\` returning either a \`Domain\`, or \`DomainError\` object.
-    """
-    result: UpdateDomainUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`UpdateDomain\` mutation,
-  allowing for users to update a domain belonging to their org,
-  and support any errors that may occur
-  """
-  union UpdateDomainUnion = DomainError | Domain
-
-  input UpdateDomainInput {
-    """
-    The global id of the domain that is being updated.
-    """
-    domainId: ID!
-
-    """
-    The global ID of the organization used for permission checks.
-    """
-    orgId: ID!
-
-    """
-    The new url of the of the old domain.
-    """
-    domain: DomainScalar
-
-    """
-    The updated DKIM selector strings corresponding to this domain.
-    """
-    selectors: [Selector]
-    clientMutationId: String
-  }
-
-  type CreateOrganizationPayload {
-    """
-    \`CreateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
-    """
-    result: CreateOrganizationUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`CreateOrganization\` mutation,
-  allowing for users to create an organization, and support any errors that may occur
-  """
-  union CreateOrganizationUnion = OrganizationError | Organization
-
-  """
-  This object is used to inform the user if any errors occurred while using an organization mutation.
-  """
-  type OrganizationError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  input CreateOrganizationInput {
-    """
-    The English acronym of the organization.
-    """
-    acronymEN: Acronym!
-
-    """
-    The French acronym of the organization.
-    """
-    acronymFR: Acronym!
-
-    """
-    The English name of the organization.
-    """
-    nameEN: String!
-
-    """
-    The French name of the organization.
-    """
-    nameFR: String!
-
-    """
-    The English translation of the zone the organization belongs to.
-    """
-    zoneEN: String!
-
-    """
-    The English translation of the zone the organization belongs to.
-    """
-    zoneFR: String!
-
-    """
-    The English translation of the sector the organization belongs to.
-    """
-    sectorEN: String!
-
-    """
-    The French translation of the sector the organization belongs to.
-    """
-    sectorFR: String!
-
-    """
-    The English translation of the country the organization resides in.
-    """
-    countryEN: String!
-
-    """
-    The French translation of the country the organization resides in.
-    """
-    countryFR: String!
-
-    """
-    The English translation of the province the organization resides in.
-    """
-    provinceEN: String!
-
-    """
-    The French translation of the province the organization resides in.
-    """
-    provinceFR: String!
-
-    """
-    The English translation of the city the organization resides in.
-    """
-    cityEN: String!
-
-    """
-    The French translation of the city the organization resides in.
-    """
-    cityFR: String!
-    clientMutationId: String
-  }
-
-  type RemoveOrganizationPayload {
-    """
-    \`RemoveOrganizationUnion\` returning either an \`OrganizationResult\`, or \`OrganizationError\` object.
-    """
-    result: RemoveOrganizationUnion!
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`RemoveOrganization\` mutation,
-  allowing for users to remove an organization they belong to,
-  and support any errors that may occur
-  """
-  union RemoveOrganizationUnion = OrganizationError | OrganizationResult
-
-  """
-  This object is used to inform the user that no errors were encountered while running organization mutations.
-  """
-  type OrganizationResult {
-    """
-    Informs the user if the organization mutation was successful.
-    """
-    status: String
-  }
-
-  input RemoveOrganizationInput {
-    """
-    The global id of the organization you wish you remove.
-    """
-    orgId: ID!
-    clientMutationId: String
-  }
-
-  type UpdateOrganizationPayload {
-    """
-    \`UpdateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
-    """
-    result: UpdateOrganizationUnion!
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`UpdateOrganization\` mutation,
-  allowing for users to update an organization, and support any errors that may occur
-  """
-  union UpdateOrganizationUnion = OrganizationError | Organization
-
-  input UpdateOrganizationInput {
-    """
-    The global id of the organization to be updated.
-    """
-    id: ID!
-
-    """
-    The English acronym of the organization.
-    """
-    acronymEN: Acronym
-
-    """
-    The French acronym of the organization.
-    """
-    acronymFR: Acronym
-
-    """
-    The English name of the organization.
-    """
-    nameEN: String
-
-    """
-    The French name of the organization.
-    """
-    nameFR: String
-
-    """
-    The English translation of the zone the organization belongs to.
-    """
-    zoneEN: String
-
-    """
-    The English translation of the zone the organization belongs to.
-    """
-    zoneFR: String
-
-    """
-    The English translation of the sector the organization belongs to.
-    """
-    sectorEN: String
-
-    """
-    The French translation of the sector the organization belongs to.
-    """
-    sectorFR: String
-
-    """
-    The English translation of the country the organization resides in.
-    """
-    countryEN: String
-
-    """
-    The French translation of the country the organization resides in.
-    """
-    countryFR: String
-
-    """
-    The English translation of the province the organization resides in.
-    """
-    provinceEN: String
-
-    """
-    The French translation of the province the organization resides in.
-    """
-    provinceFR: String
-
-    """
-    The English translation of the city the organization resides in.
-    """
-    cityEN: String
-
-    """
-    The French translation of the city the organization resides in.
-    """
-    cityFR: String
     clientMutationId: String
   }
 
@@ -4098,552 +4626,6 @@ export const getTypeNames = () => gql`
   """
   union VerifyOrganizationUnion = OrganizationError | OrganizationResult
 
-  input VerifyOrganizationInput {
-    """
-    The global id of the organization to be verified.
-    """
-    orgId: ID!
-    clientMutationId: String
-  }
-
-  type AuthenticatePayload {
-    """
-    Authenticate union returning either a \`authResult\` or \`authenticateError\` object.
-    """
-    result: AuthenticateUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`authenticate\` mutation, allowing for the user to authenticate, and support any errors that may occur
-  """
-  union AuthenticateUnion = AuthResult | AuthenticateError
-
-  """
-  An object used to return information when users sign up or authenticate.
-  """
-  type AuthResult {
-    """
-    JWT used for accessing controlled content.
-    """
-    authToken: String
-
-    """
-    User that has just been created or signed in.
-    """
-    user: PersonalUser
-  }
-
-  """
-  This object is used to inform the user if any errors occurred during authentication.
-  """
-  type AuthenticateError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  input AuthenticateInput {
-    """
-    Security code found in text msg, or email inbox.
-    """
-    authenticationCode: Int!
-
-    """
-    The JWT that is retrieved from the sign in mutation.
-    """
-    authenticateToken: String!
-    clientMutationId: String
-  }
-
-  type RemovePhoneNumberPayload {
-    """
-    \`RemovePhoneNumberUnion\` returning either a \`RemovePhoneNumberResult\`, or \`RemovePhoneNumberError\` object.
-    """
-    result: RemovePhoneNumberUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to remove their phone number, and support any errors that may occur
-  """
-  union RemovePhoneNumberUnion =
-      RemovePhoneNumberError
-    | RemovePhoneNumberResult
-
-  """
-  This object is used to inform the user if any errors occurred while removing their phone number.
-  """
-  type RemovePhoneNumberError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while removing their phone number.
-  """
-  type RemovePhoneNumberResult {
-    """
-    Informs the user if the phone number removal was successful.
-    """
-    status: String
-  }
-
-  input RemovePhoneNumberInput {
-    clientMutationId: String
-  }
-
-  type ResetPasswordPayload {
-    """
-    \`ResetPasswordUnion\` returning either a \`ResetPasswordResult\`, or \`ResetPasswordError\` object.
-    """
-    result: ResetPasswordUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`ResetPassword\` mutation, allowing for users to reset their password, and support any errors that may occur
-  """
-  union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
-
-  """
-  This object is used to inform the user if any errors occurred while resetting their password.
-  """
-  type ResetPasswordError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while resetting their password.
-  """
-  type ResetPasswordResult {
-    """
-    Informs the user if the password reset was successful, and to redirect to sign in page.
-    """
-    status: String
-  }
-
-  input ResetPasswordInput {
-    """
-    The users new password.
-    """
-    password: String!
-
-    """
-    A confirmation password to confirm the new password.
-    """
-    confirmPassword: String!
-
-    """
-    The JWT found in the url, redirected from the email they received.
-    """
-    resetToken: String!
-    clientMutationId: String
-  }
-
-  type SendEmailVerificationPayload {
-    """
-    Informs the user if the email was sent successfully.
-    """
-    status: String
-    clientMutationId: String
-  }
-
-  input SendEmailVerificationInput {
-    """
-    The users email address used for sending the verification email.
-    """
-    userName: EmailAddress!
-    clientMutationId: String
-  }
-
-  type SendPasswordResetLinkPayload {
-    """
-    Informs the user if the password reset email was sent successfully.
-    """
-    status: String
-    clientMutationId: String
-  }
-
-  input SendPasswordResetLinkInput {
-    """
-    User name for the account you would like to receive a password reset link for.
-    """
-    userName: EmailAddress!
-    clientMutationId: String
-  }
-
-  type SetPhoneNumberPayload {
-    """
-    \`SetPhoneNumberUnion\` returning either a \`SetPhoneNumberResult\`, or \`SetPhoneNumberError\` object.
-    """
-    result: SetPhoneNumberUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`setPhoneNumber\` mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
-  """
-  union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
-
-  """
-  This object is used to inform the user if any errors occurred while setting a new phone number.
-  """
-  type SetPhoneNumberError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while setting a new phone number.
-  """
-  type SetPhoneNumberResult {
-    """
-    Informs the user if their phone code was successfully sent.
-    """
-    status: String
-  }
-
-  input SetPhoneNumberInput {
-    """
-    The phone number that the text message will be sent to.
-    """
-    phoneNumber: PhoneNumber!
-    clientMutationId: String
-  }
-
-  type SignInPayload {
-    """
-    \`SignInUnion\` returning either a \`regularSignInResult\`, \`tfaSignInResult\`, or \`signInError\` object.
-    """
-    result: SignInUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`SignIn\` mutation, allowing for multiple styles of logging in, and support any errors that may occur
-  """
-  union SignInUnion = AuthResult | SignInError | TFASignInResult
-
-  """
-  This object is used to inform the user if any errors occurred during sign in.
-  """
-  type SignInError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used when the user signs in and has validated either their email or phone.
-  """
-  type TFASignInResult {
-    """
-    Token used to verify during authentication.
-    """
-    authenticateToken: String
-
-    """
-    Wether the authentication code was sent through text, or email.
-    """
-    sendMethod: String
-  }
-
-  input SignInInput {
-    """
-    The email the user signed up with.
-    """
-    userName: EmailAddress!
-
-    """
-    The password the user signed up with
-    """
-    password: String!
-    clientMutationId: String
-  }
-
-  type SignUpPayload {
-    """
-    \`SignUpUnion\` returning either a \`AuthResult\`, or \`SignUpError\` object.
-    """
-    result: SignUpUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`signUp\` mutation, allowing for the user to sign up, and support any errors that may occur.
-  """
-  union SignUpUnion = AuthResult | SignUpError
-
-  """
-  This object is used to inform the user if any errors occurred during sign up.
-  """
-  type SignUpError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  input SignUpInput {
-    """
-    The name that will be displayed to other users.
-    """
-    displayName: String!
-
-    """
-    Email address that the user will use to authenticate with.
-    """
-    userName: EmailAddress!
-
-    """
-    The password the user will authenticate with.
-    """
-    password: String!
-
-    """
-    A secondary password field used to confirm the user entered the correct password.
-    """
-    confirmPassword: String!
-
-    """
-    The users preferred language.
-    """
-    preferredLang: LanguageEnums!
-
-    """
-    A token sent by email, that will assign a user to an organization with a pre-determined role.
-    """
-    signUpToken: String
-    clientMutationId: String
-  }
-
-  type UpdateUserPasswordPayload {
-    """
-    \`UpdateUserPasswordUnion\` returning either a \`UpdateUserPasswordResultType\`, or \`UpdateUserPasswordError\` object.
-    """
-    result: UpdateUserPasswordUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`updateUserPassword\` mutation, allowing for users to update their password, and support any errors that may occur
-  """
-  union UpdateUserPasswordUnion =
-      UpdateUserPasswordError
-    | UpdateUserPasswordResultType
-
-  """
-  This object is used to inform the user if any errors occurred while updating their password.
-  """
-  type UpdateUserPasswordError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while updating their password.
-  """
-  type UpdateUserPasswordResultType {
-    """
-    Informs the user if their password was successfully updated.
-    """
-    status: String
-  }
-
-  input UpdateUserPasswordInput {
-    """
-    The users current password to verify it is the current user.
-    """
-    currentPassword: String!
-
-    """
-    The new password the user wishes to change to.
-    """
-    updatedPassword: String!
-
-    """
-    A password confirmation of their new password.
-    """
-    updatedPasswordConfirm: String!
-    clientMutationId: String
-  }
-
-  type UpdateUserProfilePayload {
-    """
-    \`UpdateUserProfileUnion\` returning either a \`UpdateUserProfileResult\`, or \`UpdateUserProfileError\` object.
-    """
-    result: UpdateUserProfileUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`updateUserProfile\` mutation, allowing for users to update their profile, and support any errors that may occur
-  """
-  union UpdateUserProfileUnion =
-      UpdateUserProfileError
-    | UpdateUserProfileResult
-
-  """
-  This object is used to inform the user if any errors occurred while updating their profile.
-  """
-  type UpdateUserProfileError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while resetting their password.
-  """
-  type UpdateUserProfileResult {
-    """
-    Informs the user if the password reset was successful, and to redirect to sign in page.
-    """
-    status: String
-
-    """
-    Return the newly updated user information.
-    """
-    user: PersonalUser
-  }
-
-  input UpdateUserProfileInput {
-    """
-    The updated display name the user wishes to change to.
-    """
-    displayName: String
-
-    """
-    The updated user name the user wishes to change to.
-    """
-    userName: EmailAddress
-
-    """
-    The updated preferred language the user wishes to change to.
-    """
-    preferredLang: LanguageEnums
-
-    """
-    The method in which the user wishes to have their TFA code sent via.
-    """
-    tfaSendMethod: TFASendMethodEnum
-    clientMutationId: String
-  }
-
-  type VerifyAccountPayload {
-    """
-    \`VerifyAccountUnion\` returning either a \`VerifyAccountResult\`, or \`VerifyAccountError\` object.
-    """
-    result: VerifyAccountUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`verifyAccount\` mutation, allowing for users to verify their account, and support any errors that may occur
-  """
-  union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
-
-  """
-  This object is used to inform the user if any errors occurred while verifying their account.
-  """
-  type VerifyAccountError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while verifying their account.
-  """
-  type VerifyAccountResult {
-    """
-    Informs the user if their account was successfully verified.
-    """
-    status: String
-  }
-
-  input VerifyAccountInput {
-    """
-    Token sent via email, and located in url.
-    """
-    verifyTokenString: String!
-    clientMutationId: String
-  }
-
-  type verifyPhoneNumberPayload {
-    """
-    \`VerifyPhoneNumberUnion\` returning either a \`VerifyPhoneNumberResult\`, or \`VerifyPhoneNumberError\` object.
-    """
-    result: VerifyPhoneNumberUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to verify their phone number, and support any errors that may occur
-  """
-  union VerifyPhoneNumberUnion =
-      VerifyPhoneNumberError
-    | VerifyPhoneNumberResult
-
   """
   This object is used to inform the user if any errors occurred while verifying their phone number.
   """
@@ -4657,6 +4639,22 @@ export const getTypeNames = () => gql`
     Description of the issue that was encountered.
     """
     description: String
+  }
+
+  input verifyPhoneNumberInput {
+    """
+    The two factor code that was received via text message.
+    """
+    twoFactorCode: Int!
+    clientMutationId: String
+  }
+
+  type verifyPhoneNumberPayload {
+    """
+    \`VerifyPhoneNumberUnion\` returning either a \`VerifyPhoneNumberResult\`, or \`VerifyPhoneNumberError\` object.
+    """
+    result: VerifyPhoneNumberUnion
+    clientMutationId: String
   }
 
   """
@@ -4674,11 +4672,73 @@ export const getTypeNames = () => gql`
     user: PersonalUser
   }
 
-  input verifyPhoneNumberInput {
+  """
+  This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to
+  verify their phone number, and support any errors that may occur
+  """
+  union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
+
+  """
+  Results of HTTPS, and SSL scan on the given domain.
+  """
+  type WebScan {
     """
-    The two factor code that was received via text message.
+    The domain the scan was ran on.
     """
-    twoFactorCode: Int!
-    clientMutationId: String
+    domain: Domain
+
+    """
+    Hyper Text Transfer Protocol Secure scan results.
+    """
+    https(
+      """
+      Start date for date filter.
+      """
+      startDate: Date
+
+      """
+      End date for date filter.
+      """
+      endDate: Date
+
+      """
+      Ordering options for https connections.
+      """
+      orderBy: HTTPSOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): HTTPSConnection
+
+    """
+    Secure Socket Layer scan results.
+    """
+    ssl(
+      """
+      Start date for date filter.
+      """
+      startDate: Date
+
+      """
+      End date for date filter.
+      """
+      endDate: Date
+
+      """
+      Ordering options for ssl connections.
+      """
+      orderBy: SSLOrder
+      after: String
+      first: Int
+      before: String
+      last: Int
+    ): SSLConnection
   }
+
+  """
+  A field that conforms to a 4 digit integer.
+  """
+  scalar Year
+
 `

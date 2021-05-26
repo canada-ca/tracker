@@ -51,6 +51,7 @@ export default function Organisations() {
       field: orderField,
       direction: orderDirection,
       search: searchTerm,
+      includeSuperAdminOrg: false,
     },
     recordsPerPage: orgsPerPage,
     relayRoot: 'findMyOrganizations',

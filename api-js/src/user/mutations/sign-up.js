@@ -230,7 +230,7 @@ export const signUp = new mutationWithClientMutationId({
       'host',
     )}/validate/${token}`
 
-    await sendVerificationEmail({ returnUser, verifyUrl })
+    await sendVerificationEmail({ user: returnUser, verifyUrl })
 
     console.info(`User: ${userName} successfully created a new account.`)
 

@@ -25,7 +25,7 @@ export const findUserByUsername = {
     },
   ) => {
     // Cleanse input
-    const userName = cleanseInput(args.userName)
+    const userName = cleanseInput(args.userName).toLowerCase()
     // Get querying user
     await userRequired()
 

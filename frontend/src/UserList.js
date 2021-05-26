@@ -141,6 +141,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const [addUser, { loading: addUserLoading }] = useMutation(
     INVITE_USER_TO_ORG,
     {
+      refetchQueries: ['PaginatedOrgAffiliations'],
+      awaitRefetchQueries: true,
       context: {
         headers: {
           authorization: currentUser.jwt,
@@ -193,6 +195,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const [removeUser, { loading: removeUserLoading }] = useMutation(
     REMOVE_USER_FROM_ORG,
     {
+      refetchQueries: ['PaginatedOrgAffiliations'],
+      awaitRefetchQueries: true,
       context: { headers: { authorization: currentUser.jwt } },
       onError(error) {
         toast({

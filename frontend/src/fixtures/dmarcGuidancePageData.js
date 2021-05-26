@@ -17,6 +17,11 @@ export const rawDmarcGuidancePageData = {
             node: {
               id: 'OTg2MDQ0NjA0',
               timestamp: '2020-05-22T00:11:52Z',
+              implementation: 'Hello World',
+              enforced: 'Hello World',
+              hsts: 'Hello World',
+              hstsAge: 'Hello World',
+              preloaded: 'Hello World',
               negativeGuidanceTags: {
                 edges: [
                   {
@@ -115,6 +120,15 @@ export const rawDmarcGuidancePageData = {
             node: {
               id: 'ODQ5NDA2NzE2',
               timestamp: '2020-07-19T02:26:33Z',
+              ccsInjectionVulnerable: false,
+              heartbleedVulnerable: false,
+              supportsEcdhKeyExchange: true,
+              acceptableCiphers: ['Hello World', 'Hello World'],
+              acceptableCurves: ['Hello World', 'Hello World'],
+              strongCiphers: ['Hello World', 'Hello World'],
+              strongCurves: ['Hello World', 'Hello World'],
+              weakCiphers: ['Hello World', 'Hello World'],
+              weakCurves: ['Hello World', 'Hello World'],
               negativeGuidanceTags: {
                 edges: [],
                 __typename: 'GuidanceTagConnection',

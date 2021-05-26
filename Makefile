@@ -81,7 +81,7 @@ credentials:
 		DB_NAME=track_dmarc
 		GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		EOF
-		cat <<-'EOF' > app/creds/$(mode)/kiali.env
+		cat <<-'EOF' > platform/creds/$(mode)/kiali.env
 		username=admin
 		passphrase=admin
 		EOF

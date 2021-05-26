@@ -133,7 +133,7 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             to={`/domains/${url}`}
           >
             <Text whiteSpace="noWrap">
-              <Trans>DMARC Guidance</Trans>
+              <Trans>Guidance</Trans>
             </Text>
           </TrackerButton>
         </Stack>

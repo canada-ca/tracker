@@ -115,9 +115,10 @@ export function GuidanceTagList({
             <Trans>Positive Tags</Trans>
           </TrackerButton>
           <Collapse isOpen={showPosi}>{positiveTagList}</Collapse>
+          <Divider borderColor="gray.50" />
         </Box>
       )}
-      <Divider borderColor="gray.50" />
+
       {neutralTagList?.length && (
         <Box>
           <TrackerButton
@@ -129,9 +130,10 @@ export function GuidanceTagList({
             <Trans>Neutral Tags</Trans>
           </TrackerButton>
           <Collapse isOpen={showNeut}>{neutralTagList}</Collapse>
+          <Divider borderColor="gray.50" />
         </Box>
       )}
-      <Divider borderColor="gray.50" />
+
       {negativeTagList?.length && (
         <Box>
           <TrackerButton
