@@ -2492,3 +2492,10 @@ msgstr "Province:"
 msgid "Country:"
 msgstr "Country:"
 
+#: src/CreateOrganizationPage.js:163
+msgid "English"
+msgstr "English"
+
+#: src/CreateOrganizationPage.js:172
+msgid "French"
+msgstr "French"

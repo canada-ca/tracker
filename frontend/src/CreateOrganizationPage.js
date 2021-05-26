@@ -160,7 +160,7 @@ export default function CreateOrganizationPage() {
                   name="nameEN"
                   onChange={handleChange}
                   value={values.nameEN}
-                  placeholder={t`Name EN`}
+                  placeholder={t`English`}
                 />
               </FormControl>
               <FormControl isRequired>
@@ -169,7 +169,7 @@ export default function CreateOrganizationPage() {
                   name="nameFR"
                   onChange={handleChange}
                   value={values.nameFR}
-                  placeholder={t`Name FR`}
+                  placeholder={t`French`}
                 />
               </FormControl>
             </Stack>
@@ -178,8 +178,8 @@ export default function CreateOrganizationPage() {
               <Text fontSize="lg" fontWeight="bold">
                 <Trans>Acronym:</Trans>
               </Text>
-              <AcronymField name="acronymEN" placeholder={t`Acronym EN`} />
-              <AcronymField name="acronymFR" placeholder={t`Acronym FR`} />
+              <AcronymField name="acronymEN" placeholder={t`English`} />
+              <AcronymField name="acronymFR" placeholder={t`French`} />
             </Stack>
 
             <Stack mb="4">
@@ -192,7 +192,7 @@ export default function CreateOrganizationPage() {
                   name="zoneEN"
                   onChange={handleChange}
                   value={values.zoneEN}
-                  placeholder={t`Zone EN`}
+                  placeholder={t`English`}
                 />
               </FormControl>
               <FormControl isRequired>
@@ -201,7 +201,7 @@ export default function CreateOrganizationPage() {
                   name="zoneFR"
                   onChange={handleChange}
                   value={values.zoneFR}
-                  placeholder={t`Zone FR`}
+                  placeholder={t`French`}
                 />
               </FormControl>
             </Stack>
@@ -216,7 +216,7 @@ export default function CreateOrganizationPage() {
                   name="sectorEN"
                   onChange={handleChange}
                   value={values.sectorEN}
-                  placeholder={t`Sector EN`}
+                  placeholder={t`English`}
                 />
               </FormControl>
               <FormControl>
@@ -225,7 +225,7 @@ export default function CreateOrganizationPage() {
                   name="sectorFR"
                   onChange={handleChange}
                   value={values.sectorFR}
-                  placeholder={t`Sector FR`}
+                  placeholder={t`French`}
                 />
               </FormControl>
             </Stack>
@@ -240,7 +240,7 @@ export default function CreateOrganizationPage() {
                   name="cityEN"
                   onChange={handleChange}
                   value={values.cityEN}
-                  placeholder={t`City EN`}
+                  placeholder={t`English`}
                 />
               </FormControl>
               <FormControl>
@@ -249,7 +249,7 @@ export default function CreateOrganizationPage() {
                   name="cityFR"
                   onChange={handleChange}
                   value={values.cityFR}
-                  placeholder={t`City FR`}
+                  placeholder={t`French`}
                 />
               </FormControl>
             </Stack>
@@ -263,9 +263,8 @@ export default function CreateOrganizationPage() {
                   id="provinceEN"
                   name="provinceEN"
                   onChange={handleChange}
-                  //
                   value={values.provinceEN}
-                  placeholder={t`Province EN`}
+                  placeholder={t`English`}
                 />
               </FormControl>
               <FormControl>
@@ -274,7 +273,7 @@ export default function CreateOrganizationPage() {
                   name="provinceFR"
                   onChange={handleChange}
                   value={values.provinceFR}
-                  placeholder={t`Province FR`}
+                  placeholder={t`French`}
                 />
               </FormControl>
             </Stack>
@@ -289,7 +288,7 @@ export default function CreateOrganizationPage() {
                   name="countryEN"
                   onChange={handleChange}
                   value={values.countryEN}
-                  placeholder={t`Country EN`}
+                  placeholder={t`English`}
                 />
               </FormControl>
               <FormControl>
@@ -298,7 +297,7 @@ export default function CreateOrganizationPage() {
                   name="countryFR"
                   onChange={handleChange}
                   value={values.countryFR}
-                  placeholder={t`Country FR`}
+                  placeholder={t`French`}
                 />
               </FormControl>
             </Stack>
