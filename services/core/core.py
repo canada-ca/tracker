@@ -113,7 +113,7 @@ def update_guidance(
             if not db.has_collection("scanSummaryCriteria"):
                 db.create_collection(
                     name="scanSummaryCriteria",
-                    replication_factor=2,
+                    replication_factor=3,
                     shard_count=6,
                     write_concern=1,
                 )
@@ -160,7 +160,7 @@ def update_guidance(
             if not db.has_collection("chartSummaryCriteria"):
                 db.create_collection(
                     "chartSummaryCriteria",
-                    replication_factor=2,
+                    replication_factor=3,
                     shard_count=6,
                     write_concern=1,
                 )
@@ -203,7 +203,7 @@ def update_guidance(
             if not db.has_collection(f"{tag_type}GuidanceTags"):
                 db.create_collection(
                     f"{tag_type}GuidanceTags",
-                    replication_factor=2,
+                    replication_factor=3,
                     shard_count=6,
                     write_concern=1,
                 )
@@ -259,7 +259,7 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
     if not db.has_collection("scanSummaries"):
         db.create_collection(
             "scanSummaries",
-            replication_factor=2,
+            replication_factor=3,
             shard_count=6,
             write_concern=1,
         )
@@ -310,7 +310,7 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
     if not db.has_collection("chartSummaries"):
         db.create_collection(
             "chartSummaries",
-            replication_factor=2,
+            replication_factor=3,
             shard_count=6,
             write_concern=1,
         )
