@@ -8,7 +8,6 @@ import {
   Input,
   Text,
   FormControl,
-  FormErrorMessage,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
@@ -106,28 +105,28 @@ export default function CreateOrganizationPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{
-          nameEN: 'a',
-          nameFR: 'a',
+          nameEN: '',
+          nameFR: '',
           acronymEN: '',
           acronymFR: '',
-          zoneEN: 'a',
-          zoneFR: 'a',
-          sectorEN: 'a',
-          sectorFR: 'a',
-          cityEN: 'a',
-          cityFR: 'a',
-          provinceEN: 'a',
-          provinceFR: 'a',
-          countryEN: 'a',
-          countryFR: 'a',
+          zoneEN: '',
+          zoneFR: '',
+          sectorEN: '',
+          sectorFR: '',
+          cityEN: '',
+          cityFR: '',
+          provinceEN: '',
+          provinceFR: '',
+          countryEN: '',
+          countryFR: '',
         }}
         onSubmit={async (values) => {
           createOrganization({
             variables: {
-              acronymEN: values.acronymEN,
-              acronymFR: values.acronymFR,
               nameEN: values.nameEN,
               nameFR: values.nameFR,
+              acronymEN: values.acronymEN,
+              acronymFR: values.acronymFR,
               zoneEN: values.zoneEN,
               zoneFR: values.zoneFR,
               sectorEN: values.sectorEN,
@@ -163,7 +162,6 @@ export default function CreateOrganizationPage() {
                   value={values.nameEN}
                   placeholder={t`Name EN`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
               <FormControl isRequired>
                 <Input
@@ -173,7 +171,6 @@ export default function CreateOrganizationPage() {
                   value={values.nameFR}
                   placeholder={t`Name FR`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
             </Stack>
 
@@ -197,7 +194,6 @@ export default function CreateOrganizationPage() {
                   value={values.zoneEN}
                   placeholder={t`Zone EN`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
               <FormControl isRequired>
                 <Input
@@ -207,7 +203,6 @@ export default function CreateOrganizationPage() {
                   value={values.zoneFR}
                   placeholder={t`Zone FR`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
             </Stack>
 
@@ -223,7 +218,6 @@ export default function CreateOrganizationPage() {
                   value={values.sectorEN}
                   placeholder={t`Sector EN`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
               <FormControl>
                 <Input
@@ -233,7 +227,6 @@ export default function CreateOrganizationPage() {
                   value={values.sectorFR}
                   placeholder={t`Sector FR`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
             </Stack>
 
@@ -249,7 +242,6 @@ export default function CreateOrganizationPage() {
                   value={values.cityEN}
                   placeholder={t`City EN`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
               <FormControl>
                 <Input
@@ -259,7 +251,6 @@ export default function CreateOrganizationPage() {
                   value={values.cityFR}
                   placeholder={t`City FR`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
             </Stack>
 
@@ -276,7 +267,6 @@ export default function CreateOrganizationPage() {
                   value={values.provinceEN}
                   placeholder={t`Province EN`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
               <FormControl>
                 <Input
@@ -286,7 +276,6 @@ export default function CreateOrganizationPage() {
                   value={values.provinceFR}
                   placeholder={t`Province FR`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
             </Stack>
 
@@ -302,7 +291,6 @@ export default function CreateOrganizationPage() {
                   value={values.countryEN}
                   placeholder={t`Country EN`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
               <FormControl>
                 <Input
@@ -312,7 +300,6 @@ export default function CreateOrganizationPage() {
                   value={values.countryFR}
                   placeholder={t`Country FR`}
                 />
-                <FormErrorMessage>Error!</FormErrorMessage>
               </FormControl>
             </Stack>
 
