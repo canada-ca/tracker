@@ -634,9 +634,9 @@ export const getTypeNames = () => gql`
     Guidance for any issues that were found from the report.
     """
     guidance: String
-    @deprecated(
-      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
-    )
+      @deprecated(
+        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+      )
 
     """
     Guidance for any issues that were found from the report.
@@ -766,9 +766,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -946,9 +946,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during DMARC Scan.
@@ -1897,9 +1897,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -2139,22 +2139,30 @@ export const getTypeNames = () => gql`
     """
     This mutation allows the creation of an organization inside the database.
     """
-    createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
+    createOrganization(
+      input: CreateOrganizationInput!
+    ): CreateOrganizationPayload
 
     """
     This mutation allows the removal of unused organizations.
     """
-    removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
+    removeOrganization(
+      input: RemoveOrganizationInput!
+    ): RemoveOrganizationPayload
 
     """
     Mutation allows the modification of organizations if any changes to the organization may occur.
     """
-    updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
+    updateOrganization(
+      input: UpdateOrganizationInput!
+    ): UpdateOrganizationPayload
 
     """
     Mutation allows the verification of an organization.
     """
-    verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
+    verifyOrganization(
+      input: VerifyOrganizationInput!
+    ): VerifyOrganizationPayload
 
     """
     This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
@@ -2205,7 +2213,9 @@ export const getTypeNames = () => gql`
     """
     This mutation allows the user to update their account password.
     """
-    updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
+    updateUserPassword(
+      input: UpdateUserPasswordInput!
+    ): UpdateUserPasswordPayload
 
     """
     This mutation allows the user to update their user profile to change various details of their current profile.
@@ -3001,7 +3011,9 @@ export const getTypeNames = () => gql`
   This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to
   remove their phone number, and support any errors that may occur
   """
-  union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
+  union RemovePhoneNumberUnion =
+      RemovePhoneNumberError
+    | RemovePhoneNumberResult
 
   input RemoveUserFromOrgInput {
     """
@@ -3219,6 +3231,8 @@ export const getTypeNames = () => gql`
     Informs the user if their phone code was successfully sent.
     """
     status: String
+
+    user: PersonalUser
   }
 
   """
@@ -3409,9 +3423,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -3514,9 +3528,9 @@ export const getTypeNames = () => gql`
     Guidance for any issues that were found from the report.
     """
     guidance: String
-    @deprecated(
-      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
-    )
+      @deprecated(
+        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+      )
 
     """
     Guidance for any issues that were found from the report.
@@ -3711,9 +3725,9 @@ export const getTypeNames = () => gql`
       before: String
       last: Int
     ): GuidanceTagConnection
-    @deprecated(
-      reason: "This has been sub-divided into neutral, negative, and positive tags."
-    )
+      @deprecated(
+        reason: "This has been sub-divided into neutral, negative, and positive tags."
+      )
 
     """
     Negative guidance tags found during scan.
@@ -4121,7 +4135,7 @@ export const getTypeNames = () => gql`
   update their password, and support any errors that may occur
   """
   union UpdateUserPasswordUnion =
-    UpdateUserPasswordError
+      UpdateUserPasswordError
     | UpdateUserPasswordResultType
 
   """
@@ -4189,7 +4203,9 @@ export const getTypeNames = () => gql`
   This union is used with the \`updateUserProfile\` mutation, allowing for users to
   update their profile, and support any errors that may occur
   """
-  union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
+  union UpdateUserProfileUnion =
+      UpdateUserProfileError
+    | UpdateUserProfileResult
 
   input UpdateUserRoleInput {
     """
@@ -4645,478 +4661,6 @@ export const getTypeNames = () => gql`
     """
     The two factor code that was received via text message.
     """
-    The JWT that is retrieved from the sign in mutation.
-    """
-    authenticateToken: String!
-    clientMutationId: String
-  }
-
-  type RemovePhoneNumberPayload {
-    """
-    \`RemovePhoneNumberUnion\` returning either a \`RemovePhoneNumberResult\`, or \`RemovePhoneNumberError\` object.
-    """
-    result: RemovePhoneNumberUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to remove their phone number, and support any errors that may occur
-  """
-  union RemovePhoneNumberUnion =
-      RemovePhoneNumberError
-    | RemovePhoneNumberResult
-
-  """
-  This object is used to inform the user if any errors occurred while removing their phone number.
-  """
-  type RemovePhoneNumberError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while removing their phone number.
-  """
-  type RemovePhoneNumberResult {
-    """
-    Informs the user if the phone number removal was successful.
-    """
-    status: String
-  }
-
-  input RemovePhoneNumberInput {
-    clientMutationId: String
-  }
-
-  type ResetPasswordPayload {
-    """
-    \`ResetPasswordUnion\` returning either a \`ResetPasswordResult\`, or \`ResetPasswordError\` object.
-    """
-    result: ResetPasswordUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`ResetPassword\` mutation, allowing for users to reset their password, and support any errors that may occur
-  """
-  union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
-
-  """
-  This object is used to inform the user if any errors occurred while resetting their password.
-  """
-  type ResetPasswordError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while resetting their password.
-  """
-  type ResetPasswordResult {
-    """
-    Informs the user if the password reset was successful, and to redirect to sign in page.
-    """
-    status: String
-  }
-
-  input ResetPasswordInput {
-    """
-    The users new password.
-    """
-    password: String!
-
-    """
-    A confirmation password to confirm the new password.
-    """
-    confirmPassword: String!
-
-    """
-    The JWT found in the url, redirected from the email they received.
-    """
-    resetToken: String!
-    clientMutationId: String
-  }
-
-  type SendEmailVerificationPayload {
-    """
-    Informs the user if the email was sent successfully.
-    """
-    status: String
-    clientMutationId: String
-  }
-
-  input SendEmailVerificationInput {
-    """
-    The users email address used for sending the verification email.
-    """
-    userName: EmailAddress!
-    clientMutationId: String
-  }
-
-  type SendPasswordResetLinkPayload {
-    """
-    Informs the user if the password reset email was sent successfully.
-    """
-    status: String
-    clientMutationId: String
-  }
-
-  input SendPasswordResetLinkInput {
-    """
-    User name for the account you would like to receive a password reset link for.
-    """
-    userName: EmailAddress!
-    clientMutationId: String
-  }
-
-  type SetPhoneNumberPayload {
-    """
-    \`SetPhoneNumberUnion\` returning either a \`SetPhoneNumberResult\`, or \`SetPhoneNumberError\` object.
-    """
-    result: SetPhoneNumberUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`setPhoneNumber\` mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
-  """
-  union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
-
-  """
-  This object is used to inform the user if any errors occurred while setting a new phone number.
-  """
-  type SetPhoneNumberError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while setting a new phone number.
-  """
-  type SetPhoneNumberResult {
-    """
-    Informs the user if their phone code was successfully sent.
-    """
-    status: String
-
-    user: PersonalUser
-  }
-
-  input SetPhoneNumberInput {
-    """
-    The phone number that the text message will be sent to.
-    """
-    phoneNumber: PhoneNumber!
-    clientMutationId: String
-  }
-
-  type SignInPayload {
-    """
-    \`SignInUnion\` returning either a \`regularSignInResult\`, \`tfaSignInResult\`, or \`signInError\` object.
-    """
-    result: SignInUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`SignIn\` mutation, allowing for multiple styles of logging in, and support any errors that may occur
-  """
-  union SignInUnion = AuthResult | SignInError | TFASignInResult
-
-  """
-  This object is used to inform the user if any errors occurred during sign in.
-  """
-  type SignInError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used when the user signs in and has validated either their email or phone.
-  """
-  type TFASignInResult {
-    """
-    Token used to verify during authentication.
-    """
-    authenticateToken: String
-
-    """
-    Wether the authentication code was sent through text, or email.
-    """
-    sendMethod: String
-  }
-
-  input SignInInput {
-    """
-    The email the user signed up with.
-    """
-    userName: EmailAddress!
-
-    """
-    The password the user signed up with
-    """
-    password: String!
-    clientMutationId: String
-  }
-
-  type SignUpPayload {
-    """
-    \`SignUpUnion\` returning either a \`AuthResult\`, or \`SignUpError\` object.
-    """
-    result: SignUpUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`signUp\` mutation, allowing for the user to sign up, and support any errors that may occur.
-  """
-  union SignUpUnion = AuthResult | SignUpError
-
-  """
-  This object is used to inform the user if any errors occurred during sign up.
-  """
-  type SignUpError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  input SignUpInput {
-    """
-    The name that will be displayed to other users.
-    """
-    displayName: String!
-
-    """
-    Email address that the user will use to authenticate with.
-    """
-    userName: EmailAddress!
-
-    """
-    The password the user will authenticate with.
-    """
-    password: String!
-
-    """
-    A secondary password field used to confirm the user entered the correct password.
-    """
-    confirmPassword: String!
-
-    """
-    The users preferred language.
-    """
-    preferredLang: LanguageEnums!
-
-    """
-    A token sent by email, that will assign a user to an organization with a pre-determined role.
-    """
-    signUpToken: String
-    clientMutationId: String
-  }
-
-  type UpdateUserPasswordPayload {
-    """
-    \`UpdateUserPasswordUnion\` returning either a \`UpdateUserPasswordResultType\`, or \`UpdateUserPasswordError\` object.
-    """
-    result: UpdateUserPasswordUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`updateUserPassword\` mutation, allowing for users to update their password, and support any errors that may occur
-  """
-  union UpdateUserPasswordUnion =
-      UpdateUserPasswordError
-    | UpdateUserPasswordResultType
-
-  """
-  This object is used to inform the user if any errors occurred while updating their password.
-  """
-  type UpdateUserPasswordError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while updating their password.
-  """
-  type UpdateUserPasswordResultType {
-    """
-    Informs the user if their password was successfully updated.
-    """
-    status: String
-  }
-
-  input UpdateUserPasswordInput {
-    """
-    The users current password to verify it is the current user.
-    """
-    currentPassword: String!
-
-    """
-    The new password the user wishes to change to.
-    """
-    updatedPassword: String!
-
-    """
-    A password confirmation of their new password.
-    """
-    updatedPasswordConfirm: String!
-    clientMutationId: String
-  }
-
-  type UpdateUserProfilePayload {
-    """
-    \`UpdateUserProfileUnion\` returning either a \`UpdateUserProfileResult\`, or \`UpdateUserProfileError\` object.
-    """
-    result: UpdateUserProfileUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`updateUserProfile\` mutation, allowing for users to update their profile, and support any errors that may occur
-  """
-  union UpdateUserProfileUnion =
-      UpdateUserProfileError
-    | UpdateUserProfileResult
-
-  """
-  This object is used to inform the user if any errors occurred while updating their profile.
-  """
-  type UpdateUserProfileError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while resetting their password.
-  """
-  type UpdateUserProfileResult {
-    """
-    Informs the user if the password reset was successful, and to redirect to sign in page.
-    """
-    status: String
-
-    """
-    Return the newly updated user information.
-    """
-    user: PersonalUser
-  }
-
-  input UpdateUserProfileInput {
-    """
-    The updated display name the user wishes to change to.
-    """
-    displayName: String
-
-    """
-    The updated user name the user wishes to change to.
-    """
-    userName: EmailAddress
-
-    """
-    The updated preferred language the user wishes to change to.
-    """
-    preferredLang: LanguageEnums
-
-    """
-    The method in which the user wishes to have their TFA code sent via.
-    """
-    tfaSendMethod: TFASendMethodEnum
-    clientMutationId: String
-  }
-
-  type VerifyAccountPayload {
-    """
-    \`VerifyAccountUnion\` returning either a \`VerifyAccountResult\`, or \`VerifyAccountError\` object.
-    """
-    result: VerifyAccountUnion
-    clientMutationId: String
-  }
-
-  """
-  This union is used with the \`verifyAccount\` mutation, allowing for users to verify their account, and support any errors that may occur
-  """
-  union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
-
-  """
-  This object is used to inform the user if any errors occurred while verifying their account.
-  """
-  type VerifyAccountError {
-    """
-    Error code to inform user what the issue is related to.
-    """
-    code: Int
-
-    """
-    Description of the issue that was encountered.
-    """
-    description: String
-  }
-
-  """
-  This object is used to inform the user that no errors were encountered while verifying their account.
-  """
-  type VerifyAccountResult {
-    """
-    Informs the user if their account was successfully verified.
-    """
-    status: String
-  }
-
-  input VerifyAccountInput {
-    """
-    Token sent via email, and located in url.
-    """
-    verifyTokenString: String!
     twoFactorCode: Int!
     clientMutationId: String
   }
@@ -5148,7 +4692,9 @@ export const getTypeNames = () => gql`
   This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to
   verify their phone number, and support any errors that may occur
   """
-  union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
+  union VerifyPhoneNumberUnion =
+      VerifyPhoneNumberError
+    | VerifyPhoneNumberResult
 
   """
   Results of HTTPS, and SSL scan on the given domain.
@@ -5212,5 +4758,4 @@ export const getTypeNames = () => gql`
   A field that conforms to a 4 digit integer.
   """
   scalar Year
-
 `
