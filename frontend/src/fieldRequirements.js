@@ -45,4 +45,7 @@ export const fieldRequirements = {
       message: t`Acronyms must be at most 50 characters`,
     },
   },
+  field: {
+    required: { message: t`This field cannot be empty` },
+  },
 }

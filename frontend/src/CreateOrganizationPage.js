@@ -1,14 +1,5 @@
 import React from 'react'
-import {
-  Stack,
-  useToast,
-  Box,
-  Button,
-  Heading,
-  Input,
-  Text,
-  FormControl,
-} from '@chakra-ui/core'
+import { Stack, useToast, Box, Button, Heading } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
@@ -19,7 +10,7 @@ import { useHistory, Link as RouteLink } from 'react-router-dom'
 import { TrackerButton } from './TrackerButton'
 import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
-import AcronymField from './AcronymField'
+import CreateOrganizationField from './CreateOrganizationField'
 import { i18n } from '@lingui/core'
 
 export default function CreateOrganizationPage() {
@@ -28,6 +19,8 @@ export default function CreateOrganizationPage() {
   const history = useHistory()
 
   const validationSchema = object().shape({
+    nameEN: string().required(i18n._(fieldRequirements.field.required.message)),
+    nameFR: string().required(i18n._(fieldRequirements.field.required.message)),
     acronymEN: string()
       .matches(
         fieldRequirements.acronym.matches.regex,
@@ -36,7 +29,8 @@ export default function CreateOrganizationPage() {
       .max(
         fieldRequirements.acronym.max.maxLength,
         i18n._(fieldRequirements.acronym.max.message),
-      ),
+      )
+      .required(i18n._(fieldRequirements.field.required.message)),
     acronymFR: string()
       .matches(
         fieldRequirements.acronym.matches.regex,
@@ -45,7 +39,30 @@ export default function CreateOrganizationPage() {
       .max(
         fieldRequirements.acronym.max.maxLength,
         i18n._(fieldRequirements.acronym.max.message),
-      ),
+      )
+      .required(i18n._(fieldRequirements.field.required.message)),
+    zoneEN: string().required(i18n._(fieldRequirements.field.required.message)),
+    zoneFR: string().required(i18n._(fieldRequirements.field.required.message)),
+    sectorEN: string().required(
+      i18n._(fieldRequirements.field.required.message),
+    ),
+    sectorFR: string().required(
+      i18n._(fieldRequirements.field.required.message),
+    ),
+    cityEN: string().required(i18n._(fieldRequirements.field.required.message)),
+    cityFR: string().required(i18n._(fieldRequirements.field.required.message)),
+    provinceEN: string().required(
+      i18n._(fieldRequirements.field.required.message),
+    ),
+    provinceFR: string().required(
+      i18n._(fieldRequirements.field.required.message),
+    ),
+    countryEN: string().required(
+      i18n._(fieldRequirements.field.required.message),
+    ),
+    countryFR: string().required(
+      i18n._(fieldRequirements.field.required.message),
+    ),
   })
 
   const [createOrganization, { loading }] = useMutation(CREATE_ORGANIZATION, {
@@ -139,9 +156,10 @@ export default function CreateOrganizationPage() {
               cityFR: values.cityFR,
             },
           })
+          // window.alert(JSON.stringify(values))
         }}
       >
-        {({ handleSubmit, handleChange, values, isSubmitting }) => (
+        {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
             <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
               <Trans>
@@ -151,155 +169,94 @@ export default function CreateOrganizationPage() {
             </Heading>
 
             <Stack mb="4">
-              <Text fontSize="lg" fontWeight="bold">
-                <Trans>Name:</Trans>
-              </Text>
-              <FormControl isRequired>
-                <Input
-                  id="nameEN"
-                  name="nameEN"
-                  onChange={handleChange}
-                  value={values.nameEN}
-                  placeholder={t`English`}
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <Input
-                  id="nameFR"
-                  name="nameFR"
-                  onChange={handleChange}
-                  value={values.nameFR}
-                  placeholder={t`French`}
-                />
-              </FormControl>
+              <CreateOrganizationField
+                name="nameEN"
+                language={t`English`}
+                label={t`Name`}
+              />
+              <CreateOrganizationField
+                name="nameFR"
+                language={t`French`}
+                label={t`Name`}
+              />
             </Stack>
 
             <Stack mb="4">
-              <Text fontSize="lg" fontWeight="bold">
-                <Trans>Acronym:</Trans>
-              </Text>
-              <AcronymField name="acronymEN" placeholder={t`English`} />
-              <AcronymField name="acronymFR" placeholder={t`French`} />
+              <CreateOrganizationField
+                name="acronymEN"
+                language={t`English`}
+                label={t`Acronym`}
+              />
+              <CreateOrganizationField
+                name="acronymFR"
+                language={t`French`}
+                label={t`Acronym`}
+              />
             </Stack>
 
             <Stack mb="4">
-              <Text fontSize="lg" fontWeight="bold">
-                <Trans>Zone:</Trans>
-              </Text>
-              <FormControl isRequired>
-                <Input
-                  id="zoneEN"
-                  name="zoneEN"
-                  onChange={handleChange}
-                  value={values.zoneEN}
-                  placeholder={t`English`}
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <Input
-                  id="zoneFR"
-                  name="zoneFR"
-                  onChange={handleChange}
-                  value={values.zoneFR}
-                  placeholder={t`French`}
-                />
-              </FormControl>
+              <CreateOrganizationField
+                name="zoneEN"
+                language={t`English`}
+                label={t`Zone`}
+              />
+              <CreateOrganizationField
+                name="zoneFR"
+                language={t`French`}
+                label={t`Zone`}
+              />
             </Stack>
 
             <Stack mb="4">
-              <Text fontSize="lg" fontWeight="bold">
-                <Trans>Sector:</Trans>
-              </Text>
-              <FormControl>
-                <Input
-                  id="sectorEN"
-                  name="sectorEN"
-                  onChange={handleChange}
-                  value={values.sectorEN}
-                  placeholder={t`English`}
-                />
-              </FormControl>
-              <FormControl>
-                <Input
-                  id="sectorFR"
-                  name="sectorFR"
-                  onChange={handleChange}
-                  value={values.sectorFR}
-                  placeholder={t`French`}
-                />
-              </FormControl>
+              <CreateOrganizationField
+                name="sectorEN"
+                language={t`English`}
+                label={t`Sector`}
+              />
+              <CreateOrganizationField
+                name="sectorFR"
+                language={t`French`}
+                label={t`Sector`}
+              />
             </Stack>
 
             <Stack mb="4">
-              <Text fontSize="lg" fontWeight="bold">
-                <Trans>City:</Trans>
-              </Text>
-              <FormControl>
-                <Input
-                  id="cityEN"
-                  name="cityEN"
-                  onChange={handleChange}
-                  value={values.cityEN}
-                  placeholder={t`English`}
-                />
-              </FormControl>
-              <FormControl>
-                <Input
-                  id="cityFR"
-                  name="cityFR"
-                  onChange={handleChange}
-                  value={values.cityFR}
-                  placeholder={t`French`}
-                />
-              </FormControl>
+              <CreateOrganizationField
+                name="cityEN"
+                language={t`English`}
+                label={t`City`}
+              />
+              <CreateOrganizationField
+                name="cityFR"
+                language={t`French`}
+                label={t`City`}
+              />
             </Stack>
 
             <Stack mb="4">
-              <Text fontSize="lg" fontWeight="bold">
-                <Trans>Province:</Trans>
-              </Text>
-              <FormControl>
-                <Input
-                  id="provinceEN"
-                  name="provinceEN"
-                  onChange={handleChange}
-                  value={values.provinceEN}
-                  placeholder={t`English`}
-                />
-              </FormControl>
-              <FormControl>
-                <Input
-                  id="provinceFR"
-                  name="provinceFR"
-                  onChange={handleChange}
-                  value={values.provinceFR}
-                  placeholder={t`French`}
-                />
-              </FormControl>
+              <CreateOrganizationField
+                name="provinceEN"
+                language={t`English`}
+                label={t`Province`}
+              />
+              <CreateOrganizationField
+                name="provinceFR"
+                language={t`French`}
+                label={t`Province`}
+              />
             </Stack>
 
             <Stack mb="4">
-              <Text fontSize="lg" fontWeight="bold">
-                <Trans>Country:</Trans>
-              </Text>
-              <FormControl>
-                <Input
-                  id="countryEN"
-                  name="countryEN"
-                  onChange={handleChange}
-                  value={values.countryEN}
-                  placeholder={t`English`}
-                />
-              </FormControl>
-              <FormControl>
-                <Input
-                  id="countryFR"
-                  name="countryFR"
-                  onChange={handleChange}
-                  value={values.countryFR}
-                  placeholder={t`French`}
-                />
-              </FormControl>
+              <CreateOrganizationField
+                name="countryEN"
+                language={t`English`}
+                label={t`Country`}
+              />
+              <CreateOrganizationField
+                name="countryFR"
+                language={t`French`}
+                label={t`Country`}
+              />
             </Stack>
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">

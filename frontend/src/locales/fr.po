@@ -2482,32 +2482,32 @@ msgid "Create an organization by filling out the following info in both English 
 msgstr "Créez une organisation en remplissant les informations suivantes en anglais et en français"
 
 #: src/CreateOrganizationPage.js:164
-msgid "Name:"
-msgstr "Nom:"
+msgid "Name"
+msgstr "Nom"
 
 #: src/CreateOrganizationPage.js:192
-msgid "Acronym:"
-msgstr "Acronyme:"
+msgid "Acronym"
+msgstr "Acronyme"
 
 #: src/CreateOrganizationPage.js:222
-msgid "Zone:"
-msgstr "Zone:"
+msgid "Zone"
+msgstr "Zone"
 
 #: src/CreateOrganizationPage.js:250
-msgid "Sector:"
-msgstr "Secteur:"
+msgid "Sector"
+msgstr "Secteur"
 
 #: src/CreateOrganizationPage.js:278
-msgid "City:"
-msgstr "Ville:"
+msgid "City"
+msgstr "Ville"
 
 #: src/CreateOrganizationPage.js:306
-msgid "Province:"
-msgstr "Province:"
+msgid "Province"
+msgstr "Province"
 
 #: src/CreateOrganizationPage.js:334
-msgid "Country:"
-msgstr "Pays:"
+msgid "Country"
+msgstr "Pays"
 
 #: src/CreateOrganizationPage.js:163
 msgid "English"

@@ -1,40 +1,49 @@
 import React from 'react'
 import { elementType, func, oneOfType, shape, string } from 'prop-types'
-import { FormControl, FormErrorMessage, Input } from '@chakra-ui/core'
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+} from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 
-const AcronymField = WithPseudoBox(function AcronymField({
+const OrganizationCreateField = WithPseudoBox(function OrganizationCreateField({
   name,
-  placeholder,
+  label,
+  language,
   forwardedRef,
   ...props
 }) {
   const [field, meta] = useField(name)
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched} isRequired>
+    <FormControl isInvalid={meta.error && meta.touched}>
+      <FormLabel fontWeight="bold">
+        {label} ({language})
+      </FormLabel>
       <Input
         {...field}
         {...props}
         id={name}
         name={name}
         ref={forwardedRef}
-        placeholder={placeholder}
+        placeholder={`${label} (${language})`}
       />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
 })
 
-AcronymField.propTypes = {
+OrganizationCreateField.propTypes = {
   name: string.isRequired,
   forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {
-  return <AcronymField {...props} forwardedRef={ref} />
+  return <OrganizationCreateField {...props} forwardedRef={ref} />
 })
-withForwardedRef.displayName = 'AcronymField'
+withForwardedRef.displayName = 'OrganizationCreateField'
 
 export default withForwardedRef
