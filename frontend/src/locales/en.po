@@ -2471,6 +2471,10 @@ msgstr "Acronyms can only use upper case letters and underscores"
 msgid "Acronyms must be at most 50 characters"
 msgstr "Acronyms must be at most 50 characters"
 
+#: src/fieldRequirements.js:49
+msgid "This field cannot be empty"
+msgstr "This field cannot be empty"
+
 #: src/CreateOrganizationPage.js:72
 msgid "Organization created"
 msgstr "Organization created"

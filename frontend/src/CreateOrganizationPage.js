@@ -156,7 +156,6 @@ export default function CreateOrganizationPage() {
               cityFR: values.cityFR,
             },
           })
-          // window.alert(JSON.stringify(values))
         }}
       >
         {({ handleSubmit, isSubmitting }) => (

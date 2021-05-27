@@ -2461,6 +2461,10 @@ msgstr "Les acronymes ne peuvent utiliser que des lettres majuscules et des cara
 msgid "Acronyms must be at most 50 characters"
 msgstr "Les acronymes doivent comporter au maximum 50 caractères."
 
+#: src/fieldRequirements.js:49
+msgid "This field cannot be empty"
+msgstr "Ce champ ne peut pas être vide"
+
 #: src/CreateOrganizationPage.js:72
 msgid "Organization created"
 msgstr "Organisation créée"
