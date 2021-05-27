@@ -322,6 +322,10 @@ export const SET_PHONE_NUMBER = gql`
       result {
         ... on SetPhoneNumberResult {
           status
+          user {
+            id
+            phoneNumber
+          }
         }
         ... on SetPhoneNumberError {
           code
@@ -338,6 +342,10 @@ export const VERIFY_PHONE_NUMBER = gql`
       result {
         ... on VerifyPhoneNumberResult {
           status
+          user {
+            id
+            phoneNumber
+          }
         }
         ... on VerifyPhoneNumberError {
           code

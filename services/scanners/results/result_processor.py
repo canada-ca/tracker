@@ -64,14 +64,15 @@ def process_https(results, domain_key, db):
         # HSTS
         hsts = results.get("hsts", None)
 
-        if hsts is not None and hsts.lower() != "no hsts":
+        if hsts is not None:
             if isinstance(hsts, str):
                 hsts = hsts.lower()
 
-            if hsts == "hsts max age too short":
-                negative_tags.append("https10")
-            elif hsts == "no hsts":
-                negative_tags.append("https9")
+                if hsts == "hsts max age too short":
+                    negative_tags.append("https10")
+
+                elif hsts == "no hsts":
+                    negative_tags.append("https9")
 
             # HSTS Age
             hsts_age = results.get("hsts_age", None)
@@ -81,17 +82,21 @@ def process_https(results, domain_key, db):
                     if "https9" not in negative_tags and "https10" not in negative_tags:
                         negative_tags.append("https10")
 
-        # Preload Status
-        preload_status = results.get("preload_status", None)
+            # Preload Status
+            preload_status = results.get("preload_status", None)
 
-        if preload_status is not None:
-            if isinstance(preload_status, str):
-                preload_status = preload_status.lower()
+            if preload_status is not None:
+                if isinstance(preload_status, str):
+                    preload_status = preload_status.lower()
 
-            if preload_status == "hsts preload ready":
-                negative_tags.append("https11")
-            elif preload_status == "hsts not preloaded":
-                negative_tags.append("https12")
+                    if preload_status == "hsts preload ready":
+                        neutral_tags.append("https11")
+
+                    elif preload_status == "hsts not preloaded":
+                        neutral_tags.append("https12")
+
+        else:
+            negative_tags.append("https9")
 
         # Expired Cert
         expired_cert = results.get("expired_cert", False)

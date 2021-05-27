@@ -111,7 +111,12 @@ def update_guidance(
     for entry in guidance_data:
         if entry["file"] == "scanSummaryCriteria.json":
             if not db.has_collection("scanSummaryCriteria"):
-                db.create_collection("scanSummaryCriteria")
+                db.create_collection(
+                    name="scanSummaryCriteria",
+                    replication_factor=3,
+                    shard_count=6,
+                    write_concern=1,
+                )
             for criteria_type, criteria in entry["guidance"].items():
                 new_criteria = {
                     "_key": criteria_type,
@@ -153,7 +158,12 @@ def update_guidance(
 
         elif entry["file"] == "chartSummaryCriteria.json":
             if not db.has_collection("chartSummaryCriteria"):
-                db.create_collection("chartSummaryCriteria")
+                db.create_collection(
+                    "chartSummaryCriteria",
+                    replication_factor=3,
+                    shard_count=6,
+                    write_concern=1,
+                )
             for criteria_type, criteria in entry["guidance"].items():
                 new_criteria = {
                     "_key": criteria_type,
@@ -191,7 +201,12 @@ def update_guidance(
             file_name = entry["file"].split(".json")[0]
             tag_type = file_name.split("tags_")[1]
             if not db.has_collection(f"{tag_type}GuidanceTags"):
-                db.create_collection(f"{tag_type}GuidanceTags")
+                db.create_collection(
+                    f"{tag_type}GuidanceTags",
+                    replication_factor=3,
+                    shard_count=6,
+                    write_concern=1,
+                )
             for tag_key, tag_data in entry["guidance"].items():
                 new_tag = {
                     "_key": tag_key,
@@ -242,7 +257,12 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
     db = client.db(name, username=user, password=password)
 
     if not db.has_collection("scanSummaries"):
-        db.create_collection("scanSummaries")
+        db.create_collection(
+            "scanSummaries",
+            replication_factor=3,
+            shard_count=6,
+            write_concern=1,
+        )
 
     for scan_type in SCAN_TYPES:
         scan_pass = 0
@@ -288,7 +308,12 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
     db = client.db(name, username=user, password=password)
 
     if not db.has_collection("chartSummaries"):
-        db.create_collection("chartSummaries")
+        db.create_collection(
+            "chartSummaries",
+            replication_factor=3,
+            shard_count=6,
+            write_concern=1,
+        )
 
     for chart_type, scan_types in CHARTS.items():
         pass_count = 0
