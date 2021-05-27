@@ -240,7 +240,7 @@ describe('testing user sign up', () => {
           )}/validate/token`
 
           expect(mockNotify).toHaveBeenCalledWith({
-            returnUser: user,
+            user: user,
             verifyUrl,
           })
         })
@@ -523,7 +523,7 @@ describe('testing user sign up', () => {
           )}/validate/token`
 
           expect(mockNotify).toHaveBeenCalledWith({
-            returnUser: user,
+            user: user,
             verifyUrl,
           })
         })
@@ -1413,7 +1413,7 @@ describe('testing user sign up', () => {
           )}/validate/token`
 
           expect(mockNotify).toHaveBeenCalledWith({
-            returnUser: user,
+            user: user,
             verifyUrl,
           })
         })
@@ -1696,7 +1696,7 @@ describe('testing user sign up', () => {
           )}/validate/token`
 
           expect(mockNotify).toHaveBeenCalledWith({
-            returnUser: user,
+            user: user,
             verifyUrl,
           })
         })

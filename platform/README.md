@@ -1,6 +1,6 @@
 # Platform manifests
 
-This folder contains the Custom Resource Definitions that the Tracker app relies on, as well as "infrastructure" stuff like Istio, that really is independent from our application.
+This folder contains the Custom Resource Definitions that the Tracker app relies on, as well as other platform layer stuff like [Istio](https://istio.io/), and [Cert Manager](https://cert-manager.io) that really is independent from our application.
 
 As an example, the Tracker app uses a `Certificate` object to acquire a TLS certificate. 
 
