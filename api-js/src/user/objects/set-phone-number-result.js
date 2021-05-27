@@ -1,4 +1,5 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
+import { userPersonalType } from './user-personal'
 
 export const setPhoneNumberResultType = new GraphQLObjectType({
   name: 'SetPhoneNumberResult',
@@ -10,6 +11,11 @@ export const setPhoneNumberResultType = new GraphQLObjectType({
       description:
         'Informs the user if their phone code was successfully sent.',
       resolve: ({ status }) => status,
+    },
+    user: {
+      type: userPersonalType,
+      description: 'The user who set their phone number.',
+      resolve: ({ user }) => user,
     },
   }),
 })
