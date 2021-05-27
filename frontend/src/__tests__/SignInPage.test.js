@@ -9,6 +9,8 @@ import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
+import { ApolloProvider } from '@apollo/client'
+import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -24,19 +26,21 @@ describe('<SignInPage />', () => {
   describe('when the email field is empty', () => {
     it('displays an error message', async () => {
       const { container, getByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider>
-                  <SignInPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <MockedProvider>
+                    <SignInPage />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
 
       const email = container.querySelector('#email')
@@ -54,19 +58,21 @@ describe('<SignInPage />', () => {
   describe('when the password field is empty', () => {
     it('displays an error message', async () => {
       const { container } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider>
-                  <SignInPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <MockedProvider>
+                    <SignInPage />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
 
       const password = container.querySelector('#password')
@@ -122,19 +128,21 @@ describe('<SignInPage />', () => {
         })
 
         const { container, getByRole } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <MockedProvider mocks={mocks} addTypename={false}>
-                    <SignInPage />
-                  </MockedProvider>
-                </Router>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+          <ApolloProvider client={client}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <Router history={history}>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                      <SignInPage />
+                    </MockedProvider>
+                  </Router>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </ApolloProvider>,
         )
 
         const email = container.querySelector('#email')
@@ -203,19 +211,21 @@ describe('<SignInPage />', () => {
         })
 
         const { container, getByRole } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <MockedProvider mocks={mocks} addTypename={false}>
-                    <SignInPage />
-                  </MockedProvider>
-                </Router>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+          <ApolloProvider client={client}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <Router history={history}>
+                    <MockedProvider mocks={mocks} addTypename={false}>
+                      <SignInPage />
+                    </MockedProvider>
+                  </Router>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </ApolloProvider>,
         )
 
         const email = container.querySelector('#email')

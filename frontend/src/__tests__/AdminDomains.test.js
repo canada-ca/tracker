@@ -7,12 +7,13 @@ import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { AdminDomains } from '../AdminDomains'
 import { MockedProvider } from '@apollo/client/testing'
-import { createCache } from '../client'
+import { client, createCache } from '../client'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import {
   rawOrgDomainListData,
   rawOrgDomainListDataEmpty,
 } from '../fixtures/orgDomainListData'
+import { ApolloProvider } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -37,27 +38,29 @@ const mocks = [
 describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testuser@testemail.gc.ca',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <MockedProvider mocks={mocks} cache={createCache()}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug="test-org.slug"
-                  domainsPerPage={4}
-                />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+      <ApolloProvider client={client}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug="test-org.slug"
+                    domainsPerPage={4}
+                  />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </ApolloProvider>,
     )
 
     await waitFor(() => {
@@ -78,27 +81,29 @@ describe('<AdminDomains />', () => {
     ]
 
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testuser@testemail.gc.ca',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <MockedProvider mocks={mocks} cache={createCache()}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug={'test-org.slug'}
-                  domainsPerPage={4}
-                />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+      <ApolloProvider client={client}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </ApolloProvider>,
     )
 
     await waitFor(() => {

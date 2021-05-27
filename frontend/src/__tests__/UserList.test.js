@@ -10,8 +10,9 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
-import { createCache } from '../client'
+import { client, createCache } from '../client'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
+import { ApolloProvider } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -61,28 +62,30 @@ const mocks = [
 describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testuser@testemail.gc.ca',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <MockedProvider mocks={mocks} cache={createCache()}>
-                <UserList
-                  permission={'SUPER_ADMIN'}
-                  usersPerPage={4}
-                  orgSlug={'test-org.slug'}
-                  orgId={rawOrgUserListData.findOrganizationBySlug.id}
-                />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+      <ApolloProvider client={client}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
+                  <UserList
+                    permission={'SUPER_ADMIN'}
+                    usersPerPage={4}
+                    orgSlug={'test-org.slug'}
+                    orgId={rawOrgUserListData.findOrganizationBySlug.id}
+                  />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </ApolloProvider>,
     )
 
     await waitFor(() =>
@@ -108,28 +111,30 @@ describe('<UserList />', () => {
         getByText,
         findByLabelText,
       } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testadmin@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <Router history={history}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <UserList
-                    permission={'SUPER_ADMIN'}
-                    usersPerPage={4}
-                    orgSlug={'test-org.slug'}
-                    orgId={rawOrgUserListData.findOrganizationBySlug.id}
-                  />
-                </MockedProvider>
-              </Router>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testadmin@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <MockedProvider mocks={mocks} cache={createCache()}>
+                    <UserList
+                      permission={'SUPER_ADMIN'}
+                      usersPerPage={4}
+                      orgSlug={'test-org.slug'}
+                      orgId={rawOrgUserListData.findOrganizationBySlug.id}
+                    />
+                  </MockedProvider>
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
 
       const leftClick = { button: 0 }

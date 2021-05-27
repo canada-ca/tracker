@@ -8,6 +8,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { GENERATE_OTP_URL } from '../graphql/queries'
 import { setupI18n } from '@lingui/core'
+import { ApolloProvider } from '@apollo/client'
+import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -39,23 +41,25 @@ describe('<QRcodePage />', () => {
         },
       ]
       const { queryByText, getByRole } = render(
-        <UserStateProvider
-          initialState={{
-            userName: email,
-            jwt: null,
-            tfaSendMethod: null,
-          }}
-        >
-          <MockedProvider mocks={mocks}>
-            <MemoryRouter initialEntries={['/']}>
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <QRcodePage />
-                </I18nProvider>
-              </ThemeProvider>
-            </MemoryRouter>
-          </MockedProvider>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{
+              userName: email,
+              jwt: null,
+              tfaSendMethod: null,
+            }}
+          >
+            <MockedProvider mocks={mocks}>
+              <MemoryRouter initialEntries={['/']}>
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <QRcodePage />
+                  </I18nProvider>
+                </ThemeProvider>
+              </MemoryRouter>
+            </MockedProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
 
       await waitFor(() => {

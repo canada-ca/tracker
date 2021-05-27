@@ -7,9 +7,10 @@ import { PAGINATED_DOMAINS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { createCache } from '../client'
+import { client, createCache } from '../client'
 import { ScanDomain } from '../ScanDomain'
 import { REQUEST_SCAN } from '../graphql/mutations'
+import { ApolloProvider } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -48,19 +49,21 @@ describe('<ScanDomain />', () => {
   describe('given no domain in input', () => {
     it('returns error message', async () => {
       const { getByRole, queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <ScanDomain />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <MockedProvider mocks={mocks} cache={createCache()}>
+                    <ScanDomain />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
 
       const submit = getByRole('button')
@@ -77,19 +80,21 @@ describe('<ScanDomain />', () => {
   describe('given a domain as input', () => {
     it('submits a domain for scan', async () => {
       const { container, getByRole, queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <ScanDomain />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <MockedProvider mocks={mocks} cache={createCache()}>
+                    <ScanDomain />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
 
       const domain = container.querySelector('#domain')

@@ -7,8 +7,9 @@ import { PAGINATED_DOMAINS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { createCache } from '../client'
+import { client, createCache } from '../client'
 import DomainsPage from '../DomainsPage'
+import { ApolloProvider } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -143,19 +144,21 @@ describe('<DomainsPage />', () => {
   describe('given a list of domains', () => {
     it('displays a list of domains', async () => {
       const { queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <DomainsPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <MockedProvider mocks={mocks} cache={createCache()}>
+                    <DomainsPage />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
 
       await waitFor(() =>
