@@ -8,6 +8,7 @@ import { ApolloProvider } from '@apollo/client'
 describe('useUserState()', () => {
   it('provides the UserState context via a Hook', async () => {
     let userState
+
     function Foo() {
       const state = useUserState()
       userState = state
