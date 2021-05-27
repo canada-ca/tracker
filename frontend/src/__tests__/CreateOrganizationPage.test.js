@@ -88,40 +88,41 @@ describe('<CreateOrganizationPage />', () => {
 
       await waitFor(() => expect(getByText(errorMessage)).toBeInTheDocument())
     })
-  })
 
-  it('displays an error message when input is too large', async () => {
-    const { container, getByText } = render(
-      <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider mocks={mocks}>
-                <CreateOrganizationPage />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
-    )
+    it('displays an error message when input is too large', async () => {
+      const { container, getByText } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <MockedProvider mocks={mocks}>
+                  <CreateOrganizationPage />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
 
-    const acronymEN = container.querySelector('#acronymEN')
-    const errorMessage = /Acronyms must be at most 50 characters/i
+      const acronymEN = container.querySelector('#acronymEN')
+      const errorMessage = /Acronyms must be at most 50 characters/i
 
-    await waitFor(() => {
-      fireEvent.change(acronymEN, {
-        target: {
-          value: 'THIS_ACRONYM_IS_OVER_FIFTY_CHARACTERS_WHICH_MAKES_IT_INVALID',
-        },
+      await waitFor(() => {
+        fireEvent.change(acronymEN, {
+          target: {
+            value:
+              'THIS_ACRONYM_IS_OVER_FIFTY_CHARACTERS_WHICH_MAKES_IT_INVALID',
+          },
+        })
       })
-    })
 
-    await waitFor(() => {
-      fireEvent.blur(acronymEN)
-    })
+      await waitFor(() => {
+        fireEvent.blur(acronymEN)
+      })
 
-    await waitFor(() => expect(getByText(errorMessage)).toBeInTheDocument())
+      await waitFor(() => expect(getByText(errorMessage)).toBeInTheDocument())
+    })
   })
 })
