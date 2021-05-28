@@ -21,6 +21,7 @@ resources:
 - knative/config/autoscan.yaml
 - knative/config/core.yaml
 - knative/config/dmarc-report.yaml
+- knative/config/redis.yaml
 - tracker-api-deployment.yaml
 - tracker-api-service.yaml
 - tracker-api-virtual-service.yaml
