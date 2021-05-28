@@ -54,7 +54,7 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
         <Box
           flexShrink="0"
           textAlign="left"
-          mr={{ base: 0, md: '' }}
+          mr={{ base: 0, md: '4' }}
           flexGrow="1"
         >
           {lastRan ? (
