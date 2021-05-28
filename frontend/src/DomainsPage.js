@@ -93,7 +93,7 @@ export default function DomainsPage() {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4" textAlign={['center', 'left']}>
+      <Heading as="h1" mb="4" textAlign={{ base: 'center', md: 'left' }}>
         <Trans>Domains</Trans>
       </Heading>
 
@@ -109,7 +109,11 @@ export default function DomainsPage() {
 
         <TabPanels>
           <TabPanel>
-            <Text fontSize="2xl" mb="2" textAlign={['center', 'left']}>
+            <Text
+              fontSize="2xl"
+              mb="2"
+              textAlign={{ base: 'center', md: 'left' }}
+            >
               <Trans>Search for any Government of Canada tracked domain:</Trans>
             </Text>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
