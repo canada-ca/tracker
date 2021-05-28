@@ -271,13 +271,57 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     ),
   })
 
-  if (loading)
-    return (
-      <LoadingMessage>
-        <Trans>Domain List</Trans>
-      </LoadingMessage>
-    )
   if (error) return <ErrorFallbackMessage error={error} />
+
+  const adminDomainList = loading ? (
+    <LoadingMessage>
+      <Trans>Domain List</Trans>
+    </LoadingMessage>
+  ) : (
+    <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => (
+          <Text fontSize="lg" fontWeight="bold">
+            <Trans>No Domains</Trans>
+          </Text>
+        )}
+      >
+        {({ id: domainId, domain, lastRan }, index) => (
+          <Box key={'admindomain' + index}>
+            <Stack isInline align="center">
+              <Stack>
+                <TrackerButton
+                  variant="primary"
+                  px="2"
+                  onClick={() => {
+                    setEditingDomainUrl(domain)
+                    setEditingDomainId(domainId)
+                    updateOnOpen()
+                  }}
+                >
+                  <Icon name="edit" />
+                </TrackerButton>
+                <TrackerButton
+                  onClick={() => {
+                    setSelectedRemoveDomainUrl(domain)
+                    setSelectedRemoveDomainId(domainId)
+                    removeOnOpen()
+                  }}
+                  variant="danger"
+                  px="2"
+                >
+                  <Icon name="minus" />
+                </TrackerButton>
+              </Stack>
+              <Domain url={domain} lastRan={lastRan} />
+            </Stack>
+            <Divider borderColor="gray.900" />
+          </Box>
+        )}
+      </ListOf>
+    </Stack>
+  )
 
   return (
     <Stack mb="6" w="100%">
@@ -320,49 +364,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </Stack>
       </form>
 
-      <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
-        <ListOf
-          elements={nodes}
-          ifEmpty={() => (
-            <Text fontSize="lg" fontWeight="bold">
-              <Trans>No Domains</Trans>
-            </Text>
-          )}
-        >
-          {({ id: domainId, domain, lastRan }, index) => (
-            <Box key={'admindomain' + index}>
-              <Stack isInline align="center">
-                <Stack>
-                  <TrackerButton
-                    variant="primary"
-                    px="2"
-                    onClick={() => {
-                      setEditingDomainUrl(domain)
-                      setEditingDomainId(domainId)
-                      updateOnOpen()
-                    }}
-                  >
-                    <Icon name="edit" />
-                  </TrackerButton>
-                  <TrackerButton
-                    onClick={() => {
-                      setSelectedRemoveDomainUrl(domain)
-                      setSelectedRemoveDomainId(domainId)
-                      removeOnOpen()
-                    }}
-                    variant="danger"
-                    px="2"
-                  >
-                    <Icon name="minus" />
-                  </TrackerButton>
-                </Stack>
-                <Domain url={domain} lastRan={lastRan} />
-              </Stack>
-              <Divider borderColor="gray.900" />
-            </Box>
-          )}
-        </ListOf>
-      </Stack>
+      {adminDomainList}
+
       <RelayPaginationControls
         onlyPagination={true}
         hasNextPage={hasNextPage}
