@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import {
@@ -44,6 +44,7 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
+import { useDebounce } from './useDebounce'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [editingDomainUrl, setEditingDomainUrl] = useState()
@@ -63,6 +64,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
+  const [dbSearchTerm, setDbSearchTerm] = useState('')
 
   const domainForm = useFormik({
     initialValues: {
@@ -97,9 +99,15 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     fetchForward: FORWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
-    variables: { orgSlug },
+    variables: { orgSlug, search: dbSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
   })
+
+  const memoizedSearchTerm = useMemo(() => {
+    return [domainForm.values.domain]
+  }, [domainForm.values.domain])
+
+  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
