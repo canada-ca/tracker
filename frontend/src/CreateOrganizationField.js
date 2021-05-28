@@ -20,7 +20,7 @@ const OrganizationCreateField = WithPseudoBox(function OrganizationCreateField({
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel fontWeight="bold">
+      <FormLabel htmlFor={name} fontWeight="bold">
         {label} ({language})
       </FormLabel>
       <Input
