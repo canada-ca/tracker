@@ -766,7 +766,7 @@ msgid "Unable to remove user from unknown organization."
 msgstr "todo"
 
 #: src/domain/mutations/request-scan.js:61
-msgid "Unable to request a on time scan on an unknown domain."
+msgid "Unable to request a one time scan on an unknown domain."
 msgstr "todo"
 
 #: src/user/mutations/reset-password.js:93

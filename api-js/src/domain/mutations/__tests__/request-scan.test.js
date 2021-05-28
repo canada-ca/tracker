@@ -528,7 +528,7 @@ describe('requesting a one time scan', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to request a on time scan on an unknown domain.',
+              'Unable to request a one time scan on an unknown domain.',
             ),
           ]
 

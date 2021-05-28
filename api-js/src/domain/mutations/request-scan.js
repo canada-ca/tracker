@@ -58,7 +58,7 @@ export const requestScan = new mutationWithClientMutationId({
         `User: ${userKey} attempted to step a one time scan on: ${requestedDomain} however domain cannot be found.`,
       )
       throw new Error(
-        i18n._(t`Unable to request a on time scan on an unknown domain.`),
+        i18n._(t`Unable to request a one time scan on an unknown domain.`),
       )
     }
 

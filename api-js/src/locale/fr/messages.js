@@ -216,7 +216,7 @@
     'Unable to remove user from organization. Please try again.': 'todo',
     'Unable to remove user from this organization. Please try again.': 'todo',
     'Unable to remove user from unknown organization.': 'todo',
-    'Unable to request a on time scan on an unknown domain.': 'todo',
+    'Unable to request a one time scan on an unknown domain.': 'todo',
     'Unable to reset password. Please request a new email.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
     'Unable to retrieve DMARC report information for: {domain}': 'todo',
