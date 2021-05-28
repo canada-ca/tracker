@@ -87,6 +87,8 @@ credentials:
 		DB_USER=root
 		DB_NAME=track_dmarc
 		GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		REDIS_HOST=10.108.20.222
+		REDIS_PORT=6379
 		EOF
 		cat <<-'EOF' > platform/creds/$(mode)/kiali.env
 		username=admin
@@ -143,6 +145,13 @@ credentials:
 		NOTIFICATION_TWO_FACTOR_CODE_FR=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_VERIFICATION_EMAIL_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_VERIFICATION_EMAIL_FR=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+		REDIS_PORT_NUMBER=6379
+		REDIS_DOMAIN_NAME=10.108.20.222
+		DKIM_SCAN_CHANNEL=scan/dkim
+		DMARC_SCAN_CHANNEL=scan/dmarc
+		HTTPS_SCAN_CHANNEL=scan/https
+		SPF_SCAN_CHANNEL=scan/spf
+		SSL_SCAN_CHANNEL=scan/ssl
 		TRACING_ENABLED=true
 		EOF
 		cat <<-'EOF' > app/creds/$(mode)/superadmin.env
