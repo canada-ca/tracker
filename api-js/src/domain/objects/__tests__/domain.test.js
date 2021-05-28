@@ -1,4 +1,10 @@
-import { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString } from 'graphql'
+import {
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLList,
+  GraphQLString,
+  GraphQLBoolean,
+} from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
@@ -32,6 +38,12 @@ describe('given the domain object', () => {
 
       expect(demoType).toHaveProperty('dmarcPhase')
       expect(demoType.dmarcPhase.type).toMatchObject(GraphQLString)
+    })
+    it('has a hasDMARCReport field', () => {
+      const demoType = domainType.getFields()
+
+      expect(demoType).toHaveProperty('hasDMARCReport')
+      expect(demoType.hasDMARCReport.type).toMatchObject(GraphQLBoolean)
     })
     it('has a lastRan field', () => {
       const demoType = domainType.getFields()
@@ -122,6 +134,50 @@ describe('given the domain object', () => {
         expect(
           demoType.dmarcPhase.resolve({ phase: 'not implemented' }),
         ).toEqual('not implemented')
+      })
+    })
+    describe('testing the hasDMARCReport resolver', () => {
+      describe('user has access to dmarc reports', () => {
+        it('returns true', async () => {
+          const demoType = domainType.getFields()
+
+          const mockedUserRequired = jest.fn().mockReturnValue(true)
+          const mockedCheckOwnership = jest.fn().mockReturnValue(true)
+
+          await expect(
+            demoType.hasDMARCReport.resolve(
+              { _id: 1 },
+              {},
+              {
+                auth: {
+                  checkDomainOwnership: mockedCheckOwnership,
+                  userRequired: mockedUserRequired,
+                },
+              },
+            ),
+          ).resolves.toEqual(true)
+        })
+      })
+      describe('user does not have access to dmarc reports', () => {
+        it('returns false', async () => {
+          const demoType = domainType.getFields()
+
+          const mockedUserRequired = jest.fn().mockReturnValue(true)
+          const mockedCheckOwnership = jest.fn().mockReturnValue(false)
+
+          await expect(
+            demoType.hasDMARCReport.resolve(
+              { _id: 1 },
+              {},
+              {
+                auth: {
+                  checkDomainOwnership: mockedCheckOwnership,
+                  userRequired: mockedUserRequired,
+                },
+              },
+            ),
+          ).resolves.toEqual(false)
+        })
       })
     })
     describe('testing the lastRan resolver', () => {
