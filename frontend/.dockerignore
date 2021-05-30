@@ -6,8 +6,10 @@ Dockerfile.dev
 envoy-dev.yaml
 LICENCE
 __mocks__
+mocking
 node_modules
 README.md
 schema.faker.graphql
 .eslintrc
 .prettierrc
+.dockerignore
