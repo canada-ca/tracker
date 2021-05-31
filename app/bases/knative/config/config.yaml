@@ -45,47 +45,52 @@ spec:
       timeoutSeconds: 600
       containerConcurrency: 1
       containers:
-        - name: result-processor
-          image: gcr.io/track-compliance/scanners/results:master-bd31de0 # {"$imagepolicy": "flux-system:result-processor"}
-          env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "8529"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
-            - name: REDIS_HOST
-              value: "redis-service.scanners"
-            - name: REDIS_PORT
-              value: "6379"
-            - name: REPO_NAME
-              value: "ITSP.40.062"
-            - name: REPO_OWNER
-              value: "CybercentreCanada"
-            - name: GUIDANCE_DIR
-              value: "transport-layer-security"
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: GITHUB_TOKEN
-
+      - name: result-processor
+        image: gcr.io/track-compliance/services/scanners/results:master-3959056-1622211059 # {"$imagepolicy": "flux-system:result-processor"}
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_PASS
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_HOST
+        - name: DB_PORT
+          value: "8529"
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_NAME
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_PORT
+        - name: REPO_NAME
+          value: "ITSP.40.062"
+        - name: REPO_OWNER
+          value: "CybercentreCanada"
+        - name: GUIDANCE_DIR
+          value: "transport-layer-security"
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: GITHUB_TOKEN
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
