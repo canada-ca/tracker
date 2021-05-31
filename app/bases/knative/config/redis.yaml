@@ -4,7 +4,7 @@ metadata:
   name: redis
   namespace: scanners
   labels:
-    app: subscription-redis
+    app: scanners
 spec:
   containers:
     - name: web
@@ -22,7 +22,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: subscription-redis
+    app: scanners
   ports:
     - protocol: TCP
       port: 6379
