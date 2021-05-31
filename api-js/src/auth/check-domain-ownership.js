@@ -1,67 +1,92 @@
 import { t } from '@lingui/macro'
 
-export const checkDomainOwnership = ({ i18n, query, userKey }) => async ({
-  domainId,
-}) => {
-  let userAffiliatedOwnership, ownership
-  const userKeyString = `users/${userKey}`
+export const checkDomainOwnership =
+  ({ i18n, query, userKey }) =>
+  async ({ domainId }) => {
+    let userAffiliatedOwnership, ownership
+    const userKeyString = `users/${userKey}`
 
-  // Check to see if the user is a super admin
-  let superAdminAffiliationCursor
-  try {
-    superAdminAffiliationCursor = await query`
+    // Check to see if the user is a super admin
+    let superAdminAffiliationCursor
+    try {
+      superAdminAffiliationCursor = await query`
       WITH affiliations, organizations, users
-      FOR v, e IN 1..1 ANY ${userKeyString} affiliations 
-        FILTER e.permission == 'super_admin' 
-        RETURN e.from
+      LET domainOwnerships = (FOR v, e IN 1..1 ANY ${domainId} ownership RETURN e._from)
+      LET superAdmin = (
+        FOR v, e IN 1..1 ANY ${userKeyString} affiliations 
+          FILTER e.permission == "super_admin"
+          RETURN e.from
+      )
+      RETURN {
+        domainOwnership: (LENGTH(domainOwnerships) > 0 ? true : false),
+        superAdmin: (LENGTH(superAdmin) > 0 ? true : false)
+      }
     `
-  } catch (err) {
-    console.error(
-      `Database error when retrieving super admin affiliated organization ownership for user: ${userKeyString} and domain: ${domainId}: ${err}`,
-    )
-    throw new Error(
-      i18n._(
-        t`Error when retrieving dmarc report information. Please try again.`,
-      ),
-    )
-  }
+    } catch (err) {
+      console.error(
+        `Database error when retrieving super admin affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
+      )
+      throw new Error(
+        i18n._(
+          t`Error when retrieving dmarc report information. Please try again.`,
+        ),
+      )
+    }
 
-  if (superAdminAffiliationCursor.count > 0) {
-    return true
-  }
+    let superAdminAffiliation
+    try {
+      superAdminAffiliation = await superAdminAffiliationCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error when retrieving super admin affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
+      )
+      throw new Error(
+        i18n._(
+          t`Error when retrieving dmarc report information. Please try again.`,
+        ),
+      )
+    }
 
-  // Get user affiliations and affiliated orgs owning provided domain
-  try {
-    userAffiliatedOwnership = await query`
+    if (superAdminAffiliation.superAdmin) {
+      if (superAdminAffiliation.domainOwnership) {
+        return true
+      } else {
+        return false
+      }
+    }
+
+    // Get user affiliations and affiliated orgs owning provided domain
+    try {
+      userAffiliatedOwnership = await query`
       WITH affiliations, domains, organizations, ownership, users
       LET userAffiliations = (FOR v, e IN 1..1 ANY ${userKeyString} affiliations RETURN e._from)
       LET domainOwnerships = (FOR v, e IN 1..1 ANY ${domainId} ownership RETURN e._from)
       LET affiliatedOwnership = INTERSECTION(userAffiliations, domainOwnerships)
         RETURN affiliatedOwnership
     `
-  } catch (err) {
-    console.error(
-      `Database error when retrieving affiliated organization ownership for user: ${userKeyString} and domain: ${domainId}: ${err}`,
-    )
-    throw new Error(
-      i18n._(
-        t`Error when retrieving dmarc report information. Please try again.`,
-      ),
-    )
-  }
+    } catch (err) {
+      console.error(
+        `Database error when retrieving affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
+      )
+      throw new Error(
+        i18n._(
+          t`Error when retrieving dmarc report information. Please try again.`,
+        ),
+      )
+    }
 
-  try {
-    ownership = await userAffiliatedOwnership.next()
-  } catch (err) {
-    console.error(
-      `Cursor error when retrieving affiliated organization ownership for user: ${userKeyString} and domain: ${domainId}: ${err}`,
-    )
-    throw new Error(
-      i18n._(
-        t`Error when retrieving dmarc report information. Please try again.`,
-      ),
-    )
-  }
+    try {
+      ownership = await userAffiliatedOwnership.next()
+    } catch (err) {
+      console.error(
+        `Cursor error when retrieving affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
+      )
+      throw new Error(
+        i18n._(
+          t`Error when retrieving dmarc report information. Please try again.`,
+        ),
+      )
+    }
 
-  return ownership[0] !== undefined
-}
+    return ownership[0] !== undefined
+  }
