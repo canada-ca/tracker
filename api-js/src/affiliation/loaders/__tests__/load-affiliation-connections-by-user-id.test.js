@@ -336,6 +336,245 @@ describe('given the load affiliations by user id function', () => {
           expect(affiliations).toEqual(expectedStructure)
         })
       })
+      describe('using the search field', () => {
+        beforeEach(async () => {
+          // This is used to sync the view before running the test below
+          await query`
+            FOR org IN organizationSearch
+              SEARCH org.orgDetails.en.acronym == "TBS"
+              OPTIONS { waitForSync: true }
+              RETURN org
+          `
+        })
+        describe('using english', () => {
+          describe('using the orgs acronym', () => {
+            it('returns the filtered affiliations', async () => {
+              const affiliationLoader = loadAffiliationConnectionsByUserId({
+                query,
+                language: 'en',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const expectedAffiliations = await loadAffiliationByKey({
+                query,
+              }).loadMany([affOne._key, affTwo._key])
+
+              expectedAffiliations[0].id = expectedAffiliations[0]._key
+              expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+              const connectionArgs = {
+                first: 1,
+                userId: user._id,
+                search: 'TBS',
+              }
+              const affiliations = await affiliationLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'affiliations',
+                      expectedAffiliations[0]._key,
+                    ),
+                    node: {
+                      ...expectedAffiliations[0],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                },
+              }
+
+              expect(affiliations).toEqual(expectedStructure)
+            })
+          })
+          describe('using the orgs name', () => {
+            it('returns the filtered affiliations', async () => {
+              const affiliationLoader = loadAffiliationConnectionsByUserId({
+                query,
+                language: 'en',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const expectedAffiliations = await loadAffiliationByKey({
+                query,
+              }).loadMany([affOne._key, affTwo._key])
+
+              expectedAffiliations[0].id = expectedAffiliations[0]._key
+              expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+              const connectionArgs = {
+                first: 1,
+                userId: user._id,
+                search: 'Treasury Board of Canada Secretariat',
+              }
+              const affiliations = await affiliationLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'affiliations',
+                      expectedAffiliations[0]._key,
+                    ),
+                    node: {
+                      ...expectedAffiliations[0],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                },
+              }
+
+              expect(affiliations).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('using french', () => {
+          describe('using the orgs acronym', () => {
+            it('returns the filtered affiliations', async () => {
+              const affiliationLoader = loadAffiliationConnectionsByUserId({
+                query,
+                language: 'fr',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const expectedAffiliations = await loadAffiliationByKey({
+                query,
+              }).loadMany([affOne._key, affTwo._key])
+
+              expectedAffiliations[0].id = expectedAffiliations[0]._key
+              expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+              const connectionArgs = {
+                first: 1,
+                userId: user._id,
+                search: 'SCT',
+              }
+              const affiliations = await affiliationLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'affiliations',
+                      expectedAffiliations[0]._key,
+                    ),
+                    node: {
+                      ...expectedAffiliations[0],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                },
+              }
+
+              expect(affiliations).toEqual(expectedStructure)
+            })
+          })
+          describe('using the orgs name', () => {
+            it('returns the filtered affiliations', async () => {
+              const affiliationLoader = loadAffiliationConnectionsByUserId({
+                query,
+                language: 'fr',
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+              })
+
+              const expectedAffiliations = await loadAffiliationByKey({
+                query,
+              }).loadMany([affOne._key, affTwo._key])
+
+              expectedAffiliations[0].id = expectedAffiliations[0]._key
+              expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+              const connectionArgs = {
+                first: 1,
+                userId: user._id,
+                search: 'Secrétariat du Conseil Trésor du Canada',
+              }
+              const affiliations = await affiliationLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'affiliations',
+                      expectedAffiliations[0]._key,
+                    ),
+                    node: {
+                      ...expectedAffiliations[0],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                },
+              }
+
+              expect(affiliations).toEqual(expectedStructure)
+            })
+          })
+        })
+      })
       describe('using orderBy field', () => {
         let affOne,
           affTwo,
