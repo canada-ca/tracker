@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
@@ -30,13 +30,21 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
+import { useDebounce } from './useDebounce'
 
 export default function DomainsPage() {
   const { currentUser } = useUserState()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
+  const [dbSearchTerm, setDbSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+
+  const memoizedSearchTerm = useMemo(() => {
+    return [searchTerm]
+  }, [searchTerm])
+
+  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
 
@@ -57,7 +65,7 @@ export default function DomainsPage() {
     relayRoot: 'findMyDomains',
     variables: {
       orderBy: { field: orderField, direction: orderDirection },
-      search: searchTerm,
+      search: dbSearchTerm,
     },
   })
 
