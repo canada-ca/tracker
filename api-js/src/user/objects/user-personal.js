@@ -63,6 +63,10 @@ export const userPersonalType = new GraphQLObjectType({
           type: affiliationOrgOrder,
           description: 'Ordering options for affiliation connections.',
         },
+        search: {
+          type: GraphQLString,
+          description: 'String used to search for affiliated organizations.',
+        },
         ...connectionArgs,
       },
       resolve: async (

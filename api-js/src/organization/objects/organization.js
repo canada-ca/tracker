@@ -114,6 +114,10 @@ export const organizationType = new GraphQLObjectType({
           type: affiliationUserOrder,
           description: 'Ordering options for affiliation connections.',
         },
+        search: {
+          type: GraphQLString,
+          description: 'String used to search for affiliated users.',
+        },
         ...connectionArgs,
       },
       resolve: async (
