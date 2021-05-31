@@ -67,6 +67,7 @@ export default function DmarcByDomainPage() {
     },
     relayRoot: 'findMyDmarcSummaries',
     fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   const memoizedSearchTerm = useMemo(() => {

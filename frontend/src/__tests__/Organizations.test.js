@@ -286,7 +286,7 @@ describe('<Organisations />', () => {
                 <Router history={history}>
                   <Switch>
                     <Route
-                      path='/organizations'
+                      path="/organizations"
                       render={() => <Organizations />}
                     />
                   </Switch>
@@ -417,7 +417,7 @@ describe('<Organisations />', () => {
                   <Router history={history}>
                     <Switch>
                       <Route
-                        path='/organizations'
+                        path="/organizations"
                         render={() => <Organizations />}
                       />
                     </Switch>
@@ -496,8 +496,13 @@ describe('<Organisations />', () => {
           {
             request: {
               query: PAGINATED_ORGANIZATIONS,
-              variables: { first: 10, search: '' },
-              includeSuperAdminOrg: false,
+              variables: {
+                first: 10,
+                field: 'NAME',
+                direction: 'ASC',
+                search: '',
+                includeSuperAdminOrg: false,
+              },
             },
             result: {
               data: {
@@ -633,7 +638,7 @@ describe('<Organisations />', () => {
                   <Router history={history}>
                     <Switch>
                       <Route
-                        path='/organizations'
+                        path="/organizations"
                         render={() => <Organizations />}
                       />
                     </Switch>

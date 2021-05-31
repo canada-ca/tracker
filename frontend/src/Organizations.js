@@ -62,6 +62,7 @@ export default function Organisations() {
       includeSuperAdminOrg: false,
     },
     fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
     recordsPerPage: orgsPerPage,
     relayRoot: 'findMyOrganizations',
   })

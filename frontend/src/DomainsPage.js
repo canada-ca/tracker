@@ -68,6 +68,7 @@ export default function DomainsPage() {
       search: dbSearchTerm,
     },
     fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />

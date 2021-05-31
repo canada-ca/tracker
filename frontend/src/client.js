@@ -9,24 +9,14 @@ export function createCache() {
     typePolicies: {
       Query: {
         fields: {
-          findMyDomains: relayStylePagination(['first', 'orderBy', 'search']),
-          findMyDmarcSummaries: relayStylePagination([
-            'first',
-            'orderBy',
-            'search',
-            'month',
-            'year',
-          ]),
-          findMyOrganizations: relayStylePagination([
-            'first',
-            'orderBy',
-            'search',
-          ]),
+          findMyDomains: relayStylePagination(),
+          findMyDmarcSummaries: relayStylePagination(),
+          findMyOrganizations: relayStylePagination(),
         },
       },
       Organization: {
         fields: {
-          domains: relayStylePagination(['first', 'search']),
+          domains: relayStylePagination(),
           affiliations: relayStylePagination(),
         },
       },
