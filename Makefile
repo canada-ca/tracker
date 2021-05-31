@@ -76,7 +76,7 @@ scans:
 credentials:
 		@cat <<-'EOF' > app/creds/$(mode)/scanners.env
 		DB_PASS=test
-		DB_HOST=arangodb.db:8529
+		DB_HOST=arangodb.db
 		DB_USER=root
 		DB_NAME=track_dmarc
 		GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
