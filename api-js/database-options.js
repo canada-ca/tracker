@@ -185,8 +185,8 @@ export const databaseOptions = ({ rootPass }) => [
                 },
                 fr: {
                   fields: {
-                    acronym: { analyzers: ['text_en'] },
-                    name: { analyzers: ['text_en'] },
+                    acronym: { analyzers: ['text_fr'] },
+                    name: { analyzers: ['text_fr'] },
                   },
                 },
               },
