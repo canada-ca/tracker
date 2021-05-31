@@ -196,4 +196,18 @@ export const databaseOptions = ({ rootPass }) => [
       },
     },
   },
+  {
+    type: 'searchview',
+    name: 'userSearch',
+    options: {
+      links: {
+        users: {
+          fields: {
+            displayName: { analyzers: ['text_en'] },
+            userName: { analyzers: ['text_en'] },
+          },
+        },
+      },
+    },
+  },
 ]
