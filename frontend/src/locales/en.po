@@ -168,10 +168,11 @@ msgstr "An error occurred while verifying your phone number."
 #: src/AdminDomains.js:147
 #: src/AdminDomains.js:199
 #: src/AdminDomains.js:275
-#: src/TwoFactorAuthenticatePage.js:36
-#: src/UserList.js:153
-#: src/UserList.js:203
-#: src/UserList.js:246
+#: src/TwoFactorAuthenticatePage.js:34
+#: src/UserList.js:136
+#: src/UserList.js:184
+#: src/UserList.js:237
+#: src/CreateOrganizationPage.js:61
 msgid "An error occurred."
 msgstr "An error occurred."
 
@@ -980,10 +981,11 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/EditableUserPhoneNumber.js:129
 #: src/EditableUserTFAMethod.js:69
 #: src/ResetPasswordPage.js:60
-#: src/SignInPage.js:99
-#: src/TwoFactorAuthenticatePage.js:83
-#: src/UserList.js:129
-#: src/UserList.js:182
+#: src/SignInPage.js:98
+#: src/TwoFactorAuthenticatePage.js:80
+#: src/UserList.js:114
+#: src/UserList.js:165
+#: src/CreateOrganizationPage.js:
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
 
@@ -2454,6 +2456,80 @@ msgstr "New user email"
 #: src/UserList.js:261
 msgid "Edit Role"
 msgstr "Edit Role"
+
+#: src/AdminPage.js:114
+#: src/AdminPage.js:149
+#: src/CreateOrganizationPage.js:367
+msgid "Create Organization"
+msgstr "Create Organization"
+
+#: src/fieldRequirements.js:41
+msgid "Acronyms can only use upper case letters and underscores"
+msgstr "Acronyms can only use upper case letters and underscores"
+
+#: src/fieldRequirements.js:45
+msgid "Acronyms must be at most 50 characters"
+msgstr "Acronyms must be at most 50 characters"
+
+#: src/fieldRequirements.js:49
+msgid "This field cannot be empty"
+msgstr "This field cannot be empty"
+
+#: src/CreateOrganizationPage.js:72
+msgid "Organization created"
+msgstr "Organization created"
+
+#: src/CreateOrganizationPage.js:73
+msgid "{0} was created"
+msgstr "{0} was created"
+
+#: src/CreateOrganizationPage.js:82
+msgid "Unable to create new organization."
+msgstr "Unable to create new organization."
+
+#: src/CreateOrganizationPage.js:92
+msgid "Incorrect createOrganization.result typename."
+msgstr "Incorrect createOrganization.result typename."
+
+#: src/CreateOrganizationPage.js:157
+msgid "Create an organization by filling out the following info in both English and French"
+msgstr "Create an organization by filling out the following info in both English and French"
+
+#: src/CreateOrganizationPage.js:164
+msgid "Name"
+msgstr "Name"
+
+#: src/CreateOrganizationPage.js:192
+msgid "Acronym"
+msgstr "Acronym"
+
+#: src/CreateOrganizationPage.js:222
+msgid "Zone"
+msgstr "Zone"
+
+#: src/CreateOrganizationPage.js:250
+msgid "Sector"
+msgstr "Sector"
+
+#: src/CreateOrganizationPage.js:278
+msgid "City"
+msgstr "City"
+
+#: src/CreateOrganizationPage.js:306
+msgid "Province"
+msgstr "Province"
+
+#: src/CreateOrganizationPage.js:334
+msgid "Country"
+msgstr "Country"
+
+#: src/CreateOrganizationPage.js:163
+msgid "English"
+msgstr "English"
+
+#: src/CreateOrganizationPage.js:172
+msgid "French"
+msgstr "French"
 
 #: src/ScanCategoryDetails.js:44
 msgid "Implementation:"
