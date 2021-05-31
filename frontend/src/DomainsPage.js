@@ -67,6 +67,7 @@ export default function DomainsPage() {
       orderBy: { field: orderField, direction: orderDirection },
       search: dbSearchTerm,
     },
+    fetchPolicy: 'cache-and-network',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />

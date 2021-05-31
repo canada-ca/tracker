@@ -101,6 +101,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     recordsPerPage: domainsPerPage,
     variables: { orgSlug, search: dbSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
   })
 
   const memoizedSearchTerm = useMemo(() => {
