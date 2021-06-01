@@ -45,105 +45,132 @@ describe('given the load organizations connection function', () => {
       }))
     })
     beforeEach(async () => {
-      org = await collections.organizations.save({
-        verified: true,
-        summaries: {
-          web: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
+      org = await collections.organizations.save(
+        {
+          verified: true,
+          summaries: {
+            web: {
+              pass: 50,
+              fail: 1000,
+              total: 1050,
+            },
+            mail: {
+              pass: 50,
+              fail: 1000,
+              total: 1050,
+            },
           },
-          mail: {
-            pass: 50,
-            fail: 1000,
-            total: 1050,
-          },
-        },
-        orgDetails: {
-          en: {
-            slug: 'slug-org-one',
-            acronym: 'ONE',
-            name: 'org One',
-            zone: 'zone one',
-            sector: 'sector one',
-            country: 'country one',
-            province: 'province one',
-            city: 'city one',
-          },
-          fr: {
-            slug: 'slug-org-one',
-            acronym: 'ONE',
-            name: 'org One',
-            zone: 'zone one',
-            sector: 'sector one',
-            country: 'country one',
-            province: 'province one',
-            city: 'city one',
-          },
-        },
-      })
-      orgTwo = await collections.organizations.save({
-        verified: true,
-        summaries: {
-          web: {
-            pass: 52,
-            fail: 1002,
-            total: 1054,
-          },
-          mail: {
-            pass: 52,
-            fail: 1002,
-            total: 1054,
+          orgDetails: {
+            en: {
+              slug: 'slug-org-one',
+              acronym: 'ONE',
+              name: 'org One',
+              zone: 'zone one',
+              sector: 'sector one',
+              country: 'country one',
+              province: 'province one',
+              city: 'city one',
+            },
+            fr: {
+              slug: 'slug-org-one',
+              acronym: 'ONE',
+              name: 'org One',
+              zone: 'zone one',
+              sector: 'sector one',
+              country: 'country one',
+              province: 'province one',
+              city: 'city one',
+            },
           },
         },
-        orgDetails: {
-          en: {
-            slug: 'slug-org-two',
-            acronym: 'TWO',
-            name: 'org two',
-            zone: 'zone two',
-            sector: 'sector two',
-            country: 'country two',
-            province: 'province two',
-            city: 'city two',
+        { waitForSync: true },
+      )
+      orgTwo = await collections.organizations.save(
+        {
+          verified: true,
+          summaries: {
+            web: {
+              pass: 52,
+              fail: 1002,
+              total: 1054,
+            },
+            mail: {
+              pass: 52,
+              fail: 1002,
+              total: 1054,
+            },
           },
-          fr: {
-            slug: 'slug-org-two',
-            acronym: 'TWO',
-            name: 'org two',
-            zone: 'zone two',
-            sector: 'sector two',
-            country: 'country two',
-            province: 'province two',
-            city: 'city two',
+          orgDetails: {
+            en: {
+              slug: 'slug-org-two',
+              acronym: 'TWO',
+              name: 'org two',
+              zone: 'zone two',
+              sector: 'sector two',
+              country: 'country two',
+              province: 'province two',
+              city: 'city two',
+            },
+            fr: {
+              slug: 'slug-org-two',
+              acronym: 'TWO',
+              name: 'org two',
+              zone: 'zone two',
+              sector: 'sector two',
+              country: 'country two',
+              province: 'province two',
+              city: 'city two',
+            },
           },
         },
-      })
-      domain = await collections.domains.save({
-        domain: 'test.domain.gc.ca',
-      })
-      domainThree = await collections.domains.save({
-        domain: 'test.domain.canada.gc.ca',
-      })
-      domainTwo = await collections.domains.save({
-        domain: 'test.domain.canada.ca',
-      })
-      await collections.claims.save({
-        _from: org._id,
-        _to: domain._id,
-      })
-      await collections.claims.save({
-        _from: orgTwo._id,
-        _to: domain._id,
-      })
-      await collections.claims.save({
-        _from: orgTwo._id,
-        _to: domainTwo._id,
-      })
-      await collections.claims.save({
-        _from: orgTwo._id,
-        _to: domainThree._id,
-      })
+        { waitForSync: true },
+      )
+      domain = await collections.domains.save(
+        {
+          domain: 'test.domain.gc.ca',
+        },
+        { waitForSync: true },
+      )
+      domainThree = await collections.domains.save(
+        {
+          domain: 'test.domain.canada.gc.ca',
+        },
+        { waitForSync: true },
+      )
+      domainTwo = await collections.domains.save(
+        {
+          domain: 'test.domain.canada.ca',
+        },
+        { waitForSync: true },
+      )
+      await collections.claims.save(
+        {
+          _from: org._id,
+          _to: domain._id,
+        },
+        { waitForSync: true },
+      )
+      await collections.claims.save(
+        {
+          _from: orgTwo._id,
+          _to: domain._id,
+        },
+        { waitForSync: true },
+      )
+      await collections.claims.save(
+        {
+          _from: orgTwo._id,
+          _to: domainTwo._id,
+        },
+        { waitForSync: true },
+      )
+      await collections.claims.save(
+        {
+          _from: orgTwo._id,
+          _to: domainThree._id,
+        },
+        { waitForSync: true },
+      )
     })
     afterEach(async () => {
       await truncate()
@@ -379,51 +406,60 @@ describe('given the load organizations connection function', () => {
       describe('using the orderBy field', () => {
         let orgThree
         beforeEach(async () => {
-          orgThree = await collections.organizations.save({
-            verified: true,
-            summaries: {
-              web: {
-                pass: 51,
-                fail: 1001,
-                total: 1052,
+          orgThree = await collections.organizations.save(
+            {
+              verified: true,
+              summaries: {
+                web: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
+                mail: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
               },
-              mail: {
-                pass: 51,
-                fail: 1001,
-                total: 1052,
+              orgDetails: {
+                en: {
+                  slug: 'slug-org-three',
+                  acronym: 'THREE',
+                  name: 'org three',
+                  zone: 'zone three',
+                  sector: 'sector three',
+                  country: 'country three',
+                  province: 'province three',
+                  city: 'city three',
+                },
+                fr: {
+                  slug: 'slug-org-three',
+                  acronym: 'THREE',
+                  name: 'org three',
+                  zone: 'zone three',
+                  sector: 'sector three',
+                  country: 'country three',
+                  province: 'province three',
+                  city: 'city three',
+                },
               },
             },
-            orgDetails: {
-              en: {
-                slug: 'slug-org-three',
-                acronym: 'THREE',
-                name: 'org three',
-                zone: 'zone three',
-                sector: 'sector three',
-                country: 'country three',
-                province: 'province three',
-                city: 'city three',
-              },
-              fr: {
-                slug: 'slug-org-three',
-                acronym: 'THREE',
-                name: 'org three',
-                zone: 'zone three',
-                sector: 'sector three',
-                country: 'country three',
-                province: 'province three',
-                city: 'city three',
-              },
+            { waitForSync: true },
+          )
+          await collections.claims.save(
+            {
+              _from: orgThree._id,
+              _to: domain._id,
             },
-          })
-          await collections.claims.save({
-            _from: orgThree._id,
-            _to: domain._id,
-          })
-          await collections.claims.save({
-            _from: orgThree._id,
-            _to: domainTwo._id,
-          })
+            { waitForSync: true },
+          )
+          await collections.claims.save(
+            {
+              _from: orgThree._id,
+              _to: domainTwo._id,
+            },
+            { waitForSync: true },
+          )
         })
         describe('ordering by ACRONYM', () => {
           describe('direction is set to ASC', () => {
@@ -1867,8 +1903,10 @@ describe('given the load organizations connection function', () => {
         })
       })
       describe('no organizations are found', () => {
-        it('returns empty structure', async () => {
+        beforeEach(async () => {
           await truncate()
+        })
+        it('returns empty structure', async () => {
           const connectionLoader = loadVerifiedOrgConnections({
             query,
             language: 'en',
@@ -2127,51 +2165,60 @@ describe('given the load organizations connection function', () => {
       describe('using the orderBy field', () => {
         let orgThree
         beforeEach(async () => {
-          orgThree = await collections.organizations.save({
-            verified: true,
-            summaries: {
-              web: {
-                pass: 51,
-                fail: 1001,
-                total: 1052,
+          orgThree = await collections.organizations.save(
+            {
+              verified: true,
+              summaries: {
+                web: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
+                mail: {
+                  pass: 51,
+                  fail: 1001,
+                  total: 1052,
+                },
               },
-              mail: {
-                pass: 51,
-                fail: 1001,
-                total: 1052,
+              orgDetails: {
+                en: {
+                  slug: 'slug-org-three',
+                  acronym: 'THREE',
+                  name: 'org three',
+                  zone: 'zone three',
+                  sector: 'sector three',
+                  country: 'country three',
+                  province: 'province three',
+                  city: 'city three',
+                },
+                fr: {
+                  slug: 'slug-org-three',
+                  acronym: 'THREE',
+                  name: 'org three',
+                  zone: 'zone three',
+                  sector: 'sector three',
+                  country: 'country three',
+                  province: 'province three',
+                  city: 'city three',
+                },
               },
             },
-            orgDetails: {
-              en: {
-                slug: 'slug-org-three',
-                acronym: 'THREE',
-                name: 'org three',
-                zone: 'zone three',
-                sector: 'sector three',
-                country: 'country three',
-                province: 'province three',
-                city: 'city three',
-              },
-              fr: {
-                slug: 'slug-org-three',
-                acronym: 'THREE',
-                name: 'org three',
-                zone: 'zone three',
-                sector: 'sector three',
-                country: 'country three',
-                province: 'province three',
-                city: 'city three',
-              },
+            { waitForSync: true },
+          )
+          await collections.claims.save(
+            {
+              _from: orgThree._id,
+              _to: domain._id,
             },
-          })
-          await collections.claims.save({
-            _from: orgThree._id,
-            _to: domain._id,
-          })
-          await collections.claims.save({
-            _from: orgThree._id,
-            _to: domainTwo._id,
-          })
+            { waitForSync: true },
+          )
+          await collections.claims.save(
+            {
+              _from: orgThree._id,
+              _to: domainTwo._id,
+            },
+            { waitForSync: true },
+          )
         })
         describe('ordering by ACRONYM', () => {
           describe('direction is set to ASC', () => {
@@ -3615,8 +3662,10 @@ describe('given the load organizations connection function', () => {
         })
       })
       describe('no organizations are found', () => {
-        it('returns empty structure', async () => {
+        beforeEach(async () => {
           await truncate()
+        })
+        it('returns empty structure', async () => {
           const connectionLoader = loadVerifiedOrgConnections({
             query,
             language: 'fr',
