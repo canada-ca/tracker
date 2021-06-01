@@ -2,10 +2,13 @@ import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 
 import { UserStateProvider, UserState, useUserState } from '../UserState'
+import { client } from '../client'
+import { ApolloProvider } from '@apollo/client'
 
 describe('useUserState()', () => {
   it('provides the UserState context via a Hook', async () => {
     let userState
+
     function Foo() {
       const state = useUserState()
       userState = state
@@ -13,15 +16,17 @@ describe('useUserState()', () => {
     }
 
     render(
-      <UserStateProvider
-        initialState={{
-          userName: null,
-          jwt: null,
-          tfaSendMethod: null,
-        }}
-      >
-        <Foo />
-      </UserStateProvider>,
+      <ApolloProvider client={client}>
+        <UserStateProvider
+          initialState={{
+            userName: null,
+            jwt: null,
+            tfaSendMethod: null,
+          }}
+        >
+          <Foo />
+        </UserStateProvider>
+      </ApolloProvider>,
     )
     await waitFor(() =>
       expect(userState).toMatchObject({
@@ -49,14 +54,16 @@ describe('<UserStateProvider/>', () => {
       let providedState
 
       render(
-        <UserStateProvider initialState={initialState}>
-          <UserState>
-            {(value) => {
-              providedState = value
-              return <p>{value.currentUser.userName}</p>
-            }}
-          </UserState>
-        </UserStateProvider>,
+        <ApolloProvider client={client}>
+          <UserStateProvider initialState={initialState}>
+            <UserState>
+              {(value) => {
+                providedState = value
+                return <p>{value.currentUser.userName}</p>
+              }}
+            </UserState>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
       expect(providedState).toMatchObject({
         currentUser: { jwt: null, tfaSendMethod: null, userName: null },
@@ -76,21 +83,23 @@ describe('<UserStateProvider/>', () => {
           }
 
           const { getByTestId } = render(
-            <UserStateProvider initialState={initialState}>
-              <UserState>
-                {({ currentUser, login }) => {
-                  return (
-                    <div>
-                      <p data-testid="username">{currentUser.userName}</p>
-                      <button
-                        data-testid="loginbutton"
-                        onClick={() => login(testUser)}
-                      />
-                    </div>
-                  )
-                }}
-              </UserState>
-            </UserStateProvider>,
+            <ApolloProvider client={client}>
+              <UserStateProvider initialState={initialState}>
+                <UserState>
+                  {({ currentUser, login }) => {
+                    return (
+                      <div>
+                        <p data-testid="username">{currentUser.userName}</p>
+                        <button
+                          data-testid="loginbutton"
+                          onClick={() => login(testUser)}
+                        />
+                      </div>
+                    )
+                  }}
+                </UserState>
+              </UserStateProvider>
+            </ApolloProvider>,
           )
 
           fireEvent.click(getByTestId('loginbutton'))
@@ -111,17 +120,19 @@ describe('<UserStateProvider/>', () => {
           }
 
           render(
-            <UserStateProvider initialState={initialState}>
-              <UserState>
-                {(state) => {
-                  const { currentUser: cu, login: li, logout: lo } = state
-                  currentUser = cu
-                  login = li
-                  logout = lo
-                  return <p data-testid="username">{cu.userName}</p>
-                }}
-              </UserState>
-            </UserStateProvider>,
+            <ApolloProvider client={client}>
+              <UserStateProvider initialState={initialState}>
+                <UserState>
+                  {(state) => {
+                    const { currentUser: cu, login: li, logout: lo } = state
+                    currentUser = cu
+                    login = li
+                    logout = lo
+                    return <p data-testid="username">{cu.userName}</p>
+                  }}
+                </UserState>
+              </UserStateProvider>
+            </ApolloProvider>,
           )
 
           await waitFor(() => login(testUser))
@@ -148,18 +159,20 @@ describe('<UserStateProvider/>', () => {
           let isLoggedIn, login
 
           render(
-            <UserStateProvider initialState={initialState}>
-              <UserState>
-                {(state) => {
-                  const { isLoggedIn: ili, login: li } = state
-                  isLoggedIn = ili
-                  login = li
-                  return (
-                    <p data-testid="username">{state.currentUser.userName}</p>
-                  )
-                }}
-              </UserState>
-            </UserStateProvider>,
+            <ApolloProvider client={client}>
+              <UserStateProvider initialState={initialState}>
+                <UserState>
+                  {(state) => {
+                    const { isLoggedIn: ili, login: li } = state
+                    isLoggedIn = ili
+                    login = li
+                    return (
+                      <p data-testid="username">{state.currentUser.userName}</p>
+                    )
+                  }}
+                </UserState>
+              </UserStateProvider>
+            </ApolloProvider>,
           )
 
           await waitFor(() => login(testUser))
@@ -179,19 +192,21 @@ describe('<UserStateProvider/>', () => {
           let isLoggedIn, logout, login
 
           render(
-            <UserStateProvider initialState={initialState}>
-              <UserState>
-                {(state) => {
-                  const { isLoggedIn: ili, login: li, logout: lo } = state
-                  isLoggedIn = ili
-                  login = li
-                  logout = lo
-                  return (
-                    <p data-testid="username">{state.currentUser.userName}</p>
-                  )
-                }}
-              </UserState>
-            </UserStateProvider>,
+            <ApolloProvider client={client}>
+              <UserStateProvider initialState={initialState}>
+                <UserState>
+                  {(state) => {
+                    const { isLoggedIn: ili, login: li, logout: lo } = state
+                    isLoggedIn = ili
+                    login = li
+                    logout = lo
+                    return (
+                      <p data-testid="username">{state.currentUser.userName}</p>
+                    )
+                  }}
+                </UserState>
+              </UserStateProvider>
+            </ApolloProvider>,
           )
 
           await waitFor(() => login(testUser))

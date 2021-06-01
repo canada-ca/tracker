@@ -8,6 +8,8 @@ import { UserStateProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
+import { ApolloProvider } from '@apollo/client'
+import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -22,29 +24,7 @@ const i18n = setupI18n({
 describe('<EditableUserDisplayName>', () => {
   it('renders', async () => {
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testUserName@email.com',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <MockedProvider addTypename={false}>
-          <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
-                <EditableUserDisplayName />
-              </ThemeProvider>
-            </I18nProvider>
-          </MemoryRouter>
-        </MockedProvider>
-      </UserStateProvider>,
-    )
-    await waitFor(() => expect(getByText(/Edit/i)).toBeInTheDocument())
-  })
-  describe("when the 'edit' button is clicked", () => {
-    it('opens the modal', async () => {
-      const { getByText } = render(
+      <ApolloProvider client={client}>
         <UserStateProvider
           initialState={{
             userName: 'testUserName@email.com',
@@ -61,7 +41,33 @@ describe('<EditableUserDisplayName>', () => {
               </I18nProvider>
             </MemoryRouter>
           </MockedProvider>
-        </UserStateProvider>,
+        </UserStateProvider>
+      </ApolloProvider>,
+    )
+    await waitFor(() => expect(getByText(/Edit/i)).toBeInTheDocument())
+  })
+  describe("when the 'edit' button is clicked", () => {
+    it('opens the modal', async () => {
+      const { getByText } = render(
+        <ApolloProvider client={client}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testUserName@email.com',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <MockedProvider addTypename={false}>
+              <MemoryRouter initialEntries={['/']}>
+                <I18nProvider i18n={i18n}>
+                  <ThemeProvider theme={theme}>
+                    <EditableUserDisplayName />
+                  </ThemeProvider>
+                </I18nProvider>
+              </MemoryRouter>
+            </MockedProvider>
+          </UserStateProvider>
+        </ApolloProvider>,
       )
       const editButton = getByText(/Edit/i)
       fireEvent.click(editButton)
@@ -76,23 +82,25 @@ describe('<EditableUserDisplayName>', () => {
       describe('and the form is submitted', () => {
         it('displays field error', async () => {
           const { getByText } = render(
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
-            >
-              <MockedProvider addTypename={false}>
-                <MemoryRouter initialEntries={['/']}>
-                  <I18nProvider i18n={i18n}>
-                    <ThemeProvider theme={theme}>
-                      <EditableUserDisplayName />
-                    </ThemeProvider>
-                  </I18nProvider>
-                </MemoryRouter>
-              </MockedProvider>
-            </UserStateProvider>,
+            <ApolloProvider client={client}>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
+                <MockedProvider addTypename={false}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <I18nProvider i18n={i18n}>
+                      <ThemeProvider theme={theme}>
+                        <EditableUserDisplayName />
+                      </ThemeProvider>
+                    </I18nProvider>
+                  </MemoryRouter>
+                </MockedProvider>
+              </UserStateProvider>
+            </ApolloProvider>,
           )
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)

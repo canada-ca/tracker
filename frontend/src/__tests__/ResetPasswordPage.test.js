@@ -8,6 +8,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import ResetPasswordPage from '../ResetPasswordPage'
 import { RESET_PASSWORD } from '../graphql/mutations'
+import { ApolloProvider } from '@apollo/client'
+import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -38,26 +40,32 @@ describe('<ResetPasswordPage />', () => {
       describe('password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={mocks}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                      ]}
-                      initialIndex={0}
-                    >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
-                    </MemoryRouter>
-                  </MockedProvider>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>,
+            <ApolloProvider client={client}>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MockedProvider mocks={mocks}>
+                      <MemoryRouter
+                        initialEntries={[
+                          '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                        ]}
+                        initialIndex={0}
+                      >
+                        <Route path="/reset-password/:resetToken">
+                          <ResetPasswordPage />
+                        </Route>
+                      </MemoryRouter>
+                    </MockedProvider>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
+            </ApolloProvider>,
           )
 
           const password = container.querySelector('#password')
@@ -75,26 +83,32 @@ describe('<ResetPasswordPage />', () => {
       describe('confirm password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={mocks}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                      ]}
-                      initialIndex={0}
-                    >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
-                    </MemoryRouter>
-                  </MockedProvider>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>,
+            <ApolloProvider client={client}>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MockedProvider mocks={mocks}>
+                      <MemoryRouter
+                        initialEntries={[
+                          '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                        ]}
+                        initialIndex={0}
+                      >
+                        <Route path="/reset-password/:resetToken">
+                          <ResetPasswordPage />
+                        </Route>
+                      </MemoryRouter>
+                    </MockedProvider>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
+            </ApolloProvider>,
           )
 
           const confirmPassword = container.querySelector('#confirmPassword')
