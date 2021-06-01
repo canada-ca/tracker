@@ -1,4 +1,4 @@
-import { GraphQLObjectType } from 'graphql'
+import { GraphQLObjectType, GraphQLString } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 
@@ -8,6 +8,11 @@ export const userSharedType = new GraphQLObjectType({
   name: 'SharedUser',
   fields: () => ({
     id: globalIdField('users'),
+    displayName: {
+      type: GraphQLString,
+      description: 'Users display name.',
+      resolve: ({ displayName }) => displayName,
+    },
     userName: {
       type: GraphQLEmailAddress,
       description: 'Users email address.',

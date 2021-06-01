@@ -48,7 +48,7 @@ describe('given the load affiliations by org id function', () => {
       })
       userTwo = await collections.users.save({
         userName: 'test.accounttwo@istio.actually.exists',
-        displayName: 'Test Account Two',
+        displayName: 'Jane Doe',
         preferredLang: 'french',
         tfaValidated: false,
         emailValidated: false,
@@ -333,6 +333,131 @@ describe('given the load affiliations by org id function', () => {
           }
 
           expect(affiliations).toEqual(expectedStructure)
+        })
+      })
+      describe('using the search field', () => {
+        beforeEach(async () => {
+          // This is used to sync the view before running the test below
+          await query`
+            FOR user IN userSearch
+              SEARCH user.userName == "test.account@istio.actually.exists"
+              OPTIONS { waitForSync: true }
+              RETURN user
+          `
+        })
+        describe('using the users userName', () => {
+          it('returns the filtered affiliations', async () => {
+            const affiliationLoader = loadAffiliationConnectionsByOrgId({
+              query,
+              userKey: user._key,
+              cleanseInput,
+              i18n,
+            })
+
+            const affLoader = loadAffiliationByKey({ query })
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 1,
+              orgId: org._id,
+              search: 'test.account@istio.actually.exists',
+            }
+            const affiliations = await affiliationLoader({
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[0],
+                  },
+                },
+              ],
+              totalCount: 2,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: false,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+        describe('using the users displayName', () => {
+          it('returns the filtered affiliations', async () => {
+            const affiliationLoader = loadAffiliationConnectionsByOrgId({
+              query,
+              userKey: user._key,
+              cleanseInput,
+              i18n,
+            })
+
+            const affLoader = loadAffiliationByKey({ query })
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 1,
+              orgId: org._id,
+              search: 'Test Account',
+            }
+            const affiliations = await affiliationLoader({
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[0],
+                  },
+                },
+              ],
+              totalCount: 2,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: false,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
         })
       })
       describe('using orderBy field', () => {
