@@ -39,7 +39,10 @@ import { object, string as yupString } from 'yup'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
-import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from './graphql/queries'
+import {
+  PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD,
+  IS_USER_SUPER_ADMIN,
+} from './graphql/queries'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
@@ -84,6 +87,25 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     variables: { orgSlug },
     relayRoot: 'findOrganizationBySlug.affiliations',
   })
+
+  // const { data: isSA } = useQuery(IS_USER_SUPER_ADMIN, {
+  //   context: {
+  //     headers: {
+  //       authorization: currentUser.jwt,
+  //     },
+  //   },
+  //   onError: (error) => {
+  //     const [_, message] = error.message.split(': ')
+  //     toast({
+  //       title: 'Error',
+  //       description: message,
+  //       status: 'error',
+  //       duration: 9000,
+  //       isClosable: true,
+  //       position: 'top-left',
+  //     })
+  //   },
+  // })
 
   const [
     updateUserRole,

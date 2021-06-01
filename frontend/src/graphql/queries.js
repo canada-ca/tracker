@@ -1380,6 +1380,10 @@ export const ADMIN_AFFILIATIONS = gql`
     $includeSuperAdminOrg: Boolean
   ) {
     findMyOrganizations(
+      after: $after
+      first: $first
+      before: $before
+      last: $last
       orderBy: $orderBy
       isAdmin: $isAdmin
       includeSuperAdminOrg: $includeSuperAdminOrg
@@ -1392,5 +1396,11 @@ export const ADMIN_AFFILIATIONS = gql`
         }
       }
     }
+  }
+`
+
+export const IS_USER_SUPER_ADMIN = gql`
+  query IsUserSuperAdmin {
+    isUserSuperAdmin
   }
 `

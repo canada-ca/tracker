@@ -3,7 +3,7 @@ import { Stack, Text, Select, useToast, Icon, Divider } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
-import { USER_AFFILIATIONS } from './graphql/queries'
+import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -16,7 +16,7 @@ export default function AdminPage() {
   const [orgDetails, setOrgDetails] = useState()
   const toast = useToast()
 
-  const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
+  const { loading, error, data } = useQuery(ADMIN_AFFILIATIONS, {
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -24,10 +24,9 @@ export default function AdminPage() {
     },
     variables: {
       first: 100,
-      orderBy: {
-        field: 'ORG_ACRONYM',
-        direction: 'ASC',
-      },
+      orderBy: { field: 'ACRONYM', direction: 'ASC' },
+      isAdmin: true,
+      includeSuperAdminOrg: true,
     },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
@@ -55,17 +54,11 @@ export default function AdminPage() {
   }
 
   const adminAffiliations = {}
-  data.findMe.affiliations?.edges.forEach((edge) => {
-    const {
-      permission,
-      organization: { slug, acronym, id },
-    } = edge.node
-    if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
-      adminAffiliations[acronym] = {
-        slug: slug,
-        permission: permission,
-        id: id,
-      }
+  data.findMyOrganizations?.edges.forEach((edge) => {
+    const { slug, acronym, id } = edge.node
+    adminAffiliations[acronym] = {
+      slug: slug,
+      id: id,
     }
   })
 
