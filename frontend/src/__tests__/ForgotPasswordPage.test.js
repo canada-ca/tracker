@@ -8,8 +8,6 @@ import { UserStateProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
 import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 import ForgotPasswordPage from '../ForgotPasswordPage'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const mocks = [
   {
@@ -40,25 +38,19 @@ describe('<ForgotPasswordPage />', () => {
       describe('email field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <ApolloProvider client={client}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <MockedProvider mocks={mocks}>
-                        <ForgotPasswordPage />
-                      </MockedProvider>
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
-            </ApolloProvider>,
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <ForgotPasswordPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
           )
 
           const email = container.querySelector('#email')

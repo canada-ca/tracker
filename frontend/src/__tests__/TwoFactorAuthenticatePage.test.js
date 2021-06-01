@@ -9,8 +9,6 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { createMemoryHistory } from 'history'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -25,26 +23,24 @@ const i18n = setupI18n({
 describe('<TwoFactorAuthenticatePage />', () => {
   it('renders correctly', async () => {
     const { getByText } = render(
-      <ApolloProvider client={client}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/authenticate/phone/authenticate-token-test']}
-                initialIndex={0}
-              >
-                <Route path="/authenticate/:sendMethod/:authenticateToken">
-                  <MockedProvider>
-                    <TwoFactorAuthenticatePage />
-                  </MockedProvider>
-                </Route>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
-      </ApolloProvider>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter
+              initialEntries={['/authenticate/phone/authenticate-token-test']}
+              initialIndex={0}
+            >
+              <Route path="/authenticate/:sendMethod/:authenticateToken">
+                <MockedProvider>
+                  <TwoFactorAuthenticatePage />
+                </MockedProvider>
+              </Route>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     await waitFor(() =>
@@ -57,32 +53,26 @@ describe('<TwoFactorAuthenticatePage />', () => {
       describe('two factor code input', () => {
         it('displays an error message', async () => {
           const { getByText } = render(
-            <ApolloProvider client={client}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/authenticate/phone/authenticate-token-test',
-                      ]}
-                      initialIndex={0}
-                    >
-                      <MockedProvider>
-                        <Route path="/authenticate/:sendMethod/:authenticateToken">
-                          <TwoFactorAuthenticatePage />
-                        </Route>
-                      </MockedProvider>
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
-            </ApolloProvider>,
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter
+                    initialEntries={[
+                      '/authenticate/phone/authenticate-token-test',
+                    ]}
+                    initialIndex={0}
+                  >
+                    <MockedProvider>
+                      <Route path="/authenticate/:sendMethod/:authenticateToken">
+                        <TwoFactorAuthenticatePage />
+                      </Route>
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
           )
           const submitButton = getByText('Submit')
           fireEvent.click(submitButton)
@@ -138,23 +128,21 @@ describe('<TwoFactorAuthenticatePage />', () => {
       })
 
       const { container, getByRole } = render(
-        <ApolloProvider client={client}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Route path="/authenticate/:sendMethod/:authenticateToken">
-                    <MockedProvider mocks={mocks} addTypename={false}>
-                      <TwoFactorAuthenticatePage />
-                    </MockedProvider>
-                  </Route>
-                </Router>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
-        </ApolloProvider>,
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <Router history={history}>
+                <Route path="/authenticate/:sendMethod/:authenticateToken">
+                  <MockedProvider mocks={mocks} addTypename={false}>
+                    <TwoFactorAuthenticatePage />
+                  </MockedProvider>
+                </Route>
+              </Router>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
       )
 
       const twoFactorCode = container.querySelector('#twoFactorCode')

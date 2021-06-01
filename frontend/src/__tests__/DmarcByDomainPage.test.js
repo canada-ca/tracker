@@ -9,8 +9,6 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import DmarcByDomainPage from '../DmarcByDomainPage'
 import { rawDmarcReportSummaryTableData } from '../fixtures/dmarcReportSummaryTable'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -46,21 +44,19 @@ describe('<DmarcByDomainPage />', () => {
       },
     ]
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider mocks={mocks} addTypename={false}>
-                  <DmarcByDomainPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
-      </ApolloProvider>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <DmarcByDomainPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
     await waitFor(() => getAllByText(/^DMARC Messages$/i))
   })
@@ -76,23 +72,19 @@ describe('<DmarcByDomainPage />', () => {
       },
     ]
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
-        <ApolloProvider client={client}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} addTypename={false}>
-                    <DmarcByDomainPage />
-                  </MockedProvider>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
-        </ApolloProvider>
-      </ApolloProvider>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <DmarcByDomainPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
     await waitFor(() => getAllByText(/Showing data for period:/i))
   })
@@ -112,23 +104,19 @@ describe('<DmarcByDomainPage />', () => {
       },
     ]
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
-        <ApolloProvider client={client}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} addTypename={false}>
-                    <DmarcByDomainPage />
-                  </MockedProvider>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
-        </ApolloProvider>
-      </ApolloProvider>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <DmarcByDomainPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
     await waitFor(() => getAllByText(/Total Messages/i))
   })
