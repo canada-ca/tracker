@@ -8,8 +8,6 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import EmailValidationPage from '../EmailValidationPage'
 import { VERIFY_ACCOUNT } from '../graphql/mutations'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -38,28 +36,26 @@ describe('<EmailValidationPage />', () => {
   describe('on render', () => {
     it('page renders', async () => {
       const { queryByText } = render(
-        <ApolloProvider client={client}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MockedProvider mocks={mocks}>
-                  <MemoryRouter
-                    initialEntries={[
-                      '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                    ]}
-                    initialIndex={0}
-                  >
-                    <Route path="/validate/:verifyToken">
-                      <EmailValidationPage />
-                    </Route>
-                  </MemoryRouter>
-                </MockedProvider>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
-        </ApolloProvider>,
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MockedProvider mocks={mocks}>
+                <MemoryRouter
+                  initialEntries={[
+                    '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                  ]}
+                  initialIndex={0}
+                >
+                  <Route path="/validate/:verifyToken">
+                    <EmailValidationPage />
+                  </Route>
+                </MemoryRouter>
+              </MockedProvider>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
       )
 
       await waitFor(() =>
@@ -71,28 +67,26 @@ describe('<EmailValidationPage />', () => {
   describe('after loading mutation', () => {
     it('displays an error message', async () => {
       const { queryByText } = render(
-        <ApolloProvider client={client}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MockedProvider mocks={mocks}>
-                  <MemoryRouter
-                    initialEntries={[
-                      '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                    ]}
-                    initialIndex={0}
-                  >
-                    <Route path="/validate/:verifyToken">
-                      <EmailValidationPage />
-                    </Route>
-                  </MemoryRouter>
-                </MockedProvider>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
-        </ApolloProvider>,
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MockedProvider mocks={mocks}>
+                <MemoryRouter
+                  initialEntries={[
+                    '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                  ]}
+                  initialIndex={0}
+                >
+                  <Route path="/validate/:verifyToken">
+                    <EmailValidationPage />
+                  </Route>
+                </MemoryRouter>
+              </MockedProvider>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
       )
 
       await waitFor(() =>

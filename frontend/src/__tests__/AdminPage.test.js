@@ -7,8 +7,6 @@ import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { USER_AFFILIATIONS } from '../graphql/queries'
 import AdminPage from '../AdminPage'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -52,23 +50,21 @@ describe('<AdminPage />', () => {
 
   it('renders correctly', async () => {
     render(
-      <ApolloProvider client={client}>
-        <UserStateProvider
-          initialState={{
-            userName: 'me',
-            jwt: 'longstring',
-            tfaSendMethod: null,
-          }}
-        >
-          <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
-              <MockedProvider mocks={mocks} addTypename={false}>
-                <AdminPage />
-              </MockedProvider>
-            </ThemeProvider>
-          </I18nProvider>
-        </UserStateProvider>
-      </ApolloProvider>,
+      <UserStateProvider
+        initialState={{
+          userName: 'me',
+          jwt: 'longstring',
+          tfaSendMethod: null,
+        }}
+      >
+        <I18nProvider i18n={i18n}>
+          <ThemeProvider theme={theme}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <AdminPage />
+            </MockedProvider>
+          </ThemeProvider>
+        </I18nProvider>
+      </UserStateProvider>,
     )
   })
 })

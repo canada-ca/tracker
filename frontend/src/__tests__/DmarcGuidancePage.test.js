@@ -10,8 +10,6 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import matchMediaPolyfill from 'mq-polyfill'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -57,26 +55,24 @@ describe('<DmarcGuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
     const { getByText } = render(
-      <ApolloProvider client={client}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider addTypename={false} mocks={mocks}>
-                <MemoryRouter
-                  initialEntries={['/domains/cse-cst.gc.ca']}
-                  initialIndex={0}
-                >
-                  <Route path="/domains/:domainSlug">
-                    <DmarcGuidancePage />
-                  </Route>
-                </MemoryRouter>
-              </MockedProvider>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
-      </ApolloProvider>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MockedProvider addTypename={false} mocks={mocks}>
+              <MemoryRouter
+                initialEntries={['/domains/cse-cst.gc.ca']}
+                initialIndex={0}
+              >
+                <Route path="/domains/:domainSlug">
+                  <DmarcGuidancePage />
+                </Route>
+              </MemoryRouter>
+            </MockedProvider>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     await waitFor(() => {

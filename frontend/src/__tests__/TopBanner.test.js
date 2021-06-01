@@ -25,7 +25,7 @@ describe('<TopBanner />', () => {
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <ApolloProvider client={client}>
-            <TopBanner lang="en" />
+            <TopBanner lang='en' />
           </ApolloProvider>
         </I18nProvider>
       </ThemeProvider>,

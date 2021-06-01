@@ -28,27 +28,19 @@ describe('<App/>', () => {
     describe('/', () => {
       it('renders the main page', async () => {
         const { getByText } = render(
-          <ApolloProvider client={client}>
-            <ApolloProvider client={client}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <ApolloProvider client={client}>
-                        <App />
-                      </ApolloProvider>
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
-            </ApolloProvider>
-          </ApolloProvider>,
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <ApolloProvider client={client}>
+                    <App />
+                  </ApolloProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
         )
         await waitFor(() => expect(getByText(/Track digital security/i)))
       })
@@ -83,21 +75,19 @@ describe('<App/>', () => {
       ]
       it('renders the sign-in page', async () => {
         const { getByText } = render(
-          <ApolloProvider client={client}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
-                    <MockedProvider mocks={mocks} addTypename={false}>
-                      <App />
-                    </MockedProvider>
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>
-          </ApolloProvider>,
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
+                  <MockedProvider mocks={mocks} addTypename={false}>
+                    <App />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
         )
         const domains = await waitFor(() =>
           getByText(/Sign in with your username and password./i),

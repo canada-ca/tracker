@@ -7,8 +7,6 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagDetails } from '../GuidanceTagDetails'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -35,19 +33,17 @@ Object.defineProperty(window, 'matchMedia', {
 describe('<GuidanceTagDetails />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <GuidanceTagDetails guidanceTag={guidanceTag} />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
-      </ApolloProvider>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <GuidanceTagDetails guidanceTag={guidanceTag} />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
     await waitFor(() => getAllByText(/DKIM-missing/i))
   })
