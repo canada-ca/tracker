@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
@@ -10,11 +10,10 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { rawOrgDomainListData } from '../fixtures/orgDomainListData'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
 import {
-  PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
   PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
+  PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
 } from '../graphql/queries'
-import { client, createCache } from '../client'
-import { ApolloProvider } from '@apollo/client'
+import { createCache } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -46,7 +45,7 @@ const mocks = [
 describe('<AdminPanel />', () => {
   it('renders both a domain list and user list', async () => {
     const { getByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -58,19 +57,17 @@ describe('<AdminPanel />', () => {
             <ThemeProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                 <Route path="/admin">
-                  <MockedProvider mocks={mocks} cache={createCache()}>
-                    <AdminPanel
-                      orgSlug="test-org.slug"
-                      permission="ADMIN"
-                      orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                    />
-                  </MockedProvider>
+                  <AdminPanel
+                    orgSlug="test-org.slug"
+                    permission="ADMIN"
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  />
                 </Route>
               </MemoryRouter>
             </ThemeProvider>
           </I18nProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => {
       expect(getByText('Domains')).toBeInTheDocument()

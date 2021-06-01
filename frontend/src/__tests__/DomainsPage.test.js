@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -7,9 +7,8 @@ import { PAGINATED_DOMAINS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { client, createCache } from '../client'
+import { createCache } from '../client'
 import DomainsPage from '../DomainsPage'
-import { ApolloProvider } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -144,21 +143,19 @@ describe('<DomainsPage />', () => {
   describe('given a list of domains', () => {
     it('displays a list of domains', async () => {
       const { queryByText } = render(
-        <ApolloProvider client={client}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} cache={createCache()}>
-                    <DomainsPage />
-                  </MockedProvider>
+                  <DomainsPage />
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
           </UserStateProvider>
-        </ApolloProvider>,
+        </MockedProvider>,
       )
 
       await waitFor(() =>

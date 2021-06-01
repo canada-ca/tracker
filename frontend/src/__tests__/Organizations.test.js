@@ -1,16 +1,15 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { ThemeProvider, theme } from '@chakra-ui/core'
-import { Router, Route, Switch, MemoryRouter } from 'react-router-dom'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
+import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import Organizations from '../Organizations'
 import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { client, createCache } from '../client'
-import { ApolloProvider } from '@apollo/client'
+import { createCache } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -118,7 +117,7 @@ describe('<Organisations />', () => {
       ]
 
       const { getByText } = render(
-        <ApolloProvider client={client}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
           >
@@ -128,14 +127,12 @@ describe('<Organisations />', () => {
                   initialEntries={['/organizations']}
                   initialIndex={0}
                 >
-                  <MockedProvider mocks={mocks} cache={createCache()}>
-                    <Organizations />
-                  </MockedProvider>
+                  <Organizations />
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
           </UserStateProvider>
-        </ApolloProvider>,
+        </MockedProvider>,
       )
 
       // expect(getByText(/organization two/i)).toBeInTheDocument(),
@@ -280,26 +277,24 @@ describe('<Organisations />', () => {
       })
 
       const { getAllByText } = render(
-        <ApolloProvider client={client}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <Router history={history}>
-                    <Switch>
-                      <Route
-                        path="/organizations"
-                        render={() => <Organizations />}
-                      />
-                    </Switch>
-                  </Router>
-                </MockedProvider>
+                <Router history={history}>
+                  <Switch>
+                    <Route
+                      path="/organizations"
+                      render={() => <Organizations />}
+                    />
+                  </Switch>
+                </Router>
               </I18nProvider>
             </ThemeProvider>
           </UserStateProvider>
-        </ApolloProvider>,
+        </MockedProvider>,
       )
 
       const orgCards = await waitFor(() => getAllByText(/organization one/i))
@@ -413,26 +408,24 @@ describe('<Organisations />', () => {
         })
 
         const { getByText } = render(
-          <ApolloProvider client={client}>
+          <MockedProvider mocks={mocks} cache={cache}>
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={mocks} cache={cache}>
-                    <Router history={history}>
-                      <Switch>
-                        <Route
-                          path="/organizations"
-                          render={() => <Organizations />}
-                        />
-                      </Switch>
-                    </Router>
-                  </MockedProvider>
+                  <Router history={history}>
+                    <Switch>
+                      <Route
+                        path="/organizations"
+                        render={() => <Organizations />}
+                      />
+                    </Switch>
+                  </Router>
                 </I18nProvider>
               </ThemeProvider>
             </UserStateProvider>
-          </ApolloProvider>,
+          </MockedProvider>,
         )
 
         await waitFor(() =>
@@ -631,26 +624,24 @@ describe('<Organisations />', () => {
         })
 
         const { queryByText } = render(
-          <ApolloProvider client={client}>
+          <MockedProvider mocks={mocks} cache={cache}>
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={mocks} cache={cache}>
-                    <Router history={history}>
-                      <Switch>
-                        <Route
-                          path="/organizations"
-                          render={() => <Organizations />}
-                        />
-                      </Switch>
-                    </Router>
-                  </MockedProvider>
+                  <Router history={history}>
+                    <Switch>
+                      <Route
+                        path="/organizations"
+                        render={() => <Organizations />}
+                      />
+                    </Switch>
+                  </Router>
                 </I18nProvider>
               </ThemeProvider>
             </UserStateProvider>
-          </ApolloProvider>,
+          </MockedProvider>,
         )
 
         await waitFor(() =>

@@ -1,14 +1,12 @@
 import React from 'react'
 import { UserStateProvider } from '../UserState'
 import { render } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { USER_AFFILIATIONS } from '../graphql/queries'
 import AdminPage from '../AdminPage'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -52,7 +50,7 @@ describe('<AdminPage />', () => {
 
   it('renders correctly', async () => {
     render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <UserStateProvider
           initialState={{
             userName: 'me',
@@ -62,13 +60,11 @@ describe('<AdminPage />', () => {
         >
           <I18nProvider i18n={i18n}>
             <ThemeProvider theme={theme}>
-              <MockedProvider mocks={mocks} addTypename={false}>
-                <AdminPage />
-              </MockedProvider>
+              <AdminPage />
             </ThemeProvider>
           </I18nProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
   })
 })

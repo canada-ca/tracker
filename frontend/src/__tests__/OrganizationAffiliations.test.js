@@ -1,16 +1,14 @@
 import React from 'react'
-import { waitFor, render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
 import { PAGINATED_ORG_AFFILIATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { OrganizationAffiliations } from '../OrganizationAffiliations'
 import matchMediaPolyfill from 'mq-polyfill'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -118,7 +116,7 @@ describe('<OrganizationAffiliations />', () => {
       const { getByText } = render(
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
-            <ApolloProvider client={client}>
+            <MockedProvider mocks={mocks} addTypename={false}>
               <UserStateProvider
                 initialState={{
                   userName: 'user@example.com',
@@ -126,18 +124,16 @@ describe('<OrganizationAffiliations />', () => {
                   tfaSendMethod: null,
                 }}
               >
-                <MockedProvider mocks={mocks} addTypename={false}>
-                  <MemoryRouter
-                    initialEntries={['/organization/tbs-sct-gc-ca']}
-                    initialIndex={0}
-                  >
-                    <Route path="/organization/:orgSlug">
-                      <OrganizationAffiliations orgSlug={orgSlug} />
-                    </Route>
-                  </MemoryRouter>
-                </MockedProvider>
+                <MemoryRouter
+                  initialEntries={['/organization/tbs-sct-gc-ca']}
+                  initialIndex={0}
+                >
+                  <Route path="/organization/:orgSlug">
+                    <OrganizationAffiliations orgSlug={orgSlug} />
+                  </Route>
+                </MemoryRouter>
               </UserStateProvider>
-            </ApolloProvider>
+            </MockedProvider>
           </I18nProvider>
         </ThemeProvider>,
       )

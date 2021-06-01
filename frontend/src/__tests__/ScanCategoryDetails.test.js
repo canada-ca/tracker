@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import ScanCategoryDetails from '../ScanCategoryDetails'
@@ -7,8 +7,7 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
+import { MockedProvider } from '@apollo/client/testing'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -34,7 +33,7 @@ Object.defineProperty(window, 'matchMedia', {
 describe('<ScanCategoryDetails />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -49,7 +48,7 @@ describe('<ScanCategoryDetails />', () => {
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/HTTPS/i))
   })

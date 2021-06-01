@@ -1,15 +1,13 @@
 import React from 'react'
 import QRcodePage from '../QRcodePage'
-import { waitFor, render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { GENERATE_OTP_URL } from '../graphql/queries'
 import { setupI18n } from '@lingui/core'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -41,7 +39,7 @@ describe('<QRcodePage />', () => {
         },
       ]
       const { queryByText, getByRole } = render(
-        <ApolloProvider client={client}>
+        <MockedProvider mocks={mocks}>
           <UserStateProvider
             initialState={{
               userName: email,
@@ -49,17 +47,15 @@ describe('<QRcodePage />', () => {
               tfaSendMethod: null,
             }}
           >
-            <MockedProvider mocks={mocks}>
-              <MemoryRouter initialEntries={['/']}>
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <QRcodePage />
-                  </I18nProvider>
-                </ThemeProvider>
-              </MemoryRouter>
-            </MockedProvider>
+            <MemoryRouter initialEntries={['/']}>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <QRcodePage />
+                </I18nProvider>
+              </ThemeProvider>
+            </MemoryRouter>
           </UserStateProvider>
-        </ApolloProvider>,
+        </MockedProvider>,
       )
 
       await waitFor(() => {

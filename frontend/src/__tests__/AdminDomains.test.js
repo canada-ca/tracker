@@ -1,19 +1,18 @@
 import React from 'react'
-import { waitFor, render } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { render, waitFor } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { AdminDomains } from '../AdminDomains'
 import { MockedProvider } from '@apollo/client/testing'
-import { client, createCache } from '../client'
+import { createCache } from '../client'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import {
   rawOrgDomainListData,
   rawOrgDomainListDataEmpty,
 } from '../fixtures/orgDomainListData'
-import { ApolloProvider } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -38,7 +37,7 @@ const mocks = [
 describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -49,18 +48,16 @@ describe('<AdminDomains />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <AdminDomains
-                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                    orgSlug="test-org.slug"
-                    domainsPerPage={4}
-                  />
-                </MockedProvider>
+                <AdminDomains
+                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  orgSlug="test-org.slug"
+                  domainsPerPage={4}
+                />
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
 
     await waitFor(() => {
@@ -81,7 +78,7 @@ describe('<AdminDomains />', () => {
     ]
 
     const { getByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -92,18 +89,16 @@ describe('<AdminDomains />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <AdminDomains
-                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                    orgSlug={'test-org.slug'}
-                    domainsPerPage={4}
-                  />
-                </MockedProvider>
+                <AdminDomains
+                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  orgSlug={'test-org.slug'}
+                  domainsPerPage={4}
+                />
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
 
     await waitFor(() => {

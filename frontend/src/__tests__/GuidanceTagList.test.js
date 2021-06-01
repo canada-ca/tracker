@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
@@ -7,8 +7,7 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagList } from '../GuidanceTagList'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
+import { MockedProvider } from '@apollo/client/testing'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -39,7 +38,7 @@ Object.defineProperty(window, 'matchMedia', {
 describe('<GuidanceTagList />', () => {
   it('renders negative guidance tags', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -57,13 +56,13 @@ describe('<GuidanceTagList />', () => {
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/DKIM-missing/i))
   })
   it('renders neutral guidance tags', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -81,7 +80,7 @@ describe('<GuidanceTagList />', () => {
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() =>
       getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
@@ -89,7 +88,7 @@ describe('<GuidanceTagList />', () => {
   })
   it('renders positive guidance tags', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -107,7 +106,7 @@ describe('<GuidanceTagList />', () => {
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() =>
       getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),

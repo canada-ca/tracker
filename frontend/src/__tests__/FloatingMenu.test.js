@@ -1,14 +1,13 @@
 import React from 'react'
-import { waitFor, render } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { render, waitFor } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { FloatingMenu } from '../FloatingMenu'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
+import { MockedProvider } from '@apollo/client/testing'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,7 +22,7 @@ const i18n = setupI18n({
 describe('<FloatingMenu>', () => {
   it('renders', async () => {
     const { getByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider>
         <UserStateProvider
           initialState={{
             userName: 'testUserName@email.com',
@@ -39,14 +38,14 @@ describe('<FloatingMenu>', () => {
             </I18nProvider>
           </MemoryRouter>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => expect(getByText(/Menu/i)).toBeInTheDocument())
   })
   describe("when the 'Menu' button is clicked", () => {
     it('opens the menu', async () => {
       const { getByText } = render(
-        <ApolloProvider client={client}>
+        <MockedProvider>
           <UserStateProvider
             initialState={{
               userName: 'testUserName@email.com',
@@ -62,7 +61,7 @@ describe('<FloatingMenu>', () => {
               </I18nProvider>
             </MemoryRouter>
           </UserStateProvider>
-        </ApolloProvider>,
+        </MockedProvider>,
       )
       const menuButton = getByText(/Menu/i)
       fireEvent.click(menuButton)
@@ -76,7 +75,7 @@ describe('<FloatingMenu>', () => {
     describe("and the 'Close' button is clicked", () => {
       it('closes the menu', async () => {
         const { getByText, queryByText } = render(
-          <ApolloProvider client={client}>
+          <MockedProvider>
             <UserStateProvider
               initialState={{
                 userName: 'testUserName@email.com',
@@ -92,7 +91,7 @@ describe('<FloatingMenu>', () => {
                 </I18nProvider>
               </MemoryRouter>
             </UserStateProvider>
-          </ApolloProvider>,
+          </MockedProvider>,
         )
         const menuButton = getByText(/Menu/i)
         fireEvent.click(menuButton)
@@ -118,7 +117,7 @@ describe('<FloatingMenu>', () => {
         let wLocation
 
         const { getByText } = render(
-          <ApolloProvider client={client}>
+          <MockedProvider>
             <UserStateProvider
               initialState={{
                 userName: 'testUserName@email.com',
@@ -141,7 +140,7 @@ describe('<FloatingMenu>', () => {
                 </I18nProvider>
               </MemoryRouter>
             </UserStateProvider>
-          </ApolloProvider>,
+          </MockedProvider>,
         )
         const menuButton = getByText(/Menu/i)
         fireEvent.click(menuButton)

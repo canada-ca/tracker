@@ -1,9 +1,8 @@
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 
-import { UserStateProvider, UserState, useUserState } from '../UserState'
-import { client } from '../client'
-import { ApolloProvider } from '@apollo/client'
+import { UserState, UserStateProvider, useUserState } from '../UserState'
+import { MockedProvider } from '@apollo/client/testing'
 
 describe('useUserState()', () => {
   it('provides the UserState context via a Hook', async () => {
@@ -16,7 +15,7 @@ describe('useUserState()', () => {
     }
 
     render(
-      <ApolloProvider client={client}>
+      <MockedProvider>
         <UserStateProvider
           initialState={{
             userName: null,
@@ -26,7 +25,7 @@ describe('useUserState()', () => {
         >
           <Foo />
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() =>
       expect(userState).toMatchObject({
@@ -54,7 +53,7 @@ describe('<UserStateProvider/>', () => {
       let providedState
 
       render(
-        <ApolloProvider client={client}>
+        <MockedProvider>
           <UserStateProvider initialState={initialState}>
             <UserState>
               {(value) => {
@@ -63,7 +62,7 @@ describe('<UserStateProvider/>', () => {
               }}
             </UserState>
           </UserStateProvider>
-        </ApolloProvider>,
+        </MockedProvider>,
       )
       expect(providedState).toMatchObject({
         currentUser: { jwt: null, tfaSendMethod: null, userName: null },
@@ -83,7 +82,7 @@ describe('<UserStateProvider/>', () => {
           }
 
           const { getByTestId } = render(
-            <ApolloProvider client={client}>
+            <MockedProvider>
               <UserStateProvider initialState={initialState}>
                 <UserState>
                   {({ currentUser, login }) => {
@@ -99,7 +98,7 @@ describe('<UserStateProvider/>', () => {
                   }}
                 </UserState>
               </UserStateProvider>
-            </ApolloProvider>,
+            </MockedProvider>,
           )
 
           fireEvent.click(getByTestId('loginbutton'))
@@ -120,7 +119,7 @@ describe('<UserStateProvider/>', () => {
           }
 
           render(
-            <ApolloProvider client={client}>
+            <MockedProvider>
               <UserStateProvider initialState={initialState}>
                 <UserState>
                   {(state) => {
@@ -132,7 +131,7 @@ describe('<UserStateProvider/>', () => {
                   }}
                 </UserState>
               </UserStateProvider>
-            </ApolloProvider>,
+            </MockedProvider>,
           )
 
           await waitFor(() => login(testUser))
@@ -159,7 +158,7 @@ describe('<UserStateProvider/>', () => {
           let isLoggedIn, login
 
           render(
-            <ApolloProvider client={client}>
+            <MockedProvider>
               <UserStateProvider initialState={initialState}>
                 <UserState>
                   {(state) => {
@@ -172,7 +171,7 @@ describe('<UserStateProvider/>', () => {
                   }}
                 </UserState>
               </UserStateProvider>
-            </ApolloProvider>,
+            </MockedProvider>,
           )
 
           await waitFor(() => login(testUser))
@@ -192,7 +191,7 @@ describe('<UserStateProvider/>', () => {
           let isLoggedIn, logout, login
 
           render(
-            <ApolloProvider client={client}>
+            <MockedProvider>
               <UserStateProvider initialState={initialState}>
                 <UserState>
                   {(state) => {
@@ -206,7 +205,7 @@ describe('<UserStateProvider/>', () => {
                   }}
                 </UserState>
               </UserStateProvider>
-            </ApolloProvider>,
+            </MockedProvider>,
           )
 
           await waitFor(() => login(testUser))

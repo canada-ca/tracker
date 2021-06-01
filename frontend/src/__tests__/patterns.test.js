@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
-import { Stripes, ZigZag, Dots, CrossHatch } from '../patterns'
+import { CrossHatch, Dots, Stripes, ZigZag } from '../patterns'
 
 describe('SVG patterns', () => {
   describe('<Stripes/>', () => {

@@ -1,15 +1,13 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter, Route } from 'react-router-dom'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import ResetPasswordPage from '../ResetPasswordPage'
 import { RESET_PASSWORD } from '../graphql/mutations'
-import { ApolloProvider } from '@apollo/client'
-import { client } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -40,7 +38,7 @@ describe('<ResetPasswordPage />', () => {
       describe('password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <ApolloProvider client={client}>
+            <MockedProvider mocks={mocks}>
               <UserStateProvider
                 initialState={{
                   userName: null,
@@ -50,22 +48,20 @@ describe('<ResetPasswordPage />', () => {
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MockedProvider mocks={mocks}>
-                      <MemoryRouter
-                        initialEntries={[
-                          '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                        ]}
-                        initialIndex={0}
-                      >
-                        <Route path="/reset-password/:resetToken">
-                          <ResetPasswordPage />
-                        </Route>
-                      </MemoryRouter>
-                    </MockedProvider>
+                    <MemoryRouter
+                      initialEntries={[
+                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                      ]}
+                      initialIndex={0}
+                    >
+                      <Route path="/reset-password/:resetToken">
+                        <ResetPasswordPage />
+                      </Route>
+                    </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
               </UserStateProvider>
-            </ApolloProvider>,
+            </MockedProvider>,
           )
 
           const password = container.querySelector('#password')
@@ -83,7 +79,7 @@ describe('<ResetPasswordPage />', () => {
       describe('confirm password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <ApolloProvider client={client}>
+            <MockedProvider mocks={mocks}>
               <UserStateProvider
                 initialState={{
                   userName: null,
@@ -93,22 +89,20 @@ describe('<ResetPasswordPage />', () => {
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MockedProvider mocks={mocks}>
-                      <MemoryRouter
-                        initialEntries={[
-                          '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                        ]}
-                        initialIndex={0}
-                      >
-                        <Route path="/reset-password/:resetToken">
-                          <ResetPasswordPage />
-                        </Route>
-                      </MemoryRouter>
-                    </MockedProvider>
+                    <MemoryRouter
+                      initialEntries={[
+                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                      ]}
+                      initialIndex={0}
+                    >
+                      <Route path="/reset-password/:resetToken">
+                        <ResetPasswordPage />
+                      </Route>
+                    </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
               </UserStateProvider>
-            </ApolloProvider>,
+            </MockedProvider>,
           )
 
           const confirmPassword = container.querySelector('#confirmPassword')

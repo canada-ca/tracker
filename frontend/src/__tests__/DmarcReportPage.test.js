@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -19,8 +19,7 @@ import { rawDkimFailureData } from '../fixtures/dkimFailureData'
 import { rawDmarcFailureData } from '../fixtures/dmarcFailureData'
 import { rawSpfFailureData } from '../fixtures/spfFailureData'
 import { rawFullPassData } from '../fixtures/fullPassData'
-import { client, createCache } from '../client'
-import { ApolloProvider } from '@apollo/client'
+import { createCache } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -107,7 +106,7 @@ const mocks = [
 describe('<DmarcReportPage />', () => {
   it('renders header', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -120,22 +119,20 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <MockedProvider mocks={mocks} cache={createCache()}>
-                    <DmarcReportPage summaryListResponsiveWidth={500} />
-                  </MockedProvider>
+                  <DmarcReportPage summaryListResponsiveWidth={500} />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/test-domain/i))
   })
 
   it('renders date selector', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -148,22 +145,20 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <MockedProvider mocks={mocks} cache={createCache()}>
-                    <DmarcReportPage summaryListResponsiveWidth={500} />
-                  </MockedProvider>
+                  <DmarcReportPage summaryListResponsiveWidth={500} />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/Showing data for period:/i))
   })
 
   it('renders bar graph', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -176,22 +171,20 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <MockedProvider mocks={mocks} cache={createCache()}>
-                    <DmarcReportPage summaryListResponsiveWidth={500} />
-                  </MockedProvider>
+                  <DmarcReportPage summaryListResponsiveWidth={500} />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/^Pass Only SPF$/i))
   })
 
   it('renders tables', async () => {
     const { getAllByText } = render(
-      <ApolloProvider client={client}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
@@ -204,15 +197,13 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <MockedProvider mocks={mocks} cache={createCache()}>
-                    <DmarcReportPage summaryListResponsiveWidth={500} />
-                  </MockedProvider>
+                  <DmarcReportPage summaryListResponsiveWidth={500} />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>
-      </ApolloProvider>,
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/DKIM Failures by IP Address/i))
     await waitFor(() => getAllByText(/SPF Failures by IP Address/i))
