@@ -11,5 +11,5 @@ resources:
 - result-processor-image-policy.yaml
 - ssl-scanner-image-policy.yaml
 - update-automation.yaml
-patches:
-- path: tracker-repo.yaml
+patchesStrategicMerge:
+- tracker-repo.yaml

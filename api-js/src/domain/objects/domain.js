@@ -32,6 +32,22 @@ export const domainType = new GraphQLObjectType({
       description: 'The current dmarc phase the domain is compliant to.',
       resolve: ({ phase }) => phase,
     },
+    hasDMARCReport: {
+      type: GraphQLBoolean,
+      description: 'Whether or not the domain has a aggregate dmarc report.',
+      resolve: async (
+        { _id },
+        _,
+        { auth: { checkDomainOwnership, userRequired } },
+      ) => {
+        await userRequired()
+        const hasDMARCReport = await checkDomainOwnership({
+          domainId: _id,
+        })
+
+        return hasDMARCReport
+      },
+    },
     lastRan: {
       type: GraphQLString,
       description: 'The last time that a scan was ran on this domain.',

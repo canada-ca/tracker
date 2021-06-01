@@ -17,7 +17,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "1"
     spec:
-      timeoutSeconds: 600
+      timeoutSeconds: 500
       containers:
         - name: scan-queue
           image: gcr.io/track-compliance/services/scan-queue
@@ -43,7 +43,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "1"
     spec:
-      timeoutSeconds: 600
+      timeoutSeconds: 500
       containers:
         - name: result-queue
           image: gcr.io/track-compliance/services/result-queue

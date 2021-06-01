@@ -14,6 +14,15 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
 
   const data = categoryData.edges[0]?.node
 
+  if (!data)
+    return (
+      <Text fontWeight="bold" fontSize="2xl">
+        <Trans>
+          {t`No scan data available for ${categoryName.toUpperCase()}.`}
+        </Trans>
+      </Text>
+    )
+
   const tagDetails =
     categoryName === 'dkim' ? (
       data.results.edges.map(({ node }, idx) => (

@@ -16,32 +16,27 @@ describe('given the upsertOwnership function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, collections
-
-  beforeEach(async () => {
+  beforeEach(() => {
     console.error = mockedError
     console.info = mockedInfo
+  })
+  afterEach(() => {
     consoleErrorOutput.length = 0
     consoleInfoOutput.length = 0
-
-    // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-
-    await truncate()
-  })
-
-  afterEach(async () => {
-    await drop()
   })
 
   describe('given a successful upseration operation', () => {
-    let org, domain
+    let org, domain, query, drop, truncate, collections
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
       org = await collections.organizations.save({
         orgDetails: {
@@ -74,25 +69,34 @@ describe('given the upsertOwnership function', () => {
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
     })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('ownership to domains is assigned to org', () => {
       it('returns the upserted item, with type being set to insert', async () => {
-        const ownerships = {
+        const ownership = {
           TEST: ['test.gc.ca'],
         }
 
-        await upsertOwnership({ ownerships, query })
-
-        const cursor = await query`
-            FOR item IN ownership RETURN { _from: item._from, _to: item._to }
-          `
+        await upsertOwnership({ ownership: ownership.TEST, key: 'TEST', query })
 
         const expectedOwnership = {
           _to: domain._id,
           _from: org._id,
         }
-        setTimeout(async () => {
-          await expect(cursor.next()).resolves.toEqual(expectedOwnership)
-        }, 1000)
+
+        const cursor = await query`
+          FOR item IN ownership
+            FILTER item._to == ${domain._id} AND item._from == ${org._id}
+            RETURN { _from: item._from, _to: item._to }
+        `
+
+        const data = await cursor.next()
+
+        expect(data).toEqual(expectedOwnership)
       })
     })
     describe('domain is not reassigned', () => {
@@ -103,11 +107,11 @@ describe('given the upsertOwnership function', () => {
         })
       })
       it('returns the upserted item, with type being set to update', async () => {
-        const ownerships = {
+        const ownership = {
           TEST: ['test.gc.ca'],
         }
 
-        await upsertOwnership({ ownerships, query })
+        await upsertOwnership({ ownership: ownership.TEST, key: 'TEST', query })
 
         const expectedOwnership = {
           _to: domain._id,
@@ -115,11 +119,14 @@ describe('given the upsertOwnership function', () => {
         }
 
         const cursor = await query`
-            FOR item IN ownership RETURN { _from: item._from, _to: item._to }
-          `
-        setTimeout(async () => {
-          await expect(cursor.next()).resolves.toEqual(expectedOwnership)
-        }, 1000)
+          FOR item IN ownership 
+            FILTER item._to == ${domain._id} AND item._from == ${org._id}
+            RETURN { _from: item._from, _to: item._to }
+        `
+
+        const data = await cursor.next()
+
+        expect(data).toEqual(expectedOwnership)
       })
     })
     describe('domain is reassigned to a different organization', () => {
@@ -156,11 +163,11 @@ describe('given the upsertOwnership function', () => {
         })
       })
       it('returns the upserted item, with type being set to update', async () => {
-        const ownerships = {
+        const ownership = {
           TEST2: ['test.gc.ca'],
         }
 
-        await upsertOwnership({ ownerships, query })
+        await upsertOwnership({ ownership: ownership.TEST2, key: 'TEST2', query })
 
         const expectedOwnership = {
           _to: domain._id,
@@ -168,11 +175,13 @@ describe('given the upsertOwnership function', () => {
         }
 
         const cursor = await query`
-            FOR item IN ownership RETURN { _from: item._from, _to: item._to }
-          `
-        setTimeout(async () => {
-          await expect(cursor.next()).resolves.toEqual(expectedOwnership)
-        }, 1000)
+          FOR item IN ownership 
+            FILTER item._to == ${domain._id} AND item._from == ${org2._id}
+            RETURN { _from: item._from, _to: item._to }
+        `
+        const data = await cursor.next()
+
+        expect(data).toEqual(expectedOwnership)
       })
     })
   })
@@ -186,13 +195,11 @@ describe('given the upsertOwnership function', () => {
         TEST: ['test.gc.ca'],
       }
 
-      await upsertOwnership({ ownerships, query: queryMock })
+      await upsertOwnership({ ownerships, key: 'TEST', query: queryMock })
 
-      setTimeout(async () => {
-        expect(consoleErrorOutput).toEqual([
-          `Error occurred while inserting/updating ownerships for TEST: Error: Database error occurred.`,
-        ])
-      }, 1000)
+      expect(consoleErrorOutput).toEqual([
+        `Error occurred while inserting/updating ownerships for TEST: Error: Database error occurred.`,
+      ])
     })
   })
 })

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import {
@@ -44,6 +44,7 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
+import { useDebounce } from './useDebounce'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [editingDomainUrl, setEditingDomainUrl] = useState()
@@ -63,6 +64,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
+  const [dbSearchTerm, setDbSearchTerm] = useState('')
 
   const domainForm = useFormik({
     initialValues: {
@@ -97,9 +99,15 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     fetchForward: FORWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
-    variables: { orgSlug },
+    variables: { orgSlug, search: dbSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
   })
+
+  const memoizedSearchTerm = useMemo(() => {
+    return [domainForm.values.domain]
+  }, [domainForm.values.domain])
+
+  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
@@ -263,13 +271,57 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     ),
   })
 
-  if (loading)
-    return (
-      <LoadingMessage>
-        <Trans>Domain List</Trans>
-      </LoadingMessage>
-    )
   if (error) return <ErrorFallbackMessage error={error} />
+
+  const adminDomainList = loading ? (
+    <LoadingMessage>
+      <Trans>Domain List</Trans>
+    </LoadingMessage>
+  ) : (
+    <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => (
+          <Text fontSize="lg" fontWeight="bold">
+            <Trans>No Domains</Trans>
+          </Text>
+        )}
+      >
+        {({ id: domainId, domain, lastRan }, index) => (
+          <Box key={'admindomain' + index}>
+            <Stack isInline align="center">
+              <Stack>
+                <TrackerButton
+                  variant="primary"
+                  px="2"
+                  onClick={() => {
+                    setEditingDomainUrl(domain)
+                    setEditingDomainId(domainId)
+                    updateOnOpen()
+                  }}
+                >
+                  <Icon name="edit" />
+                </TrackerButton>
+                <TrackerButton
+                  onClick={() => {
+                    setSelectedRemoveDomainUrl(domain)
+                    setSelectedRemoveDomainId(domainId)
+                    removeOnOpen()
+                  }}
+                  variant="danger"
+                  px="2"
+                >
+                  <Icon name="minus" />
+                </TrackerButton>
+              </Stack>
+              <Domain url={domain} lastRan={lastRan} />
+            </Stack>
+            <Divider borderColor="gray.900" />
+          </Box>
+        )}
+      </ListOf>
+    </Stack>
+  )
 
   return (
     <Stack mb="6" w="100%">
@@ -312,49 +364,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </Stack>
       </form>
 
-      <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
-        <ListOf
-          elements={nodes}
-          ifEmpty={() => (
-            <Text fontSize="lg" fontWeight="bold">
-              <Trans>No Domains</Trans>
-            </Text>
-          )}
-        >
-          {({ id: domainId, domain, lastRan }, index) => (
-            <Box key={'admindomain' + index}>
-              <Stack isInline align="center">
-                <Stack>
-                  <TrackerButton
-                    variant="primary"
-                    px="2"
-                    onClick={() => {
-                      setEditingDomainUrl(domain)
-                      setEditingDomainId(domainId)
-                      updateOnOpen()
-                    }}
-                  >
-                    <Icon name="edit" />
-                  </TrackerButton>
-                  <TrackerButton
-                    onClick={() => {
-                      setSelectedRemoveDomainUrl(domain)
-                      setSelectedRemoveDomainId(domainId)
-                      removeOnOpen()
-                    }}
-                    variant="danger"
-                    px="2"
-                  >
-                    <Icon name="minus" />
-                  </TrackerButton>
-                </Stack>
-                <Domain url={domain} lastRan={lastRan} />
-              </Stack>
-              <Divider borderColor="gray.900" />
-            </Box>
-          )}
-        </ListOf>
-      </Stack>
+      {adminDomainList}
+
       <RelayPaginationControls
         onlyPagination={true}
         hasNextPage={hasNextPage}

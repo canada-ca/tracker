@@ -426,7 +426,7 @@ export const loadOrgConnectionsByUserId = ({
       ))
       LET tokenArrFR = TOKENS(${search}, "text_fr")
       LET searchedOrgsFR = FLATTEN(UNIQUE(
-        FOR token IN tokenArrEN
+        FOR token IN tokenArrFR
         FOR org IN organizationSearch
           SEARCH ANALYZER(
               org.orgDetails.fr.acronym LIKE CONCAT("%", token, "%")

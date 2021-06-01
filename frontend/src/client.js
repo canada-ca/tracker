@@ -26,7 +26,7 @@ export function createCache() {
       },
       Organization: {
         fields: {
-          domains: relayStylePagination(),
+          domains: relayStylePagination(['first', 'search']),
           affiliations: relayStylePagination(),
         },
       },

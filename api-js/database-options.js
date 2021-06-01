@@ -185,12 +185,26 @@ export const databaseOptions = ({ rootPass }) => [
                 },
                 fr: {
                   fields: {
-                    acronym: { analyzers: ['text_en'] },
-                    name: { analyzers: ['text_en'] },
+                    acronym: { analyzers: ['text_fr'] },
+                    name: { analyzers: ['text_fr'] },
                   },
                 },
               },
             },
+          },
+        },
+      },
+    },
+  },
+  {
+    type: 'searchview',
+    name: 'userSearch',
+    options: {
+      links: {
+        users: {
+          fields: {
+            displayName: { analyzers: ['text_en'] },
+            userName: { analyzers: ['text_en'] },
           },
         },
       },

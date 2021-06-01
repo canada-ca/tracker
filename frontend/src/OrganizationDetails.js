@@ -100,7 +100,7 @@ export default function OrganizationDetails() {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <OrganizationSummary
-                summaries={data.organization.summaries}
+                summaries={data?.organization?.summaries}
                 domainCount={data.organization.domainCount}
                 userCount={data.organization.affiliations.totalCount}
                 city={data.organization.city}
