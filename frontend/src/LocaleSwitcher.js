@@ -34,6 +34,8 @@ const Toggler = props => {
         d={{ base: 'none', md: 'flex' }}
         alignItems='center'
         justifyContent='center'
+        border='1px'
+        borderColor='transparent'
         _hover={{
           color: 'accent',
           border: '1px solid',
