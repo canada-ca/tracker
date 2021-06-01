@@ -41,6 +41,25 @@ export default function AdminPage() {
     },
   })
 
+  const { data: isSA } = useQuery(IS_USER_SUPER_ADMIN, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    onError: (error) => {
+      const [_, message] = error.message.split(': ')
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
   if (loading) {
     return (
       <LoadingMessage>
@@ -116,7 +135,7 @@ export default function AdminPage() {
               <AdminPanel
                 orgSlug={orgDetails.slug}
                 orgId={orgDetails.id}
-                permission={orgDetails.permission}
+                permission={isSA?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
                 mr="4"
               />
             </Stack>
