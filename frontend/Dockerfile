@@ -22,7 +22,7 @@ RUN npm run build
 # https://github.com/astefanutti/scratch-node
 # FROM astefanutti/scratch-node
 # Our build of the above:
-FROM gcr.io/track-compliance/scratch-node:16.1.0
+FROM gcr.io/track-compliance/scratch-node:16.2.0
 COPY --from=build-env /app /app
 WORKDIR /app
 
