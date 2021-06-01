@@ -10,16 +10,26 @@ RUN npm ci --production
 # Base the production image on something slimmer
 FROM node:alpine
 LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
+WORKDIR /app
 
 ENV HOST 0.0.0.0
 ENV PORT 3000
-ENV NODE_ENV production
 
-# copy built app in
+COPY . .
+RUN npm i
+RUN npm run build
+
+# https://github.com/astefanutti/scratch-node
+# FROM astefanutti/scratch-node
+# Our build of the above:
+FROM gcr.io/track-compliance/scratch-node:16.1.0
 COPY --from=build-env /app /app
 WORKDIR /app
+
+ENV NODE_ENV production
 
 USER node
 EXPOSE 3000
 
-CMD ["npm", "start"]
+ENTRYPOINT ["/bin/node"]
+CMD ["index.js"]
