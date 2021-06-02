@@ -18,6 +18,7 @@ import { FloatingMenu } from './FloatingMenu'
 import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
+import { TrackerButton } from './TrackerButton'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -113,9 +114,22 @@ export default function App() {
               <Trans>Sign Out</Trans>
             </Link>
           ) : (
-            <Link to="/sign-in" ml={[null, 'auto']}>
+            <TrackerButton
+              variant="primary"
+              to="/sign-in"
+              ml={[null, 'auto']}
+            >
               <Trans>Sign In</Trans>
-            </Link>
+            </TrackerButton>
+          )}
+
+          {!isLoggedIn() && (
+            <TrackerButton
+              variant="primary outline"
+              to="/create-user"
+            >
+              <Trans>Create Account</Trans>
+            </TrackerButton>
           )}
         </Navigation>
 
