@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: super-admin
+  namespace: superadmin
+spec:
+  template:
+    spec:
+      containers:
+      - name: super-admin
+        image: gcr.io/track-compliance/super-admin:master-0df3a4b-1622452603 # {"$imagepolicy": "flux-system:super-admin"}
+        env:
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: superadmin
+              key: DB_PASS
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: superadmin
+              key: DB_NAME
+        - name: DB_URL
+          value: http://arangodb.db:8529
+        - name: SA_USER_DISPLAY_NAME
+          valueFrom:
+            secretKeyRef:
+              name: superadmin
+              key: SA_USER_DISPLAY_NAME
+        - name: SA_USER_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: superadmin
+              key: SA_USER_USERNAME
+        - name: SA_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: superadmin
+              key: SA_USER_PASSWORD
+        - name: SA_USER_LANG
+          value: "english"
+        - name: SA_ORG_EN_SLUG
+          value: "sa"
+        - name: SA_ORG_EN_ACRONYM
+          value: "SA"
+        - name: SA_ORG_EN_NAME
+          value: "Super Admin"
+        - name: SA_ORG_EN_ZONE
+          value: "FED"
+        - name: SA_ORG_EN_SECTOR
+          value: "TBS"
+        - name: SA_ORG_EN_PROVINCE
+          value: "Ontario"
+        - name: SA_ORG_EN_CITY
+          value: "Ottawa"
+        - name: SA_ORG_EN_COUNTRY
+          value: "Canada"
+        - name: SA_ORG_FR_SLUG
+          value: "sa"
+        - name: SA_ORG_FR_ACRONYM
+          value: "SA"
+        - name: SA_ORG_FR_NAME
+          value: "Super Admin"
+        - name: SA_ORG_FR_ZONE
+          value: "FED"
+        - name: SA_ORG_FR_SECTOR
+          value: "TBS"
+        - name: SA_ORG_FR_PROVINCE
+          value: "Ontario"
+        - name: SA_ORG_FR_CITY
+          value: "Ottawa"
+        - name: SA_ORG_FR_COUNTRY
+          value: "Canada"
+      restartPolicy: Never
+  backoffLimit: 4
+
