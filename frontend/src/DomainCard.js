@@ -176,6 +176,17 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           </Stack>
         )}
         <Stack fontSize="sm" justifySelf="flex-end" alignSelf="stretch">
+          <TrackerButton
+            variant="primary"
+            as={RouteLink}
+            to={`/domains/${url}`}
+            px="10"
+          >
+            <Text whiteSpace="noWrap">
+              <Trans>Guidance</Trans>
+            </Text>
+          </TrackerButton>
+
           {hasDMARCReport && (
             <TrackerButton
               variant="primary"
@@ -187,16 +198,6 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
               </Text>
             </TrackerButton>
           )}
-
-          <TrackerButton
-            variant="primary"
-            as={RouteLink}
-            to={`/domains/${url}`}
-          >
-            <Text whiteSpace="noWrap">
-              <Trans>Guidance</Trans>
-            </Text>
-          </TrackerButton>
         </Stack>
       </Flex>
     </ListItem>
