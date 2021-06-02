@@ -85,13 +85,18 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, lastRan, status }, index) => (
+      {({ id, domain, lastRan, status, hasDMARCReport }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
           <Box>
-            <DomainCard url={domain} lastRan={lastRan} status={status} />
+            <DomainCard
+              url={domain}
+              lastRan={lastRan}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+            />
             <Divider borderColor="gray.900" />
           </Box>
         </ErrorBoundary>

@@ -10,10 +10,10 @@ import {
   Flex,
 } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
-import { object, string } from 'prop-types'
+import { object, string, boolean } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 
-export function DomainCard({ url, lastRan, status, ...rest }) {
+export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
   const generateStatusIcon = (status) => {
     let statusIcon
     if (status === 'PASS') {
@@ -176,15 +176,18 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
           </Stack>
         )}
         <Stack fontSize="sm" justifySelf="flex-end" alignSelf="stretch">
-          <TrackerButton
-            variant="primary"
-            as={RouteLink}
-            to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
-          >
-            <Text whiteSpace="noWrap">
-              <Trans>DMARC Report</Trans>
-            </Text>
-          </TrackerButton>
+          {hasDMARCReport && (
+            <TrackerButton
+              variant="primary"
+              as={RouteLink}
+              to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+            >
+              <Text whiteSpace="noWrap">
+                <Trans>DMARC Report</Trans>
+              </Text>
+            </TrackerButton>
+          )}
+
           <TrackerButton
             variant="primary"
             as={RouteLink}
@@ -204,4 +207,5 @@ DomainCard.propTypes = {
   url: string.isRequired,
   lastRan: string,
   status: object,
+  hasDMARCReport: boolean,
 }

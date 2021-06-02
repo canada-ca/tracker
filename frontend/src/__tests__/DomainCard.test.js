@@ -35,6 +35,7 @@ describe('<OrganizationsCard />', () => {
                 url="tbs-sct.gc.ca"
                 lastRan="2020-09-10T00:34:26.429Z"
                 status={status}
+                hasDMARCReport={true}
               />
             </I18nProvider>
           </ThemeProvider>
@@ -54,7 +55,12 @@ describe('<OrganizationsCard />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DomainCard url="tbs-sct.gc.ca" lastRan={null} status={status} />
+              <DomainCard
+                url="tbs-sct.gc.ca"
+                lastRan={null}
+                status={status}
+                hasDMARCReport={true}
+              />
             </I18nProvider>
           </ThemeProvider>
         </MemoryRouter>

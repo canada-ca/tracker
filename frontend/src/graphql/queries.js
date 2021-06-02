@@ -107,6 +107,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
         ssl
       }
       dmarcPhase
+      hasDMARCReport
       web {
         https(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
@@ -643,6 +644,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
               spf
               ssl
             }
+            hasDMARCReport
           }
         }
       }
@@ -703,6 +705,7 @@ export const PAGINATED_DOMAINS = gql`
             spf
             ssl
           }
+          hasDMARCReport
           __typename
         }
         __typename
@@ -835,6 +838,7 @@ export const DMARC_REPORT_GRAPH = gql`
   query DmarcReportGraph($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
       id
+      hasDMARCReport
       yearlyDmarcSummaries {
         month
         year

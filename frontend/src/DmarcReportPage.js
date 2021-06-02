@@ -29,6 +29,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
+import { Layout } from './Layout'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -132,6 +133,18 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       after: '',
     },
   })
+
+  if (!graphData?.findDomainByDomain?.hasDMARCReport) {
+    return (
+      <Layout>
+        <Stack align="center">
+          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+            <Trans>This Domain does not support aggregate data</Trans>
+          </Text>
+        </Stack>
+      </Layout>
+    )
+  }
 
   const options = [
     <option

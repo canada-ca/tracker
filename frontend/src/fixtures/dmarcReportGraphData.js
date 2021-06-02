@@ -2,6 +2,7 @@ export const rawDmarcReportGraphData = {
   data: {
     findDomainByDomain: {
       id: 'testid=',
+      hasDMARCReport: true,
       yearlyDmarcSummaries: [
         {
           month: 'DECEMBER',
