@@ -23,7 +23,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { toConstantCase } from './helpers/toConstantCase'
-import { useDebounce } from './useDebounce'
+import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -43,7 +43,7 @@ export default function DmarcByDomainPage() {
     direction: 'DESC',
   })
   const [searchTerm, setSearchTerm] = useState('')
-  const [dbSearchTerm, setDbSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
   const {
     loading,
@@ -62,17 +62,17 @@ export default function DmarcByDomainPage() {
     variables: {
       month: selectedPeriod,
       year: selectedYear,
-      search: dbSearchTerm,
+      search: debouncedSearchTerm,
       orderBy: orderBy,
     },
     relayRoot: 'findMyDmarcSummaries',
   })
 
-  const memoizedSearchTerm = useMemo(() => {
-    return [searchTerm]
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
 
-  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const updateOrderBy = useCallback(
     (sortBy) => {
