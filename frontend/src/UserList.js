@@ -91,10 +91,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   useDebounce(setDbSearchUser, 500, memoizedSearchTerm)
 
-  useEffect(() => {
-    console.log({ dbSearchUser })
-  }, [dbSearchUser])
-
   const {
     loading,
     isLoadingMore,
