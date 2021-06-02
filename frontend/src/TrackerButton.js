@@ -14,6 +14,11 @@ export const TrackerButton = React.forwardRef(
       color = 'gray.50'
       bg = 'primary'
       hoverColor = 'primary2'
+    } else if (variant === 'primary outline') {
+      color="primary"
+      bg="transparent"
+      borderColor="primary"
+      borderWidth="1px"
     } else if (variant === 'outline') {
       color = 'primary2'
       bg = 'transparent'

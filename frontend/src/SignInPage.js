@@ -4,7 +4,6 @@ import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import {
   Box,
-  Button,
   Heading,
   Link,
   Stack,
@@ -154,16 +153,12 @@ export default function SignInPage() {
                 <Trans>Sign In</Trans>
               </TrackerButton>
 
-              <Button
-                as={RouteLink}
+              <TrackerButton
+                variant="primary outline"
                 to="/create-user"
-                color="primary"
-                bg="transparent"
-                borderColor="primary"
-                borderWidth="1px"
               >
                 <Trans>Create Account</Trans>
-              </Button>
+              </TrackerButton>
             </Stack>
           </form>
         )}

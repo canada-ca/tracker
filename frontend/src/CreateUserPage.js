@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Stack, useToast, Box, Heading, Text } from '@chakra-ui/core'
+import { Stack, useToast, Box, Heading, Text } from '@chakra-ui/core'
 import { useMutation } from '@apollo/client'
 import { object, string } from 'yup'
 import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
@@ -156,6 +156,13 @@ export default function CreateUserPage() {
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton
+                variant="primary outline"
+                to="/sign-in"
+              >
+                <Trans>Back</Trans>
+              </TrackerButton>
+
+              <TrackerButton
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
@@ -163,17 +170,6 @@ export default function CreateUserPage() {
               >
                 <Trans>Create Account</Trans>
               </TrackerButton>
-
-              <Button
-                as={RouteLink}
-                to="/sign-in"
-                color="primary"
-                bg="transparent"
-                borderColor="primary"
-                borderWidth="1px"
-              >
-                <Trans>Back</Trans>
-              </Button>
             </Stack>
           </form>
         )}
