@@ -63,9 +63,7 @@ export function createCache() {
 
 export const cache = createCache()
 
-const httpLink = createHttpLink({
-  uri: 'https://tracker.alpha.canada.ca/graphql',
-})
+const httpLink = createHttpLink({ uri: '/graphql' })
 
 const languageLink = setContext((_, { headers }) => {
   const language = i18n.locale
