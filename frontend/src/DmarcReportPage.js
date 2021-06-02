@@ -134,18 +134,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
   })
 
-  if (!graphData?.findDomainByDomain?.hasDMARCReport) {
-    return (
-      <Layout>
-        <Stack align="center">
-          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
-            <Trans>This Domain does not support aggregate data</Trans>
-          </Text>
-        </Stack>
-      </Layout>
-    )
-  }
-
   const options = [
     <option
       key="LAST30DAYS"
@@ -209,6 +197,19 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       </LoadingMessage>
     )
   }
+
+  if (!graphData?.findDomainByDomain?.hasDMARCReport) {
+    return (
+      <Layout>
+        <Stack align="center">
+          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+            <Trans>This domain does not support aggregate data</Trans>
+          </Text>
+        </Stack>
+      </Layout>
+    )
+  }
+
   // Display graph query error if found
   else if (graphError) {
     graphDisplay = <ErrorFallbackMessage error={graphError} />

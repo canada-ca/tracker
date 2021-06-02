@@ -10,7 +10,7 @@ import {
   Flex,
 } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
-import { object, string, boolean } from 'prop-types'
+import { object, string, bool } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 
 export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
@@ -175,7 +175,12 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
             />
           </Stack>
         )}
-        <Stack fontSize="sm" justifySelf="flex-end" alignSelf="stretch">
+        <Stack
+          fontSize="sm"
+          justifySelf="flex-end"
+          alignSelf="stretch"
+          justifyContent="center"
+        >
           <TrackerButton
             variant="primary"
             as={RouteLink}
@@ -208,5 +213,5 @@ DomainCard.propTypes = {
   url: string.isRequired,
   lastRan: string,
   status: object,
-  hasDMARCReport: boolean,
+  hasDMARCReport: bool,
 }

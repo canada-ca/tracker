@@ -2557,5 +2557,5 @@ msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
 
 #: src/DmarcReportPage.js:142
-msgid "This Domain does not support aggregate data"
+msgid "This domain does not support aggregate data"
 msgstr "Ce domaine ne prend pas en charge les données agrégées"
