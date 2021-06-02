@@ -262,13 +262,53 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     },
   )
 
-  if (loading)
-    return (
-      <LoadingMessage>
-        <Trans>User List</Trans>
-      </LoadingMessage>
-    )
   if (error) return <ErrorFallbackMessage error={error} />
+
+  const userList = loading ? (
+    <LoadingMessage>
+      <Trans>User List</Trans>
+    </LoadingMessage>
+  ) : nodes.length === 0 ? (
+    <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+      <Trans>No users in this organization</Trans>
+    </Text>
+  ) : (
+    nodes.map((node) => {
+      const userRole = node.permission
+      return (
+        <Box key={`${node.user.userName}:${node.id}`}>
+          <Stack isInline align="center">
+            <Stack>
+              <TrackerButton
+                aria-label="userEditButton"
+                variant="primary"
+                px="2"
+                onClick={() => {
+                  setEditingUserRole(userRole)
+                  setEditingUserName(node.user.userName)
+                  updateOnOpen()
+                }}
+              >
+                <Icon name="edit" />
+              </TrackerButton>
+              <TrackerButton
+                variant="danger"
+                onClick={() => {
+                  setSelectedRemoveUser(node.user)
+                  removeOnOpen()
+                }}
+                px="2"
+              >
+                <Icon name="minus" />
+              </TrackerButton>
+            </Stack>
+            <UserCard userName={node.user.userName} role={userRole} />
+          </Stack>
+          <Divider borderColor="gray.900" />
+        </Box>
+      )
+    })
+  )
 
   return (
     <Stack mb="6" w="100%">
@@ -333,47 +373,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         </Stack>
       </form>
 
-      {nodes.length === 0 ? (
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-          <Trans>No users in this organization</Trans>
-        </Text>
-      ) : (
-        nodes.map((node) => {
-          const userRole = node.permission
-          return (
-            <Box key={`${node.user.userName}:${node.id}`}>
-              <Stack isInline align="center">
-                <Stack>
-                  <TrackerButton
-                    aria-label="userEditButton"
-                    variant="primary"
-                    px="2"
-                    onClick={() => {
-                      setEditingUserRole(userRole)
-                      setEditingUserName(node.user.userName)
-                      updateOnOpen()
-                    }}
-                  >
-                    <Icon name="edit" />
-                  </TrackerButton>
-                  <TrackerButton
-                    variant="danger"
-                    onClick={() => {
-                      setSelectedRemoveUser(node.user)
-                      removeOnOpen()
-                    }}
-                    px="2"
-                  >
-                    <Icon name="minus" />
-                  </TrackerButton>
-                </Stack>
-                <UserCard userName={node.user.userName} role={userRole} />
-              </Stack>
-              <Divider borderColor="gray.900" />
-            </Box>
-          )
-        })
-      )}
+      {userList}
+
       <RelayPaginationControls
         onlyPagination={true}
         hasNextPage={hasNextPage}
