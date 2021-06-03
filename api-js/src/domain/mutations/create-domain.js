@@ -199,13 +199,17 @@ export const createDomain = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
     } else {
-      const selectorList = checkDomain.selectors
+      const { selectors: selectorList, status, lastRan } = checkDomain
+
       selectors.forEach((selector) => {
         if (!checkDomain.selectors.includes(selector)) {
           selectorList.push(selector)
         }
       })
+
       insertDomain.selectors = selectorList
+      insertDomain.status = status
+      insertDomain.lastRan = lastRan
 
       try {
         await trx.step(
