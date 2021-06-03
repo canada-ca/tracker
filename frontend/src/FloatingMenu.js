@@ -51,10 +51,12 @@ export const FloatingMenu = () => {
       p="4px"
       display={{ base: 'static', md: 'none' }}
     >
-      <Stack isInline width="100%" rounded="md" spacing={0}>
+      <Stack isInline width="100%" rounded="md" spacing={0}
+        fontSize={{base:'60%', sm:'100%'}}
+      >
         <Link as={RouteLink} to="/organizations" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src={buildingIcon} size="16px" />
+            <Trans>Organizations</Trans>
           </TrackerButton>
         </Link>
         <Divider
@@ -65,7 +67,7 @@ export const FloatingMenu = () => {
         />
         <Link as={RouteLink} to="/domains" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Icon name="https" height="16px" width="100%" />
+            <Trans>Domains</Trans>
           </TrackerButton>
         </Link>
         <Divider
@@ -76,7 +78,7 @@ export const FloatingMenu = () => {
         />
         <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src={reportIcon} size="16px" />
+            <Trans>DMARC Report</Trans>
           </TrackerButton>
         </Link>
         <Divider
