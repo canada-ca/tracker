@@ -75,4 +75,4 @@ steps:
         exit 0
       fi
 
-  timeout: 1200s
+timeout: 1200s
