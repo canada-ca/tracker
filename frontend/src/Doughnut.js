@@ -29,7 +29,7 @@ export const Doughnut = ({
   })
 
   const patterns = scaleOrdinal().range([
-    color,
+    color[0],
     `url(#stripes)`,
     `url(#dots)`,
     `url(#crosshatch)`,
@@ -40,10 +40,10 @@ export const Doughnut = ({
     <svg height={height} width={width}>
       <title>{title}</title>
       <defs>
-        <ZigZag width={0.4} background="#F16D22" color="#fff" />
-        <Dots size={1} background="#B93B26" color="#fff" />
-        <Stripes angle={45} background="#F8991F" color="#fff" />
-        <CrossHatch width={0.8} background="#F16D22" color="#fff" />
+        <Stripes angle={45} background={color[1]} color="#fff" />
+        <Dots size={1} background={color[2]} color="#fff" />
+        <CrossHatch width={0.8} background={color[3]} color="#fff" />
+        <ZigZag width={0.4} background={color[4]} color="#fff" />
       </defs>
       <g transform={`translate(${width / 2},${height / 2})`}>
         {arcs.map((arc, index) => {
@@ -96,10 +96,10 @@ export const Doughnut = ({
               style={{ display: 'inline', marginRight: '1em' }}
             >
               <defs>
-                <ZigZag width={0.4} background="#F16D22" color="#fff" />
-                <Dots size={1} background="#B93B26" color="#fff" />
-                <Stripes angle={45} background="#F8991F" color="#fff" />
-                <CrossHatch width={0.8} background="#F16D22" color="#fff" />
+                <Stripes angle={45} background={color[1]} color="#fff" />
+                <Dots size={1} background={color[2]} color="#fff" />
+                <CrossHatch width={0.8} background={color[3]} color="#fff" />
+                <ZigZag width={0.4} background={color[4]} color="#fff" />
               </defs>
               <g>
                 <rect
@@ -131,7 +131,7 @@ export const Doughnut = ({
 Doughnut.propTypes = {
   data: arrayOf(object),
   title: string,
-  color: string,
+  color: arrayOf(string),
   children: func,
   height: number,
   width: number,
