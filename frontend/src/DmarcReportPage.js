@@ -211,14 +211,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       ],
       moderate: [
         {
-          name: 'passSpfOnly',
-          displayName: t`Pass Only SPF`,
+          name: 'failDkim',
+          displayName: t`Fail DKIM`,
         },
       ],
       moderateAlt: [
         {
-          name: 'passDkimOnly',
-          displayName: t`Pass Only DKIM`,
+          name: 'failSpf',
+          displayName: t`Fail SPF`,
         },
       ],
       weak: [
