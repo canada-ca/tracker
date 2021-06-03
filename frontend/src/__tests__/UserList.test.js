@@ -27,7 +27,7 @@ const mocks = [
   {
     request: {
       query: FORWARD,
-      variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+      variables: { first: 4, orgSlug: 'test-org.slug' },
     },
     result: { data: rawOrgUserListData },
   },
