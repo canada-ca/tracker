@@ -81,6 +81,7 @@ export const requestScan = new mutationWithClientMutationId({
     const parameters = {
       domain_key: domain._key,
       domain: domain.domain,
+      selectors: domain.selectors,
       uuid,
     }
 
