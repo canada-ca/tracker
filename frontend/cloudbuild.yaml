@@ -74,3 +74,5 @@ steps:
       else
         exit 0
       fi
+
+timeout: 1200s
