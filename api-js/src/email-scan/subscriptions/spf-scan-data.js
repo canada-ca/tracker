@@ -13,7 +13,10 @@ export const spfScanData = {
       description: 'Subscription ID retrieved from the requestScan mutation.',
     },
   },
-  resolve: ({ scan }) => scan,
+  resolve: ({ scan }) => {
+    console.log(scan)
+    return scan
+  },
   subscribe: async (_context, { subscriptionId }, { pubsub }) =>
     pubsub.asyncIterator(`${SPF_SCAN_CHANNEL}/${subscriptionId}`),
 }
