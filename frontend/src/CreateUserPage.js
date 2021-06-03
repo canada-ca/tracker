@@ -155,15 +155,6 @@ export default function CreateUserPage() {
             <LanguageSelect name="lang" width="100%" mb="4" />
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <TrackerButton
-                type="submit"
-                id="submitBtn"
-                isLoading={isSubmitting}
-                variant="primary"
-              >
-                <Trans>Create Account</Trans>
-              </TrackerButton>
-
               <Button
                 as={RouteLink}
                 to="/sign-in"
@@ -174,6 +165,15 @@ export default function CreateUserPage() {
               >
                 <Trans>Back</Trans>
               </Button>
+
+              <TrackerButton
+                type="submit"
+                id="submitBtn"
+                isLoading={isSubmitting}
+                variant="primary"
+              >
+                <Trans>Create Account</Trans>
+              </TrackerButton>
             </Stack>
           </form>
         )}
