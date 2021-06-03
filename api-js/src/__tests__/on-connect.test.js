@@ -46,7 +46,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
-        })({ connectionParams, webSocket })
+        })( connectionParams, webSocket )
 
         expect(onConnect.language).toEqual('en')
         expect(consoleOutput).toEqual([
@@ -76,7 +76,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
-        })({ connectionParams, webSocket })
+        })( connectionParams, webSocket )
 
         expect(onConnect.language).toEqual('fr')
         expect(consoleOutput).toEqual([
@@ -107,7 +107,7 @@ describe('given the customOnConnect function', () => {
         verifyToken,
         userRequired: mockedUserRequired,
         loadUserByKey: jest.fn(),
-      })({ connectionParams, webSocket })
+      })( connectionParams, webSocket )
 
       expect(onConnect.authorization).toEqual(token)
       expect(consoleOutput).toEqual(['User: 1234, connected to subscription.'])
@@ -151,7 +151,7 @@ describe('given the customOnConnect function', () => {
             verifyToken,
             userRequired,
             loadUserByKey: jest.fn(),
-          })({ connectionParams, webSocket })
+          })( connectionParams, webSocket )
         } catch (err) {
           expect(err).toEqual(
             new Error('Authentication error. Please sign in.'),
@@ -182,7 +182,7 @@ describe('given the customOnConnect function', () => {
             verifyToken,
             userRequired,
             loadUserByKey: jest.fn(),
-          })({ connectionParams, webSocket })
+          })( connectionParams, webSocket )
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
