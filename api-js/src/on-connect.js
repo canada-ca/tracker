@@ -4,7 +4,7 @@ export const customOnConnect = ({
   verifyToken,
   userRequired,
   loadUserByKey,
-}) => async ({ connectionParams, webSocket }) => {
+}) => async (connectionParams, webSocket) => {
   const enLangPos = String(
     webSocket.upgradeReq.headers['accept-language'],
   ).indexOf('en')
