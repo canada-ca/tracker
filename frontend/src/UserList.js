@@ -73,6 +73,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         .email(i18n._(fieldRequirements.email.email.message)),
     }),
     onSubmit: async (values) => {
+      userForm.setFieldValue('userName', '')
+      setDbSearchUser('')
       setAddedUserName(values.userName)
       addUser({
         variables: {
