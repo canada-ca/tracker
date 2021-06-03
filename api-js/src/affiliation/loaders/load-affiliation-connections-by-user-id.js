@@ -350,7 +350,7 @@ export const loadAffiliationConnectionsByUserId =
 
     let orgSearchQuery = aql``
     let orgIdFilter = aql``
-    if (typeof search !== 'undefined') {
+    if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       orgSearchQuery = aql`
       LET tokenArrEN = TOKENS(${search}, "text_en")

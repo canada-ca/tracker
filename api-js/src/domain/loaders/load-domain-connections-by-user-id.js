@@ -294,7 +294,7 @@ export const loadDomainConnectionsByUserId = ({
   let domainQuery = aql``
   let loopString = aql`FOR domain IN domains`
   let totalCount = aql`LENGTH(domainKeys)`
-  if (typeof search !== 'undefined') {
+  if (typeof search !== 'undefined' && search !== '') {
     search = cleanseInput(search)
     domainQuery = aql`
       LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")

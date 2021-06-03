@@ -122,7 +122,21 @@ describe('given a loadOrgBySlug dataloader', () => {
             FOR org IN organizations
               FILTER org.orgDetails.en.slug == "communications-security-establishment"
               LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("en", org.orgDetails))
+              RETURN MERGE(
+                {
+                  _id: org._id,
+                  _key: org._key,
+                  _rev: org._rev,
+                  _type: "organization",
+                  id: org._key,
+                  verified: org.verified,
+                  domainCount: COUNT(domains),
+                  summaries: org.summaries,
+                  slugEN: org.orgDetails.en.slug,
+                  slugFR: org.orgDetails.fr.slug
+                },
+                TRANSLATE("en", org.orgDetails)
+              )
           `
           const expectedOrg = await expectedCursor.next()
 
@@ -139,7 +153,21 @@ describe('given a loadOrgBySlug dataloader', () => {
           const expectedCursor = await query`
             FOR org IN organizations
               LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("en", org.orgDetails))
+              RETURN MERGE(
+                {
+                  _id: org._id,
+                  _key: org._key,
+                  _rev: org._rev,
+                  _type: "organization",
+                  id: org._key,
+                  verified: org.verified,
+                  domainCount: COUNT(domains),
+                  summaries: org.summaries,
+                  slugEN: org.orgDetails.en.slug,
+                  slugFR: org.orgDetails.fr.slug
+                },
+                TRANSLATE("en", org.orgDetails)
+              )
           `
 
           while (expectedCursor.hasMore) {
@@ -176,7 +204,21 @@ describe('given a loadOrgBySlug dataloader', () => {
             FOR org IN organizations
               FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
               LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("fr", org.orgDetails))
+              RETURN MERGE(
+                {
+                  _id: org._id,
+                  _key: org._key,
+                  _rev: org._rev,
+                  _type: "organization",
+                  id: org._key,
+                  verified: org.verified,
+                  domainCount: COUNT(domains),
+                  summaries: org.summaries,
+                  slugEN: org.orgDetails.en.slug,
+                  slugFR: org.orgDetails.fr.slug
+                }, 
+                TRANSLATE("fr", org.orgDetails)
+              )
           `
           const expectedOrg = await expectedCursor.next()
 
@@ -193,7 +235,21 @@ describe('given a loadOrgBySlug dataloader', () => {
           const expectedCursor = await query`
             FOR org IN organizations
               LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("fr", org.orgDetails))
+              RETURN MERGE(
+                {
+                  _id: org._id,
+                  _key: org._key,
+                  _rev: org._rev,
+                  _type: "organization",
+                  id: org._key,
+                  verified: org.verified,
+                  domainCount: COUNT(domains),
+                  summaries: org.summaries,
+                  slugEN: org.orgDetails.en.slug,
+                  slugFR: org.orgDetails.fr.slug
+                }, 
+                TRANSLATE("fr", org.orgDetails)
+              )
           `
 
           while (expectedCursor.hasMore) {
