@@ -523,10 +523,15 @@ export const ADMIN_PANEL = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
-  query PaginatedOrgAffiliations($orgSlug: Slug!, $first: Int, $after: String) {
+  query PaginatedOrgAffiliations(
+    $orgSlug: Slug!
+    $first: Int
+    $after: String
+    $search: String
+  ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after) {
+      affiliations(first: $first, after: $after, search: $search) {
         edges {
           node {
             id
