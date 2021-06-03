@@ -27,15 +27,17 @@ export const customOnConnect = ({
   const verify = verifyToken({ i18n })
   const token = authorization || ''
 
-  let userKey
+  let userKey = ''
   if (token !== '') {
     userKey = verify({ token }).userKey
   }
 
+  const { query } = context
+
   await userRequired({
     i18n,
     userKey,
-    loadUserByKey: loadUserByKey(context.query),
+    loadUserByKey: loadUserByKey({ query, userKey }),
   })()
 
   console.info(`User: ${userKey}, connected to subscription.`)
