@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   FormLabel,
   Stack,
@@ -33,7 +33,7 @@ import {
 } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
 import { useUserState } from './UserState'
-import { Formik, useFormik } from 'formik'
+import { Field, Formik } from 'formik'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 import { LoadingMessage } from './LoadingMessage'
@@ -41,7 +41,6 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { RelayPaginationControls } from './RelayPaginationControls'
-import { useDebounce } from './useDebounce'
 
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
@@ -63,35 +62,11 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     onClose: updateOnClose,
   } = useDisclosure()
   const initialFocusRef = useRef()
-  const [dbSearchUser, setDbSearchUser] = useState('')
-
-  const userForm = useFormik({
-    initialValues: { userName: '', roleSelect: 'USER' },
-    validationSchema: object().shape({
-      userName: yupString()
-        .required(i18n._(fieldRequirements.email.required.message))
-        .email(i18n._(fieldRequirements.email.email.message)),
-    }),
-    onSubmit: async (values) => {
-      userForm.setFieldValue('userName', '')
-      setDbSearchUser('')
-      setAddedUserName(values.userName)
-      addUser({
-        variables: {
-          userName: values.userName,
-          requestedRole: values.roleSelect,
-          orgId: orgId,
-          preferredLang: 'ENGLISH',
-        },
-      })
-    },
+  const addUserValidationSchema = object().shape({
+    userName: yupString()
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
   })
-
-  const memoizedSearchTerm = useMemo(() => {
-    return [userForm.values.userName]
-  }, [userForm.values.userName])
-
-  useDebounce(setDbSearchUser, 500, memoizedSearchTerm)
 
   const {
     loading,
@@ -106,10 +81,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     fetchForward: FORWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: usersPerPage,
-    variables: { orgSlug, search: dbSearchUser },
+    variables: { orgSlug },
     relayRoot: 'findOrganizationBySlug.affiliations',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
   })
 
   const [
@@ -260,119 +233,141 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     },
   )
 
+  if (loading)
+    return (
+      <LoadingMessage>
+        <Trans>User List</Trans>
+      </LoadingMessage>
+    )
   if (error) return <ErrorFallbackMessage error={error} />
 
-  const userList = loading ? (
-    <LoadingMessage>
-      <Trans>User List</Trans>
-    </LoadingMessage>
-  ) : nodes.length === 0 ? (
-    <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-      <Trans>No users in this organization</Trans>
-    </Text>
-  ) : (
-    nodes.map((node) => {
-      const userRole = node.permission
-      return (
-        <Box key={`${node.user.userName}:${node.id}`}>
-          <Stack isInline align="center">
-            <Stack>
-              <TrackerButton
-                aria-label="userEditButton"
-                variant="primary"
-                px="2"
-                onClick={() => {
-                  setEditingUserRole(userRole)
-                  setEditingUserName(node.user.userName)
-                  updateOnOpen()
-                }}
-              >
-                <Icon name="edit" />
-              </TrackerButton>
-              <TrackerButton
-                variant="danger"
-                onClick={() => {
-                  setSelectedRemoveUser(node.user)
-                  removeOnOpen()
-                }}
-                px="2"
-              >
-                <Icon name="minus" />
-              </TrackerButton>
-            </Stack>
-            <UserCard userName={node.user.userName} role={userRole} />
-          </Stack>
-          <Divider borderColor="gray.900" />
-        </Box>
-      )
+  const showErrorToast = (error) =>
+    toast({
+      title: t`An error occurred.`,
+      description: error,
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+      position: 'top-left',
     })
-  )
 
   return (
     <Stack mb="6" w="100%">
-      <form
-        onSubmit={(e) => {
-          // Manually handle submit
-          // if error exist, show toast. Only submit if no errors
-          e.preventDefault()
-          if (userForm.errors.userName) {
-            toast({
-              title: t`An error occurred.`,
-              description: userForm.errors.userName,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-              position: 'top-left',
-            })
-          } else userForm.handleSubmit()
+      <Formik
+        validationSchema={addUserValidationSchema}
+        initialValues={{ userName: '', roleSelect: 'USER' }}
+        initialErrors={{ userName: 'Email cannot be empty' }}
+        onSubmit={(values) => {
+          addUser({
+            variables: {
+              userName: values.userName,
+              requestedRole: values.roleSelect,
+              orgId: orgId,
+              preferredLang: 'ENGLISH',
+            },
+          })
         }}
       >
-        <Stack
-          align="center"
-          w="100%"
-          flexDirection={['column', 'row']}
-          isInline
-          mb="2"
-        >
-          <Stack
-            isInline
-            w="100%"
-            align="center"
-            mb={['2', '0']}
-            mr={['0', '2']}
-          >
-            <InputGroup flexGrow={1} w="50%">
-              <InputLeftElement>
-                <Icon name="email" color="gray.300" />
-              </InputLeftElement>
-              <Input
-                type="email"
-                placeholder={t`New user email`}
-                isDisabled={addUserLoading}
-                {...userForm.getFieldProps('userName')}
-              />
-            </InputGroup>
-
-            <Select
-              w="25%"
-              flexBasis="7rem"
-              flexShrink={0}
-              {...userForm.getFieldProps('roleSelect')}
+        {({ handleSubmit, values, errors }) => (
+          <form id="form" onSubmit={handleSubmit} noValidate>
+            <Stack
+              align="center"
+              w="100%"
+              flexDirection={['column', 'row']}
+              isInline
+              mb="2"
             >
-              <option value="USER">{t`USER`}</option>
-              <option value="ADMIN">{t`ADMIN`}</option>
-            </Select>
-          </Stack>
+              <Stack
+                isInline
+                w="100%"
+                align="center"
+                mb={['2', '0']}
+                mr={['0', '2']}
+              >
+                <InputGroup flexGrow={1} w="50%">
+                  <InputLeftElement>
+                    <Icon name="email" color="gray.300" />
+                  </InputLeftElement>
+                  <Input
+                    as={Field}
+                    type="email"
+                    name="userName"
+                    placeholder={t`New user email`}
+                    isDisabled={addUserLoading}
+                  />
+                </InputGroup>
 
-          <TrackerButton w={['100%', '25%']} variant="primary" type="submit">
-            <Icon name="add" />
-            <Trans>Invite User</Trans>
-          </TrackerButton>
-        </Stack>
-      </form>
+                <Field
+                  w="25%"
+                  as={Select}
+                  flexBasis="7rem"
+                  flexShrink={0}
+                  id="roleSelect"
+                  name="roleSelect"
+                >
+                  <option value="USER">{t`USER`}</option>
+                  <option value="ADMIN">{t`ADMIN`}</option>
+                </Field>
+              </Stack>
 
-      {userList}
+              <TrackerButton
+                w={['100%', '25%']}
+                variant="primary"
+                type="submit"
+                onClick={() => {
+                  setAddedUserName(values.userName)
+                  if (errors.userName) showErrorToast(errors.userName)
+                }}
+              >
+                <Icon name="add" />
+                <Trans>Invite User</Trans>
+              </TrackerButton>
+            </Stack>
+          </form>
+        )}
+      </Formik>
 
+      {nodes.length === 0 ? (
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+          <Trans>No users in this organization</Trans>
+        </Text>
+      ) : (
+        nodes.map((node) => {
+          const userRole = node.permission
+          return (
+            <Box key={`${node.user.userName}:${node.id}`}>
+              <Stack isInline align="center">
+                <Stack>
+                  <TrackerButton
+                    aria-label="userEditButton"
+                    variant="primary"
+                    px="2"
+                    onClick={() => {
+                      setEditingUserRole(userRole)
+                      setEditingUserName(node.user.userName)
+                      updateOnOpen()
+                    }}
+                  >
+                    <Icon name="edit" />
+                  </TrackerButton>
+                  <TrackerButton
+                    variant="danger"
+                    onClick={() => {
+                      setSelectedRemoveUser(node.user)
+                      removeOnOpen()
+                    }}
+                    px="2"
+                  >
+                    <Icon name="minus" />
+                  </TrackerButton>
+                </Stack>
+                <UserCard userName={node.user.userName} role={userRole} />
+              </Stack>
+              <Divider borderColor="gray.900" />
+            </Box>
+          )
+        })
+      )}
       <RelayPaginationControls
         onlyPagination={true}
         hasNextPage={hasNextPage}
