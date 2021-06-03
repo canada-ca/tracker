@@ -78,7 +78,7 @@ export const FloatingMenu = () => {
         />
         <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Trans>DMARC Report</Trans>
+            <Trans>DMARC Summaries</Trans>
           </TrackerButton>
         </Link>
         <Divider

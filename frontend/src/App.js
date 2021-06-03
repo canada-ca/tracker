@@ -78,7 +78,7 @@ export default function App() {
 
           {isLoggedIn() && (
             <Link to="/dmarc-summaries">
-              <Trans>DMARC Report</Trans>
+              <Trans>DMARC Summaries</Trans>
             </Link>
           )}
 
@@ -203,7 +203,7 @@ export default function App() {
 
               <PrivatePage
                 path="/dmarc-summaries"
-                title={t`DMARC Report`}
+                title={t`DMARC Summaries`}
                 exact
               >
                 <DmarcByDomainPage />
