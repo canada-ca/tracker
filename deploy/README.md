@@ -2,7 +2,7 @@
 
 The Tracker project uses [Flux](https://fluxcd.io/), to enable [pull based](https://alex.kaskaso.li/post/pull-based-pipelines) Continuous Deployment.
 
-The directory here is laid out to allow the patching of a basic flux install. It is based on [the example](https://docs.fluxcd.io/en/1.18.0/tutorials/get-started-kustomize.html) in the documentation.
+The directory layout here to allow the patching of a basic flux install using [Kustomize](https://kustomize.io/).
 
 ## Testing config changes
 
@@ -10,7 +10,9 @@ Config changes can be pretty high impact, so trying it out somewhere is pretty u
 
 Containerized applications [read their config from the environment](https://12factor.net/config), and that environment is largely populated via secrets. Consequently we create these secrets and the namespaces they live in before doing the deployment.
 
-See the readme in the app folder for instructions on how to create those app credentials.
+You can run `make credentials` in the project root to generate a basic set of dev credentials. Without passing any arguments, `make credentials` is equivalent to `make credentials mode=dev displayname=admin email=admin@example.com password=admin`. These default arguments set the credentials for the super admin user, and if you intend to log into your testing instance, make a note of those or adjust the arguments as needed.
+
+In each of the cases below, `make deploy` installs flux into whatever cluster `kubectl` is currently pointing at. Flux will clone the Tracker repository and start applying the config it finds within to create a fully working instance of Tracker. This can take several minutes.
 
 ### Testing in Minikube
 
