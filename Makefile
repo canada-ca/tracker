@@ -7,6 +7,9 @@ name = test
 region = northamerica-northeast1
 mode = dev
 env = test
+displayname="admin"
+SA_USER_USERNAME="admin@example.com""
+SA_USER_PASSWORD="admin"
 
 define scanners =
 endef
@@ -70,6 +73,10 @@ app:
 scans:
 		kubectl apply -n scanners -f app/jobs/scan-job.yaml
 		kubectl apply -n scanners -f app/jobs/core-job.yaml
+
+.PHONY: superadmin
+superadmin:
+		kubectl apply -f app/jobs/super-admin.yaml
 
 .ONESHELL:
 .PHONY: credentials
@@ -137,5 +144,30 @@ credentials:
 		NOTIFICATION_VERIFICATION_EMAIL_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_VERIFICATION_EMAIL_FR=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		TRACING_ENABLED=true
+		EOF
+		cat <<-'EOF' > app/creds/$(mode)/superadmin.env
+		DB_PASS=test
+		DB_URL=arangodb.db:8529
+		DB_NAME=track_dmarc
+		SA_USER_DISPLAY_NAME="$(displayname)"
+		SA_USER_USERNAME="$(username)"
+		SA_USER_PASSWORD="$(password)"
+		SA_USER_LANG=en
+		SA_ORG_EN_SLUG=sa
+		SA_ORG_EN_ACRONYM=SA
+		SA_ORG_EN_NAME=Super Admin
+		SA_ORG_EN_ZONE=FED
+		SA_ORG_EN_SECTOR=TBS
+		SA_ORG_EN_COUNTRY=Canada
+		SA_ORG_EN_PROVINCE=Ontario
+		SA_ORG_EN_CITY=Ottawa
+		SA_ORG_FR_SLUG=sa
+		SA_ORG_FR_ACRONYM=SA
+		SA_ORG_FR_NAME=Super Admin
+		SA_ORG_FR_ZONE=FED
+		SA_ORG_FR_SECTOR=TBS
+		SA_ORG_FR_COUNTRY=Canada
+		SA_ORG_FR_PROVINCE=Ontario
+		SA_ORG_FR_CITY=Ottawa
 		EOF
 		echo "Credentials written to app/creds/$(mode)"

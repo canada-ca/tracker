@@ -6,6 +6,10 @@ secretGenerator:
   name: arangodb
   namespace: db
 - envs:
+  - superadmin.env
+  name: superadmin
+  namespace: superadmin
+- envs:
   - api.env
   name: api
   namespace: api
