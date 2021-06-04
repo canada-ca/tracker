@@ -24,7 +24,6 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { toConstantCase } from './helpers/toConstantCase'
 import { useDebounce } from './useDebounce'
-import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
 
 export default function DmarcByDomainPage() {
@@ -117,22 +116,16 @@ export default function DmarcByDomainPage() {
     {
       Header: i18n._(t`Domain`),
       accessor: 'domain',
-      Cell: ({ value }) => {
+      // eslint-disable-next-line react/prop-types
+      Cell: function CellValueWithLink({ value }) {
         return (
-          <Stack direction="row" fontSize="sm" justifyContent="space-between">
-            <Box alignSelf="center">
-              {value}
-            </Box>
-            <TrackerButton
-              variant="primary"
-              as={RouteLink}
-              to={`/domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
-            >
-              <Text whiteSpace="noWrap">
-                <Trans>DMARC Report</Trans>
-              </Text>
-            </TrackerButton>
-          </Stack>
+          <Link
+            as={RouteLink}
+            to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+            isExternal={false}
+          >
+            {`${value} `} <Icon name="link" />
+          </Link>
         )
       },
       sortDescFirst: true,
