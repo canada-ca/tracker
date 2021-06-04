@@ -15,15 +15,25 @@ steps:
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: services/core
+    args:
+      - '-c'
+      - |
+        echo "gcr.io/$PROJECT_ID/services/core:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: 'gcr.io/cloud-builders/docker'
     id: build-results-if-master
     entrypoint: 'bash'
-    dir: services/scanners/results
+    dir: services/core
     args:
     -  '-c'
     - |
       if [[ "$BRANCH_NAME" == "master" ]]
       then
-        docker build -t gcr.io/$PROJECT_ID/services/core:$BRANCH_NAME-$SHORT_SHA .
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
       else
         exit 0
       fi
@@ -31,12 +41,14 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: push-results-if-master
     entrypoint: 'bash'
+    dir: services/core
     args:
     -  '-c'
     -  |
        if [[ "$BRANCH_NAME" == "master" ]]
        then
-         docker push gcr.io/$PROJECT_ID/services/core:$BRANCH_NAME-$SHORT_SHA
+         image=$(cat /workspace/imagename)
+         docker push $image
        else
          exit 0
        fi
