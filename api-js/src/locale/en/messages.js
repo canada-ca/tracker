@@ -499,7 +499,7 @@
     'User could not be queried.': 'User could not be queried.',
     'User role was updated successfully.':
       'User role was updated successfully.',
-    'Username already in use.': 'Username already in use.',
+    'Email already in use.': 'Email already in use.',
     'Username not available, please try another.':
       'Username not available, please try another.',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':

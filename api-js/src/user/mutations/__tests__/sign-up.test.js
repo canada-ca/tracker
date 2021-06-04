@@ -752,7 +752,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'Username already in use.',
+                  description: 'Email already in use.',
                 },
               },
             },
@@ -760,7 +760,7 @@ describe('testing user sign up', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that username.',
+            'User: test.account@istio.actually.exists tried to sign up, however there is already an email in use with that username.',
           ])
         })
       })

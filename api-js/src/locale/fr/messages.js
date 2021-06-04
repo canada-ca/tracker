@@ -260,7 +260,7 @@
     'Unable to verify unknown organization.': 'todo',
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
-    'Username already in use.': 'todo',
+    'Email already in use.': 'todo',
     'Username not available, please try another.': 'todo',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'todo',
