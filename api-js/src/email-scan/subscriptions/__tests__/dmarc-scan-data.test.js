@@ -46,14 +46,12 @@ describe('given the dmarcScanData subscription', () => {
     }
 
     dmarcScan = {
-      scan: {
-        dmarcPhase: 1,
-        record: 'record',
-        pPolicy: 'pPolicy',
-        spPolicy: 'spPolicy',
-        pct: 100,
-        guidanceTags: ['dmarc1'],
-      },
+      dmarcPhase: 1,
+      record: 'record',
+      pPolicy: 'pPolicy',
+      spPolicy: 'spPolicy',
+      pct: 100,
+      guidanceTags: ['dmarc1'],
     }
 
     createSubscriptionMutation = () =>

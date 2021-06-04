@@ -46,16 +46,14 @@ describe('given the dkimScanData subscription', () => {
     }
 
     dkimScan = {
-      scan: {
-        results: [
-          {
-            selector: 'selector',
-            record: 'record',
-            keyLength: 'keyLength',
-            guidanceTags: ['dkim1'],
-          },
-        ],
-      },
+      results: [
+        {
+          selector: 'selector',
+          record: 'record',
+          keyLength: 'keyLength',
+          guidanceTags: ['dkim1'],
+        },
+      ],
     }
 
     createSubscriptionMutation = () =>

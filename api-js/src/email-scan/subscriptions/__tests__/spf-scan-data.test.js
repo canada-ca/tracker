@@ -46,12 +46,10 @@ describe('given the spfScanData subscription', () => {
     }
 
     spfScan = {
-      scan: {
-        lookups: 1,
-        record: 'record',
-        spfDefault: 'spfDefault',
-        guidanceTags: ['spf1'],
-      },
+      lookups: 1,
+      record: 'record',
+      spfDefault: 'spfDefault',
+      guidanceTags: ['spf1'],
     }
 
     createSubscriptionMutation = () =>
