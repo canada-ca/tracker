@@ -44,7 +44,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
           color={[
             categoryDisplay.pass.color,
             categoryDisplay.fail.color,
-            categoryDisplay.unscanned.color
+            categoryDisplay.unscanned.color,
           ]}
           height={320}
           width={320}
