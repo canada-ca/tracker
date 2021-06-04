@@ -13,7 +13,7 @@ export const sslScanData = {
       description: 'Subscription ID retrieved from the requestScan mutation.',
     },
   },
-  resolve: ({ scan }) => {
+  resolve: (scan) => {
     console.log(scan)
     return scan
   },

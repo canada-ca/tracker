@@ -46,14 +46,12 @@ describe('given the httpsScanData subscription', () => {
     }
 
     httpsScan = {
-      scan: {
-        implementation: 'implementation',
-        enforced: 'enforced',
-        hsts: 'hsts',
-        hstsAge: 'hstsAge',
-        preloaded: 'preloaded',
-        guidanceTags: ['https1'],
-      },
+      implementation: 'implementation',
+      enforced: 'enforced',
+      hsts: 'hsts',
+      hstsAge: 'hstsAge',
+      preloaded: 'preloaded',
+      guidanceTags: ['https1'],
     }
 
     createSubscriptionMutation = () =>

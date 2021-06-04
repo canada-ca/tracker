@@ -46,9 +46,7 @@ describe('given the spfScanData subscription', () => {
     }
 
     sslScan = {
-      scan: {
-        guidanceTags: ['ssl1'],
-      },
+      guidanceTags: ['ssl1'],
     }
 
     createSubscriptionMutation = () =>
