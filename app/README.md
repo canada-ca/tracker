@@ -13,7 +13,10 @@ In accordance with the [12Factor app](https://12factor.net) philosophy, all the 
 To generate the config needed to run a copy of the app, we need to define some `.env` files, that will be used to create Kubernetes secrets, whose values are available to the various parts of the app.
 
 ```
+# let the super user account be created with the default username/password
 $ make credentials
+# or override the default credentials by passing your own.
+$ make credentials displayname=admin email=admin@example.com password=admin
 Credentials written to app/creds/dev
 ```
 
@@ -25,14 +28,14 @@ minikube start --cpus 8 --memory 20480
 Then we load the secrets and platform config into minikube.
 
 ```
-$ make secrets
-$ make platform
+$ make secrets env=minikube
+$ make platform env=minikube
 ```
 
 Watch the results with `watch kubectl get pods -n istio-system`. Once Istio is running (and ready to inject it's sidecar proxies), the config for our app can be applied.
 
 ```
-$ make app
+$ make app env=minikube
 ```
 
 Depending on the speed of your system you might need to run the kustomize/apply commands more than once.
