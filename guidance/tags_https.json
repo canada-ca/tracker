@@ -152,6 +152,28 @@
             }
         ],
         "refLinksTechnical": [""]
+    },
+    "https15": {
+        "tagName": "HTTPS-certificate-name-mismatch",
+        "guidance": "Domain does not match name on HTTPS certificate",
+        "refLinksGuide": [
+            {
+                "description": "6.1.3 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "refLinksTechnical": [""]
+    },
+    "https16": {
+        "tagName": "HTTPS-certificate-revoked",
+        "guidance": "HTTPS certificate has been revoked",
+        "refLinksGuide": [
+            {
+                "description": "6.1.3 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "refLinksTechnical": [""]
     }
     
 }
