@@ -133,6 +133,7 @@
     'DMARC Report for {domainSlug}': ['DMARC Report for ', ['domainSlug']],
     'DMARC Report | {domainSlug}': ['DMARC Report | ', ['domainSlug']],
     'DMARC Status': 'DMARC Status',
+    'DMARC Summaries': 'DMARC Summaries',
     'DMARC fail': 'DMARC fail',
     'DMARC pass': 'DMARC pass',
     'DMARC-GC': 'DMARC-GC',
