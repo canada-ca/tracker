@@ -171,7 +171,7 @@ export default function DmarcByDomainPage() {
   const percentageColumns = useMemo(
     () => [
       {
-        Header: i18n._(t`DMARC Messages`),
+        Header: i18n._(t`DMARC Summaries`),
         hidden: true,
         columns: [
           domain,
@@ -271,7 +271,7 @@ export default function DmarcByDomainPage() {
   return (
     <Box width="100%" px="2">
       <Heading as="h1" textAlign="center" size="lg" mb="4px">
-        <Trans>DMARC Messages</Trans>
+        <Trans>DMARC Summaries</Trans>
       </Heading>
 
       <Stack isInline align="center" mb="4px">
