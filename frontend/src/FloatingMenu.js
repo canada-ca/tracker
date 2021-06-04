@@ -17,7 +17,6 @@ import {
   Image,
   useToast,
   Heading,
-  Icon,
 } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
