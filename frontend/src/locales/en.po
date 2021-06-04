@@ -2563,3 +2563,7 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Tracker"
+
+#: src/DmarcReportPage.js:142
+msgid "This domain does not support aggregate data"
+msgstr "This domain does not support aggregate data"

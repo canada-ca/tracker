@@ -2555,3 +2555,7 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
+
+#: src/DmarcReportPage.js:142
+msgid "This domain does not support aggregate data"
+msgstr "Ce domaine ne prend pas en charge les données agrégées"
