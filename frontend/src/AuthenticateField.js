@@ -67,6 +67,7 @@ const AuthenticateField = WithPseudoBox(function AuthenticateField({
             ref={forwardedRef}
             placeholder={i18n._(t`Enter two factor code`)}
             autoFocus
+            autoComplete="off"
             inputMode="numeric"
           />
         </InputGroup>
