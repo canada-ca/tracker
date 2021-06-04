@@ -1374,3 +1374,38 @@ export const USER_AFFILIATIONS = gql`
     }
   }
 `
+export const ADMIN_AFFILIATIONS = gql`
+  query AdminAffiliations(
+    $after: String
+    $first: Int
+    $before: String
+    $last: Int
+    $orderBy: OrganizationOrder
+    $isAdmin: Boolean
+    $includeSuperAdminOrg: Boolean
+  ) {
+    findMyOrganizations(
+      after: $after
+      first: $first
+      before: $before
+      last: $last
+      orderBy: $orderBy
+      isAdmin: $isAdmin
+      includeSuperAdminOrg: $includeSuperAdminOrg
+    ) {
+      edges {
+        node {
+          id
+          acronym
+          slug
+        }
+      }
+    }
+  }
+`
+
+export const IS_USER_SUPER_ADMIN = gql`
+  query IsUserSuperAdmin {
+    isUserSuperAdmin
+  }
+`
