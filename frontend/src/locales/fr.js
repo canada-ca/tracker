@@ -422,7 +422,7 @@
       "La politique ne s'applique à aucune partie du flux de courrier - configuration irrégulière",
     'Policy applies to percentage of mailflow':
       "La politique s'applique au pourcentage du flux de courrier",
-    'Pre-Alpha': 'préalpha',
+    'Pre-Alpha': 'Préalpha',
     'Preloaded Status:': 'Statut préchargé:',
     Previous: 'Précédent',
     Privacy: 'Confidentialité',
