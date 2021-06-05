@@ -2,8 +2,6 @@ import React, { useCallback, useState } from 'react'
 import { useDebouncedFunction } from '../useDebouncedFunction'
 import { act, fireEvent, render } from '@testing-library/react'
 
-jest.useFakeTimers()
-
 const UseDebouncedFunctionExample = () => {
   const [count, setCount] = useState(0)
   const [debouncedCount, setDebouncedCount] = useState(0)
@@ -27,6 +25,9 @@ const UseDebouncedFunctionExample = () => {
 }
 
 describe('userDebouncedFunction', () => {
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
   describe('is given a valid function', () => {
     it('successfully debounces the function', async () => {
       const { getByText, getByLabelText } = render(
