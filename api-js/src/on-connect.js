@@ -11,11 +11,10 @@ export const customOnConnect = ({
   const frLangPos = String(
     webSocket.upgradeReq.headers['accept-language'],
   ).indexOf('fr')
-  let language
+  
+  let language = 'en'
   if (frLangPos > enLangPos) {
     language = 'fr'
-  } else {
-    language = 'en'
   }
 
   let authorization
