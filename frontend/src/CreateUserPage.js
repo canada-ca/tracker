@@ -2,7 +2,7 @@ import React from 'react'
 import { Stack, useToast, Box, Heading, Text } from '@chakra-ui/core'
 import { useMutation } from '@apollo/client'
 import { object, string } from 'yup'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { SIGN_UP } from './graphql/mutations'
 import { useUserState } from './UserState'
@@ -156,6 +156,7 @@ export default function CreateUserPage() {
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton
+                as={RouteLink}
                 variant="primary outline"
                 to="/sign-in"
               >
