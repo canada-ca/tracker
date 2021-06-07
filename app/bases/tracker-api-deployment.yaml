@@ -218,12 +218,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: api
-              key: SPF_SCAN_CHANNEL
+              key: SSL_SCAN_CHANNEL
         - name: HTTPS_SCAN_CHANNEL
           valueFrom:
             secretKeyRef:
               name: api
-              key: SPF_SCAN_CHANNEL
+              key: HTTPS_SCAN_CHANNEL
         resources:
           limits:
             cpu: 300m
