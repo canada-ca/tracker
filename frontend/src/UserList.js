@@ -361,6 +361,9 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             >
               <option value="USER">{t`USER`}</option>
               <option value="ADMIN">{t`ADMIN`}</option>
+              {permission === 'SUPER_ADMIN' && orgSlug === 'super-admin' && (
+                <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+              )}
             </Select>
           </Stack>
 
@@ -487,7 +490,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                             <option value="ADMIN">{t`ADMIN`}</option>
                           )}
                           {(editingUserRole === 'SUPER_ADMIN' ||
-                            permission === 'SUPER_ADMIN') && (
+                            (permission === 'SUPER_ADMIN' &&
+                              orgSlug === 'super-admin')) && (
                             <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
                           )}
                         </Select>
