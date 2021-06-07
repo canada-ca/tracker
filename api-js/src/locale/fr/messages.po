@@ -22,7 +22,7 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/organization/objects/organization.js:138
+#: src/organization/objects/organization.js:142
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -151,8 +151,8 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 msgstr "todo"
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:83
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:174
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:80
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:170
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "todo"
 
@@ -312,8 +312,8 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:106
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:197
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:103
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:193
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
@@ -627,8 +627,8 @@ msgstr "todo"
 msgid "Unable to load SSL scan(s). Please try again."
 msgstr "todo"
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:234
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:416
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:266
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:449
 msgid "Unable to load affiliation(s). Please try again."
 msgstr "todo"
 
@@ -700,8 +700,8 @@ msgstr "todo"
 msgid "Unable to load web summary. Please try again."
 msgstr "todo"
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:223
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:405
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:254
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:437
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "todo"
 
@@ -921,6 +921,10 @@ msgstr "todo"
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
+#: src/user/queries/is-user-super-admin.js:23
+msgid "Unable to verify if user is a super admin, please try again."
+msgstr "todo"
+
 #: src/user/queries/is-user-admin.js:23
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "todo"
@@ -1014,8 +1018,8 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 msgstr "todo"
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:74
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:165
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:71
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:161
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "todo"
 
@@ -1036,8 +1040,8 @@ msgstr "todo"
 msgid "You must provide a `year` value to access the `dmarcSummaries` connection."
 msgstr "todo"
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:121
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:212
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:118
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:208
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:86
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:86
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:229
@@ -1130,8 +1134,8 @@ msgstr "todo"
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:95
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:186
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:92
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:182
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "todo"
 

@@ -74,3 +74,7 @@ steps:
       else
         exit 0
       fi
+
+timeout: 1200s
+options:
+  machineType: 'E2_HIGHCPU_8'

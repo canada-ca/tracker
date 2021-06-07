@@ -9,6 +9,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link,
   Select,
   Spinner,
   Stack,
@@ -24,6 +25,7 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { toConstantCase } from './helpers/toConstantCase'
 import { useDebouncedFunction } from './useDebouncedFunction'
+import { Link as RouteLink } from 'react-router-dom'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -115,6 +117,18 @@ export default function DmarcByDomainPage() {
     {
       Header: i18n._(t`Domain`),
       accessor: 'domain',
+      // eslint-disable-next-line react/prop-types
+      Cell: function CellValueWithLink({ value }) {
+        return (
+          <Link
+            as={RouteLink}
+            to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+            isExternal={false}
+          >
+            {`${value} `} <Icon name="link" />
+          </Link>
+        )
+      },
       sortDescFirst: true,
     },
     {
@@ -197,9 +211,6 @@ export default function DmarcByDomainPage() {
         initialSort={initialSort}
         mb="10px"
         hideTitleButton={true}
-        linkColumns={[{ column: 'domain', isExternal: false }]}
-        prependLink="domains/"
-        appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
         frontendPagination={false}
         selectedDisplayLimit={selectedTableDisplayLimit}
         manualSort={true}

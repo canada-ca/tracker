@@ -490,6 +490,8 @@
       'Unable to verify account. Please request a new email.',
     'Unable to verify account. Please try again.':
       'Unable to verify account. Please try again.',
+    'Unable to verify if user is a super admin, please try again.':
+      'Unable to verify if user is a super admin, please try again.',
     'Unable to verify if user is an admin, please try again.':
       'Unable to verify if user is an admin, please try again.',
     'Unable to verify organization. Please try again.':
