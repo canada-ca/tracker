@@ -37,15 +37,11 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
           title={title}
           data={data.categories.map(({ name, count, percentage }) => ({
             title: categoryDisplay[name].name,
+            color: categoryDisplay[name].color,
             count,
             percentage,
             total: data.total,
           }))}
-          color={[
-            categoryDisplay.pass.color,
-            categoryDisplay.fail.color,
-            categoryDisplay.unscanned.color,
-          ]}
           height={320}
           width={320}
           valueAccessor={(d) => d.count}
