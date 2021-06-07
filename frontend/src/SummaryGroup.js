@@ -21,6 +21,10 @@ export function SummaryGroup({ web, mail }) {
           name: t`Compliant TLS`,
           color: colors.strong,
         },
+        unscanned: {
+          name: t`Unscanned`,
+          color: colors.gray["400"],
+        },
       }}
       data={web}
     />
@@ -42,6 +46,10 @@ export function SummaryGroup({ web, mail }) {
         fail: {
           name: t`DMARC fail`,
           color: colors.weak,
+        },
+        unscanned: {
+          name: t`Unscanned`,
+          color: colors.gray["400"],
         },
       }}
       data={mail}

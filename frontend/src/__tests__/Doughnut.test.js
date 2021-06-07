@@ -16,9 +16,9 @@ const i18n = setupI18n({
 
 describe('<Doughnut/>', () => {
   const data = [
-    { count: 1, title: 'good', percentage: 1, total: 3 },
-    { count: 1, title: 'bad', percentage: 1, total: 3 },
-    { count: 1, title: 'ugly', percentage: 1, total: 3 },
+    { count: 1, title: 'good', color: '#00ff00', percentage: 1, total: 3 },
+    { count: 1, title: 'bad', color: '#ff0000', percentage: 1, total: 3 },
+    { count: 1, title: 'ugly', color: '#0000ff', percentage: 1, total: 3 },
   ]
   it('renders segments for the data provided', () => {
     const { queryAllByTestId } = render(
@@ -26,7 +26,6 @@ describe('<Doughnut/>', () => {
         <Doughnut
           title="doughnut chart!"
           data={data}
-          color="#2e2e40"
           height={320}
           width={320}
           valueAccessor={(d) => d.count}
