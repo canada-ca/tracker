@@ -359,8 +359,12 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               flexShrink={0}
               {...userForm.getFieldProps('roleSelect')}
             >
-              <option value="USER">{t`USER`}</option>
-              <option value="ADMIN">{t`ADMIN`}</option>
+              {orgSlug !== 'super-admin' && (
+                <option value="USER">{t`USER`}</option>
+              )}
+              {orgSlug !== 'super-admin' && (
+                <option value="ADMIN">{t`ADMIN`}</option>
+              )}
               {permission === 'SUPER_ADMIN' && orgSlug === 'super-admin' && (
                 <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
               )}
