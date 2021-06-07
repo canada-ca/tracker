@@ -30,7 +30,7 @@ r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 
 def publish_results(results, scan_type, uuid):
-    r.publish(f"scan/{scan_type}/{uuid}", str(results))
+    r.publish(f"scan/{scan_type}/{uuid}", json.dumps(results))
 
 def process_https(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
