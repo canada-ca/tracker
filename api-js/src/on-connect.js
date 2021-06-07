@@ -26,7 +26,7 @@ export const customOnConnect = ({
   const verify = verifyToken({ i18n })
   const token = authorization || ''
 
-  let userKey = ''
+  let userKey
   if (token !== '') {
     userKey = verify({ token }).userKey
   }

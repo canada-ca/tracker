@@ -153,7 +153,7 @@ describe('given the customOnConnect function', () => {
             createI18n,
             verifyToken,
             userRequired,
-            loadUserByKey: jest.fn(),
+            loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn()}),
           })(connectionParams, webSocket)
         } catch (err) {
           expect(err).toEqual(
@@ -184,7 +184,7 @@ describe('given the customOnConnect function', () => {
             createI18n,
             verifyToken,
             userRequired,
-            loadUserByKey: jest.fn(),
+            loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn()}),
           })(connectionParams, webSocket)
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
