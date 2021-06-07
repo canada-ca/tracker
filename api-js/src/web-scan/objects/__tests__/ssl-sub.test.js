@@ -1,7 +1,7 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLList } from 'graphql'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { sslSubType } from '../index'
@@ -21,16 +21,16 @@ describe('given the sslSubType object', () => {
   })
   describe('testing its field resolvers', () => {
     describe('testing the guidanceTags resolver', () => {
-      let query, drop, truncate, migrate, collections, sslGT
+      let query, drop, truncate, collections, sslGT
 
       beforeAll(async () => {
-        ;({ migrate } = await ArangoTools({ rootPass, url }))
-        ;({ query, drop, truncate, collections } = await migrate(
-          makeMigrations({
-            databaseName: dbNameFromFile(__filename),
-            rootPass,
-          }),
-        ))
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
       })
 
       beforeEach(async () => {

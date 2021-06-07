@@ -1,4 +1,4 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import Redis from 'ioredis'
 import {
   graphql,
@@ -12,7 +12,7 @@ import {
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadDmarcGuidanceTagByTagId } from '../../../guidance-tag/loaders'
@@ -34,7 +34,6 @@ describe('given the dmarcScanData subscription', () => {
     truncate,
     collections,
     drop,
-    migrate,
     options,
     dmarcScan,
     createSubscriptionMutation
@@ -99,10 +98,13 @@ describe('given the dmarcScanData subscription', () => {
     })
 
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)

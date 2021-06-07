@@ -1,4 +1,4 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import Redis from 'ioredis'
 import {
   graphql,
@@ -11,7 +11,7 @@ import {
 } from 'graphql'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
@@ -34,7 +34,6 @@ describe('given the spfScanData subscription', () => {
     truncate,
     collections,
     drop,
-    migrate,
     options,
     sslScan,
     createSubscriptionMutation
@@ -94,10 +93,13 @@ describe('given the spfScanData subscription', () => {
     })
 
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)

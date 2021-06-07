@@ -1,11 +1,8 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLList } from 'graphql'
 
-import { makeMigrations } from '../../../../migrations'
-import {
-  dkimResultSubType,
-  dkimSubType,
-} from '../index'
+import { databaseOptions } from '../../../../database-options'
+import { dkimResultSubType, dkimSubType } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -22,16 +19,16 @@ describe('given the dkimSubType object', () => {
   })
   describe('testing its field resolvers', () => {
     describe('testing the results resolver', () => {
-      let drop, truncate, migrate, collections, dkimGT
+      let drop, truncate, collections, dkimGT
 
       beforeAll(async () => {
-        ;({ migrate } = await ArangoTools({ rootPass, url }))
-        ;({ drop, truncate, collections } = await migrate(
-          makeMigrations({
-            databaseName: dbNameFromFile(__filename),
-            rootPass,
-          }),
-        ))
+        ;({ drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
       })
 
       beforeEach(async () => {

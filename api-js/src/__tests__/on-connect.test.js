@@ -1,9 +1,9 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 
-import { makeMigrations } from '../../migrations'
 import { customOnConnect } from '../on-connect'
 import { verifyToken, tokenize, userRequired } from '../auth'
 import { createI18n } from '../create-i18n'
+import { databaseOptions } from '../../database-options'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -46,7 +46,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
-        })( connectionParams, webSocket )
+        })(connectionParams, webSocket)
 
         expect(onConnect.language).toEqual('en')
         expect(consoleOutput).toEqual([
@@ -76,7 +76,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
-        })( connectionParams, webSocket )
+        })(connectionParams, webSocket)
 
         expect(onConnect.language).toEqual('fr')
         expect(consoleOutput).toEqual([
@@ -107,20 +107,23 @@ describe('given the customOnConnect function', () => {
         verifyToken,
         userRequired: mockedUserRequired,
         loadUserByKey: jest.fn(),
-      })( connectionParams, webSocket )
+      })(connectionParams, webSocket)
 
       expect(onConnect.authorization).toEqual(token)
       expect(consoleOutput).toEqual(['User: 1234, connected to subscription.'])
     })
   })
   describe('authorization token is not set', () => {
-    let query, drop, truncate, migrate
+    let query, drop, truncate
 
     beforeAll(async () => {
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     afterEach(async () => {
@@ -151,7 +154,7 @@ describe('given the customOnConnect function', () => {
             verifyToken,
             userRequired,
             loadUserByKey: jest.fn(),
-          })( connectionParams, webSocket )
+          })(connectionParams, webSocket)
         } catch (err) {
           expect(err).toEqual(
             new Error('Authentication error. Please sign in.'),
@@ -182,7 +185,7 @@ describe('given the customOnConnect function', () => {
             verifyToken,
             userRequired,
             loadUserByKey: jest.fn(),
-          })( connectionParams, webSocket )
+          })(connectionParams, webSocket)
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
