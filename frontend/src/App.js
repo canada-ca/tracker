@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { Switch } from 'react-router-dom'
+import { Link as RouteLink, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -115,6 +115,7 @@ export default function App() {
             </Link>
           ) : (
             <TrackerButton
+              as={RouteLink}
               variant="primary"
               to="/sign-in"
               ml={[null, 'auto']}
@@ -125,6 +126,7 @@ export default function App() {
 
           {!isLoggedIn() && (
             <TrackerButton
+              as={RouteLink}
               variant="primary outline"
               to="/create-user"
             >
