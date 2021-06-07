@@ -2,14 +2,7 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
-import {
-  Box,
-  Heading,
-  Link,
-  Stack,
-  Text,
-  useToast,
-} from '@chakra-ui/core'
+import { Box, Heading, Link, Stack, Text, useToast } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
@@ -154,6 +147,7 @@ export default function SignInPage() {
               </TrackerButton>
 
               <TrackerButton
+                as={RouteLink}
                 variant="primary outline"
                 to="/create-user"
               >
