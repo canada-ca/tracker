@@ -35,10 +35,28 @@ const {
     port: REDIS_PORT_NUMBER,
   }
 
-  const pubsub = new RedisPubSub({
-    publisher: new Redis(options),
-    subscriber: new Redis(options),
-  })
+  const pubsubs = {
+    dkimPubSub: new RedisPubSub({
+      publisher: new Redis(options),
+      subscriber: new Redis(options),
+    }),
+    dmarcPubSub: new RedisPubSub({
+      publisher: new Redis(options),
+      subscriber: new Redis(options),
+    }),
+    spfPubSub: new RedisPubSub({
+      publisher: new Redis(options),
+      subscriber: new Redis(options),
+    }),
+    httpsPubSub: new RedisPubSub({
+      publisher: new Redis(options),
+      subscriber: new Redis(options),
+    }),
+    sslPubSub: new RedisPubSub({
+      publisher: new Redis(options),
+      subscriber: new Redis(options),
+    }),
+  }
 
   Server({
     maxDepth,
@@ -51,7 +69,7 @@ const {
       query,
       collections,
       transaction,
-      pubsub,
+      pubsubs,
     },
   }).listen(PORT, (err) => {
     if (err) throw err

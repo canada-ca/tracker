@@ -189,7 +189,9 @@ describe('given the httpsScanData subscription', () => {
       `),
       triggerSubscription,
       {
-        pubsub,
+        pubsubs: {
+          httpsPubSub: pubsub,
+        },
         userKey: 'uuid-1234',
         loaders: {
           loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({

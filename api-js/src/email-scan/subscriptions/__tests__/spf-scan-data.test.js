@@ -185,7 +185,9 @@ describe('given the spfScanData subscription', () => {
       `),
       triggerSubscription,
       {
-        pubsub,
+        pubsubs: {
+          spfPubSub: pubsub,
+        },
         userKey: 'uuid-1234',
         loaders: {
           loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({

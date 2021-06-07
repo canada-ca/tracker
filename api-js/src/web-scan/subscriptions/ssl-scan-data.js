@@ -9,6 +9,6 @@ export const sslScanData = {
   resolve: (scan) => {
     return scan
   },
-  subscribe: async (_context, _args, { pubsub, userKey }) =>
-    pubsub.asyncIterator(`${SSL_SCAN_CHANNEL}/${userKey}`),
+  subscribe: async (_context, _args, { pubsubs: { sslPubSub }, userKey }) =>
+    sslPubSub.asyncIterator(`${SSL_SCAN_CHANNEL}/${userKey}`),
 }

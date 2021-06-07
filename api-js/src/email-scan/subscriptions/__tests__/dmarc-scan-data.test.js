@@ -189,7 +189,9 @@ describe('given the dmarcScanData subscription', () => {
       `),
       triggerSubscription,
       {
-        pubsub,
+        pubsubs: {
+          dmarcPubSub: pubsub,
+        },
         userKey: 'uuid-1234',
         loaders: {
           loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({

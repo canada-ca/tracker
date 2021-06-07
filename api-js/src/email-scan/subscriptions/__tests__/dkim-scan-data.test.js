@@ -191,7 +191,9 @@ describe('given the dkimScanData subscription', () => {
       `),
       triggerSubscription,
       {
-        pubsub,
+        pubsubs: {
+          dkimPubSub: pubsub,
+        },
         userKey: 'uuid-1234',
         loaders: {
           loadDkimGuidanceTagById: loadDkimGuidanceTagById({

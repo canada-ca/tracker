@@ -7,9 +7,8 @@ export const dkimScanData = {
   description:
     'This subscription allows the user to receive dkim data directly from the scanners in real time.',
   resolve: (scan) => {
-    console.log(scan)
     return scan
   },
-  subscribe: async (_context, _args, { pubsub, userKey }) =>
-    pubsub.asyncIterator(`${DKIM_SCAN_CHANNEL}/${userKey}`),
+  subscribe: async (_context, _args, { pubsubs: { dkimPubSub }, userKey }) =>
+    dkimPubSub.asyncIterator(`${DKIM_SCAN_CHANNEL}/${userKey}`),
 }
