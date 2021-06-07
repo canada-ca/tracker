@@ -164,7 +164,7 @@ describe('given the httpsScanData subscription', () => {
       schema,
       parse(`
       subscription {
-        httpsScanData (subscriptionId: "uuid-1234") {
+        httpsScanData {
           implementation
           enforced
           hsts
@@ -190,6 +190,7 @@ describe('given the httpsScanData subscription', () => {
       triggerSubscription,
       {
         pubsub,
+        userKey: 'uuid-1234',
         loaders: {
           loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
             query,

@@ -166,7 +166,7 @@ describe('given the dkimScanData subscription', () => {
       schema,
       parse(`
       subscription {
-        dkimScanData (subscriptionId: "uuid-1234") {
+        dkimScanData {
           results {
             selector
             record
@@ -192,6 +192,7 @@ describe('given the dkimScanData subscription', () => {
       triggerSubscription,
       {
         pubsub,
+        userKey: 'uuid-1234',
         loaders: {
           loadDkimGuidanceTagById: loadDkimGuidanceTagById({
             query,

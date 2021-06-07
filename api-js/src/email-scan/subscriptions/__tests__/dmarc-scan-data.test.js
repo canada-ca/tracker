@@ -164,7 +164,7 @@ describe('given the dmarcScanData subscription', () => {
       schema,
       parse(`
       subscription {
-        dmarcScanData (subscriptionId: "uuid-1234") {
+        dmarcScanData {
           dmarcPhase
           record
           pPolicy
@@ -190,6 +190,7 @@ describe('given the dmarcScanData subscription', () => {
       triggerSubscription,
       {
         pubsub,
+        userKey: 'uuid-1234',
         loaders: {
           loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
             query,

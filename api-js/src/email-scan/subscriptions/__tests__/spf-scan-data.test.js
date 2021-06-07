@@ -162,7 +162,7 @@ describe('given the spfScanData subscription', () => {
       schema,
       parse(`
       subscription {
-        spfScanData (subscriptionId: "uuid-1234") {
+        spfScanData {
           lookups
           record
           spfDefault
@@ -186,6 +186,7 @@ describe('given the spfScanData subscription', () => {
       triggerSubscription,
       {
         pubsub,
+        userKey: 'uuid-1234',
         loaders: {
           loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
             query,

@@ -159,7 +159,7 @@ describe('given the spfScanData subscription', () => {
       schema,
       parse(`
       subscription {
-        sslScanData (subscriptionId: "uuid-1234") {
+        sslScanData {
           guidanceTags {
             id
             tagId
@@ -180,6 +180,7 @@ describe('given the spfScanData subscription', () => {
       triggerSubscription,
       {
         pubsub,
+        userKey: 'uuid-1234',
         loaders: {
           loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
             query,

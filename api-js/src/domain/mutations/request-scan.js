@@ -21,12 +21,6 @@ export const requestScan = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    subscriptionId: {
-      type: GraphQLString,
-      description:
-        'The id used to specify the channel in the various subscriptions.',
-      resolve: ({ subscriptionId }) => subscriptionId,
-    },
     status: {
       type: GraphQLString,
       description: 'Informs the user if the scan was dispatched successfully.',
@@ -39,7 +33,6 @@ export const requestScan = new mutationWithClientMutationId({
       i18n,
       fetch,
       userKey,
-      uuidv4,
       auth: { checkDomainPermission, userRequired },
       loaders: { loadDomainByDomain },
       validators: { cleanseInput },
@@ -76,13 +69,11 @@ export const requestScan = new mutationWithClientMutationId({
       )
     }
 
-    const uuid = uuidv4()
-
     const parameters = {
       domain_key: domain._key,
       domain: domain.domain,
       selectors: domain.selectors,
-      uuid,
+      uuid: userKey,
     }
 
     try {
@@ -131,7 +122,6 @@ export const requestScan = new mutationWithClientMutationId({
       `User: ${userKey} successfully dispatched a one time scan on domain: ${domain.domain}.`,
     )
     return {
-      subscriptionId: uuid,
       status: i18n._(t`Successfully dispatched one time scan.`),
     }
   },
