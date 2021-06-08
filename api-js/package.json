@@ -13,7 +13,7 @@
     "dev": "nodemon --exec babel-node index.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "jest --testPathIgnorePatterns=.*-scan-data.*",
-    "test-subscriptions": "jest --testPathPattern=.*-scan-data.*",
+    "test-subscriptions": "jest --runInBand --testPathPattern=.*-scan-data.*",
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "prettier": "prettier --write \"**/*.js\"",
