@@ -12,7 +12,7 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon --exec babel-node index.js",
     "clean": "rm -rf ./dist && mkdir dist",
-    "test": "jest",
+    "test": "jest --maxWorkers=50%",
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "prettier": "prettier --write \"**/*.js\"",
