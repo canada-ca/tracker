@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, useToast, Box, Button, Heading } from '@chakra-ui/core'
+import { Stack, useToast, Box, Heading } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
