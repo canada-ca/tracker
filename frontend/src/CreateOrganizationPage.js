@@ -260,6 +260,14 @@ export default function CreateOrganizationPage() {
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton
+                as={RouteLink}
+                variant="primary outline"
+                to="/admin"
+              >
+                <Trans>Back</Trans>
+              </TrackerButton>
+
+              <TrackerButton
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
@@ -267,17 +275,6 @@ export default function CreateOrganizationPage() {
               >
                 <Trans>Create Organization</Trans>
               </TrackerButton>
-
-              <Button
-                as={RouteLink}
-                to="/admin"
-                color="primary"
-                bg="transparent"
-                borderColor="primary"
-                borderWidth="1px"
-              >
-                <Trans>Back</Trans>
-              </Button>
             </Stack>
           </form>
         )}
