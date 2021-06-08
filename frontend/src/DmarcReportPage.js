@@ -226,13 +226,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       moderate: [
         {
           name: 'passSpfOnly',
-          displayName: t`Pass Only SPF`,
+          displayName: t`Fail DKIM`,
         },
       ],
       moderateAlt: [
         {
           name: 'passDkimOnly',
-          displayName: t`Pass Only DKIM`,
+          displayName: t`Fail SPF`,
         },
       ],
       weak: [

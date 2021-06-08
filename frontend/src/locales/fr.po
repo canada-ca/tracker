@@ -53,8 +53,8 @@ msgstr "A.5 Tenir les éléments à jour"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Assurer la rotation des clés DKIM"
 
-#: src/UserList.js:363
-#: src/UserList.js:487
+#: src/UserList.js:367
+#: src/UserList.js:495
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -184,9 +184,9 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/AdminDomains.js:335
 #: src/CreateOrganizationPage.js:76
 #: src/TwoFactorAuthenticatePage.js:36
-#: src/UserList.js:180
-#: src/UserList.js:230
-#: src/UserList.js:320
+#: src/UserList.js:181
+#: src/UserList.js:231
+#: src/UserList.js:321
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -339,8 +339,8 @@ msgstr "TLS conformant"
 #: src/EditableUserPassword.js:198
 #: src/EditableUserPhoneNumber.js:201
 #: src/EditableUserPhoneNumber.js:259
-#: src/UserList.js:417
-#: src/UserList.js:504
+#: src/UserList.js:425
+#: src/UserList.js:513
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -360,7 +360,7 @@ msgstr "Confirmer le mot de passe"
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine :"
 
-#: src/UserList.js:397
+#: src/UserList.js:405
 msgid "Confirm removal of user:"
 msgstr "Confirmer le retrait de l'utilisateur :"
 
@@ -545,11 +545,11 @@ msgstr "Statut DMARC"
 msgid "DMARC Summaries"
 msgstr "Résumés DMARC"
 
-#: src/SummaryGroup.js:43
+#: src/SummaryGroup.js:47
 msgid "DMARC fail"
 msgstr "DMARC échoue"
 
-#: src/SummaryGroup.js:39
+#: src/SummaryGroup.js:43
 msgid "DMARC pass"
 msgstr "Passe DMARC"
 
@@ -696,7 +696,7 @@ msgstr "Modifier les détails d'un domaine"
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
 
-#: src/UserList.js:455
+#: src/UserList.js:463
 msgid "Edit Role"
 msgstr "Rôle d'édition"
 
@@ -706,7 +706,7 @@ msgid "Email"
 msgstr "Courriel"
 
 #: src/OrganizationCard.js:116
-#: src/SummaryGroup.js:35
+#: src/SummaryGroup.js:39
 msgid "Email Configuration"
 msgstr "Configuration du courriel"
 
@@ -739,11 +739,11 @@ msgstr "Vérification de l'e-mail"
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
-#: src/UserList.js:192
+#: src/UserList.js:193
 msgid "Email invitation sent to {addedUserName}"
 msgstr "Invitation par courrier électronique envoyée à jim@hotmail.com"
 
-#: src/SummaryGroup.js:36
+#: src/SummaryGroup.js:40
 msgid "Email security settings summary"
 msgstr "Résumé des paramètres de sécurité du courriel"
 
@@ -795,9 +795,19 @@ msgstr "Enveloppe De"
 msgid "Fail"
 msgstr "Échec"
 
+#: src/DmarcReportPage.js:229
+#: src/fixtures/summaryListData.js:161
+msgid "Fail DKIM"
+msgstr "Échec DKIM"
+
 #: src/DmarcByDomainPage.js:149
 msgid "Fail DKIM %"
 msgstr "Échec DKIM %"
+
+#: src/DmarcReportPage.js:235
+#: src/fixtures/summaryListData.js:165
+msgid "Fail SPF"
+msgstr "Échec du SPF"
 
 #: src/DmarcByDomainPage.js:156
 msgid "Fail SPF %"
@@ -1045,7 +1055,7 @@ msgstr ""
 msgid "Incorrect createOrganization.result typename."
 msgstr "createOrganization.result incorrecte typename."
 
-#: src/UserList.js:210
+#: src/UserList.js:211
 msgid "Incorrect inviteUserToOrg.result typename."
 msgstr ""
 
@@ -1072,8 +1082,8 @@ msgstr ""
 #: src/ResetPasswordPage.js:60
 #: src/SignInPage.js:91
 #: src/TwoFactorAuthenticatePage.js:83
-#: src/UserList.js:156
-#: src/UserList.js:209
+#: src/UserList.js:157
+#: src/UserList.js:210
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
@@ -1104,7 +1114,7 @@ msgstr ""
 msgid "Incorrect updateUserProfile.result typename."
 msgstr ""
 
-#: src/UserList.js:157
+#: src/UserList.js:158
 msgid "Incorrect updateUserRole.result typename."
 msgstr ""
 
@@ -1133,7 +1143,7 @@ msgstr "Pourcentage non valable"
 msgid "Invalid public key"
 msgstr "Clé publique invalide"
 
-#: src/UserList.js:369
+#: src/UserList.js:377
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
@@ -1325,7 +1335,7 @@ msgstr "Nouveau numéro de téléphone:"
 #~ msgid "New domain name cannot be empty"
 #~ msgstr "Un nouveau nom de domaine ne peut pas être vide"
 
-#: src/UserList.js:350
+#: src/UserList.js:351
 msgid "New user email"
 msgstr "Courriel du nouvel utilisateur"
 
@@ -1397,7 +1407,7 @@ msgstr "Aucun domaine n'a encore été scanné."
 msgid "No guidance tags were found for this scan category"
 msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
 
-#: src/SummaryGroup.js:51
+#: src/SummaryGroup.js:59
 msgid "No mail configuration information available for this org."
 msgstr "Aucune information sur la configuration du courrier n'est disponible pour cette organisation."
 
@@ -1405,15 +1415,15 @@ msgstr "Aucune information sur la configuration du courrier n'est disponible pou
 msgid "No scan data available for {0}."
 msgstr "No scan data available for {0}."
 
-#: src/Doughnut.js:63
+#: src/Doughnut.js:66
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
-#: src/UserList.js:271
+#: src/UserList.js:272
 msgid "No users in this organization"
 msgstr "Aucun utilisateur dans cette organisation"
 
-#: src/SummaryGroup.js:29
+#: src/SummaryGroup.js:33
 msgid "No web configuration information available for this org."
 msgstr "Aucune information de configuration web disponible pour cette org."
 
@@ -1567,13 +1577,13 @@ msgstr "Passez"
 
 #: src/DmarcReportPage.js:235
 #: src/fixtures/summaryListData.js:165
-msgid "Pass Only DKIM"
-msgstr "Passez seulement DKIM"
+#~ msgid "Pass Only DKIM"
+#~ msgstr "Passez seulement DKIM"
 
 #: src/DmarcReportPage.js:229
 #: src/fixtures/summaryListData.js:161
-msgid "Pass Only SPF"
-msgstr "Passez seulement SPF"
+#~ msgid "Pass Only SPF"
+#~ msgstr "Passez seulement SPF"
 
 #: src/DmarcByDomainPage.js:210
 msgid "Pass/Fail Ratios by Domain"
@@ -1765,7 +1775,7 @@ msgstr ""
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
-#: src/UserList.js:391
+#: src/UserList.js:399
 msgid "Remove User"
 msgstr "Supprimer l'utilisateur"
 
@@ -1799,11 +1809,11 @@ msgstr "Résultats des analyses des technologies du courrier électronique (DMAR
 msgid "Results for scans of web technologies (SSL, HTTPS)."
 msgstr "Résultats des analyses des technologies du web (SSL, HTTPS)."
 
-#: src/UserList.js:137
+#: src/UserList.js:138
 msgid "Role updated"
 msgstr "Rôle mis à jour"
 
-#: src/UserList.js:470
+#: src/UserList.js:478
 msgid "Role:"
 msgstr "Fonction:"
 
@@ -1898,7 +1908,8 @@ msgstr ""
 msgid "SSL-rc4"
 msgstr ""
 
-#: src/UserList.js:491
+#: src/UserList.js:370
+#: src/UserList.js:500
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
@@ -2045,7 +2056,7 @@ msgstr "Ciphers forts:"
 msgid "Submit"
 msgstr "Soumettre"
 
-#: src/UserList.js:243
+#: src/UserList.js:244
 msgid "Successfully removed user {0}."
 msgstr ""
 
@@ -2094,7 +2105,7 @@ msgstr "Représentation textuelle"
 msgid "The page you are looking for has moved or does not exist."
 msgstr "La page que vous recherchez a été déplacée ou n'existe pas."
 
-#: src/UserList.js:138
+#: src/UserList.js:139
 msgid "The user's role has been successfully updated"
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 
@@ -2152,12 +2163,12 @@ msgstr "Authentification à deux facteurs"
 msgid "Two-Factor Authentication:"
 msgstr "Authentification à deux facteurs :"
 
-#: src/UserList.js:362
-#: src/UserList.js:483
+#: src/UserList.js:364
+#: src/UserList.js:491
 msgid "USER"
 msgstr "UTILISATEUR"
 
-#: src/UserList.js:127
+#: src/UserList.js:128
 msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
@@ -2177,7 +2188,7 @@ msgstr "Impossible de créer une nouvelle organisation."
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
-#: src/UserList.js:200
+#: src/UserList.js:201
 msgid "Unable to invite user."
 msgstr "Impossible d'inviter un utilisateur."
 
@@ -2185,7 +2196,7 @@ msgstr "Impossible d'inviter un utilisateur."
 msgid "Unable to remove domain."
 msgstr "Impossible de supprimer le domaine."
 
-#: src/UserList.js:251
+#: src/UserList.js:252
 msgid "Unable to remove user."
 msgstr "Impossible de supprimer l'utilisateur."
 
@@ -2240,7 +2251,7 @@ msgstr "Impossible de mettre à jour votre langue préférée, veuillez réessay
 msgid "Unable to update to your username, please try again."
 msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer."
 
-#: src/UserList.js:147
+#: src/UserList.js:148
 msgid "Unable to update user role."
 msgstr "Impossible de mettre à jour le rôle de l'utilisateur."
 
@@ -2256,6 +2267,11 @@ msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez rée
 msgid "Unable to verify your phone number, please try again."
 msgstr "Impossible de vérifier votre numéro de téléphone, veuillez réessayer."
 
+#: src/SummaryGroup.js:25
+#: src/SummaryGroup.js:51
+msgid "Unscanned"
+msgstr ""
+
 #: src/guidanceTagConstants.js:82
 msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
@@ -2264,7 +2280,7 @@ msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé dep
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
-#: src/UserList.js:267
+#: src/UserList.js:268
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
@@ -2273,15 +2289,15 @@ msgstr "Liste des utilisateurs"
 #~ msgid "User Profile"
 #~ msgstr "Profil de l'utilisateur"
 
-#: src/UserList.js:191
+#: src/UserList.js:192
 msgid "User invited"
 msgstr "Utilisateur invité"
 
-#: src/UserList.js:242
+#: src/UserList.js:243
 msgid "User removed."
 msgstr "Utilisateur supprimé."
 
-#: src/UserList.js:462
+#: src/UserList.js:470
 msgid "User:"
 msgstr "Utilisateur:"
 
