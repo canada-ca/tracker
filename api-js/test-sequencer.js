@@ -6,7 +6,7 @@ class CustomSequencer extends Sequencer {
     
     const rtnTests = []
 
-    const re = /subscriptions/
+    const re = /.*-scan-data.*/
 
     copyTests.forEach(test => {
       if (test.path.match(re)) {
@@ -16,7 +16,7 @@ class CustomSequencer extends Sequencer {
 
     copyTests.filter(test => !test.path.match(re))
 
-    rtnTests.push(...copyTests)
+    rtnTests.append(...copyTests)
 
     return rtnTests
   }
