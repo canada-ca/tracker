@@ -677,6 +677,8 @@ type Domain implements Node {
   lastRan: String @fake(type: recentDate)
   # DMARC phase found during scan.
   dmarcPhase: String @examples(values: ["maintain", "deploy", "not implemented"])
+  # Whether or not the domain has a aggregate dmarc report.
+  hasDMARCReport: Boolean
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
   selectors: [Selector] @listLength(min: 0, max: 2)
   # The domains scan status, based on the latest scan data.

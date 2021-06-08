@@ -370,7 +370,7 @@ export const loadOrgConnectionsByUserId = ({
 
   let includeSuperAdminOrgQuery = aql``
   if (!includeSuperAdminOrg) {
-    includeSuperAdminOrgQuery = aql`FILTER org.orgDetails.en.slug != "sa" OR org.orgDetails.fr.slug != "sa"`
+    includeSuperAdminOrgQuery = aql`FILTER org.orgDetails.en.slug != "super-admin" OR org.orgDetails.fr.slug != "super-admin"`
   }
 
   let orgKeysQuery

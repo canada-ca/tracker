@@ -2312,7 +2312,7 @@ describe('given the load organization connections by user id function', () => {
                 },
                 orgDetails: {
                   en: {
-                    slug: 'sa',
+                    slug: 'super-admin',
                     acronym: 'SA',
                     name: 'Super Admin Org',
                     zone: 'zone sa',
@@ -2322,7 +2322,7 @@ describe('given the load organization connections by user id function', () => {
                     city: 'city sa',
                   },
                   fr: {
-                    slug: 'sa',
+                    slug: 'super-admin',
                     acronym: 'SA',
                     name: 'Super Admin Org',
                     zone: 'zone sa',
@@ -4635,7 +4635,7 @@ describe('given the load organization connections by user id function', () => {
                 },
                 orgDetails: {
                   en: {
-                    slug: 'sa',
+                    slug: 'super-admin',
                     acronym: 'SA',
                     name: 'Super Admin Org',
                     zone: 'zone sa',
@@ -4645,7 +4645,7 @@ describe('given the load organization connections by user id function', () => {
                     city: 'city sa',
                   },
                   fr: {
-                    slug: 'sa',
+                    slug: 'super-admin',
                     acronym: 'SA',
                     name: 'Super Admin Org',
                     zone: 'zone sa',

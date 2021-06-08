@@ -2856,6 +2856,11 @@ export const getTypeNames = () => gql`
     isUserAdmin: Boolean
 
     """
+    Query used to check if the user has a super admin role.
+    """
+    isUserSuperAdmin: Boolean
+
+    """
     Retrieve a specific verified domain by providing a domain.
     """
     findVerifiedDomainByDomain(

@@ -141,6 +141,7 @@
     'DMARC Report': 'Rapport DMARC ',
     'DMARC Report for {domainSlug}': ['Rapport DMARC pour ', ['domainSlug']],
     'DMARC Status': 'Statut DMARC',
+    'DMARC Summaries': 'Résumés DMARC',
     'DMARC fail': 'DMARC échoue',
     'DMARC pass': 'Passe DMARC',
     'DMARC-GC': 'DMARC-GC',
@@ -422,7 +423,7 @@
       "La politique ne s'applique à aucune partie du flux de courrier - configuration irrégulière",
     'Policy applies to percentage of mailflow':
       "La politique s'applique au pourcentage du flux de courrier",
-    'Pre-Alpha': 'préalpha',
+    'Pre-Alpha': 'Préalpha',
     'Preloaded Status:': 'Statut préchargé:',
     Previous: 'Précédent',
     Privacy: 'Confidentialité',

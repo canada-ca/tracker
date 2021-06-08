@@ -255,6 +255,7 @@
     'Unable to update your own role.': 'todo',
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
+    'Unable to verify if user is a super admin, please try again.': 'todo',
     'Unable to verify if user is an admin, please try again.': 'todo',
     'Unable to verify organization. Please try again.': 'todo',
     'Unable to verify unknown organization.': 'todo',
