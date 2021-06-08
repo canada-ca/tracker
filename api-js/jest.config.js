@@ -11,5 +11,4 @@ module.exports = {
     'index.js',
   ],
   testTimeout: 50000,
-  testSequencer: '<rootDir>/test-sequencer.js',
 }
