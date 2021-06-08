@@ -16,7 +16,7 @@ class CustomSequencer extends Sequencer {
 
     copyTests.filter(test => !test.path.match(re))
 
-    rtnTests.append(...copyTests)
+    rtnTests.push(...copyTests)
 
     return rtnTests
   }
