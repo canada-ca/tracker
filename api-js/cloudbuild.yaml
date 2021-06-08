@@ -41,7 +41,7 @@ steps:
   id: test-subscriptions
   dir: api-js
   entrypoint: npm
-  args: ['test-subscriptions']
+  args: ['run', 'test-subscriptions']
   env:
   - DB_PASS=$_DB_PASS
   - DB_URL=$_DB_URL
@@ -88,7 +88,7 @@ steps:
   id: test
   dir: api-js
   entrypoint: npm
-  args: ['test']
+  args: ['run', 'test']
   env:
   - DB_PASS=$_DB_PASS
   - DB_URL=$_DB_URL
