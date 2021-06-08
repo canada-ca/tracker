@@ -162,7 +162,7 @@ describe('given the dkimScanData subscription', () => {
           options,
         },
       )
-    }, 100)
+    }, 1000)
 
     const data = await subscribe(
       schema,

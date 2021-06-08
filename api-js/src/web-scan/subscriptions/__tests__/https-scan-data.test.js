@@ -160,7 +160,7 @@ describe('given the httpsScanData subscription', () => {
           options,
         },
       )
-    }, 100)
+    }, 1000)
 
     const data = await subscribe(
       schema,

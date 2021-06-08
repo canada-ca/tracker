@@ -155,7 +155,7 @@ describe('given the spfScanData subscription', () => {
           options,
         },
       )
-    }, 100)
+    }, 1000)
 
     const data = await subscribe(
       schema,
