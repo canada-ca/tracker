@@ -53,50 +53,6 @@ describe('given the dmarcScanData subscription', () => {
       guidanceTags: ['dmarc1'],
     }
 
-    createSubscriptionMutation = () =>
-      new GraphQLObjectType({
-        name: 'Mutation',
-        fields: () => ({
-          testMutation: {
-            type: GraphQLInt,
-            args: {
-              subscriptionId: {
-                type: GraphQLID,
-              },
-            },
-            resolve: async (
-              _source,
-              { subscriptionId },
-              { Redis, options },
-            ) => {
-              const redis = await new Redis(options)
-              const pub = await new Redis(options)
-
-              await redis.subscribe(
-                `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
-                (_err, _count) => {
-                  pub.publish(
-                    `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(dmarcScan),
-                  )
-                },
-              )
-
-              await redis.quit()
-              await pub.quit()
-
-              return 1
-            },
-          },
-        }),
-      })
-
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createSubscriptionMutation(),
-      subscription: createSubscriptionSchema(),
-    })
-
     // Generate DB Items
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
@@ -146,6 +102,50 @@ describe('given the dmarcScanData subscription', () => {
   })
 
   it('returns the subscription data', async () => {
+    createSubscriptionMutation = () =>
+      new GraphQLObjectType({
+        name: 'Mutation',
+        fields: () => ({
+          testMutation: {
+            type: GraphQLInt,
+            args: {
+              subscriptionId: {
+                type: GraphQLID,
+              },
+            },
+            resolve: async (
+              _source,
+              { subscriptionId },
+              { Redis, options },
+            ) => {
+              const redis = await new Redis(options)
+              const pub = await new Redis(options)
+
+              await redis.subscribe(
+                `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
+                (_err, _count) => {
+                  pub.publish(
+                    `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
+                    JSON.stringify(dmarcScan),
+                  )
+                },
+              )
+
+              await redis.quit()
+              await pub.quit()
+
+              return 1
+            },
+          },
+        }),
+      })
+
+    schema = new GraphQLSchema({
+      query: createQuerySchema(),
+      mutation: createSubscriptionMutation(),
+      subscription: createSubscriptionSchema(),
+    })
+    
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -160,7 +160,7 @@ describe('given the dmarcScanData subscription', () => {
           options,
         },
       )
-    }, 1000)
+    }, 100)
 
     const data = await subscribe(
       schema,

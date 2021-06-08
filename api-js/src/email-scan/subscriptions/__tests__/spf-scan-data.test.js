@@ -51,50 +51,6 @@ describe('given the spfScanData subscription', () => {
       guidanceTags: ['spf1'],
     }
 
-    createSubscriptionMutation = () =>
-      new GraphQLObjectType({
-        name: 'Mutation',
-        fields: () => ({
-          testMutation: {
-            type: GraphQLInt,
-            args: {
-              subscriptionId: {
-                type: GraphQLID,
-              },
-            },
-            resolve: async (
-              _source,
-              { subscriptionId },
-              { Redis, options },
-            ) => {
-              const redis = await new Redis(options)
-              const pub = await new Redis(options)
-
-              await redis.subscribe(
-                `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
-                (_err, _count) => {
-                  pub.publish(
-                    `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(spfScan),
-                  )
-                },
-              )
-
-              await redis.quit()
-              await pub.quit()
-
-              return 1
-            },
-          },
-        }),
-      })
-
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createSubscriptionMutation(),
-      subscription: createSubscriptionSchema(),
-    })
-
     // Generate DB Items
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
@@ -144,6 +100,50 @@ describe('given the spfScanData subscription', () => {
   })
 
   it('returns the subscription data', async () => {
+    createSubscriptionMutation = () =>
+      new GraphQLObjectType({
+        name: 'Mutation',
+        fields: () => ({
+          testMutation: {
+            type: GraphQLInt,
+            args: {
+              subscriptionId: {
+                type: GraphQLID,
+              },
+            },
+            resolve: async (
+              _source,
+              { subscriptionId },
+              { Redis, options },
+            ) => {
+              const redis = await new Redis(options)
+              const pub = await new Redis(options)
+
+              await redis.subscribe(
+                `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
+                (_err, _count) => {
+                  pub.publish(
+                    `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
+                    JSON.stringify(spfScan),
+                  )
+                },
+              )
+
+              await redis.quit()
+              await pub.quit()
+
+              return 1
+            },
+          },
+        }),
+      })
+
+    schema = new GraphQLSchema({
+      query: createQuerySchema(),
+      mutation: createSubscriptionMutation(),
+      subscription: createSubscriptionSchema(),
+    })
+    
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -158,7 +158,7 @@ describe('given the spfScanData subscription', () => {
           options,
         },
       )
-    }, 1000)
+    }, 100)
 
     const data = await subscribe(
       schema,
