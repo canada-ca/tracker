@@ -10,6 +10,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
+import OrganizationInformation from './OrganizationInformation'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
@@ -131,14 +132,15 @@ export default function AdminPage() {
             </TrackerButton>
           </Stack>
           {options.length > 1 && orgDetails ? (
-            <Stack>
+            <>
+              <OrganizationInformation orgSlug={orgDetails.slug} mb="1rem" />
               <AdminPanel
                 orgSlug={orgDetails.slug}
                 orgId={orgDetails.id}
                 permission={isSA?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
                 mr="4"
               />
-            </Stack>
+            </>
           ) : (
             <Text fontSize="2xl" fontWeight="bold" textAlign="center">
               <Trans>Select an organization to view admin options</Trans>
