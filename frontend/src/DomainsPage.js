@@ -123,6 +123,7 @@ export default function DomainsPage() {
                     <Icon name="search" color="gray.300" />
                   </InputLeftElement>
                   <Input
+                    aria-label="domain-search"
                     type="text"
                     placeholder={t`Search for a domain`}
                     onChange={(e) => {
@@ -137,6 +138,7 @@ export default function DomainsPage() {
                     <Trans>Sort by:</Trans>
                   </Text>
                   <Select
+                    aria-label="sort-select"
                     width="fit-content"
                     size="md"
                     variant="filled"

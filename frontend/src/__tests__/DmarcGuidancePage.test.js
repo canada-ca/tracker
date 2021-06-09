@@ -43,7 +43,7 @@ const mocks = [
   {
     request: {
       query: GET_GUIDANCE_TAGS_OF_DOMAIN,
-      variables: { domain: 'cse-cst.gc.ca' },
+      variables: { domain: 'forces.gc.ca' },
     },
     result: {
       data: rawDmarcGuidancePageData,
@@ -62,7 +62,7 @@ describe('<DmarcGuidancePage />', () => {
           <I18nProvider i18n={i18n}>
             <MockedProvider addTypename={false} mocks={mocks}>
               <MemoryRouter
-                initialEntries={['/domains/cse-cst.gc.ca']}
+                initialEntries={['/domains/forces.gc.ca']}
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug">
@@ -76,7 +76,7 @@ describe('<DmarcGuidancePage />', () => {
     )
 
     await waitFor(() => {
-      expect(getByText(/Web Scan Results/i)).toBeInTheDocument()
+      expect(getByText(/forces.gc.ca/i)).toBeInTheDocument()
     })
   })
 })

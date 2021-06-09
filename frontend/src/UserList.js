@@ -289,6 +289,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                     <Icon name="email" color="gray.300" />
                   </InputLeftElement>
                   <Input
+                    aria-label="new-user-input"
                     as={Field}
                     type="email"
                     name="userName"
@@ -351,6 +352,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                     <Icon name="edit" />
                   </TrackerButton>
                   <TrackerButton
+                    aria-label="userRemoveButton"
                     variant="danger"
                     onClick={() => {
                       setSelectedRemoveUser(node.user)

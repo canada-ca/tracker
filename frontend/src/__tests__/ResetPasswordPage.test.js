@@ -19,14 +19,48 @@ const i18n = setupI18n({
   },
 })
 
-const mocks = [
+const failMocks = [
   {
     request: {
       query: RESET_PASSWORD,
+      variables: {
+        password: 'newPassword1',
+        confirmPassword: 'newPassword1',
+        resetToken: 'fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+      },
     },
     result: {
       data: {
-        status: 'string',
+        resetPassword: {
+          result: {
+            code: -89,
+            description: 'Hello World',
+            __typename: 'ResetPasswordError',
+          },
+        },
+      },
+    },
+  },
+]
+
+const successMocks = [
+  {
+    request: {
+      query: RESET_PASSWORD,
+      variables: {
+        password: 'newPassword1',
+        confirmPassword: 'newPassword1',
+        resetToken: 'fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+      },
+    },
+    result: {
+      data: {
+        resetPassword: {
+          result: {
+            status: 'Hello World',
+            __typename: 'ResetPasswordResult',
+          },
+        },
       },
     },
   },
@@ -43,7 +77,7 @@ describe('<ResetPasswordPage />', () => {
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={mocks}>
+                  <MockedProvider mocks={successMocks}>
                     <MemoryRouter
                       initialEntries={[
                         '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -80,7 +114,7 @@ describe('<ResetPasswordPage />', () => {
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={mocks}>
+                  <MockedProvider mocks={successMocks}>
                     <MemoryRouter
                       initialEntries={[
                         '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -102,12 +136,85 @@ describe('<ResetPasswordPage />', () => {
           await waitFor(() => fireEvent.blur(confirmPassword))
 
           await waitFor(() =>
-            // This should work exactly like the password field above, but it
-            // doesn't! The message is displayed but we can only get partial
-            // match for some reason.
             expect(queryByText(/Password confirmation/)).toBeInTheDocument(),
           )
         })
+      })
+    })
+  })
+
+  describe('given input', () => {
+    it('succeeds in reseting the password', async () => {
+      const { container, queryByText, getByText } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MockedProvider mocks={successMocks}>
+                <MemoryRouter
+                  initialEntries={[
+                    '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                  ]}
+                  initialIndex={0}
+                >
+                  <Route path="/reset-password/:resetToken">
+                    <ResetPasswordPage />
+                  </Route>
+                </MemoryRouter>
+              </MockedProvider>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      const password = container.querySelector('#password')
+      const confirmPassword = container.querySelector('#confirmPassword')
+      const submitBtn = getByText(/Change Password/)
+
+      await waitFor(() => {
+        fireEvent.change(password, { target: { value: 'newPassword1' } })
+        fireEvent.change(confirmPassword, { target: { value: 'newPassword1' } })
+        fireEvent.click(submitBtn)
+        expect(queryByText(/Password Updated/i)).toBeInTheDocument()
+      })
+    })
+
+    it('fails in reseting the password', async () => {
+      const { container, queryByText, getByText } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MockedProvider mocks={failMocks}>
+                <MemoryRouter
+                  initialEntries={[
+                    '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                  ]}
+                  initialIndex={0}
+                >
+                  <Route path="/reset-password/:resetToken">
+                    <ResetPasswordPage />
+                  </Route>
+                </MemoryRouter>
+              </MockedProvider>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      const password = container.querySelector('#password')
+      const confirmPassword = container.querySelector('#confirmPassword')
+      const submitBtn = getByText(/Change Password/)
+
+      await waitFor(() => {
+        fireEvent.change(password, { target: { value: 'newPassword1' } })
+        fireEvent.change(confirmPassword, { target: { value: 'newPassword1' } })
+        fireEvent.click(submitBtn)
+        expect(
+          queryByText(/Unable to reset your password, please try again./i),
+        ).toBeInTheDocument()
       })
     })
   })

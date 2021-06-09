@@ -644,6 +644,10 @@ msgstr "Modifier les détails d'un domaine"
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
 
+#: src/EditableUserPhoneNumber.js:171
+msgid "Edit Phone Number"
+msgstr "Modifier le numéro de téléphone"
+
 #: src/UserList.js:450
 msgid "Edit Role"
 msgstr "Rôle d'édition"

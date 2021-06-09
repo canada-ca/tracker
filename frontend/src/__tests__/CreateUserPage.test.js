@@ -26,8 +26,13 @@ const mocks = [
     },
     result: {
       data: {
-        user: {
-          userName: 'foo@example.com',
+        signUp: {
+          result: {
+            __typename: 'SignUpError',
+            code: 98,
+            description: 'Hello World',
+          },
+          __typename: 'SignUpPayload',
         },
       },
     },
@@ -363,7 +368,7 @@ describe('<CreateUserPage />', () => {
   })
 
   describe('given correct input in all fields', () => {
-    it('successfully creates account', async () => {
+    it('fails to create account', async () => {
       const { container, getByText } = render(
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
