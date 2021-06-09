@@ -56,7 +56,7 @@ export default function DmarcGuidancePage() {
   const dmarcPhase = data.findDomainByDomain.dmarcPhase
 
   return (
-    <Stack spacing="25px" mb="6" px="4" mx="auto">
+    <Stack spacing="25px" mb="6" px="4" mx="auto" isFitted minW='100%'>
       <PseudoBox d={{ md: 'flex' }}>
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
