@@ -125,62 +125,6 @@ describe('requesting a one time scan', () => {
             permission: 'super_admin',
           })
         })
-        it('returns a subscriptionId', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                requestScan(input: { domain: "test.gc.ca" }) {
-                  subscriptionId
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              fetch,
-              userKey: user._key,
-              uuidv4: mockUUID,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                }),
-              },
-              loaders: {
-                loadDomainByDomain: loadDomainByDomain({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-              validators: { cleanseInput },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              requestScan: {
-                subscriptionId: 'uuid-token-1234',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
-          ])
-        })
         it('returns a status message', async () => {
           const response = await graphql(
             schema,
@@ -246,62 +190,6 @@ describe('requesting a one time scan', () => {
             permission: 'admin',
           })
         })
-        it('returns a subscriptionId', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                requestScan(input: { domain: "test.gc.ca" }) {
-                  subscriptionId
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              fetch,
-              userKey: user._key,
-              uuidv4: mockUUID,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                }),
-              },
-              loaders: {
-                loadDomainByDomain: loadDomainByDomain({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-              validators: { cleanseInput },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              requestScan: {
-                subscriptionId: 'uuid-token-1234',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
-          ])
-        })
         it('returns a status message', async () => {
           const response = await graphql(
             schema,
@@ -366,62 +254,6 @@ describe('requesting a one time scan', () => {
             _to: user._id,
             permission: 'user',
           })
-        })
-        it('returns a subscriptionId', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                requestScan(input: { domain: "test.gc.ca" }) {
-                  subscriptionId
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              fetch,
-              userKey: user._key,
-              uuidv4: mockUUID,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                }),
-              },
-              loaders: {
-                loadDomainByDomain: loadDomainByDomain({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-              validators: { cleanseInput },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              requestScan: {
-                subscriptionId: 'uuid-token-1234',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
-          ])
         })
         it('returns a status message', async () => {
           const response = await graphql(
@@ -489,7 +321,7 @@ describe('requesting a one time scan', () => {
             `
               mutation {
                 requestScan(input: { domain: "test-domain.gc.ca" }) {
-                  subscriptionId
+                  status
                 }
               }
             `,
@@ -528,7 +360,7 @@ describe('requesting a one time scan', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to request a on time scan on an unknown domain.',
+              'Unable to request a one time scan on an unknown domain.',
             ),
           ]
 
@@ -579,7 +411,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -642,7 +474,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -711,7 +543,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -773,7 +605,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -836,7 +668,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -918,62 +750,6 @@ describe('requesting a one time scan', () => {
             permission: 'super_admin',
           })
         })
-        it('returns a subscriptionId', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                requestScan(input: { domain: "test.gc.ca" }) {
-                  subscriptionId
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              fetch,
-              userKey: user._key,
-              uuidv4: mockUUID,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                }),
-              },
-              loaders: {
-                loadDomainByDomain: loadDomainByDomain({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-              validators: { cleanseInput },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              requestScan: {
-                subscriptionId: 'uuid-token-1234',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
-          ])
-        })
         it('returns a status message', async () => {
           const response = await graphql(
             schema,
@@ -1039,62 +815,6 @@ describe('requesting a one time scan', () => {
             permission: 'admin',
           })
         })
-        it('returns a subscriptionId', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                requestScan(input: { domain: "test.gc.ca" }) {
-                  subscriptionId
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              fetch,
-              userKey: user._key,
-              uuidv4: mockUUID,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                }),
-              },
-              loaders: {
-                loadDomainByDomain: loadDomainByDomain({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-              validators: { cleanseInput },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              requestScan: {
-                subscriptionId: 'uuid-token-1234',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
-          ])
-        })
         it('returns a status message', async () => {
           const response = await graphql(
             schema,
@@ -1159,62 +879,6 @@ describe('requesting a one time scan', () => {
             _to: user._id,
             permission: 'user',
           })
-        })
-        it('returns a subscriptionId', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                requestScan(input: { domain: "test.gc.ca" }) {
-                  subscriptionId
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              fetch,
-              userKey: user._key,
-              uuidv4: mockUUID,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  query,
-                  userKey: user._key,
-                }),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                }),
-              },
-              loaders: {
-                loadDomainByDomain: loadDomainByDomain({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-              validators: { cleanseInput },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              requestScan: {
-                subscriptionId: 'uuid-token-1234',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
-          ])
         })
         it('returns a status message', async () => {
           const response = await graphql(
@@ -1282,7 +946,7 @@ describe('requesting a one time scan', () => {
             `
               mutation {
                 requestScan(input: { domain: "test-domain.gc.ca" }) {
-                  subscriptionId
+                  status
                 }
               }
             `,
@@ -1368,7 +1032,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -1427,7 +1091,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -1492,7 +1156,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -1550,7 +1214,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,
@@ -1609,7 +1273,7 @@ describe('requesting a one time scan', () => {
               `
                 mutation {
                   requestScan(input: { domain: "test.gc.ca" }) {
-                    subscriptionId
+                    status
                   }
                 }
               `,

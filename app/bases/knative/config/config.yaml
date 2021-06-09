@@ -46,7 +46,7 @@ spec:
       containerConcurrency: 1
       containers:
       - name: result-processor
-        image: gcr.io/track-compliance/services/scanners/results:master-862c782-1622056155 # {"$imagepolicy": "flux-system:result-processor"}
+        image: gcr.io/track-compliance/services/scanners/results:master-3959056-1622211059 # {"$imagepolicy": "flux-system:result-processor"}
         env:
         - name: DB_USER
           valueFrom:
@@ -70,6 +70,16 @@ spec:
             secretKeyRef:
               name: scanners
               key: DB_NAME
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_PORT
         - name: REPO_NAME
           value: "ITSP.40.062"
         - name: REPO_OWNER

@@ -422,8 +422,8 @@
       'Unable to remove user from this organization. Please try again.',
     'Unable to remove user from unknown organization.':
       'Unable to remove user from unknown organization.',
-    'Unable to request a on time scan on an unknown domain.':
-      'Unable to request a on time scan on an unknown domain.',
+    'Unable to request a one time scan on an unknown domain.':
+      'Unable to request a one time scan on an unknown domain.',
     'Unable to reset password. Please request a new email.':
       'Unable to reset password. Please request a new email.',
     'Unable to reset password. Please try again.':

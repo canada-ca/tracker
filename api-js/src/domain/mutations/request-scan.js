@@ -21,12 +21,6 @@ export const requestScan = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    subscriptionId: {
-      type: GraphQLString,
-      description:
-        'The id used to specify the channel in the various subscriptions.',
-      resolve: ({ subscriptionId }) => subscriptionId,
-    },
     status: {
       type: GraphQLString,
       description: 'Informs the user if the scan was dispatched successfully.',
@@ -39,7 +33,6 @@ export const requestScan = new mutationWithClientMutationId({
       i18n,
       fetch,
       userKey,
-      uuidv4,
       auth: { checkDomainPermission, userRequired },
       loaders: { loadDomainByDomain },
       validators: { cleanseInput },
@@ -58,7 +51,7 @@ export const requestScan = new mutationWithClientMutationId({
         `User: ${userKey} attempted to step a one time scan on: ${requestedDomain} however domain cannot be found.`,
       )
       throw new Error(
-        i18n._(t`Unable to request a on time scan on an unknown domain.`),
+        i18n._(t`Unable to request a one time scan on an unknown domain.`),
       )
     }
 
@@ -76,12 +69,11 @@ export const requestScan = new mutationWithClientMutationId({
       )
     }
 
-    const uuid = uuidv4()
-
     const parameters = {
       domain_key: domain._key,
       domain: domain.domain,
-      uuid,
+      selectors: domain.selectors,
+      uuid: userKey,
     }
 
     try {
@@ -130,7 +122,6 @@ export const requestScan = new mutationWithClientMutationId({
       `User: ${userKey} successfully dispatched a one time scan on domain: ${domain.domain}.`,
     )
     return {
-      subscriptionId: uuid,
       status: i18n._(t`Successfully dispatched one time scan.`),
     }
   },
