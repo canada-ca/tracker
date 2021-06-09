@@ -33,7 +33,7 @@ const mocks = [
   {
     request: {
       query: FORWARD,
-      variables: { first: 4, orgSlug: 'test-org.slug' },
+      variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
     },
     result: { data: rawOrgDomainListData },
   },
@@ -76,7 +76,7 @@ describe('<AdminDomains />', () => {
       {
         request: {
           query: FORWARD,
-          variables: { first: 4, orgSlug: 'test-org.slug' },
+          variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
         },
         result: { data: rawOrgDomainListDataEmpty },
       },

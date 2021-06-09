@@ -21,7 +21,9 @@ export const loadOrgBySlug = ({ query, language, userKey, i18n }) =>
               id: org._key,
               verified: org.verified,
               domainCount: COUNT(orgDomains),
-              summaries: org.summaries 
+              summaries: org.summaries,
+              slugEN: org.orgDetails.en.slug,
+              slugFR: org.orgDetails.fr.slug
             }, 
             TRANSLATE(${language}, org.orgDetails)
           )
@@ -38,7 +40,8 @@ export const loadOrgBySlug = ({ query, language, userKey, i18n }) =>
     const orgMap = {}
     try {
       await cursor.forEach((org) => {
-        orgMap[org.slug] = org
+        orgMap[org.slugEN] = org
+        orgMap[org.slugFR] = org
       })
     } catch (err) {
       console.error(

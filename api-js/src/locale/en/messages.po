@@ -22,13 +22,14 @@ msgstr "Authentication error. Please sign in again."
 msgid "Authentication error. Please sign in."
 msgstr "Authentication error. Please sign in."
 
-#: src/organization/objects/organization.js:138
+#: src/organization/objects/organization.js:142
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
-#: src/auth/check-domain-ownership.js:24
-#: src/auth/check-domain-ownership.js:48
-#: src/auth/check-domain-ownership.js:61
+#: src/auth/check-domain-ownership.js:31
+#: src/auth/check-domain-ownership.js:45
+#: src/auth/check-domain-ownership.js:73
+#: src/auth/check-domain-ownership.js:86
 msgid "Error when retrieving dmarc report information. Please try again."
 msgstr "Error when retrieving dmarc report information. Please try again."
 
@@ -123,8 +124,8 @@ msgstr "Passing both `first` and `last` to paginate the `GuidanceTag` connection
 msgid "Passing both `first` and `last` to paginate the `HTTPS` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `HTTPS` connection is not supported."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:179
-#: src/organization/loaders/load-organization-connections-by-user-id.js:188
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:190
+#: src/organization/loaders/load-organization-connections-by-user-id.js:189
 msgid "Passing both `first` and `last` to paginate the `Organization` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `Organization` connection is not supported."
 
@@ -150,8 +151,8 @@ msgstr "Passing both `first` and `last` to paginate the `VerifiedDomain` connect
 msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:83
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:174
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:80
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:170
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 
@@ -263,7 +264,7 @@ msgstr "Permission error, not an admin for this user."
 msgid "Phone number has been successfully removed."
 msgstr "Phone number has been successfully removed."
 
-#: src/user/mutations/set-phone-number.js:108
+#: src/user/mutations/set-phone-number.js:109
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
@@ -292,8 +293,8 @@ msgstr "Requesting `{amount}` records on the `FullPassTable` connection exceeds 
 msgid "Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:202
-#: src/organization/loaders/load-organization-connections-by-user-id.js:211
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:213
+#: src/organization/loaders/load-organization-connections-by-user-id.js:212
 msgid "Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records."
 
@@ -311,8 +312,8 @@ msgstr "Requesting `{amount}` records on the `VerifiedDomain` connection exceeds
 msgid "Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:106
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:197
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:103
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:193
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 
@@ -427,11 +428,10 @@ msgstr "Unable to create domain, organization has already claimed it."
 
 #: src/domain/mutations/create-domain.js:128
 #: src/domain/mutations/create-domain.js:179
-#: src/domain/mutations/create-domain.js:189
-#: src/domain/mutations/create-domain.js:207
-#: src/domain/mutations/create-domain.js:233
-#: src/domain/mutations/create-domain.js:244
-#: src/domain/mutations/create-domain.js:254
+#: src/domain/mutations/create-domain.js:199
+#: src/domain/mutations/create-domain.js:225
+#: src/domain/mutations/create-domain.js:243
+#: src/domain/mutations/create-domain.js:253
 msgid "Unable to create domain. Please try again."
 msgstr "Unable to create domain. Please try again."
 
@@ -627,8 +627,8 @@ msgstr "Unable to load SSL guidance tag(s). Please try again."
 msgid "Unable to load SSL scan(s). Please try again."
 msgstr "Unable to load SSL scan(s). Please try again."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:234
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:416
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:266
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:449
 msgid "Unable to load affiliation(s). Please try again."
 msgstr "Unable to load affiliation(s). Please try again."
 
@@ -659,10 +659,10 @@ msgstr "Unable to load mail summary. Please try again."
 #: src/organization/loaders/load-organization-by-key.js:47
 #: src/organization/loaders/load-organization-by-slug.js:34
 #: src/organization/loaders/load-organization-by-slug.js:48
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:467
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:479
-#: src/organization/loaders/load-organization-connections-by-user-id.js:491
-#: src/organization/loaders/load-organization-connections-by-user-id.js:503
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:516
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:528
+#: src/organization/loaders/load-organization-connections-by-user-id.js:507
+#: src/organization/loaders/load-organization-connections-by-user-id.js:519
 msgid "Unable to load organization(s). Please try again."
 msgstr "Unable to load organization(s). Please try again."
 
@@ -700,8 +700,8 @@ msgstr "Unable to load verified organization(s). Please try again."
 msgid "Unable to load web summary. Please try again."
 msgstr "Unable to load web summary. Please try again."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:223
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:405
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:254
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:437
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "Unable to query affiliation(s). Please try again."
 
@@ -778,8 +778,8 @@ msgstr "Unable to reset password. Please request a new email."
 msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
-#: src/domain/objects/domain.js:127
-#: src/domain/objects/domain.js:170
+#: src/domain/objects/domain.js:160
+#: src/domain/objects/domain.js:203
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Unable to retrieve DMARC report information for: {domain}"
 
@@ -823,14 +823,14 @@ msgstr "Unable to set phone number, please try again."
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
-#: src/user/mutations/sign-up.js:162
 #: src/user/mutations/sign-up.js:176
+#: src/user/mutations/sign-up.js:190
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Unable to sign up, please contact org admin for a new invite."
 
-#: src/user/mutations/sign-up.js:140
-#: src/user/mutations/sign-up.js:196
-#: src/user/mutations/sign-up.js:206
+#: src/user/mutations/sign-up.js:152
+#: src/user/mutations/sign-up.js:211
+#: src/user/mutations/sign-up.js:221
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
@@ -921,6 +921,10 @@ msgstr "Unable to verify account. Please request a new email."
 msgid "Unable to verify account. Please try again."
 msgstr "Unable to verify account. Please try again."
 
+#: src/user/queries/is-user-super-admin.js:23
+msgid "Unable to verify if user is a super admin, please try again."
+msgstr "Unable to verify if user is a super admin, please try again."
+
 #: src/user/queries/is-user-admin.js:23
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Unable to verify if user is an admin, please try again."
@@ -987,8 +991,8 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Gui
 msgid "You must provide a `first` or `last` value to properly paginate the `HTTPS` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `HTTPS` connection."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:170
-#: src/organization/loaders/load-organization-connections-by-user-id.js:179
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:181
+#: src/organization/loaders/load-organization-connections-by-user-id.js:180
 msgid "You must provide a `first` or `last` value to properly paginate the `Organization` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `Organization` connection."
 
@@ -1014,8 +1018,8 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Ver
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:74
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:165
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:71
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:161
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 
@@ -1036,8 +1040,8 @@ msgstr "You must provide a `period` value to access the `dmarcSummaries` connect
 msgid "You must provide a `year` value to access the `dmarcSummaries` connection."
 msgstr "You must provide a `year` value to access the `dmarcSummaries` connection."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:121
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:212
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:118
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:208
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:86
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:86
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:229
@@ -1055,8 +1059,8 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:133
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:217
-#: src/organization/loaders/load-organization-connections-by-user-id.js:226
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:228
+#: src/organization/loaders/load-organization-connections-by-user-id.js:227
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:159
 #: src/verified-domains/loaders/load-verified-domain-connections.js:159
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:213
@@ -1103,8 +1107,8 @@ msgstr "`{argSet}` on the `GuidanceTag` connection cannot be less than zero."
 msgid "`{argSet}` on the `HTTPS` connection cannot be less than zero."
 msgstr "`{argSet}` on the `HTTPS` connection cannot be less than zero."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:191
-#: src/organization/loaders/load-organization-connections-by-user-id.js:200
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:202
+#: src/organization/loaders/load-organization-connections-by-user-id.js:201
 msgid "`{argSet}` on the `Organization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `Organization` connection cannot be less than zero."
 
@@ -1130,8 +1134,8 @@ msgstr "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:95
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:186
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:92
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:182
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "`{argSet}` on the `affiliations` cannot be less than zero."
 

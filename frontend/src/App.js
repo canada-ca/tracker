@@ -36,13 +36,13 @@ const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
 const EmailValidationPage = lazy(() => import('./EmailValidationPage'))
+const CreateOrganizationPage = lazy(() => import('./CreateOrganizationPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
   const toast = useToast()
   const { currentUser, isLoggedIn, logout } = useUserState()
-  const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
   return (
     <>
@@ -77,7 +77,7 @@ export default function App() {
 
           {isLoggedIn() && (
             <Link to="/dmarc-summaries">
-              <Trans>DMARC Report</Trans>
+              <Trans>DMARC Summaries</Trans>
             </Link>
           )}
 
@@ -189,7 +189,7 @@ export default function App() {
 
               <PrivatePage
                 path="/dmarc-summaries"
-                title={t`DMARC Report`}
+                title={t`DMARC Summaries`}
                 exact
               >
                 <DmarcByDomainPage />
@@ -203,45 +203,52 @@ export default function App() {
                 <EmailValidationPage />
               </Page>
 
+              <PrivatePage
+                path="/create-organization"
+                title={t`Create Organization`}
+              >
+                <CreateOrganizationPage />
+              </PrivatePage>
+
               <Page component={PageNotFound} title="404" />
             </Switch>
           </Suspense>
         </Main>
         <FloatingMenu />
 
-        <Footer>
-          {!smallDevice && (
-            <div>
-              <Link
-                isExternal={true}
-                href={
-                  i18n.locale === 'en'
-                    ? 'https://www.canada.ca/en/transparency/privacy.html'
-                    : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-                }
-              >
-                <Trans>Privacy</Trans>
-              </Link>
-              <Link
-                ml={4}
-                isExternal={true}
-                href={
-                  i18n.locale === 'en'
-                    ? 'https://www.canada.ca/en/transparency/terms.html'
-                    : 'https://www.canada.ca/fr/transparence/avis.html'
-                }
-              >
-                <Trans>Terms & conditions</Trans>
-              </Link>
-              <Link
-                ml={4}
-                href={'https://github.com/canada-ca/tracker/issues'}
-                isExternal={true}
-              >
-                <Trans>Report an Issue</Trans>
-              </Link>
-            </div>
-          )}
+        <Footer
+          display={{ base: 'none', md: 'inline' }}
+        >
+          <div>
+            <Link
+              isExternal={true}
+              href={
+                i18n.locale === 'en'
+                  ? 'https://www.canada.ca/en/transparency/privacy.html'
+                  : 'https://www.canada.ca/fr/transparence/confidentialite.html'
+              }
+            >
+              <Trans>Privacy</Trans>
+            </Link>
+            <Link
+              ml={4}
+              isExternal={true}
+              href={
+                i18n.locale === 'en'
+                  ? 'https://www.canada.ca/en/transparency/terms.html'
+                  : 'https://www.canada.ca/fr/transparence/avis.html'
+              }
+            >
+              <Trans>Terms & conditions</Trans>
+            </Link>
+            <Link
+              ml={4}
+              href={'https://github.com/canada-ca/tracker/issues'}
+              isExternal={true}
+            >
+              <Trans>Report an Issue</Trans>
+            </Link>
+          </div>
         </Footer>
       </Flex>
     </>

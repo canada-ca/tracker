@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - ../base
 - domain-config.yaml
-patches:
+patchesStrategicMerge:
 - istio-ingressgateway-service.yaml
 components:
 - ../components/knative

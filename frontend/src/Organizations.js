@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
@@ -24,13 +24,21 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
+import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function Organisations() {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(10)
   const { currentUser } = useUserState()
+
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
+  }, [searchTerm])
+
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
 
@@ -50,7 +58,7 @@ export default function Organisations() {
     variables: {
       field: orderField,
       direction: orderDirection,
-      search: searchTerm,
+      search: debouncedSearchTerm,
       includeSuperAdminOrg: false,
     },
     recordsPerPage: orgsPerPage,

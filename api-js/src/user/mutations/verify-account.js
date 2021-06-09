@@ -27,7 +27,6 @@ export const verifyAccount = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      userKey,
       auth: { verifyToken },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -35,32 +34,6 @@ export const verifyAccount = new mutationWithClientMutationId({
   ) => {
     // Cleanse Input
     const verifyTokenString = cleanseInput(args.verifyTokenString)
-
-    if (typeof userKey === 'undefined') {
-      console.warn(
-        `User attempted to verify their account, but the userKey is undefined.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to verify account. Please try again.`),
-      }
-    }
-
-    // Auth shouldn't be needed with this
-    // Check if user exists
-    const user = await loadUserByKey.load(userKey)
-
-    if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to verify account, however no account is associated with this id.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to verify account. Please try again.`),
-      }
-    }
 
     // Get info from token
     const tokenParameters = verifyToken({ token: verifyTokenString })
@@ -71,7 +44,7 @@ export const verifyAccount = new mutationWithClientMutationId({
       typeof tokenParameters.userKey === 'undefined'
     ) {
       console.warn(
-        `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
+        `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
       )
       return {
         _type: 'error',
@@ -79,6 +52,22 @@ export const verifyAccount = new mutationWithClientMutationId({
         description: i18n._(
           t`Unable to verify account. Please request a new email.`,
         ),
+      }
+    }
+
+    // Auth shouldn't be needed with this
+    // Check if user exists
+    const { userKey } = tokenParameters
+    const user = await loadUserByKey.load(userKey)
+
+    if (typeof user === 'undefined') {
+      console.warn(
+        `User: ${userKey} attempted to verify account, however no account is associated with this id.`,
+      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to verify account. Please request a new email.`),
       }
     }
 

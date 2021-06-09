@@ -27,12 +27,14 @@ export function OrganizationCard({
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
   let webValue = 0
   let mailValue = 0
-  const webSummary = summaries.web.categories.filter((cat) => {
-    return cat.name === 'pass'
-  })
-  const mailSummary = summaries.mail.categories.filter((cat) => {
-    return cat.name === 'pass'
-  })
+  const webSummary =
+    summaries?.web?.categories?.filter((cat) => {
+      return cat.name === 'pass'
+    }) || []
+  const mailSummary =
+    summaries?.mail?.categories?.filter((cat) => {
+      return cat.name === 'pass'
+    }) || []
   if (webSummary[0]?.percentage) webValue = webSummary[0]?.percentage
   if (mailSummary[0]?.percentage) mailValue = mailSummary[0]?.percentage
 

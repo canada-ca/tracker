@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLID } from 'graphql'
+import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 
@@ -11,6 +11,12 @@ describe('given the user object', () => {
 
       expect(demoType).toHaveProperty('id')
       expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+    })
+    it('has a displayName field', () => {
+      const demoType = userSharedType.getFields()
+
+      expect(demoType).toHaveProperty('displayName')
+      expect(demoType.displayName.type).toMatchObject(GraphQLString)
     })
     it('has a userName field', () => {
       const demoType = userSharedType.getFields()
@@ -28,6 +34,15 @@ describe('given the user object', () => {
         expect(demoType.id.resolve({ id: '1' })).toEqual(
           toGlobalId('users', '1'),
         )
+      })
+    })
+    describe('testing the displayName field', () => {
+      it('returns the resolved value', () => {
+        const demoType = userSharedType.getFields()
+
+        expect(
+          demoType.displayName.resolve({ displayName: 'Display Name' }),
+        ).toEqual('Display Name')
       })
     })
     describe('testing the userName field', () => {

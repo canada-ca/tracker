@@ -65,7 +65,7 @@ describe('<DmarcByDomainPage />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/^DMARC Messages$/i))
+    await waitFor(() => getAllByText(/^DMARC Summaries$/i))
   })
 
   it('renders date selector', async () => {

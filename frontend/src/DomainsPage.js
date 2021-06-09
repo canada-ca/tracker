@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
@@ -30,13 +30,21 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
+import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function DomainsPage() {
   const { currentUser } = useUserState()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
+  }, [searchTerm])
+
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
 
@@ -57,7 +65,7 @@ export default function DomainsPage() {
     relayRoot: 'findMyDomains',
     variables: {
       orderBy: { field: orderField, direction: orderDirection },
-      search: searchTerm,
+      search: debouncedSearchTerm,
     },
   })
 
@@ -77,13 +85,18 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, lastRan, status }, index) => (
+      {({ id, domain, lastRan, status, hasDMARCReport }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
           <Box>
-            <DomainCard url={domain} lastRan={lastRan} status={status} />
+            <DomainCard
+              url={domain}
+              lastRan={lastRan}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+            />
             <Divider borderColor="gray.900" />
           </Box>
         </ErrorBoundary>
@@ -93,7 +106,7 @@ export default function DomainsPage() {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4" textAlign={['center', 'left']}>
+      <Heading as="h1" mb="4" textAlign={{ base: 'center', md: 'left' }}>
         <Trans>Domains</Trans>
       </Heading>
 
@@ -109,7 +122,11 @@ export default function DomainsPage() {
 
         <TabPanels>
           <TabPanel>
-            <Text fontSize="2xl" mb="2" textAlign={['center', 'left']}>
+            <Text
+              fontSize="2xl"
+              mb="2"
+              textAlign={{ base: 'center', md: 'left' }}
+            >
               <Trans>Search for any Government of Canada tracked domain:</Trans>
             </Text>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>

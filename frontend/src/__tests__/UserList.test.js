@@ -30,7 +30,7 @@ const successMocks = [
   {
     request: {
       query: FORWARD,
-      variables: { first: 10, orgSlug: 'test-org.slug' },
+      variables: { first: 10, orgSlug: 'test-org.slug', search: '' },
     },
     result: { data: rawOrgUserListData },
   },

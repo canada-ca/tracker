@@ -35,4 +35,17 @@ export const fieldRequirements = {
     },
     required: { message: t`Phone number field must not be empty` },
   },
+  acronym: {
+    matches: {
+      regex: /^[A-Z]+(?:_[A-Z]+)*$/g,
+      message: t`Acronyms can only use upper case letters and underscores`,
+    },
+    max: {
+      maxLength: 50,
+      message: t`Acronyms must be at most 50 characters`,
+    },
+  },
+  field: {
+    required: { message: t`This field cannot be empty` },
+  },
 }

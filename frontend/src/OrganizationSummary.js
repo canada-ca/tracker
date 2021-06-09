@@ -38,7 +38,7 @@ export function OrganizationSummary({
           </Text>
         </Stack>
       </Stack>
-      <SummaryGroup web={summaries.web} mail={summaries.mail} />
+      <SummaryGroup web={summaries?.web} mail={summaries?.mail} />
     </Layout>
   )
 }
