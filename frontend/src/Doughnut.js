@@ -9,7 +9,6 @@ import trackerLogo from './images/tracker_v-03.png'
 
 export const Doughnut = ({
   data,
-  color,
   height,
   width,
   title,
@@ -29,22 +28,26 @@ export const Doughnut = ({
   })
 
   const patterns = scaleOrdinal().range([
-    color,
+    data[0] ? data[0].color : '#000',
     `url(#stripes)`,
     `url(#dots)`,
     `url(#crosshatch)`,
     `url(#zigzag)`,
   ])
 
+  const patternDefs = (
+    <defs>
+      <Stripes angle={45} background={data[1] ? data[1].color : '#000'} color="#fff" />
+      <Dots size={1} background={data[2] ? data[2].color : '#000'} color="#fff" />
+      <CrossHatch width={0.8} background={data[3] ? data[3].color : '#000'} color="#fff" />
+      <ZigZag width={0.4} background={data[4] ? data[4].color : '#000'} color="#fff" />
+    </defs>
+  )
+
   const doughnutChart = (
     <svg height={height} width={width}>
       <title>{title}</title>
-      <defs>
-        <ZigZag width={0.4} background="#F16D22" color="#fff" />
-        <Dots size={1} background="#B93B26" color="#fff" />
-        <Stripes angle={45} background="#F8991F" color="#fff" />
-        <CrossHatch width={0.8} background="#F16D22" color="#fff" />
-      </defs>
+      {patternDefs}
       <g transform={`translate(${width / 2},${height / 2})`}>
         {arcs.map((arc, index) => {
           return children(
@@ -95,12 +98,7 @@ export const Doughnut = ({
               width={30}
               style={{ display: 'inline', marginRight: '1em' }}
             >
-              <defs>
-                <ZigZag width={0.4} background="#F16D22" color="#fff" />
-                <Dots size={1} background="#B93B26" color="#fff" />
-                <Stripes angle={45} background="#F8991F" color="#fff" />
-                <CrossHatch width={0.8} background="#F16D22" color="#fff" />
-              </defs>
+              {patternDefs}
               <g>
                 <rect
                   stroke="#fff"
@@ -131,7 +129,6 @@ export const Doughnut = ({
 Doughnut.propTypes = {
   data: arrayOf(object),
   title: string,
-  color: string,
   children: func,
   height: number,
   width: number,

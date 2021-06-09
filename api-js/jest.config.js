@@ -10,5 +10,5 @@ module.exports = {
     'locale',
     'index.js',
   ],
-  testTimeout: 30000,
+  testTimeout: 50000,
 }

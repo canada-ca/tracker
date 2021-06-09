@@ -9,3 +9,4 @@ pretend
 uvloop
 httptools
 gql
+redis

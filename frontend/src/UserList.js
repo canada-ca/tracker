@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import {
   FormLabel,
   Stack,
@@ -41,7 +41,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { RelayPaginationControls } from './RelayPaginationControls'
-import { useDebounce } from './useDebounce'
+import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
@@ -63,7 +63,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     onClose: updateOnClose,
   } = useDisclosure()
   const initialFocusRef = useRef()
-  const [dbSearchUser, setDbSearchUser] = useState('')
+
+  const [debouncedSearchUser, setDebouncedSearchUser] = useState('')
 
   const userForm = useFormik({
     initialValues: { userName: '', roleSelect: 'USER' },
@@ -74,7 +75,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     }),
     onSubmit: async (values) => {
       userForm.setFieldValue('userName', '')
-      setDbSearchUser('')
+      setDebouncedSearchUser('')
       setAddedUserName(values.userName)
       addUser({
         variables: {
@@ -87,11 +88,11 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     },
   })
 
-  const memoizedSearchTerm = useMemo(() => {
-    return [userForm.values.userName]
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchUser(userForm.values.userName)
   }, [userForm.values.userName])
 
-  useDebounce(setDbSearchUser, 500, memoizedSearchTerm)
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const {
     loading,
@@ -106,7 +107,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     fetchForward: FORWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: usersPerPage,
-    variables: { orgSlug, search: dbSearchUser },
+    variables: { orgSlug, search: debouncedSearchUser },
     relayRoot: 'findOrganizationBySlug.affiliations',
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
@@ -359,8 +360,15 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               flexShrink={0}
               {...userForm.getFieldProps('roleSelect')}
             >
-              <option value="USER">{t`USER`}</option>
-              <option value="ADMIN">{t`ADMIN`}</option>
+              {orgSlug !== 'super-admin' && (
+                <option value="USER">{t`USER`}</option>
+              )}
+              {orgSlug !== 'super-admin' && (
+                <option value="ADMIN">{t`ADMIN`}</option>
+              )}
+              {permission === 'SUPER_ADMIN' && orgSlug === 'super-admin' && (
+                <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+              )}
             </Select>
           </Stack>
 
@@ -487,7 +495,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                             <option value="ADMIN">{t`ADMIN`}</option>
                           )}
                           {(editingUserRole === 'SUPER_ADMIN' ||
-                            permission === 'SUPER_ADMIN') && (
+                            (permission === 'SUPER_ADMIN' &&
+                              orgSlug === 'super-admin')) && (
                             <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
                           )}
                         </Select>

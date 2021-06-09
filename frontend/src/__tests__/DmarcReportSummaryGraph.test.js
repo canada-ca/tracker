@@ -25,6 +25,6 @@ describe('<DmarcReportTimeGraph />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    await waitFor(() => getByText(/Pass Only SPF/i))
+    await waitFor(() => getByText(/Fail DKIM/i))
   })
 })

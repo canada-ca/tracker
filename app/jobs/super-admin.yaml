@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: super-admin
-        image: gcr.io/track-compliance/super-admin:master-0df3a4b-1622452603 # {"$imagepolicy": "flux-system:super-admin"}
+        image: gcr.io/track-compliance/super-admin:master-f293fdc-1623175461 # {"$imagepolicy": "flux-system:super-admin"}
         env:
         - name: DB_PASS
           valueFrom:
@@ -73,4 +73,3 @@ spec:
           value: "Canada"
       restartPolicy: Never
   backoffLimit: 4
-
