@@ -66,8 +66,14 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   const [debouncedSearchUser, setDebouncedSearchUser] = useState('')
 
+  const isSuperAdminInSuperAdminOrg =
+    permission === 'SUPER_ADMIN' && orgSlug === 'super-admin'
+
   const userForm = useFormik({
-    initialValues: { userName: '', roleSelect: 'USER' },
+    initialValues: {
+      userName: '',
+      roleSelect: isSuperAdminInSuperAdminOrg ? 'SUPER_ADMIN' : 'USER',
+    },
     validationSchema: object().shape({
       userName: yupString()
         .required(i18n._(fieldRequirements.email.required.message))
@@ -360,14 +366,13 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               flexShrink={0}
               {...userForm.getFieldProps('roleSelect')}
             >
-              {orgSlug !== 'super-admin' && (
-                <option value="USER">{t`USER`}</option>
-              )}
-              {orgSlug !== 'super-admin' && (
-                <option value="ADMIN">{t`ADMIN`}</option>
-              )}
-              {permission === 'SUPER_ADMIN' && orgSlug === 'super-admin' && (
+              {isSuperAdminInSuperAdminOrg ? (
                 <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+              ) : (
+                <>
+                  <option value="USER">{t`USER`}</option>
+                  <option value="ADMIN">{t`ADMIN`}</option>
+                </>
               )}
             </Select>
           </Stack>
