@@ -50,7 +50,9 @@ describe('given the httpsScanData subscription', () => {
       hsts: 'hsts',
       hstsAge: 'hstsAge',
       preloaded: 'preloaded',
-      guidanceTags: ['https1'],
+      negativeTags: ['https1'],
+      neutralTags: ['https1'],
+      positiveTags: ['https1'],
     }
 
     // Generate DB Items
@@ -69,9 +71,6 @@ describe('given the httpsScanData subscription', () => {
       publisher: publisherClient,
       subscriber: subscriberClient,
     })
-  })
-
-  beforeEach(async () => {
     await collections.httpsGuidanceTags.save({
       _key: 'https1',
       tagName: 'HTTPS-TAG',
@@ -172,7 +171,35 @@ describe('given the httpsScanData subscription', () => {
           hsts
           hstsAge
           preloaded
-          guidanceTags {
+          negativeGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          neutralGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          positiveGuidanceTags {
             id
             tagId
             tagName
@@ -216,7 +243,47 @@ describe('given the httpsScanData subscription', () => {
           hsts: 'hsts',
           hstsAge: 'hstsAge',
           preloaded: 'preloaded',
-          guidanceTags: [
+          negativeGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'https1'),
+              tagId: 'https1',
+              tagName: 'HTTPS-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          neutralGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'https1'),
+              tagId: 'https1',
+              tagName: 'HTTPS-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          positiveGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'https1'),
               tagId: 'https1',
