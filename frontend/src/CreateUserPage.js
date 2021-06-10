@@ -16,8 +16,7 @@ import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { activate } from './i18n.config'
-
-const TermsConditionsPage = lazy(() => import('./TermsConditionsPage'))
+import { TermsConditionsPage } from  './TermsConditionsPage'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
