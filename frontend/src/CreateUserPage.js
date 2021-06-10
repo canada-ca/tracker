@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { Stack, useToast, Box, Heading, Text } from '@chakra-ui/core'
 import { useMutation } from '@apollo/client'
 import { object, string } from 'yup'
@@ -16,6 +16,8 @@ import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { activate } from './i18n.config'
+
+const TermsConditionsPage = lazy(() => import('./TermsConditionsPage'))
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -153,6 +155,10 @@ export default function CreateUserPage() {
             <PasswordConfirmation spacing="4" width="100%" mb="4" />
 
             <LanguageSelect name="lang" width="100%" mb="4" />
+
+            <Box overflow='scroll' height='20em' border="1px" borderColor="gray.200" p={4} m={4}>
+              <TermsConditionsPage />
+            </Box>
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton
