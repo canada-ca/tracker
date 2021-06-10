@@ -1,6 +1,5 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLBoolean, GraphQLList, GraphQLString } from 'graphql'
-import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
@@ -38,12 +37,6 @@ describe('given the sslSubType object', () => {
 
       expect(demoType).toHaveProperty('heartbleedVulnerable')
       expect(demoType.heartbleedVulnerable.type).toMatchObject(GraphQLBoolean)
-    })
-    it('has a rawJson field', () => {
-      const demoType = sslSubType.getFields()
-
-      expect(demoType).toHaveProperty('rawJson')
-      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has a strongCiphers field', () => {
       const demoType = sslSubType.getFields()
@@ -157,17 +150,6 @@ describe('given the sslSubType object', () => {
             heartbleed_vulnerable: false,
           }),
         ).toEqual(false)
-      })
-    })
-    describe('testing the rawJSON resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = sslSubType.getFields()
-
-        const rawJson = { item: 1234 }
-
-        expect(demoType.rawJson.resolve({ rawJson })).toEqual(
-          JSON.stringify(rawJson),
-        )
       })
     })
     describe('testing the strongCiphers resolver', () => {
