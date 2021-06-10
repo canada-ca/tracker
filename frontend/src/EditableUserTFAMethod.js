@@ -124,7 +124,7 @@ function EditableUserTFAMethod({
           <form id="tfaForm" onSubmit={handleSubmit}>
             <Stack isInline align="center" justifyContent="space-between">
               <Field
-                aria-label="tfa-method-select"
+                data-testid="tfa-method-select"
                 id="tfaMethod"
                 component={Select}
                 {...getFieldProps('tfaMethod')}

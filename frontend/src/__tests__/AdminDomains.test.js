@@ -211,7 +211,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByLabelText } = render(
+      const { getByText, getByPlaceholderText } = render(
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -236,7 +236,7 @@ describe('<AdminDomains />', () => {
       )
 
       await waitFor(() => {
-        const domainInput = getByLabelText('domain-input')
+        const domainInput = getByPlaceholderText('Domain URL')
         fireEvent.change(domainInput, {
           target: {
             value: 'random text dot com',
@@ -280,7 +280,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByLabelText, queryByText } = render(
+      const { getByText, getByPlaceholderText, queryByText } = render(
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -308,7 +308,7 @@ describe('<AdminDomains />', () => {
         expect(queryByText(/Add Domain/)).toBeInTheDocument()
       })
 
-      const domainInput = getByLabelText('domain-input')
+      const domainInput = getByPlaceholderText('Domain URL')
       fireEvent.change(domainInput, {
         target: {
           value: 'test.domain.gc.ca',
@@ -354,7 +354,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByLabelText, queryByText, queryAllByText } = render(
+      const { getByText, getByTestId, queryByText, queryAllByText } = render(
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -382,7 +382,7 @@ describe('<AdminDomains />', () => {
         expect(queryByText(/Add Domain/)).toBeInTheDocument()
       })
 
-      const removeDomain = getByLabelText('remove-1')
+      const removeDomain = getByTestId('remove-1')
       fireEvent.click(removeDomain)
 
       await waitFor(() => {
@@ -412,7 +412,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByLabelText, getAllByText } = render(
+      const { getByText, getByTestId, getAllByText } = render(
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -437,7 +437,7 @@ describe('<AdminDomains />', () => {
       )
 
       await waitFor(() => {
-        const editDomain = getByLabelText('edit-1')
+        const editDomain = getByTestId('edit-1')
         fireEvent.click(editDomain)
         const editText = getByText(/Edit Domain Details/i)
         expect(editText).toBeInTheDocument()
@@ -480,7 +480,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByLabelText } = render(
+      const { getByText, getByLabelText, getByTestId } = render(
         <UserStateProvider
           initialState={{
             userName: 'testuser@testemail.gc.ca',
@@ -505,7 +505,7 @@ describe('<AdminDomains />', () => {
       )
 
       await waitFor(() => {
-        const editDomain = getByLabelText('edit-1')
+        const editDomain = getByTestId('edit-1')
         fireEvent.click(editDomain)
         const editText = getByText(/Edit Domain Details/i)
         expect(editText).toBeInTheDocument()

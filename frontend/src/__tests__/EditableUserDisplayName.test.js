@@ -167,7 +167,7 @@ describe('<EditableUserDisplayName>', () => {
             expect(queryByText(/Edit Display Name/)).toBeInTheDocument()
           })
 
-          const displayName = getByLabelText(/input-display-name/)
+          const displayName = getByLabelText(/New Display Name:/)
           fireEvent.change(displayName, { target: { value: 'Test User' } })
 
           const confirmButton = getByText('Confirm')
@@ -228,7 +228,7 @@ describe('<EditableUserDisplayName>', () => {
             expect(queryByText(/Edit Display Name/)).toBeInTheDocument()
           })
 
-          const displayName = getByLabelText(/input-display-name/)
+          const displayName = getByLabelText(/New Display Name:/)
           fireEvent.change(displayName, { target: { value: 'Test User' } })
 
           const confirmButton = getByText('Confirm')

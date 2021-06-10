@@ -68,7 +68,7 @@ describe('<EditableUserLanguage />', () => {
       },
     ]
 
-    const { getByText, getByLabelText } = render(
+    const { getByText, getByTestId } = render(
       <UserStateProvider
         initialState={{
           userName: 'testUserName@email.com',
@@ -89,7 +89,7 @@ describe('<EditableUserLanguage />', () => {
     )
 
     const saveBtn = getByText(/Save Language/i)
-    const languageSelect = getByLabelText(/user-language-select/)
+    const languageSelect = getByTestId(/user-language-select/)
     fireEvent.change(languageSelect, { target: { value: 'FRENCH' } })
     fireEvent.click(saveBtn)
     await waitFor(() =>
@@ -121,7 +121,7 @@ describe('<EditableUserLanguage />', () => {
       },
     ]
 
-    const { getByText, getByLabelText } = render(
+    const { getByText, getByTestId } = render(
       <UserStateProvider
         initialState={{
           userName: 'testUserName@email.com',
@@ -142,7 +142,7 @@ describe('<EditableUserLanguage />', () => {
     )
 
     const saveBtn = getByText(/Save Language/i)
-    const languageSelect = getByLabelText(/user-language-select/)
+    const languageSelect = getByTestId(/user-language-select/)
     fireEvent.change(languageSelect, { target: { value: 'FRENCH' } })
     fireEvent.click(saveBtn)
     await waitFor(() =>

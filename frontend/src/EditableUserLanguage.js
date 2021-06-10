@@ -99,7 +99,7 @@ function EditableUserLanguage({ currentLang }) {
           <form id="langForm" onSubmit={handleSubmit}>
             <Stack isInline align="center" justifyContent="space-between">
               <Field
-                aria-label="user-language-select"
+                data-testid="user-language-select"
                 id="lang"
                 component={Select}
                 {...getFieldProps('lang')}

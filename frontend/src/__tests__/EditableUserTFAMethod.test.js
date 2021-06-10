@@ -68,7 +68,7 @@ describe('<EditableUserTFAMethod />', () => {
       },
     ]
 
-    const { getByText, getByLabelText } = render(
+    const { getByText, getByTestId } = render(
       <UserStateProvider
         initialState={{
           userName: 'testUserName@email.com',
@@ -93,7 +93,7 @@ describe('<EditableUserTFAMethod />', () => {
     )
 
     const saveBtn = getByText(/Save/i)
-    const languageSelect = getByLabelText(/tfa-method-select/)
+    const languageSelect = getByTestId(/tfa-method-select/)
     fireEvent.change(languageSelect, { target: { value: 'EMAIL' } })
     fireEvent.click(saveBtn)
     await waitFor(() =>
@@ -125,7 +125,7 @@ describe('<EditableUserTFAMethod />', () => {
       },
     ]
 
-    const { getByText, getByLabelText } = render(
+    const { getByText, getByTestId } = render(
       <UserStateProvider
         initialState={{
           userName: 'testUserName@email.com',
@@ -150,7 +150,7 @@ describe('<EditableUserTFAMethod />', () => {
     )
 
     const saveBtn = getByText(/Save/i)
-    const languageSelect = getByLabelText(/tfa-method-select/)
+    const languageSelect = getByTestId(/tfa-method-select/)
     fireEvent.change(languageSelect, { target: { value: 'EMAIL' } })
     fireEvent.click(saveBtn)
     await waitFor(() =>

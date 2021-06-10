@@ -292,7 +292,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <Stack isInline align="center">
               <Stack>
                 <TrackerButton
-                  aria-label={`edit-${index}`}
+                  data-testid={`edit-${index}`}
                   variant="primary"
                   px="2"
                   onClick={() => {
@@ -304,7 +304,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   <Icon name="edit" />
                 </TrackerButton>
                 <TrackerButton
-                  aria-label={`remove-${index}`}
+                  data-testid={`remove-${index}`}
                   onClick={() => {
                     setSelectedRemoveDomainUrl(domain)
                     setSelectedRemoveDomainId(domainId)
@@ -350,7 +350,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               <Icon name="plus-square" color="gray.300" />
             </InputLeftElement>
             <Input
-              aria-label="domain-input"
               type="text"
               placeholder={t`Domain URL`}
               {...domainForm.getFieldProps('domain')}

@@ -285,7 +285,7 @@ describe('<DomainsPage />', () => {
     describe('filtering options', () => {
       describe('search bar', () => {
         it('correctly filters results', async () => {
-          const { getByLabelText, queryByText } = render(
+          const { getByPlaceholderText, queryByText } = render(
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
@@ -307,7 +307,7 @@ describe('<DomainsPage />', () => {
           })
 
           await waitFor(() => {
-            const search = getByLabelText(/domain-search/)
+            const search = getByPlaceholderText(/Search for a domain/)
             fireEvent.change(search, { target: { value: 'tbs-sct.gc.ca' } })
           })
 
@@ -320,7 +320,7 @@ describe('<DomainsPage />', () => {
 
       describe('sort by select', () => {
         it('changes sorting order', async () => {
-          const { getByLabelText } = render(
+          const { getByTestId } = render(
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
@@ -337,7 +337,7 @@ describe('<DomainsPage />', () => {
           )
 
           await waitFor(() => {
-            const sortSelect = getByLabelText('sort-select')
+            const sortSelect = getByTestId('sort-select')
             fireEvent.change(sortSelect, { target: { value: 'LAST_RAN' } })
           })
         })

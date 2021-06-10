@@ -219,7 +219,7 @@ describe('<AdminPage />', () => {
 
   describe('Organization select', () => {
     it('displays info for admin', async () => {
-      const { getByText, getByLabelText } = render(
+      const { getByText } = render(
         <UserStateProvider
           initialState={{
             userName: 'me',
@@ -247,7 +247,7 @@ describe('<AdminPage />', () => {
       })
 
       await waitFor(() => {
-        const orgSelect = getByLabelText('select-an-organization')
+        const orgSelect = getByText('Select an organization')
         fireEvent.change(orgSelect, { target: { value: 'INFC' } })
       })
     })

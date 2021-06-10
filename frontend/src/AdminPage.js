@@ -109,7 +109,6 @@ export default function AdminPage() {
               <Trans>Organization: </Trans>
             </Text>
             <Select
-              aria-label="select-an-organization"
               w={['100%', '25%']}
               size="lg"
               variant="filled"
