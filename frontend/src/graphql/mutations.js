@@ -428,4 +428,24 @@ export const CREATE_ORGANIZATION = gql`
   }
 `
 
+export const REMOVE_ORGANIZATION = gql`
+  mutation RemoveOrganization($orgId: ID!) {
+    removeOrganization(input: { orgId: $orgId }) {
+      result {
+        ... on OrganizationResult {
+          status
+          organization {
+            id
+            name
+          }
+        }
+        ... on OrganizationError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''
