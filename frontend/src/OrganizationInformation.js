@@ -70,7 +70,7 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
           mb={{ base: '0.5em', md: '0' }}
         >
           <Heading as="h1" fontSize="3xl">
-            Header{org.name}
+            {org.name}
           </Heading>
           <Icon name="check-circle" color="blue.500" size="icons.md" />
         </Stack>
