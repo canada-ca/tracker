@@ -32,6 +32,7 @@ const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
 const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
+const HelpPage = lazy(() => import('./helpPage'))
 const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
@@ -153,6 +154,12 @@ export default function App() {
                 title={t`Reset Password`}
               />
 
+              <Page
+                path="/help"
+                component={HelpPage}
+                title={t`help`}
+              />
+
               <PrivatePage path="/organizations" title={t`Organizations`} exact>
                 <Organizations />
               </PrivatePage>
@@ -240,6 +247,13 @@ export default function App() {
               }
             >
               <Trans>Terms & conditions</Trans>
+            </Link>
+            <Link
+              ml={4}
+              href='./help'
+              isExternal={false}
+            >
+              <Trans>Help</Trans>
             </Link>
             <Link
               ml={4}
