@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React from 'react'
 import { Stack, useToast, Box, Heading, Text } from '@chakra-ui/core'
 import { useMutation } from '@apollo/client'
 import { object, string } from 'yup'
