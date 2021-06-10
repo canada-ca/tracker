@@ -4,7 +4,6 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
-import { GraphQLJSON } from 'graphql-scalars'
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const sslSubType = new GraphQLObjectType({
@@ -35,11 +34,6 @@ export const sslSubType = new GraphQLObjectType({
       description: 'Denotes vulnerability to "Heartbleed" exploit.',
       resolve: ({ heartbleed_vulnerable: heartbleedVulnerable }) =>
         heartbleedVulnerable,
-    },
-    rawJson: {
-      type: GraphQLJSON,
-      description: 'Raw scan result.',
-      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     strongCiphers: {
       type: GraphQLList(GraphQLString),
