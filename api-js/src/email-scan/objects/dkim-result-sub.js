@@ -20,15 +20,39 @@ export const dkimResultSubType = new GraphQLObjectType({
       description: 'Size of the Public Key in bits',
       resolve: ({ keyLength }) => keyLength,
     },
-    guidanceTags: {
+    negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),
-      description: 'Key tags found during scan.',
+      description: 'Negative guidance tags found during scan.',
       resolve: async (
-        { guidanceTags },
+        { negativeTags },
         _args,
         { loaders: { loadDkimGuidanceTagById } },
       ) => {
-        const dkimTags = await loadDkimGuidanceTagById.loadMany(guidanceTags)
+        const dkimTags = await loadDkimGuidanceTagById.loadMany(negativeTags)
+        return dkimTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: 'Neutral guidance tags found during scan.',
+      resolve: async (
+        { neutralTags },
+        _args,
+        { loaders: { loadDkimGuidanceTagById } },
+      ) => {
+        const dkimTags = await loadDkimGuidanceTagById.loadMany(neutralTags)
+        return dkimTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: 'Positive guidance tags found during scan.',
+      resolve: async (
+        { positiveTags },
+        _args,
+        { loaders: { loadDkimGuidanceTagById } },
+      ) => {
+        const dkimTags = await loadDkimGuidanceTagById.loadMany(positiveTags)
         return dkimTags
       },
     },

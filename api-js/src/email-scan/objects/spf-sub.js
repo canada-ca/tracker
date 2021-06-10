@@ -26,15 +26,39 @@ export const spfSubType = new GraphQLObjectType({
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
       resolve: ({ spfDefault }) => spfDefault,
     },
-    guidanceTags: {
+    negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),
-      description: `Key tags found during scan.`,
+      description: `Negative guidance tags found during scan.`,
       resolve: async (
-        { guidanceTags },
+        { negativeTags },
         _args,
         { loaders: { loadSpfGuidanceTagByTagId } },
       ) => {
-        const spfTags = await loadSpfGuidanceTagByTagId.loadMany(guidanceTags)
+        const spfTags = await loadSpfGuidanceTagByTagId.loadMany(negativeTags)
+        return spfTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Neutral guidance tags found during scan.`,
+      resolve: async (
+        { neutralTags },
+        _args,
+        { loaders: { loadSpfGuidanceTagByTagId } },
+      ) => {
+        const spfTags = await loadSpfGuidanceTagByTagId.loadMany(neutralTags)
+        return spfTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Positive guidance tags found during scan.`,
+      resolve: async (
+        { positiveTags },
+        _args,
+        { loaders: { loadSpfGuidanceTagByTagId } },
+      ) => {
+        const spfTags = await loadSpfGuidanceTagByTagId.loadMany(positiveTags)
         return spfTags
       },
     },
