@@ -40,11 +40,27 @@ describe('given the httpsSubType object', () => {
       expect(demoType).toHaveProperty('preloaded')
       expect(demoType.preloaded.type).toMatchObject(GraphQLString)
     })
-    it('has guidanceTags field', () => {
+    it('has negativeGuidanceTags field', () => {
       const demoType = httpsSubType.getFields()
 
-      expect(demoType).toHaveProperty('guidanceTags')
-      expect(demoType.guidanceTags.type).toMatchObject(
+      expect(demoType).toHaveProperty('negativeGuidanceTags')
+      expect(demoType.negativeGuidanceTags.type).toMatchObject(
+        GraphQLList(guidanceTagType),
+      )
+    })
+    it('has neutralGuidanceTags field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('neutralGuidanceTags')
+      expect(demoType.neutralGuidanceTags.type).toMatchObject(
+        GraphQLList(guidanceTagType),
+      )
+    })
+    it('has positiveGuidanceTags field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('positiveGuidanceTags')
+      expect(demoType.positiveGuidanceTags.type).toMatchObject(
         GraphQLList(guidanceTagType),
       )
     })
@@ -93,9 +109,8 @@ describe('given the httpsSubType object', () => {
         )
       })
     })
-    describe('testing the guidanceTags resolver', () => {
+    describe('testing the positiveGuidanceTags resolver', () => {
       let query, drop, truncate, collections, httpsGT
-
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
           type: 'database',
@@ -105,7 +120,6 @@ describe('given the httpsSubType object', () => {
           options: databaseOptions({ rootPass }),
         }))
       })
-
       beforeEach(async () => {
         await truncate()
         httpsGT = await collections.httpsGuidanceTags.save({
@@ -126,11 +140,9 @@ describe('given the httpsSubType object', () => {
           ],
         })
       })
-
       afterAll(async () => {
         await drop()
       })
-
       it('returns the parsed value', async () => {
         const demoType = httpsSubType.getFields()
 
@@ -139,11 +151,163 @@ describe('given the httpsSubType object', () => {
           userKey: '1',
           i18n: {},
         })
-        const guidanceTags = ['https1']
+        const positiveTags = ['https1']
 
         expect(
-          await demoType.guidanceTags.resolve(
-            { guidanceTags },
+          await demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
+            {},
+            { loaders: { loadHttpsGuidanceTagByTagId: loader } },
+          ),
+        ).toEqual([
+          {
+            _id: httpsGT._id,
+            _key: httpsGT._key,
+            _rev: httpsGT._rev,
+            _type: 'guidanceTag',
+            guidance: 'Some Interesting Guidance',
+            id: 'https1',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+            tagId: 'https1',
+            tagName: 'HTTPS-TAG',
+          },
+        ])
+      })
+    })
+    describe('testing the neutralGuidanceTags resolver', () => {
+      let query, drop, truncate, collections, httpsGT
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        await truncate()
+        httpsGT = await collections.httpsGuidanceTags.save({
+          _key: 'https1',
+          tagName: 'HTTPS-TAG',
+          guidance: 'Some Interesting Guidance',
+          refLinksGuide: [
+            {
+              description: 'refLinksGuide Description',
+              ref_link: 'www.refLinksGuide.ca',
+            },
+          ],
+          refLinksTechnical: [
+            {
+              description: 'refLinksTechnical Description',
+              ref_link: 'www.refLinksTechnical.ca',
+            },
+          ],
+        })
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      it('returns the parsed value', async () => {
+        const demoType = httpsSubType.getFields()
+
+        const loader = loadHttpsGuidanceTagByTagId({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
+        const neutralTags = ['https1']
+
+        expect(
+          await demoType.neutralGuidanceTags.resolve(
+            { neutralTags },
+            {},
+            { loaders: { loadHttpsGuidanceTagByTagId: loader } },
+          ),
+        ).toEqual([
+          {
+            _id: httpsGT._id,
+            _key: httpsGT._key,
+            _rev: httpsGT._rev,
+            _type: 'guidanceTag',
+            guidance: 'Some Interesting Guidance',
+            id: 'https1',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+            tagId: 'https1',
+            tagName: 'HTTPS-TAG',
+          },
+        ])
+      })
+    })
+    describe('testing the positiveGuidanceTags resolver', () => {
+      let query, drop, truncate, collections, httpsGT
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        await truncate()
+        httpsGT = await collections.httpsGuidanceTags.save({
+          _key: 'https1',
+          tagName: 'HTTPS-TAG',
+          guidance: 'Some Interesting Guidance',
+          refLinksGuide: [
+            {
+              description: 'refLinksGuide Description',
+              ref_link: 'www.refLinksGuide.ca',
+            },
+          ],
+          refLinksTechnical: [
+            {
+              description: 'refLinksTechnical Description',
+              ref_link: 'www.refLinksTechnical.ca',
+            },
+          ],
+        })
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      it('returns the parsed value', async () => {
+        const demoType = httpsSubType.getFields()
+
+        const loader = loadHttpsGuidanceTagByTagId({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
+        const positiveTags = ['https1']
+
+        expect(
+          await demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
             {},
             { loaders: { loadHttpsGuidanceTagByTagId: loader } },
           ),

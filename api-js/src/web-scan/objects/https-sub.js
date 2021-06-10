@@ -31,16 +31,44 @@ export const httpsSubType = new GraphQLObjectType({
       description: `Denotes whether the domain has been submitted and included within HSTS preload list.`,
       resolve: ({ preloaded }) => preloaded,
     },
-    guidanceTags: {
+    negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),
-      description: `Key tags found during scan.`,
+      description: `Negative guidance tags found during scan.`,
       resolve: async (
-        { guidanceTags },
+        { negativeTags },
         _args,
         { loaders: { loadHttpsGuidanceTagByTagId } },
       ) => {
         const httpsTags = await loadHttpsGuidanceTagByTagId.loadMany(
-          guidanceTags,
+          negativeTags,
+        )
+        return httpsTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Neutral guidance tags found during scan.`,
+      resolve: async (
+        { neutralTags },
+        _args,
+        { loaders: { loadHttpsGuidanceTagByTagId } },
+      ) => {
+        const httpsTags = await loadHttpsGuidanceTagByTagId.loadMany(
+          neutralTags,
+        )
+        return httpsTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Positive guidance tags found during scan.`,
+      resolve: async (
+        { positiveTags },
+        _args,
+        { loaders: { loadHttpsGuidanceTagByTagId } },
+      ) => {
+        const httpsTags = await loadHttpsGuidanceTagByTagId.loadMany(
+          positiveTags,
         )
         return httpsTags
       },

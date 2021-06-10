@@ -1,4 +1,10 @@
-import { GraphQLObjectType, GraphQLList } from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLString,
+  GraphQLBoolean,
+} from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const sslSubType = new GraphQLObjectType({
@@ -6,15 +12,97 @@ export const sslSubType = new GraphQLObjectType({
   description:
     'SSL gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
-    guidanceTags: {
+    acceptableCiphers: {
+      type: GraphQLList(GraphQLString),
+      description:
+        'List of ciphers in use by the server deemed to be "acceptable".',
+      resolve: ({ acceptable_ciphers: acceptableCiphers }) => acceptableCiphers,
+    },
+    acceptableCurves: {
+      type: GraphQLList(GraphQLString),
+      description:
+        'List of curves in use by the server deemed to be "acceptable".',
+      resolve: ({ acceptable_curves: acceptableCurves }) => acceptableCurves,
+    },
+    ccsInjectionVulnerable: {
+      type: GraphQLBoolean,
+      description: 'Denotes vulnerability to OpenSSL CCS Injection.',
+      resolve: ({ ccs_injection_vulnerable: ccsInjectionVulnerable }) =>
+        ccsInjectionVulnerable,
+    },
+    heartbleedVulnerable: {
+      type: GraphQLBoolean,
+      description: 'Denotes vulnerability to "Heartbleed" exploit.',
+      resolve: ({ heartbleed_vulnerable: heartbleedVulnerable }) =>
+        heartbleedVulnerable,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
+    },
+    strongCiphers: {
+      type: GraphQLList(GraphQLString),
+      description:
+        'List of ciphers in use by the server deemed to be "strong".',
+      resolve: ({ strong_ciphers: strongCiphers }) => strongCiphers,
+    },
+    strongCurves: {
+      type: GraphQLList(GraphQLString),
+      description: 'List of curves in use by the server deemed to be "strong".',
+      resolve: ({ strong_curves: strongCurves }) => strongCurves,
+    },
+    supportsEcdhKeyExchange: {
+      type: GraphQLBoolean,
+      description: 'Denotes support for elliptic curve key pairs.',
+      resolve: ({ supports_ecdh_key_exchange: supportsEcdhKeyExchange }) =>
+        supportsEcdhKeyExchange,
+    },
+    weakCiphers: {
+      type: GraphQLList(GraphQLString),
+      description:
+        'List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.',
+      resolve: ({ weak_ciphers: weakCiphers }) => weakCiphers,
+    },
+    weakCurves: {
+      type: GraphQLList(GraphQLString),
+      description:
+        'List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.',
+      resolve: ({ weak_curves: weakCurves }) => weakCurves,
+    },
+    negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),
-      description: `Key tags found during DMARC Scan.`,
+      description: `Negative guidance tags found during scan.`,
       resolve: async (
-        { guidanceTags },
+        { negativeTags },
         _args,
         { loaders: { loadSslGuidanceTagByTagId } },
       ) => {
-        const sslTags = await loadSslGuidanceTagByTagId.loadMany(guidanceTags)
+        const sslTags = await loadSslGuidanceTagByTagId.loadMany(negativeTags)
+        return sslTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Neutral guidance tags found during scan.`,
+      resolve: async (
+        { neutralTags },
+        _args,
+        { loaders: { loadSslGuidanceTagByTagId } },
+      ) => {
+        const sslTags = await loadSslGuidanceTagByTagId.loadMany(neutralTags)
+        return sslTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Positive guidance tags found during scan.`,
+      resolve: async (
+        { positiveTags },
+        _args,
+        { loaders: { loadSslGuidanceTagByTagId } },
+      ) => {
+        const sslTags = await loadSslGuidanceTagByTagId.loadMany(positiveTags)
         return sslTags
       },
     },
