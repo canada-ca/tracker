@@ -45,12 +45,13 @@ describe('given the dmarcScanData subscription', () => {
     }
 
     dmarcScan = {
-      dmarcPhase: 1,
       record: 'record',
       pPolicy: 'pPolicy',
       spPolicy: 'spPolicy',
       pct: 100,
-      guidanceTags: ['dmarc1'],
+      negativeTags: ['dmarc1'],
+      neutralTags: ['dmarc1'],
+      positiveTags: ['dmarc1'],
     }
 
     // Generate DB Items
@@ -69,9 +70,7 @@ describe('given the dmarcScanData subscription', () => {
       publisher: publisherClient,
       subscriber: subscriberClient,
     })
-  })
 
-  beforeEach(async () => {
     await collections.dmarcGuidanceTags.save({
       _key: 'dmarc1',
       tagName: 'DMARC-TAG',
@@ -172,7 +171,35 @@ describe('given the dmarcScanData subscription', () => {
           pPolicy
           spPolicy
           pct
-          guidanceTags {
+          negativeGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          neutralGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          positiveGuidanceTags {
             id
             tagId
             tagName
@@ -211,12 +238,51 @@ describe('given the dmarcScanData subscription', () => {
     const expectedResult = {
       data: {
         dmarcScanData: {
-          dmarcPhase: 1,
           record: 'record',
           pPolicy: 'pPolicy',
           spPolicy: 'spPolicy',
           pct: 100,
-          guidanceTags: [
+          negativeGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'dmarc1'),
+              tagId: 'dmarc1',
+              tagName: 'DMARC-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          neutralGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'dmarc1'),
+              tagId: 'dmarc1',
+              tagName: 'DMARC-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          positiveGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'dmarc1'),
               tagId: 'dmarc1',

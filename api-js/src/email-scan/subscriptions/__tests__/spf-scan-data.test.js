@@ -48,7 +48,9 @@ describe('given the spfScanData subscription', () => {
       lookups: 1,
       record: 'record',
       spfDefault: 'spfDefault',
-      guidanceTags: ['spf1'],
+      negativeTags: ['spf1'],
+      neutralTags: ['spf1'],
+      positiveTags: ['spf1'],
     }
 
     // Generate DB Items
@@ -67,9 +69,7 @@ describe('given the spfScanData subscription', () => {
       publisher: publisherClient,
       subscriber: subscriberClient,
     })
-  })
 
-  beforeEach(async () => {
     await collections.spfGuidanceTags.save({
       _key: 'spf1',
       tagName: 'SPF-TAG',
@@ -168,7 +168,35 @@ describe('given the spfScanData subscription', () => {
           lookups
           record
           spfDefault
-          guidanceTags {
+          negativeGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          neutralGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          positiveGuidanceTags {
             id
             tagId
             tagName
@@ -210,7 +238,47 @@ describe('given the spfScanData subscription', () => {
           lookups: 1,
           record: 'record',
           spfDefault: 'spfDefault',
-          guidanceTags: [
+          negativeGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'spf1'),
+              tagId: 'spf1',
+              tagName: 'SPF-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          neutralGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'spf1'),
+              tagId: 'spf1',
+              tagName: 'SPF-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          positiveGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'spf1'),
               tagId: 'spf1',
