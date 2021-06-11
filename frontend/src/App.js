@@ -32,7 +32,7 @@ const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
 const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
-const HelpPage = lazy(() => import('./helpPage'))
+const HelpPage = lazy(() => import('./HelpPage'))
 const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
