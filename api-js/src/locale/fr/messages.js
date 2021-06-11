@@ -4,6 +4,7 @@
     'Authentication error. Please sign in.': 'todo',
     'Cannot query affiliations on organization without admin permission or higher.':
       'todo',
+    'Email already in use.': 'todo',
     'Error when retrieving dmarc report information. Please try again.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
@@ -261,8 +262,9 @@
     'Unable to verify unknown organization.': 'todo',
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
-    'Email already in use.': 'todo',
     'Username not available, please try another.': 'todo',
+    'Verification error. Please verify your account via email to access content.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `DKIM` connection.':
