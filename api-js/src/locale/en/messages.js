@@ -6,6 +6,7 @@
       'Authentication error. Please sign in.',
     'Cannot query affiliations on organization without admin permission or higher.':
       'Cannot query affiliations on organization without admin permission or higher.',
+    'Email already in use.': 'Email already in use.',
     'Error when retrieving dmarc report information. Please try again.':
       'Error when retrieving dmarc report information. Please try again.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
@@ -501,9 +502,10 @@
     'User could not be queried.': 'User could not be queried.',
     'User role was updated successfully.':
       'User role was updated successfully.',
-    'Email already in use.': 'Email already in use.',
     'Username not available, please try another.':
       'Username not available, please try another.',
+    'Verification error. Please verify your account via email to access content.':
+      'Verification error. Please verify your account via email to access content.',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DKIM` connection.':
