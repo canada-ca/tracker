@@ -2583,3 +2583,19 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
+
+#: src/ScanCategoryDetails.js:166
+msgid "Strong Curves:"
+msgstr "Courbes fortes:"
+
+#: src/ScanCategoryDetails.js:175
+msgid "Acceptable Curves:"
+msgstr "Courbes acceptables:"
+
+#: src/ScanCategoryDetails.js:184
+msgid "Weak Curves:"
+msgstr "Courbes faibles:"
+
+#: src/ScanCategoryDetails.js:232
+msgid "Curves"
+msgstr "Courbes"
