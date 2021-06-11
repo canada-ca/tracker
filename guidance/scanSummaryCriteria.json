@@ -13,10 +13,12 @@
             "https10",
             "https13",
             "https14",
-            "https15",
-            "https16"
+            "https15"
         ],
-        "info": ["https1"]
+        "info": [
+            "https1",
+            "https16" 
+        ]
     },
     "sslScanSummaryCriteria": {
         "pass": ["ssl5"],
