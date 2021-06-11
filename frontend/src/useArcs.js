@@ -7,7 +7,7 @@ export function useArcs({
   padAngle = 0,
   valueAccessor = (d) => d,
 }) {
-  const pie = Pie().value(valueAccessor)(data)
+  const pie = Pie().value(valueAccessor).sort(null)(data)
   const arc = Arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius)
