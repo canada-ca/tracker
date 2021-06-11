@@ -23,14 +23,3 @@ replicas:
   count: 1
 components:
 - ../namespaces
-patchesJSON6902:
-- target:
-    group: install.istio.io
-    version: v1alpha1
-    kind: IstioOperator
-    name: istio-controlplane
-    namespace: istio-operator
-  patch: |-
-    - op: add
-      path: /spec/components/ingressGateways/0/k8s/service/loadBalancerIP
-      value: 34.95.5.243

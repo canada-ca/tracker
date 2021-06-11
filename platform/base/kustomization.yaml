@@ -5,6 +5,7 @@ resources:
 - kiali.yaml
 - jaeger.yaml
 - prometheus.yaml
+- istio-operator.yaml
 components:
 - ../components/namespaces
 - ../components/istio
