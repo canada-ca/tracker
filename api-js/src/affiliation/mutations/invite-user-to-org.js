@@ -46,7 +46,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, tokenize, userRequired },
+      auth: { checkPermission, tokenize, userRequired, verifiedRequired },
       loaders: { loadOrgByKey, loadUserByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
@@ -59,6 +59,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
 
     // Get requesting user
     const user = await userRequired()
+
+    verifiedRequired({ user })
 
     // Make sure user is not inviting themselves
     if (user.userName === userName) {
