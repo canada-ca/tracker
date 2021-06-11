@@ -154,6 +154,7 @@ export default function DomainsPage() {
                     <Trans>Sort by:</Trans>
                   </Text>
                   <Select
+                    data-testid="sort-select"
                     width="fit-content"
                     size="md"
                     variant="filled"
