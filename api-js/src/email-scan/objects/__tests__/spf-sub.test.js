@@ -1,5 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList, GraphQLInt } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
@@ -27,6 +28,12 @@ describe('given the spfSubType object', () => {
 
       expect(demoType).toHaveProperty('spfDefault')
       expect(demoType.spfDefault.type).toMatchObject(GraphQLString)
+    })
+    it('has a rawJson field', () => {
+      const demoType = spfSubType.getFields()
+
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has negativeGuidanceTags field', () => {
       const demoType = spfSubType.getFields()
@@ -77,6 +84,17 @@ describe('given the spfSubType object', () => {
         expect(
           demoType.spfDefault.resolve({ spfDefault: 'spfDefault' }),
         ).toEqual('spfDefault')
+      })
+    })
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = spfSubType.getFields()
+
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(
+          JSON.stringify(rawJson),
+        )
       })
     })
     describe('testing the negativeGuidanceTags resolver', () => {

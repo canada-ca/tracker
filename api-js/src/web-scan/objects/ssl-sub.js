@@ -4,6 +4,8 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
+
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const sslSubType = new GraphQLObjectType({
@@ -63,6 +65,11 @@ export const sslSubType = new GraphQLObjectType({
       description:
         'List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.',
       resolve: ({ weak_curves: weakCurves }) => weakCurves,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),

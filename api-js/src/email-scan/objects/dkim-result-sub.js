@@ -1,4 +1,6 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
+
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const dkimResultSubType = new GraphQLObjectType({
@@ -19,6 +21,11 @@ export const dkimResultSubType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Size of the Public Key in bits',
       resolve: ({ keyLength }) => keyLength,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),

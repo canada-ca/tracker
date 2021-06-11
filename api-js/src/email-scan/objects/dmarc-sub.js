@@ -4,6 +4,8 @@ import {
   GraphQLString,
   GraphQLList,
 } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
+
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const dmarcSubType = new GraphQLObjectType({
@@ -32,6 +34,11 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       type: GraphQLInt,
       description: `The percentage of messages to which the DMARC policy is to be applied.`,
       resolve: ({ pct }) => pct,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),

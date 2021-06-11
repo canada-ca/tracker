@@ -4,6 +4,8 @@ import {
   GraphQLString,
   GraphQLList,
 } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
+
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const spfSubType = new GraphQLObjectType({
@@ -25,6 +27,11 @@ export const spfSubType = new GraphQLObjectType({
       type: GraphQLString,
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
       resolve: ({ spfDefault }) => spfDefault,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),

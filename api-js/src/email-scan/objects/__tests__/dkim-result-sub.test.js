@@ -1,5 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadDkimGuidanceTagById } from '../../../guidance-tag/loaders'
@@ -27,6 +28,12 @@ describe('Given The dkimResultSubType object', () => {
 
       expect(demoType).toHaveProperty('keyLength')
       expect(demoType.keyLength.type).toMatchObject(GraphQLString)
+    })
+    it('has a rawJson field', () => {
+      const demoType = dkimResultSubType.getFields()
+
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has negativeGuidanceTags field', () => {
       const demoType = dkimResultSubType.getFields()
@@ -78,6 +85,17 @@ describe('Given The dkimResultSubType object', () => {
 
         expect(demoType.keyLength.resolve({ keyLength: '2048' })).toEqual(
           '2048',
+        )
+      })
+    })
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = dkimResultSubType.getFields()
+
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(
+          JSON.stringify(rawJson),
         )
       })
     })

@@ -1,4 +1,6 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
+
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const httpsSubType = new GraphQLObjectType({
@@ -30,6 +32,11 @@ export const httpsSubType = new GraphQLObjectType({
       type: GraphQLString,
       description: `Denotes whether the domain has been submitted and included within HSTS preload list.`,
       resolve: ({ preloaded }) => preloaded,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),

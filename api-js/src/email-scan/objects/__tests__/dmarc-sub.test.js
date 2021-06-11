@@ -1,5 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList, GraphQLInt } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadDmarcGuidanceTagByTagId } from '../../../guidance-tag/loaders'
@@ -33,6 +34,12 @@ describe('given the dmarcSubType object', () => {
 
       expect(demoType).toHaveProperty('pct')
       expect(demoType.pct.type).toMatchObject(GraphQLInt)
+    })
+    it('has a rawJson field', () => {
+      const demoType = dmarcSubType.getFields()
+
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has negativeGuidanceTags field', () => {
       const demoType = dmarcSubType.getFields()
@@ -92,6 +99,17 @@ describe('given the dmarcSubType object', () => {
         const demoType = dmarcSubType.getFields()
 
         expect(demoType.pct.resolve({ pct: 100 })).toEqual(100)
+      })
+    })
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = dmarcSubType.getFields()
+
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(
+          JSON.stringify(rawJson),
+        )
       })
     })
     describe('testing the negativeGuidanceTags resolver', () => {

@@ -1,5 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
@@ -39,6 +40,12 @@ describe('given the httpsSubType object', () => {
 
       expect(demoType).toHaveProperty('preloaded')
       expect(demoType.preloaded.type).toMatchObject(GraphQLString)
+    })
+    it('has a rawJson field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has negativeGuidanceTags field', () => {
       const demoType = httpsSubType.getFields()
@@ -109,7 +116,18 @@ describe('given the httpsSubType object', () => {
         )
       })
     })
-    describe('testing the positiveGuidanceTags resolver', () => {
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsSubType.getFields()
+
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(
+          JSON.stringify(rawJson),
+        )
+      })
+    })
+    describe('testing the negativeGuidanceTags resolver', () => {
       let query, drop, truncate, collections, httpsGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
@@ -151,11 +169,11 @@ describe('given the httpsSubType object', () => {
           userKey: '1',
           i18n: {},
         })
-        const positiveTags = ['https1']
+        const negativeTags = ['https1']
 
         expect(
-          await demoType.positiveGuidanceTags.resolve(
-            { positiveTags },
+          await demoType.negativeGuidanceTags.resolve(
+            { negativeTags },
             {},
             { loaders: { loadHttpsGuidanceTagByTagId: loader } },
           ),
