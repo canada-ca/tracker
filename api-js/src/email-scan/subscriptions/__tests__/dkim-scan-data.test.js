@@ -50,7 +50,12 @@ describe('given the dkimScanData subscription', () => {
           selector: 'selector',
           record: 'record',
           keyLength: 'keyLength',
-          guidanceTags: ['dkim1'],
+          rawJson: {
+            missing: true,
+          },
+          negativeTags: ['dkim1'],
+          neutralTags: ['dkim1'],
+          positiveTags: ['dkim1'],
         },
       ],
     }
@@ -71,9 +76,6 @@ describe('given the dkimScanData subscription', () => {
       publisher: publisherClient,
       subscriber: subscriberClient,
     })
-  })
-
-  beforeEach(async () => {
     await collections.dkimGuidanceTags.save({
       _key: 'dkim1',
       tagName: 'DKIM-TAG',
@@ -147,7 +149,7 @@ describe('given the dkimScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -173,7 +175,36 @@ describe('given the dkimScanData subscription', () => {
             selector
             record
             keyLength
-            guidanceTags {
+            rawJson
+            negativeGuidanceTags {
+              id
+              tagId
+              tagName
+              guidance
+              refLinks {
+                description
+                refLink
+              }
+              refLinksTech {
+                description
+                refLink
+              }
+            }
+            neutralGuidanceTags {
+              id
+              tagId
+              tagName
+              guidance
+              refLinks {
+                description
+                refLink
+              }
+              refLinksTech {
+                description
+                refLink
+              }
+            }
+            positiveGuidanceTags {
               id
               tagId
               tagName
@@ -218,7 +249,48 @@ describe('given the dkimScanData subscription', () => {
               selector: 'selector',
               record: 'record',
               keyLength: 'keyLength',
-              guidanceTags: [
+              rawJson: '{"missing":true}',
+              negativeGuidanceTags: [
+                {
+                  id: toGlobalId('guidanceTags', 'dkim1'),
+                  tagId: 'dkim1',
+                  tagName: 'DKIM-TAG',
+                  guidance: 'Some Interesting Guidance',
+                  refLinks: [
+                    {
+                      description: 'refLinksGuide Description',
+                      refLink: 'www.refLinksGuide.ca',
+                    },
+                  ],
+                  refLinksTech: [
+                    {
+                      description: 'refLinksTechnical Description',
+                      refLink: 'www.refLinksTechnical.ca',
+                    },
+                  ],
+                },
+              ],
+              neutralGuidanceTags: [
+                {
+                  id: toGlobalId('guidanceTags', 'dkim1'),
+                  tagId: 'dkim1',
+                  tagName: 'DKIM-TAG',
+                  guidance: 'Some Interesting Guidance',
+                  refLinks: [
+                    {
+                      description: 'refLinksGuide Description',
+                      refLink: 'www.refLinksGuide.ca',
+                    },
+                  ],
+                  refLinksTech: [
+                    {
+                      description: 'refLinksTechnical Description',
+                      refLink: 'www.refLinksTechnical.ca',
+                    },
+                  ],
+                },
+              ],
+              positiveGuidanceTags: [
                 {
                   id: toGlobalId('guidanceTags', 'dkim1'),
                   tagId: 'dkim1',
