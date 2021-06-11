@@ -198,15 +198,14 @@ describe('given the findMyDmarcSummaries query', () => {
             verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
-            loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
-              {
+            loadDmarcSummaryConnectionsByUserId:
+              loadDmarcSummaryConnectionsByUserId({
                 query,
                 userKey: user._key,
                 cleanseInput,
                 i18n,
                 loadStartDateFromPeriod: mockedStartDateLoader,
-              },
-            ),
+              }),
           },
         },
       )
@@ -349,8 +348,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
-                  {
+                loadDmarcSummaryConnectionsByUserId:
+                  loadDmarcSummaryConnectionsByUserId({
                     query: jest
                       .fn()
                       .mockRejectedValue(new Error('Database error occurred.')),
@@ -358,8 +357,7 @@ describe('given the findMyDmarcSummaries query', () => {
                     cleanseInput,
                     i18n,
                     loadStartDateFromPeriod: jest.fn(),
-                  },
-                ),
+                  }),
               },
             },
           )
@@ -481,8 +479,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
-                  {
+                loadDmarcSummaryConnectionsByUserId:
+                  loadDmarcSummaryConnectionsByUserId({
                     query: jest
                       .fn()
                       .mockRejectedValue(new Error('Database error occurred.')),
@@ -490,8 +488,7 @@ describe('given the findMyDmarcSummaries query', () => {
                     cleanseInput,
                     i18n,
                     loadStartDateFromPeriod: jest.fn(),
-                  },
-                ),
+                  }),
               },
             },
           )
