@@ -50,6 +50,9 @@ describe('given the dkimScanData subscription', () => {
           selector: 'selector',
           record: 'record',
           keyLength: 'keyLength',
+          rawJson: {
+            missing: true,
+          },
           negativeTags: ['dkim1'],
           neutralTags: ['dkim1'],
           positiveTags: ['dkim1'],
@@ -146,7 +149,7 @@ describe('given the dkimScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -172,6 +175,7 @@ describe('given the dkimScanData subscription', () => {
             selector
             record
             keyLength
+            rawJson
             negativeGuidanceTags {
               id
               tagId
@@ -245,6 +249,7 @@ describe('given the dkimScanData subscription', () => {
               selector: 'selector',
               record: 'record',
               keyLength: 'keyLength',
+              rawJson: '{"missing":true}',
               negativeGuidanceTags: [
                 {
                   id: toGlobalId('guidanceTags', 'dkim1'),

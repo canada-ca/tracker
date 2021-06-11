@@ -48,6 +48,9 @@ describe('given the spfScanData subscription', () => {
       lookups: 1,
       record: 'record',
       spfDefault: 'spfDefault',
+      rawJson: {
+        missing: true,
+      },
       negativeTags: ['spf1'],
       neutralTags: ['spf1'],
       positiveTags: ['spf1'],
@@ -143,7 +146,7 @@ describe('given the spfScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -168,6 +171,7 @@ describe('given the spfScanData subscription', () => {
           lookups
           record
           spfDefault
+          rawJson
           negativeGuidanceTags {
             id
             tagId
@@ -238,6 +242,7 @@ describe('given the spfScanData subscription', () => {
           lookups: 1,
           record: 'record',
           spfDefault: 'spfDefault',
+          rawJson: '{"missing":true}',
           negativeGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'spf1'),

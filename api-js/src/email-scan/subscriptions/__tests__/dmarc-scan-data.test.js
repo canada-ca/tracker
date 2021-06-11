@@ -49,6 +49,9 @@ describe('given the dmarcScanData subscription', () => {
       pPolicy: 'pPolicy',
       spPolicy: 'spPolicy',
       pct: 100,
+      rawJson: {
+        missing: true,
+      },
       negativeTags: ['dmarc1'],
       neutralTags: ['dmarc1'],
       positiveTags: ['dmarc1'],
@@ -144,7 +147,7 @@ describe('given the dmarcScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -171,6 +174,7 @@ describe('given the dmarcScanData subscription', () => {
           pPolicy
           spPolicy
           pct
+          rawJson
           negativeGuidanceTags {
             id
             tagId
@@ -242,6 +246,7 @@ describe('given the dmarcScanData subscription', () => {
           pPolicy: 'pPolicy',
           spPolicy: 'spPolicy',
           pct: 100,
+          rawJson: '{"missing":true}',
           negativeGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'dmarc1'),

@@ -63,6 +63,9 @@ describe('given the spfScanData subscription', () => {
         'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
       ],
       weak_curves: ['curve123'],
+      rawJson: {
+        missing: true,
+      },
       negativeTags: ['ssl1'],
       neutralTags: ['ssl1'],
       positiveTags: ['ssl1'],
@@ -188,6 +191,7 @@ describe('given the spfScanData subscription', () => {
           supportsEcdhKeyExchange
           weakCiphers
           weakCurves
+          rawJson
           negativeGuidanceTags {
             id
             tagId
@@ -273,6 +277,7 @@ describe('given the spfScanData subscription', () => {
             'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
           ],
           weakCurves: ['curve123'],
+          rawJson: "{\"missing\":true}",
           negativeGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'ssl1'),

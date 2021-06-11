@@ -45,11 +45,14 @@ describe('given the httpsScanData subscription', () => {
     }
 
     httpsScan = {
-      implementation: 'implementation',
-      enforced: 'enforced',
-      hsts: 'hsts',
-      hstsAge: 'hstsAge',
-      preloaded: 'preloaded',
+      implementation: 'Valid HTTPS',
+      enforced: 'Strict',
+      hsts: 'No HSTS',
+      hstsAge: null,
+      preloaded: 'HSTS Not Preloaded',
+      rawJson: {
+        missing: true,
+      },
       negativeTags: ['https1'],
       neutralTags: ['https1'],
       positiveTags: ['https1'],
@@ -144,7 +147,7 @@ describe('given the httpsScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -171,6 +174,7 @@ describe('given the httpsScanData subscription', () => {
           hsts
           hstsAge
           preloaded
+          rawJson
           negativeGuidanceTags {
             id
             tagId
@@ -238,11 +242,12 @@ describe('given the httpsScanData subscription', () => {
     const expectedResult = {
       data: {
         httpsScanData: {
-          implementation: 'implementation',
-          enforced: 'enforced',
-          hsts: 'hsts',
-          hstsAge: 'hstsAge',
-          preloaded: 'preloaded',
+          implementation: 'Valid HTTPS',
+          enforced: 'Strict',
+          hsts: 'No HSTS',
+          hstsAge: null,
+          preloaded: 'HSTS Not Preloaded',
+          rawJson: '{"missing":true}',
           negativeGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'https1'),
