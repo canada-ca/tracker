@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadAffiliationByKey } from '../../loaders'
@@ -115,7 +115,7 @@ const adminData = {
   displayName: 'Test Admin',
   preferredLang: 'french',
   tfaValidated: false,
-  emailValidated: false,
+  emailValidated: true,
 }
 
 const userData = {
@@ -123,7 +123,7 @@ const userData = {
   displayName: 'Test Account',
   preferredLang: 'french',
   tfaValidated: false,
-  emailValidated: false,
+  emailValidated: true,
 }
 
 describe('removing a user from an organization', () => {
@@ -242,6 +242,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -329,6 +330,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -464,6 +466,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -550,6 +553,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -684,6 +688,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -770,6 +775,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -882,6 +888,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1006,6 +1013,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1089,7 +1097,7 @@ describe('removing a user from an organization', () => {
         afterAll(async () => {
           await drop()
         })
-        beforeEach(async () => {})
+
         it('returns an error', async () => {
           const response = await graphql(
             schema,
@@ -1139,6 +1147,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1263,6 +1272,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1387,6 +1397,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1505,6 +1516,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1645,6 +1657,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1779,6 +1792,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1914,6 +1928,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
