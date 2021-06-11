@@ -4,5 +4,4 @@ resources:
 # envoy-gzip.yaml is still breaking one-time scans, re-add once fixed
 - envoy-security-headers-filter.yaml
 - istio.yaml
-- operator.yaml
 - http-01-challenge-destination-rule.yaml
