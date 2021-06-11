@@ -10,7 +10,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkSuperAdmin, userRequired } from '../../../auth'
+import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
 import { loadDmarcSummaryConnectionsByUserId } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 
@@ -78,6 +78,7 @@ describe('given the findMyDmarcSummaries query', () => {
         displayName: 'Test Account',
         userName: 'test.account@istio.actually.exists',
         preferredLang: 'english',
+        emailValidated: true,
       })
 
       org = await collections.organizations.save({
@@ -194,6 +195,7 @@ describe('given the findMyDmarcSummaries query', () => {
               userKey: user._key,
               loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
             }),
+            verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
             loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
@@ -294,6 +296,7 @@ describe('given the findMyDmarcSummaries query', () => {
                     load: jest.fn(),
                   },
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDmarcSummaryConnectionsByUserId: jest.fn(),
@@ -342,7 +345,8 @@ describe('given the findMyDmarcSummaries query', () => {
               userKey: user._key,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: jest.fn(),
+                userRequired: jest.fn().mockReturnValue({}),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
                 loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
@@ -426,6 +430,7 @@ describe('given the findMyDmarcSummaries query', () => {
                     load: jest.fn(),
                   },
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDmarcSummaryConnectionsByUserId: jest.fn(),
@@ -472,7 +477,8 @@ describe('given the findMyDmarcSummaries query', () => {
               userKey: user._key,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: jest.fn(),
+                userRequired: jest.fn().mockReturnValue({}),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
                 loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
