@@ -491,6 +491,7 @@ export const ADMIN_PANEL = gql`
             id
             domain
             lastRan
+            selectors
           }
         }
         pageInfo {
