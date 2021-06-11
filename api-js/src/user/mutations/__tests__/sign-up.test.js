@@ -680,7 +680,7 @@ describe('testing user sign up', () => {
           ])
         })
       })
-      describe('when the user name already in use', () => {
+      describe('when the user name (email) already in use', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -690,7 +690,7 @@ describe('testing user sign up', () => {
             emailValidated: false,
           })
         })
-        it('returns a user name already in use error', async () => {
+        it('returns an email already in use error', async () => {
           const response = await graphql(
             schema,
             `
@@ -752,7 +752,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'Username already in use.',
+                  description: 'Email already in use.',
                 },
               },
             },
@@ -760,7 +760,7 @@ describe('testing user sign up', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that username.',
+            'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that email.',
           ])
         })
       })
@@ -1853,7 +1853,7 @@ describe('testing user sign up', () => {
           ])
         })
       })
-      describe('when the user name already in use', () => {
+      describe('when the user name (email) already in use', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -1863,7 +1863,7 @@ describe('testing user sign up', () => {
             emailValidated: false,
           })
         })
-        it('returns a user name already in use error', async () => {
+        it('returns an email already in use error', async () => {
           const response = await graphql(
             schema,
             `
@@ -1933,7 +1933,7 @@ describe('testing user sign up', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that username.',
+            'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that email.',
           ])
         })
       })
