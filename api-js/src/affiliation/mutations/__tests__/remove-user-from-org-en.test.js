@@ -154,19 +154,14 @@ describe('removing a user from an organization', () => {
             affiliation
 
           beforeEach(async () => {
-            ;({
-              query,
-              drop,
-              truncate,
-              collections,
-              transaction,
-            } = await ensure({
-              type: 'database',
-              name: 'sa_remove_admin_' + dbNameFromFile(__filename),
-              url,
-              rootPassword: rootPass,
-              options: databaseOptions({ rootPass }),
-            }))
+            ;({ query, drop, truncate, collections, transaction } =
+              await ensure({
+                type: 'database',
+                name: 'sa_remove_admin_' + dbNameFromFile(__filename),
+                url,
+                rootPassword: rootPass,
+                options: databaseOptions({ rootPass }),
+              }))
             orgOne = await collections.organizations.save(orgOneData)
             orgTwo = await collections.organizations.save(orgTwoData)
             admin = await collections.users.save(adminData)
@@ -377,19 +372,14 @@ describe('removing a user from an organization', () => {
             affiliation
 
           beforeEach(async () => {
-            ;({
-              query,
-              drop,
-              truncate,
-              collections,
-              transaction,
-            } = await ensure({
-              type: 'database',
-              name: 'sa_remove_user_' + dbNameFromFile(__filename),
-              url,
-              rootPassword: rootPass,
-              options: databaseOptions({ rootPass }),
-            }))
+            ;({ query, drop, truncate, collections, transaction } =
+              await ensure({
+                type: 'database',
+                name: 'sa_remove_user_' + dbNameFromFile(__filename),
+                url,
+                rootPassword: rootPass,
+                options: databaseOptions({ rootPass }),
+              }))
             orgOne = await collections.organizations.save(orgOneData)
             orgTwo = await collections.organizations.save(orgTwoData)
             admin = await collections.users.save(adminData)
@@ -601,19 +591,14 @@ describe('removing a user from an organization', () => {
             affiliation
 
           beforeEach(async () => {
-            ;({
-              query,
-              drop,
-              truncate,
-              collections,
-              transaction,
-            } = await ensure({
-              type: 'database',
-              name: 'sa_remove_user_' + dbNameFromFile(__filename),
-              url,
-              rootPassword: rootPass,
-              options: databaseOptions({ rootPass }),
-            }))
+            ;({ query, drop, truncate, collections, transaction } =
+              await ensure({
+                type: 'database',
+                name: 'sa_remove_user_' + dbNameFromFile(__filename),
+                url,
+                rootPassword: rootPass,
+                options: databaseOptions({ rootPass }),
+              }))
             orgOne = await collections.organizations.save(orgOneData)
             admin = await collections.users.save(adminData)
             user = await collections.users.save(userData)
@@ -1867,7 +1852,6 @@ describe('removing a user from an organization', () => {
               throw new Error('Transaction error occurred.')
             },
           })
-
         })
 
         afterEach(async () => {

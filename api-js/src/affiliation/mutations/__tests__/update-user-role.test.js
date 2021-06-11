@@ -38,7 +38,7 @@ describe('update a users role', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  
+
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn

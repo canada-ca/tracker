@@ -150,8 +150,9 @@ able to sign-up and be assigned to that organization in one mutation.`,
 
       // Create affiliation
       try {
-        await trx.step(() =>
-          query`
+        await trx.step(
+          () =>
+            query`
             WITH affiliations, organizations, users
             INSERT {
               _from: ${org._id},
