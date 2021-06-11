@@ -33,3 +33,4 @@ resources:
 - arangodb-operator.yaml
 - arangodb-deployment.yaml
 - issuers.yaml
+- istio-operator.yaml
