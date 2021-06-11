@@ -4,6 +4,7 @@ import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 export function HelpPage() {
+  
   const { i18n } = useLingui()
 
   return (
