@@ -58,7 +58,7 @@
     "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.14.4",
     "@jest/test-sequencer": "^27.0.4",
-    "@lingui/cli": "^3.9.0",
+    "@lingui/cli": "^3.10.2",
     "@lingui/loader": "^3.9.0",
     "@lingui/macro": "^3.9.0",
     "babel-core": "^7.0.0-bridge.0",
