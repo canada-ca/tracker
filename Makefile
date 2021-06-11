@@ -42,11 +42,7 @@ update-flux:
 
 .PHONY: update-istio
 update-istio:
-		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set tag=1.9.5-distroless --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
-
-.PHONY: print-ingress
-print-ingress:
-		kustomize build platform/$(env) | yq -y '. | select(.kind == "Service" and .metadata.name == "istio-ingressgateway")'
+		istioctl operator dump > platform/components/istio/istio.yaml
 
 .PHONY: print-arango-deployment
 print-arango-deployment:
