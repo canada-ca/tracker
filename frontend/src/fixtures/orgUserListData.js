@@ -10,6 +10,7 @@ export const rawOrgUserListData = {
             user: {
               id: 'userid',
               userName: 'test.user@email.com',
+              displayName: 'test User Name',
               __typename: 'SharedUser',
             },
             __typename: 'UserAffiliations',

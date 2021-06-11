@@ -59,6 +59,7 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
             >
               <UserCard
                 userName={user.userName}
+                displayName={user.displayName}
                 role={permission}
                 tfa={user.tfaValidated}
               />
