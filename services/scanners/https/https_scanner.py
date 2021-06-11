@@ -136,11 +136,19 @@ def process_results(results):
         else:
             self_signed = False
 
+        if results["HTTPS Cert Revoked"] is None:
+            revoked = "Unknown"
+        elif results["HTTPS Cert Revoked"]:
+            revoked = "Revoked"
+        else:
+            revoked = "Valid"
+
         report["hsts"] = hsts
         report["hsts_age"] = hsts_age
         report["preload_status"] = preloaded
         report["expired_cert"] = expired
         report["self_signed_cert"] = self_signed
+        report["cert_revocation_status"] = revoked
 
     logging.info(f"Processed HTTPS scan results: {str(report)}")
     return report
