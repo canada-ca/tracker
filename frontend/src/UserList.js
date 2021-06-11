@@ -308,7 +308,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="minus" />
               </TrackerButton>
             </Stack>
-            <UserCard userName={node.user.userName} role={userRole} />
+            <UserCard userName={node.user.userName} displayName={node.user.displayName} role={userRole} />
           </Stack>
           <Divider borderColor="gray.900" />
         </Box>

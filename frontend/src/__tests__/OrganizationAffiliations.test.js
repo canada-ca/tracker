@@ -72,6 +72,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'MjQyMzg1MTM1OQ==',
                           userName: 'Jabari_Larson@hotmail.com',
+                          displayName: 'Jabari Larson',
                         },
                       },
                     },
@@ -82,6 +83,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'NjYzODA5ODE1OA==',
                           userName: 'Joel_Nienow77@yahoo.com',
+                          displayName: 'Joel Nienow',
                         },
                       },
                     },
@@ -92,6 +94,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'NzQyMzU3NDYzMw==',
                           userName: 'Cara.Olson81@yahoo.com',
+                          displayName: 'Cara Olson',
                         },
                       },
                     },
@@ -102,6 +105,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'Nzc0Mjg2MjM2Ng==',
                           userName: 'Rahul.Wintheiser10@yahoo.com',
+                          displayName: 'Rahul Wintheiser',
                         },
                       },
                     },
@@ -140,6 +144,9 @@ describe('<OrganizationAffiliations />', () => {
 
       await waitFor(() => {
         expect(getByText('Jabari_Larson@hotmail.com')).toBeInTheDocument()
+      })
+      await waitFor(() => {
+        expect(getByText('Cara Olson')).toBeInTheDocument()
       })
     })
   })
