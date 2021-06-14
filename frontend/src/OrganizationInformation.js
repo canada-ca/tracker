@@ -222,7 +222,9 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
             <Heading as="h1" fontSize="3xl">
               {org.name}
             </Heading>
-            <Icon name="check-circle" color="blue.500" size="icons.md" />
+            {org.verified && (
+              <Icon name="check-circle" color="blue.500" size="icons.md" />
+            )}
           </Stack>
 
           <Stack
