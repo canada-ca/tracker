@@ -124,7 +124,7 @@ def process_https(results, domain_key, uuid, db):
             negative_tags.append("https15")
             
         elif revocation_status == "Unknown":
-            negative_tags.append("https16")
+            neutral_tags.append("https16")
 
     httpsResults = {
         "timestamp": timestamp,
