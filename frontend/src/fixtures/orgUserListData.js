@@ -24,6 +24,7 @@ export const rawOrgUserListData = {
             user: {
               id: 'f6caa8ae-645e-4bef-9bc3-d251f184140c',
               userName: 'Garland.Hudson@yahoo.com',
+              displayName: 'Jack Altenwerth',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -37,6 +38,7 @@ export const rawOrgUserListData = {
             user: {
               id: '94785736-34df-4f68-b1d4-5c22bbb1e65a',
               userName: 'Weldon.Kautzer@gmail.com',
+              displayName: 'Miss Lila Stoltenberg',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -50,6 +52,7 @@ export const rawOrgUserListData = {
             user: {
               id: '9cb2b4ec-9fbe-4b31-8a8a-3be0e02a8995',
               userName: 'Lea.Hand@hotmail.com',
+              displayName: 'Ricky Kautzer',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -63,6 +66,7 @@ export const rawOrgUserListData = {
             user: {
               id: '9a4fc063-b3af-46db-a1b7-056c72f027bc',
               userName: 'Joey53@hotmail.com',
+              displayName: 'Roger Gulgowski',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -76,6 +80,7 @@ export const rawOrgUserListData = {
             user: {
               id: '146731b2-6004-4707-9d13-67f399b5b1cd',
               userName: 'Gino.Bechtelar@hotmail.com',
+              displayName: 'Spencer Rath',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -89,6 +94,7 @@ export const rawOrgUserListData = {
             user: {
               id: '352626b2-cd66-4c1a-a132-9fa237b8f6bc',
               userName: 'Cleora_Howell@gmail.com',
+              displayName: 'Pat Botsford III',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -102,6 +108,7 @@ export const rawOrgUserListData = {
             user: {
               id: '7ef88625-7220-404a-b88e-d7f2b7069bfa',
               userName: 'Dusty66@gmail.com',
+              displayName: 'Jimmie Kunde',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -115,6 +122,7 @@ export const rawOrgUserListData = {
             user: {
               id: '1a7b47f9-f8f8-4316-a9ea-2073d60a558f',
               userName: 'Jeromy_Boyer@yahoo.com',
+              displayName: 'Terri Oberbrunner MD',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -128,6 +136,7 @@ export const rawOrgUserListData = {
             user: {
               id: 'fc30e257-9fe9-467e-a6a3-5dcd503b1439',
               userName: 'Andrew_King44@hotmail.com',
+              displayName: 'Mr. Vincent Harris',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -141,6 +150,7 @@ export const rawOrgUserListData = {
             user: {
               id: '74a41fa6-217c-45fb-98d1-78a303a193e4',
               userName: 'Abelardo_Carroll12@hotmail.com',
+              displayName: 'Marc Carter',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -154,6 +164,7 @@ export const rawOrgUserListData = {
             user: {
               id: '147e47ec-3112-4fec-8075-cd83df7ae369',
               userName: 'Deron.Torphy@yahoo.com',
+              displayName: 'Patty Ritchie',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -167,6 +178,7 @@ export const rawOrgUserListData = {
             user: {
               id: 'fd6b0c88-6874-4edf-84de-9075a7bde148',
               userName: 'Lesley_Pfannerstill@gmail.com',
+              displayName: 'Sherman Quitzon',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -180,6 +192,7 @@ export const rawOrgUserListData = {
             user: {
               id: '562ff52c-407c-4484-94d8-a622e34e6bf5',
               userName: 'Toney.Morissette62@gmail.com',
+              displayName: 'Terrell Herzog',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -193,6 +206,7 @@ export const rawOrgUserListData = {
             user: {
               id: '9f8a0866-a7cc-46c8-9527-d81ab8390ce1',
               userName: 'Armani.Murray@hotmail.com',
+              displayName: 'Alexis Stehr',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -206,6 +220,7 @@ export const rawOrgUserListData = {
             user: {
               id: '125ab1fb-6531-4d3a-a5c0-943b1d05d43f',
               userName: 'Tiffany8@hotmail.com',
+              displayName: 'Leon Zemlak IV',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -219,6 +234,7 @@ export const rawOrgUserListData = {
             user: {
               id: '65d38dd3-bcbe-4eab-9a57-54d52bc8a408',
               userName: 'Enos97@yahoo.com',
+              displayName: 'Ms. Omar Wuckert',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -232,6 +248,7 @@ export const rawOrgUserListData = {
             user: {
               id: '9832b021-d452-442e-8d58-500fbf92a937',
               userName: 'Remington_Marquardt92@hotmail.com',
+              displayName: 'Nichole Kozey',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
@@ -245,6 +262,7 @@ export const rawOrgUserListData = {
             user: {
               id: '66f9d0cf-ec7d-4541-b185-3b40a4a029f5',
               userName: 'Charlotte.Huel@hotmail.com',
+              displayName: 'Miss Anna Powlowski',
               __typename: 'SharedUser',
             },
             __typename: 'Affiliation',
