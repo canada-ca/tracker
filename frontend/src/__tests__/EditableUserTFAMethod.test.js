@@ -69,14 +69,14 @@ describe('<EditableUserTFAMethod />', () => {
     ]
 
     const { getByText, getByTestId } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testUserName@email.com',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <MockedProvider addTypename={false} mocks={mocks}>
+      <MockedProvider addTypename={false} mocks={mocks}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testUserName@email.com',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ThemeProvider theme={theme}>
@@ -88,8 +88,8 @@ describe('<EditableUserTFAMethod />', () => {
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
-        </MockedProvider>
-      </UserStateProvider>,
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     const saveBtn = getByText(/Save/i)
@@ -126,14 +126,14 @@ describe('<EditableUserTFAMethod />', () => {
     ]
 
     const { getByText, getByTestId } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testUserName@email.com',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <MockedProvider addTypename={false} mocks={mocks}>
+      <MockedProvider addTypename={false} mocks={mocks}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testUserName@email.com',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ThemeProvider theme={theme}>
@@ -145,8 +145,8 @@ describe('<EditableUserTFAMethod />', () => {
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
-        </MockedProvider>
-      </UserStateProvider>,
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     const saveBtn = getByText(/Save/i)

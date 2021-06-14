@@ -63,12 +63,12 @@ describe('<EmailValidationPage />', () => {
   describe('on render', () => {
     it('page renders', async () => {
       const { queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider mocks={successMocks}>
+        <MockedProvider mocks={successMocks}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
                     '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -94,12 +94,12 @@ describe('<EmailValidationPage />', () => {
   describe('after loading mutation', () => {
     it('displays an error message', async () => {
       const { queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider mocks={failMocks}>
+        <MockedProvider mocks={failMocks}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
                     '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -127,12 +127,12 @@ describe('<EmailValidationPage />', () => {
 
     it('displays a success message', async () => {
       const { queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider mocks={successMocks}>
+        <MockedProvider mocks={successMocks}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
                     '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -143,10 +143,10 @@ describe('<EmailValidationPage />', () => {
                     <EmailValidationPage />
                   </Route>
                 </MemoryRouter>
-              </MockedProvider>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() =>

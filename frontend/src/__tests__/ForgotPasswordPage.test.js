@@ -54,9 +54,9 @@ describe('<ForgotPasswordPage />', () => {
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter
-                    initialEntries={['/forgot-password']}
-                    initialIndex={0}
-                  >
+                      initialEntries={['/forgot-password']}
+                      initialIndex={0}
+                    >
                       <ForgotPasswordPage />
                     </MemoryRouter>
                   </I18nProvider>
@@ -87,16 +87,16 @@ describe('<ForgotPasswordPage />', () => {
 
     it('successfully submits', async () => {
       const { container, queryByText, getByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/forgot-password']}
-                initialIndex={0}
-              >
-                <MockedProvider mocks={mocks}>
+        <MockedProvider mocks={mocks}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter
+                  initialEntries={['/forgot-password']}
+                  initialIndex={0}
+                >
                   <Router history={history}>
                     <Switch>
                       <Route
@@ -105,11 +105,11 @@ describe('<ForgotPasswordPage />', () => {
                       />
                     </Switch>
                   </Router>
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const email = container.querySelector('#email')

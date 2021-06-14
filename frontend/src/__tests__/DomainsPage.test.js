@@ -198,19 +198,19 @@ describe('<DomainsPage />', () => {
 
     it('handles an empty list of domains', async () => {
       const { queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <MockedProvider mocks={empty} cache={createCache()}>
+        <MockedProvider mocks={empty} cache={createCache()}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                   <DomainsPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() =>
@@ -225,23 +225,23 @@ describe('<DomainsPage />', () => {
       })
       it('takes user to DMARC Report page', async () => {
         const { getAllByText } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} cache={createCache()}>
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                     <Router history={history}>
                       <Switch>
                         <Route path="/domains" render={() => <DomainsPage />} />
                       </Switch>
                     </Router>
-                  </MockedProvider>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </MockedProvider>,
         )
 
         await waitFor(() => {
@@ -255,23 +255,23 @@ describe('<DomainsPage />', () => {
 
       it('takes user to Guidance page', async () => {
         const { getAllByText } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} cache={createCache()}>
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                     <Router history={history}>
                       <Switch>
                         <Route path="/domains" render={() => <DomainsPage />} />
                       </Switch>
                     </Router>
-                  </MockedProvider>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </MockedProvider>,
         )
 
         await waitFor(() => {
@@ -286,19 +286,26 @@ describe('<DomainsPage />', () => {
       describe('search bar', () => {
         it('correctly filters results', async () => {
           const { getByPlaceholderText, queryByText } = render(
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <MockedProvider mocks={mocks} cache={createCache()}>
+            <MockedProvider mocks={mocks} cache={createCache()}>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter
+                      initialEntries={['/domains']}
+                      initialIndex={0}
+                    >
                       <DomainsPage />
-                    </MockedProvider>
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>,
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
+            </MockedProvider>,
           )
 
           await waitFor(() => {
@@ -321,19 +328,26 @@ describe('<DomainsPage />', () => {
       describe('sort by select', () => {
         it('changes sorting order', async () => {
           const { getByTestId } = render(
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <MockedProvider mocks={mocks} cache={createCache()}>
+            <MockedProvider mocks={mocks} cache={createCache()}>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter
+                      initialEntries={['/domains']}
+                      initialIndex={0}
+                    >
                       <DomainsPage />
-                    </MockedProvider>
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>,
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
+            </MockedProvider>,
           )
 
           await waitFor(() => {

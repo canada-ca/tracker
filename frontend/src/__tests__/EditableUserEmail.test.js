@@ -140,14 +140,14 @@ describe('<EditableUserEmail />', () => {
           ]
 
           const { queryByText, getByText, getByLabelText } = render(
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
-            >
-              <MockedProvider addTypename={false} mocks={mocks}>
+            <MockedProvider addTypename={false} mocks={mocks}>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
                     <ThemeProvider theme={theme}>
@@ -155,8 +155,8 @@ describe('<EditableUserEmail />', () => {
                     </ThemeProvider>
                   </I18nProvider>
                 </MemoryRouter>
-              </MockedProvider>
-            </UserStateProvider>,
+              </UserStateProvider>
+            </MockedProvider>,
           )
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)
@@ -203,14 +203,14 @@ describe('<EditableUserEmail />', () => {
           ]
 
           const { queryByText, getByText, getByLabelText } = render(
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
-            >
-              <MockedProvider addTypename={false} mocks={mocks}>
+            <MockedProvider addTypename={false} mocks={mocks}>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
                     <ThemeProvider theme={theme}>
@@ -218,8 +218,8 @@ describe('<EditableUserEmail />', () => {
                     </ThemeProvider>
                   </I18nProvider>
                 </MemoryRouter>
-              </MockedProvider>
-            </UserStateProvider>,
+              </UserStateProvider>
+            </MockedProvider>,
           )
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)

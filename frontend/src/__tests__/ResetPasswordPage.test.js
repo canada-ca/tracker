@@ -72,12 +72,16 @@ describe('<ResetPasswordPage />', () => {
       describe('password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={successMocks}>
+            <MockedProvider mocks={successMocks}>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={[
                         '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -109,12 +113,16 @@ describe('<ResetPasswordPage />', () => {
       describe('confirm password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MockedProvider mocks={successMocks}>
+            <MockedProvider mocks={successMocks}>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={[
                         '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -146,12 +154,12 @@ describe('<ResetPasswordPage />', () => {
   describe('given input', () => {
     it('succeeds in reseting the password', async () => {
       const { container, queryByText, getByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider mocks={successMocks}>
+        <MockedProvider mocks={successMocks}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
                     '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -162,10 +170,10 @@ describe('<ResetPasswordPage />', () => {
                     <ResetPasswordPage />
                   </Route>
                 </MemoryRouter>
-              </MockedProvider>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const password = container.querySelector('#password')
@@ -182,12 +190,12 @@ describe('<ResetPasswordPage />', () => {
 
     it('fails in reseting the password', async () => {
       const { container, queryByText, getByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider mocks={failMocks}>
+        <MockedProvider mocks={failMocks}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
                     '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
@@ -198,10 +206,10 @@ describe('<ResetPasswordPage />', () => {
                     <ResetPasswordPage />
                   </Route>
                 </MemoryRouter>
-              </MockedProvider>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const password = container.querySelector('#password')

@@ -46,14 +46,14 @@ describe('<EditableUserPassword />', () => {
   describe("when the 'edit' button is clicked", () => {
     it('opens the modal', async () => {
       const { getByText, queryByText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testUserName@email.com',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <MockedProvider addTypename={false}>
+        <MockedProvider addTypename={false}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testUserName@email.com',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
                 <ThemeProvider theme={theme}>
@@ -61,9 +61,8 @@ describe('<EditableUserPassword />', () => {
                 </ThemeProvider>
               </I18nProvider>
             </MemoryRouter>
-                    </MockedProvider>
-
-          </UserStateProvider>,
+          </UserStateProvider>
+        </MockedProvider>,
       )
       const editButton = getByText(/Edit/i)
       fireEvent.click(editButton)
@@ -143,14 +142,14 @@ describe('<EditableUserPassword />', () => {
           ]
 
           const { getByText, queryByText, getByLabelText } = render(
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
-            >
-              <MockedProvider addTypename={false} mocks={mocks}>
+            <MockedProvider addTypename={false} mocks={mocks}>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
                     <ThemeProvider theme={theme}>
@@ -158,8 +157,8 @@ describe('<EditableUserPassword />', () => {
                     </ThemeProvider>
                   </I18nProvider>
                 </MemoryRouter>
-              </MockedProvider>
-            </UserStateProvider>,
+              </UserStateProvider>
+            </MockedProvider>,
           )
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)
@@ -217,14 +216,14 @@ describe('<EditableUserPassword />', () => {
           ]
 
           const { getByText, queryByText, getByLabelText } = render(
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
-            >
-              <MockedProvider addTypename={false} mocks={mocks}>
+            <MockedProvider addTypename={false} mocks={mocks}>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
                     <ThemeProvider theme={theme}>
@@ -232,8 +231,8 @@ describe('<EditableUserPassword />', () => {
                     </ThemeProvider>
                   </I18nProvider>
                 </MemoryRouter>
-              </MockedProvider>
-            </UserStateProvider>,
+              </UserStateProvider>
+            </MockedProvider>,
           )
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)
