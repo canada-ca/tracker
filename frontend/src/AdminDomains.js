@@ -101,6 +101,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     recordsPerPage: domainsPerPage,
     variables: { orgSlug, search: debouncedSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
