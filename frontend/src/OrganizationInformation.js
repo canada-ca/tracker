@@ -31,7 +31,7 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import FormField from './FormField'
 import { useLingui } from '@lingui/react'
-import { Formik } from 'formik'
+import { Formik, useFormik } from 'formik'
 import {
   REMOVE_ORGANIZATION,
   UPDATE_ORGANIZATION,
@@ -156,7 +156,6 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
             isClosable: true,
             position: 'top-left',
           })
-          setIsEditingOrg(false)
         } else if (
           updateOrganization.result.__typename === 'OrganizationError'
         ) {
@@ -278,10 +277,11 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
               cityFR: '',
             }}
             validationSchema={updateOrgValidationSchema}
-            onSubmit={async (values) => {
+            onSubmit={async (values, formikHelpers) => {
               // Update the organization (only include fields that have values)
               const propertiesWithValues = {}
 
+              // Extract only the entries that have truthy values
               Object.entries(values).forEach((entry) => {
                 const [key, value] = entry
                 if (value) {
@@ -289,6 +289,7 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
                 }
               })
 
+              // Handle case where user does not supply any fields to update
               if (Object.keys(propertiesWithValues).length === 0) {
                 toast({
                   title: `Organization not updated`,
@@ -302,12 +303,21 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
                 return
               }
 
-              await updateOrganization({
+              const updateResponse = await updateOrganization({
                 variables: {
                   id: org.id,
                   ...propertiesWithValues,
                 },
               })
+
+              // Close and reset form if successfully updated organization
+              if (
+                updateResponse.data.updateOrganization.result.__typename ===
+                'Organization'
+              ) {
+                setIsEditingOrg(false)
+                formikHelpers.resetForm()
+              }
             }}
           >
             {({ handleSubmit, isSubmitting, handleReset }) => (
@@ -531,80 +541,6 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
           </Modal>
         )}
       </SlideIn>
-
-      {/*<SlideIn in={isRemovalOpen}>*/}
-      {/*  {(styles) => (*/}
-      {/*    <Modal*/}
-      {/*      finalFocusRef={removeOrgBtnRef}*/}
-      {/*      isOpen={true}*/}
-      {/*      onClose={onRemovalClose}*/}
-      {/*    >*/}
-      {/*      <ModalOverlay opacity={styles.opacity} />*/}
-      {/*      <Formik*/}
-      {/*        validateOnBlur={false}*/}
-      {/*        initialValues={{*/}
-      {/*          orgName: '',*/}
-      {/*        }}*/}
-      {/*        initialTouched={{*/}
-      {/*          orgName: true,*/}
-      {/*        }}*/}
-      {/*        validationSchema={removeOrgValidationSchema}*/}
-      {/*        onSubmit={async () => {*/}
-      {/*          // Submit the remove organization mutation*/}
-      {/*          await removeOrganization({*/}
-      {/*            variables: {*/}
-      {/*              orgId: org.id,*/}
-      {/*            },*/}
-      {/*          })*/}
-      {/*        }}*/}
-      {/*      >*/}
-      {/*        {({ handleSubmit, isSubmitting }) => (*/}
-      {/*          <form onSubmit={handleSubmit}>*/}
-      {/*            <ModalContent {...styles}>*/}
-      {/*              <ModalHeader>*/}
-      {/*                <Trans>Remove Organization</Trans>*/}
-      {/*              </ModalHeader>*/}
-      {/*              <ModalCloseButton />*/}
-      {/*              <ModalBody>*/}
-      {/*                <Text>*/}
-      {/*                  <Trans>*/}
-      {/*                    Are you sure you want to permanently remove the*/}
-      {/*                    organization "{org.name}"?*/}
-      {/*                  </Trans>*/}
-      {/*                </Text>*/}
-
-      {/*                <br />*/}
-
-      {/*                <Text mb="1rem">*/}
-      {/*                  <Trans>*/}
-      {/*                    Enter "{org.name}" below to confirm removal. This*/}
-      {/*                    field is case-sensitive.*/}
-      {/*                  </Trans>*/}
-      {/*                </Text>*/}
-
-      {/*                <FormField*/}
-      {/*                  name="orgName"*/}
-      {/*                  label={t`Organization Name`}*/}
-      {/*                  placeholder={org.name}*/}
-      {/*                />*/}
-      {/*              </ModalBody>*/}
-      {/*              <ModalFooter>*/}
-      {/*                <TrackerButton*/}
-      {/*                  isLoading={isSubmitting}*/}
-      {/*                  type="submit"*/}
-      {/*                  mr="4"*/}
-      {/*                  variant="primary"*/}
-      {/*                >*/}
-      {/*                  <Trans>Confirm</Trans>*/}
-      {/*                </TrackerButton>*/}
-      {/*              </ModalFooter>*/}
-      {/*            </ModalContent>*/}
-      {/*          </form>*/}
-      {/*        )}*/}
-      {/*      </Formik>*/}
-      {/*    </Modal>*/}
-      {/*  )}*/}
-      {/*</SlideIn>*/}
     </>
   )
 }
