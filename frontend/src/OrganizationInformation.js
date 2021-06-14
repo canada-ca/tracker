@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react'
 import {
   Box,
   Collapse,
-  Flex,
   Grid,
   Heading,
   Icon,
@@ -31,12 +30,8 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import FormField from './FormField'
 import { useLingui } from '@lingui/react'
-import { Formik, useFormik } from 'formik'
-import {
-  REMOVE_ORGANIZATION,
-  UPDATE_ORGANIZATION,
-  UPDATE_USER_PASSWORD,
-} from './graphql/mutations'
+import { Formik } from 'formik'
+import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from './graphql/mutations'
 
 export default function OrganizationInformation({ orgSlug, ...props }) {
   const { currentUser } = useUserState()
@@ -47,7 +42,6 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
     onClose: onRemovalClose,
   } = useDisclosure()
   const removeOrgBtnRef = useRef()
-  const removeOrgInputRef = useRef()
   const { i18n } = useLingui()
   const [isEditingOrg, setIsEditingOrg] = useState(false)
 
