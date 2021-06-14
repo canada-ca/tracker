@@ -1,7 +1,7 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
@@ -43,22 +43,26 @@ describe('<ForgotPasswordPage />', () => {
       describe('email field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter
-                    initialEntries={['/forgot-password']}
-                    initialIndex={0}
-                  >
-                    <MockedProvider mocks={mocks}>
+            <MockedProvider mocks={mocks}>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter
+                      initialEntries={['/forgot-password']}
+                      initialIndex={0}
+                    >
                       <ForgotPasswordPage />
-                    </MockedProvider>
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>,
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
+            </MockedProvider>,
           )
 
           const email = container.querySelector('#email')
@@ -83,16 +87,16 @@ describe('<ForgotPasswordPage />', () => {
 
     it('successfully submits', async () => {
       const { container, queryByText, getByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/forgot-password']}
-                initialIndex={0}
-              >
-                <MockedProvider mocks={mocks}>
+        <MockedProvider mocks={mocks}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter
+                  initialEntries={['/forgot-password']}
+                  initialIndex={0}
+                >
                   <Router history={history}>
                     <Switch>
                       <Route
@@ -101,11 +105,11 @@ describe('<ForgotPasswordPage />', () => {
                       />
                     </Switch>
                   </Router>
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const email = container.querySelector('#email')

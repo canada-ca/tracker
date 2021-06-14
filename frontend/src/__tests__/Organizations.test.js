@@ -1,8 +1,8 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { ThemeProvider, theme } from '@chakra-ui/core'
-import { Router, Route, Switch, MemoryRouter } from 'react-router-dom'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
+import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import Organizations from '../Organizations'
 import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
@@ -117,22 +117,22 @@ describe('<Organisations />', () => {
       ]
 
       const { getByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/organizations']}
-                initialIndex={0}
-              >
-                <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter
+                  initialEntries={['/organizations']}
+                  initialIndex={0}
+                >
                   <Organizations />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       // expect(getByText(/organization two/i)).toBeInTheDocument(),
@@ -277,12 +277,12 @@ describe('<Organisations />', () => {
       })
 
       const { getAllByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
                 <Router history={history}>
                   <Switch>
                     <Route
@@ -291,10 +291,10 @@ describe('<Organisations />', () => {
                     />
                   </Switch>
                 </Router>
-              </MockedProvider>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const orgCards = await waitFor(() => getAllByText(/organization one/i))
@@ -408,12 +408,12 @@ describe('<Organisations />', () => {
         })
 
         const { getByText } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MockedProvider mocks={mocks} cache={cache}>
+          <MockedProvider mocks={mocks} cache={cache}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <Switch>
                       <Route
@@ -422,10 +422,10 @@ describe('<Organisations />', () => {
                       />
                     </Switch>
                   </Router>
-                </MockedProvider>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </MockedProvider>,
         )
 
         await waitFor(() =>
@@ -629,12 +629,12 @@ describe('<Organisations />', () => {
         })
 
         const { queryByText } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MockedProvider mocks={mocks} cache={cache}>
+          <MockedProvider mocks={mocks} cache={cache}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <Switch>
                       <Route
@@ -643,10 +643,10 @@ describe('<Organisations />', () => {
                       />
                     </Switch>
                   </Router>
-                </MockedProvider>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </MockedProvider>,
         )
 
         await waitFor(() =>

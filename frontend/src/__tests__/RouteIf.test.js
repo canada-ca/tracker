@@ -1,6 +1,6 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { waitFor, render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { RouteIf } from '../RouteIf'
 import { MemoryRouter, Router, Switch } from 'react-router-dom'
 

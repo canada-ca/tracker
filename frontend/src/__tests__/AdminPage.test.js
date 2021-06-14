@@ -1,6 +1,6 @@
 import React from 'react'
 import { UserStateProvider } from '../UserState'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
@@ -163,23 +163,23 @@ describe('<AdminPage />', () => {
 
   it('renders if user not an admin', async () => {
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'me',
-          jwt: 'longstring',
-          tfaSendMethod: null,
-        }}
-      >
-        <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
-            <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-              <MockedProvider mocks={empty} addTypename={false}>
+      <MockedProvider mocks={empty} addTypename={false}>
+        <UserStateProvider
+          initialState={{
+            userName: 'me',
+            jwt: 'longstring',
+            tfaSendMethod: null,
+          }}
+        >
+          <I18nProvider i18n={i18n}>
+            <ThemeProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                 <AdminPage />
-              </MockedProvider>
-            </MemoryRouter>
-          </ThemeProvider>
-        </I18nProvider>
-      </UserStateProvider>,
+              </MemoryRouter>
+            </ThemeProvider>
+          </I18nProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     await waitFor(() => {
@@ -192,23 +192,23 @@ describe('<AdminPage />', () => {
 
   it('renders correctly', async () => {
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'me',
-          jwt: 'longstring',
-          tfaSendMethod: null,
-        }}
-      >
-        <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
-            <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-              <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserStateProvider
+          initialState={{
+            userName: 'me',
+            jwt: 'longstring',
+            tfaSendMethod: null,
+          }}
+        >
+          <I18nProvider i18n={i18n}>
+            <ThemeProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                 <AdminPage />
-              </MockedProvider>
-            </MemoryRouter>
-          </ThemeProvider>
-        </I18nProvider>
-      </UserStateProvider>,
+              </MemoryRouter>
+            </ThemeProvider>
+          </I18nProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     await waitFor(() => {
@@ -220,23 +220,23 @@ describe('<AdminPage />', () => {
   describe('Organization select', () => {
     it('displays info for admin', async () => {
       const { getByText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'me',
-            jwt: 'longstring',
-            tfaSendMethod: null,
-          }}
-        >
-          <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-                <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserStateProvider
+            initialState={{
+              userName: 'me',
+              jwt: 'longstring',
+              tfaSendMethod: null,
+            }}
+          >
+            <I18nProvider i18n={i18n}>
+              <ThemeProvider theme={theme}>
+                <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                   <AdminPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </ThemeProvider>
-          </I18nProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </ThemeProvider>
+            </I18nProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {

@@ -3,7 +3,7 @@ import UserPage from '../UserPage'
 import { setupI18n } from '@lingui/core'
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
@@ -52,10 +52,10 @@ describe('<UserPage />', () => {
 
   it('renders without error', async () => {
     const { queryByText } = render(
-      <UserStateProvider
-        initialState={{ userName, jwt: 'string', tfaSendMethod: null }}
-      >
-        <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserStateProvider
+          initialState={{ userName, jwt: 'string', tfaSendMethod: null }}
+        >
           <MemoryRouter initialEntries={['/']}>
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -63,8 +63,8 @@ describe('<UserPage />', () => {
               </I18nProvider>
             </ThemeProvider>
           </MemoryRouter>
-        </MockedProvider>
-      </UserStateProvider>,
+        </UserStateProvider>
+      </MockedProvider>,
     )
     await waitFor(() => expect(queryByText(userName)).toBeInTheDocument())
   })

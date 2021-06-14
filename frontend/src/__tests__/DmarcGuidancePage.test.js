@@ -1,6 +1,6 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
-import { Route, MemoryRouter } from 'react-router-dom'
+import { theme, ThemeProvider } from '@chakra-ui/core'
+import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import DmarcGuidancePage from '../DmarcGuidancePage'
@@ -55,12 +55,12 @@ describe('<DmarcGuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MockedProvider addTypename={false} mocks={mocks}>
+      <MockedProvider addTypename={false} mocks={mocks}>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={['/domains/forces.gc.ca']}
                 initialIndex={0}
@@ -69,10 +69,10 @@ describe('<DmarcGuidancePage />', () => {
                   <DmarcGuidancePage />
                 </Route>
               </MemoryRouter>
-            </MockedProvider>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     await waitFor(() => {

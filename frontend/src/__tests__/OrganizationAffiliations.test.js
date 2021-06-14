@@ -1,8 +1,8 @@
 import React from 'react'
-import { waitFor, render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
 import { PAGINATED_ORG_AFFILIATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
@@ -120,14 +120,14 @@ describe('<OrganizationAffiliations />', () => {
       const { getByText } = render(
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
-            <UserStateProvider
-              initialState={{
-                userName: 'user@example.com',
-                jwt: 'somestring',
-                tfaSendMethod: null,
-              }}
-            >
-              <MockedProvider mocks={mocks} addTypename={false}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserStateProvider
+                initialState={{
+                  userName: 'user@example.com',
+                  jwt: 'somestring',
+                  tfaSendMethod: null,
+                }}
+              >
                 <MemoryRouter
                   initialEntries={['/organization/tbs-sct-gc-ca']}
                   initialIndex={0}
@@ -136,8 +136,8 @@ describe('<OrganizationAffiliations />', () => {
                     <OrganizationAffiliations orgSlug={orgSlug} />
                   </Route>
                 </MemoryRouter>
-              </MockedProvider>
-            </UserStateProvider>
+              </UserStateProvider>
+            </MockedProvider>
           </I18nProvider>
         </ThemeProvider>,
       )

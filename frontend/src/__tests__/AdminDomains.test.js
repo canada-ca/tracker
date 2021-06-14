@@ -42,27 +42,27 @@ const mocks = [
 describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testuser@testemail.gc.ca',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <MockedProvider mocks={mocks} cache={createCache()}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
                 <AdminDomains
                   orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                   orgSlug="test-org.slug"
                   domainsPerPage={4}
                 />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     await waitFor(() => {
@@ -83,27 +83,27 @@ describe('<AdminDomains />', () => {
     ]
 
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testuser@testemail.gc.ca',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <MockedProvider mocks={mocks} cache={createCache()}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
                 <AdminDomains
                   orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                   orgSlug={'test-org.slug'}
                   domainsPerPage={4}
                 />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     await waitFor(() => {
@@ -148,27 +148,27 @@ describe('<AdminDomains />', () => {
       ]
 
       const { getByText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {
@@ -212,27 +212,27 @@ describe('<AdminDomains />', () => {
       ]
 
       const { getByText, getByPlaceholderText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {
@@ -281,27 +281,27 @@ describe('<AdminDomains />', () => {
       ]
 
       const { getByText, getByPlaceholderText, queryByText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {
@@ -355,27 +355,27 @@ describe('<AdminDomains />', () => {
       ]
 
       const { getByText, getByTestId, queryByText, queryAllByText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {
@@ -413,27 +413,27 @@ describe('<AdminDomains />', () => {
       ]
 
       const { getByText, getByTestId, getAllByText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {
@@ -481,27 +481,27 @@ describe('<AdminDomains />', () => {
       ]
 
       const { getByText, getByLabelText, getByTestId } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
                     orgId={rawOrgDomainListData.findOrganizationBySlug.id}
                     orgSlug={'test-org.slug'}
                     domainsPerPage={4}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {

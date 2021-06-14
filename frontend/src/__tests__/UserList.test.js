@@ -5,9 +5,9 @@ import {
   INVITE_USER_TO_ORG,
   REMOVE_USER_FROM_ORG,
 } from '../graphql/mutations'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
@@ -112,28 +112,28 @@ const successMocks = [
 describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
     const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testuser@testemail.gc.ca',
-          jwt: 'string',
-          tfaSendMethod: false,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <MockedProvider mocks={successMocks} cache={createCache()}>
+      <MockedProvider mocks={successMocks} cache={createCache()}>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
                 <UserList
                   permission={'SUPER_ADMIN'}
                   usersPerPage={10}
                   orgSlug={'test-org.slug'}
                   orgId={rawOrgUserListData.findOrganizationBySlug.id}
                 />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
 
     await waitFor(() =>
@@ -158,26 +158,26 @@ describe('<UserList />', () => {
         findByLabelText,
         findAllByLabelText,
       } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testadmin@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MockedProvider mocks={successMocks} cache={createCache()}>
+        <MockedProvider mocks={successMocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testadmin@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
                 <UserList
                   permission={'SUPER_ADMIN'}
                   usersPerPage={10}
                   orgSlug={'test-org.slug'}
                   orgId={rawOrgUserListData.findOrganizationBySlug.id}
                 />
-              </MockedProvider>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const leftClick = { button: 0 }
@@ -216,28 +216,28 @@ describe('<UserList />', () => {
     // add user
     it('successfully invites user to org', async () => {
       const { getByText, getByLabelText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={successMocks} cache={createCache()}>
+        <MockedProvider mocks={successMocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <UserList
                     permission={'SUPER_ADMIN'}
                     usersPerPage={10}
                     orgSlug={'test-org.slug'}
                     orgId={rawOrgUserListData.findOrganizationBySlug.id}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {
@@ -255,28 +255,28 @@ describe('<UserList />', () => {
     // remove user
     it('successfully removes user from org', async () => {
       const { getAllByLabelText, queryByText, getByText } = render(
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <MockedProvider mocks={successMocks} cache={createCache()}>
+        <MockedProvider mocks={successMocks} cache={createCache()}>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
                   <UserList
                     permission={'SUPER_ADMIN'}
                     usersPerPage={10}
                     orgSlug={'test-org.slug'}
                     orgId={rawOrgUserListData.findOrganizationBySlug.id}
                   />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {
