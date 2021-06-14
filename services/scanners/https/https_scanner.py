@@ -18,7 +18,9 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 MIN_HSTS_AGE = 31536000  # one year
 
-QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
+QUEUE_URL = os.getenv(
+    "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
+)
 
 
 def dispatch_results(payload, client):
@@ -190,7 +192,7 @@ def Server(server_client=requests):
                         "results": processed_results,
                         "scan_type": "https",
                         "uuid": uuid,
-                        "domain_key": domain_key
+                        "domain_key": domain_key,
                     }
                 )
                 logging.info(f"Scan results: {str(scan_results)}")
@@ -203,7 +205,13 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "https", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
+                {
+                    "scan_type": "https",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                    "results": {"missing": True},
+                },
+                server_client,
             )
             return PlainTextResponse(msg)
 

@@ -287,7 +287,10 @@ def is_http_redirect_domain(domain):
     is a redirect, and all other http endpoints are either redirects
     or down.
     """
-    http, httpwww, = domain.http, domain.httpwww
+    http, httpwww, = (
+        domain.http,
+        domain.httpwww,
+    )
 
     return is_live(domain) and (
         (is_redirect(http) or is_redirect(httpwww))
@@ -480,7 +483,7 @@ def is_self_signed_cert(domain):
 
 def is_revoked_cert(domain):
     """
-    Returns if its canonical https endpoint has a revoked cert 
+    Returns if its canonical https endpoint has a revoked cert
     """
     canonical, https, httpswww = domain.canonical, domain.https, domain.httpswww
 
@@ -1152,8 +1155,10 @@ def https_check(endpoint):
     # remove the https:// from prefix for sslyze
     try:
         hostname = endpoint.url[8:]
-        server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
-            hostname, 443
+        server_location = (
+            ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
+                hostname, 443
+            )
         )
         server_tester = ServerConnectivityTester()
         server_info = server_tester.perform(server_location)
@@ -1304,7 +1309,9 @@ def https_check(endpoint):
     try:
         endpoint.https_cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
     except ValueError as e:
-        logging.debug(f"Error while checking revocation status for {endpoint.url}: {str(e)}")
+        logging.debug(
+            f"Error while checking revocation status for {endpoint.url}: {str(e)}"
+        )
         endpoint.https_cert_revoked = None
 
     # Check for leaf certificate expiration/self-signature.

@@ -11,7 +11,7 @@ def query_crlite(pem_cert: bytes) -> bool:
     :param bytes pem_cert: A PEM encoded X.509 certificate.
     :return: True if cert is revoked, else False.
     :rtype: bool
-    :raises ValueError: if revocation status can't be checked 
+    :raises ValueError: if revocation status can't be checked
     """
     completed = subprocess.run(
         ["moz_crlite_query", "-"],
