@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import {
   Box,
+  Collapse,
   Flex,
   Grid,
   Heading,
@@ -44,7 +45,7 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
   const removeOrgBtnRef = useRef()
   const removeOrgInputRef = useRef()
   const { i18n } = useLingui()
-  const { isEditingOrg, setIsEditingOrg } = useState(false)
+  const [isEditingOrg, setIsEditingOrg] = useState(false)
 
   const { loading, error, data } = useQuery(ORGANIZATION_INFORMATION, {
     context: {
@@ -137,6 +138,19 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
 
   const org = data.findOrganizationBySlug
 
+  const updateOrgValidationSchema = object().shape({
+    acronymEN: yupString().matches(
+      fieldRequirements.acronym.matches.regex,
+      i18n._(fieldRequirements.acronym.matches.message),
+    ),
+    acronymFR: yupString().matches(
+      fieldRequirements.acronym.matches.regex,
+      i18n._(fieldRequirements.acronym.matches.message),
+    ),
+    nameEN: yupString(),
+    nameFR: yupString(),
+  })
+
   const removeOrgValidationSchema = object().shape({
     orgName: yupString()
       .required(i18n._(fieldRequirements.field.required.message))
@@ -179,13 +193,135 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
             <TrackerButton
               variant="primary"
               px="2"
-              onClick={() => setIsEditingOrg(true)}
+              onClick={() => setIsEditingOrg(!isEditingOrg)}
               w={{ base: '45%', md: 'auto' }}
             >
               <Icon name="edit" />
             </TrackerButton>
           </Stack>
         </Stack>
+
+        <Collapse isOpen={isEditingOrg}>
+          <Formik
+            validateOnBlur={false}
+            initialValues={{
+              acronymEN: '',
+              acronymFR: '',
+              nameEN: '',
+              nameFR: '',
+            }}
+            validationSchema={updateOrgValidationSchema}
+            onSubmit={async () => {
+              // // Submit the remove organization mutation
+              // await removeOrganization({
+              //   variables: {
+              //     orgId: org.id,
+              //   },
+              // })
+            }}
+          >
+            {({ handleSubmit, isSubmitting }) => (
+              <form onSubmit={handleSubmit}>
+                <Grid
+                  gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
+                  gridRowGap="0.5em"
+                  gridColumnGap="1.5em"
+                  mx="1rem"
+                >
+                  <FormField
+                    name="acronymEN"
+                    label={t`Acronym (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="acronymFR"
+                    label={t`Acronym (FR)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameEN"
+                    label={t`Name (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameFR"
+                    label={t`Name (FR)`}
+                    // placeholder={org.name}
+                  />{' '}
+                  <FormField
+                    name="acronymEN"
+                    label={t`Acronym (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="acronymFR"
+                    label={t`Acronym (FR)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameEN"
+                    label={t`Name (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameFR"
+                    label={t`Name (FR)`}
+                    // placeholder={org.name}
+                  />{' '}
+                  <FormField
+                    name="acronymEN"
+                    label={t`Acronym (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="acronymFR"
+                    label={t`Acronym (FR)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameEN"
+                    label={t`Name (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameFR"
+                    label={t`Name (FR)`}
+                    // placeholder={org.name}
+                  />{' '}
+                  <FormField
+                    name="acronymEN"
+                    label={t`Acronym (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="acronymFR"
+                    label={t`Acronym (FR)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameEN"
+                    label={t`Name (EN)`}
+                    // placeholder={org.name}
+                  />
+                  <FormField
+                    name="nameFR"
+                    label={t`Name (FR)`}
+                    // placeholder={org.name}
+                  />
+                  <TrackerButton
+                    isLoading={isSubmitting}
+                    mr="4"
+                    variant="primary"
+                    onClick={() => setIsEditingOrg(false)}
+                    justifySelf="end"
+                  >
+                    <Trans>Confirm</Trans>
+                  </TrackerButton>
+                </Grid>
+              </form>
+            )}
+          </Formik>
+        </Collapse>
 
         <Grid
           gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
