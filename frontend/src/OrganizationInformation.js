@@ -32,7 +32,11 @@ import { fieldRequirements } from './fieldRequirements'
 import FormField from './FormField'
 import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
-import { REMOVE_ORGANIZATION, UPDATE_USER_PASSWORD } from './graphql/mutations'
+import {
+  REMOVE_ORGANIZATION,
+  UPDATE_ORGANIZATION,
+  UPDATE_USER_PASSWORD,
+} from './graphql/mutations'
 
 export default function OrganizationInformation({ orgSlug, ...props }) {
   const { currentUser } = useUserState()
@@ -124,6 +128,61 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
     },
   )
 
+  const [updateOrganization, { error: _updateOrganizationError }] = useMutation(
+    UPDATE_ORGANIZATION,
+    {
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
+      },
+      onError: ({ message }) => {
+        toast({
+          title: t`An error occurred while updating this organization.`,
+          description: message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onCompleted({ updateOrganization }) {
+        if (updateOrganization.result.__typename === 'Organization') {
+          toast({
+            title: t`Updated Organization`,
+            description: t`You have successfully updated ${updateOrganization.result.name}.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          setIsEditingOrg(false)
+        } else if (
+          updateOrganization.result.__typename === 'OrganizationError'
+        ) {
+          toast({
+            title: t`Unable to update this organization.`,
+            description: updateOrganization.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect typename received.`,
+            description: t`Incorrect updateOrganization.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateOrganization.result typename.')
+        }
+      },
+    },
+  )
+
   if (loading) {
     return (
       <LoadingMessage>
@@ -147,8 +206,6 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
       fieldRequirements.acronym.matches.regex,
       i18n._(fieldRequirements.acronym.matches.message),
     ),
-    nameEN: yupString(),
-    nameFR: yupString(),
   })
 
   const removeOrgValidationSchema = object().shape({
@@ -209,111 +266,136 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
               acronymFR: '',
               nameEN: '',
               nameFR: '',
+              zoneEN: '',
+              zoneFR: '',
+              sectorEN: '',
+              sectorFR: '',
+              countryEN: '',
+              countryFR: '',
+              provinceEN: '',
+              provinceFR: '',
+              cityEN: '',
+              cityFR: '',
             }}
             validationSchema={updateOrgValidationSchema}
-            onSubmit={async () => {
-              // // Submit the remove organization mutation
-              // await removeOrganization({
-              //   variables: {
-              //     orgId: org.id,
-              //   },
-              // })
+            onSubmit={async (values) => {
+              // Update the organization (only include fields that have values)
+              const propertiesWithValues = {}
+
+              Object.entries(values).forEach((entry) => {
+                const [key, value] = entry
+                if (value) {
+                  propertiesWithValues[key] = value
+                }
+              })
+
+              if (Object.keys(propertiesWithValues).length === 0) {
+                toast({
+                  title: `Organization not updated`,
+                  description: t`No values were supplied when attempting to update organization details.`,
+                  status: 'warning',
+                  duration: 9000,
+                  isClosable: true,
+                  position: 'top-left',
+                })
+
+                return
+              }
+
+              await updateOrganization({
+                variables: {
+                  id: org.id,
+                  ...propertiesWithValues,
+                },
+              })
             }}
           >
-            {({ handleSubmit, isSubmitting }) => (
+            {({ handleSubmit, isSubmitting, handleReset }) => (
               <form onSubmit={handleSubmit}>
                 <Grid
-                  gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
-                  gridRowGap="0.5em"
-                  gridColumnGap="1.5em"
+                  gridTemplateColumns="repeat(4, 1fr)"
+                  gridRowGap="0.5rem"
+                  gridColumnGap="1.5rem"
                   mx="1rem"
+                  mb="1.5rem"
                 >
-                  <FormField
-                    name="acronymEN"
-                    label={t`Acronym (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="acronymFR"
-                    label={t`Acronym (FR)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameEN"
-                    label={t`Name (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameFR"
-                    label={t`Name (FR)`}
-                    // placeholder={org.name}
-                  />{' '}
-                  <FormField
-                    name="acronymEN"
-                    label={t`Acronym (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="acronymFR"
-                    label={t`Acronym (FR)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameEN"
-                    label={t`Name (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameFR"
-                    label={t`Name (FR)`}
-                    // placeholder={org.name}
-                  />{' '}
-                  <FormField
-                    name="acronymEN"
-                    label={t`Acronym (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="acronymFR"
-                    label={t`Acronym (FR)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameEN"
-                    label={t`Name (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameFR"
-                    label={t`Name (FR)`}
-                    // placeholder={org.name}
-                  />{' '}
-                  <FormField
-                    name="acronymEN"
-                    label={t`Acronym (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="acronymFR"
-                    label={t`Acronym (FR)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameEN"
-                    label={t`Name (EN)`}
-                    // placeholder={org.name}
-                  />
-                  <FormField
-                    name="nameFR"
-                    label={t`Name (FR)`}
-                    // placeholder={org.name}
-                  />
+                  <Text
+                    fontWeight="bold"
+                    textAlign="center"
+                    mb="0.5em"
+                    gridColumn="span 4"
+                  >
+                    <Trans>
+                      Blank fields will not be included when updating the
+                      organization.
+                    </Trans>
+                  </Text>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="acronymEN" label={t`Acronym (EN)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="acronymFR" label={t`Acronym (FR)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="nameEN" label={t`Name (EN)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="nameFR" label={t`Name (FR)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="zoneEN" label={t`Zone (EN)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="zoneFR" label={t`Zone (FR)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="sectorEN" label={t`Sector (EN)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="sectorFR" label={t`Sector (FR)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="countryEN" label={t`Country (EN)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="countryFR" label={t`Country (FR)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="provinceEN" label={t`Province (EN)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="provinceFR" label={t`Province (FR)`} />
+                  </Box>
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                    <FormField name="cityEN" label={t`City (EN)`} />
+                  </Box>
+                  <Box
+                    gridColumn={{ base: 'span 4', md: 'span 2' }}
+                    mb="0.5rem"
+                  >
+                    <FormField name="cityFR" label={t`City (FR)`} />
+                  </Box>
                   <TrackerButton
-                    isLoading={isSubmitting}
-                    mr="4"
-                    variant="primary"
+                    type="reset"
+                    variant="danger"
+                    onClick={handleReset}
+                    gridColumn={{ base: '1 / 3', md: '1 / 2' }}
+                  >
+                    <Trans>Clear</Trans>
+                  </TrackerButton>
+                  <TrackerButton
+                    type="button"
+                    variant="primary outline"
                     onClick={() => setIsEditingOrg(false)}
-                    justifySelf="end"
+                    gridColumn={{ base: '3 / 5', md: '3 / 4' }}
+                  >
+                    <Trans>Close</Trans>
+                  </TrackerButton>
+                  <TrackerButton
+                    type="submit"
+                    isLoading={isSubmitting}
+                    variant="primary"
+                    gridColumn={{ base: '1 / 5', md: '4 / 5' }}
                   >
                     <Trans>Confirm</Trans>
                   </TrackerButton>

@@ -448,4 +448,62 @@ export const REMOVE_ORGANIZATION = gql`
   }
 `
 
+export const UPDATE_ORGANIZATION = gql`
+  mutation UpdateOrganization(
+    $id: ID!
+    $acronymEN: Acronym
+    $acronymFR: Acronym
+    $nameEN: String
+    $nameFR: String
+    $zoneEN: String
+    $zoneFR: String
+    $sectorEN: String
+    $sectorFR: String
+    $countryEN: String
+    $countryFR: String
+    $provinceEN: String
+    $provinceFR: String
+    $cityEN: String
+    $cityFR: String
+  ) {
+    updateOrganization(
+      input: {
+        id: $id
+        acronymEN: $acronymEN
+        acronymFR: $acronymFR
+        nameEN: $nameEN
+        nameFR: $nameFR
+        zoneEN: $zoneEN
+        zoneFR: $zoneFR
+        sectorEN: $sectorEN
+        sectorFR: $sectorFR
+        countryEN: $countryEN
+        countryFR: $countryFR
+        provinceEN: $provinceEN
+        provinceFR: $provinceFR
+        cityEN: $cityEN
+        cityFR: $cityFR
+      }
+    ) {
+      result {
+        ... on Organization {
+          id
+          acronym
+          name
+          slug
+          zone
+          sector
+          country
+          province
+          city
+        }
+        ... on OrganizationError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''
