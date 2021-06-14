@@ -6,6 +6,7 @@ def query_crlite(pem_cert: bytes) -> bool:
     """Checks if a PEM encoded certificate has been revoked with Mozilla's CRLite.
 
     Uses https://github.com/mozilla/moz_crlite_query and will raise an error if it is not installed.
+    Will download a DB of revocations to ~/.crlite_db and update it when needed.
 
     :param bytes pem_cert: A PEM encoded X.509 certificate.
     :return: True if cert is revoked, else False.
