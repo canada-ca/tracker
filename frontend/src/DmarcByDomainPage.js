@@ -9,6 +9,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link,
   Select,
   Spinner,
   Stack,
@@ -23,7 +24,8 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { toConstantCase } from './helpers/toConstantCase'
-import { useDebounce } from './useDebounce'
+import { useDebouncedFunction } from './useDebouncedFunction'
+import { Link as RouteLink } from 'react-router-dom'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -43,7 +45,7 @@ export default function DmarcByDomainPage() {
     direction: 'DESC',
   })
   const [searchTerm, setSearchTerm] = useState('')
-  const [dbSearchTerm, setDbSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
   const {
     loading,
@@ -62,17 +64,19 @@ export default function DmarcByDomainPage() {
     variables: {
       month: selectedPeriod,
       year: selectedYear,
-      search: dbSearchTerm,
+      search: debouncedSearchTerm,
       orderBy: orderBy,
     },
     relayRoot: 'findMyDmarcSummaries',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
-  const memoizedSearchTerm = useMemo(() => {
-    return [searchTerm]
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
 
-  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const updateOrderBy = useCallback(
     (sortBy) => {
@@ -115,6 +119,18 @@ export default function DmarcByDomainPage() {
     {
       Header: i18n._(t`Domain`),
       accessor: 'domain',
+      // eslint-disable-next-line react/prop-types
+      Cell: function CellValueWithLink({ value }) {
+        return (
+          <Link
+            as={RouteLink}
+            to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+            isExternal={false}
+          >
+            {`${value} `} <Icon name="link" />
+          </Link>
+        )
+      },
       sortDescFirst: true,
     },
     {
@@ -157,7 +173,7 @@ export default function DmarcByDomainPage() {
   const percentageColumns = useMemo(
     () => [
       {
-        Header: i18n._(t`DMARC Messages`),
+        Header: i18n._(t`DMARC Summaries`),
         hidden: true,
         columns: [
           domain,
@@ -197,9 +213,6 @@ export default function DmarcByDomainPage() {
         initialSort={initialSort}
         mb="10px"
         hideTitleButton={true}
-        linkColumns={[{ column: 'domain', isExternal: false }]}
-        prependLink="domains/"
-        appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
         frontendPagination={false}
         selectedDisplayLimit={selectedTableDisplayLimit}
         manualSort={true}
@@ -260,7 +273,7 @@ export default function DmarcByDomainPage() {
   return (
     <Box width="100%" px="2">
       <Heading as="h1" textAlign="center" size="lg" mb="4px">
-        <Trans>DMARC Messages</Trans>
+        <Trans>DMARC Summaries</Trans>
       </Heading>
 
       <Stack isInline align="center" mb="4px">

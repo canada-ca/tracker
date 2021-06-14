@@ -5,3 +5,4 @@ resources:
 - db-namespace.yaml
 - frontend-namespace.yaml
 - scanners-namespace.yaml
+- sa-namespace.yaml

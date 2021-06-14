@@ -7,6 +7,9 @@ name = test
 region = northamerica-northeast1
 mode = dev
 env = test
+displayname="admin"
+SA_USER_USERNAME="admin@example.com""
+SA_USER_PASSWORD="admin"
 
 define scanners =
 endef
@@ -39,11 +42,7 @@ update-flux:
 
 .PHONY: update-istio
 update-istio:
-		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set tag=1.9.5-distroless --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
-
-.PHONY: print-ingress
-print-ingress:
-		kustomize build platform/$(env) | yq -y '. | select(.kind == "Service" and .metadata.name == "istio-ingressgateway")'
+		istioctl operator dump > platform/components/istio/istio.yaml
 
 .PHONY: print-arango-deployment
 print-arango-deployment:
@@ -71,6 +70,10 @@ scans:
 		kubectl apply -n scanners -f app/jobs/scan-job.yaml
 		kubectl apply -n scanners -f app/jobs/core-job.yaml
 
+.PHONY: superadmin
+superadmin:
+		kubectl apply -f app/jobs/super-admin.yaml
+
 .ONESHELL:
 .PHONY: credentials
 credentials:
@@ -80,6 +83,8 @@ credentials:
 		DB_USER=root
 		DB_NAME=track_dmarc
 		GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		REDIS_HOST=redis-service.scanners
+		REDIS_PORT=6379
 		EOF
 		cat <<-'EOF' > platform/creds/$(mode)/kiali.env
 		username=admin
@@ -117,13 +122,13 @@ credentials:
 		DMARC_REPORT_API_TOKEN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		DMARC_REPORT_API_URL=http://localhost:4001/graphql
 		DEPTH_LIMIT=15
-		COST_LIMIT=5000
+		COST_LIMIT=75000
 		SCALAR_COST=1
 		OBJECT_COST=1
 		LIST_FACTOR=1
-		DNS_SCANNER_ENDPOINT=dns.scanners
-		HTTPS_SCANNER_ENDPOINT=https.scanners
-		SSL_SCANNER_ENDPOINT=ssl.scanners
+		DNS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/dns
+		HTTPS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/https
+		SSL_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/ssl
 		NOTIFICATION_AUTHENTICATE_EMAIL_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_AUTHENTICATE_TEXT_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -136,6 +141,38 @@ credentials:
 		NOTIFICATION_TWO_FACTOR_CODE_FR=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_VERIFICATION_EMAIL_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_VERIFICATION_EMAIL_FR=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+		REDIS_PORT_NUMBER=6379
+		REDIS_DOMAIN_NAME=redis-service.scanners
+		DKIM_SCAN_CHANNEL=scan/dkim
+		DMARC_SCAN_CHANNEL=scan/dmarc
+		HTTPS_SCAN_CHANNEL=scan/https
+		SPF_SCAN_CHANNEL=scan/spf
+		SSL_SCAN_CHANNEL=scan/ssl
 		TRACING_ENABLED=true
+		EOF
+		cat <<-'EOF' > app/creds/$(mode)/superadmin.env
+		DB_PASS=test
+		DB_URL=arangodb.db:8529
+		DB_NAME=track_dmarc
+		SA_USER_DISPLAY_NAME="$(displayname)"
+		SA_USER_USERNAME="$(username)"
+		SA_USER_PASSWORD="$(password)"
+		SA_USER_LANG=en
+		SA_ORG_EN_SLUG=sa
+		SA_ORG_EN_ACRONYM=SA
+		SA_ORG_EN_NAME=Super Admin
+		SA_ORG_EN_ZONE=FED
+		SA_ORG_EN_SECTOR=TBS
+		SA_ORG_EN_COUNTRY=Canada
+		SA_ORG_EN_PROVINCE=Ontario
+		SA_ORG_EN_CITY=Ottawa
+		SA_ORG_FR_SLUG=sa
+		SA_ORG_FR_ACRONYM=SA
+		SA_ORG_FR_NAME=Super Admin
+		SA_ORG_FR_ZONE=FED
+		SA_ORG_FR_SECTOR=TBS
+		SA_ORG_FR_COUNTRY=Canada
+		SA_ORG_FR_PROVINCE=Ontario
+		SA_ORG_FR_CITY=Ottawa
 		EOF
 		echo "Credentials written to app/creds/$(mode)"

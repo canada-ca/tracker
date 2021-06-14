@@ -4,6 +4,7 @@
     'Authentication error. Please sign in.': 'todo',
     'Cannot query affiliations on organization without admin permission or higher.':
       'todo',
+    'Email already in use.': 'todo',
     'Error when retrieving dmarc report information. Please try again.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
@@ -216,7 +217,7 @@
     'Unable to remove user from organization. Please try again.': 'todo',
     'Unable to remove user from this organization. Please try again.': 'todo',
     'Unable to remove user from unknown organization.': 'todo',
-    'Unable to request a on time scan on an unknown domain.': 'todo',
+    'Unable to request a one time scan on an unknown domain.': 'todo',
     'Unable to reset password. Please request a new email.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
     'Unable to retrieve DMARC report information for: {domain}': 'todo',
@@ -255,13 +256,15 @@
     'Unable to update your own role.': 'todo',
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
+    'Unable to verify if user is a super admin, please try again.': 'todo',
     'Unable to verify if user is an admin, please try again.': 'todo',
     'Unable to verify organization. Please try again.': 'todo',
     'Unable to verify unknown organization.': 'todo',
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
-    'Username already in use.': 'todo',
     'Username not available, please try another.': 'todo',
+    'Verification error. Please verify your account via email to access content.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `DKIM` connection.':

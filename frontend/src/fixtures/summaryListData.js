@@ -157,12 +157,12 @@ const strengths = {
   ],
   moderate: [
     {
-      name: 'passSpfOnly',
-      displayName: t`Pass Only SPF`,
+      name: 'failDkim',
+      displayName: t`Fail DKIM`,
     },
     {
-      name: 'passDkimOnly',
-      displayName: t`Pass Only DKIM`,
+      name: 'failSpf',
+      displayName: t`Fail SPF`,
     },
   ],
   weak: [

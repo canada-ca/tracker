@@ -19,7 +19,7 @@ spec:
         app: tracker-api
     spec:
       containers:
-      - image: gcr.io/track-compliance/api-js:master-085868d-1622538419 # {"$imagepolicy": "flux-system:api"}
+      - image: gcr.io/track-compliance/api-js:master-1da8adc-1623420063 # {"$imagepolicy": "flux-system:api"}
         name: api
         ports:
         - containerPort: 4000
@@ -189,6 +189,41 @@ spec:
             secretKeyRef:
               name: api
               key: TRACING_ENABLED
+        - name: REDIS_PORT_NUMBER
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: REDIS_PORT_NUMBER
+        - name: REDIS_DOMAIN_NAME
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: REDIS_DOMAIN_NAME
+        - name: DKIM_SCAN_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DKIM_SCAN_CHANNEL
+        - name: DMARC_SCAN_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DMARC_SCAN_CHANNEL
+        - name: SPF_SCAN_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SPF_SCAN_CHANNEL
+        - name: SSL_SCAN_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SSL_SCAN_CHANNEL
+        - name: HTTPS_SCAN_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: HTTPS_SCAN_CHANNEL
         resources:
           limits:
             cpu: 300m

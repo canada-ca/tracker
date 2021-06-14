@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
@@ -30,21 +30,21 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
-import { useDebounce } from './useDebounce'
+import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function DomainsPage() {
   const { currentUser } = useUserState()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
-  const [dbSearchTerm, setDbSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
 
-  const memoizedSearchTerm = useMemo(() => {
-    return [searchTerm]
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
 
-  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
 
@@ -65,8 +65,10 @@ export default function DomainsPage() {
     relayRoot: 'findMyDomains',
     variables: {
       orderBy: { field: orderField, direction: orderDirection },
-      search: dbSearchTerm,
+      search: debouncedSearchTerm,
     },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -85,13 +87,18 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, lastRan, status }, index) => (
+      {({ id, domain, lastRan, status, hasDMARCReport }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
           <Box>
-            <DomainCard url={domain} lastRan={lastRan} status={status} />
+            <DomainCard
+              url={domain}
+              lastRan={lastRan}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+            />
             <Divider borderColor="gray.900" />
           </Box>
         </ErrorBoundary>
@@ -149,6 +156,7 @@ export default function DomainsPage() {
                     <Trans>Sort by:</Trans>
                   </Text>
                   <Select
+                    data-testid="sort-select"
                     width="fit-content"
                     size="md"
                     variant="filled"

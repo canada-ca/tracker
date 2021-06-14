@@ -179,7 +179,7 @@ describe('<DmarcReportPage />', () => {
         </UserStateProvider>
       </MockedProvider>,
     )
-    await waitFor(() => getAllByText(/^Pass Only SPF$/i))
+    await waitFor(() => getAllByText(/^Fail DKIM$/i))
   })
 
   it('renders tables', async () => {

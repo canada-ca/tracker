@@ -56,24 +56,26 @@ export default function DmarcGuidancePage() {
   const dmarcPhase = data.findDomainByDomain.dmarcPhase
 
   return (
-    <Stack spacing="25px" mb="6" px="4" mx="auto">
+    <Stack spacing="25px" mb="6" px="4" mx="auto" minW='100%'>
       <PseudoBox d={{ md: 'flex' }}>
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>
-        <Link
-          color="teal.500"
-          whiteSpace="noWrap"
-          my="auto"
-          ml="auto"
-          to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
-          as={RouteLink}
-          d="block"
-          textAlign={{ base: 'center', md: 'right' }}
-        >
-          <Trans>DMARC Report</Trans>
-          <Icon name="link" ml="4px" />
-        </Link>
+        {data.findDomainByDomain.hasDMARCReport && (
+          <Link
+            color="teal.500"
+            whiteSpace="noWrap"
+            my="auto"
+            ml="auto"
+            to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+            as={RouteLink}
+            d="block"
+            textAlign={{ base: 'center', md: 'right' }}
+          >
+            <Trans>DMARC Report</Trans>
+            <Icon name="link" ml="4px" />
+          </Link>
+        )}
       </PseudoBox>
       <Tabs isFitted>
         <TabList mb="4">

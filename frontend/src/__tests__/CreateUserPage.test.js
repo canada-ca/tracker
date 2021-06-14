@@ -26,8 +26,13 @@ const mocks = [
     },
     result: {
       data: {
-        user: {
-          userName: 'foo@example.com',
+        signUp: {
+          result: {
+            __typename: 'SignUpError',
+            code: 98,
+            description: 'Hello World',
+          },
+          __typename: 'SignUpPayload',
         },
       },
     },
@@ -35,6 +40,35 @@ const mocks = [
 ]
 
 describe('<CreateUserPage />', () => {
+  it('renders', async () => {
+    const { queryByText } = render(
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter
+              initialEntries={['/create-user/invited-token-test']}
+              initialIndex={0}
+            >
+              <Route path="/create-user/:userOrgToken?">
+                <MockedProvider mocks={mocks}>
+                  <CreateUserPage />
+                </MockedProvider>
+              </Route>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
+    )
+
+    await waitFor(() =>
+      expect(
+        queryByText(/Create an account by entering an email and password./),
+      ).toBeInTheDocument(),
+    )
+  })
+
   describe('given optional invited token', () => {
     it('displays a notification', async () => {
       const { queryByText } = render(
@@ -100,6 +134,38 @@ describe('<CreateUserPage />', () => {
 
           await waitFor(() =>
             expect(queryByText(/Email cannot be empty/i)).toBeInTheDocument(),
+          )
+        })
+      })
+
+      describe('display name field', () => {
+        it('displays an error message', async () => {
+          const { container, queryByText } = render(
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
+          )
+
+          const name = container.querySelector('#displayName')
+
+          await waitFor(() => {
+            fireEvent.blur(name)
+          })
+
+          await waitFor(() =>
+            expect(
+              queryByText(/Display name cannot be empty/i),
+            ).toBeInTheDocument(),
           )
         })
       })
@@ -203,18 +269,13 @@ describe('<CreateUserPage />', () => {
           await waitFor(() => fireEvent.blur(languageSelect))
 
           await waitFor(() =>
-            // This should work exactly like the email field above, but it
-            // doesn't! The message is displayed but we can only get partial
-            // match for some reason.
             expect(
               queryByText(/Select Preferred Language/),
             ).toBeInTheDocument(),
           )
         })
-      })
 
-      describe('language selection', () => {
-        it('displays required message', async () => {
+        it('displays error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
               <UserStateProvider
@@ -237,20 +298,23 @@ describe('<CreateUserPage />', () => {
 
           const languageSelect = container.querySelector('#lang')
 
-          await waitFor(() => fireEvent.blur(languageSelect))
+          await waitFor(() => {
+            fireEvent.blur(languageSelect)
+          })
 
           await waitFor(() =>
-            // This should work exactly like the email field above, but it
-            // doesn't! The message is displayed but we can only get partial
-            // match for some reason.
             expect(
-              queryByText(/Select Preferred Language/),
+              queryByText(/Please choose your preferred language/i),
             ).toBeInTheDocument(),
           )
         })
       })
-      describe('confirm password field', () => {
-        it('displays an error message', async () => {
+    })
+  })
+  describe('given incorrect input', () => {
+    describe('when onBlur fires', () => {
+      describe('password field', () => {
+        it('displays password length message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
               <UserStateProvider
@@ -271,17 +335,108 @@ describe('<CreateUserPage />', () => {
             </MockedProvider>,
           )
 
+          const password = container.querySelector('#password')
+
+          await waitFor(() => {
+            fireEvent.change(password, {
+              target: {
+                value: 'short',
+              },
+            })
+          })
+
+          await waitFor(() => {
+            fireEvent.blur(password)
+            expect(
+              queryByText(/Password must be at least 12 characters long/i),
+            ).toBeInTheDocument()
+          })
+        })
+      })
+
+      describe('password confirm field', () => {
+        it('displays matching error message', async () => {
+          const { container, queryByText } = render(
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
+          )
+
           const confirmPassword = container.querySelector('#confirmPassword')
 
-          await waitFor(() => fireEvent.blur(confirmPassword))
+          await waitFor(() => {
+            fireEvent.change(confirmPassword, {
+              target: {
+                value: 'shorter',
+              },
+            })
+          })
 
-          await waitFor(() =>
-            // This should work exactly like the email field above, but it
-            // doesn't! The message is displayed but we can only get partial
-            // match for some reason.
-            expect(queryByText(/Password confirmation/)).toBeInTheDocument(),
-          )
+          await waitFor(() => {
+            fireEvent.blur(confirmPassword)
+            expect(queryByText(/Passwords must match/i)).toBeInTheDocument()
+          })
         })
+      })
+    })
+  })
+
+  describe('given correct input in all fields', () => {
+    it('fails to create account', async () => {
+      const { container, getByText } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <MockedProvider mocks={mocks}>
+                  <CreateUserPage />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      // fill in each field
+      const email = container.querySelector('#email')
+      const displayName = container.querySelector('#displayName')
+      const password = container.querySelector('#password')
+      const confirmPassword = container.querySelector('#confirmPassword')
+      const lang = container.querySelector('#lang')
+
+      await waitFor(() => {
+        fireEvent.change(email, { target: { value: 'user@test.email.ca' } })
+        fireEvent.change(displayName, { target: { value: 'Test User' } })
+        fireEvent.change(password, { target: { value: 'SuperSecretPassword' } })
+        fireEvent.change(confirmPassword, {
+          target: { value: 'SuperSecretPassword' },
+        })
+        fireEvent.change(lang, { target: { value: 'ENGLISH' } })
+      })
+
+      // fire mutation
+      const createAccount = getByText(/Create Account/i)
+      await waitFor(() => {
+        fireEvent.click(createAccount)
+      })
+
+      // expect success
+      await waitFor(() => {
+        expect(
+          getByText(/Unable to create your account, please try again./i),
+        ).toBeInTheDocument()
       })
     })
   })

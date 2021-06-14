@@ -648,6 +648,14 @@ describe('create a domain', () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            lastRan: null,
+            status: {
+              dkim: null,
+              dmarc: null,
+              https: null,
+              spf: null,
+              ssl: null,
+            },
           })
           await collections.claims.save({
             _from: org._id,
@@ -781,6 +789,14 @@ describe('create a domain', () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            lastRan: null,
+            status: {
+              dkim: null,
+              dmarc: null,
+              https: null,
+              spf: null,
+              ssl: null,
+            },
           })
           await collections.claims.save({
             _from: org._id,
@@ -915,6 +931,14 @@ describe('create a domain', () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            lastRan: null,
+            status: {
+              dkim: null,
+              dmarc: null,
+              https: null,
+              spf: null,
+              ssl: null,
+            },
           })
           await collections.claims.save({
             _from: org._id,
@@ -1020,6 +1044,290 @@ describe('create a domain', () => {
                     https: null,
                     spf: null,
                     ssl: null,
+                  },
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('organizations', org._key),
+                          name: 'Treasury Board of Canada Secretariat',
+                        },
+                      },
+                      {
+                        node: {
+                          id: toGlobalId('organizations', secondOrg._key),
+                          name: 'Communications Security Establishment',
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
+          ])
+        })
+      })
+      describe('lastRan is not changed', () => {
+        beforeEach(async () => {
+          const domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            lastRan: '2021-01-01 12:00:00.000000',
+            status: {
+              dkim: null,
+              dmarc: null,
+              https: null,
+              spf: null,
+              ssl: null,
+            },
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('returns the domain', async () => {
+          const response = await graphql(
+            schema,
+            `
+            mutation {
+              createDomain(
+                input: {
+                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  domain: "test.gc.ca"
+                  selectors: ["selector1._domainkey", "selector2._domainkey"]
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
+                    organizations(first: 5) {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+            null,
+            {
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+              },
+              loaders: {
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+                  query,
+                  language: 'en',
+                  userKey: user._key,
+                  cleanseInput,
+                }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const domainCursor = await query`
+          FOR domain IN domains
+            RETURN domain
+        `
+          const domain = await domainCursor.next()
+
+          const expectedResponse = {
+            data: {
+              createDomain: {
+                result: {
+                  id: toGlobalId('domains', domain._key),
+                  domain: 'test.gc.ca',
+                  lastRan: '2021-01-01 12:00:00.000000',
+                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  status: {
+                    dkim: null,
+                    dmarc: null,
+                    https: null,
+                    spf: null,
+                    ssl: null,
+                  },
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('organizations', org._key),
+                          name: 'Treasury Board of Canada Secretariat',
+                        },
+                      },
+                      {
+                        node: {
+                          id: toGlobalId('organizations', secondOrg._key),
+                          name: 'Communications Security Establishment',
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
+          ])
+        })
+      })
+      describe('status do not changed', () => {
+        beforeEach(async () => {
+          const domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            lastRan: '',
+            status: {
+              dkim: 'fail',
+              dmarc: 'fail',
+              https: 'fail',
+              spf: 'fail',
+              ssl: 'fail',
+            },
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('returns the domain', async () => {
+          const response = await graphql(
+            schema,
+            `
+            mutation {
+              createDomain(
+                input: {
+                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  domain: "test.gc.ca"
+                  selectors: ["selector1._domainkey", "selector2._domainkey"]
+                }
+              ) {
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
+                    organizations(first: 5) {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+            null,
+            {
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+              },
+              loaders: {
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+                  query,
+                  language: 'en',
+                  userKey: user._key,
+                  cleanseInput,
+                }),
+                loadUserByKey: loadUserByKey({ query }),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const domainCursor = await query`
+          FOR domain IN domains
+            RETURN domain
+        `
+          const domain = await domainCursor.next()
+
+          const expectedResponse = {
+            data: {
+              createDomain: {
+                result: {
+                  id: toGlobalId('domains', domain._key),
+                  domain: 'test.gc.ca',
+                  lastRan: '',
+                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  status: {
+                    dkim: 'FAIL',
+                    dmarc: 'FAIL',
+                    https: 'FAIL',
+                    spf: 'FAIL',
+                    ssl: 'FAIL',
                   },
                   organizations: {
                     edges: [

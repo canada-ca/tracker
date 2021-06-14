@@ -107,6 +107,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
         ssl
       }
       dmarcPhase
+      hasDMARCReport
       web {
         https(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
@@ -507,6 +508,7 @@ export const ADMIN_PANEL = gql`
             permission
             user {
               userName
+              displayName
             }
           }
         }
@@ -523,10 +525,15 @@ export const ADMIN_PANEL = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
-  query PaginatedOrgAffiliations($orgSlug: Slug!, $first: Int, $after: String) {
+  query PaginatedOrgAffiliations(
+    $orgSlug: Slug!
+    $first: Int
+    $after: String
+    $search: String
+  ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after) {
+      affiliations(first: $first, after: $after, search: $search) {
         edges {
           node {
             id
@@ -534,6 +541,7 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
             user {
               id
               userName
+              displayName
             }
           }
         }
@@ -643,6 +651,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
               spf
               ssl
             }
+            hasDMARCReport
           }
         }
       }
@@ -669,6 +678,7 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
             user {
               id
               userName
+              displayName
             }
           }
         }
@@ -703,6 +713,7 @@ export const PAGINATED_DOMAINS = gql`
             spf
             ssl
           }
+          hasDMARCReport
           __typename
         }
         __typename
@@ -754,6 +765,7 @@ export const QUERY_USERLIST = gql`
         node {
           id
           userName
+          displayName
           role
           tfa
         }
@@ -835,6 +847,7 @@ export const DMARC_REPORT_GRAPH = gql`
   query DmarcReportGraph($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
       id
+      hasDMARCReport
       yearlyDmarcSummaries {
         month
         year
@@ -1367,5 +1380,40 @@ export const USER_AFFILIATIONS = gql`
         }
       }
     }
+  }
+`
+export const ADMIN_AFFILIATIONS = gql`
+  query AdminAffiliations(
+    $after: String
+    $first: Int
+    $before: String
+    $last: Int
+    $orderBy: OrganizationOrder
+    $isAdmin: Boolean
+    $includeSuperAdminOrg: Boolean
+  ) {
+    findMyOrganizations(
+      after: $after
+      first: $first
+      before: $before
+      last: $last
+      orderBy: $orderBy
+      isAdmin: $isAdmin
+      includeSuperAdminOrg: $includeSuperAdminOrg
+    ) {
+      edges {
+        node {
+          id
+          acronym
+          slug
+        }
+      }
+    }
+  }
+`
+
+export const IS_USER_SUPER_ADMIN = gql`
+  query IsUserSuperAdmin {
+    isUserSuperAdmin
   }
 `

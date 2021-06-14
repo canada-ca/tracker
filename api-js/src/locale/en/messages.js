@@ -6,6 +6,7 @@
       'Authentication error. Please sign in.',
     'Cannot query affiliations on organization without admin permission or higher.':
       'Cannot query affiliations on organization without admin permission or higher.',
+    'Email already in use.': 'Email already in use.',
     'Error when retrieving dmarc report information. Please try again.':
       'Error when retrieving dmarc report information. Please try again.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
@@ -422,8 +423,8 @@
       'Unable to remove user from this organization. Please try again.',
     'Unable to remove user from unknown organization.':
       'Unable to remove user from unknown organization.',
-    'Unable to request a on time scan on an unknown domain.':
-      'Unable to request a on time scan on an unknown domain.',
+    'Unable to request a one time scan on an unknown domain.':
+      'Unable to request a one time scan on an unknown domain.',
     'Unable to reset password. Please request a new email.':
       'Unable to reset password. Please request a new email.',
     'Unable to reset password. Please try again.':
@@ -490,6 +491,8 @@
       'Unable to verify account. Please request a new email.',
     'Unable to verify account. Please try again.':
       'Unable to verify account. Please try again.',
+    'Unable to verify if user is a super admin, please try again.':
+      'Unable to verify if user is a super admin, please try again.',
     'Unable to verify if user is an admin, please try again.':
       'Unable to verify if user is an admin, please try again.',
     'Unable to verify organization. Please try again.':
@@ -499,9 +502,10 @@
     'User could not be queried.': 'User could not be queried.',
     'User role was updated successfully.':
       'User role was updated successfully.',
-    'Username already in use.': 'Username already in use.',
     'Username not available, please try another.':
       'Username not available, please try another.',
+    'Verification error. Please verify your account via email to access content.':
+      'Verification error. Please verify your account via email to access content.',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DKIM` connection.':

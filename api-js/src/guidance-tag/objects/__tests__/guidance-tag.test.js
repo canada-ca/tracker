@@ -35,7 +35,7 @@ describe('given the guidanceTag gql object', () => {
       expect(demoType).toHaveProperty('refLinks')
       expect(demoType.refLinks.type).toMatchObject(GraphQLList(refLinksType))
     })
-    it('has a refLinksTech field', () => {
+    it('has a refLinksTechnical field', () => {
       const demoType = guidanceTagType.getFields()
 
       expect(demoType).toHaveProperty('refLinksTech')

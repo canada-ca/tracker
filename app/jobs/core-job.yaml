@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: scan
-        image: gcr.io/track-compliance/services/core
+        image: gcr.io/track-compliance/services/core # {"$imagepolicy": "flux-system:core"}
         env:
           - name: DB_USER
             valueFrom:

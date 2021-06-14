@@ -496,8 +496,13 @@ describe('<Organisations />', () => {
           {
             request: {
               query: PAGINATED_ORGANIZATIONS,
-              variables: { first: 10, search: '' },
-              includeSuperAdminOrg: false,
+              variables: {
+                first: 10,
+                field: 'NAME',
+                direction: 'ASC',
+                search: '',
+                includeSuperAdminOrg: false,
+              },
             },
             result: {
               data: {

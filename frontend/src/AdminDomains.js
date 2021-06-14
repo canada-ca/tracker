@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import {
@@ -44,7 +44,7 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
-import { useDebounce } from './useDebounce'
+import { useDebouncedFunction } from './useDebouncedFunction'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [editingDomainUrl, setEditingDomainUrl] = useState()
@@ -64,7 +64,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
-  const [dbSearchTerm, setDbSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
   const domainForm = useFormik({
     initialValues: {
@@ -99,15 +99,17 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     fetchForward: FORWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
-    variables: { orgSlug, search: dbSearchTerm },
+    variables: { orgSlug, search: debouncedSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
-  const memoizedSearchTerm = useMemo(() => {
-    return [domainForm.values.domain]
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(domainForm.values.domain)
   }, [domainForm.values.domain])
 
-  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
@@ -292,6 +294,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <Stack isInline align="center">
               <Stack>
                 <TrackerButton
+                  data-testid={`edit-${index}`}
                   variant="primary"
                   px="2"
                   onClick={() => {
@@ -303,6 +306,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   <Icon name="edit" />
                 </TrackerButton>
                 <TrackerButton
+                  data-testid={`remove-${index}`}
                   onClick={() => {
                     setSelectedRemoveDomainUrl(domain)
                     setSelectedRemoveDomainId(domainId)
@@ -435,6 +439,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
                               <Input
                                 {...field}
+                                aria-label="new-domain-url"
                                 id="newDomainUrl"
                                 placeholder={t`New Domain Url`}
                                 ref={initialFocusRef}

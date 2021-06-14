@@ -77,6 +77,7 @@ describe('<OrganizationDomains />', () => {
                           spf: 'FAIL',
                           ssl: 'PASS',
                         },
+                        hasDMARCReport: true,
                       },
                     },
                     {
@@ -92,6 +93,7 @@ describe('<OrganizationDomains />', () => {
                           spf: 'FAIL',
                           ssl: 'INFO',
                         },
+                        hasDMARCReport: true,
                       },
                     },
                   ],

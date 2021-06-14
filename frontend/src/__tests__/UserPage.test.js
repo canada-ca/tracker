@@ -21,6 +21,12 @@ const i18n = setupI18n({
 
 describe('<UserPage />', () => {
   const userName = 'testuser@testemail.gc.ca'
+  const displayName = 'Test User'
+  const preferredLang = 'ENGLISH'
+  const phoneNumber = '19025551234'
+  const tfaSendMethod = 'PHONE'
+  const phoneValidated = true
+  const emailValidated = true
 
   const mocks = [
     {
@@ -32,12 +38,12 @@ describe('<UserPage />', () => {
           userPage: {
             id: 'ODk3MDg5MzI2MA==',
             userName: userName,
-            displayName: 'Test User',
-            preferredLang: 'ENGLISH',
-            phoneNumber: '19025551234',
-            tfaSendMethod: 'PHONE',
-            phoneValidated: true,
-            emailValidated: true,
+            displayName: displayName,
+            preferredLang: preferredLang,
+            phoneNumber: phoneNumber,
+            tfaSendMethod: tfaSendMethod,
+            phoneValidated: phoneValidated,
+            emailValidated: emailValidated,
           },
         },
       },

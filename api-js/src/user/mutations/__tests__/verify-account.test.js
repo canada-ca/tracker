@@ -205,64 +205,6 @@ describe('user send password reset email', () => {
       })
     })
     describe('given an unsuccessful validation', () => {
-      describe('userKey is undefined', () => {
-        it('returns an error message', async () => {
-          const token = tokenize({
-            parameters: { userKey: 1 },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: undefined,
-              query,
-              auth: {
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyAccount: {
-                result: {
-                  code: 400,
-                  description: 'Unable to verify account. Please try again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to verify their account, but the userKey is undefined.`,
-          ])
-        })
-      })
       describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
           const token = tokenize({
@@ -308,7 +250,7 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'Unable to verify account. Please try again.',
+                  description: 'Unable to verify account. Please request a new email.',
                 },
               },
             },
@@ -391,7 +333,7 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
+            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
@@ -466,7 +408,7 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
+            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
@@ -541,7 +483,7 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
+            `User: 1 attempted to verify account, however no account is associated with this id.`,
           ])
         })
       })
@@ -769,64 +711,6 @@ describe('user send password reset email', () => {
       })
     })
     describe('given an unsuccessful validation', () => {
-      describe('userKey is undefined', () => {
-        it('returns an error message', async () => {
-          const token = tokenize({
-            parameters: { userKey: 1 },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: undefined,
-              query,
-              auth: {
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyAccount: {
-                result: {
-                  code: 400,
-                  description: 'todo',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to verify their account, but the userKey is undefined.`,
-          ])
-        })
-      })
       describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
           const token = tokenize({
@@ -954,7 +838,7 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
+            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
@@ -1028,7 +912,7 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
+            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
@@ -1102,7 +986,7 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
+            `User: 1 attempted to verify account, however no account is associated with this id.`,
           ])
         })
       })
