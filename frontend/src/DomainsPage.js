@@ -67,6 +67,8 @@ export default function DomainsPage() {
       orderBy: { field: orderField, direction: orderDirection },
       search: debouncedSearchTerm,
     },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -154,6 +156,7 @@ export default function DomainsPage() {
                     <Trans>Sort by:</Trans>
                   </Text>
                   <Select
+                    data-testid="sort-select"
                     width="fit-content"
                     size="md"
                     variant="filled"

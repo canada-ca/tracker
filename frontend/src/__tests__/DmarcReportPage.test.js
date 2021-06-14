@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -106,104 +106,104 @@ const mocks = [
 describe('<DmarcReportPage />', () => {
   it('renders header', async () => {
     const { getAllByText } = render(
-      <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter
-              initialEntries={[
-                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
-              ]}
-              initialIndex={0}
-            >
-              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} cache={createCache()}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={[
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                ]}
+                initialIndex={0}
+              >
+                <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                   <DmarcReportPage summaryListResponsiveWidth={500} />
-                </MockedProvider>
-              </Route>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/test-domain/i))
   })
 
   it('renders date selector', async () => {
     const { getAllByText } = render(
-      <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter
-              initialEntries={[
-                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
-              ]}
-              initialIndex={0}
-            >
-              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} cache={createCache()}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={[
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                ]}
+                initialIndex={0}
+              >
+                <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                   <DmarcReportPage summaryListResponsiveWidth={500} />
-                </MockedProvider>
-              </Route>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/Showing data for period:/i))
   })
 
   it('renders bar graph', async () => {
     const { getAllByText } = render(
-      <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter
-              initialEntries={[
-                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
-              ]}
-              initialIndex={0}
-            >
-              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} cache={createCache()}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={[
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                ]}
+                initialIndex={0}
+              >
+                <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                   <DmarcReportPage summaryListResponsiveWidth={500} />
-                </MockedProvider>
-              </Route>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/^Fail DKIM$/i))
   })
 
   it('renders tables', async () => {
     const { getAllByText } = render(
-      <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter
-              initialEntries={[
-                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
-              ]}
-              initialIndex={0}
-            >
-              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} cache={createCache()}>
+      <MockedProvider mocks={mocks} cache={createCache()}>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={[
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                ]}
+                initialIndex={0}
+              >
+                <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                   <DmarcReportPage summaryListResponsiveWidth={500} />
-                </MockedProvider>
-              </Route>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
+      </MockedProvider>,
     )
     await waitFor(() => getAllByText(/DKIM Failures by IP Address/i))
     await waitFor(() => getAllByText(/SPF Failures by IP Address/i))

@@ -66,8 +66,14 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   const [debouncedSearchUser, setDebouncedSearchUser] = useState('')
 
+  const isSuperAdminInSuperAdminOrg =
+    permission === 'SUPER_ADMIN' && orgSlug === 'super-admin'
+
   const userForm = useFormik({
-    initialValues: { userName: '', roleSelect: 'USER' },
+    initialValues: {
+      userName: '',
+      roleSelect: isSuperAdminInSuperAdminOrg ? 'SUPER_ADMIN' : 'USER',
+    },
     validationSchema: object().shape({
       userName: yupString()
         .required(i18n._(fieldRequirements.email.required.message))
@@ -291,6 +297,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="edit" />
               </TrackerButton>
               <TrackerButton
+                aria-label="userRemoveButton"
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
@@ -301,7 +308,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="minus" />
               </TrackerButton>
             </Stack>
-            <UserCard userName={node.user.userName} role={userRole} />
+            <UserCard userName={node.user.userName} displayName={node.user.displayName} role={userRole} />
           </Stack>
           <Divider borderColor="gray.900" />
         </Box>
@@ -347,6 +354,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="email" color="gray.300" />
               </InputLeftElement>
               <Input
+                aria-label="new-user-input"
                 type="email"
                 placeholder={t`New user email`}
                 isDisabled={addUserLoading}
@@ -360,14 +368,13 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               flexShrink={0}
               {...userForm.getFieldProps('roleSelect')}
             >
-              {orgSlug !== 'super-admin' && (
-                <option value="USER">{t`USER`}</option>
-              )}
-              {orgSlug !== 'super-admin' && (
-                <option value="ADMIN">{t`ADMIN`}</option>
-              )}
-              {permission === 'SUPER_ADMIN' && orgSlug === 'super-admin' && (
+              {isSuperAdminInSuperAdminOrg ? (
                 <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+              ) : (
+                <>
+                  <option value="USER">{t`USER`}</option>
+                  <option value="ADMIN">{t`ADMIN`}</option>
+                </>
               )}
             </Select>
           </Stack>

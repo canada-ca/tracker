@@ -24,19 +24,19 @@ describe('<SignInPage />', () => {
   describe('when the email field is empty', () => {
     it('displays an error message', async () => {
       const { container, getByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider>
+        <MockedProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <SignInPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const email = container.querySelector('#email')
@@ -54,19 +54,19 @@ describe('<SignInPage />', () => {
   describe('when the password field is empty', () => {
     it('displays an error message', async () => {
       const { container } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider>
+        <MockedProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <SignInPage />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       const password = container.querySelector('#password')
@@ -122,19 +122,19 @@ describe('<SignInPage />', () => {
         })
 
         const { container, getByRole } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <Router history={history}>
                     <SignInPage />
-                  </MockedProvider>
-                </Router>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+                  </Router>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </MockedProvider>,
         )
 
         const email = container.querySelector('#email')
@@ -203,19 +203,19 @@ describe('<SignInPage />', () => {
         })
 
         const { container, getByRole } = render(
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <Router history={history}>
                     <SignInPage />
-                  </MockedProvider>
-                </Router>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>,
+                  </Router>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
+          </MockedProvider>,
         )
 
         const email = container.querySelector('#email')

@@ -1,6 +1,6 @@
 import React from 'react'
-import { waitFor, render } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { render, waitFor } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { ListOf } from '../ListOf'
 
 describe('<ListOf />', () => {

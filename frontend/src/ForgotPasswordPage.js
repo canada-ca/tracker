@@ -77,6 +77,7 @@ export default function ForgotPasswordPage() {
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton
+                aria-label="forgot-password-submit"
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}

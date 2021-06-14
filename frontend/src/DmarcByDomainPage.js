@@ -68,6 +68,8 @@ export default function DmarcByDomainPage() {
       orderBy: orderBy,
     },
     relayRoot: 'findMyDmarcSummaries',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {

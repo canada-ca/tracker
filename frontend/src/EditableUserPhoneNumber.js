@@ -168,7 +168,7 @@ function EditableUserPhoneNumber({ detailValue }) {
               {({ handleSubmit, isSubmitting }) => (
                 <form id="form" onSubmit={handleSubmit}>
                   <ModalHeader>
-                    <Trans>Edit </Trans>
+                    <Trans>Edit Phone Number</Trans>
                   </ModalHeader>
                   <ModalCloseButton />
                   <ModalBody>

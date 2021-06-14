@@ -42,11 +42,7 @@ update-flux:
 
 .PHONY: update-istio
 update-istio:
-		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set tag=1.9.5-distroless --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
-
-.PHONY: print-ingress
-print-ingress:
-		kustomize build platform/$(env) | yq -y '. | select(.kind == "Service" and .metadata.name == "istio-ingressgateway")'
+		istioctl operator dump > platform/components/istio/istio.yaml
 
 .PHONY: print-arango-deployment
 print-arango-deployment:
@@ -87,6 +83,8 @@ credentials:
 		DB_USER=root
 		DB_NAME=track_dmarc
 		GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		REDIS_HOST=redis-service.scanners
+		REDIS_PORT=6379
 		EOF
 		cat <<-'EOF' > platform/creds/$(mode)/kiali.env
 		username=admin
@@ -128,9 +126,9 @@ credentials:
 		SCALAR_COST=1
 		OBJECT_COST=1
 		LIST_FACTOR=1
-		DNS_SCANNER_ENDPOINT=dns.scanners
-		HTTPS_SCANNER_ENDPOINT=https.scanners
-		SSL_SCANNER_ENDPOINT=ssl.scanners
+		DNS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/dns
+		HTTPS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/https
+		SSL_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/ssl
 		NOTIFICATION_AUTHENTICATE_EMAIL_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_AUTHENTICATE_TEXT_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -143,6 +141,13 @@ credentials:
 		NOTIFICATION_TWO_FACTOR_CODE_FR=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_VERIFICATION_EMAIL_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_VERIFICATION_EMAIL_FR=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+		REDIS_PORT_NUMBER=6379
+		REDIS_DOMAIN_NAME=redis-service.scanners
+		DKIM_SCAN_CHANNEL=scan/dkim
+		DMARC_SCAN_CHANNEL=scan/dmarc
+		HTTPS_SCAN_CHANNEL=scan/https
+		SPF_SCAN_CHANNEL=scan/spf
+		SSL_SCAN_CHANNEL=scan/ssl
 		TRACING_ENABLED=true
 		EOF
 		cat <<-'EOF' > app/creds/$(mode)/superadmin.env

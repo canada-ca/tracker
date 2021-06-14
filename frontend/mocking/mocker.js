@@ -387,6 +387,7 @@ const mocks = {
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),
+  SharedUser: () => ({ displayName: faker.name.findName() }),
   SpfFailureTable: () => {
     const dnsHost = faker.internet.domainName()
     const envelopeFrom = faker.internet.domainName()
@@ -501,10 +502,16 @@ const schemaWithMocks = addMocksToSchema({
     },
     Mutation: {
       setPhoneNumber: (_, args, context, _resolveInfo) => {
-        store.set('PersonalUser', context.token, 'phoneNumber', args.input.phoneNumber)
+        store.set(
+          'PersonalUser',
+          context.token,
+          'phoneNumber',
+          args.input.phoneNumber,
+        )
         return {
           result: {
-            status: 'Phone number has been successfully set, you will receive a verification text message shortly.',
+            status:
+              'Phone number has been successfully set, you will receive a verification text message shortly.',
             user: store.get('PersonalUser', context.token),
             type: 'SetPhoneNumberResult',
           },
@@ -532,7 +539,6 @@ const schemaWithMocks = addMocksToSchema({
         if (obj.authToken) return 'AuthResult'
       },
     },
-
   }),
 })
 
