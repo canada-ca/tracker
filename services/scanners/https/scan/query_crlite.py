@@ -1,3 +1,4 @@
+import logging
 import subprocess
 
 
@@ -17,6 +18,9 @@ def query_crlite(pem_cert: bytes) -> bool:
         capture_output=True,
         text=True,
     )
+    # moz_crlite_query prints everything but results to stderr
+    # Logging at debug level for now to monitor updates to DB
+    logging.debug(completed.stderr)
     if "Revoked" in completed.stdout:
         return True
     elif "Valid" in completed.stdout:
