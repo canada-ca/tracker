@@ -20,16 +20,18 @@ export const findOrganizationBySlug = {
     args,
     {
       i18n,
-      auth: { checkPermission, userRequired },
+      auth: { checkPermission, userRequired, verifiedRequired },
       loaders: { loadOrgBySlug },
       validators: { cleanseInput },
     },
   ) => {
-    // Cleanse input
-    const orgSlug = cleanseInput(args.orgSlug)
-
     // Get User
     const user = await userRequired()
+
+    verifiedRequired({ user })
+
+    // Cleanse input
+    const orgSlug = cleanseInput(args.orgSlug)
 
     // Retrieve organization by slug
     const org = await loadOrgBySlug.load(orgSlug)
