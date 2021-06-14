@@ -270,7 +270,7 @@ function EditableUserPhoneNumber({ detailValue }) {
 
   const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
 
-  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{10,15}$/
+  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{9,14}$/
 
   const phoneValidationSchema = object().shape({
     phoneNumber: yupString()
