@@ -1302,8 +1302,9 @@ def https_check(endpoint):
         endpoint.https_bad_hostname = True
 
     try:
-        endpoint.https_cert_revoked = leaf_cert.public_bytes(Encoding.PEM)
-    except ValueError:
+        endpoint.https_cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
+    except ValueError as e:
+        logging.debug(f"Error while checking revocation status for {endpoint.url}: {str(e)}")
         endpoint.https_cert_revoked = None
 
     # Check for leaf certificate expiration/self-signature.
