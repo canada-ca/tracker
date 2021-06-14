@@ -33,19 +33,21 @@ export const removeDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired },
+      auth: { checkPermission, userRequired, verifiedRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
     },
   ) => {
+    // Get User
+    const user = await userRequired()
+
+    verifiedRequired({ user })
+
     // Cleanse Input
     const { type: _domainType, id: domainId } = fromGlobalId(
       cleanseInput(args.domainId),
     )
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-
-    // Get User
-    await userRequired()
 
     // Get domain from db
     const domain = await loadDomainByKey.load(domainId)
