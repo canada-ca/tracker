@@ -31,7 +31,7 @@ export const fieldRequirements = {
   },
   phoneNumber: {
     matches: {
-      message: t`Phone number must be a valid phone number of the form +17895551234 (10-15 digits)`,
+      message: t`Phone number must be a valid phone number that is 10-15 digits long`,
     },
     required: { message: t`Phone number field must not be empty` },
   },
