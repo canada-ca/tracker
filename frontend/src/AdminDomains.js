@@ -456,15 +456,14 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                             </FormControl>
                           )}
                         </Field>
-                      </Stack>
-                      <Box>
-                        <Text fontWeight="bold">
-                          <Trans>DKIM Selectors</Trans>
-                        </Text>
+
                         <FieldArray
                           name="selectors"
                           render={(arrayHelpers) => (
                             <Box>
+                              <Text fontWeight="bold">
+                                <Trans>DKIM Selectors:</Trans>
+                              </Text>
                               {values.selectors.map((selector, index) => (
                                 <Stack
                                   key={index}
@@ -519,7 +518,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                             </Box>
                           )}
                         />
-                      </Box>
+                      </Stack>
                     </ModalBody>
 
                     <ModalFooter>
