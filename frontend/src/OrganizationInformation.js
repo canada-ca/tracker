@@ -567,5 +567,5 @@ export default function OrganizationInformation({
 
 OrganizationInformation.propTypes = {
   orgSlug: string.isRequired,
-  removeOrgCallback: func.isRequired,
+  removeOrgCallback: func,
 }
