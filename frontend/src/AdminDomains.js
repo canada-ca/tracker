@@ -318,7 +318,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   <Icon name="minus" />
                 </TrackerButton>
               </Stack>
-              <Domain url={domain} lastRan={lastRan} />
+              <Domain url={domain} lastRan={lastRan} flexGrow={1} />
             </Stack>
             <Divider borderColor="gray.900" />
           </Box>
