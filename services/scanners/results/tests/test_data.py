@@ -9,7 +9,7 @@ https_result_data = {
 }
 
 expected_negative_https_tags = []
-expected_neutral_https_tags = ["https11"]
+expected_neutral_https_tags = ["https11", "https16"]
 expected_positive_https_tags = []
 
 ssl_result_data = {
