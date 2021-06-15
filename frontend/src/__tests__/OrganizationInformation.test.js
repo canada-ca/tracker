@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import OrganizationInformation from '../OrganizationInformation'
 import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
@@ -202,15 +202,7 @@ describe('<OrganizationInformation />', () => {
           },
         ]
 
-        const {
-          getByText,
-          getByRole,
-          findByRole,
-          findByText,
-          findAllByRole,
-          queryByText,
-          debug,
-        } = render(
+        const { getByText, getByRole, findByRole, findByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
