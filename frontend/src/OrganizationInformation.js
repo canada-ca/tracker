@@ -91,6 +91,7 @@ export default function OrganizationInformation({
         })
       },
       onCompleted({ removeOrganization }) {
+        // eslint-disable-next-line no-empty
         if (removeOrganization.result.__typename === 'OrganizationResult') {
         } else if (
           removeOrganization.result.__typename === 'OrganizationError'
