@@ -33,7 +33,7 @@ import {
   REMOVE_DOMAIN,
   UPDATE_DOMAIN,
 } from './graphql/mutations'
-import { Field, Formik, useFormik } from 'formik'
+import { Field, Formik, useFormik, FieldArray } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
 import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
@@ -270,7 +270,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     newDomainUrl: yupString().required(
       i18n._(fieldRequirements.domainUrl.required.message),
     ),
-    selector: yupString()
+    selectors: yupString()
       .required(i18n._(fieldRequirements.selector.required.message))
       .matches(
         fieldRequirements.selector.matches.regex,
@@ -304,7 +304,10 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   onClick={() => {
                     setEditingDomainUrl(domain)
                     setEditingDomainId(domainId)
-                    setSelectorInputList(['selector._domainkey'])
+                    setSelectorInputList([
+                      'selector._domainkey',
+                      'dkim_is_dope._domainkey',
+                    ])
                     // setSelectorInputList(selectors)
                     updateOnOpen()
                   }}
@@ -330,80 +333,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         )}
       </ListOf>
     </Stack>
-  )
-
-  const dkimSelectorInputs = (
-    <Box>
-      <Text fontWeight="bold">
-        <Trans>DKIM Selectors</Trans>
-      </Text>
-      {selectorInputList.map((selector, index) => {
-        return (
-          <Box key={index}>
-            <Stack isInline align="center">
-              <TrackerButton
-                type="button"
-                variant="danger"
-                p="3"
-                onClick={() => {
-                  const list = [...selectorInputList]
-                  list.splice(index, 1)
-                  setSelectorInputList(list)
-                }}
-              >
-                <Icon name="minus" size="icons.xs" />
-              </TrackerButton>
-              <Input
-                name="selector"
-                // id="selector"
-                placeholder={t`DKIM Selector`}
-                value={selector}
-                mb="2"
-                onChange={(e) => {
-                  const list = [...selectorInputList]
-                  list[index] = e.target.value
-                  setSelectorInputList(list)
-                }}
-              />
-              {/* <Field id={`selector-${index}`} name="selector">
-                {({ field, form }) => (
-                  <FormControl
-                    isInvalid={form.errors.selector && form.touched.selector}
-                  >
-                    <FormLabel htmlFor="selector" />
-                    <Input
-                      mb="2"
-                      {...field}
-                      id={`selector-${index}`}
-                      name="selector"
-                      // value={selector}
-                      placeholder={t`DKIM Selector`}
-                      ref={initialFocusRef}
-                      // onChange={(e) => {
-                      //   const list = [...selectorInputList]
-                      //   list[index] = e.target.value
-                      //   setSelectorInputList(list)
-                      // }}
-                    />
-                    <FormErrorMessage>{form.errors.selector}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field> */}
-            </Stack>
-          </Box>
-        )
-      })}
-      <TrackerButton
-        type="button"
-        variant="primary"
-        px="2"
-        onClick={() => {
-          setSelectorInputList([...selectorInputList, ''])
-        }}
-      >
-        <Icon name="small-add" />
-      </TrackerButton>
-    </Box>
   )
 
   return (
@@ -471,6 +400,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 validateOnBlur={false}
                 initialValues={{
                   newDomainUrl: editingDomainUrl,
+                  selectors: selectorInputList,
                 }}
                 initialTouched={{
                   displayName: true,
@@ -478,17 +408,18 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 validationSchema={updatedDomainValidationSchema}
                 onSubmit={async (values) => {
                   // Submit update detail mutation
+                  // window.alert(JSON.stringify(values))
                   await updateDomain({
                     variables: {
                       domainId: editingDomainId,
                       orgId: orgId,
                       domain: values.newDomainUrl,
-                      selectors: selectorInputList,
+                      selectors: values.selectors,
                     },
                   })
                 }}
               >
-                {({ handleSubmit, isSubmitting }) => (
+                {({ handleSubmit, isSubmitting, values }) => (
                   <form id="form" onSubmit={handleSubmit}>
                     <ModalHeader>
                       <Trans>Edit Domain Details</Trans>
@@ -524,8 +455,70 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                             </FormControl>
                           )}
                         </Field>
-                        {dkimSelectorInputs}
                       </Stack>
+                      <Box>
+                        <Text fontWeight="bold">
+                          <Trans>DKIM Selectors</Trans>
+                        </Text>
+                        <FieldArray
+                          name="selectors"
+                          render={(arrayHelpers) => (
+                            <Box>
+                              {values.selectors.map((selector, index) => (
+                                <Stack
+                                  key={index}
+                                  isInline
+                                  align="center"
+                                  mb="2"
+                                >
+                                  <TrackerButton
+                                    type="button"
+                                    variant="danger"
+                                    p="2"
+                                    onClick={() => arrayHelpers.remove(index)}
+                                  >
+                                    <Icon name="minus" size="icons.xs" />
+                                  </TrackerButton>
+                                  <Field
+                                    id={`selectors.${index}`}
+                                    name={`selectors.${index}`}
+                                  >
+                                    {({ field, form }) => (
+                                      <FormControl
+                                        isInvalid={
+                                          form.errors.selectors &&
+                                          form.touched.selectors
+                                        }
+                                      >
+                                        <Input
+                                          mb="2"
+                                          {...field}
+                                          id={`selectors.${index}`}
+                                          name={`selectors.${index}`}
+                                          placeholder={t`DKIM Selector`}
+                                          ref={initialFocusRef}
+                                          defaultValue={selector}
+                                        />
+                                        <FormErrorMessage>
+                                          {form.errors.selectors}
+                                        </FormErrorMessage>
+                                      </FormControl>
+                                    )}
+                                  </Field>
+                                </Stack>
+                              ))}
+                              <TrackerButton
+                                type="button"
+                                variant="primary"
+                                px="2"
+                                onClick={() => arrayHelpers.push('')}
+                              >
+                                <Icon name="small-add" size="icons.md" />
+                              </TrackerButton>
+                            </Box>
+                          )}
+                        />
+                      </Box>
                     </ModalBody>
 
                     <ModalFooter>
