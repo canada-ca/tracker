@@ -16,5 +16,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN pip3 install -r requirements.txt
 
+# Get the Mozilla CRLite DB for revocation checks
+RUN moz_crlite_query --force-update
+
 # Run the web service on container startup. Using uvicorn, in this case.
 CMD exec gunicorn https_scanner:app -w 4 --timeout 10000 -k uvicorn.workers.UvicornWorker

@@ -113,10 +113,18 @@ def process_https(results, domain_key, uuid, db):
             negative_tags.append("https13")
 
         # Self Signed Cert
-        self_signed_cert = results.get("https", {}).get("self_signed_cert", False)
+        self_signed_cert = results.get("self_signed_cert", False)
 
         if self_signed_cert is True:
             negative_tags.append("https14")
+
+        revocation_status = results.get("cert_revocation_status", "Unknown")
+
+        if revocation_status == "Revoked":
+            negative_tags.append("https15")
+            
+        elif revocation_status == "Unknown":
+            neutral_tags.append("https16")
 
     httpsResults = {
         "timestamp": timestamp,
