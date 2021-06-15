@@ -113,6 +113,7 @@ credentials:
 		DB_URL=http://arangodb.db:8529
 		DB_NAME=track_dmarc
 		AUTHENTICATED_KEY=alonghash
+		REFRESH_KEY=alonghash
 		SIGN_IN_KEY=alonghash
 		CIPHER_KEY=1234averyveryveryveryverylongkey
 		NOTIFICATION_API_KEY=test_key-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
