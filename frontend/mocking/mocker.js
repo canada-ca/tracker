@@ -384,6 +384,8 @@ const mocks = {
       refLink,
     }
   },
+  Selector: () =>
+    'selector' + faker.datatype.number({ min: 1, max: 9 }) + '._domainkey',
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),
@@ -501,10 +503,16 @@ const schemaWithMocks = addMocksToSchema({
     },
     Mutation: {
       setPhoneNumber: (_, args, context, _resolveInfo) => {
-        store.set('PersonalUser', context.token, 'phoneNumber', args.input.phoneNumber)
+        store.set(
+          'PersonalUser',
+          context.token,
+          'phoneNumber',
+          args.input.phoneNumber,
+        )
         return {
           result: {
-            status: 'Phone number has been successfully set, you will receive a verification text message shortly.',
+            status:
+              'Phone number has been successfully set, you will receive a verification text message shortly.',
             user: store.get('PersonalUser', context.token),
             type: 'SetPhoneNumberResult',
           },
@@ -532,7 +540,6 @@ const schemaWithMocks = addMocksToSchema({
         if (obj.authToken) return 'AuthResult'
       },
     },
-
   }),
 })
 

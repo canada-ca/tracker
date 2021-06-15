@@ -35,7 +35,11 @@ import {
 } from './graphql/mutations'
 import { Field, Formik, useFormik, FieldArray } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
-import { object as yupObject, string as yupString } from 'yup'
+import {
+  object as yupObject,
+  string as yupString,
+  array as yupArray,
+} from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -270,12 +274,14 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     newDomainUrl: yupString().required(
       i18n._(fieldRequirements.domainUrl.required.message),
     ),
-    selectors: yupString()
-      .required(i18n._(fieldRequirements.selector.required.message))
-      .matches(
-        fieldRequirements.selector.matches.regex,
-        i18n._(fieldRequirements.selector.matches.message),
-      ),
+    selectors: yupArray().of(
+      yupString()
+        .required(i18n._(fieldRequirements.selector.required.message))
+        .matches(
+          fieldRequirements.selector.matches.regex,
+          i18n._(fieldRequirements.selector.matches.message),
+        ),
+    ),
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -294,7 +300,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           </Text>
         )}
       >
-        {({ id: domainId, domain, lastRan /*, selectors */ }, index) => (
+        {({ id: domainId, domain, lastRan, selectors }, index) => (
           <Box key={'admindomain' + index}>
             <Stack isInline align="center">
               <Stack>
@@ -304,11 +310,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   onClick={() => {
                     setEditingDomainUrl(domain)
                     setEditingDomainId(domainId)
-                    setSelectorInputList([
-                      'selector._domainkey',
-                      'dkim_is_dope._domainkey',
-                    ])
-                    // setSelectorInputList(selectors)
+                    setSelectorInputList(selectors)
                     updateOnOpen()
                   }}
                 >
@@ -408,7 +410,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 validationSchema={updatedDomainValidationSchema}
                 onSubmit={async (values) => {
                   // Submit update detail mutation
-                  // window.alert(JSON.stringify(values))
                   await updateDomain({
                     variables: {
                       domainId: editingDomainId,
@@ -474,7 +475,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                                   <TrackerButton
                                     type="button"
                                     variant="danger"
-                                    p="2"
+                                    p="3"
                                     onClick={() => arrayHelpers.remove(index)}
                                   >
                                     <Icon name="minus" size="icons.xs" />
