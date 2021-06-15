@@ -15,10 +15,10 @@ export const TrackerButton = React.forwardRef(
       bg = 'primary'
       hoverColor = 'primary2'
     } else if (variant === 'primary outline') {
-      color="primary"
-      bg="transparent"
-      borderColor="primary"
-      borderWidth="1px"
+      color = 'primary'
+      bg = 'transparent'
+      borderColor = 'primary'
+      borderWidth = '1px'
     } else if (variant === 'outline') {
       color = 'primary2'
       bg = 'transparent'
@@ -67,7 +67,7 @@ export const TrackerButton = React.forwardRef(
         ref={ref}
         {...props}
       >
-        <Stack isInline align="center" justifyContent="center">
+        <Stack isInline align="center" justifyContent="center" spacing={0}>
           {children}
         </Stack>
       </PseudoBox>
