@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, screen } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import OrganizationInformation from '../OrganizationInformation'
 import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
@@ -161,6 +161,7 @@ describe('<OrganizationInformation />', () => {
           findByRole,
           findByText,
           findAllByRole,
+          debug,
         } = render(
           <MockedProvider mocks={mocks}>
             <UserStateProvider
@@ -207,10 +208,14 @@ describe('<OrganizationInformation />', () => {
 
         await findByText(/You have successfully removed Org Name/)
 
+        debug(undefined, 30000)
+
         const toastButton = await findAllByRole('button', {
           role: 'presentation',
         })
         userEvent.click(toastButton[0])
+
+        screen.logTestingPlaygroundURL()
       })
 
       it.skip('blocks the user from removing until entering the org name', async () => {
