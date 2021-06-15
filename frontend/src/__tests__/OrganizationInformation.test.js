@@ -100,11 +100,15 @@ const mocks = [
 ]
 
 describe('<OrganizationInformation />', () => {
+  beforeEach(() => {
+    jest.setTimeout(30000)
+  })
+
   describe('given a valid organization slug', () => {
     describe('the organization has the required fields', () => {
       it('displays the organization information', async () => {
         const { queryByText, findByText } = render(
-          <MockedProvider mocks={mocks}>
+          <MockedProvider mocks={mocks} cache={createCache()}>
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
@@ -129,7 +133,7 @@ describe('<OrganizationInformation />', () => {
 
       it('organization editing area is hidden', async () => {
         const { queryByText, findByText } = render(
-          <MockedProvider mocks={mocks}>
+          <MockedProvider mocks={mocks} cache={createCache()}>
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
@@ -252,13 +256,11 @@ describe('<OrganizationInformation />', () => {
         const toast = await findByText(/You have successfully removed Org Name/)
 
         expect(toast).toBeVisible()
+      })
 
-        screen.logTestingPlaygroundURL()
-      }, 120000)
-
-      it.skip('blocks the user from removing until entering the org name', async () => {
-        const { getByText, getByRole, findByRole, queryAllByText } = render(
-          <MockedProvider mocks={mocks}>
+      it('blocks the user from removing until entering the org name', async () => {
+        const { getByText, getByRole, findByRole } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
@@ -291,28 +293,22 @@ describe('<OrganizationInformation />', () => {
           name: 'Confirm',
         })
 
+        await waitFor(() => expect(removeOrgInput).toBeVisible())
+
         expect(
           getByText(
             /Are you sure you want to permanently remove the organization "Org Name"?/,
           ),
-        ).toBeInTheDocument()
+        ).toBeVisible()
 
         userEvent.click(confirmOrganizationRemovalButton)
 
         await waitFor(() => expect(removeOrgInput).toBeInvalid())
-
-        const removedOrgToasts = queryAllByText(
-          /You have successfully removed Org Name/,
-        )
-
-        removedOrgToasts.forEach((toast) => {
-          expect(toast).toBeInTheDocument()
-        })
       })
 
       describe('user tries to update organization', () => {
         describe('some update fields are filled out', () => {
-          it.skip('updates the organization', async () => {
+          it('updates the organization', async () => {
             const { getByText, getByRole, findByRole, findByText } = render(
               <MockedProvider mocks={mocks} cache={createCache()}>
                 <UserStateProvider
@@ -369,7 +365,11 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(confrimOrganizationUpdateButton)
 
-            await findByText(/You have successfully updated Org Name/)
+            const successfulUpdateToastText = await findByText(
+              /You have successfully updated Org Name/,
+            )
+
+            expect(successfulUpdateToastText).toBeVisible()
 
             // Check that the new country is shown in the info area
             const countryEl = await findByText(/Country:/)
@@ -378,9 +378,9 @@ describe('<OrganizationInformation />', () => {
         })
 
         describe('no update fields are filled out', () => {
-          it.skip('shows user error toast', async () => {
+          it('shows user error toast', async () => {
             const { getByText, getByRole, findByRole, findByText } = render(
-              <MockedProvider mocks={mocks}>
+              <MockedProvider mocks={mocks} cache={createCache()}>
                 <UserStateProvider
                   initialState={{
                     userName: null,
@@ -422,7 +422,11 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(confrimOrganizationUpdateButton)
 
-            await findByText(/No values were supplied/)
+            const noValuesSuppliedToastText = await findByText(
+              /No values were supplied/,
+            )
+
+            expect(noValuesSuppliedToastText).toBeVisible()
           })
         })
       })
