@@ -17,7 +17,6 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  // Heading,
   ModalFooter,
   FormLabel,
   FormControl,
@@ -271,6 +270,12 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     newDomainUrl: yupString().required(
       i18n._(fieldRequirements.domainUrl.required.message),
     ),
+    selector: yupString()
+      .required(i18n._(fieldRequirements.selector.required.message))
+      .matches(
+        fieldRequirements.selector.matches.regex,
+        i18n._(fieldRequirements.selector.matches.message),
+      ),
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -289,7 +294,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           </Text>
         )}
       >
-        {({ id: domainId, domain, lastRan }, index) => (
+        {({ id: domainId, domain, lastRan /*, selectors */ }, index) => (
           <Box key={'admindomain' + index}>
             <Stack isInline align="center">
               <Stack>
@@ -299,6 +304,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   onClick={() => {
                     setEditingDomainUrl(domain)
                     setEditingDomainId(domainId)
+                    setSelectorInputList(['selector._domainkey'])
+                    // setSelectorInputList(selectors)
                     updateOnOpen()
                   }}
                 >
@@ -335,6 +342,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           <Box key={index}>
             <Stack isInline align="center">
               <TrackerButton
+                type="button"
                 variant="danger"
                 p="3"
                 onClick={() => {
@@ -347,7 +355,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               </TrackerButton>
               <Input
                 name="selector"
-                placeholder="New DKIM Selector"
+                // id="selector"
+                placeholder={t`DKIM Selector`}
                 value={selector}
                 mb="2"
                 onChange={(e) => {
@@ -356,11 +365,36 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   setSelectorInputList(list)
                 }}
               />
+              {/* <Field id={`selector-${index}`} name="selector">
+                {({ field, form }) => (
+                  <FormControl
+                    isInvalid={form.errors.selector && form.touched.selector}
+                  >
+                    <FormLabel htmlFor="selector" />
+                    <Input
+                      mb="2"
+                      {...field}
+                      id={`selector-${index}`}
+                      name="selector"
+                      // value={selector}
+                      placeholder={t`DKIM Selector`}
+                      ref={initialFocusRef}
+                      // onChange={(e) => {
+                      //   const list = [...selectorInputList]
+                      //   list[index] = e.target.value
+                      //   setSelectorInputList(list)
+                      // }}
+                    />
+                    <FormErrorMessage>{form.errors.selector}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field> */}
             </Stack>
           </Box>
         )
       })}
       <TrackerButton
+        type="button"
         variant="primary"
         px="2"
         onClick={() => {
@@ -436,8 +470,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               <Formik
                 validateOnBlur={false}
                 initialValues={{
-                  newDomainUrl: '',
-                  selectors: [],
+                  newDomainUrl: editingDomainUrl,
                 }}
                 initialTouched={{
                   displayName: true,
@@ -445,7 +478,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 validationSchema={updatedDomainValidationSchema}
                 onSubmit={async (values) => {
                   // Submit update detail mutation
-                  // window.alert(selectorInputList)
                   await updateDomain({
                     variables: {
                       domainId: editingDomainId,
@@ -464,12 +496,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                     <ModalCloseButton />
                     <ModalBody>
                       <Stack spacing={4} p={25}>
-                        {/* <Heading as="h3" size="sm">
-                          <Trans>Current Domain URL:</Trans>
-                        </Heading>
-
-                        <Text>{editingDomainUrl}</Text> */}
-
                         <Field id="newDomainUrl" name="newDomainUrl">
                           {({ field, form }) => (
                             <FormControl
@@ -491,7 +517,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                                 id="newDomainUrl"
                                 placeholder={t`Domain URL`}
                                 ref={initialFocusRef}
-                                defaultValue={editingDomainUrl}
                               />
                               <FormErrorMessage>
                                 {form.errors.newDomainUrl}
