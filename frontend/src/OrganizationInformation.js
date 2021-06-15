@@ -17,6 +17,7 @@ import {
   Text,
   useDisclosure,
   useToast,
+  VisuallyHidden,
 } from '@chakra-ui/core'
 import { string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
@@ -241,6 +242,9 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
               w={{ base: '45%', md: 'auto' }}
             >
               <Icon name="minus" />
+              <VisuallyHidden>
+                <Trans>Remove Organization</Trans>
+              </VisuallyHidden>
             </TrackerButton>
             <TrackerButton
               variant="primary"
@@ -249,6 +253,9 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
               w={{ base: '45%', md: 'auto' }}
             >
               <Icon name="edit" />
+              <VisuallyHidden>
+                <Trans>Edit Organization</Trans>
+              </VisuallyHidden>
             </TrackerButton>
           </Stack>
         </Stack>
