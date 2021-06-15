@@ -10,7 +10,7 @@ RUN npm ci && npm run build && npm prune --production
 # https://github.com/astefanutti/scratch-node
 # FROM astefanutti/scratch-node
 # Our build of the above:
-FROM gcr.io/track-compliance/scratch-node:16.2.0
+FROM gcr.io/track-compliance/scratch-node:16.3.0
 LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
 
 ENV HOST 0.0.0.0
