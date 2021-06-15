@@ -111,7 +111,10 @@ describe('<OrganizationInformation />', () => {
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation orgSlug="test-org" />
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
@@ -135,7 +138,10 @@ describe('<OrganizationInformation />', () => {
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation orgSlug="test-org" />
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
@@ -165,7 +171,10 @@ describe('<OrganizationInformation />', () => {
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation orgSlug="test-org" />
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
@@ -217,7 +226,10 @@ describe('<OrganizationInformation />', () => {
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation orgSlug="test-org" />
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
@@ -274,7 +286,10 @@ describe('<OrganizationInformation />', () => {
                   <ThemeProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                        <OrganizationInformation orgSlug="test-org" />
+                        <OrganizationInformation
+                          orgSlug="test-org"
+                          removeOrgCallback={() => {}}
+                        />
                       </MemoryRouter>
                     </I18nProvider>
                   </ThemeProvider>
@@ -339,7 +354,10 @@ describe('<OrganizationInformation />', () => {
                   <ThemeProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                        <OrganizationInformation orgSlug="test-org" />
+                        <OrganizationInformation
+                          orgSlug="test-org"
+                          removeOrgCallback={() => {}}
+                        />
                       </MemoryRouter>
                     </I18nProvider>
                   </ThemeProvider>
