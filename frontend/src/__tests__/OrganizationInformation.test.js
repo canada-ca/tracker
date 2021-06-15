@@ -155,15 +155,63 @@ describe('<OrganizationInformation />', () => {
       })
 
       it('can remove the organization', async () => {
+        const mocks = [
+          {
+            request: {
+              query: ORGANIZATION_INFORMATION,
+              variables: { orgSlug: 'test-org' },
+            },
+            result: {
+              data: {
+                findOrganizationBySlug: {
+                  id: 'org-id',
+                  acronym: 'ORG-ACR',
+                  name: 'Org Name',
+                  slug: 'org-name',
+                  zone: 'org zone',
+                  sector: 'org sector',
+                  country: 'org country',
+                  province: 'org province',
+                  city: 'org city',
+                  verified: true,
+                  __typename: 'Organization',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: REMOVE_ORGANIZATION,
+              variables: { orgId: 'org-id' },
+            },
+            result: {
+              data: {
+                removeOrganization: {
+                  result: {
+                    status: 'Organization successfully removed.',
+                    organization: {
+                      id: 'org-id',
+                      name: 'Org Name',
+                      __typename: 'Organization',
+                    },
+                    __typename: 'OrganizationResult',
+                  },
+                },
+              },
+            },
+          },
+        ]
+
         const {
           getByText,
           getByRole,
           findByRole,
           findByText,
           findAllByRole,
+          queryByText,
           debug,
         } = render(
-          <MockedProvider mocks={mocks}>
+          <MockedProvider mocks={mocks} cache={createCache()}>
             <UserStateProvider
               initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
@@ -191,31 +239,27 @@ describe('<OrganizationInformation />', () => {
 
         const removeOrgInput = getByRole('textbox', {
           name: 'Organization Name',
+          hidden: false,
         })
         const confirmOrganizationRemovalButton = getByRole('button', {
           name: 'Confirm',
         })
 
+        await waitFor(() => expect(removeOrgInput).toBeVisible())
+
         expect(
           getByText(
             /Are you sure you want to permanently remove the organization "Org Name"?/,
           ),
-        ).toBeInTheDocument()
+        ).toBeVisible()
 
         userEvent.type(removeOrgInput, 'Org Name')
 
         userEvent.click(confirmOrganizationRemovalButton)
 
-        await findByText(/You have successfully removed Org Name/)
+        const toast = await findByText(/You have successfully removed Org Name/)
 
-        debug(undefined, 30000)
-
-        const toastButton = await findAllByRole('button', {
-          role: 'presentation',
-        })
-        userEvent.click(toastButton[0])
-
-        screen.logTestingPlaygroundURL()
+        expect(toast).toBeVisible()
       })
 
       it.skip('blocks the user from removing until entering the org name', async () => {
