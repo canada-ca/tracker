@@ -22,6 +22,7 @@ import {
   FormControl,
   Divider,
   Box,
+  Grid,
 } from '@chakra-ui/core'
 import { Domain } from './Domain'
 import { string, number } from 'prop-types'
@@ -420,7 +421,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   })
                 }}
               >
-                {({ handleSubmit, isSubmitting, values }) => (
+                {({ handleSubmit, isSubmitting, values, errors }) => (
                   <form id="form" onSubmit={handleSubmit}>
                     <ModalHeader>
                       <Trans>Edit Domain Details</Trans>
@@ -464,49 +465,65 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                               <Text fontWeight="bold">
                                 <Trans>DKIM Selectors:</Trans>
                               </Text>
-                              {values.selectors.map((selector, index) => (
-                                <Stack
-                                  key={index}
-                                  isInline
-                                  align="center"
-                                  mb="2"
-                                >
-                                  <TrackerButton
-                                    type="button"
-                                    variant="danger"
-                                    p="3"
-                                    onClick={() => arrayHelpers.remove(index)}
-                                  >
-                                    <Icon name="minus" size="icons.xs" />
-                                  </TrackerButton>
-                                  <Field
-                                    id={`selectors.${index}`}
-                                    name={`selectors.${index}`}
-                                  >
-                                    {({ field, form }) => (
-                                      <FormControl
-                                        isInvalid={
-                                          form.errors.selectors &&
-                                          form.touched.selectors
-                                        }
-                                      >
-                                        <Input
-                                          mb="2"
-                                          {...field}
-                                          id={`selectors.${index}`}
-                                          name={`selectors.${index}`}
-                                          placeholder={t`DKIM Selector`}
-                                          ref={initialFocusRef}
-                                          defaultValue={selector}
-                                        />
-                                        <FormErrorMessage>
-                                          {form.errors.selectors}
-                                        </FormErrorMessage>
-                                      </FormControl>
-                                    )}
-                                  </Field>
-                                </Stack>
-                              ))}
+                              <Grid
+                                gridTemplateColumns="auto 1fr"
+                                gap="0.5em"
+                                alignItems="center"
+                                mb="0.5em"
+                              >
+                                {values.selectors.map((_selector, index) => (
+                                  <React.Fragment key={index}>
+                                    <TrackerButton
+                                      type="button"
+                                      variant="danger"
+                                      p="3"
+                                      onClick={() => arrayHelpers.remove(index)}
+                                    >
+                                      <Icon name="minus" size="icons.xs" />
+                                    </TrackerButton>
+                                    <Field
+                                      id={`selectors.${index}`}
+                                      name={`selectors.${index}`}
+                                      h="1.5rem"
+                                    >
+                                      {({ field, form }) => (
+                                        <FormControl
+                                          isInvalid={
+                                            form.errors.selectors &&
+                                            form.errors.selectors[index] &&
+                                            form.touched.selectors &&
+                                            form.touched.selectors[index]
+                                          }
+                                        >
+                                          <Input
+                                            {...field}
+                                            id={`selectors.${index}`}
+                                            name={`selectors.${index}`}
+                                            placeholder={t`DKIM Selector`}
+                                            ref={initialFocusRef}
+                                          />
+                                        </FormControl>
+                                      )}
+                                    </Field>
+                                    <Stack
+                                      isInline
+                                      align="center"
+                                      gridColumn="2 / 3"
+                                      color="red.500"
+                                    >
+                                      {errors.selectors &&
+                                        errors.selectors[index] && (
+                                          <>
+                                            <Icon name="warning" mr="0.5em" />
+                                            <Text>
+                                              {errors.selectors[index]}
+                                            </Text>
+                                          </>
+                                        )}
+                                    </Stack>
+                                  </React.Fragment>
+                                ))}
+                              </Grid>
                               <TrackerButton
                                 type="button"
                                 variant="primary"
