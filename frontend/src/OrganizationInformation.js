@@ -19,7 +19,7 @@ import {
   useToast,
   VisuallyHidden,
 } from '@chakra-ui/core'
-import { string } from 'prop-types'
+import { func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { ORGANIZATION_INFORMATION } from './graphql/queries'
 import { useUserState } from './UserState'
@@ -34,7 +34,11 @@ import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
 import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from './graphql/mutations'
 
-export default function OrganizationInformation({ orgSlug, ...props }) {
+export default function OrganizationInformation({
+  orgSlug,
+  removeOrgCallback: setSelectedOrg,
+  ...props
+}) {
   const { currentUser } = useUserState()
   const toast = useToast()
   const {
@@ -88,15 +92,6 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
       },
       onCompleted({ removeOrganization }) {
         if (removeOrganization.result.__typename === 'OrganizationResult') {
-          toast({
-            title: t`Removed Organization`,
-            description: t`You have successfully removed ${removeOrganization.result.organization.name}.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          onRemovalClose()
         } else if (
           removeOrganization.result.__typename === 'OrganizationError'
         ) {
@@ -119,6 +114,27 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
           })
           console.log('Incorrect removeOrganization.result typename.')
         }
+      },
+      update: (cache, { data }) => {
+        if (data.removeOrganization.result.__typename !== 'OrganizationResult')
+          return
+
+        toast({
+          title: t`Removed Organization`,
+          description: t`You have successfully removed ${data.removeOrganization.result.organization.name}.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+
+        const removedOrgId = cache.identify(
+          data.removeOrganization.result.organization,
+        )
+
+        setSelectedOrg('none')
+
+        cache.evict({ id: removedOrgId })
       },
     },
   )
@@ -550,4 +566,5 @@ export default function OrganizationInformation({ orgSlug, ...props }) {
 
 OrganizationInformation.propTypes = {
   orgSlug: string.isRequired,
+  removeOrgCallback: func.isRequired,
 }
