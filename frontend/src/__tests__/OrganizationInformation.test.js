@@ -149,7 +149,7 @@ describe('<OrganizationInformation />', () => {
           </MockedProvider>,
         )
 
-        expect(await findByText(/Org Name/)).toBeInTheDocument()
+        await findByText(/Org Name/)
 
         expect(
           queryByText(/Blank fields will not be included/),
@@ -207,9 +207,7 @@ describe('<OrganizationInformation />', () => {
 
         userEvent.click(confirmOrganizationRemovalButton)
 
-        expect(
-          await findByText(/You have successfully removed Org Name/),
-        ).toBeInTheDocument()
+        await findByText(/You have successfully removed Org Name/)
 
         const toastButton = await findAllByRole('button', {
           role: 'presentation',
@@ -330,9 +328,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(confrimOrganizationUpdateButton)
 
-            expect(
-              await findByText(/You have successfully updated Org Name/),
-            ).toBeInTheDocument()
+            await findByText(/You have successfully updated Org Name/)
 
             // Check that the new country is shown in the info area
             const countryEl = await findByText(/Country:/)
@@ -385,9 +381,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(confrimOrganizationUpdateButton)
 
-            expect(
-              await findByText(/No values were supplied/),
-            ).toBeInTheDocument()
+            await findByText(/No values were supplied/)
           })
         })
       })
