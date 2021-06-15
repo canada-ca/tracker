@@ -49,6 +49,11 @@ spec:
             secretKeyRef:
               name: api
               key: AUTHENTICATED_KEY
+        - name: REFRESH_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: REFRESH_KEY
         - name: SIGN_IN_KEY
           valueFrom:
             secretKeyRef:
