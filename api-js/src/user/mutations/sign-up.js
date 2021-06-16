@@ -97,12 +97,12 @@ export const signUp = new mutationWithClientMutationId({
 
     if (typeof checkUser !== 'undefined') {
       console.warn(
-        `User: ${userName} tried to sign up, however there is already an account in use with that username.`,
+        `User: ${userName} tried to sign up, however there is already an account in use with that email.`,
       )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Username already in use.`),
+        description: i18n._(t`Email already in use.`),
       }
     }
 

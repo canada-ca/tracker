@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkSuperAdmin, userRequired } from '../../../auth'
+import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgConnectionsByUserId } from '../../loaders'
 
@@ -35,7 +35,6 @@ describe('given findMyOrganizationsQuery', () => {
     console.error = mockedError
     consoleOutput.length = 0
   })
-
   describe('given a successful load', () => {
     beforeAll(async () => {
       // Generate DB Items
@@ -52,6 +51,7 @@ describe('given findMyOrganizationsQuery', () => {
         displayName: 'Test Account',
         userName: 'test.account@istio.actually.exists',
         preferredLang: 'french',
+        emailValidated: true,
       })
 
       orgOne = await collections.organizations.save({
@@ -188,6 +188,7 @@ describe('given findMyOrganizationsQuery', () => {
                         i18n,
                       }),
                     }),
+                    verifiedRequired: verifiedRequired({}),
                   },
                   loaders: {
                     loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
@@ -331,6 +332,7 @@ describe('given findMyOrganizationsQuery', () => {
                         i18n,
                       }),
                     }),
+                    verifiedRequired: verifiedRequired({}),
                   },
                   loaders: {
                     loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
@@ -367,8 +369,7 @@ describe('given findMyOrganizationsQuery', () => {
                           id: toGlobalId('organizations', orgTwo._key),
                           slug: 'ne-pas-secretariat-conseil-tresor',
                           acronym: 'NPSCT',
-                          name:
-                            'Ne Pas Secrétariat du Conseil Trésor du Canada',
+                          name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
                           zone: 'NPFED',
                           sector: 'NPTBS',
                           country: 'Canada',
@@ -453,7 +454,8 @@ describe('given findMyOrganizationsQuery', () => {
               userKey: user._key,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: jest.fn(),
+                userRequired: jest.fn().mockReturnValue({}),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
                 loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
@@ -535,7 +537,8 @@ describe('given findMyOrganizationsQuery', () => {
               userKey: user._key,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: jest.fn(),
+                userRequired: jest.fn().mockReturnValue({}),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
                 loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({

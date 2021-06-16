@@ -297,6 +297,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="edit" />
               </TrackerButton>
               <TrackerButton
+                aria-label="userRemoveButton"
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
@@ -307,7 +308,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="minus" />
               </TrackerButton>
             </Stack>
-            <UserCard userName={node.user.userName} role={userRole} />
+            <UserCard userName={node.user.userName} displayName={node.user.displayName} role={userRole} />
           </Stack>
           <Divider borderColor="gray.900" />
         </Box>
@@ -353,6 +354,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="email" color="gray.300" />
               </InputLeftElement>
               <Input
+                aria-label="new-user-input"
                 type="email"
                 placeholder={t`New user email`}
                 isDisabled={addUserLoading}

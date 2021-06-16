@@ -1,17 +1,22 @@
 import React, { useContext, useReducer } from 'react'
 import { object, node } from 'prop-types'
 import equal from 'fast-deep-equal'
+import { useApolloClient } from '@apollo/client'
 
 const UserStateContext = React.createContext()
 const { Provider, Consumer } = UserStateContext
 
 export function UserStateProvider({ initialState, children }) {
+  const client = useApolloClient()
+
   const reducer = (state, action) => {
     switch (action.type) {
       case 'LOGIN':
         return Object.assign({}, state, action.user)
       case 'LOGOUT':
+        client.resetStore()
         return Object.assign({}, state, action.user)
+
       default:
         return state
     }

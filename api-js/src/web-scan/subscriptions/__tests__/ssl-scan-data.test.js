@@ -36,7 +36,9 @@ describe('given the spfScanData subscription', () => {
     drop,
     options,
     sslScan,
-    createSubscriptionMutation
+    createSubscriptionMutation,
+    redis,
+    pub
 
   beforeAll(async () => {
     options = {
@@ -45,7 +47,30 @@ describe('given the spfScanData subscription', () => {
     }
 
     sslScan = {
-      guidanceTags: ['ssl1'],
+      acceptable_ciphers: [
+        'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+        'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+      ],
+      acceptable_curves: ['curve123'],
+      ccs_injection_vulnerable: false,
+      heartbleed_vulnerable: false,
+      strong_ciphers: [
+        'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+        'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+      ],
+      strong_curves: ['curve123'],
+      supports_ecdh_key_exchange: false,
+      weak_ciphers: [
+        'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+        'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+      ],
+      weak_curves: ['curve123'],
+      rawJson: {
+        missing: true,
+      },
+      negativeTags: ['ssl1'],
+      neutralTags: ['ssl1'],
+      positiveTags: ['ssl1'],
     }
 
     // Generate DB Items
@@ -59,14 +84,13 @@ describe('given the spfScanData subscription', () => {
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)
+    redis = new Redis(options)
+    pub = new Redis(options)
 
     pubsub = new RedisPubSub({
       publisher: publisherClient,
       subscriber: subscriberClient,
     })
-  })
-
-  beforeEach(async () => {
     await collections.sslGuidanceTags.save({
       _key: 'ssl1',
       tagName: 'SSL-TAG',
@@ -93,6 +117,8 @@ describe('given the spfScanData subscription', () => {
   afterAll(async () => {
     await publisherClient.quit()
     await subscriberClient.quit()
+    await redis.quit()
+    await pub.quit()
     await drop()
   })
 
@@ -108,14 +134,7 @@ describe('given the spfScanData subscription', () => {
                 type: GraphQLID,
               },
             },
-            resolve: async (
-              _source,
-              { subscriptionId },
-              { Redis, options },
-            ) => {
-              const redis = await new Redis(options)
-              const pub = await new Redis(options)
-
+            resolve: async (_source, { subscriptionId }) => {
               await redis.subscribe(
                 `${SSL_SCAN_CHANNEL}/${subscriptionId}`,
                 (_err, _count) => {
@@ -125,10 +144,6 @@ describe('given the spfScanData subscription', () => {
                   )
                 },
               )
-
-              await redis.quit()
-              await pub.quit()
-
               return 1
             },
           },
@@ -140,7 +155,7 @@ describe('given the spfScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -162,7 +177,45 @@ describe('given the spfScanData subscription', () => {
       parse(`
       subscription {
         sslScanData {
-          guidanceTags {
+          acceptableCiphers
+          acceptableCurves
+          ccsInjectionVulnerable
+          heartbleedVulnerable
+          strongCiphers
+          strongCurves
+          supportsEcdhKeyExchange
+          weakCiphers
+          weakCurves
+          rawJson
+          negativeGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          neutralGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          positiveGuidanceTags {
             id
             tagId
             tagName
@@ -201,7 +254,66 @@ describe('given the spfScanData subscription', () => {
     const expectedResult = {
       data: {
         sslScanData: {
-          guidanceTags: [
+          acceptableCiphers: [
+            'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+            'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+          ],
+          acceptableCurves: ['curve123'],
+          ccsInjectionVulnerable: false,
+          heartbleedVulnerable: false,
+          strongCiphers: [
+            'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+            'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+          ],
+          strongCurves: ['curve123'],
+          supportsEcdhKeyExchange: false,
+          weakCiphers: [
+            'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+            'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+          ],
+          weakCurves: ['curve123'],
+          rawJson: '{"missing":true}',
+          negativeGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'ssl1'),
+              tagId: 'ssl1',
+              tagName: 'SSL-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          neutralGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'ssl1'),
+              tagId: 'ssl1',
+              tagName: 'SSL-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          positiveGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'ssl1'),
               tagId: 'ssl1',

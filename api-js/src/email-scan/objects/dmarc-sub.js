@@ -4,6 +4,8 @@ import {
   GraphQLString,
   GraphQLList,
 } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
+
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const dmarcSubType = new GraphQLObjectType({
@@ -11,11 +13,6 @@ export const dmarcSubType = new GraphQLObjectType({
   description:
     'DMARC gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
-    dmarcPhase: {
-      type: GraphQLInt,
-      description: `DMARC phase found during scan.`,
-      resolve: ({ dmarcPhase }) => dmarcPhase,
-    },
     record: {
       type: GraphQLString,
       description: `DMARC record retrieved during scan.`,
@@ -38,16 +35,49 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       description: `The percentage of messages to which the DMARC policy is to be applied.`,
       resolve: ({ pct }) => pct,
     },
-    guidanceTags: {
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
+    },
+    negativeGuidanceTags: {
       type: GraphQLList(guidanceTagType),
-      description: `Key tags found during DMARC Scan.`,
+      description: `Negative guidance tags found during DMARC Scan.`,
       resolve: async (
-        { guidanceTags },
+        { negativeTags },
         _args,
         { loaders: { loadDmarcGuidanceTagByTagId } },
       ) => {
         const dmarcTags = await loadDmarcGuidanceTagByTagId.loadMany(
-          guidanceTags,
+          negativeTags,
+        )
+        return dmarcTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Neutral guidance tags found during DMARC Scan.`,
+      resolve: async (
+        { neutralTags },
+        _args,
+        { loaders: { loadDmarcGuidanceTagByTagId } },
+      ) => {
+        const dmarcTags = await loadDmarcGuidanceTagByTagId.loadMany(
+          neutralTags,
+        )
+        return dmarcTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: GraphQLList(guidanceTagType),
+      description: `Positive guidance tags found during DMARC Scan.`,
+      resolve: async (
+        { positiveTags },
+        _args,
+        { loaders: { loadDmarcGuidanceTagByTagId } },
+      ) => {
+        const dmarcTags = await loadDmarcGuidanceTagByTagId.loadMany(
+          positiveTags,
         )
         return dmarcTags
       },

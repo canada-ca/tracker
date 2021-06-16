@@ -46,6 +46,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
+          verifiedRequired: jest.fn(),
         })(connectionParams, webSocket)
 
         expect(onConnect.language).toEqual('en')
@@ -76,6 +77,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
+          verifiedRequired: jest.fn(),
         })(connectionParams, webSocket)
 
         expect(onConnect.language).toEqual('fr')
@@ -107,6 +109,7 @@ describe('given the customOnConnect function', () => {
         verifyToken,
         userRequired: mockedUserRequired,
         loadUserByKey: jest.fn(),
+        verifiedRequired: jest.fn(),
       })(connectionParams, webSocket)
 
       expect(onConnect.authorization).toEqual(token)

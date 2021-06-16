@@ -36,7 +36,9 @@ describe('given the spfScanData subscription', () => {
     drop,
     options,
     spfScan,
-    createSubscriptionMutation
+    createSubscriptionMutation,
+    redis,
+    pub
 
   beforeAll(async () => {
     options = {
@@ -48,7 +50,12 @@ describe('given the spfScanData subscription', () => {
       lookups: 1,
       record: 'record',
       spfDefault: 'spfDefault',
-      guidanceTags: ['spf1'],
+      rawJson: {
+        missing: true,
+      },
+      negativeTags: ['spf1'],
+      neutralTags: ['spf1'],
+      positiveTags: ['spf1'],
     }
 
     // Generate DB Items
@@ -62,14 +69,14 @@ describe('given the spfScanData subscription', () => {
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)
+    redis = new Redis(options)
+    pub = new Redis(options)
 
     pubsub = new RedisPubSub({
       publisher: publisherClient,
       subscriber: subscriberClient,
     })
-  })
 
-  beforeEach(async () => {
     await collections.spfGuidanceTags.save({
       _key: 'spf1',
       tagName: 'SPF-TAG',
@@ -96,6 +103,8 @@ describe('given the spfScanData subscription', () => {
   afterAll(async () => {
     await publisherClient.quit()
     await subscriberClient.quit()
+    await redis.quit()
+    await pub.quit()
     await drop()
   })
 
@@ -111,14 +120,7 @@ describe('given the spfScanData subscription', () => {
                 type: GraphQLID,
               },
             },
-            resolve: async (
-              _source,
-              { subscriptionId },
-              { Redis, options },
-            ) => {
-              const redis = await new Redis(options)
-              const pub = await new Redis(options)
-
+            resolve: async (_source, { subscriptionId }) => {
               await redis.subscribe(
                 `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
                 (_err, _count) => {
@@ -128,10 +130,6 @@ describe('given the spfScanData subscription', () => {
                   )
                 },
               )
-
-              await redis.quit()
-              await pub.quit()
-
               return 1
             },
           },
@@ -143,7 +141,7 @@ describe('given the spfScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -168,7 +166,36 @@ describe('given the spfScanData subscription', () => {
           lookups
           record
           spfDefault
-          guidanceTags {
+          rawJson
+          negativeGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          neutralGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          positiveGuidanceTags {
             id
             tagId
             tagName
@@ -210,7 +237,48 @@ describe('given the spfScanData subscription', () => {
           lookups: 1,
           record: 'record',
           spfDefault: 'spfDefault',
-          guidanceTags: [
+          rawJson: '{"missing":true}',
+          negativeGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'spf1'),
+              tagId: 'spf1',
+              tagName: 'SPF-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          neutralGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'spf1'),
+              tagId: 'spf1',
+              tagName: 'SPF-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          positiveGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'spf1'),
               tagId: 'spf1',

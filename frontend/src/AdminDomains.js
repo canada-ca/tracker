@@ -106,6 +106,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     recordsPerPage: domainsPerPage,
     variables: { orgSlug, search: debouncedSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
@@ -306,6 +308,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <Stack isInline align="center">
               <Stack>
                 <TrackerButton
+                  data-testid={`edit-${index}`}
                   variant="primary"
                   px="2"
                   onClick={() => {
@@ -318,6 +321,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   <Icon name="edit" />
                 </TrackerButton>
                 <TrackerButton
+                  data-testid={`remove-${index}`}
                   onClick={() => {
                     setSelectedRemoveDomainUrl(domain)
                     setSelectedRemoveDomainId(domainId)
@@ -329,7 +333,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   <Icon name="minus" />
                 </TrackerButton>
               </Stack>
-              <Domain url={domain} lastRan={lastRan} />
+              <Domain url={domain} lastRan={lastRan} flexGrow={1} />
             </Stack>
             <Divider borderColor="gray.900" />
           </Box>
@@ -447,6 +451,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                               <Input
                                 mb="2"
                                 {...field}
+                                aria-label="new-domain-url"
                                 id="newDomainUrl"
                                 placeholder={t`Domain URL`}
                                 ref={initialFocusRef}

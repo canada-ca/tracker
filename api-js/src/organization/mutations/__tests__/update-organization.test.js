@@ -9,7 +9,7 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
 
@@ -40,22 +40,19 @@ describe('updating an organization', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     consoleOutput.length = 0
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('given a successful organization update', () => {
     let org
     beforeEach(async () => {
@@ -138,6 +135,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -217,6 +215,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -296,6 +295,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -375,6 +375,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -454,6 +455,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -533,6 +535,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -612,6 +615,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -704,6 +708,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -785,6 +790,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -864,6 +870,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -943,6 +950,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1022,6 +1030,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1101,6 +1110,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1180,6 +1190,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1259,6 +1270,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1351,6 +1363,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1441,6 +1454,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1520,6 +1534,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1599,6 +1614,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1678,6 +1694,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1757,6 +1774,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1836,6 +1854,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1915,6 +1934,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2007,6 +2027,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2088,6 +2109,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2167,6 +2189,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2246,6 +2269,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2325,6 +2349,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2404,6 +2429,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2483,6 +2509,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2562,6 +2589,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2654,6 +2682,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -2790,6 +2819,7 @@ describe('updating an organization', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({}),
                   },
                   validators: {
                     cleanseInput,
@@ -2866,6 +2896,7 @@ describe('updating an organization', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({}),
                   },
                   validators: {
                     cleanseInput,
@@ -2945,6 +2976,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -3054,6 +3086,7 @@ describe('updating an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -3173,6 +3206,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -3285,6 +3319,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -3363,6 +3398,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -3508,6 +3544,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -3617,6 +3654,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -3740,6 +3778,7 @@ describe('updating an organization', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({}),
                   },
                   validators: {
                     cleanseInput,
@@ -3815,6 +3854,7 @@ describe('updating an organization', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({}),
                   },
                   validators: {
                     cleanseInput,
@@ -3925,6 +3965,7 @@ describe('updating an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -4001,6 +4042,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -4120,6 +4162,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -4228,6 +4271,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -4302,6 +4346,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -4412,6 +4457,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -4517,6 +4563,7 @@ describe('updating an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,

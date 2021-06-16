@@ -700,6 +700,10 @@ msgstr "Edit Domain Details"
 msgid "Edit Email"
 msgstr "Edit Email"
 
+#: src/EditableUserPhoneNumber.js:171
+msgid "Edit Phone Number"
+msgstr "Edit Phone Number"
+
 #: src/UserList.js:463
 msgid "Edit Role"
 msgstr "Edit Role"
@@ -2607,3 +2611,19 @@ msgstr "Selector cannot be empty"
 #:src/fieldRequirements.js:55
 msgid "Selector must be string ending in '._domainkey'"
 msgstr "Selector must be string ending in '._domainkey'"
+
+#: src/ScanCategoryDetails.js:166
+msgid "Strong Curves:"
+msgstr "Strong Curves:"
+
+#: src/ScanCategoryDetails.js:175
+msgid "Acceptable Curves:"
+msgstr "Acceptable Curves:"
+
+#: src/ScanCategoryDetails.js:184
+msgid "Weak Curves:"
+msgstr "Weak Curves:"
+
+#: src/ScanCategoryDetails.js:232
+msgid "Curves"
+msgstr "Curves"

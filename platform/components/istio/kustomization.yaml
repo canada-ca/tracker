@@ -5,6 +5,3 @@ resources:
 - envoy-security-headers-filter.yaml
 - istio.yaml
 - http-01-challenge-destination-rule.yaml
-patchesStrategicMerge:
-# remove extra status ports from ingress service
-- istio-ingressgateway-service.yaml

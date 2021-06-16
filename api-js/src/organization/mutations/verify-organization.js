@@ -29,15 +29,17 @@ export const verifyOrganization = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired },
+      auth: { checkPermission, userRequired, verifiedRequired },
       loaders: { loadOrgByKey },
       validators: { cleanseInput },
     },
   ) => {
-    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
-
     // Ensure that user is required
-    await userRequired()
+    const user = await userRequired()
+
+    verifiedRequired({ user })
+
+    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
 
     // Check to see if org exists
     const currentOrg = await loadOrgByKey.load(orgKey)

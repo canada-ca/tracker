@@ -1,8 +1,8 @@
 import React from 'react'
-import { waitFor, render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
 import { PAGINATED_ORG_AFFILIATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
@@ -72,6 +72,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'MjQyMzg1MTM1OQ==',
                           userName: 'Jabari_Larson@hotmail.com',
+                          displayName: 'Jabari Larson',
                         },
                       },
                     },
@@ -82,6 +83,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'NjYzODA5ODE1OA==',
                           userName: 'Joel_Nienow77@yahoo.com',
+                          displayName: 'Joel Nienow',
                         },
                       },
                     },
@@ -92,6 +94,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'NzQyMzU3NDYzMw==',
                           userName: 'Cara.Olson81@yahoo.com',
+                          displayName: 'Cara Olson',
                         },
                       },
                     },
@@ -102,6 +105,7 @@ describe('<OrganizationAffiliations />', () => {
                         user: {
                           id: 'Nzc0Mjg2MjM2Ng==',
                           userName: 'Rahul.Wintheiser10@yahoo.com',
+                          displayName: 'Rahul Wintheiser',
                         },
                       },
                     },
@@ -116,14 +120,14 @@ describe('<OrganizationAffiliations />', () => {
       const { getByText } = render(
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
-            <UserStateProvider
-              initialState={{
-                userName: 'user@example.com',
-                jwt: 'somestring',
-                tfaSendMethod: null,
-              }}
-            >
-              <MockedProvider mocks={mocks} addTypename={false}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserStateProvider
+                initialState={{
+                  userName: 'user@example.com',
+                  jwt: 'somestring',
+                  tfaSendMethod: null,
+                }}
+              >
                 <MemoryRouter
                   initialEntries={['/organization/tbs-sct-gc-ca']}
                   initialIndex={0}
@@ -132,14 +136,17 @@ describe('<OrganizationAffiliations />', () => {
                     <OrganizationAffiliations orgSlug={orgSlug} />
                   </Route>
                 </MemoryRouter>
-              </MockedProvider>
-            </UserStateProvider>
+              </UserStateProvider>
+            </MockedProvider>
           </I18nProvider>
         </ThemeProvider>,
       )
 
       await waitFor(() => {
         expect(getByText('Jabari_Larson@hotmail.com')).toBeInTheDocument()
+      })
+      await waitFor(() => {
+        expect(getByText('Cara Olson')).toBeInTheDocument()
       })
     })
   })

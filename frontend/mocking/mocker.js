@@ -155,9 +155,12 @@ const mocks = {
   },
   Domain: () => {
     // gives date in format "2020-12-31 15:30:20.262Z"
-    const lastRan = new Date(faker.date.between('2019-01-01', '2022-01-01'))
-      .toISOString()
-      .replace('T', ' ')
+    const lastRan =
+      Math.random() > 0.2
+        ? new Date(faker.date.between('2019-01-01', '2022-01-01'))
+            .toISOString()
+            .replace('T', ' ')
+        : null
     const curDate = new Date()
 
     // generate an object matching DmarcSummary
@@ -389,6 +392,7 @@ const mocks = {
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),
+  SharedUser: () => ({ displayName: faker.name.findName() }),
   SpfFailureTable: () => {
     const dnsHost = faker.internet.domainName()
     const envelopeFrom = faker.internet.domainName()

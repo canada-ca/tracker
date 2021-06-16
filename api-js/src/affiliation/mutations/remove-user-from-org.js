@@ -34,7 +34,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired },
+      auth: { checkPermission, userRequired, verifiedRequired },
       loaders: { loadOrgByKey, loadUserByKey },
       validators: { cleanseInput },
     },
@@ -44,7 +44,9 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     const { id: requestedOrgKey } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get requesting user
-    await userRequired()
+    const user = await userRequired()
+
+    verifiedRequired({ user })
 
     // Get requested org
     const requestedOrg = await loadOrgByKey.load(requestedOrgKey)

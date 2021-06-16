@@ -1,8 +1,8 @@
 import React from 'react'
 import QRcodePage from '../QRcodePage'
-import { waitFor, render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
@@ -39,14 +39,14 @@ describe('<QRcodePage />', () => {
         },
       ]
       const { queryByText, getByRole } = render(
-        <UserStateProvider
-          initialState={{
-            userName: email,
-            jwt: null,
-            tfaSendMethod: null,
-          }}
-        >
-          <MockedProvider mocks={mocks}>
+        <MockedProvider mocks={mocks}>
+          <UserStateProvider
+            initialState={{
+              userName: email,
+              jwt: null,
+              tfaSendMethod: null,
+            }}
+          >
             <MemoryRouter initialEntries={['/']}>
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -54,8 +54,8 @@ describe('<QRcodePage />', () => {
                 </I18nProvider>
               </ThemeProvider>
             </MemoryRouter>
-          </MockedProvider>
-        </UserStateProvider>,
+          </UserStateProvider>
+        </MockedProvider>,
       )
 
       await waitFor(() => {

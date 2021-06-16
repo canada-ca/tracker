@@ -509,6 +509,7 @@ export const ADMIN_PANEL = gql`
             permission
             user {
               userName
+              displayName
             }
           }
         }
@@ -541,6 +542,7 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
             user {
               id
               userName
+              displayName
             }
           }
         }
@@ -678,6 +680,7 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
             user {
               id
               userName
+              displayName
             }
           }
         }
@@ -764,6 +767,7 @@ export const QUERY_USERLIST = gql`
         node {
           id
           userName
+          displayName
           role
           tfa
         }
