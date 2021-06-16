@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
 
-const { SIGN_IN_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_KEY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -32,6 +32,7 @@ export const authenticate = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      uuidv4,
       auth: { tokenize, verifyToken },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -76,14 +77,29 @@ export const authenticate = new mutationWithClientMutationId({
 
     // Check to see if security token matches the user submitted one
     if (authenticationCode === user.tfaCode) {
-      const token = tokenize({ parameters: { userKey: user._key } })
+      const refreshId = uuidv4()
 
-      // Reset Failed Login attempts
+      const token = tokenize({ parameters: { userKey: user._key } })
+      const refreshToken = tokenize({
+        parameters: { userKey: user._key, uuid: refreshId },
+        expPeriod: 168,
+        secret: String(REFRESH_KEY),
+      })
+
+      // Reset tfa code attempts, and set refresh code
       try {
         await query`
           WITH users
-          FOR u IN users
-            UPDATE ${user._key} WITH { tfaCode: null } IN users
+          UPSERT { _key: ${user._key} }
+            INSERT {
+              tfaCode: null,
+              refreshId: ${refreshId}
+            }
+            UPDATE {
+              tfaCode: null,
+              refreshId: ${refreshId}
+            }
+            IN users
         `
       } catch (err) {
         console.error(
@@ -100,6 +116,7 @@ export const authenticate = new mutationWithClientMutationId({
       return {
         _type: 'authResult',
         token,
+        refreshToken,
         user,
       }
     } else {
