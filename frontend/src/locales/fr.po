@@ -114,13 +114,17 @@ msgstr "Compte créé"
 msgid "Acronym"
 msgstr "Acronyme"
 
-#: src/OrganizationInformation.js:363
+#: src/OrganizationInformation.js:364
 msgid "Acronym (EN)"
 msgstr "Acronyme (EN)"
 
-#: src/OrganizationInformation.js:366
+#: src/OrganizationInformation.js:367
 msgid "Acronym (FR)"
 msgstr "Acronyme (FR)"
+
+#: src/OrganizationInformation.js:450
+msgid "Acronym:"
+msgstr "Acronyme :"
 
 #: src/fieldRequirements.js:41
 msgid "Acronyms can only use upper case letters and underscores"
@@ -166,7 +170,7 @@ msgstr "Une erreur s'est produite."
 msgid "An error occurred while removing this organization."
 msgstr "Une erreur s'est produite lors de la suppression de cette organisation."
 
-#: src/OrganizationInformation.js:152
+#: src/OrganizationInformation.js:153
 msgid "An error occurred while updating this organization."
 msgstr "Une erreur s'est produite lors de la mise à jour de cette organisation."
 
@@ -218,7 +222,7 @@ msgstr "Une erreur s'est produite."
 msgid "April"
 msgstr "Avril"
 
-#: src/OrganizationInformation.js:525
+#: src/OrganizationInformation.js:526
 msgid "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer définitivement l'organisation \"{0}\" ?"
 
@@ -269,7 +273,7 @@ msgstr "Retour"
 msgid "Based in:"
 msgstr "Basé à:"
 
-#: src/OrganizationInformation.js:357
+#: src/OrganizationInformation.js:358
 msgid "Blank fields will not be included when updating the organization."
 msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de l'organisation."
 
@@ -348,20 +352,24 @@ msgstr "Ciphers"
 msgid "City"
 msgstr "Ville"
 
-#: src/OrganizationInformation.js:399
+#: src/OrganizationInformation.js:400
 msgid "City (EN)"
 msgstr "Ville (EN)"
 
-#: src/OrganizationInformation.js:405
+#: src/OrganizationInformation.js:406
 msgid "City (FR)"
 msgstr "Ville (FR)"
 
-#: src/OrganizationInformation.js:413
+#: src/OrganizationInformation.js:470
+msgid "City:"
+msgstr "Ville :"
+
+#: src/OrganizationInformation.js:414
 msgid "Clear"
 msgstr "Dégager"
 
 #: src/FloatingMenu.js:219
-#: src/OrganizationInformation.js:421
+#: src/OrganizationInformation.js:422
 msgid "Close"
 msgstr "Fermer"
 
@@ -380,8 +388,8 @@ msgstr "TLS conformant"
 #: src/EditableUserPassword.js:198
 #: src/EditableUserPhoneNumber.js:201
 #: src/EditableUserPhoneNumber.js:259
-#: src/OrganizationInformation.js:429
-#: src/OrganizationInformation.js:553
+#: src/OrganizationInformation.js:430
+#: src/OrganizationInformation.js:554
 #: src/UserList.js:432
 #: src/UserList.js:520
 msgid "Confirm"
@@ -420,13 +428,17 @@ msgstr "Continuer"
 msgid "Country"
 msgstr "Pays"
 
-#: src/OrganizationInformation.js:387
+#: src/OrganizationInformation.js:388
 msgid "Country (EN)"
 msgstr "Pays (EN)"
 
-#: src/OrganizationInformation.js:390
+#: src/OrganizationInformation.js:391
 msgid "Country (FR)"
 msgstr "Pays (FR)"
+
+#: src/OrganizationInformation.js:483
+msgid "Country:"
+msgstr "Pays :"
 
 #: src/CreateUserPage.js:172
 #: src/SignInPage.js:154
@@ -750,7 +762,7 @@ msgstr "Modifier les détails d'un domaine"
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
 
-#: src/OrganizationInformation.js:273
+#: src/OrganizationInformation.js:274
 msgid "Edit Organization"
 msgstr "Organisation d'édition"
 
@@ -832,7 +844,7 @@ msgstr "Application de la loi:"
 msgid "English"
 msgstr "Anglais"
 
-#: src/OrganizationInformation.js:534
+#: src/OrganizationInformation.js:535
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -1129,7 +1141,7 @@ msgstr ""
 msgid "Incorrect removeDomain.result typename."
 msgstr ""
 
-#: src/OrganizationInformation.js:109
+#: src/OrganizationInformation.js:110
 msgid "Incorrect removeOrganization.result typename."
 msgstr ""
 
@@ -1169,8 +1181,8 @@ msgstr "Nom d'utilisateur incorrect signIn.result."
 msgid "Incorrect signUp.result typename."
 msgstr ""
 
-#: src/OrganizationInformation.js:108
-#: src/OrganizationInformation.js:183
+#: src/OrganizationInformation.js:109
+#: src/OrganizationInformation.js:184
 msgid "Incorrect typename received."
 msgstr ""
 
@@ -1178,7 +1190,7 @@ msgstr ""
 msgid "Incorrect updateDomain.result typename."
 msgstr ""
 
-#: src/OrganizationInformation.js:184
+#: src/OrganizationInformation.js:185
 msgid "Incorrect updateOrganization.result typename."
 msgstr ""
 
@@ -1378,11 +1390,11 @@ msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 msgid "Name"
 msgstr "Nom"
 
-#: src/OrganizationInformation.js:369
+#: src/OrganizationInformation.js:370
 msgid "Name (EN)"
 msgstr "Nom (EN)"
 
-#: src/OrganizationInformation.js:372
+#: src/OrganizationInformation.js:373
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
@@ -1510,7 +1522,7 @@ msgstr "Aucune donnée d'analyse pour cette organisation."
 msgid "No users in this organization"
 msgstr "Aucun utilisateur dans cette organisation"
 
-#: src/OrganizationInformation.js:315
+#: src/OrganizationInformation.js:316
 msgid "No values were supplied when attempting to update organization details."
 msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des détails de l'organisation."
 
@@ -1548,11 +1560,11 @@ msgstr "Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes dire
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
 
-#: src/OrganizationInformation.js:199
+#: src/OrganizationInformation.js:200
 msgid "Organization Information"
 msgstr "Informations sur l'organisation"
 
-#: src/OrganizationInformation.js:542
+#: src/OrganizationInformation.js:543
 msgid "Organization Name"
 msgstr "Nom de l'organisation"
 
@@ -1560,9 +1572,13 @@ msgstr "Nom de l'organisation"
 msgid "Organization created"
 msgstr "Organisation créée"
 
-#: src/OrganizationInformation.js:224
+#: src/OrganizationInformation.js:225
 msgid "Organization name does not match."
 msgstr "Le nom de l'organisation ne correspond pas."
+
+#: src/OrganizationInformation.js:315
+msgid "Organization not updated"
+msgstr "Organisation non mise à jour"
 
 #: src/AdminPage.js:111
 msgid "Organization:"
@@ -1810,13 +1826,17 @@ msgstr "Confidentialité"
 msgid "Province"
 msgstr "Province"
 
-#: src/OrganizationInformation.js:393
+#: src/OrganizationInformation.js:394
 msgid "Province (EN)"
 msgstr "Province (EN)"
 
-#: src/OrganizationInformation.js:396
+#: src/OrganizationInformation.js:397
 msgid "Province (FR)"
 msgstr "Province (FR)"
+
+#: src/OrganizationInformation.js:476
+msgid "Province:"
+msgstr "Province :"
 
 #: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
@@ -1886,8 +1906,8 @@ msgstr ""
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
-#: src/OrganizationInformation.js:262
-#: src/OrganizationInformation.js:520
+#: src/OrganizationInformation.js:263
+#: src/OrganizationInformation.js:521
 msgid "Remove Organization"
 msgstr "Supprimer l'organisation"
 
@@ -1899,7 +1919,7 @@ msgstr "Supprimer l'utilisateur"
 #~ msgid "Remove user \"{0}\" from \"{orgSlug}\" ?"
 #~ msgstr "Supprimer l'utilisateur \"{0}\" de \"{orgSlug}\" ?"
 
-#: src/OrganizationInformation.js:123
+#: src/OrganizationInformation.js:124
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
@@ -2095,13 +2115,17 @@ msgstr "Recherche :"
 msgid "Sector"
 msgstr "Secteur"
 
-#: src/OrganizationInformation.js:381
+#: src/OrganizationInformation.js:382
 msgid "Sector (EN)"
 msgstr "Secteur (EN)"
 
-#: src/OrganizationInformation.js:384
+#: src/OrganizationInformation.js:385
 msgid "Sector (FR)"
 msgstr "Secteur (FR)"
+
+#: src/OrganizationInformation.js:463
+msgid "Sector:"
+msgstr "Secteur :"
 
 #: src/LanguageSelect.js:23
 msgid "Select Preferred Language"
@@ -2165,6 +2189,10 @@ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 #: src/App.js:53
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
+
+#: src/OrganizationInformation.js:444
+msgid "Slug:"
+msgstr "Slug :"
 
 #: src/DomainsPage.js:156
 #: src/Organizations.js:140
@@ -2328,7 +2356,7 @@ msgstr "Impossible d'inviter un utilisateur."
 msgid "Unable to remove domain."
 msgstr "Impossible de supprimer le domaine."
 
-#: src/OrganizationInformation.js:99
+#: src/OrganizationInformation.js:100
 msgid "Unable to remove this organization."
 msgstr "Impossible de supprimer cette organisation."
 
@@ -2367,7 +2395,7 @@ msgstr "Impossible de mettre à jour le domaine."
 msgid "Unable to update password"
 msgstr "Impossible de mettre à jour le mot de passe"
 
-#: src/OrganizationInformation.js:174
+#: src/OrganizationInformation.js:175
 msgid "Unable to update this organization."
 msgstr "Impossible de mettre à jour cette organisation."
 
@@ -2412,7 +2440,7 @@ msgstr "Impossible de vérifier votre numéro de téléphone, veuillez réessaye
 msgid "Unscanned"
 msgstr "Non balayé"
 
-#: src/OrganizationInformation.js:163
+#: src/OrganizationInformation.js:164
 msgid "Updated Organization"
 msgstr "Organisation mise à jour"
 
@@ -2571,7 +2599,7 @@ msgstr "Vous n'avez pas activé l'authentification à deux facteurs. Pour maximi
 msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
 
-#: src/OrganizationInformation.js:124
+#: src/OrganizationInformation.js:125
 msgid "You have successfully removed {0}."
 msgstr "Vous avez retiré {0} avec succès."
 
@@ -2599,7 +2627,7 @@ msgstr "Vous avez réussi à mettre à jour votre numéro de téléphone."
 msgid "You have successfully updated your preferred language."
 msgstr "Vous avez réussi à mettre à jour votre langue préférée."
 
-#: src/OrganizationInformation.js:164
+#: src/OrganizationInformation.js:165
 msgid "You have successfully updated {0}."
 msgstr "Vous avez réussi à mettre à jour {0}."
 
@@ -2628,13 +2656,17 @@ msgstr "L'email de votre compte a été vérifié avec succès"
 msgid "Zone"
 msgstr "Zone"
 
-#: src/OrganizationInformation.js:375
+#: src/OrganizationInformation.js:376
 msgid "Zone (EN)"
 msgstr "Zone (EN)"
 
-#: src/OrganizationInformation.js:378
+#: src/OrganizationInformation.js:379
 msgid "Zone (FR)"
 msgstr "Zone (FR)"
+
+#: src/OrganizationInformation.js:457
+msgid "Zone:"
+msgstr "Zone :"
 
 #: src/guidanceTagConstants.js:6
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"

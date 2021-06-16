@@ -312,7 +312,7 @@ export default function OrganizationInformation({
               // Handle case where user does not supply any fields to update
               if (Object.keys(propertiesWithValues).length === 0) {
                 toast({
-                  title: `Organization not updated`,
+                  title: t`Organization not updated`,
                   description: t`No values were supplied when attempting to update organization details.`,
                   status: 'warning',
                   duration: 9000,
@@ -441,46 +441,46 @@ export default function OrganizationInformation({
           mx="1rem"
         >
           <Text fontWeight="bold">
-            Slug:{' '}
+            <Trans>Slug:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.slug}
             </Box>
           </Text>
           <Text fontWeight="bold">
-            Acronym:{' '}
+            <Trans>Acronym:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.acronym}
             </Box>
           </Text>
 
           <Text fontWeight="bold">
-            Zone:{' '}
+            <Trans>Zone:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.zone}
             </Box>
           </Text>
           <Text fontWeight="bold">
-            Sector:{' '}
+            <Trans>Sector:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.sector}
             </Box>
           </Text>
 
           <Text fontWeight="bold">
-            City:{' '}
+            <Trans>City:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.city}
             </Box>
           </Text>
           <Text fontWeight="bold">
-            Province:{' '}
+            <Trans>Province:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.province}
             </Box>
           </Text>
 
           <Text fontWeight="bold">
-            Country:{' '}
+            <Trans>Country:</Trans>{' '}
             <Box as="span" fontWeight="normal">
               {org.country}
             </Box>
