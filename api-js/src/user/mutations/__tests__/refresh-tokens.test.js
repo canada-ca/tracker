@@ -55,11 +55,11 @@ describe('refresh users tokens', () => {
 
   afterEach(async () => {
     consoleOutput.length = 0
-    await truncate
+    await truncate()
   })
 
   afterAll(async () => {
-    await drop
+    await drop()
   })
 
   describe('given a successful refresh', () => {
