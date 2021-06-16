@@ -5,7 +5,7 @@ import { t } from '@lingui/macro'
 
 import { signInUnion } from '../../user'
 
-const { SIGN_IN_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_KEY } = process.env
 
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
@@ -34,6 +34,7 @@ export const signIn = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      uuidv4,
       auth: { tokenize, bcrypt },
       loaders: { loadUserByUserName },
       validators: { cleanseInput },
@@ -139,18 +140,41 @@ export const signIn = new mutationWithClientMutationId({
             authenticateToken,
           }
         } else {
-          console.info(
-            `User: ${user._key} successfully signed in, and sent auth msg.`,
-          )
+          const refreshId = uuidv4()
+
+          try {
+            await query`
+              WITH users
+              UPSERT { _key: ${user._key} }
+                INSERT { refreshId: ${refreshId} }
+                UPDATE { refreshId: ${refreshId} }
+                IN users
+            `
+          } catch (err) {
+            console.error(
+              `Database error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: ${err}`,
+            )
+            throw new Error(i18n._(t`Unable to sign in, please try again.`))
+          }
 
           const token = tokenize({
             parameters: { userKey: user._key },
           })
+          const refreshToken = tokenize({
+            parameters: { userKey: user._key, uuid: refreshId },
+            expPeriod: 168,
+            secret: String(REFRESH_KEY),
+          })
+
+          console.info(
+            `User: ${user._key} successfully signed in, and sent auth msg.`,
+          )
 
           return {
             _type: 'regular',
             token,
             user,
+            refreshToken,
           }
         }
       } else {
