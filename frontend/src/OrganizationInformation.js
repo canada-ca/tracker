@@ -234,15 +234,16 @@ export default function OrganizationInformation({
             align="center"
             flexGrow={1}
             flexShrink={0}
-            flexBasis={{ base: '100%', md: 'auto' }}
+            flexBasis={{ base: '100%', md: '0' }}
             mb={{ base: '0.5em', md: '0' }}
+            fontSize="3xl"
           >
-            <Heading as="h1" fontSize="3xl">
-              {org.name}
+            <Heading as="h1">
+              {org.name}{' '}
+              {org.verified && (
+                <Icon name="check-circle" color="blue.500" size="icons.md" />
+              )}
             </Heading>
-            {org.verified && (
-              <Icon name="check-circle" color="blue.500" size="icons.md" />
-            )}
           </Stack>
 
           <Stack
