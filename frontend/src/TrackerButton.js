@@ -67,7 +67,7 @@ export const TrackerButton = React.forwardRef(
         ref={ref}
         {...props}
       >
-        <Stack isInline align="center" justifyContent="center" spacing={0}>
+        <Stack isInline align="center" justifyContent="center">
           {children}
         </Stack>
       </PseudoBox>

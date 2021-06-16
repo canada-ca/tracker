@@ -258,10 +258,12 @@ export default function OrganizationInformation({
               mr={{ md: '0.5em' }}
               w={{ base: '45%', md: 'auto' }}
             >
-              <Icon name="minus" />
-              <VisuallyHidden>
-                <Trans>Remove Organization</Trans>
-              </VisuallyHidden>
+              <Stack spacing={0}>
+                <Icon name="minus" />
+                <VisuallyHidden>
+                  <Trans>Remove Organization</Trans>
+                </VisuallyHidden>
+              </Stack>
             </TrackerButton>
             <TrackerButton
               variant="primary"
@@ -269,10 +271,12 @@ export default function OrganizationInformation({
               onClick={() => setIsEditingOrg(!isEditingOrg)}
               w={{ base: '45%', md: 'auto' }}
             >
-              <Icon name="edit" />
-              <VisuallyHidden>
-                <Trans>Edit Organization</Trans>
-              </VisuallyHidden>
+              <Stack spacing={0}>
+                <Icon name="edit" />
+                <VisuallyHidden>
+                  <Trans>Edit Organization</Trans>
+                </VisuallyHidden>
+              </Stack>
             </TrackerButton>
           </Stack>
         </Stack>
