@@ -1382,6 +1382,24 @@ export const USER_AFFILIATIONS = gql`
     }
   }
 `
+
+export const ORGANIZATION_INFORMATION = gql`
+  query OrganizationInformation($orgSlug: Slug!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      acronym
+      name
+      slug
+      zone
+      sector
+      country
+      province
+      city
+      verified
+    }
+  }
+`
+
 export const ADMIN_AFFILIATIONS = gql`
   query AdminAffiliations(
     $after: String
