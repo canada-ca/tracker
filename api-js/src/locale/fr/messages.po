@@ -45,7 +45,7 @@ msgstr "todo"
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "todo"
 
-#: src/user/mutations/authenticate.js:109
+#: src/user/mutations/authenticate.js:121
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "todo"
 
@@ -53,8 +53,8 @@ msgstr "todo"
 msgid "Incorrect token value. Please request a new email."
 msgstr "todo"
 
-#: src/user/mutations/sign-in.js:59
-#: src/user/mutations/sign-in.js:179
+#: src/user/mutations/sign-in.js:60
+#: src/user/mutations/sign-in.js:201
 msgid "Incorrect username or password. Please try again."
 msgstr "todo"
 
@@ -390,11 +390,11 @@ msgstr "todo"
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "todo"
 
-#: src/user/mutations/authenticate.js:58
+#: src/user/mutations/authenticate.js:59
 msgid "Token value incorrect, please sign in again."
 msgstr "todo"
 
-#: src/user/mutations/sign-in.js:73
+#: src/user/mutations/sign-in.js:74
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "todo"
 
@@ -410,8 +410,8 @@ msgstr "todo"
 msgid "Unable to add user to organization. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/authenticate.js:73
-#: src/user/mutations/authenticate.js:92
+#: src/user/mutations/authenticate.js:74
+#: src/user/mutations/authenticate.js:103
 msgid "Unable to authenticate. Please try again."
 msgstr "todo"
 
@@ -713,6 +713,14 @@ msgstr "todo"
 msgid "Unable to query domain(s). Please try again."
 msgstr "todo"
 
+#: src/user/mutations/refresh-tokens.js:61
+#: src/user/mutations/refresh-tokens.js:76
+#: src/user/mutations/refresh-tokens.js:93
+#: src/user/mutations/refresh-tokens.js:107
+#: src/user/mutations/refresh-tokens.js:125
+msgid "Unable to refresh tokens, please sign in."
+msgstr "todo"
+
 #: src/affiliation/mutations/remove-user-from-org.js:120
 msgid "Unable to remove a user that already does not belong to this organization."
 msgstr "todo"
@@ -821,20 +829,21 @@ msgstr "todo"
 msgid "Unable to set phone number, please try again."
 msgstr "todo"
 
-#: src/user/mutations/sign-in.js:90
-#: src/user/mutations/sign-in.js:110
-#: src/user/mutations/sign-in.js:170
+#: src/user/mutations/sign-in.js:91
+#: src/user/mutations/sign-in.js:111
+#: src/user/mutations/sign-in.js:155
+#: src/user/mutations/sign-in.js:192
 msgid "Unable to sign in, please try again."
 msgstr "todo"
 
-#: src/user/mutations/sign-up.js:176
-#: src/user/mutations/sign-up.js:190
+#: src/user/mutations/sign-up.js:177
+#: src/user/mutations/sign-up.js:191
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "todo"
 
-#: src/user/mutations/sign-up.js:152
-#: src/user/mutations/sign-up.js:211
-#: src/user/mutations/sign-up.js:221
+#: src/user/mutations/sign-up.js:153
+#: src/user/mutations/sign-up.js:212
+#: src/user/mutations/sign-up.js:222
 msgid "Unable to sign up. Please try again."
 msgstr "todo"
 
