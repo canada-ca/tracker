@@ -36,7 +36,9 @@ describe('given the dkimScanData subscription', () => {
     drop,
     options,
     dkimScan,
-    createSubscriptionMutation
+    createSubscriptionMutation,
+    redis,
+    pub
 
   beforeAll(async () => {
     options = {
@@ -71,6 +73,8 @@ describe('given the dkimScanData subscription', () => {
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)
+    redis = new Redis(options)
+    pub = new Redis(options)
 
     pubsub = new RedisPubSub({
       publisher: publisherClient,
@@ -102,6 +106,8 @@ describe('given the dkimScanData subscription', () => {
   afterAll(async () => {
     await publisherClient.quit()
     await subscriberClient.quit()
+    await redis.quit()
+    await pub.quit()
     await drop()
   })
 
@@ -117,14 +123,7 @@ describe('given the dkimScanData subscription', () => {
                 type: GraphQLID,
               },
             },
-            resolve: async (
-              _source,
-              { subscriptionId },
-              { Redis, options },
-            ) => {
-              const redis = await new Redis(options)
-              const pub = await new Redis(options)
-
+            resolve: async (_source, { subscriptionId }) => {
               await redis.subscribe(
                 `${DKIM_SCAN_CHANNEL}/${subscriptionId}`,
                 (_err, _count) => {
@@ -134,10 +133,6 @@ describe('given the dkimScanData subscription', () => {
                   )
                 },
               )
-
-              await redis.quit()
-              await pub.quit()
-
               return 1
             },
           },
