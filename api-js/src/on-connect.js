@@ -4,6 +4,7 @@ export const customOnConnect = ({
   verifyToken,
   userRequired,
   loadUserByKey,
+  verifiedRequired,
 }) => async (connectionParams, webSocket) => {
   const enLangPos = String(
     webSocket.upgradeReq.headers['accept-language'],
@@ -33,11 +34,13 @@ export const customOnConnect = ({
 
   const { query } = context
 
-  await userRequired({
+  const user = await userRequired({
     i18n,
     userKey,
     loadUserByKey: loadUserByKey({ query, userKey }),
   })()
+
+  verifiedRequired({ user })
 
   console.info(`User: ${userKey}, connected to subscription.`)
 

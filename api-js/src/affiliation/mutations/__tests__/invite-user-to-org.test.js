@@ -5,7 +5,7 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { databaseOptions } from '../../../../database-options'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
@@ -48,18 +48,16 @@ describe('invite user to org', () => {
     }))
     tokenize = jest.fn().mockReturnValue('token')
   })
-
   beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
@@ -172,6 +170,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -267,6 +266,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -362,6 +362,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -452,6 +453,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -546,6 +548,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -641,6 +644,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -753,6 +757,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -848,6 +853,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -939,6 +945,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1034,6 +1041,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1130,6 +1138,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1205,6 +1214,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1307,6 +1317,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1415,6 +1426,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1523,6 +1535,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1645,6 +1658,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1724,6 +1738,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1855,6 +1870,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1949,6 +1965,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2043,6 +2060,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2133,6 +2151,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2224,6 +2243,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2315,6 +2335,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2423,6 +2444,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2517,6 +2539,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2607,6 +2630,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2698,6 +2722,7 @@ describe('invite user to org', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2790,6 +2815,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2865,6 +2891,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2972,6 +2999,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -3079,6 +3107,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -3200,6 +3229,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -3275,6 +3305,7 @@ describe('invite user to org', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),

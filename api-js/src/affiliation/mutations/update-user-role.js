@@ -43,7 +43,7 @@ given organization.`,
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired },
+      auth: { checkPermission, userRequired, verifiedRequired },
       loaders: { loadOrgByKey, loadUserByUserName },
       validators: { cleanseInput },
     },
@@ -55,6 +55,8 @@ given organization.`,
 
     // Get requesting user from db
     const user = await userRequired()
+
+    verifiedRequired({ user })
 
     // Make sure user is not attempting to update their own role
     if (user.userName === userName) {

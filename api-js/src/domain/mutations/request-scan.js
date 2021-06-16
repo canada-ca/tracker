@@ -4,11 +4,8 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 
 import { Domain } from '../../scalars'
 
-const {
-  DNS_SCANNER_ENDPOINT,
-  HTTPS_SCANNER_ENDPOINT,
-  SSL_SCANNER_ENDPOINT,
-} = process.env
+const { DNS_SCANNER_ENDPOINT, HTTPS_SCANNER_ENDPOINT, SSL_SCANNER_ENDPOINT } =
+  process.env
 
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
@@ -33,15 +30,17 @@ export const requestScan = new mutationWithClientMutationId({
       i18n,
       fetch,
       userKey,
-      auth: { checkDomainPermission, userRequired },
+      auth: { checkDomainPermission, userRequired, verifiedRequired },
       loaders: { loadDomainByDomain },
       validators: { cleanseInput },
     },
   ) => {
-    const requestedDomain = cleanseInput(args.domain)
-
     // User is required
-    await userRequired()
+    const user = await userRequired()
+
+    verifiedRequired({ user })
+
+    const requestedDomain = cleanseInput(args.domain)
 
     // Check to see if domain exists
     const domain = await loadDomainByDomain.load(requestedDomain)

@@ -12,7 +12,7 @@ import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
 import { createSubscriptionSchema } from './subscription'
 import { createI18n } from './create-i18n'
-import { verifyToken, userRequired } from './auth'
+import { verifyToken, userRequired, verifiedRequired } from './auth'
 import { loadUserByKey } from './user/loaders'
 import { customOnConnect } from './on-connect'
 
@@ -81,6 +81,7 @@ export const Server = ({
         verifyToken,
         userRequired,
         loadUserByKey,
+        verifiedRequired,
       }),
     },
     validationRules: createValidationRules(

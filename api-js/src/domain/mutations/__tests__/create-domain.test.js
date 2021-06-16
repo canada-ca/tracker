@@ -9,7 +9,12 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, userRequired, checkSuperAdmin } from '../../../auth'
+import {
+  checkPermission,
+  userRequired,
+  checkSuperAdmin,
+  verifiedRequired,
+} from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import {
   loadOrgByKey,
@@ -43,10 +48,10 @@ describe('create a domain', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
     org = await collections.organizations.save({
       orgDetails: {
@@ -74,15 +79,12 @@ describe('create a domain', () => {
     })
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('given a successful domain creation', () => {
     describe('user has super admin permission level', () => {
       describe('user belongs to the same org', () => {
@@ -151,6 +153,7 @@ describe('create a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -300,6 +303,7 @@ describe('create a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -426,6 +430,7 @@ describe('create a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               }),
               checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+              verifiedRequired: verifiedRequired({}),
             },
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
@@ -551,6 +556,7 @@ describe('create a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               }),
               checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+              verifiedRequired: verifiedRequired({}),
             },
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
@@ -719,6 +725,7 @@ describe('create a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -861,6 +868,7 @@ describe('create a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1003,6 +1011,7 @@ describe('create a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1150,6 +1159,7 @@ describe('create a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1292,6 +1302,7 @@ describe('create a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1435,6 +1446,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1528,6 +1540,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1635,6 +1648,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1743,6 +1757,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1851,6 +1866,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1952,6 +1968,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2058,6 +2075,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2157,6 +2175,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2269,6 +2288,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2371,6 +2391,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2463,6 +2484,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2569,6 +2591,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2676,6 +2699,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2782,6 +2806,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2881,6 +2906,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -2985,6 +3011,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -3082,6 +3109,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
@@ -3192,6 +3220,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
