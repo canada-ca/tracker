@@ -1,6 +1,6 @@
 import React from 'react'
 import { PseudoBox, Spinner, Stack } from '@chakra-ui/core'
-import { string, any } from 'prop-types'
+import { string, any, bool } from 'prop-types'
 
 export const TrackerButton = React.forwardRef(
   ({ variant, isLoading, children, ...props }, ref) => {
@@ -87,4 +87,5 @@ TrackerButton.displayName = 'TrackerButton'
 TrackerButton.propTypes = {
   variant: string,
   children: any,
+  isLoading: bool,
 }
