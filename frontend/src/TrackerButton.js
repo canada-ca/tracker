@@ -19,6 +19,22 @@ export const TrackerButton = React.forwardRef(
       bg="transparent"
       borderColor="primary"
       borderWidth="1px"
+    } else if (variant === 'primary hover') {
+      color = 'gray.50'
+      bg = 'primary'
+      borderColor="primary"
+      borderWidth="1px"
+      hoverOb.bg = 'primary'
+      hoverOb.borderColor="primary2"
+      hoverOb.color="primary2"
+    } else if (variant === 'primary white') {
+      color="gray.50"
+      bg="primary"
+      borderColor="gray.50"
+      borderWidth="1px"
+      hoverOb.bg="primary"
+      hoverOb.borderColor="primary2"
+      hoverOb.color="primary2"
     } else if (variant === 'outline') {
       color = 'primary2'
       bg = 'transparent'
