@@ -72,7 +72,7 @@ export default function OrganizationInformation({
     },
   })
 
-  const [removeOrganization, { error: _removeOrganizationError }] = useMutation(
+  const [removeOrganization, { loading: removeOrgLoading }] = useMutation(
     REMOVE_ORGANIZATION,
     {
       context: {
@@ -140,7 +140,7 @@ export default function OrganizationInformation({
     },
   )
 
-  const [updateOrganization, { error: _updateOrganizationError }] = useMutation(
+  const [updateOrganization, { loading: updateOrgLoading }] = useMutation(
     UPDATE_ORGANIZATION,
     {
       context: {
@@ -257,6 +257,7 @@ export default function OrganizationInformation({
               px="2"
               mr={{ md: '0.5em' }}
               w={{ base: '45%', md: 'auto' }}
+              isLoading={removeOrgLoading}
             >
               <Stack spacing={0}>
                 <Icon name="minus" />
@@ -344,7 +345,7 @@ export default function OrganizationInformation({
               }
             }}
           >
-            {({ handleSubmit, isSubmitting, handleReset }) => (
+            {({ handleSubmit, handleReset }) => (
               <form onSubmit={handleSubmit}>
                 <Grid
                   gridTemplateColumns="repeat(4, 1fr)"
@@ -414,6 +415,7 @@ export default function OrganizationInformation({
                     variant="danger"
                     onClick={handleReset}
                     gridColumn={{ base: '1 / 3', md: '1 / 2' }}
+                    isLoading={updateOrgLoading}
                   >
                     <Trans>Clear</Trans>
                   </TrackerButton>
@@ -422,14 +424,15 @@ export default function OrganizationInformation({
                     variant="primary outline"
                     onClick={() => setIsEditingOrg(false)}
                     gridColumn={{ base: '3 / 5', md: '3 / 4' }}
+                    isLoading={updateOrgLoading}
                   >
                     <Trans>Close</Trans>
                   </TrackerButton>
                   <TrackerButton
                     type="submit"
-                    isLoading={isSubmitting}
                     variant="primary"
                     gridColumn={{ base: '1 / 5', md: '4 / 5' }}
+                    isLoading={updateOrgLoading}
                   >
                     <Trans>Confirm</Trans>
                   </TrackerButton>

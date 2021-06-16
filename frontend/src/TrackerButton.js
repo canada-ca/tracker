@@ -1,9 +1,9 @@
 import React from 'react'
-import { PseudoBox, Stack } from '@chakra-ui/core'
+import { PseudoBox, Spinner, Stack } from '@chakra-ui/core'
 import { string, any } from 'prop-types'
 
 export const TrackerButton = React.forwardRef(
-  ({ variant, children, ...props }, ref) => {
+  ({ variant, isLoading, children, ...props }, ref) => {
     let color = 'black'
     let bg = 'gray.100'
     let hoverColor = 'gray.200'
@@ -54,22 +54,29 @@ export const TrackerButton = React.forwardRef(
         py="2"
         color={color}
         bg={bg}
-        _hover={{ bg: hoverColor }}
+        _hover={!isLoading && { bg: hoverColor }}
         _active={{
           boxShadow: 'outline',
         }}
         _focus={{
           boxShadow: 'outline',
         }}
-        _disabled={{ opacity: 0.6 }}
+        _disabled={{ opacity: '0.4', cursor: 'not-allowed', boxShadow: 'none' }}
+        disabled={isLoading}
         borderColor={borderColor}
         borderWidth={borderWidth}
         ref={ref}
         {...props}
       >
-        <Stack isInline align="center" justifyContent="center">
-          {children}
-        </Stack>
+        {isLoading ? (
+          <Stack align="center" justifyContent="center">
+            <Spinner />
+          </Stack>
+        ) : (
+          <Stack isInline align="center" justifyContent="center">
+            {children}
+          </Stack>
+        )}
       </PseudoBox>
     )
   },
