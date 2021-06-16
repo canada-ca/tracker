@@ -1,8 +1,7 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
 import { locales, activate } from './i18n.config'
-import svgGlobe from './images/vector-globe.svg'
-import { Box, PseudoBox, VisuallyHidden, Image } from '@chakra-ui/core'
+import { Box, PseudoBox, VisuallyHidden } from '@chakra-ui/core'
 import { useApolloClient } from '@apollo/client'
 
 const Toggler = props => {
@@ -27,27 +26,7 @@ const Toggler = props => {
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
       <PseudoBox
         aria-hidden
-        fontSize='sm'
-        pl={2}
-        py={1}
-        textTransform='uppercase'
-        d={{ base: 'none', md: 'flex' }}
-        alignItems='center'
-        justifyContent='center'
-        border='1px'
-        borderColor='transparent'
-        _hover={{
-          color: 'accent',
-          border: '1px solid',
-          borderColor: 'accent',
-        }}
-      >
-        {locales[locale]}
-        <Image src={svgGlobe} px={2} alt={'SVG Globe'} />
-      </PseudoBox>
-      <PseudoBox
-        aria-hidden
-        d={{ base: 'flex', md: 'none' }}
+        d='flex'
         bg='gray.100'
         color='primary'
         textTransform='uppercase'
