@@ -139,6 +139,8 @@ export default function AdminPage() {
                 orgSlug={orgDetails.slug}
                 mb="1rem"
                 removeOrgCallback={setSelectedOrg}
+                // set key, this resets state when switching orgs (closes editing box)
+                key={orgDetails.slug}
               />
               <AdminPanel
                 orgSlug={orgDetails.slug}
