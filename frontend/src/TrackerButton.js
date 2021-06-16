@@ -6,14 +6,14 @@ export const TrackerButton = React.forwardRef(
   ({ variant, children, ...props }, ref) => {
     let color = 'black'
     let bg = 'gray.100'
-    let hoverColor = 'gray.200'
+    const hoverOb = {bg: 'gray.200'}
     let borderColor = null
     let borderWidth = null
 
     if (variant === 'primary') {
       color = 'gray.50'
       bg = 'primary'
-      hoverColor = 'primary2'
+      hoverOb.bg = 'primary2'
     } else if (variant === 'primary outline') {
       color="primary"
       bg="transparent"
@@ -24,23 +24,23 @@ export const TrackerButton = React.forwardRef(
       bg = 'transparent'
       borderColor = 'primary2'
       borderWidth = '1px'
-      hoverColor = 'blue.50'
+      hoverOb.bg = 'blue.50'
     } else if (variant === 'danger') {
       color = 'gray.50'
       bg = 'red.700'
-      hoverColor = 'red.600'
+      hoverOb.bg = 'red.600'
     } else if (variant === 'strong') {
       color = 'white'
       bg = 'strong'
-      hoverColor = 'green.400'
+      hoverOb.bg = 'green.400'
     } else if (variant === 'info') {
       color = 'white'
       bg = 'info'
-      hoverColor = 'blue.300'
+      hoverOb.bg = 'blue.300'
     } else if (variant === 'weak') {
       color = 'white'
       bg = 'weak'
-      hoverColor = 'red.400'
+      hoverOb.bg = 'red.400'
     }
 
     return (
@@ -54,7 +54,7 @@ export const TrackerButton = React.forwardRef(
         py="2"
         color={color}
         bg={bg}
-        _hover={{ bg: hoverColor }}
+        _hover={hoverOb}
         _active={{
           boxShadow: 'outline',
         }}
