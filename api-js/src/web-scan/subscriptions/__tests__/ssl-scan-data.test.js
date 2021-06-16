@@ -36,7 +36,9 @@ describe('given the spfScanData subscription', () => {
     drop,
     options,
     sslScan,
-    createSubscriptionMutation
+    createSubscriptionMutation,
+    redis,
+    pub
 
   beforeAll(async () => {
     options = {
@@ -82,6 +84,8 @@ describe('given the spfScanData subscription', () => {
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)
+    redis = new Redis(options)
+    pub = new Redis(options)
 
     pubsub = new RedisPubSub({
       publisher: publisherClient,
@@ -113,6 +117,8 @@ describe('given the spfScanData subscription', () => {
   afterAll(async () => {
     await publisherClient.quit()
     await subscriberClient.quit()
+    await redis.quit()
+    await pub.quit()
     await drop()
   })
 
@@ -128,14 +134,7 @@ describe('given the spfScanData subscription', () => {
                 type: GraphQLID,
               },
             },
-            resolve: async (
-              _source,
-              { subscriptionId },
-              { Redis, options },
-            ) => {
-              const redis = await new Redis(options)
-              const pub = await new Redis(options)
-
+            resolve: async (_source, { subscriptionId }) => {
               await redis.subscribe(
                 `${SSL_SCAN_CHANNEL}/${subscriptionId}`,
                 (_err, _count) => {
@@ -145,10 +144,6 @@ describe('given the spfScanData subscription', () => {
                   )
                 },
               )
-
-              await redis.quit()
-              await pub.quit()
-
               return 1
             },
           },
@@ -277,7 +272,7 @@ describe('given the spfScanData subscription', () => {
             'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
           ],
           weakCurves: ['curve123'],
-          rawJson: "{\"missing\":true}",
+          rawJson: '{"missing":true}',
           negativeGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'ssl1'),
