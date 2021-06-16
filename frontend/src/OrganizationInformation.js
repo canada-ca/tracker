@@ -258,7 +258,6 @@ export default function OrganizationInformation({
               px="2"
               mr={{ md: '0.5em' }}
               w={{ base: '45%', md: 'auto' }}
-              isLoading={removeOrgLoading}
             >
               <Stack spacing={0}>
                 <Icon name="minus" />
@@ -522,7 +521,7 @@ export default function OrganizationInformation({
                 })
               }}
             >
-              {({ handleSubmit, isSubmitting }) => (
+              {({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>
                   <ModalContent {...styles}>
                     <ModalHeader>
@@ -554,7 +553,7 @@ export default function OrganizationInformation({
                     </ModalBody>
                     <ModalFooter>
                       <TrackerButton
-                        isLoading={isSubmitting}
+                        isLoading={removeOrgLoading}
                         type="submit"
                         mr="4"
                         variant="primary"
