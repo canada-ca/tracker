@@ -46,6 +46,9 @@ export const TrackerButton = React.forwardRef(
     return (
       <PseudoBox
         as="button"
+        display="inline-flex"
+        alignItems="center"
+        justifyContent="center"
         fontWeight="semibold"
         rounded="md"
         transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
@@ -68,15 +71,26 @@ export const TrackerButton = React.forwardRef(
         ref={ref}
         {...props}
       >
-        {isLoading ? (
-          <Stack align="center" justifyContent="center">
+        {isLoading && (
+          <Stack
+            align="center"
+            justifyContent="center"
+            position="absolute"
+            fontSize="1em"
+            lineHeight="normal"
+          >
             <Spinner />
           </Stack>
-        ) : (
-          <Stack isInline align="center" justifyContent="center">
-            {children}
-          </Stack>
         )}
+
+        <Stack
+          isInline
+          align="center"
+          justifyContent="center"
+          opacity={isLoading ? 0 : 100}
+        >
+          {children}
+        </Stack>
       </PseudoBox>
     )
   },
