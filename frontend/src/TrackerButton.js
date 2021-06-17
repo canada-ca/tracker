@@ -6,41 +6,57 @@ export const TrackerButton = React.forwardRef(
   ({ variant, isLoading, children, ...props }, ref) => {
     let color = 'black'
     let bg = 'gray.100'
-    let hoverColor = 'gray.200'
+    const hoverOb = {bg: 'gray.200'}
     let borderColor = null
     let borderWidth = null
 
     if (variant === 'primary') {
       color = 'gray.50'
       bg = 'primary'
-      hoverColor = 'primary2'
+      hoverOb.bg = 'primary2'
     } else if (variant === 'primary outline') {
       color = 'primary'
       bg = 'transparent'
       borderColor = 'primary'
       borderWidth = '1px'
+    } else if (variant === 'primary hover') {
+      color = 'gray.50'
+      bg = 'primary'
+      borderColor = 'primary'
+      borderWidth = '1px'
+      hoverOb.bg = 'primary'
+      hoverOb.borderColor = 'primary2'
+      hoverOb.color = 'primary2'
+    } else if (variant === 'primary white') {
+      color = 'gray.50'
+      bg = 'primary'
+      borderColor = 'gray.50'
+      borderWidth = '1px'
+      hoverOb.bg = 'primary'
+      hoverOb.borderColor = 'primary2'
+      hoverOb.color = 'primary2'
     } else if (variant === 'outline') {
       color = 'primary2'
       bg = 'transparent'
       borderColor = 'primary2'
       borderWidth = '1px'
-      hoverColor = 'blue.50'
+      hoverOb.bg = 'blue.50'
     } else if (variant === 'danger') {
       color = 'gray.50'
       bg = 'red.700'
-      hoverColor = 'red.600'
+      hoverOb.bg = 'red.600'
     } else if (variant === 'strong') {
       color = 'white'
       bg = 'strong'
-      hoverColor = 'green.400'
+      hoverOb.bg = 'green.400'
     } else if (variant === 'info') {
       color = 'white'
       bg = 'info'
-      hoverColor = 'blue.300'
+      hoverOb.bg = 'blue.300'
     } else if (variant === 'weak') {
       color = 'white'
       bg = 'weak'
-      hoverColor = 'red.400'
+      hoverOb.bg = 'red.400'
     }
 
     return (
@@ -57,7 +73,7 @@ export const TrackerButton = React.forwardRef(
         py="2"
         color={color}
         bg={bg}
-        _hover={!isLoading && { bg: hoverColor }}
+        _hover={!isLoading && hoverOb}
         _active={{
           boxShadow: 'outline',
         }}
