@@ -511,7 +511,7 @@ describe('<AdminDomains />', () => {
         expect(editText).toBeInTheDocument()
       })
 
-      const editDomainInput = getByLabelText(/New Domain Url:/)
+      const editDomainInput = getByLabelText(/Domain URL:/)
       fireEvent.change(editDomainInput, {
         target: {
           value: 'test.domain.ca',

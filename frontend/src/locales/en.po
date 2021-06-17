@@ -2788,6 +2788,22 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgid "{title} - Tracker"
 msgstr "{title} - Tracker"
 
+#:src/AdminDomains.js:465
+msgid "DKIM Selectors:"
+msgstr "DKIM Selectors:"
+
+#:src/AdminDomains.js:498
+msgid "DKIM Selector"
+msgstr "DKIM Selector"
+
+#:src/fieldRequirements.js:52
+msgid "Selector cannot be empty"
+msgstr "Selector cannot be empty"
+
+#:src/fieldRequirements.js:55
+msgid "Selector must be string ending in '._domainkey'"
+msgstr "Selector must be string ending in '._domainkey'"
+
 #: src/ScanCategoryDetails.js:166
 msgid "Strong Curves:"
 msgstr "Strong Curves:"
@@ -2859,3 +2875,4 @@ msgstr "Correct misconfigurations and update records as required; and"
 #: src/ScanCard.js:43
 msgid "Rotate DKIM keys annually."
 msgstr "Rotate DKIM keys annually."
+

@@ -491,6 +491,7 @@ export const ADMIN_PANEL = gql`
             id
             domain
             lastRan
+            selectors
           }
         }
         pageInfo {
@@ -573,6 +574,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             id
             domain
             lastRan
+            selectors
           }
         }
         pageInfo {

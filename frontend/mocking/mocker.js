@@ -395,6 +395,8 @@ const mocks = {
       refLink,
     }
   },
+  Selector: () =>
+    'selector' + faker.datatype.number({ min: 1, max: 9 }) + '._domainkey',
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),

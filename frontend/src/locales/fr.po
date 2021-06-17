@@ -2780,6 +2780,22 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
 
+#:src/AdminDomains.js:465
+msgid "DKIM Selectors:"
+msgstr "Sélecteurs DKIM:"
+
+#:src/AdminDomains.js:498
+msgid "DKIM Selector"
+msgstr "Sélecteur DKIM"
+
+#:src/fieldRequirements.js:52
+msgid "Selector cannot be empty"
+msgstr "Le sélecteur ne peut pas être vide"
+
+#:src/fieldRequirements.js:55
+msgid "Selector must be string ending in '._domainkey'"
+msgstr "Le sélecteur doit être une chaîne se terminant par '._domainkey'"
+
 #: src/ScanCategoryDetails.js:166
 msgid "Strong Curves:"
 msgstr "Courbes fortes:"
