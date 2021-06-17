@@ -1757,7 +1757,8 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
                     },
                   },
                 },
@@ -1827,7 +1828,8 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
                     },
                   },
                 },
@@ -1906,7 +1908,8 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
                     },
                   },
                 },
@@ -1976,7 +1979,8 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
                     },
                   },
                 },
@@ -2064,7 +2068,8 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
                     },
                   },
                 },
@@ -2169,7 +2174,7 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Impossible de mettre à jour votre propre rôle.',
                 },
               },
             },
@@ -2237,7 +2242,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour le rôle : utilisateur inconnu.',
                 },
               },
             },
@@ -2305,7 +2311,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour le rôle : organisation inconnue.',
                 },
               },
             },
@@ -2380,7 +2387,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs.",
                 },
               },
             },
@@ -2481,7 +2489,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs.",
                 },
               },
             },
@@ -2556,7 +2565,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas à l'organisation.",
                 },
               },
             },
@@ -2641,7 +2651,8 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       code: 400,
-                      description: 'todo',
+                      description:
+                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
                     },
                   },
                 },
@@ -2726,7 +2737,8 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       code: 400,
-                      description: 'todo',
+                      description:
+                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
                     },
                   },
                 },
@@ -2812,7 +2824,8 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
                   },
                 },
               },
@@ -2895,7 +2908,8 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
                   },
                 },
               },
@@ -3009,7 +3023,11 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -3119,7 +3137,11 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -3187,7 +3209,11 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

@@ -247,7 +247,11 @@ describe('given a loadAffiliationByKey dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              `Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez réessayer.`,
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -272,7 +276,11 @@ describe('given a loadAffiliationByKey dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              `Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez réessayer.`,
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
