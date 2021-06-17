@@ -19,6 +19,31 @@ function ScanCard({ scanType, scanData, status }) {
       ? t`Results for scans of email technologies (DMARC, SPF, DKIM).`
       : ''
 
+  const dmarcSteps = {
+    assess: [
+      t`Identify all domains and subdomains used to send mail;`,
+      t`Assess current state;`,
+      t`Deploy initial DMARC records with policy of none; and`,
+      t`Collect and analyze DMARC reports.`,
+    ],
+    deploy: [
+      t`Identify all authorized senders;`,
+      t`Deploy SPF records for all domains;`,
+      t`Deploy DKIM records and keys for all domains and senders; and`,
+      t`Monitor DMARC reports and correct misconfigurations.`,
+    ],
+    enforce: [
+      t`Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);`,
+      t`Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and`,
+      t`Reject all messages from non-mail domains.`,
+    ],
+    maintain: [
+      t`Monitor DMARC reports;`,
+      t`Correct misconfigurations and update records as required; and`,
+      t`Rotate DKIM keys annually.`,
+    ],
+  }
+
   const topInfo = () => {
     if (scanType === 'web') {
       return (
@@ -51,6 +76,15 @@ function ScanCard({ scanType, scanData, status }) {
               <Trans>DMARC Implementation Phase: {status.toUpperCase()}</Trans>
             </Text>
           </Stack>
+          {status !== 'UNKNOWN' && status !== 'not implemented' && (
+            <Box bg="gray.100" px="2" py="1">
+              {dmarcSteps[status].map((step, index) => (
+                <Text key={index}>
+                  {index + 1}. {step}
+                </Text>
+              ))}
+            </Box>
+          )}
         </Box>
       )
     } else {
