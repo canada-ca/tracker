@@ -512,6 +512,24 @@ const schemaWithMocks = addMocksToSchema({
       },
     },
     Mutation: {
+      updateOrganization: (_, args, _context, _resolveInfo) => {
+        Object.entries(args.input).forEach((entry) => {
+          const [key, value] = entry
+          if (key === 'id') return
+
+          // Current mock implementation does not support multi-lang, remove language from keys
+          store.set(
+            'Organization',
+            args.input.id,
+            key.substring(0, key.length - 2),
+            value,
+          )
+        })
+
+        return {
+          result: store.get('Organization', args.input.id),
+        }
+      },
       setPhoneNumber: (_, args, context, _resolveInfo) => {
         store.set(
           'PersonalUser',
