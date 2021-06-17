@@ -2611,3 +2611,59 @@ msgstr "Weak Curves:"
 #: src/ScanCategoryDetails.js:232
 msgid "Curves"
 msgstr "Curves"
+
+#: src/ScanCard.js:24
+msgid "Identify all domains and subdomains used to send mail;"
+msgstr "Identify all domains and subdomains used to send mail;"
+
+#: src/ScanCard.js:25
+msgid "Assess current state;"
+msgstr "Assess current state;"
+
+#: src/ScanCard.js:26
+msgid "Deploy initial DMARC records with policy of none; and"
+msgstr "Deploy initial DMARC records with policy of none; and"
+
+#: src/ScanCard.js:27
+msgid "Collect and analyze DMARC reports."
+msgstr "Collect and analyze DMARC reports."
+
+#: src/ScanCard.js:30
+msgid "Identify all authorized senders;"
+msgstr "Identify all authorized senders;"
+
+#: src/ScanCard.js:31
+msgid "Deploy SPF records for all domains;"
+msgstr "Deploy SPF records for all domains;"
+
+#: src/ScanCard.js:32
+msgid "Deploy DKIM records and keys for all domains and senders; and"
+msgstr "Deploy DKIM records and keys for all domains and senders; and"
+
+#: src/ScanCard.js:33
+msgid "Monitor DMARC reports and correct misconfigurations."
+msgstr "Monitor DMARC reports and correct misconfigurations."
+
+#: src/ScanCard.js:36
+msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
+msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
+
+#: src/ScanCard.js:37
+msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
+msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
+
+#: src/ScanCard.js:38
+msgid "Reject all messages from non-mail domains."
+msgstr "Reject all messages from non-mail domains."
+
+#: src/ScanCard.js:41
+msgid "Monitor DMARC reports;"
+msgstr "Monitor DMARC reports;"
+
+#: src/ScanCard.js:42
+msgid "Correct misconfigurations and update records as required; and"
+msgstr "Correct misconfigurations and update records as required; and"
+
+#: src/ScanCard.js:43
+msgid "Rotate DKIM keys annually."
+msgstr "Rotate DKIM keys annually."

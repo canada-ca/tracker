@@ -162,6 +162,13 @@ const mocks = {
             .replace('T', ' ')
         : null
     const curDate = new Date()
+    const dmarcPhase = faker.random.arrayElement([
+      'assess',
+      'deploy',
+      'enforce',
+      'maintain',
+      'not implemented',
+    ])
 
     // generate an object matching DmarcSummary
     const generateFakeSummary = (currentDate, month, year) => {
@@ -219,6 +226,7 @@ const mocks = {
 
     return {
       lastRan,
+      dmarcPhase,
       yearlyDmarcSummaries,
     }
   },
