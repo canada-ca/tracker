@@ -1,9 +1,9 @@
 import React from 'react'
-import { PseudoBox, Stack } from '@chakra-ui/core'
-import { string, any } from 'prop-types'
+import { PseudoBox, Spinner, Stack } from '@chakra-ui/core'
+import { string, any, bool } from 'prop-types'
 
 export const TrackerButton = React.forwardRef(
-  ({ variant, children, ...props }, ref) => {
+  ({ variant, isLoading, children, ...props }, ref) => {
     let color = 'black'
     let bg = 'gray.100'
     const hoverOb = {bg: 'gray.200'}
@@ -15,26 +15,26 @@ export const TrackerButton = React.forwardRef(
       bg = 'primary'
       hoverOb.bg = 'primary2'
     } else if (variant === 'primary outline') {
-      color="primary"
-      bg="transparent"
-      borderColor="primary"
-      borderWidth="1px"
+      color = 'primary'
+      bg = 'transparent'
+      borderColor = 'primary'
+      borderWidth = '1px'
     } else if (variant === 'primary hover') {
       color = 'gray.50'
       bg = 'primary'
-      borderColor="primary"
-      borderWidth="1px"
+      borderColor = 'primary'
+      borderWidth = '1px'
       hoverOb.bg = 'primary'
-      hoverOb.borderColor="primary2"
-      hoverOb.color="primary2"
+      hoverOb.borderColor = 'primary2'
+      hoverOb.color = 'primary2'
     } else if (variant === 'primary white') {
-      color="gray.50"
-      bg="primary"
-      borderColor="gray.50"
-      borderWidth="1px"
-      hoverOb.bg="primary"
-      hoverOb.borderColor="primary2"
-      hoverOb.color="primary2"
+      color = 'gray.50'
+      bg = 'primary'
+      borderColor = 'gray.50'
+      borderWidth = '1px'
+      hoverOb.bg = 'primary'
+      hoverOb.borderColor = 'primary2'
+      hoverOb.color = 'primary2'
     } else if (variant === 'outline') {
       color = 'primary2'
       bg = 'transparent'
@@ -62,6 +62,9 @@ export const TrackerButton = React.forwardRef(
     return (
       <PseudoBox
         as="button"
+        display="inline-flex"
+        alignItems="center"
+        justifyContent="center"
         fontWeight="semibold"
         rounded="md"
         transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
@@ -70,20 +73,38 @@ export const TrackerButton = React.forwardRef(
         py="2"
         color={color}
         bg={bg}
-        _hover={hoverOb}
+        _hover={!isLoading && hoverOb}
         _active={{
           boxShadow: 'outline',
         }}
         _focus={{
           boxShadow: 'outline',
         }}
-        _disabled={{ opacity: 0.6 }}
+        _disabled={{ opacity: '0.4', cursor: 'not-allowed', boxShadow: 'none' }}
+        disabled={isLoading}
         borderColor={borderColor}
         borderWidth={borderWidth}
         ref={ref}
         {...props}
       >
-        <Stack isInline align="center" justifyContent="center">
+        {isLoading && (
+          <Stack
+            align="center"
+            justifyContent="center"
+            position="absolute"
+            fontSize="1em"
+            lineHeight="normal"
+          >
+            <Spinner />
+          </Stack>
+        )}
+
+        <Stack
+          isInline
+          align="center"
+          justifyContent="center"
+          opacity={isLoading ? 0 : 100}
+        >
           {children}
         </Stack>
       </PseudoBox>
@@ -96,4 +117,5 @@ TrackerButton.displayName = 'TrackerButton'
 TrackerButton.propTypes = {
   variant: string,
   children: any,
+  isLoading: bool,
 }
