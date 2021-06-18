@@ -5,3 +5,15 @@ resources:
 - domain-config.yaml
 components:
 - ../components/knative
+patchesJSON6902:
+- target:
+    group: install.istio.io
+    version: v1alpha1
+    kind: IstioOperator
+    name: istio-controlplane
+    namespace: istio-operator
+  patch: |-
+    - op: add
+      path: /spec/components/ingressGateways/0/k8s/serviceAnnotations
+      value:
+        service.beta.kubernetes.io/azure-load-balancer-internal: "true"

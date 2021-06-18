@@ -16,3 +16,5 @@ publicsuffix2
 pretend
 uvloop
 httptools
+moz_crlite_query
+cryptography

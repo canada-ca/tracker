@@ -13,6 +13,7 @@ import {
   checkUserIsAdminForUser,
   tokenize,
   userRequired,
+  verifiedRequired,
   verifyToken,
 } from './auth'
 import {
@@ -153,6 +154,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         loadUserByKey: loadUserByKey({ query, userKey, i18n }),
       }),
+      verifiedRequired: verifiedRequired({ i18n }),
       verifyToken: verifyToken({ i18n }),
     },
     validators: {

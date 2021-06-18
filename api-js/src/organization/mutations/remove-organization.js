@@ -29,16 +29,18 @@ export const removeOrganization = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired },
+      auth: { checkPermission, userRequired, verifiedRequired },
       validators: { cleanseInput },
       loaders: { loadOrgByKey },
     },
   ) => {
+    // Get user
+    const user = await userRequired()
+
+    verifiedRequired({ user })
+
     // Cleanse Input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-
-    // Get user
-    await userRequired()
 
     // Get org from db
     const organization = await loadOrgByKey.load(orgId)

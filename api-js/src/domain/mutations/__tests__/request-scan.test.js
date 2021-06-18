@@ -8,7 +8,11 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { checkDomainPermission, userRequired } from '../../../auth'
+import {
+  checkDomainPermission,
+  userRequired,
+  verifiedRequired,
+} from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
@@ -42,14 +46,13 @@ describe('requesting a one time scan', () => {
     console.warn = mockedWarn
     console.error = mockedError
   })
-
   beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
       preferredLang: 'french',
       tfaValidated: false,
-      emailValidated: false,
+      emailValidated: true,
     })
     org = await collections.organizations.save({
       orgDetails: {
@@ -86,16 +89,13 @@ describe('requesting a one time scan', () => {
       _from: org._id,
     })
   })
-
   afterEach(async () => {
     consoleOutput.length = 0
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -156,6 +156,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -221,6 +222,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -286,6 +288,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -346,6 +349,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -436,6 +440,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -499,6 +504,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -568,6 +574,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -630,6 +637,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -693,6 +701,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -781,6 +790,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -846,6 +856,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -911,6 +922,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -971,6 +983,7 @@ describe('requesting a one time scan', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({
@@ -1057,6 +1070,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -1116,6 +1130,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -1181,6 +1196,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -1239,6 +1255,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({
@@ -1298,6 +1315,7 @@ describe('requesting a one time scan', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({

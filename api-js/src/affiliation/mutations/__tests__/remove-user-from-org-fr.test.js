@@ -8,7 +8,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadAffiliationByKey } from '../../loaders'
@@ -114,14 +114,15 @@ const adminData = {
   displayName: 'Test Admin',
   preferredLang: 'french',
   tfaValidated: false,
-  emailValidated: false,
+  emailValidated: true,
 }
+
 const userData = {
   userName: 'test.account@istio.actually.exists',
   displayName: 'Test Account',
   preferredLang: 'french',
   tfaValidated: false,
-  emailValidated: false,
+  emailValidated: true,
 }
 
 describe('removing a user from an organization', () => {
@@ -152,19 +153,14 @@ describe('removing a user from an organization', () => {
             user,
             affiliation
           beforeEach(async () => {
-            ;({
-              query,
-              drop,
-              truncate,
-              collections,
-              transaction,
-            } = await ensure({
-              type: 'database',
-              name: 'sa_rm_admin_fr_' + dbNameFromFile(__filename),
-              url,
-              rootPassword: rootPass,
-              options: databaseOptions({ rootPass }),
-            }))
+            ;({ query, drop, truncate, collections, transaction } =
+              await ensure({
+                type: 'database',
+                name: 'sa_rm_admin_fr_' + dbNameFromFile(__filename),
+                url,
+                rootPassword: rootPass,
+                options: databaseOptions({ rootPass }),
+              }))
 
             orgOne = await collections.organizations.save(orgOneData)
             orgTwo = await collections.organizations.save(orgTwoData)
@@ -243,6 +239,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -330,6 +327,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -375,19 +373,14 @@ describe('removing a user from an organization', () => {
             user
 
           beforeEach(async () => {
-            ;({
-              query,
-              drop,
-              truncate,
-              collections,
-              transaction,
-            } = await ensure({
-              type: 'database',
-              name: 'sa_rm_msg_fr_' + dbNameFromFile(__filename),
-              url,
-              rootPassword: rootPass,
-              options: databaseOptions({ rootPass }),
-            }))
+            ;({ query, drop, truncate, collections, transaction } =
+              await ensure({
+                type: 'database',
+                name: 'sa_rm_msg_fr_' + dbNameFromFile(__filename),
+                url,
+                rootPassword: rootPass,
+                options: databaseOptions({ rootPass }),
+              }))
 
             orgOne = await collections.organizations.save(orgOneData)
             orgTwo = await collections.organizations.save(orgTwoData)
@@ -467,6 +460,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -519,19 +513,14 @@ describe('removing a user from an organization', () => {
             affiliation
 
           beforeEach(async () => {
-            ;({
-              query,
-              drop,
-              truncate,
-              collections,
-              transaction,
-            } = await ensure({
-              type: 'database',
-              name: 'sa_rm_usr_fr_' + dbNameFromFile(__filename),
-              url,
-              rootPassword: rootPass,
-              options: databaseOptions({ rootPass }),
-            }))
+            ;({ query, drop, truncate, collections, transaction } =
+              await ensure({
+                type: 'database',
+                name: 'sa_rm_usr_fr_' + dbNameFromFile(__filename),
+                url,
+                rootPassword: rootPass,
+                options: databaseOptions({ rootPass }),
+              }))
 
             orgOne = await collections.organizations.save(orgOneData)
             orgTwo = await collections.organizations.save(orgTwoData)
@@ -609,6 +598,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -656,19 +646,14 @@ describe('removing a user from an organization', () => {
             affiliation
 
           beforeEach(async () => {
-            ;({
-              query,
-              drop,
-              truncate,
-              collections,
-              transaction,
-            } = await ensure({
-              type: 'database',
-              name: 'adm_rm_usr_shared_' + dbNameFromFile(__filename),
-              url,
-              rootPassword: rootPass,
-              options: databaseOptions({ rootPass }),
-            }))
+            ;({ query, drop, truncate, collections, transaction } =
+              await ensure({
+                type: 'database',
+                name: 'adm_rm_usr_shared_' + dbNameFromFile(__filename),
+                url,
+                rootPassword: rootPass,
+                options: databaseOptions({ rootPass }),
+              }))
 
             orgOne = await collections.organizations.save(orgOneData)
             admin = await collections.users.save(adminData)
@@ -745,6 +730,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -832,6 +818,7 @@ describe('removing a user from an organization', () => {
                       i18n,
                     }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -943,6 +930,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1067,6 +1055,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1201,6 +1190,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1326,6 +1316,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1451,6 +1442,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1572,6 +1564,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1713,6 +1706,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1841,6 +1835,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1974,6 +1969,7 @@ describe('removing a user from an organization', () => {
                     i18n,
                   }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
