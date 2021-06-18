@@ -967,7 +967,7 @@ describe('authenticate user account', () => {
                   user: {
                     displayName: 'John Doe',
                   },
-                  status: "Le profil a été mis à jour avec succès.",
+                  status: 'Le profil a été mis à jour avec succès.',
                 },
               },
             },
@@ -1040,7 +1040,7 @@ describe('authenticate user account', () => {
                   user: {
                     userName: 'john.doe@istio.actually.works',
                   },
-                  status: "Le profil a été mis à jour avec succès.",
+                  status: 'Le profil a été mis à jour avec succès.',
                 },
               },
             },
@@ -1111,7 +1111,7 @@ describe('authenticate user account', () => {
                   user: {
                     preferredLang: 'ENGLISH',
                   },
-                  status: "Le profil a été mis à jour avec succès.",
+                  status: 'Le profil a été mis à jour avec succès.',
                 },
               },
             },
@@ -1211,7 +1211,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'PHONE',
                       },
-                      status: "Le profil a été mis à jour avec succès.",
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1309,7 +1309,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'NONE',
                       },
-                      status: "Le profil a été mis à jour avec succès.",
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1392,7 +1392,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'EMAIL',
                       },
-                      status: "Le profil a été mis à jour avec succès.",
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1473,7 +1473,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'NONE',
                       },
-                      status: "Le profil a été mis à jour avec succès.",
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1555,7 +1555,7 @@ describe('authenticate user account', () => {
                     user: {
                       tfaSendMethod: 'NONE',
                     },
-                    status: "Le profil a été mis à jour avec succès.",
+                    status: 'Le profil a été mis à jour avec succès.',
                   },
                 },
               },
@@ -1634,7 +1634,8 @@ describe('authenticate user account', () => {
               updateUserProfile: {
                 result: {
                   code: 400,
-                  description: "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre.",
+                  description:
+                    "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre.",
                 },
               },
             },
@@ -1711,7 +1712,11 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('Impossible de mettre à jour le profil. Veuillez réessayer.')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le profil. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

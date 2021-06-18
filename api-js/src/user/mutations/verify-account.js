@@ -67,7 +67,9 @@ export const verifyAccount = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to verify account. Please request a new email.`),
+        description: i18n._(
+          t`Unable to verify account. Please request a new email.`,
+        ),
       }
     }
 

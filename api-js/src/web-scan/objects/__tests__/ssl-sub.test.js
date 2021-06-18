@@ -207,12 +207,12 @@ describe('given the sslSubType object', () => {
           'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
         ]
 
-        expect(
-          demoType.weakCiphers.resolve({ weak_ciphers: ciphers }),
-        ).toEqual([
-          'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
-          'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
-        ])
+        expect(demoType.weakCiphers.resolve({ weak_ciphers: ciphers })).toEqual(
+          [
+            'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+            'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+          ],
+        )
       })
     })
     describe('testing the weakCurves resolver', () => {

@@ -552,7 +552,11 @@ describe('given findMyOrganizationsQuery', () => {
             },
           )
 
-          const error = [new GraphQLError("Impossible de charger l'organisation (s). Veuillez réessayer.")]
+          const error = [
+            new GraphQLError(
+              "Impossible de charger l'organisation (s). Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

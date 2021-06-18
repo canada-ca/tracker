@@ -4401,7 +4401,11 @@ describe('given the load affiliations by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error("Passer à la fois `first` et `last` pour paginer la connexion `Affiliation` n'est pas supporté."))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `Affiliation` n'est pas supporté.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -4426,7 +4430,11 @@ describe('given the load affiliations by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error("Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Affiliation`."))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Affiliation`.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -4455,7 +4463,11 @@ describe('given the load affiliations by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error("`first` sur la connexion `Affiliation` ne peut être inférieur à zéro."))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `Affiliation` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadAffiliationConnectionsByUserId.`,
@@ -4482,7 +4494,11 @@ describe('given the load affiliations by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error("`last` sur la connexion `Affiliation` ne peut être inférieur à zéro."))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `Affiliation` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadAffiliationConnectionsByUserId.`,
