@@ -66,7 +66,7 @@ describe('<EditableUserPhoneNumber />', () => {
               </MemoryRouter>
             </UserStateProvider>
           </MockedProvider>
-        </Suspense>
+        </Suspense>,
       )
       const editButton = getByText(/Edit/i)
       fireEvent.click(editButton)
@@ -99,7 +99,7 @@ describe('<EditableUserPhoneNumber />', () => {
                   </MemoryRouter>
                 </UserStateProvider>
               </MockedProvider>
-            </Suspense>
+            </Suspense>,
           )
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)
@@ -187,7 +187,7 @@ describe('<EditableUserPhoneNumber />', () => {
                   </MemoryRouter>
                 </UserStateProvider>
               </MockedProvider>
-            </Suspense>
+            </Suspense>,
           )
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)
