@@ -1510,7 +1510,11 @@ describe('given the load https connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `HTTPS`.',
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadHttpsConnectionsByDomainId.`,
@@ -1537,7 +1541,11 @@ describe('given the load https connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `HTTPS` n'est pas supporté.",
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: loadHttpsConnectionsByDomainId.`,
@@ -1564,7 +1572,11 @@ describe('given the load https connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `HTTPS` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadHttpsConnectionsByDomainId.`,
@@ -1590,7 +1602,11 @@ describe('given the load https connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `HTTPS` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadHttpsConnectionsByDomainId.`,
@@ -1618,7 +1634,11 @@ describe('given the load https connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 101 enregistrements sur la connexion `HTTPS` dépasse la limite `first` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 101 for: loadHttpsConnectionsByDomainId.`,
@@ -1644,7 +1664,11 @@ describe('given the load https connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 500 enregistrements sur la connexion `HTTPS` dépasse la limite `last` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: loadHttpsConnectionsByDomainId.`,
@@ -1675,7 +1699,11 @@ describe('given the load https connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1707,7 +1735,11 @@ describe('given the load https connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1742,7 +1774,11 @@ describe('given the load https connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1776,7 +1812,11 @@ describe('given the load https connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([

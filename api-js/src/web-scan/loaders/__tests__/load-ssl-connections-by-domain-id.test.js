@@ -1901,7 +1901,7 @@ describe('given the load ssl connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(new Error("Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SSL`."))
           }
 
           expect(consoleWarnOutput).toEqual([
@@ -1929,7 +1929,7 @@ describe('given the load ssl connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(new Error("Passer à la fois `first` et `last` pour paginer la connexion `SSL` n'est pas supporté."))
           }
 
           expect(consoleWarnOutput).toEqual([
@@ -1957,7 +1957,7 @@ describe('given the load ssl connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(new Error("`first` sur la connexion `SSL` ne peut être inférieur à zéro."))
             }
 
             expect(consoleWarnOutput).toEqual([
@@ -1984,7 +1984,7 @@ describe('given the load ssl connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(new Error("`last` sur la connexion `SSL` ne peut être inférieur à zéro."))
             }
 
             expect(consoleWarnOutput).toEqual([
@@ -2013,7 +2013,7 @@ describe('given the load ssl connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(new Error("La demande de 101 enregistrements sur la connexion `SSL` dépasse la limite `first` de 100 enregistrements."))
             }
 
             expect(consoleWarnOutput).toEqual([
@@ -2040,7 +2040,7 @@ describe('given the load ssl connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(new Error("La demande de 500 enregistrements sur la connexion `SSL` dépasse la limite `last` de 100 enregistrements."))
             }
 
             expect(consoleWarnOutput).toEqual([
@@ -2072,7 +2072,7 @@ describe('given the load ssl connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(new Error(`\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -2104,7 +2104,7 @@ describe('given the load ssl connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(new Error(`\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -2139,7 +2139,7 @@ describe('given the load ssl connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(new Error("Impossible de charger le(s) scan(s) SSL. Veuillez réessayer."))
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -2173,7 +2173,7 @@ describe('given the load ssl connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(new Error("Impossible de charger le(s) scan(s) SSL. Veuillez réessayer."))
         }
 
         expect(consoleErrorOutput).toEqual([
