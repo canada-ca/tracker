@@ -2170,7 +2170,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2262,7 +2263,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2354,7 +2356,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2651,7 +2654,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2743,7 +2747,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
