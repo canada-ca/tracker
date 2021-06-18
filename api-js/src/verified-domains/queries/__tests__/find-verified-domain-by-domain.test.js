@@ -126,11 +126,8 @@ describe('given findVerifiedDomainByDomain query', () => {
           },
           loaders: {
             loadVerifiedDomainsById: loadVerifiedDomainsById({ query }),
-            loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
-              query,
-              'en',
-              cleanseInput,
-            ),
+            loadVerifiedOrgConnectionsByDomainId:
+              loadVerifiedOrgConnectionsByDomainId(query, 'en', cleanseInput),
           },
         },
       )
@@ -182,11 +179,12 @@ describe('given findVerifiedDomainByDomain query', () => {
               },
               loaders: {
                 loadVerifiedDomainsById: loadVerifiedDomainsById({ query }),
-                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
-                  query,
-                  'en',
-                  cleanseInput,
-                ),
+                loadVerifiedOrgConnectionsByDomainId:
+                  loadVerifiedOrgConnectionsByDomainId(
+                    query,
+                    'en',
+                    cleanseInput,
+                  ),
               },
             },
           )
@@ -238,16 +236,21 @@ describe('given findVerifiedDomainByDomain query', () => {
               },
               loaders: {
                 loadVerifiedDomainsById: loadVerifiedDomainsById({ query }),
-                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
-                  query,
-                  'en',
-                  cleanseInput,
-                ),
+                loadVerifiedOrgConnectionsByDomainId:
+                  loadVerifiedOrgConnectionsByDomainId(
+                    query,
+                    'en',
+                    cleanseInput,
+                  ),
               },
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              `Aucun domaine vérifié avec le domaine fourni n'a pu être trouvé.`,
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
         })

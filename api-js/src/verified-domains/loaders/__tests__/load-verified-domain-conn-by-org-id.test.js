@@ -1378,7 +1378,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedDomain`.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -1404,7 +1408,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedDomain` n'est pas supporté.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -1430,7 +1438,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -1455,7 +1467,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -1482,7 +1498,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `1000` sur la connexion `VerifiedDomain` dépasse la limite `first` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -1507,7 +1527,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `1000` sur la connexion `VerifiedDomain` dépasse la limite `last` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -1538,7 +1562,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User attempted to have \`first\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
@@ -1567,7 +1595,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User attempted to have \`last\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
@@ -1599,7 +1631,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -1633,7 +1669,11 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
