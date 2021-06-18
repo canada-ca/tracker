@@ -11,7 +11,7 @@ export function createCache() {
         fields: {
           findMyDomains: relayStylePagination(),
           findMyDmarcSummaries: relayStylePagination(),
-          findMyOrganizations: relayStylePagination(),
+          findMyOrganizations: relayStylePagination(['isAdmin']),
         },
       },
       Organization: {
