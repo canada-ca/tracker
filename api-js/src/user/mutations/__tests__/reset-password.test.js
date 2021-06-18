@@ -2,6 +2,8 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
+import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -71,6 +73,8 @@ describe('reset users password', () => {
         query,
         collections,
         transaction,
+        jwt,
+        uuidv4,
         auth: {
           bcrypt,
           tokenize,
@@ -214,6 +218,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            jwt,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize: jest.fn().mockReturnValue('token'),
@@ -985,6 +991,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            uuidv4,
+            jwt,
             auth: {
               bcrypt,
               tokenize: jest.fn().mockReturnValue('token'),

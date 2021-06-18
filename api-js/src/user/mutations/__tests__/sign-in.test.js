@@ -2,6 +2,8 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
+import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -11,7 +13,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
 
-const { SIGN_IN_KEY } = process.env
+
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const mockNotify = jest.fn()
@@ -35,12 +37,10 @@ describe('authenticate user account', () => {
     }))
     tokenize = jest.fn().mockReturnValue('token')
   })
-
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -73,6 +73,8 @@ describe('authenticate user account', () => {
         query,
         collections,
         transaction,
+        jwt,
+        uuidv4,
         auth: {
           bcrypt,
           tokenize,
@@ -94,11 +96,9 @@ describe('authenticate user account', () => {
     )
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
@@ -120,7 +120,7 @@ describe('authenticate user account', () => {
     })
     describe('given successful sign in', () => {
       describe('user has send method set to phone', () => {
-        it('returns sendMethod message and authentication token', async () => {
+        it('returns sendMethod message, authentication token and refresh token', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -150,6 +150,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -159,6 +160,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -231,6 +233,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -240,6 +243,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -312,6 +316,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -321,6 +326,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -342,6 +348,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                 },
               },
             },
@@ -392,6 +399,7 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
+                    refreshToken
                   }
                 }
               }
@@ -401,6 +409,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
@@ -447,6 +456,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -525,6 +535,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -538,6 +549,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -601,6 +613,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -614,6 +627,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -671,6 +685,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -684,6 +699,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -749,6 +765,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -762,6 +779,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -824,6 +842,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -837,6 +856,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -901,6 +921,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -914,6 +935,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -989,6 +1011,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1002,6 +1025,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1074,6 +1098,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1087,6 +1112,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1159,6 +1185,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1172,6 +1199,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1193,6 +1221,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                 },
               },
             },
@@ -1243,6 +1272,7 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
+                    refreshToken
                   }
                   ... on SignInError {
                     code
@@ -1256,6 +1286,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
@@ -1302,6 +1333,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1315,6 +1347,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1379,6 +1412,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1392,6 +1426,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1454,6 +1489,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1467,6 +1503,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1524,6 +1561,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1537,6 +1575,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1602,6 +1641,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1615,6 +1655,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1675,6 +1716,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1688,6 +1730,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1750,6 +1793,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1763,6 +1807,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,

@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs'
 import moment from 'moment'
 import fetch from 'isomorphic-fetch'
 import { v4 as uuidv4 } from 'uuid'
+import jwt from 'jsonwebtoken'
 
 import { createI18n } from './create-i18n'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
@@ -137,6 +138,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
     moment,
     fetch,
     uuidv4,
+    jwt,
     auth: {
       bcrypt,
       checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),

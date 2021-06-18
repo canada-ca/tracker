@@ -204,6 +204,7 @@
     'Unable to load web summary. Please try again.': 'todo',
     'Unable to query affiliation(s). Please try again.': 'todo',
     'Unable to query domain(s). Please try again.': 'todo',
+    'Unable to refresh tokens, please sign in.': 'todo',
     'Unable to remove a user that already does not belong to this organization.':
       'todo',
     'Unable to remove domain from unknown organization.': 'todo',

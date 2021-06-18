@@ -400,6 +400,8 @@
       'Unable to query affiliation(s). Please try again.',
     'Unable to query domain(s). Please try again.':
       'Unable to query domain(s). Please try again.',
+    'Unable to refresh tokens, please sign in.':
+      'Unable to refresh tokens, please sign in.',
     'Unable to remove a user that already does not belong to this organization.':
       'Unable to remove a user that already does not belong to this organization.',
     'Unable to remove domain from unknown organization.':
