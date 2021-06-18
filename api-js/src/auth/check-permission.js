@@ -17,7 +17,7 @@ export const checkPermission = ({ i18n, userKey, query }) => async ({
     console.error(
       `Database error when checking to see if user: ${userKeyString} has super admin permission: ${err}`,
     )
-    throw new Error(i18n._(t`Authentication error. Please sign in again.`))
+    throw new Error(i18n._(t`Authentication error. Please sign in.`))
   }
 
   let permission
@@ -45,7 +45,7 @@ export const checkPermission = ({ i18n, userKey, query }) => async ({
       console.error(
         `Database error occurred when checking ${userKeyString}'s permission: ${err}`,
       )
-      throw new Error(i18n._(t`Authentication error. Please sign in again.`))
+      throw new Error(i18n._(t`Authentication error. Please sign in.`))
     }
 
     try {

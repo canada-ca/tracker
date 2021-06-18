@@ -12,7 +12,7 @@ export const verifyToken = ({ i18n }) => ({
     decoded = jwt.verify(token, secret)
   } catch (err) {
     console.warn('JWT was attempted to be verified but secret was incorrect.')
-    throw new Error(i18n._(t`Invalid token, please request a new one.`))
+    throw new Error(i18n._(t`Invalid token, please sign in.`))
   }
   return decoded.parameters
 }

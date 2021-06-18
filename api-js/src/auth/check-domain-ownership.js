@@ -27,9 +27,7 @@ export const checkDomainOwnership =
         `Database error when retrieving super admin affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
       throw new Error(
-        i18n._(
-          t`Error when retrieving dmarc report information. Please try again.`,
-        ),
+        i18n._(t`Ownership check error. Unable to request domain information.`),
       )
     }
 
@@ -41,9 +39,7 @@ export const checkDomainOwnership =
         `Cursor error when retrieving super admin affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
       throw new Error(
-        i18n._(
-          t`Error when retrieving dmarc report information. Please try again.`,
-        ),
+        i18n._(t`Ownership check error. Unable to request domain information.`),
       )
     }
 
@@ -69,9 +65,7 @@ export const checkDomainOwnership =
         `Database error when retrieving affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
       throw new Error(
-        i18n._(
-          t`Error when retrieving dmarc report information. Please try again.`,
-        ),
+        i18n._(t`Ownership check error. Unable to request domain information.`),
       )
     }
 
@@ -82,9 +76,7 @@ export const checkDomainOwnership =
         `Cursor error when retrieving affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
       throw new Error(
-        i18n._(
-          t`Error when retrieving dmarc report information. Please try again.`,
-        ),
+        i18n._(t`Ownership check error. Unable to request domain information.`),
       )
     }
 

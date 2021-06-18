@@ -261,7 +261,7 @@ describe('given the check domain ownership function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Error when retrieving dmarc report information. Please try again.',
+                'Ownership check error. Unable to request domain information.',
               ),
             )
             expect(consoleOutput).toEqual([
@@ -300,7 +300,7 @@ describe('given the check domain ownership function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Error when retrieving dmarc report information. Please try again.',
+                'Ownership check error. Unable to request domain information.',
               ),
             )
             expect(consoleOutput).toEqual([
@@ -327,7 +327,7 @@ describe('given the check domain ownership function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Error when retrieving dmarc report information. Please try again.',
+                'Ownership check error. Unable to request domain information.',
               ),
             )
             expect(consoleOutput).toEqual([
@@ -362,7 +362,7 @@ describe('given the check domain ownership function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Error when retrieving dmarc report information. Please try again.',
+                'Ownership check error. Unable to request domain information.',
               ),
             )
             expect(consoleOutput).toEqual([
@@ -406,7 +406,11 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Erreur de vérification de la propriété. Impossible de demander des informations sur le domaine.',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `Cursor error when retrieving super admin affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Cursor error occurred.`,
             ])
@@ -441,7 +445,11 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Erreur de vérification de la propriété. Impossible de demander des informations sur le domaine.',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `Cursor error when retrieving affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Cursor error occurred.`,
             ])
@@ -464,7 +472,11 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Erreur de vérification de la propriété. Impossible de demander des informations sur le domaine.',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `Database error when retrieving super admin affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
@@ -495,7 +507,11 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Erreur de vérification de la propriété. Impossible de demander des informations sur le domaine.',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `Database error when retrieving affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
