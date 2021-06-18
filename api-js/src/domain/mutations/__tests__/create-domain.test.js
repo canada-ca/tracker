@@ -2413,7 +2413,8 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de créer un domaine dans une organisation inconnue.',
                 },
               },
             },
@@ -2506,7 +2507,8 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la création du domaine.",
                 },
               },
             },
@@ -2613,7 +2615,8 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de créer le domaine, l'organisation l'a déjà réclamé.",
                 },
               },
             },
@@ -2716,7 +2719,11 @@ describe('create a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer un domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2823,7 +2830,11 @@ describe('create a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de créer un domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2923,7 +2934,11 @@ describe('create a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de créer un domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -3028,7 +3043,11 @@ describe('create a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de créer un domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -3126,7 +3145,11 @@ describe('create a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de créer un domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -3237,7 +3260,11 @@ describe('create a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer un domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

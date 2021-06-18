@@ -2892,7 +2892,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3136,7 +3137,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3356,7 +3358,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3568,7 +3571,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3882,7 +3886,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -4096,7 +4101,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -4310,7 +4316,7 @@ describe('removing a domain', () => {
               removeDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Impossible de supprimer un domaine inconnu.',
                 },
               },
             },
@@ -4385,7 +4391,8 @@ describe('removing a domain', () => {
               removeDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de supprimer le domaine d'une organisation inconnue.",
                 },
               },
             },
@@ -4501,7 +4508,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -4579,7 +4587,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -4650,7 +4659,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -4767,7 +4777,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
                   },
                 },
               },
@@ -4838,7 +4849,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
                   },
                 },
               },
@@ -4961,7 +4973,11 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -5076,7 +5092,11 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -5162,7 +5182,11 @@ describe('removing a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de supprimer le domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -5242,7 +5266,11 @@ describe('removing a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de supprimer le domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -5318,7 +5346,11 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

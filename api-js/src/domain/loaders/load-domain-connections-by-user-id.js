@@ -128,7 +128,7 @@ export const loadDomainConnectionsByUserId = ({
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`domain\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -137,7 +137,7 @@ export const loadDomainConnectionsByUserId = ({
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`domain\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -149,7 +149,7 @@ export const loadDomainConnectionsByUserId = ({
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`domain\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -160,7 +160,7 @@ export const loadDomainConnectionsByUserId = ({
       )
       throw new Error(
         i18n._(
-          t`Requesting \`${amount}\` records on the \`domain\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting \`${amount}\` records on the \`Domain\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {

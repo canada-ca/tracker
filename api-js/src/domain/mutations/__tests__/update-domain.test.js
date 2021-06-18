@@ -1680,7 +1680,8 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour un domaine inconnu.',
                 },
               },
             },
@@ -1764,7 +1765,8 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour le domaine dans un org inconnu.',
                 },
               },
             },
@@ -2112,7 +2114,8 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée.",
                 },
               },
             },
@@ -2229,7 +2232,11 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2345,7 +2352,11 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2421,7 +2432,11 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
