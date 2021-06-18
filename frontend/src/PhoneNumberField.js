@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
@@ -11,7 +11,7 @@ import {
 import { useField, useFormikContext } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 import { fieldRequirements } from './fieldRequirements'
-import PhoneInput from 'react-phone-input-2'
+const PhoneInput = lazy(() => import('react-phone-input-2'))
 
 const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
   name,
