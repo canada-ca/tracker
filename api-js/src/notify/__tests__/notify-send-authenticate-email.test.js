@@ -135,7 +135,11 @@ describe('given the sendAuthEmail function', () => {
           const mockedSendAuthEmail = sendAuthEmail({ notifyClient, i18n })
           await mockedSendAuthEmail({ user })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible d'envoyer l'email d'authentification. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
