@@ -1,28 +1,24 @@
-import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import React, { lazy } from 'react'
+import { string } from 'prop-types'
 import { useLingui } from '@lingui/react'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import {
+  Box,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
 } from '@chakra-ui/core'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 import { fieldRequirements } from './fieldRequirements'
+const PhoneInput = lazy(() => import('react-phone-input-2'))
 
 const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
   name,
   label,
-  forwardedRef,
-  ...props
 }) {
-  const [field, meta] = useField(name)
+  const [,meta] = useField(name)
+  const { values, setFieldValue } = useFormikContext()
   const { i18n } = useLingui()
 
   const labelText = label === undefined ? <Trans>Phone Number:</Trans> : label
@@ -39,23 +35,21 @@ const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
       <FormLabel htmlFor="phoneNumber" fontWeight="bold">
         {labelText}
       </FormLabel>
-      <InputGroup>
-        <InputLeftElement>
-          <Icon name="phone" color="gray.300" />
-        </InputLeftElement>
-        <Input
-          {...field}
-          {...props}
-          id="phoneNumber"
+      <br />
+      <Box display='inline-block' border='2px' borderColor='gray.200'>
+        <PhoneInput
+          inputProps={{
+            id: name,
+            name: name,
+            autoFocus: true,
+          }}
+          value={values[name]}
+          onChange={e => setFieldValue(name, e)}
           type="phoneNumber"
-          ref={forwardedRef}
-          placeholder={i18n._(t`Phone Number`)}
+          specialLabel={null}
+          country={'ca'}
         />
-      </InputGroup>
-
-      <FormHelperText>
-        {i18n._(fieldRequirements.phoneNumber.matches.message)}
-      </FormHelperText>
+      </Box>
 
       {errorText}
     </FormControl>
@@ -64,12 +58,7 @@ const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
 
 PhoneNumberField.propTypes = {
   name: string.isRequired,
-  forwardedRef: oneOfType([func, shape({ current: elementType })]),
+  label: string.isRequired,
 }
 
-const withForwardedRef = React.forwardRef((props, ref) => {
-  return <PhoneNumberField {...props} forwardedRef={ref} />
-})
-withForwardedRef.displayName = 'PhoneNumberField'
-
-export default withForwardedRef
+export default PhoneNumberField

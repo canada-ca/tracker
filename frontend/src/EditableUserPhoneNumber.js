@@ -160,7 +160,7 @@ function EditableUserPhoneNumber({ detailValue }) {
                 // Submit update detail mutation
                 await setPhoneNumber({
                   variables: {
-                    phoneNumber: values.phoneNumber,
+                    phoneNumber: ('+' + values.phoneNumber),
                   },
                 })
               }}
@@ -186,7 +186,6 @@ function EditableUserPhoneNumber({ detailValue }) {
                       <PhoneNumberField
                         name="phoneNumber"
                         label={t`New Phone Number:`}
-                        ref={initialFocusRef}
                       />
                     </Stack>
                   </ModalBody>
@@ -270,7 +269,7 @@ function EditableUserPhoneNumber({ detailValue }) {
 
   const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
 
-  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{9,14}$/
+  const PHONE_NUMBER_REGEX = /^[1-9]\d{9,14}$/
 
   const phoneValidationSchema = object().shape({
     phoneNumber: yupString()
