@@ -256,7 +256,11 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
             '1234',
           )
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de trouver les données de synthèse DMARC. Veuillez réessayer.',
+            ),
+          )
         }
         expect(consoleOutput).toEqual([
           `Database error occurred when user: 1234 running loadDmarcSummaryByKey: Error: Database error occurred.`,
@@ -277,7 +281,11 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
             '1234',
           )
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de trouver les données de synthèse DMARC. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

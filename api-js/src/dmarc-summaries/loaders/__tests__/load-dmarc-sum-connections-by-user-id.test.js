@@ -2821,7 +2821,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection.',
               ),
             )
           }
@@ -2856,7 +2856,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported.',
               ),
             )
           }
@@ -2891,7 +2891,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `101` records on the `dmarcSummaries` connection exceeds the `first` limit of 100 records.',
+                  'Requesting `101` records on the `DmarcSummaries` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -2925,7 +2925,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `101` records on the `dmarcSummaries` connection exceeds the `last` limit of 100 records.',
+                  'Requesting `101` records on the `DmarcSummaries` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -2961,7 +2961,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `dmarcSummaries` connection cannot be less than zero.',
+                  '`first` on the `DmarcSummaries` connection cannot be less than zero.',
                 ),
               )
             }
@@ -2995,7 +2995,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `dmarcSummaries` connection cannot be less than zero.',
+                  '`last` on the `DmarcSummaries` connection cannot be less than zero.',
                 ),
               )
             }
@@ -3111,7 +3111,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `period` value to access the `dmarcSummaries` connection.',
+                'You must provide a `period` value to access the `DmarcSummaries` connection.',
               ),
             )
           }
@@ -3144,7 +3144,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `year` value to access the `dmarcSummaries` connection.',
+                'You must provide a `year` value to access the `DmarcSummaries` connection.',
               ),
             )
           }
@@ -3276,7 +3276,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcSummaries`.',
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3307,7 +3311,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `DmarcSummaries` n'est pas supporté.",
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3338,7 +3346,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `101` sur la connexion `DmarcSummaries` dépasse la limite `first` de 100 enregistrements.",
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 101 for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3368,7 +3380,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `101` sur la connexion `DmarcSummaries` dépasse la limite `last` de 100 enregistrements.",
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 101 for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3400,7 +3416,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3430,7 +3450,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3465,7 +3489,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -3501,7 +3529,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -3534,7 +3566,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `period` pour accéder à la connexion `DmarcSummaries`.',
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `User: ${user._key} did not have \`period\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3563,7 +3599,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `year` pour accéder à la connexion `DmarcSummaries`.',
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `User: ${user._key} did not have \`year\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3597,7 +3637,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -3636,7 +3680,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([

@@ -696,7 +696,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DkimFailureTable`.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -723,7 +727,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `DkimFailureTable` n'est pas supporté.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -804,7 +812,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `DkimFailureTable` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -830,7 +842,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `DkimFailureTable` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -862,7 +878,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -894,7 +914,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -922,7 +946,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de charger les données d'échec DKIM. Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -953,7 +981,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de charger les données d'échec DKIM. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -986,7 +1018,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de charger les données d'échec DKIM. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

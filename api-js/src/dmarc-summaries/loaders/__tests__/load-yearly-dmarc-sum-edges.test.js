@@ -238,7 +238,11 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
             startDate: 'thirtyDays',
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -267,7 +271,11 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
             startDate: 'thirtyDays',
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
