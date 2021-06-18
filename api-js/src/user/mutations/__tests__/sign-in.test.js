@@ -1369,7 +1369,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
@@ -1448,7 +1449,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
@@ -1597,7 +1599,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 401,
-                  description: 'todo',
+                  description:
+                    'Trop de tentatives de connexion ont échoué, veuillez réinitialiser votre mot de passe et réessayer.',
                 },
               },
             },
@@ -1671,7 +1674,9 @@ describe('authenticate user account', () => {
               },
             },
           )
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1747,7 +1752,9 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1824,7 +1831,9 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

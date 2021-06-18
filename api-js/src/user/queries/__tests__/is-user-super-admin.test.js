@@ -1,6 +1,6 @@
 import { setupI18n } from '@lingui/core'
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema } from 'graphql'
+import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 
 import { databaseOptions } from '../../../../database-options'
 import { checkPermission, userRequired } from '../../../auth'
@@ -240,39 +240,37 @@ describe('given the isUserSuperAdmin query', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        try {
-          await graphql(
-            schema,
-            `
-              query {
-                isUserSuperAdmin
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query: mockedQuery,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
+        const response = await graphql(
+          schema,
+          `
+            query {
+              isUserSuperAdmin
+            }
+          `,
+          null,
+          {
+            i18n,
+            userKey: user._key,
+            query: mockedQuery,
+            auth: {
+              checkPermission: checkPermission({ userKey: user._key, query }),
+              userRequired: userRequired({
+                userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
-              },
+              }),
             },
-          )
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Unable to verify if user is a super admin, please try again.',
-            ),
-          )
-        }
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
+          },
+        )
 
+        const error = [
+          new GraphQLError(
+            `Unable to verify if user is a super admin, please try again.`,
+          ),
+        ]
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
           `Database error occurred when user: ${user._key} was seeing if they were a super admin, err: Error: Database error occurred.`,
         ])
@@ -300,35 +298,37 @@ describe('given the isUserSuperAdmin query', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        try {
-          await graphql(
-            schema,
-            `
-              query {
-                isUserSuperAdmin
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query: mockedQuery,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
+        const response = await graphql(
+          schema,
+          `
+            query {
+              isUserSuperAdmin
+            }
+          `,
+          null,
+          {
+            i18n,
+            userKey: user._key,
+            query: mockedQuery,
+            auth: {
+              checkPermission: checkPermission({ userKey: user._key, query }),
+              userRequired: userRequired({
+                userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
-              },
+              }),
             },
-          )
-        } catch (err) {
-          expect(err).toEqual(new Error('todo'))
-        }
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
+          },
+        )
 
+        const error = [
+          new GraphQLError(
+            `Impossible de vérifier si l'utilisateur est un super administrateur, veuillez réessayer.`,
+          ),
+        ]
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
           `Database error occurred when user: ${user._key} was seeing if they were a super admin, err: Error: Database error occurred.`,
         ])

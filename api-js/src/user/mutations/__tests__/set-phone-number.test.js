@@ -943,7 +943,8 @@ describe('user sets a new phone number', () => {
             data: {
               setPhoneNumber: {
                 result: {
-                  status: 'todo',
+                  status:
+                    'Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification.',
                   user: {
                     phoneNumber: newPhoneNumber,
                   },
@@ -1036,7 +1037,8 @@ describe('user sets a new phone number', () => {
               data: {
                 setPhoneNumber: {
                   result: {
-                    status: 'todo',
+                    status:
+                      'Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification.',
                     user: {
                       phoneNumber: newPhoneNumber,
                     },
@@ -1240,7 +1242,8 @@ describe('user sets a new phone number', () => {
               data: {
                 setPhoneNumber: {
                   result: {
-                    status: 'todo',
+                    status:
+                      'Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification.',
                     user: {
                       phoneNumber: newPhoneNumber,
                     },
@@ -1444,7 +1447,8 @@ describe('user sets a new phone number', () => {
               data: {
                 setPhoneNumber: {
                   result: {
-                    status: 'todo',
+                    status:
+                      'Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification.',
                     user: {
                       phoneNumber: newPhoneNumber,
                     },
@@ -1647,7 +1651,11 @@ describe('user sets a new phone number', () => {
               },
             },
           )
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de définir le numéro de téléphone, veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
