@@ -2170,7 +2170,7 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2262,7 +2262,7 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2354,7 +2354,7 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2651,7 +2651,7 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2743,7 +2743,7 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },

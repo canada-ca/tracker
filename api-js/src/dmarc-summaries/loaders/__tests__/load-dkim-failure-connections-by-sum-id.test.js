@@ -758,7 +758,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `101` sur la connexion `DkimFailureTable` dépasse la limite `first` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -784,7 +788,11 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `101` sur la connexion `DkimFailureTable` dépasse la limite `last` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
