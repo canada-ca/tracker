@@ -23,7 +23,7 @@ import { string, array, bool, object, func } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 import { Field, Formik, FieldArray } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
-import { UPDATE_DOMAIN } from './graphql/mutations'
+import { UPDATE_DOMAIN, CREATE_DOMAIN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 
@@ -36,10 +36,63 @@ export function AdminDomainModal({
   editingDomainUrl,
   selectorInputList,
   orgSlug,
+  mutation,
 }) {
   const { currentUser } = useUserState()
   const toast = useToast()
   const initialFocusRef = useRef()
+
+  const [createDomain] = useMutation(CREATE_DOMAIN, {
+    refetchQueries: ['PaginatedOrgDomains'],
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    onError(error) {
+      toast({
+        title: t`An error occurred.`,
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ createDomain }) {
+      if (createDomain.result.__typename === 'Domain') {
+        toast({
+          title: t`Domain added`,
+          description: t`${createDomain.result.domain} was added to ${orgSlug}`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        onClose()
+      } else if (createDomain.result.__typename === 'DomainError') {
+        toast({
+          title: t`Unable to create new domain.`,
+          description: createDomain.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect createDomain.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect createDomain.result typename.')
+      }
+    },
+  })
+
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
     context: {
@@ -113,14 +166,25 @@ export function AdminDomainModal({
               validationSchema={validationSchema}
               onSubmit={async (values) => {
                 // Submit update detail mutation
-                await updateDomain({
-                  variables: {
-                    domainId: editingDomainId,
-                    orgId: orgId,
-                    domain: values.domainUrl,
-                    selectors: values.selectors,
-                  },
-                })
+
+                if (mutation === 'update') {
+                  await updateDomain({
+                    variables: {
+                      domainId: editingDomainId,
+                      orgId: orgId,
+                      domain: values.domainUrl,
+                      selectors: values.selectors,
+                    },
+                  })
+                } else if (mutation === 'create') {
+                  await createDomain({
+                    variables: {
+                      orgId: orgId,
+                      domain: values.domainUrl,
+                      selectors: values.selectors,
+                    },
+                  })
+                }
               }}
             >
               {({ handleSubmit, isSubmitting, values, errors }) => (
@@ -264,4 +328,5 @@ AdminDomainModal.propTypes = {
   editingDomainUrl: string,
   selectorInputList: array,
   orgSlug: string,
+  mutation: string,
 }
