@@ -14,6 +14,33 @@ spec:
       tracing:
         sampling: 100.0
   components:
+    pilot:
+      k8s:
+        replicaCount: 2
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - istiod
+                  topologyKey: kubernetes.io/hostname
+                weight: 1
+        hpaSpec:
+          maxReplicas: 2
+          minReplicas: 1
+        podDisruptionBudget:
+          minAvailable: 1
+          selector:
+            matchLabels:
+              app: istiod
+        strategy:
+          rollingUpdate:
+            maxSurge: 100%
+            maxUnavailable: 50%
     ingressGateways:
     - name: istio-ingressgateway
       enabled: true
