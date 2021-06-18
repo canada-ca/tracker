@@ -2,7 +2,7 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
-import { Box, Heading, Link, Stack, Text, useToast } from '@chakra-ui/core'
+import { Box, Heading, Link, Text, useToast } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
@@ -137,23 +137,15 @@ export default function SignInPage() {
               </Link>
             </Box>
 
-            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <TrackerButton
-                variant="primary"
-                isLoading={isSubmitting}
-                type="submit"
-              >
-                <Trans>Sign In</Trans>
-              </TrackerButton>
-
-              <TrackerButton
-                as={RouteLink}
-                variant="primary outline"
-                to="/create-user"
-              >
-                <Trans>Create Account</Trans>
-              </TrackerButton>
-            </Stack>
+            <TrackerButton
+              variant="primary"
+              isLoading={isSubmitting}
+              type="submit"
+              width='100%'
+              mb={5}
+            >
+              <Trans>Sign In</Trans>
+            </TrackerButton>
           </form>
         )}
       </Formik>
