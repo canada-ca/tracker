@@ -174,7 +174,11 @@ describe('given the loadDkimGuidanceTagById function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de trouver le(s) tag(s) d'orientation DKIM. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -195,7 +199,11 @@ describe('given the loadDkimGuidanceTagById function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de trouver le(s) tag(s) d'orientation DKIM. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
