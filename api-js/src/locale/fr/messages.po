@@ -13,107 +13,118 @@ msgstr ""
 
 #: src/auth/check-permission.js:20
 #: src/auth/check-permission.js:48
-msgid "Authentication error. Please sign in again."
-msgstr "todo"
-
 #: src/auth/user-required.js:8
 #: src/auth/user-required.js:19
 #: src/auth/user-required.js:26
 msgid "Authentication error. Please sign in."
-msgstr "todo"
+msgstr "Erreur d'authentification. Veuillez vous connecter."
 
 #: src/organization/objects/organization.js:142
 msgid "Cannot query affiliations on organization without admin permission or higher."
-msgstr "todo"
+msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autorisation de l'administrateur ou plus."
 
 #: src/user/mutations/sign-up.js:105
 msgid "Email already in use."
-msgstr "todo"
-
-#: src/auth/check-domain-ownership.js:31
-#: src/auth/check-domain-ownership.js:45
-#: src/auth/check-domain-ownership.js:73
-#: src/auth/check-domain-ownership.js:86
-msgid "Error when retrieving dmarc report information. Please try again."
-msgstr "todo"
+msgstr "Courriel déjà utilisé."
 
 #: src/user/mutations/send-password-reset.js:64
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
-msgstr "todo"
+msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de réinitialisation du mot de passe se trouvera dans votre boîte de réception."
 
 #: src/user/mutations/send-email-verification.js:63
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
-msgstr "todo"
+msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception."
 
 #: src/user/mutations/authenticate.js:121
 msgid "Incorrect TFA code. Please sign in again."
-msgstr "todo"
+msgstr "Code TFA incorrect. Veuillez vous reconnecter."
 
 #: src/user/mutations/reset-password.js:64
 msgid "Incorrect token value. Please request a new email."
-msgstr "todo"
+msgstr "La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail."
 
 #: src/user/mutations/sign-in.js:60
 #: src/user/mutations/sign-in.js:201
 msgid "Incorrect username or password. Please try again."
-msgstr "todo"
+msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer."
 
 #: src/auth/verify-jwt.js:15
-msgid "Invalid token, please request a new one."
-msgstr "todo"
+msgid "Invalid token, please sign in."
+msgstr "Jeton invalide, veuillez vous connecter."
 
 #: src/user/mutations/reset-password.js:106
-msgid "New passwords do not match. Please try again."
-msgstr "todo"
+msgid "New passwords do not match."
+msgstr "Les nouveaux mots de passe ne correspondent pas."
 
-#: src/organization/queries/find-organization-by-slug.js:40
+#: src/organization/queries/find-organization-by-slug.js:42
 msgid "No organization with the provided slug could be found."
-msgstr "todo"
+msgstr "Aucune organisation avec le slug fourni n'a pu être trouvée."
 
 #: src/verified-domains/queries/find-verified-domain-by-domain.js:33
 msgid "No verified domain with the provided domain could be found."
-msgstr "todo"
+msgstr "Aucun domaine vérifié avec le domaine fourni n'a pu être trouvé."
 
 #: src/verified-organizations/queries/find-verified-organization-by-slug.js:31
 msgid "No verified organization with the provided slug could be found."
-msgstr "todo"
+msgstr "Aucune organisation vérifiée avec le slug fourni n'a pu être trouvée."
 
-#: src/organization/mutations/verify-organization.js:80
+#: src/organization/mutations/verify-organization.js:82
 msgid "Organization has already been verified."
-msgstr "todo"
+msgstr "L'organisation a déjà été vérifiée."
 
-#: src/organization/mutations/update-organization.js:186
+#: src/organization/mutations/update-organization.js:188
 msgid "Organization name already in use, please choose another and try again."
-msgstr "todo"
+msgstr "Le nom de l'organisation est déjà utilisé, veuillez en choisir un autre et réessayer."
 
-#: src/organization/mutations/create-organization.js:136
+#: src/organization/mutations/create-organization.js:138
 msgid "Organization name already in use. Please try again with a different name."
-msgstr "todo"
+msgstr "Le nom de l'organisation est déjà utilisé. Veuillez réessayer avec un nom différent."
+
+#: src/auth/check-domain-ownership.js:30
+#: src/auth/check-domain-ownership.js:42
+#: src/auth/check-domain-ownership.js:68
+#: src/auth/check-domain-ownership.js:79
+msgid "Ownership check error. Unable to request domain information."
+msgstr "Erreur de vérification de la propriété. Impossible de demander des informations sur le domaine."
+
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:80
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:170
+msgid "Passing both `first` and `last` to paginate the `Affiliation` connection is not supported."
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Affiliation` n'est pas supporté."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:95
 msgid "Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DKIMResults` n'est pas supporté."
 
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:120
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:156
 msgid "Passing both `first` and `last` to paginate the `DKIM` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DKIMResults` n'est pas supporté."
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:144
 msgid "Passing both `first` and `last` to paginate the `DMARC` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DMARC` n'est pas supporté."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:48
 msgid "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DkimFailureTable` n'est pas supporté."
 
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:48
 msgid "Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DmarcFailureTable` n'est pas supporté."
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:187
+msgid "Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported."
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DmarcSummaries` n'est pas supporté."
+
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:140
+#: src/domain/loaders/load-domain-connections-by-user-id.js:140
+msgid "Passing both `first` and `last` to paginate the `Domain` connection is not supported."
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Domain` n'est pas supporté."
 
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:46
 msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `FullPassTable` n'est pas supporté."
 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:98
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:95
@@ -122,171 +133,168 @@ msgstr "todo"
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:95
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:95
 msgid "Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `GuidanceTag` n'est pas supporté."
 
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:152
 msgid "Passing both `first` and `last` to paginate the `HTTPS` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `HTTPS` n'est pas supporté."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:190
 #: src/organization/loaders/load-organization-connections-by-user-id.js:189
 msgid "Passing both `first` and `last` to paginate the `Organization` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Organization` n'est pas supporté."
 
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:138
 msgid "Passing both `first` and `last` to paginate the `SPF` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `SPF` n'est pas supporté."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:176
 msgid "Passing both `first` and `last` to paginate the `SSL` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `SSL` n'est pas supporté."
 
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:48
 msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `SpfFailureTable` n'est pas supporté."
 
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:121
 #: src/verified-domains/loaders/load-verified-domain-connections.js:121
 msgid "Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedDomain` n'est pas supporté."
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:175
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:176
 msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
-msgstr "todo"
+msgstr "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedOrganization` n'est pas supporté."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:80
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:170
-msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
-msgstr "todo"
-
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:191
-msgid "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
-msgstr "todo"
-
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:140
-#: src/domain/loaders/load-domain-connections-by-user-id.js:140
-msgid "Passing both `first` and `last` to paginate the `domain` connection is not supported."
-msgstr "todo"
-
+#: src/user/mutations/reset-password.js:118
 #: src/user/mutations/sign-up.js:79
 msgid "Password does not meet requirements."
-msgstr "todo"
+msgstr "Le mot de passe ne répond pas aux exigences."
 
-#: src/user/mutations/reset-password.js:119
-msgid "Password does not requirements. Please try again."
-msgstr "todo"
-
-#: src/user/mutations/reset-password.js:144
+#: src/user/mutations/reset-password.js:142
 msgid "Password was successfully reset."
-msgstr "todo"
+msgstr "Le mot de passe a été réinitialisé avec succès."
 
 #: src/user/mutations/update-user-password.js:112
 msgid "Password was successfully updated."
-msgstr "todo"
+msgstr "Le mot de passe a été mis à jour avec succès."
 
 #: src/user/mutations/sign-up.js:91
 msgid "Passwords do not match."
-msgstr "todo"
+msgstr "Les mots de passe ne correspondent pas."
 
-#: src/organization/queries/find-organization-by-slug.js:51
+#: src/organization/queries/find-organization-by-slug.js:53
 msgid "Permission Denied: Could not retrieve specified organization."
-msgstr "todo"
+msgstr "Permission refusée : Impossible de récupérer l'organisation spécifiée."
 
-#: src/domain/mutations/remove-domain.js:107
+#: src/domain/mutations/remove-domain.js:109
 msgid "Permission Denied: Please contact organization admin for help with removing domain."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine."
 
-#: src/organization/mutations/remove-organization.js:83
+#: src/organization/mutations/remove-organization.js:85
 msgid "Permission Denied: Please contact organization admin for help with removing organization."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer l'organisation."
 
-#: src/affiliation/mutations/remove-user-from-org.js:200
+#: src/affiliation/mutations/remove-user-from-org.js:202
 msgid "Permission Denied: Please contact organization admin for help with removing users."
 msgstr "todo"
 
-#: src/organization/mutations/update-organization.js:154
+#: src/organization/mutations/update-organization.js:156
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs."
 
-#: src/affiliation/mutations/update-user-role.js:178
-#: src/affiliation/mutations/update-user-role.js:201
-#: src/affiliation/mutations/update-user-role.js:219
+#: src/affiliation/mutations/update-user-role.js:180
+#: src/affiliation/mutations/update-user-role.js:203
+#: src/affiliation/mutations/update-user-role.js:221
 msgid "Permission Denied: Please contact organization admin for help with updating user roles."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs."
 
-#: src/affiliation/mutations/invite-user-to-org.js:104
+#: src/affiliation/mutations/invite-user-to-org.js:106
 msgid "Permission Denied: Please contact organization admin for help with user invitations."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs."
 
-#: src/affiliation/mutations/update-user-role.js:110
+#: src/affiliation/mutations/update-user-role.js:112
 msgid "Permission Denied: Please contact organization admin for help with user role changes."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs."
 
-#: src/domain/mutations/create-domain.js:93
+#: src/domain/mutations/create-domain.js:95
 msgid "Permission Denied: Please contact organization user for help with creating domain."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la création du domaine."
 
-#: src/domain/queries/find-domain-by-domain.js:47
+#: src/domain/queries/find-domain-by-domain.js:48
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide pour récupérer ce domaine."
 
-#: src/domain/mutations/request-scan.js:67
+#: src/domain/mutations/request-scan.js:66
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine."
 
-#: src/domain/mutations/update-domain.js:110
+#: src/domain/mutations/update-domain.js:112
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "todo"
 
-#: src/domain/mutations/remove-domain.js:94
+#: src/domain/mutations/remove-domain.js:96
 msgid "Permission Denied: Please contact super admin for help with removing domain."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
-#: src/organization/mutations/remove-organization.js:70
+#: src/organization/mutations/remove-organization.js:72
 msgid "Permission Denied: Please contact super admin for help with removing organization."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à supprimer l'organisation."
 
-#: src/organization/mutations/verify-organization.js:67
+#: src/organization/mutations/verify-organization.js:69
 msgid "Permission Denied: Please contact super admin for help with verifying this organization."
-msgstr "todo"
+msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à vérifier cette organisation."
 
 #: src/auth/check-domain-permission.js:23
 #: src/auth/check-domain-permission.js:45
 #: src/auth/check-domain-permission.js:56
 msgid "Permission check error. Unable to request domain information."
-msgstr "todo"
+msgstr "Erreur de vérification des permissions. Impossible de demander des informations sur le domaine."
 
 #: src/auth/check-user-is-admin-for-user.js:20
 #: src/auth/check-user-is-admin-for-user.js:30
 #: src/auth/check-user-is-admin-for-user.js:62
 #: src/auth/check-user-is-admin-for-user.js:72
 msgid "Permission error, not an admin for this user."
-msgstr "todo"
+msgstr "Erreur de permission, pas d'administrateur pour cet utilisateur."
 
 #: src/user/mutations/remove-phone-number.js:81
 msgid "Phone number has been successfully removed."
-msgstr "todo"
+msgstr "Le numéro de téléphone a été supprimé avec succès."
 
 #: src/user/mutations/set-phone-number.js:109
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
-msgstr "todo"
+msgstr "Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification."
 
 #: src/user/mutations/update-user-profile.js:119
 msgid "Profile successfully updated."
-msgstr "todo"
+msgstr "Le profil a été mis à jour avec succès."
+
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:103
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:193
+msgid "Requesting `{amount}` records on the `Affiliation` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `Affiliation` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:71
 msgid "Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `DkimFailureTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:71
 msgid "Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `DkimFailureTable` dépasse la limite `{argSet}` de 100 enregistrements."
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:210
+msgid "Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `DmarcSummaries` dépasse la limite `{argSet}` de 100 enregistrements."
+
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:163
+#: src/domain/loaders/load-domain-connections-by-user-id.js:163
+msgid "Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `Domain` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:69
 msgid "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `FullPassTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:118
@@ -295,369 +303,355 @@ msgstr "todo"
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:118
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:118
 msgid "Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `GuidanceTag` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:213
 #: src/organization/loaders/load-organization-connections-by-user-id.js:212
 msgid "Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `Organization` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:71
 msgid "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `SpfFailureTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:144
 #: src/verified-domains/loaders/load-verified-domain-connections.js:144
 msgid "Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `VerifiedDomain` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:198
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:199
 msgid "Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
-
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:103
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:193
-msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
-
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:214
-msgid "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
-
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:163
-#: src/domain/loaders/load-domain-connections-by-user-id.js:163
-msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande d'enregistrements `{amount}` sur la connexion `VerifiedOrganization` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:118
 msgid "Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande de {amount} enregistrements sur la connexion `DKIMResults` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:143
 msgid "Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande de {amount} enregistrements sur la connexion `DKIM` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:168
 msgid "Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande de {amount} enregistrements sur la connexion `DMARC` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:175
 msgid "Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande de {amount} enregistrements sur la connexion `HTTPS` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:161
 msgid "Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande de {amount} enregistrements sur la connexion `SPF` dépasse la limite `{argSet}` de 100 enregistrements."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:199
 msgid "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
+msgstr "La demande de {amount} enregistrements sur la connexion `SSL` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/domain/mutations/request-scan.js:125
+#: src/domain/mutations/request-scan.js:124
 msgid "Successfully dispatched one time scan."
-msgstr "todo"
+msgstr "Un seul balayage a été effectué avec succès."
 
 #: src/user/mutations/verify-account.js:111
 msgid "Successfully email verified account, and set TFA send method to email."
-msgstr "todo"
+msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:192
+#: src/affiliation/mutations/invite-user-to-org.js:195
 msgid "Successfully invited user to organization, and sent notification email."
-msgstr "todo"
+msgstr "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé."
 
-#: src/domain/mutations/remove-domain.js:259
+#: src/domain/mutations/remove-domain.js:261
 msgid "Successfully removed domain: {0} from {1}."
-msgstr "todo"
+msgstr "A réussi à supprimer le domaine : {0} de {1}."
 
-#: src/organization/mutations/remove-organization.js:217
+#: src/organization/mutations/remove-organization.js:219
 msgid "Successfully removed organization: {0}."
-msgstr "todo"
+msgstr "A réussi à supprimer l'organisation : {0}."
 
-#: src/affiliation/mutations/remove-user-from-org.js:186
+#: src/affiliation/mutations/remove-user-from-org.js:188
 msgid "Successfully removed user from organization."
-msgstr "todo"
+msgstr "L'utilisateur a été retiré de l'organisation avec succès."
 
-#: src/affiliation/mutations/invite-user-to-org.js:134
+#: src/affiliation/mutations/invite-user-to-org.js:136
 msgid "Successfully sent invitation to service, and organization email."
-msgstr "todo"
+msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisation."
 
-#: src/organization/mutations/verify-organization.js:133
+#: src/organization/mutations/verify-organization.js:135
 msgid "Successfully verified organization: {0}."
-msgstr "todo"
+msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisation."
 
 #: src/user/mutations/verify-phone-number.js:94
 msgid "Successfully verified phone number, and set TFA send method to text."
-msgstr "todo"
+msgstr "Le numéro de téléphone a été vérifié avec succès, et la méthode d'envoi de la TFA a été réglée sur le texte."
 
 #: src/user/mutations/authenticate.js:59
 msgid "Token value incorrect, please sign in again."
-msgstr "todo"
+msgstr "La valeur du jeton est incorrecte, veuillez vous connecter à nouveau."
 
 #: src/user/mutations/sign-in.js:74
 msgid "Too many failed login attempts, please reset your password, and try again."
-msgstr "todo"
+msgstr "Trop de tentatives de connexion ont échoué, veuillez réinitialiser votre mot de passe et réessayer."
 
 #: src/user/mutations/verify-phone-number.js:61
 msgid "Two factor code is incorrect. Please try again."
-msgstr "todo"
+msgstr "Le code à deux facteurs est incorrect. Veuillez réessayer."
 
 #: src/user/mutations/verify-phone-number.js:48
 msgid "Two factor code length is incorrect. Please try again."
-msgstr "todo"
+msgstr "La longueur du code à deux facteurs est incorrecte. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:166
+#: src/affiliation/mutations/invite-user-to-org.js:169
 msgid "Unable to add user to organization. Please try again."
-msgstr "todo"
+msgstr "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer."
 
 #: src/user/mutations/authenticate.js:74
 #: src/user/mutations/authenticate.js:103
 msgid "Unable to authenticate. Please try again."
-msgstr "todo"
+msgstr "Impossible de s'authentifier. Veuillez réessayer."
 
 #: src/auth/check-permission.js:30
 #: src/auth/check-permission.js:57
 #: src/auth/check-super-admin.js:18
 #: src/auth/check-super-admin.js:28
 msgid "Unable to check permission. Please try again."
-msgstr "todo"
+msgstr "Impossible de vérifier l'autorisation. Veuillez réessayer."
 
-#: src/domain/mutations/create-domain.js:73
+#: src/domain/mutations/create-domain.js:75
 msgid "Unable to create domain in unknown organization."
-msgstr "todo"
+msgstr "Impossible de créer un domaine dans une organisation inconnue."
 
-#: src/domain/mutations/create-domain.js:141
+#: src/domain/mutations/create-domain.js:143
 msgid "Unable to create domain, organization has already claimed it."
-msgstr "todo"
+msgstr "Impossible de créer le domaine, l'organisation l'a déjà réclamé."
 
-#: src/domain/mutations/create-domain.js:128
-#: src/domain/mutations/create-domain.js:179
-#: src/domain/mutations/create-domain.js:199
-#: src/domain/mutations/create-domain.js:229
-#: src/domain/mutations/create-domain.js:247
-#: src/domain/mutations/create-domain.js:257
+#: src/domain/mutations/create-domain.js:130
+#: src/domain/mutations/create-domain.js:181
+#: src/domain/mutations/create-domain.js:201
+#: src/domain/mutations/create-domain.js:231
+#: src/domain/mutations/create-domain.js:249
+#: src/domain/mutations/create-domain.js:259
 msgid "Unable to create domain. Please try again."
-msgstr "todo"
+msgstr "Impossible de créer un domaine. Veuillez réessayer."
 
-#: src/organization/mutations/create-organization.js:204
-#: src/organization/mutations/create-organization.js:226
-#: src/organization/mutations/create-organization.js:237
+#: src/organization/mutations/create-organization.js:206
+#: src/organization/mutations/create-organization.js:228
+#: src/organization/mutations/create-organization.js:239
 msgid "Unable to create organization. Please try again."
-msgstr "todo"
+msgstr "Impossible de créer une organisation. Veuillez réessayer."
 
-#: src/domain/mutations/request-scan.js:89
-#: src/domain/mutations/request-scan.js:103
-#: src/domain/mutations/request-scan.js:117
+#: src/domain/mutations/request-scan.js:88
+#: src/domain/mutations/request-scan.js:102
+#: src/domain/mutations/request-scan.js:116
 msgid "Unable to dispatch one time scan. Please try again."
-msgstr "todo"
+msgstr "Impossible d'envoyer un scan unique. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:19
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:33
 msgid "Unable to find Aggregate guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) tag(s) d'orientation des agrégats. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-dkim-guidance-tags.js:19
 #: src/guidance-tag/loaders/load-dkim-guidance-tags.js:33
 msgid "Unable to find DKIM guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) tag(s) d'orientation DKIM. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dkim-result-by-key.js:20
 #: src/email-scan/loaders/load-dkim-result-by-key.js:34
 msgid "Unable to find DKIM result(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) résultat(s) DKIM. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dkim-by-key.js:19
 #: src/email-scan/loaders/load-dkim-by-key.js:31
 msgid "Unable to find DKIM scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) scan(s) DKIM. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:19
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:33
 msgid "Unable to find DMARC guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) tag(s) d'orientation DMARC. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dmarc-by-key.js:20
 #: src/email-scan/loaders/load-dmarc-by-key.js:34
 msgid "Unable to find DMARC scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) scan(s) DMARC. Veuillez réessayer."
 
 #: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:37
 #: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:51
 msgid "Unable to find DMARC summary data. Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver les données de synthèse DMARC. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-https-guidance-tags.js:19
 #: src/guidance-tag/loaders/load-https-guidance-tags.js:33
 msgid "Unable to find HTTPS guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver la ou les balises d'orientation HTTPS. Veuillez réessayer."
 
 #: src/web-scan/loaders/load-https-by-key.js:19
 msgid "Unable to find HTTPS scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) scan(s) HTTPS. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-spf-guidance-tags.js:19
 #: src/guidance-tag/loaders/load-spf-guidance-tags.js:33
 msgid "Unable to find SPF guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) tag(s) d'orientation SPF. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-spf-by-key.js:19
 #: src/email-scan/loaders/load-spf-by-key.js:31
 msgid "Unable to find SPF scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) scan(s) SPF. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-ssl-guidance-tags.js:19
 #: src/guidance-tag/loaders/load-ssl-guidance-tags.js:33
 msgid "Unable to find SSL guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) tag(s) d'orientation SSL. Veuillez réessayer."
 
 #: src/web-scan/loaders/load-ssl-by-key.js:18
 #: src/web-scan/loaders/load-ssl-by-key.js:30
 msgid "Unable to find SSL scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver le(s) scan(s) SSL. Veuillez réessayer."
 
-#: src/domain/queries/find-domain-by-domain.js:37
+#: src/domain/queries/find-domain-by-domain.js:38
 msgid "Unable to find the requested domain."
-msgstr "todo"
+msgstr "Impossible de trouver le domaine demandé."
 
 #: src/affiliation/loaders/load-affiliation-by-key.js:22
 #: src/affiliation/loaders/load-affiliation-by-key.js:36
 msgid "Unable to find user affiliation(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez réessayer."
 
 #: src/verified-organizations/loaders/load-verified-organization-by-key.js:32
 #: src/verified-organizations/loaders/load-verified-organization-by-key.js:44
 #: src/verified-organizations/loaders/load-verified-organization-by-slug.js:32
 #: src/verified-organizations/loaders/load-verified-organization-by-slug.js:44
 msgid "Unable to find verified organization(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:85
+#: src/affiliation/mutations/invite-user-to-org.js:87
 msgid "Unable to invite user to unknown organization."
-msgstr "todo"
+msgstr "Impossible d'inviter un utilisateur à une organisation inconnue."
 
-#: src/affiliation/mutations/invite-user-to-org.js:182
+#: src/affiliation/mutations/invite-user-to-org.js:185
 msgid "Unable to invite user. Please try again."
-msgstr "todo"
+msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:71
+#: src/affiliation/mutations/invite-user-to-org.js:73
 msgid "Unable to invite yourself to an org."
-msgstr "todo"
+msgstr "Impossible de s'inviter à un org."
 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256
 msgid "Unable to load Aggregate guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez réessayer."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:16
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:144
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:156
 msgid "Unable to load DKIM failure data. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger les données d'échec DKIM. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:243
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:255
 msgid "Unable to load DKIM guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) tag(s) d'orientation DKIM. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:245
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:255
 msgid "Unable to load DKIM result(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) résultat(s) DKIM. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:269
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:279
 msgid "Unable to load DKIM scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) scan(s) DKIM. Veuillez réessayer."
 
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:16
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:144
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:156
 msgid "Unable to load DMARC failure data. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger les données d'échec DMARC. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:243
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:255
 msgid "Unable to load DMARC guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:308
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:318
 msgid "Unable to load DMARC scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:467
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:479
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:463
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:475
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:22
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:34
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:20
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:32
 msgid "Unable to load DMARC summary data. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger les données de synthèse DMARC. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:243
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:255
 msgid "Unable to load HTTPS guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger la ou les balises d'orientation HTTPS. Veuillez réessayer."
 
 #: src/web-scan/loaders/load-https-by-key.js:33
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:321
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:331
 msgid "Unable to load HTTPS scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer."
 
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:16
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:143
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:155
 msgid "Unable to load SPF failure data. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger les données d'échec SPF. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:243
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:255
 msgid "Unable to load SPF guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) tag(s) d'orientation SPF. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:295
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:305
 msgid "Unable to load SPF scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) scan(s) SPF. Veuillez réessayer."
 
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:243
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:255
 msgid "Unable to load SSL guidance tag(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) tag(s) d'orientation SSL. Veuillez réessayer."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:369
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:379
 msgid "Unable to load SSL scan(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) scan(s) SSL. Veuillez réessayer."
 
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:266
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:449
 msgid "Unable to load affiliation(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger l'affiliation (s). Veuillez réessayer."
 
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:345
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:355
 #: src/domain/loaders/load-domain-connections-by-user-id.js:371
 msgid "Unable to load domain(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) domaine(s). Veuillez réessayer."
 
 #: src/domain/loaders/load-domain-by-domain.js:19
 #: src/domain/loaders/load-domain-by-domain.js:31
 #: src/domain/loaders/load-domain-by-key.js:19
 #: src/domain/loaders/load-domain-by-key.js:31
 msgid "Unable to load domain. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le domaine. Veuillez réessayer."
 
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:140
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:150
 msgid "Unable to load full pass data. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger les données complètes de la passe. Veuillez réessayer."
 
 #: src/summaries/queries/mail-summary.js:12
 msgid "Unable to load mail summary. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 
 #: src/organization/loaders/load-organization-by-key.js:33
 #: src/organization/loaders/load-organization-by-key.js:47
@@ -668,19 +662,19 @@ msgstr "todo"
 #: src/organization/loaders/load-organization-connections-by-user-id.js:507
 #: src/organization/loaders/load-organization-connections-by-user-id.js:519
 msgid "Unable to load organization(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger l'organisation (s). Veuillez réessayer."
 
 #: src/summaries/loaders/load-chart-summary-by-key.js:19
 #: src/summaries/loaders/load-chart-summary-by-key.js:31
 msgid "Unable to load summary. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le résumé. Veuillez réessayer."
 
 #: src/user/loaders/load-user-by-key.js:19
 #: src/user/loaders/load-user-by-key.js:31
 #: src/user/loaders/load-user-by-username.js:19
 #: src/user/loaders/load-user-by-username.js:31
 msgid "Unable to load user(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) utilisateur(s). Veuillez réessayer."
 
 #: src/verified-domains/loaders/load-verified-domain-by-domain.js:24
 #: src/verified-domains/loaders/load-verified-domain-by-domain.js:38
@@ -691,27 +685,27 @@ msgstr "todo"
 #: src/verified-domains/loaders/load-verified-domain-connections.js:304
 #: src/verified-domains/loaders/load-verified-domain-connections.js:316
 msgid "Unable to load verified domain(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer."
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:422
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:434
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:424
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:436
 msgid "Unable to load verified organization(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le(s) organisme(s) vérifié(s). Veuillez réessayer."
 
 #: src/summaries/queries/web-summary.js:13
 msgid "Unable to load web summary. Please try again."
-msgstr "todo"
+msgstr "Impossible de charger le résumé web. Veuillez réessayer."
 
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:254
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:437
 msgid "Unable to query affiliation(s). Please try again."
-msgstr "todo"
+msgstr "Impossible de demander l'affiliation (s). Veuillez réessayer."
 
 #: src/domain/loaders/load-domain-connections-by-user-id.js:361
 msgid "Unable to query domain(s). Please try again."
-msgstr "todo"
+msgstr "Impossible d'interroger le(s) domaine(s). Veuillez réessayer."
 
 #: src/user/mutations/refresh-tokens.js:61
 #: src/user/mutations/refresh-tokens.js:76
@@ -722,273 +716,288 @@ msgid "Unable to refresh tokens, please sign in."
 msgstr "todo"
 
 #: src/affiliation/mutations/remove-user-from-org.js:120
+#: src/affiliation/mutations/remove-user-from-org.js:122
 msgid "Unable to remove a user that already does not belong to this organization."
-msgstr "todo"
+msgstr "Impossible de supprimer un utilisateur qui n'appartient déjà plus à cette organisation."
 
-#: src/domain/mutations/remove-domain.js:77
+#: src/domain/mutations/remove-domain.js:79
 msgid "Unable to remove domain from unknown organization."
-msgstr "todo"
+msgstr "Impossible de supprimer le domaine d'une organisation inconnue."
 
-#: src/domain/mutations/remove-domain.js:123
-#: src/domain/mutations/remove-domain.js:199
-#: src/domain/mutations/remove-domain.js:217
-#: src/domain/mutations/remove-domain.js:239
-#: src/domain/mutations/remove-domain.js:250
+#: src/domain/mutations/remove-domain.js:125
+#: src/domain/mutations/remove-domain.js:201
+#: src/domain/mutations/remove-domain.js:219
+#: src/domain/mutations/remove-domain.js:241
+#: src/domain/mutations/remove-domain.js:252
 msgid "Unable to remove domain. Please try again."
-msgstr "todo"
+msgstr "Impossible de supprimer le domaine. Veuillez réessayer."
 
-#: src/organization/mutations/remove-organization.js:160
-#: src/organization/mutations/remove-organization.js:195
-#: src/organization/mutations/remove-organization.js:206
+#: src/organization/mutations/remove-organization.js:162
+#: src/organization/mutations/remove-organization.js:197
+#: src/organization/mutations/remove-organization.js:208
 msgid "Unable to remove organization. Please try again."
-msgstr "todo"
+msgstr "Impossible de supprimer l'organisation. Veuillez réessayer."
 
 #: src/user/mutations/remove-phone-number.js:63
 #: src/user/mutations/remove-phone-number.js:74
 msgid "Unable to remove phone number. Please try again."
-msgstr "todo"
+msgstr "Impossible de supprimer le numéro de téléphone. Veuillez réessayer."
 
-#: src/domain/mutations/remove-domain.js:61
+#: src/domain/mutations/remove-domain.js:63
 msgid "Unable to remove unknown domain."
-msgstr "todo"
+msgstr "Impossible de supprimer un domaine inconnu."
 
-#: src/organization/mutations/remove-organization.js:54
+#: src/organization/mutations/remove-organization.js:56
 msgid "Unable to remove unknown organization."
-msgstr "todo"
+msgstr "Impossible de supprimer une organisation inconnue."
 
-#: src/affiliation/mutations/remove-user-from-org.js:87
+#: src/affiliation/mutations/remove-user-from-org.js:89
 msgid "Unable to remove unknown user from organization."
-msgstr "todo"
+msgstr "Impossible de supprimer un utilisateur inconnu de l'organisation."
 
-#: src/affiliation/mutations/remove-user-from-org.js:73
+#: src/affiliation/mutations/remove-user-from-org.js:75
 msgid "Unable to remove user from organization."
-msgstr "todo"
+msgstr "Impossible de supprimer un utilisateur de l'organisation."
 
-#: src/affiliation/mutations/remove-user-from-org.js:165
-#: src/affiliation/mutations/remove-user-from-org.js:176
+#: src/affiliation/mutations/remove-user-from-org.js:167
+#: src/affiliation/mutations/remove-user-from-org.js:178
 msgid "Unable to remove user from organization. Please try again."
-msgstr "todo"
+msgstr "Impossible de supprimer un utilisateur de l'organisation. Veuillez réessayer."
 
-#: src/affiliation/mutations/remove-user-from-org.js:107
+#: src/affiliation/mutations/remove-user-from-org.js:109
 msgid "Unable to remove user from this organization. Please try again."
-msgstr "todo"
+msgstr "Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."
 
-#: src/affiliation/mutations/remove-user-from-org.js:59
+#: src/affiliation/mutations/remove-user-from-org.js:61
 msgid "Unable to remove user from unknown organization."
-msgstr "todo"
+msgstr "Impossible de supprimer un utilisateur d'une organisation inconnue."
 
-#: src/domain/mutations/request-scan.js:54
+#: src/domain/mutations/request-scan.js:53
 msgid "Unable to request a one time scan on an unknown domain."
-msgstr "todo"
+msgstr "Impossible de demander un scan unique sur un domaine inconnu."
 
 #: src/user/mutations/reset-password.js:93
 msgid "Unable to reset password. Please request a new email."
-msgstr "todo"
+msgstr "Impossible de réinitialiser le mot de passe. Veuillez demander un nouvel e-mail."
 
 #: src/user/mutations/reset-password.js:80
-#: src/user/mutations/reset-password.js:137
+#: src/user/mutations/reset-password.js:135
 msgid "Unable to reset password. Please try again."
-msgstr "todo"
+msgstr "Impossible de réinitialiser le mot de passe. Veuillez réessayer."
 
 #: src/domain/objects/domain.js:160
 #: src/domain/objects/domain.js:203
 msgid "Unable to retrieve DMARC report information for: {domain}"
-msgstr "todo"
+msgstr "Impossible de récupérer les informations du rapport DMARC pour : {domain}"
 
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:49
 msgid "Unable to select DMARC report(s) for this period and year."
-msgstr "todo"
+msgstr "Impossible de sélectionner le(s) rapport(s) DMARC pour cette période et cette année."
 
 #: src/notify/notify-send-authenticate-email.js:19
 msgid "Unable to send authentication email. Please try again."
-msgstr "todo"
+msgstr "Impossible d'envoyer l'email d'authentification. Veuillez réessayer."
 
 #: src/notify/notify-send-authenticate-text-msg.js:32
 msgid "Unable to send authentication text message. Please try again."
-msgstr "todo"
+msgstr "Impossible d'envoyer un message texte d'authentification. Veuillez réessayer."
 
 #: src/notify/notify-send-org-invite-create-account.js:31
 #: src/notify/notify-send-org-invite-email.js:26
 msgid "Unable to send org invite email. Please try again."
-msgstr "todo"
+msgstr "Impossible d'envoyer l'e-mail d'invitation à l'org. Veuillez réessayer."
 
 #: src/notify/notify-send-password-reset-email.js:30
 msgid "Unable to send password reset email. Please try again."
-msgstr "todo"
+msgstr "Impossible d'envoyer l'email de réinitialisation du mot de passe. Veuillez réessayer."
 
 #: src/notify/notify-send-tfa-text-msg.js:30
 msgid "Unable to send two factor authentication message. Please try again."
-msgstr "todo"
+msgstr "Impossible d'envoyer le message d'authentification à deux facteurs. Veuillez réessayer."
 
 #: src/notify/notify-send-verification-email.js:30
 msgid "Unable to send verification email. Please try again."
-msgstr "todo"
+msgstr "Impossible d'envoyer l'email de vérification. Veuillez réessayer."
 
 #: src/user/mutations/set-phone-number.js:95
 msgid "Unable to set phone number, please try again."
-msgstr "todo"
+msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 
 #: src/user/mutations/sign-in.js:91
 #: src/user/mutations/sign-in.js:111
 #: src/user/mutations/sign-in.js:155
 #: src/user/mutations/sign-in.js:192
 msgid "Unable to sign in, please try again."
-msgstr "todo"
+msgstr "Impossible de se connecter, veuillez réessayer."
 
 #: src/user/mutations/sign-up.js:177
 #: src/user/mutations/sign-up.js:191
 msgid "Unable to sign up, please contact org admin for a new invite."
-msgstr "todo"
+msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation."
 
 #: src/user/mutations/sign-up.js:153
 #: src/user/mutations/sign-up.js:212
 #: src/user/mutations/sign-up.js:222
 msgid "Unable to sign up. Please try again."
-msgstr "todo"
+msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
 #: src/user/mutations/verify-phone-number.js:79
 msgid "Unable to two factor authenticate. Please try again."
-msgstr "todo"
+msgstr "Impossible de s'authentifier par deux facteurs. Veuillez réessayer."
 
-#: src/domain/mutations/update-domain.js:91
+#: src/domain/mutations/update-domain.js:93
 msgid "Unable to update domain in an unknown org."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le domaine dans un org inconnu."
 
-#: src/domain/mutations/update-domain.js:139
+#: src/domain/mutations/update-domain.js:141
 msgid "Unable to update domain that does not belong to the given organization."
-msgstr "todo"
+msgstr "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée."
 
-#: src/domain/mutations/update-domain.js:128
-#: src/domain/mutations/update-domain.js:175
-#: src/domain/mutations/update-domain.js:185
+#: src/domain/mutations/update-domain.js:130
+#: src/domain/mutations/update-domain.js:177
+#: src/domain/mutations/update-domain.js:187
 msgid "Unable to update domain. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 
-#: src/organization/mutations/update-organization.js:174
-#: src/organization/mutations/update-organization.js:206
-#: src/organization/mutations/update-organization.js:218
-#: src/organization/mutations/update-organization.js:273
-#: src/organization/mutations/update-organization.js:284
+#: src/organization/mutations/update-organization.js:176
+#: src/organization/mutations/update-organization.js:208
+#: src/organization/mutations/update-organization.js:220
+#: src/organization/mutations/update-organization.js:275
+#: src/organization/mutations/update-organization.js:286
 msgid "Unable to update organization. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour l'organisation. Veuillez réessayer."
 
 #: src/user/mutations/update-user-password.js:60
 msgid "Unable to update password, current password does not match. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le mot de passe, le mot de passe actuel ne correspond pas. Veuillez réessayer."
 
 #: src/user/mutations/update-user-password.js:74
 msgid "Unable to update password, new passwords do not match. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le mot de passe, les nouveaux mots de passe ne correspondent pas. Veuillez réessayer."
 
 #: src/user/mutations/update-user-password.js:88
 msgid "Unable to update password, passwords do not match requirements. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le mot de passe, les mots de passe ne correspondent pas aux exigences. Veuillez réessayer."
 
 #: src/user/mutations/update-user-password.js:106
 msgid "Unable to update password. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le mot de passe. Veuillez réessayer."
 
 #: src/user/mutations/update-user-profile.js:110
 msgid "Unable to update profile. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le profil. Veuillez réessayer."
 
-#: src/affiliation/mutations/update-user-role.js:95
+#: src/affiliation/mutations/update-user-role.js:97
 msgid "Unable to update role: organization unknown."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le rôle : organisation inconnue."
 
-#: src/affiliation/mutations/update-user-role.js:141
+#: src/affiliation/mutations/update-user-role.js:143
 msgid "Unable to update role: user does not belong to organization."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas à l'organisation."
 
-#: src/affiliation/mutations/update-user-role.js:81
+#: src/affiliation/mutations/update-user-role.js:83
 msgid "Unable to update role: user unknown."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le rôle : utilisateur inconnu."
 
-#: src/domain/mutations/update-domain.js:77
+#: src/domain/mutations/update-domain.js:79
 msgid "Unable to update unknown domain."
-msgstr "todo"
+msgstr "Impossible de mettre à jour un domaine inconnu."
 
-#: src/organization/mutations/update-organization.js:139
+#: src/organization/mutations/update-organization.js:141
 msgid "Unable to update unknown organization."
-msgstr "todo"
+msgstr "Impossible de mettre à jour une organisation inconnue."
 
-#: src/affiliation/mutations/update-user-role.js:129
-#: src/affiliation/mutations/update-user-role.js:239
-#: src/affiliation/mutations/update-user-role.js:250
+#: src/affiliation/mutations/update-user-role.js:131
+#: src/affiliation/mutations/update-user-role.js:241
+#: src/affiliation/mutations/update-user-role.js:252
 msgid "Unable to update user's role. Please try again."
-msgstr "todo"
+msgstr "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer."
 
-#: src/affiliation/mutations/update-user-role.js:67
+#: src/affiliation/mutations/update-user-role.js:69
 msgid "Unable to update your own role."
-msgstr "todo"
+msgstr "Impossible de mettre à jour votre propre rôle."
 
 #: src/user/mutations/verify-account.js:53
 #: src/user/mutations/verify-account.js:70
 #: src/user/mutations/verify-account.js:83
 msgid "Unable to verify account. Please request a new email."
-msgstr "todo"
+msgstr "Impossible de vérifier le compte. Veuillez demander un nouvel e-mail."
 
 #: src/user/mutations/verify-account.js:101
 msgid "Unable to verify account. Please try again."
-msgstr "todo"
+msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 
 #: src/user/queries/is-user-super-admin.js:23
 msgid "Unable to verify if user is a super admin, please try again."
-msgstr "todo"
+msgstr "Impossible de vérifier si l'utilisateur est un super administrateur, veuillez réessayer."
 
 #: src/user/queries/is-user-admin.js:23
 msgid "Unable to verify if user is an admin, please try again."
-msgstr "todo"
+msgstr "Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer."
 
-#: src/organization/mutations/verify-organization.js:113
-#: src/organization/mutations/verify-organization.js:124
+#: src/organization/mutations/verify-organization.js:115
+#: src/organization/mutations/verify-organization.js:126
 msgid "Unable to verify organization. Please try again."
-msgstr "todo"
+msgstr "Impossible de vérifier l'organisation. Veuillez réessayer."
 
-#: src/organization/mutations/verify-organization.js:52
+#: src/organization/mutations/verify-organization.js:54
 msgid "Unable to verify unknown organization."
-msgstr "todo"
+msgstr "Impossible de vérifier une organisation inconnue."
 
 #: src/user/queries/find-user-by-username.js:41
 msgid "User could not be queried."
-msgstr "todo"
+msgstr "L'utilisateur n'a pas pu être interrogé."
 
-#: src/affiliation/mutations/update-user-role.js:260
+#: src/affiliation/mutations/update-user-role.js:262
 msgid "User role was updated successfully."
-msgstr "todo"
+msgstr "Le rôle de l'utilisateur a été mis à jour avec succès."
 
 #: src/user/mutations/update-user-profile.js:71
 msgid "Username not available, please try another."
-msgstr "todo"
+msgstr "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre."
 
 #: src/auth/verified-required.js:15
 msgid "Verification error. Please verify your account via email to access content."
-msgstr "todo"
+msgstr "Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu."
+
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:71
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:161
+msgid "You must provide a `first` or `last` value to properly paginate the `Affiliation` connection."
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Affiliation`."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:86
 msgid "You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DKIMResults`."
 
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:111
 msgid "You must provide a `first` or `last` value to properly paginate the `DKIM` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DKIM`."
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:135
 msgid "You must provide a `first` or `last` value to properly paginate the `DMARC` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DMARC`."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:39
 msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DkimFailureTable`."
 
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:39
 msgid "You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcFailureTable`."
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:178
+msgid "You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection."
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcSummaries`."
+
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:131
+#: src/domain/loaders/load-domain-connections-by-user-id.js:131
+msgid "You must provide a `first` or `last` value to properly paginate the `Domain` connection."
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Domain`."
 
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:37
 msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `FullPassTable`."
 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:89
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:86
@@ -997,66 +1006,52 @@ msgstr "todo"
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:86
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:86
 msgid "You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `GuidanceTag`."
 
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:143
 msgid "You must provide a `first` or `last` value to properly paginate the `HTTPS` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `HTTPS`."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:181
 #: src/organization/loaders/load-organization-connections-by-user-id.js:180
 msgid "You must provide a `first` or `last` value to properly paginate the `Organization` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Organization`."
 
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:129
 msgid "You must provide a `first` or `last` value to properly paginate the `SPF` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SPF`."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:167
 msgid "You must provide a `first` or `last` value to properly paginate the `SSL` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SSL`."
 
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:39
 msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SpfFailureTable`."
 
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:112
 #: src/verified-domains/loaders/load-verified-domain-connections.js:112
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedDomain`."
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:166
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:167
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
-msgstr "todo"
+msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedOrganization`."
 
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:71
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:161
-msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
-msgstr "todo"
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:26
+msgid "You must provide a `period` value to access the `DmarcSummaries` connection."
+msgstr "Vous devez fournir une valeur `period` pour accéder à la connexion `DmarcSummaries`."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:182
-msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
-msgstr "todo"
-
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:131
-#: src/domain/loaders/load-domain-connections-by-user-id.js:131
-msgid "You must provide a `first` or `last` value to properly paginate the `domain` connection."
-msgstr "todo"
-
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:30
-msgid "You must provide a `period` value to access the `dmarcSummaries` connection."
-msgstr "todo"
-
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:42
-msgid "You must provide a `year` value to access the `dmarcSummaries` connection."
-msgstr "todo"
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:38
+msgid "You must provide a `year` value to access the `DmarcSummaries` connection."
+msgstr "Vous devez fournir une valeur `year` pour accéder à la connexion `DmarcSummaries`."
 
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:118
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:208
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:86
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:86
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:229
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:225
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:86
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:178
@@ -1080,31 +1075,45 @@ msgstr "todo"
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:190
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:214
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
-msgstr "todo"
+msgstr "`{argSet}` doit être de type `number` et non `{typeSet}`."
+
+#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:92
+#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:182
+msgid "`{argSet}` on the `Affiliation` connection cannot be less than zero."
+msgstr "`{argSet}` sur la connexion `Affiliation` ne peut être inférieur à zéro."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:107
 msgid "`{argSet}` on the `DKIMResults` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `DKIMResults` ne peut être inférieur à zéro."
 
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:132
 msgid "`{argSet}` on the `DKIM` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `DKIM` ne peut être inférieur à zéro."
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:157
 msgid "`{argSet}` on the `DMARC` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `DMARC` ne peut être inférieur à zéro."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:60
 msgid "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `DkimFailureTable` ne peut être inférieur à zéro."
 
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:60
 msgid "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro."
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:199
+msgid "`{argSet}` on the `DmarcSummaries` connection cannot be less than zero."
+msgstr "`{argSet}` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro."
+
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:152
+#: src/domain/loaders/load-domain-connections-by-user-id.js:152
+msgid "`{argSet}` on the `Domain` connection cannot be less than zero."
+msgstr "`{argSet}` sur la connexion `Domain` ne peut être inférieur à zéro."
 
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:58
 msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `FullPassTable` ne peut être inférieur à zéro."
 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:110
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:107
@@ -1113,59 +1122,45 @@ msgstr "todo"
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:107
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:107
 msgid "`{argSet}` on the `GuidanceTag` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `GuidanceTag` ne peut être inférieure à zéro."
 
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:164
 msgid "`{argSet}` on the `HTTPS` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `HTTPS` ne peut être inférieur à zéro."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:202
 #: src/organization/loaders/load-organization-connections-by-user-id.js:201
 msgid "`{argSet}` on the `Organization` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `Organization` ne peut être inférieure à zéro."
 
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:150
 msgid "`{argSet}` on the `SPF` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `SPF` ne peut être inférieure à zéro."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:188
 msgid "`{argSet}` on the `SSL` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `SSL` ne peut être inférieur à zéro."
 
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:60
 msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `SpfFailureTable` ne peut être inférieur à zéro."
 
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:133
 #: src/verified-domains/loaders/load-verified-domain-connections.js:133
 msgid "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro."
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:187
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:188
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
-msgstr "todo"
-
-#: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:92
-#: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:182
-msgid "`{argSet}` on the `affiliations` cannot be less than zero."
-msgstr "todo"
-
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:203
-msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
-msgstr "todo"
-
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:152
-#: src/domain/loaders/load-domain-connections-by-user-id.js:152
-msgid "`{argSet}` on the `domain` connection cannot be less than zero."
-msgstr "todo"
+msgstr "`{argSet}` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro."
 
 #: src/summaries/queries/mail-summary.js:22
 #: src/summaries/queries/web-summary.js:23
 msgid "fail"
-msgstr "todo"
+msgstr "échouer"
 
 #: src/summaries/queries/mail-summary.js:17
 #: src/summaries/queries/web-summary.js:18
 msgid "pass"
-msgstr "todo"
+msgstr "passer"
