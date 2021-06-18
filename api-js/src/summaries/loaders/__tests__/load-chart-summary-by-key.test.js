@@ -184,7 +184,9 @@ describe('given the loadChartSummaryByKey function', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error('Impossible de charger le résumé. Veuillez réessayer.'),
+            )
           }
 
           expect(consoleErrorOutput).toEqual([
@@ -205,7 +207,9 @@ describe('given the loadChartSummaryByKey function', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error('Impossible de charger le résumé. Veuillez réessayer.'),
+            )
           }
 
           expect(consoleErrorOutput).toEqual([
