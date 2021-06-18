@@ -5199,7 +5199,11 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Organization`.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -5226,7 +5230,11 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Passer à la fois `first` et `last` pour paginer la connexion `Organization` n'est pas supporté.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -5253,7 +5261,11 @@ describe('given the load organization connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error('todo'))
+                expect(err).toEqual(
+                  new Error(
+                    '`first` sur la connexion `Organization` ne peut être inférieure à zéro.',
+                  ),
+                )
               }
 
               expect(consoleOutput).toEqual([
@@ -5279,7 +5291,11 @@ describe('given the load organization connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error('todo'))
+                expect(err).toEqual(
+                  new Error(
+                    '`last` sur la connexion `Organization` ne peut être inférieure à zéro.',
+                  ),
+                )
               }
 
               expect(consoleOutput).toEqual([
@@ -5307,7 +5323,11 @@ describe('given the load organization connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error('todo'))
+                expect(err).toEqual(
+                  new Error(
+                    "La demande d'enregistrements `101` sur la connexion `Organization` dépasse la limite `first` de 100 enregistrements.",
+                  ),
+                )
               }
 
               expect(consoleOutput).toEqual([
@@ -5333,7 +5353,11 @@ describe('given the load organization connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error('todo'))
+                expect(err).toEqual(
+                  new Error(
+                    "La demande d'enregistrements `101` sur la connexion `Organization` dépasse la limite `last` de 100 enregistrements.",
+                  ),
+                )
               }
 
               expect(consoleOutput).toEqual([
@@ -5365,7 +5389,11 @@ describe('given the load organization connections by user id function', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(new Error(`todo`))
+                  expect(err).toEqual(
+                    new Error(
+                      `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                    ),
+                  )
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -5397,7 +5425,11 @@ describe('given the load organization connections by user id function', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(new Error(`todo`))
+                  expect(err).toEqual(
+                    new Error(
+                      `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                    ),
+                  )
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -5434,7 +5466,11 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Impossible de charger l'organisation (s). Veuillez réessayer.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -5471,7 +5507,11 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Impossible de charger l'organisation (s). Veuillez réessayer.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([

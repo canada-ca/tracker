@@ -321,7 +321,11 @@ describe('given a loadOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de charger l'organisation (s). Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -347,7 +351,11 @@ describe('given a loadOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de charger l'organisation (s). Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

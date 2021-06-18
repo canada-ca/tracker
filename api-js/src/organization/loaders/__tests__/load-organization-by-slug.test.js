@@ -365,7 +365,11 @@ describe('given a loadOrgBySlug dataloader', () => {
           try {
             await loader.load('slug')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de charger l'organisation (s). Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -391,7 +395,11 @@ describe('given a loadOrgBySlug dataloader', () => {
           try {
             await loader.load('slug')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de charger l'organisation (s). Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

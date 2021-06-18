@@ -468,7 +468,11 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Permission refusée : Impossible de récupérer l'organisation spécifiée.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -520,7 +524,11 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Aucune organisation avec le slug fourni n'a pu être trouvée.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

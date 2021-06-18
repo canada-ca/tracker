@@ -3796,7 +3796,8 @@ describe('updating an organization', () => {
                   updateOrganization: {
                     result: {
                       code: 403,
-                      description: 'todo',
+                      description:
+                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                     },
                   },
                 },
@@ -3872,7 +3873,8 @@ describe('updating an organization', () => {
                   updateOrganization: {
                     result: {
                       code: 403,
-                      description: 'todo',
+                      description:
+                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                     },
                   },
                 },
@@ -3983,7 +3985,8 @@ describe('updating an organization', () => {
               updateOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom de l'organisation est déjà utilisé, veuillez en choisir un autre et réessayer.",
                 },
               },
             },
@@ -4060,7 +4063,8 @@ describe('updating an organization', () => {
                 updateOrganization: {
                   result: {
                     code: 400,
-                    description: 'todo',
+                    description:
+                      'Impossible de mettre à jour une organisation inconnue.',
                   },
                 },
               },
@@ -4175,7 +4179,11 @@ describe('updating an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -4284,7 +4292,11 @@ describe('updating an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -4359,7 +4371,11 @@ describe('updating an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -4470,7 +4486,11 @@ describe('updating an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -4576,7 +4596,11 @@ describe('updating an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
