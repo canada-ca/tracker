@@ -45,11 +45,16 @@ export const updateDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired },
+      auth: { checkPermission, userRequired, verifiedRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
     },
   ) => {
+    // Get User
+    const user = await userRequired()
+
+    verifiedRequired({ user })
+
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const updatedDomain = cleanseInput(args.domain)
@@ -60,9 +65,6 @@ export const updateDomain = new mutationWithClientMutationId({
     } else {
       selectors = null
     }
-
-    // Get User
-    await userRequired()
 
     // Check to see if domain exists
     const domain = await loadDomainByKey.load(domainId)

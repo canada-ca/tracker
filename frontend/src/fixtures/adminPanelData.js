@@ -77,6 +77,7 @@ export const rawAdminPanelData = {
               permission: 'SUPER_ADMIN',
               user: {
                 userName: 'test.user@email.com',
+                displayName: 'test User Name',
                 __typename: 'SharedUser',
               },
               __typename: 'UserAffiliations',

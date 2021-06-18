@@ -36,7 +36,9 @@ describe('given the dmarcScanData subscription', () => {
     drop,
     options,
     dmarcScan,
-    createSubscriptionMutation
+    createSubscriptionMutation,
+    redis,
+    pub
 
   beforeAll(async () => {
     options = {
@@ -45,12 +47,16 @@ describe('given the dmarcScanData subscription', () => {
     }
 
     dmarcScan = {
-      dmarcPhase: 1,
       record: 'record',
       pPolicy: 'pPolicy',
       spPolicy: 'spPolicy',
       pct: 100,
-      guidanceTags: ['dmarc1'],
+      rawJson: {
+        missing: true,
+      },
+      negativeTags: ['dmarc1'],
+      neutralTags: ['dmarc1'],
+      positiveTags: ['dmarc1'],
     }
 
     // Generate DB Items
@@ -64,14 +70,14 @@ describe('given the dmarcScanData subscription', () => {
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)
+    redis = new Redis(options)
+    pub = new Redis(options)
 
     pubsub = new RedisPubSub({
       publisher: publisherClient,
       subscriber: subscriberClient,
     })
-  })
 
-  beforeEach(async () => {
     await collections.dmarcGuidanceTags.save({
       _key: 'dmarc1',
       tagName: 'DMARC-TAG',
@@ -98,6 +104,8 @@ describe('given the dmarcScanData subscription', () => {
   afterAll(async () => {
     await publisherClient.quit()
     await subscriberClient.quit()
+    await redis.quit()
+    await pub.quit()
     await drop()
   })
 
@@ -113,14 +121,7 @@ describe('given the dmarcScanData subscription', () => {
                 type: GraphQLID,
               },
             },
-            resolve: async (
-              _source,
-              { subscriptionId },
-              { Redis, options },
-            ) => {
-              const redis = await new Redis(options)
-              const pub = await new Redis(options)
-
+            resolve: async (_source, { subscriptionId }) => {
               await redis.subscribe(
                 `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
                 (_err, _count) => {
@@ -130,10 +131,6 @@ describe('given the dmarcScanData subscription', () => {
                   )
                 },
               )
-
-              await redis.quit()
-              await pub.quit()
-
               return 1
             },
           },
@@ -145,7 +142,7 @@ describe('given the dmarcScanData subscription', () => {
       mutation: createSubscriptionMutation(),
       subscription: createSubscriptionSchema(),
     })
-    
+
     const triggerSubscription = setTimeout(() => {
       graphql(
         schema,
@@ -172,7 +169,36 @@ describe('given the dmarcScanData subscription', () => {
           pPolicy
           spPolicy
           pct
-          guidanceTags {
+          rawJson
+          negativeGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          neutralGuidanceTags {
+            id
+            tagId
+            tagName
+            guidance
+            refLinks {
+              description
+              refLink
+            }
+            refLinksTech {
+              description
+              refLink
+            }
+          }
+          positiveGuidanceTags {
             id
             tagId
             tagName
@@ -211,12 +237,52 @@ describe('given the dmarcScanData subscription', () => {
     const expectedResult = {
       data: {
         dmarcScanData: {
-          dmarcPhase: 1,
           record: 'record',
           pPolicy: 'pPolicy',
           spPolicy: 'spPolicy',
           pct: 100,
-          guidanceTags: [
+          rawJson: '{"missing":true}',
+          negativeGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'dmarc1'),
+              tagId: 'dmarc1',
+              tagName: 'DMARC-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          neutralGuidanceTags: [
+            {
+              id: toGlobalId('guidanceTags', 'dmarc1'),
+              tagId: 'dmarc1',
+              tagName: 'DMARC-TAG',
+              guidance: 'Some Interesting Guidance',
+              refLinks: [
+                {
+                  description: 'refLinksGuide Description',
+                  refLink: 'www.refLinksGuide.ca',
+                },
+              ],
+              refLinksTech: [
+                {
+                  description: 'refLinksTechnical Description',
+                  refLink: 'www.refLinksTechnical.ca',
+                },
+              ],
+            },
+          ],
+          positiveGuidanceTags: [
             {
               id: toGlobalId('guidanceTags', 'dmarc1'),
               tagId: 'dmarc1',

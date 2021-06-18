@@ -1,7 +1,7 @@
 import React from 'react'
 import { PaginationButtons } from '../PaginationButtons'
-import { render, cleanup } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { cleanup, render } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 
 describe('<PaginationButtons />', () => {
   afterEach(cleanup)

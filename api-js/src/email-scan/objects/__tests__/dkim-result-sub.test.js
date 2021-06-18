@@ -1,5 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadDkimGuidanceTagById } from '../../../guidance-tag/loaders'
@@ -28,11 +29,33 @@ describe('Given The dkimResultSubType object', () => {
       expect(demoType).toHaveProperty('keyLength')
       expect(demoType.keyLength.type).toMatchObject(GraphQLString)
     })
-    it('has guidanceTags field', () => {
+    it('has a rawJson field', () => {
       const demoType = dkimResultSubType.getFields()
 
-      expect(demoType).toHaveProperty('guidanceTags')
-      expect(demoType.guidanceTags.type).toMatchObject(
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
+    })
+    it('has negativeGuidanceTags field', () => {
+      const demoType = dkimResultSubType.getFields()
+
+      expect(demoType).toHaveProperty('negativeGuidanceTags')
+      expect(demoType.negativeGuidanceTags.type).toMatchObject(
+        GraphQLList(guidanceTagType),
+      )
+    })
+    it('has neutralGuidanceTags field', () => {
+      const demoType = dkimResultSubType.getFields()
+
+      expect(demoType).toHaveProperty('neutralGuidanceTags')
+      expect(demoType.neutralGuidanceTags.type).toMatchObject(
+        GraphQLList(guidanceTagType),
+      )
+    })
+    it('has positiveGuidanceTags field', () => {
+      const demoType = dkimResultSubType.getFields()
+
+      expect(demoType).toHaveProperty('positiveGuidanceTags')
+      expect(demoType.positiveGuidanceTags.type).toMatchObject(
         GraphQLList(guidanceTagType),
       )
     })
@@ -65,9 +88,19 @@ describe('Given The dkimResultSubType object', () => {
         )
       })
     })
-    describe('testing the guidanceTags resolver', () => {
-      let query, drop, truncate, collections, dkimGT
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = dkimResultSubType.getFields()
 
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(
+          JSON.stringify(rawJson),
+        )
+      })
+    })
+    describe('testing the negativeGuidanceTags resolver', () => {
+      let query, drop, truncate, collections, dkimGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
           type: 'database',
@@ -77,7 +110,6 @@ describe('Given The dkimResultSubType object', () => {
           options: databaseOptions({ rootPass }),
         }))
       })
-
       beforeEach(async () => {
         await truncate()
         dkimGT = await collections.dkimGuidanceTags.save({
@@ -98,11 +130,9 @@ describe('Given The dkimResultSubType object', () => {
           ],
         })
       })
-
       afterAll(async () => {
         await drop()
       })
-
       it('returns the parsed value', async () => {
         const demoType = dkimResultSubType.getFields()
 
@@ -111,11 +141,163 @@ describe('Given The dkimResultSubType object', () => {
           userKey: '1',
           i18n: {},
         })
-        const guidanceTags = ['dkim1']
+        const negativeTags = ['dkim1']
 
         expect(
-          await demoType.guidanceTags.resolve(
-            { guidanceTags },
+          await demoType.negativeGuidanceTags.resolve(
+            { negativeTags },
+            {},
+            { loaders: { loadDkimGuidanceTagById: loader } },
+          ),
+        ).toEqual([
+          {
+            _id: dkimGT._id,
+            _key: dkimGT._key,
+            _rev: dkimGT._rev,
+            _type: 'guidanceTag',
+            guidance: 'Some Interesting Guidance',
+            id: 'dkim1',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+            tagId: 'dkim1',
+            tagName: 'DKIM-TAG',
+          },
+        ])
+      })
+    })
+    describe('testing the neutralGuidanceTags resolver', () => {
+      let query, drop, truncate, collections, dkimGT
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        await truncate()
+        dkimGT = await collections.dkimGuidanceTags.save({
+          _key: 'dkim1',
+          tagName: 'DKIM-TAG',
+          guidance: 'Some Interesting Guidance',
+          refLinksGuide: [
+            {
+              description: 'refLinksGuide Description',
+              ref_link: 'www.refLinksGuide.ca',
+            },
+          ],
+          refLinksTechnical: [
+            {
+              description: 'refLinksTechnical Description',
+              ref_link: 'www.refLinksTechnical.ca',
+            },
+          ],
+        })
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      it('returns the parsed value', async () => {
+        const demoType = dkimResultSubType.getFields()
+
+        const loader = loadDkimGuidanceTagById({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
+        const neutralTags = ['dkim1']
+
+        expect(
+          await demoType.neutralGuidanceTags.resolve(
+            { neutralTags },
+            {},
+            { loaders: { loadDkimGuidanceTagById: loader } },
+          ),
+        ).toEqual([
+          {
+            _id: dkimGT._id,
+            _key: dkimGT._key,
+            _rev: dkimGT._rev,
+            _type: 'guidanceTag',
+            guidance: 'Some Interesting Guidance',
+            id: 'dkim1',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+            tagId: 'dkim1',
+            tagName: 'DKIM-TAG',
+          },
+        ])
+      })
+    })
+    describe('testing the positiveGuidanceTags resolver', () => {
+      let query, drop, truncate, collections, dkimGT
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        await truncate()
+        dkimGT = await collections.dkimGuidanceTags.save({
+          _key: 'dkim1',
+          tagName: 'DKIM-TAG',
+          guidance: 'Some Interesting Guidance',
+          refLinksGuide: [
+            {
+              description: 'refLinksGuide Description',
+              ref_link: 'www.refLinksGuide.ca',
+            },
+          ],
+          refLinksTechnical: [
+            {
+              description: 'refLinksTechnical Description',
+              ref_link: 'www.refLinksTechnical.ca',
+            },
+          ],
+        })
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      it('returns the parsed value', async () => {
+        const demoType = dkimResultSubType.getFields()
+
+        const loader = loadDkimGuidanceTagById({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
+        const positiveTags = ['dkim1']
+
+        expect(
+          await demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
             {},
             { loaders: { loadDkimGuidanceTagById: loader } },
           ),

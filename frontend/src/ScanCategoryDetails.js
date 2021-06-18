@@ -11,6 +11,8 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
   const handleShowCategory = () => setShowCategory(!showCategory)
   const [showCiphers, setShowCiphers] = useState(true)
   const handleShowCiphers = () => setShowCiphers(!showCiphers)
+  const [showCurves, setShowCurves] = useState(true)
+  const handleShowCurves = () => setShowCurves(!showCurves)
 
   const data = categoryData.edges[0]?.node
 
@@ -45,7 +47,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
 
   const webSummary =
     categoryName === 'https' ? (
-      <Box bg="gray.200" px="2">
+      <Box bg="gray.100" px="2" py="1">
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Implementation:</Trans>
@@ -80,7 +82,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         </Stack>
       </Box>
     ) : categoryName === 'ssl' ? (
-      <Box bg="gray.200" px="2">
+      <Box bg="gray.100" px="2" py="1">
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>CCS Injection Vulnerability:</Trans>
@@ -155,6 +157,39 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
     </Box>
   )
 
+  const curves = categoryName === 'ssl' && (
+    <Box>
+      <Stack>
+        <Box bg="strongMuted">
+          <Box bg="strong" color="white" px="2">
+            <Text fontWeight="bold">
+              <Trans>Strong Curves:</Trans>
+            </Text>
+          </Box>
+          {mapCiphers(data?.strongCurves)}
+        </Box>
+        <Divider />
+        <Box bg="moderateMuted">
+          <Box bg="moderate" color="white" px="2">
+            <Text fontWeight="bold">
+              <Trans>Acceptable Curves:</Trans>
+            </Text>
+          </Box>
+          {mapCiphers(data?.acceptableCurves)}
+        </Box>
+        <Divider />
+        <Box bg="weakMuted">
+          <Box bg="weak" color="white" px="2">
+            <Text fontWeight="bold">
+              <Trans>Weak Curves:</Trans>
+            </Text>
+          </Box>
+          {mapCiphers(data?.weakCurves)}
+        </Box>
+      </Stack>
+    </Box>
+  )
+
   return (
     <Box pb="2">
       <TrackerButton
@@ -183,6 +218,20 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Ciphers</Trans>
             </TrackerButton>
             <Collapse isOpen={showCiphers}>{ciphers}</Collapse>
+          </Box>
+        )}
+        {curves && (
+          <Box>
+            <Divider />
+            <TrackerButton
+              variant="primary"
+              onClick={handleShowCurves}
+              w="100%"
+              mb="2"
+            >
+              <Trans>Curves</Trans>
+            </TrackerButton>
+            <Collapse isOpen={showCurves}>{curves}</Collapse>
           </Box>
         )}
       </Collapse>

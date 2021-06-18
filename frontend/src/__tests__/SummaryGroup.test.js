@@ -1,11 +1,10 @@
 import React from 'react'
 import { MockedProvider } from '@apollo/client/testing'
 import { render, waitFor } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { SummaryGroup } from '../SummaryGroup'
-import { WEB_AND_EMAIL_SUMMARIES } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

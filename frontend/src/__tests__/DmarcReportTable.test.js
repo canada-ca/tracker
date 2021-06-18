@@ -1,12 +1,12 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import DmarcReportTable from '../DmarcReportTable'
 import {
-  singleDmarcReportDetailTableData,
   singleDmarcReportDetailTableColumns,
+  singleDmarcReportDetailTableData,
 } from '../fixtures/dmarcReportDetailTablesData'
 
 const i18n = setupI18n({

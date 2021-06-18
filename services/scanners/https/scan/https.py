@@ -8,6 +8,7 @@ import logging
 import base64
 import urllib
 import publicsuffix2 as publicsuffix
+from cryptography.hazmat.primitives.serialization import Encoding
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed
 from sslyze.scanner import Scanner, ServerScanRequest, ScanCommandExtraArgumentsDict
@@ -21,6 +22,7 @@ from sslyze.plugins.certificate_info._certificate_utils import (
 )
 
 from .models import Domain, Endpoint
+from .query_crlite import query_crlite
 
 suffix_list = None
 preload_pending = None
@@ -57,6 +59,7 @@ def result_for(domain):
         "HTTPS Bad Hostname": is_bad_hostname(domain),
         "HTTPS Expired Cert": is_expired_cert(domain),
         "HTTPS Self Signed Cert": is_self_signed_cert(domain),
+        "HTTPS Cert Revoked": is_revoked_cert(domain),
         "HTTPS Cert Chain Length": cert_chain_length(domain),
         "HTTPS Probably Missing Intermediate Cert": is_missing_intermediate_cert(
             domain
@@ -284,7 +287,10 @@ def is_http_redirect_domain(domain):
     is a redirect, and all other http endpoints are either redirects
     or down.
     """
-    http, httpwww, = domain.http, domain.httpwww
+    http, httpwww, = (
+        domain.http,
+        domain.httpwww,
+    )
 
     return is_live(domain) and (
         (is_redirect(http) or is_redirect(httpwww))
@@ -473,6 +479,20 @@ def is_self_signed_cert(domain):
         canonical_https = https
 
     return canonical_https.https_self_signed_cert
+
+
+def is_revoked_cert(domain):
+    """
+    Returns if its canonical https endpoint has a revoked cert
+    """
+    canonical, https, httpswww = domain.canonical, domain.https, domain.httpswww
+
+    if canonical.host == "www":
+        canonical_https = httpswww
+    else:
+        canonical_https = https
+
+    return canonical_https.https_cert_revoked
 
 
 def cert_chain_length(domain):
@@ -1135,8 +1155,10 @@ def https_check(endpoint):
     # remove the https:// from prefix for sslyze
     try:
         hostname = endpoint.url[8:]
-        server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
-            hostname, 443
+        server_location = (
+            ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
+                hostname, 443
+            )
         )
         server_tester = ServerConnectivityTester()
         server_info = server_tester.perform(server_location)
@@ -1264,6 +1286,7 @@ def https_check(endpoint):
     endpoint.https_self_signed_cert = False
     endpoint.https_bad_chain = False
     endpoint.https_bad_hostname = False
+    endpoint.https_cert_revoked = False
 
     cert_chain = cert_plugin_result.certificate_deployments[
         0
@@ -1282,6 +1305,14 @@ def https_check(endpoint):
         0
     ].leaf_certificate_subject_matches_hostname:
         endpoint.https_bad_hostname = True
+
+    try:
+        endpoint.https_cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
+    except ValueError as e:
+        logging.debug(
+            f"Error while checking revocation status for {endpoint.url}: {str(e)}"
+        )
+        endpoint.https_cert_revoked = None
 
     # Check for leaf certificate expiration/self-signature.
     if leaf_cert.not_valid_after < datetime.datetime.now():

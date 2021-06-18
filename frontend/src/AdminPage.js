@@ -10,10 +10,12 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
+import OrganizationInformation from './OrganizationInformation'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
-  const [orgDetails, setOrgDetails] = useState()
+  const [selectedOrg, setSelectedOrg] = useState('none')
+  const [orgDetails, setOrgDetails] = useState({})
   const toast = useToast()
 
   const { loading, error, data } = useQuery(ADMIN_AFFILIATIONS, {
@@ -84,7 +86,7 @@ export default function AdminPage() {
   const adminOrgsAcronyms = Object.keys(adminAffiliations)
 
   const options = [
-    <option hidden key="default">
+    <option hidden key="default" value="none">
       {t`Select an organization`}
     </option>,
   ]
@@ -109,13 +111,14 @@ export default function AdminPage() {
               <Trans>Organization: </Trans>
             </Text>
             <Select
-              aria-label="Select an organization"
               w={['100%', '25%']}
               size="lg"
               variant="filled"
               onChange={(e) => {
                 setOrgDetails(adminAffiliations[e.target.value])
+                setSelectedOrg(e.target.value)
               }}
+              value={selectedOrg}
             >
               {options}
             </Select>
@@ -130,15 +133,22 @@ export default function AdminPage() {
               <Trans>Create Organization</Trans>
             </TrackerButton>
           </Stack>
-          {options.length > 1 && orgDetails ? (
-            <Stack>
+          {options.length > 1 && selectedOrg !== 'none' ? (
+            <>
+              <OrganizationInformation
+                orgSlug={orgDetails.slug}
+                mb="1rem"
+                removeOrgCallback={setSelectedOrg}
+                // set key, this resets state when switching orgs (closes editing box)
+                key={orgDetails.slug}
+              />
               <AdminPanel
                 orgSlug={orgDetails.slug}
                 orgId={orgDetails.id}
                 permission={isSA?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
                 mr="4"
               />
-            </Stack>
+            </>
           ) : (
             <Text fontSize="2xl" fontWeight="bold" textAlign="center">
               <Trans>Select an organization to view admin options</Trans>

@@ -94,11 +94,16 @@ export const createOrganization = new mutationWithClientMutationId({
       transaction,
       query,
       userKey,
-      auth: { userRequired },
+      auth: { userRequired, verifiedRequired },
       loaders: { loadOrgBySlug },
       validators: { cleanseInput, slugify },
     },
   ) => {
+    // Get user
+    const user = await userRequired()
+
+    verifiedRequired({ user })
+
     // Cleanse Input
     const acronymEN = cleanseInput(args.acronymEN)
     const acronymFR = cleanseInput(args.acronymFR)
@@ -118,9 +123,6 @@ export const createOrganization = new mutationWithClientMutationId({
     // Create EN and FR slugs
     const slugEN = slugify(nameEN)
     const slugFR = slugify(nameFR)
-
-    // Get user
-    const user = await userRequired()
 
     // Check to see if org already exists
     const [orgEN, orgFR] = await loadOrgBySlug.loadMany([slugEN, slugFR])

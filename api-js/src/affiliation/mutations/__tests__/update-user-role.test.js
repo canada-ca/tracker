@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 
@@ -38,6 +38,7 @@ describe('update a users role', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
+
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -45,6 +46,7 @@ describe('update a users role', () => {
     consoleOutput = []
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
   })
 
@@ -162,6 +164,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -231,6 +234,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -309,6 +313,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -378,6 +383,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -465,6 +471,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -568,6 +575,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -635,6 +643,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -702,6 +711,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -776,6 +786,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -877,6 +888,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -952,6 +964,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1037,6 +1050,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1122,6 +1136,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1208,6 +1223,7 @@ describe('update a users role', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1291,6 +1307,7 @@ describe('update a users role', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1410,6 +1427,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1522,6 +1540,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1591,6 +1610,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1720,6 +1740,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1789,6 +1810,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1867,6 +1889,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1936,6 +1959,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2023,6 +2047,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2126,6 +2151,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2193,6 +2219,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2260,6 +2287,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2334,6 +2362,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2434,6 +2463,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2508,6 +2538,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2592,6 +2623,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2676,6 +2708,7 @@ describe('update a users role', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2761,6 +2794,7 @@ describe('update a users role', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2843,6 +2877,7 @@ describe('update a users role', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -2961,6 +2996,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -3070,6 +3106,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -3137,6 +3174,7 @@ describe('update a users role', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),

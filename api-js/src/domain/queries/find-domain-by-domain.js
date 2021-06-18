@@ -18,16 +18,17 @@ export const findDomainByDomain = {
     args,
     {
       i18n,
-      auth: { checkDomainPermission, userRequired },
+      auth: { checkDomainPermission, userRequired, verifiedRequired },
       loaders: { loadDomainByDomain },
       validators: { cleanseInput },
     },
   ) => {
-    // Cleanse input
-    const domainInput = cleanseInput(args.domain)
-
     // Get User
     const user = await userRequired()
+    verifiedRequired({ user })
+
+    // Cleanse input
+    const domainInput = cleanseInput(args.domain)
 
     // Retrieve domain by domain
     const domain = await loadDomainByDomain.load(domainInput)
@@ -52,7 +53,7 @@ export const findDomainByDomain = {
     console.info(
       `User ${user._key} successfully retrieved domain ${domain._key}.`,
     )
-    
+
     return domain
   },
 }

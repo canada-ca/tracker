@@ -17,12 +17,12 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  Heading,
   ModalFooter,
   FormLabel,
   FormControl,
   Divider,
   Box,
+  Grid,
 } from '@chakra-ui/core'
 import { Domain } from './Domain'
 import { string, number } from 'prop-types'
@@ -34,9 +34,13 @@ import {
   REMOVE_DOMAIN,
   UPDATE_DOMAIN,
 } from './graphql/mutations'
-import { Field, Formik, useFormik } from 'formik'
+import { Field, Formik, useFormik, FieldArray } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
-import { object as yupObject, string as yupString } from 'yup'
+import {
+  object as yupObject,
+  string as yupString,
+  array as yupArray,
+} from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -65,6 +69,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [selectorInputList, setSelectorInputList] = useState([])
 
   const domainForm = useFormik({
     initialValues: {
@@ -101,6 +106,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     recordsPerPage: domainsPerPage,
     variables: { orgSlug, search: debouncedSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
@@ -242,6 +249,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           position: 'top-left',
         })
         updateOnClose()
+        setSelectorInputList([])
       } else if (updateDomain.result.__typename === 'DomainError') {
         toast({
           title: t`Unable to update domain.`,
@@ -269,6 +277,14 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     newDomainUrl: yupString().required(
       i18n._(fieldRequirements.domainUrl.required.message),
     ),
+    selectors: yupArray().of(
+      yupString()
+        .required(i18n._(fieldRequirements.selector.required.message))
+        .matches(
+          fieldRequirements.selector.matches.regex,
+          i18n._(fieldRequirements.selector.matches.message),
+        ),
+    ),
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -287,22 +303,25 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           </Text>
         )}
       >
-        {({ id: domainId, domain, lastRan }, index) => (
+        {({ id: domainId, domain, lastRan, selectors }, index) => (
           <Box key={'admindomain' + index}>
             <Stack isInline align="center">
               <Stack>
                 <TrackerButton
+                  data-testid={`edit-${index}`}
                   variant="primary"
                   px="2"
                   onClick={() => {
                     setEditingDomainUrl(domain)
                     setEditingDomainId(domainId)
+                    setSelectorInputList(selectors)
                     updateOnOpen()
                   }}
                 >
                   <Icon name="edit" />
                 </TrackerButton>
                 <TrackerButton
+                  data-testid={`remove-${index}`}
                   onClick={() => {
                     setSelectedRemoveDomainUrl(domain)
                     setSelectedRemoveDomainId(domainId)
@@ -314,7 +333,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   <Icon name="minus" />
                 </TrackerButton>
               </Stack>
-              <Domain url={domain} lastRan={lastRan} />
+              <Domain url={domain} lastRan={lastRan} flexGrow={1} />
             </Stack>
             <Divider borderColor="gray.900" />
           </Box>
@@ -374,6 +393,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
+
       <SlideIn in={updateIsOpen}>
         {(styles) => (
           <Modal
@@ -386,7 +406,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               <Formik
                 validateOnBlur={false}
                 initialValues={{
-                  newDomainUrl: '',
+                  newDomainUrl: editingDomainUrl,
+                  selectors: selectorInputList,
                 }}
                 initialTouched={{
                   displayName: true,
@@ -399,12 +420,12 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                       domainId: editingDomainId,
                       orgId: orgId,
                       domain: values.newDomainUrl,
-                      selectors: [],
+                      selectors: values.selectors,
                     },
                   })
                 }}
               >
-                {({ handleSubmit, isSubmitting }) => (
+                {({ handleSubmit, isSubmitting, values, errors }) => (
                   <form id="form" onSubmit={handleSubmit}>
                     <ModalHeader>
                       <Trans>Edit Domain Details</Trans>
@@ -412,12 +433,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                     <ModalCloseButton />
                     <ModalBody>
                       <Stack spacing={4} p={25}>
-                        <Heading as="h3" size="sm">
-                          <Trans>Current Domain URL:</Trans>
-                        </Heading>
-
-                        <Text>{editingDomainUrl}</Text>
-
                         <Field id="newDomainUrl" name="newDomainUrl">
                           {({ field, form }) => (
                             <FormControl
@@ -430,13 +445,15 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                                 htmlFor="newDomainUrl"
                                 fontWeight="bold"
                               >
-                                <Trans>New Domain Url:</Trans>
+                                <Trans>Domain URL:</Trans>
                               </FormLabel>
 
                               <Input
+                                mb="2"
                                 {...field}
+                                aria-label="new-domain-url"
                                 id="newDomainUrl"
-                                placeholder={t`New Domain Url`}
+                                placeholder={t`Domain URL`}
                                 ref={initialFocusRef}
                               />
                               <FormErrorMessage>
@@ -445,6 +462,84 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                             </FormControl>
                           )}
                         </Field>
+
+                        <FieldArray
+                          name="selectors"
+                          render={(arrayHelpers) => (
+                            <Box>
+                              <Text fontWeight="bold">
+                                <Trans>DKIM Selectors:</Trans>
+                              </Text>
+                              <Grid
+                                gridTemplateColumns="auto 1fr"
+                                gap="0.5em"
+                                alignItems="center"
+                                mb="0.5em"
+                              >
+                                {values.selectors.map((_selector, index) => (
+                                  <React.Fragment key={index}>
+                                    <TrackerButton
+                                      type="button"
+                                      variant="danger"
+                                      p="3"
+                                      onClick={() => arrayHelpers.remove(index)}
+                                    >
+                                      <Icon name="minus" size="icons.xs" />
+                                    </TrackerButton>
+                                    <Field
+                                      id={`selectors.${index}`}
+                                      name={`selectors.${index}`}
+                                      h="1.5rem"
+                                    >
+                                      {({ field, form }) => (
+                                        <FormControl
+                                          isInvalid={
+                                            form.errors.selectors &&
+                                            form.errors.selectors[index] &&
+                                            form.touched.selectors &&
+                                            form.touched.selectors[index]
+                                          }
+                                        >
+                                          <Input
+                                            {...field}
+                                            id={`selectors.${index}`}
+                                            name={`selectors.${index}`}
+                                            placeholder={t`DKIM Selector`}
+                                            ref={initialFocusRef}
+                                          />
+                                        </FormControl>
+                                      )}
+                                    </Field>
+                                    <Stack
+                                      isInline
+                                      align="center"
+                                      gridColumn="2 / 3"
+                                      color="red.500"
+                                    >
+                                      {errors.selectors &&
+                                        errors.selectors[index] && (
+                                          <>
+                                            <Icon name="warning" mr="0.5em" />
+                                            <Text>
+                                              {errors.selectors[index]}
+                                            </Text>
+                                          </>
+                                        )}
+                                    </Stack>
+                                  </React.Fragment>
+                                ))}
+                              </Grid>
+                              <TrackerButton
+                                type="button"
+                                variant="primary"
+                                px="2"
+                                onClick={() => arrayHelpers.push('')}
+                              >
+                                <Icon name="small-add" size="icons.md" />
+                              </TrackerButton>
+                            </Box>
+                          )}
+                        />
                       </Stack>
                     </ModalBody>
 

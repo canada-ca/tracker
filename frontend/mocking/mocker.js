@@ -155,10 +155,20 @@ const mocks = {
   },
   Domain: () => {
     // gives date in format "2020-12-31 15:30:20.262Z"
-    const lastRan = new Date(faker.date.between('2019-01-01', '2022-01-01'))
-      .toISOString()
-      .replace('T', ' ')
+    const lastRan =
+      Math.random() > 0.2
+        ? new Date(faker.date.between('2019-01-01', '2022-01-01'))
+            .toISOString()
+            .replace('T', ' ')
+        : null
     const curDate = new Date()
+    const dmarcPhase = faker.random.arrayElement([
+      'assess',
+      'deploy',
+      'enforce',
+      'maintain',
+      'not implemented',
+    ])
 
     // generate an object matching DmarcSummary
     const generateFakeSummary = (currentDate, month, year) => {
@@ -216,6 +226,7 @@ const mocks = {
 
     return {
       lastRan,
+      dmarcPhase,
       yearlyDmarcSummaries,
     }
   },
@@ -384,9 +395,12 @@ const mocks = {
       refLink,
     }
   },
+  Selector: () =>
+    'selector' + faker.datatype.number({ min: 1, max: 9 }) + '._domainkey',
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),
+  SharedUser: () => ({ displayName: faker.name.findName() }),
   SpfFailureTable: () => {
     const dnsHost = faker.internet.domainName()
     const envelopeFrom = faker.internet.domainName()
@@ -500,11 +514,35 @@ const schemaWithMocks = addMocksToSchema({
       },
     },
     Mutation: {
+      updateOrganization: (_, args, _context, _resolveInfo) => {
+        Object.entries(args.input).forEach((entry) => {
+          const [key, value] = entry
+          if (key === 'id') return
+
+          // Current mock implementation does not support multi-lang, remove language from keys
+          store.set(
+            'Organization',
+            args.input.id,
+            key.substring(0, key.length - 2),
+            value,
+          )
+        })
+
+        return {
+          result: store.get('Organization', args.input.id),
+        }
+      },
       setPhoneNumber: (_, args, context, _resolveInfo) => {
-        store.set('PersonalUser', context.token, 'phoneNumber', args.input.phoneNumber)
+        store.set(
+          'PersonalUser',
+          context.token,
+          'phoneNumber',
+          args.input.phoneNumber,
+        )
         return {
           result: {
-            status: 'Phone number has been successfully set, you will receive a verification text message shortly.',
+            status:
+              'Phone number has been successfully set, you will receive a verification text message shortly.',
             user: store.get('PersonalUser', context.token),
             type: 'SetPhoneNumberResult',
           },
@@ -532,7 +570,6 @@ const schemaWithMocks = addMocksToSchema({
         if (obj.authToken) return 'AuthResult'
       },
     },
-
   }),
 })
 

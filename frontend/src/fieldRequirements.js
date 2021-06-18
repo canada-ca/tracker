@@ -37,7 +37,7 @@ export const fieldRequirements = {
   },
   acronym: {
     matches: {
-      regex: /^[A-Z]+(?:_[A-Z]+)*$/g,
+      regex: /^[A-Z]+(?:_[A-Z]+)*$/gm,
       message: t`Acronyms can only use upper case letters and underscores`,
     },
     max: {
@@ -47,5 +47,12 @@ export const fieldRequirements = {
   },
   field: {
     required: { message: t`This field cannot be empty` },
+  },
+  selector: {
+    required: { message: t`Selector cannot be empty` },
+    matches: {
+      regex: /^([\S]+)([.]_domainkey)$/gm,
+      message: t`Selector must be string ending in '._domainkey'`,
+    },
   },
 }

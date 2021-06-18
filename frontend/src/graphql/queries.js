@@ -491,6 +491,7 @@ export const ADMIN_PANEL = gql`
             id
             domain
             lastRan
+            selectors
           }
         }
         pageInfo {
@@ -508,6 +509,7 @@ export const ADMIN_PANEL = gql`
             permission
             user {
               userName
+              displayName
             }
           }
         }
@@ -540,6 +542,7 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
             user {
               id
               userName
+              displayName
             }
           }
         }
@@ -571,6 +574,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             id
             domain
             lastRan
+            selectors
           }
         }
         pageInfo {
@@ -676,6 +680,7 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
             user {
               id
               userName
+              displayName
             }
           }
         }
@@ -762,6 +767,7 @@ export const QUERY_USERLIST = gql`
         node {
           id
           userName
+          displayName
           role
           tfa
         }
@@ -1378,6 +1384,24 @@ export const USER_AFFILIATIONS = gql`
     }
   }
 `
+
+export const ORGANIZATION_INFORMATION = gql`
+  query OrganizationInformation($orgSlug: Slug!) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      acronym
+      name
+      slug
+      zone
+      sector
+      country
+      province
+      city
+      verified
+    }
+  }
+`
+
 export const ADMIN_AFFILIATIONS = gql`
   query AdminAffiliations(
     $after: String
