@@ -81,7 +81,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       ),
     }),
     onSubmit: async (values) => {
-      createDomain({
+      await createDomain({
         variables: {
           orgId: orgId,
           domain: values.domain,
@@ -376,6 +376,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             type="submit"
             width={['100%', '25%']}
             variant="primary"
+            isLoading={domainForm.isSubmitting}
           >
             <Icon name="add" />
             <Trans>Add Domain</Trans>
