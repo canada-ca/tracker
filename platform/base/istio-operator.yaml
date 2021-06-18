@@ -31,7 +31,7 @@ spec:
                 weight: 1
         hpaSpec:
           maxReplicas: 2
-          minReplicas: 1
+          minReplicas: 2
         podDisruptionBudget:
           minAvailable: 1
           selector:
