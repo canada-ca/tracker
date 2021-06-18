@@ -125,13 +125,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   language: 'en',
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
-                  {
+                loadVerifiedDomainConnectionsByOrgId:
+                  loadVerifiedDomainConnectionsByOrgId({
                     query,
                     cleanseInput,
                     i18n,
-                  },
-                ),
+                  }),
               },
             },
           )
@@ -175,13 +174,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   language: 'en',
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
-                  {
+                loadVerifiedDomainConnectionsByOrgId:
+                  loadVerifiedDomainConnectionsByOrgId({
                     query,
                     cleanseInput,
                     i18n,
-                  },
-                ),
+                  }),
               },
             },
           )
@@ -239,13 +237,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   language: 'fr',
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
-                  {
+                loadVerifiedDomainConnectionsByOrgId:
+                  loadVerifiedDomainConnectionsByOrgId({
                     query,
                     cleanseInput,
                     i18n,
-                  },
-                ),
+                  }),
               },
             },
           )
@@ -303,18 +300,21 @@ describe('given findOrganizationBySlugQuery', () => {
                   language: 'fr',
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
-                  {
+                loadVerifiedDomainConnectionsByOrgId:
+                  loadVerifiedDomainConnectionsByOrgId({
                     query,
                     cleanseInput,
                     i18n,
-                  },
-                ),
+                  }),
               },
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              `Aucune organisation vérifiée avec le slug fourni n'a pu être trouvée.`,
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
         })
