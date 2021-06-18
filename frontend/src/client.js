@@ -11,7 +11,7 @@ export function createCache() {
         fields: {
           findMyDomains: relayStylePagination(),
           findMyDmarcSummaries: relayStylePagination(),
-          findMyOrganizations: relayStylePagination(),
+          findMyOrganizations: relayStylePagination(['isAdmin']),
         },
       },
       Organization: {
@@ -54,7 +54,7 @@ export function createCache() {
 export const cache = createCache()
 
 const httpLink = createHttpLink({
-  uri: '/graphql',
+  uri: 'https://tracker.alpha.canada.ca/graphql',
 })
 
 const languageLink = setContext((_, { headers }) => {
