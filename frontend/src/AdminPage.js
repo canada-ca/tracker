@@ -24,6 +24,7 @@ export default function AdminPage() {
         authorization: currentUser.jwt,
       },
     },
+    fetchPolicy: 'cache-and-network',
     variables: {
       first: 100,
       orderBy: { field: 'ACRONYM', direction: 'ASC' },
