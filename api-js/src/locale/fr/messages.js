@@ -81,7 +81,7 @@
     'Permission Denied: Please contact organization admin for help with removing organization.':
       "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer l'organisation.",
     'Permission Denied: Please contact organization admin for help with removing users.':
-      'todo',
+      "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
     'Permission Denied: Please contact organization admin for help with updating organization.':
       "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
     'Permission Denied: Please contact organization admin for help with updating user roles.':
@@ -97,7 +97,7 @@
     'Permission Denied: Please contact organization user for help with scanning this domain.':
       "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine.",
     'Permission Denied: Please contact organization user for help with updating this domain.':
-      'todo',
+      "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
     'Permission Denied: Please contact super admin for help with removing domain.':
       "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
     'Permission Denied: Please contact super admin for help with removing organization.':
@@ -394,7 +394,8 @@
       "Impossible de demander l'affiliation (s). Veuillez réessayer.",
     'Unable to query domain(s). Please try again.':
       "Impossible d'interroger le(s) domaine(s). Veuillez réessayer.",
-    'Unable to refresh tokens, please sign in.': 'todo',
+    'Unable to refresh tokens, please sign in.':
+      'Impossible de rafraîchir les jetons, veuillez vous connecter.',
     'Unable to remove a user that already does not belong to this organization.':
       "Impossible de supprimer un utilisateur qui n'appartient déjà plus à cette organisation.",
     'Unable to remove domain from unknown organization.':

@@ -13,9 +13,9 @@ msgstr ""
 
 #: src/auth/check-permission.js:20
 #: src/auth/check-permission.js:48
-#: src/auth/user-required.js:8
-#: src/auth/user-required.js:19
-#: src/auth/user-required.js:26
+#: src/auth/user-required.js:10
+#: src/auth/user-required.js:21
+#: src/auth/user-required.js:28
 msgid "Authentication error. Please sign in."
 msgstr "Erreur d'authentification. Veuillez vous connecter."
 
@@ -23,7 +23,7 @@ msgstr "Erreur d'authentification. Veuillez vous connecter."
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Impossible d'interroger les affiliations sur l'organisation sans l'autorisation de l'administrateur ou plus."
 
-#: src/user/mutations/sign-up.js:105
+#: src/user/mutations/sign-up.js:108
 msgid "Email already in use."
 msgstr "Courriel déjà utilisé."
 
@@ -35,7 +35,7 @@ msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de réinitia
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception."
 
-#: src/user/mutations/authenticate.js:121
+#: src/user/mutations/authenticate.js:126
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "Code TFA incorrect. Veuillez vous reconnecter."
 
@@ -44,11 +44,11 @@ msgid "Incorrect token value. Please request a new email."
 msgstr "La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail."
 
 #: src/user/mutations/sign-in.js:60
-#: src/user/mutations/sign-in.js:201
+#: src/user/mutations/sign-in.js:203
 msgid "Incorrect username or password. Please try again."
 msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer."
 
-#: src/auth/verify-jwt.js:15
+#: src/auth/verify-jwt.js:14
 msgid "Invalid token, please sign in."
 msgstr "Jeton invalide, veuillez vous connecter."
 
@@ -92,24 +92,24 @@ msgstr "Erreur de vérification de la propriété. Impossible de demander des in
 msgid "Passing both `first` and `last` to paginate the `Affiliation` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Affiliation` n'est pas supporté."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:95
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:92
 msgid "Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DKIMResults` n'est pas supporté."
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:120
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:156
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:117
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:153
 msgid "Passing both `first` and `last` to paginate the `DKIM` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DKIMResults` n'est pas supporté."
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:144
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:141
 msgid "Passing both `first` and `last` to paginate the `DMARC` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DMARC` n'est pas supporté."
 
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:48
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:45
 msgid "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DkimFailureTable` n'est pas supporté."
 
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:48
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:45
 msgid "Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DmarcFailureTable` n'est pas supporté."
 
@@ -117,57 +117,57 @@ msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DmarcFail
 msgid "Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DmarcSummaries` n'est pas supporté."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:140
-#: src/domain/loaders/load-domain-connections-by-user-id.js:140
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:128
+#: src/domain/loaders/load-domain-connections-by-user-id.js:137
 msgid "Passing both `first` and `last` to paginate the `Domain` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Domain` n'est pas supporté."
 
-#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:46
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:45
 msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `FullPassTable` n'est pas supporté."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:98
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:95
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:95
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:95
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:95
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:95
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:88
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:92
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:92
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:92
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:92
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:92
 msgid "Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `GuidanceTag` n'est pas supporté."
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:152
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:149
 msgid "Passing both `first` and `last` to paginate the `HTTPS` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `HTTPS` n'est pas supporté."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:190
-#: src/organization/loaders/load-organization-connections-by-user-id.js:189
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:186
+#: src/organization/loaders/load-organization-connections-by-user-id.js:185
 msgid "Passing both `first` and `last` to paginate the `Organization` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Organization` n'est pas supporté."
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:138
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:135
 msgid "Passing both `first` and `last` to paginate the `SPF` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `SPF` n'est pas supporté."
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:176
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:173
 msgid "Passing both `first` and `last` to paginate the `SSL` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `SSL` n'est pas supporté."
 
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:48
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:45
 msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `SpfFailureTable` n'est pas supporté."
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:121
-#: src/verified-domains/loaders/load-verified-domain-connections.js:121
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:119
+#: src/verified-domains/loaders/load-verified-domain-connections.js:119
 msgid "Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedDomain` n'est pas supporté."
 
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:175
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:176
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:172
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:173
 msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedOrganization` n'est pas supporté."
 
 #: src/user/mutations/reset-password.js:118
-#: src/user/mutations/sign-up.js:79
+#: src/user/mutations/sign-up.js:82
 msgid "Password does not meet requirements."
 msgstr "Le mot de passe ne répond pas aux exigences."
 
@@ -179,7 +179,7 @@ msgstr "Le mot de passe a été réinitialisé avec succès."
 msgid "Password was successfully updated."
 msgstr "Le mot de passe a été mis à jour avec succès."
 
-#: src/user/mutations/sign-up.js:91
+#: src/user/mutations/sign-up.js:94
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
@@ -197,7 +197,7 @@ msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisat
 
 #: src/affiliation/mutations/remove-user-from-org.js:202
 msgid "Permission Denied: Please contact organization admin for help with removing users."
-msgstr "todo"
+msgstr "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs."
 
 #: src/organization/mutations/update-organization.js:156
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
@@ -231,7 +231,7 @@ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation
 
 #: src/domain/mutations/update-domain.js:112
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
-msgstr "todo"
+msgstr "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
 #: src/domain/mutations/remove-domain.js:96
 msgid "Permission Denied: Please contact super admin for help with removing domain."
@@ -245,16 +245,16 @@ msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu
 msgid "Permission Denied: Please contact super admin for help with verifying this organization."
 msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à vérifier cette organisation."
 
-#: src/auth/check-domain-permission.js:23
-#: src/auth/check-domain-permission.js:45
-#: src/auth/check-domain-permission.js:56
+#: src/auth/check-domain-permission.js:24
+#: src/auth/check-domain-permission.js:48
+#: src/auth/check-domain-permission.js:61
 msgid "Permission check error. Unable to request domain information."
 msgstr "Erreur de vérification des permissions. Impossible de demander des informations sur le domaine."
 
 #: src/auth/check-user-is-admin-for-user.js:20
 #: src/auth/check-user-is-admin-for-user.js:30
-#: src/auth/check-user-is-admin-for-user.js:62
-#: src/auth/check-user-is-admin-for-user.js:72
+#: src/auth/check-user-is-admin-for-user.js:63
+#: src/auth/check-user-is-admin-for-user.js:75
 msgid "Permission error, not an admin for this user."
 msgstr "Erreur de permission, pas d'administrateur pour cet utilisateur."
 
@@ -275,11 +275,11 @@ msgstr "Le profil a été mis à jour avec succès."
 msgid "Requesting `{amount}` records on the `Affiliation` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `Affiliation` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:71
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:68
 msgid "Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `DkimFailureTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:71
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:68
 msgid "Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `DkimFailureTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
@@ -287,64 +287,64 @@ msgstr "La demande d'enregistrements `{amount}` sur la connexion `DkimFailureTab
 msgid "Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `DmarcSummaries` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:163
-#: src/domain/loaders/load-domain-connections-by-user-id.js:163
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:151
+#: src/domain/loaders/load-domain-connections-by-user-id.js:160
 msgid "Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `Domain` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:69
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:68
 msgid "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `FullPassTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:121
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:118
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:118
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:118
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:118
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:118
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:111
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:115
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:115
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:115
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:115
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:115
 msgid "Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `GuidanceTag` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:213
-#: src/organization/loaders/load-organization-connections-by-user-id.js:212
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:209
+#: src/organization/loaders/load-organization-connections-by-user-id.js:208
 msgid "Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `Organization` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:71
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:68
 msgid "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `SpfFailureTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:144
-#: src/verified-domains/loaders/load-verified-domain-connections.js:144
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:142
+#: src/verified-domains/loaders/load-verified-domain-connections.js:142
 msgid "Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `VerifiedDomain` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:198
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:199
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:195
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:196
 msgid "Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `VerifiedOrganization` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:118
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:115
 msgid "Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `DKIMResults` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:143
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:140
 msgid "Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `DKIM` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:168
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:165
 msgid "Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `DMARC` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:175
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:172
 msgid "Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `HTTPS` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:161
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:158
 msgid "Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `SPF` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:199
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:196
 msgid "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `SSL` dépasse la limite `{argSet}` de 100 enregistrements."
 
@@ -352,7 +352,7 @@ msgstr "La demande de {amount} enregistrements sur la connexion `SSL` dépasse l
 msgid "Successfully dispatched one time scan."
 msgstr "Un seul balayage a été effectué avec succès."
 
-#: src/user/mutations/verify-account.js:111
+#: src/user/mutations/verify-account.js:113
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
@@ -405,14 +405,14 @@ msgid "Unable to add user to organization. Please try again."
 msgstr "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer."
 
 #: src/user/mutations/authenticate.js:74
-#: src/user/mutations/authenticate.js:103
+#: src/user/mutations/authenticate.js:108
 msgid "Unable to authenticate. Please try again."
 msgstr "Impossible de s'authentifier. Veuillez réessayer."
 
 #: src/auth/check-permission.js:30
-#: src/auth/check-permission.js:57
-#: src/auth/check-super-admin.js:18
-#: src/auth/check-super-admin.js:28
+#: src/auth/check-permission.js:58
+#: src/auth/check-super-admin.js:20
+#: src/auth/check-super-admin.js:30
 msgid "Unable to check permission. Please try again."
 msgstr "Impossible de vérifier l'autorisation. Veuillez réessayer."
 
@@ -537,91 +537,91 @@ msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 msgid "Unable to invite yourself to an org."
 msgstr "Impossible de s'inviter à un org."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:234
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:246
 msgid "Unable to load Aggregate guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez réessayer."
 
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:16
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:144
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:156
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:13
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:141
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:153
 msgid "Unable to load DKIM failure data. Please try again."
 msgstr "Impossible de charger les données d'échec DKIM. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:243
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:255
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:240
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:252
 msgid "Unable to load DKIM guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation DKIM. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:245
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:255
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:257
 msgid "Unable to load DKIM result(s). Please try again."
 msgstr "Impossible de charger le(s) résultat(s) DKIM. Veuillez réessayer."
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:269
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:279
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:266
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:276
 msgid "Unable to load DKIM scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) DKIM. Veuillez réessayer."
 
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:16
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:144
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:156
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:13
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:141
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:153
 msgid "Unable to load DMARC failure data. Please try again."
 msgstr "Impossible de charger les données d'échec DMARC. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:243
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:255
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:240
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:252
 msgid "Unable to load DMARC guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer."
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:308
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:306
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:318
 msgid "Unable to load DMARC scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer."
 
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:463
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:475
-#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:22
-#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:34
+#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:20
+#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:32
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:20
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:32
 msgid "Unable to load DMARC summary data. Please try again."
 msgstr "Impossible de charger les données de synthèse DMARC. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:243
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:255
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:240
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:252
 msgid "Unable to load HTTPS guidance tag(s). Please try again."
 msgstr "Impossible de charger la ou les balises d'orientation HTTPS. Veuillez réessayer."
 
 #: src/web-scan/loaders/load-https-by-key.js:33
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:321
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:319
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:331
 msgid "Unable to load HTTPS scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer."
 
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:16
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:143
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:155
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:13
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:140
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:152
 msgid "Unable to load SPF failure data. Please try again."
 msgstr "Impossible de charger les données d'échec SPF. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:243
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:255
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:240
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:252
 msgid "Unable to load SPF guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation SPF. Veuillez réessayer."
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:295
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:305
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:292
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:302
 msgid "Unable to load SPF scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) SPF. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:243
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:255
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:240
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:252
 msgid "Unable to load SSL guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation SSL. Veuillez réessayer."
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:369
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:379
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:366
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:376
 msgid "Unable to load SSL scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) SSL. Veuillez réessayer."
 
@@ -630,9 +630,9 @@ msgstr "Impossible de charger le(s) scan(s) SSL. Veuillez réessayer."
 msgid "Unable to load affiliation(s). Please try again."
 msgstr "Impossible de charger l'affiliation (s). Veuillez réessayer."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:345
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:355
-#: src/domain/loaders/load-domain-connections-by-user-id.js:371
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:333
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:343
+#: src/domain/loaders/load-domain-connections-by-user-id.js:368
 msgid "Unable to load domain(s). Please try again."
 msgstr "Impossible de charger le(s) domaine(s). Veuillez réessayer."
 
@@ -643,9 +643,9 @@ msgstr "Impossible de charger le(s) domaine(s). Veuillez réessayer."
 msgid "Unable to load domain. Please try again."
 msgstr "Impossible de charger le domaine. Veuillez réessayer."
 
-#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:13
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:140
-#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:150
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:152
 msgid "Unable to load full pass data. Please try again."
 msgstr "Impossible de charger les données complètes de la passe. Veuillez réessayer."
 
@@ -657,10 +657,10 @@ msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 #: src/organization/loaders/load-organization-by-key.js:47
 #: src/organization/loaders/load-organization-by-slug.js:36
 #: src/organization/loaders/load-organization-by-slug.js:51
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:516
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:528
-#: src/organization/loaders/load-organization-connections-by-user-id.js:507
-#: src/organization/loaders/load-organization-connections-by-user-id.js:519
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:512
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:524
+#: src/organization/loaders/load-organization-connections-by-user-id.js:503
+#: src/organization/loaders/load-organization-connections-by-user-id.js:515
 msgid "Unable to load organization(s). Please try again."
 msgstr "Impossible de charger l'organisation (s). Veuillez réessayer."
 
@@ -680,17 +680,17 @@ msgstr "Impossible de charger le(s) utilisateur(s). Veuillez réessayer."
 #: src/verified-domains/loaders/load-verified-domain-by-domain.js:38
 #: src/verified-domains/loaders/load-verified-domain-by-key.js:24
 #: src/verified-domains/loaders/load-verified-domain-by-key.js:38
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:298
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:310
-#: src/verified-domains/loaders/load-verified-domain-connections.js:304
-#: src/verified-domains/loaders/load-verified-domain-connections.js:316
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:296
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:308
+#: src/verified-domains/loaders/load-verified-domain-connections.js:302
+#: src/verified-domains/loaders/load-verified-domain-connections.js:314
 msgid "Unable to load verified domain(s). Please try again."
 msgstr "Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer."
 
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:422
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:434
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:424
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:436
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:419
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:431
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:421
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:433
 msgid "Unable to load verified organization(s). Please try again."
 msgstr "Impossible de charger le(s) organisme(s) vérifié(s). Veuillez réessayer."
 
@@ -703,19 +703,18 @@ msgstr "Impossible de charger le résumé web. Veuillez réessayer."
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "Impossible de demander l'affiliation (s). Veuillez réessayer."
 
-#: src/domain/loaders/load-domain-connections-by-user-id.js:361
+#: src/domain/loaders/load-domain-connections-by-user-id.js:358
 msgid "Unable to query domain(s). Please try again."
 msgstr "Impossible d'interroger le(s) domaine(s). Veuillez réessayer."
 
-#: src/user/mutations/refresh-tokens.js:61
-#: src/user/mutations/refresh-tokens.js:76
-#: src/user/mutations/refresh-tokens.js:93
-#: src/user/mutations/refresh-tokens.js:107
-#: src/user/mutations/refresh-tokens.js:125
+#: src/user/mutations/refresh-tokens.js:60
+#: src/user/mutations/refresh-tokens.js:75
+#: src/user/mutations/refresh-tokens.js:92
+#: src/user/mutations/refresh-tokens.js:106
+#: src/user/mutations/refresh-tokens.js:124
 msgid "Unable to refresh tokens, please sign in."
-msgstr "todo"
+msgstr "Impossible de rafraîchir les jetons, veuillez vous connecter."
 
-#: src/affiliation/mutations/remove-user-from-org.js:120
 #: src/affiliation/mutations/remove-user-from-org.js:122
 msgid "Unable to remove a user that already does not belong to this organization."
 msgstr "Impossible de supprimer un utilisateur qui n'appartient déjà plus à cette organisation."
@@ -790,33 +789,33 @@ msgstr "Impossible de réinitialiser le mot de passe. Veuillez réessayer."
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Impossible de récupérer les informations du rapport DMARC pour : {domain}"
 
-#: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
-#: src/dmarc-summaries/loaders/load-start-date-from-period.js:49
+#: src/dmarc-summaries/loaders/load-start-date-from-period.js:33
+#: src/dmarc-summaries/loaders/load-start-date-from-period.js:48
 msgid "Unable to select DMARC report(s) for this period and year."
 msgstr "Impossible de sélectionner le(s) rapport(s) DMARC pour cette période et cette année."
 
-#: src/notify/notify-send-authenticate-email.js:19
+#: src/notify/notify-send-authenticate-email.js:21
 msgid "Unable to send authentication email. Please try again."
 msgstr "Impossible d'envoyer l'email d'authentification. Veuillez réessayer."
 
-#: src/notify/notify-send-authenticate-text-msg.js:32
+#: src/notify/notify-send-authenticate-text-msg.js:35
 msgid "Unable to send authentication text message. Please try again."
 msgstr "Impossible d'envoyer un message texte d'authentification. Veuillez réessayer."
 
-#: src/notify/notify-send-org-invite-create-account.js:31
-#: src/notify/notify-send-org-invite-email.js:26
+#: src/notify/notify-send-org-invite-create-account.js:29
+#: src/notify/notify-send-org-invite-email.js:25
 msgid "Unable to send org invite email. Please try again."
 msgstr "Impossible d'envoyer l'e-mail d'invitation à l'org. Veuillez réessayer."
 
-#: src/notify/notify-send-password-reset-email.js:30
+#: src/notify/notify-send-password-reset-email.js:27
 msgid "Unable to send password reset email. Please try again."
 msgstr "Impossible d'envoyer l'email de réinitialisation du mot de passe. Veuillez réessayer."
 
-#: src/notify/notify-send-tfa-text-msg.js:30
+#: src/notify/notify-send-tfa-text-msg.js:27
 msgid "Unable to send two factor authentication message. Please try again."
 msgstr "Impossible d'envoyer le message d'authentification à deux facteurs. Veuillez réessayer."
 
-#: src/notify/notify-send-verification-email.js:30
+#: src/notify/notify-send-verification-email.js:29
 msgid "Unable to send verification email. Please try again."
 msgstr "Impossible d'envoyer l'email de vérification. Veuillez réessayer."
 
@@ -826,19 +825,19 @@ msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 
 #: src/user/mutations/sign-in.js:91
 #: src/user/mutations/sign-in.js:111
-#: src/user/mutations/sign-in.js:155
-#: src/user/mutations/sign-in.js:192
+#: src/user/mutations/sign-in.js:157
+#: src/user/mutations/sign-in.js:194
 msgid "Unable to sign in, please try again."
 msgstr "Impossible de se connecter, veuillez réessayer."
 
-#: src/user/mutations/sign-up.js:177
-#: src/user/mutations/sign-up.js:191
+#: src/user/mutations/sign-up.js:182
+#: src/user/mutations/sign-up.js:196
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation."
 
-#: src/user/mutations/sign-up.js:153
-#: src/user/mutations/sign-up.js:212
-#: src/user/mutations/sign-up.js:222
+#: src/user/mutations/sign-up.js:158
+#: src/user/mutations/sign-up.js:217
+#: src/user/mutations/sign-up.js:227
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
@@ -919,12 +918,12 @@ msgid "Unable to update your own role."
 msgstr "Impossible de mettre à jour votre propre rôle."
 
 #: src/user/mutations/verify-account.js:53
-#: src/user/mutations/verify-account.js:70
-#: src/user/mutations/verify-account.js:83
+#: src/user/mutations/verify-account.js:71
+#: src/user/mutations/verify-account.js:85
 msgid "Unable to verify account. Please request a new email."
 msgstr "Impossible de vérifier le compte. Veuillez demander un nouvel e-mail."
 
-#: src/user/mutations/verify-account.js:101
+#: src/user/mutations/verify-account.js:103
 msgid "Unable to verify account. Please try again."
 msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 
@@ -966,23 +965,23 @@ msgstr "Erreur de vérification. Veuillez vérifier votre compte par e-mail pour
 msgid "You must provide a `first` or `last` value to properly paginate the `Affiliation` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Affiliation`."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:86
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:83
 msgid "You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DKIMResults`."
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:111
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:108
 msgid "You must provide a `first` or `last` value to properly paginate the `DKIM` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DKIM`."
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:135
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:132
 msgid "You must provide a `first` or `last` value to properly paginate the `DMARC` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DMARC`."
 
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:39
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:36
 msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DkimFailureTable`."
 
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:39
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:36
 msgid "You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcFailureTable`."
 
@@ -990,52 +989,52 @@ msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctemen
 msgid "You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcSummaries`."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:131
-#: src/domain/loaders/load-domain-connections-by-user-id.js:131
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:119
+#: src/domain/loaders/load-domain-connections-by-user-id.js:128
 msgid "You must provide a `first` or `last` value to properly paginate the `Domain` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Domain`."
 
-#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:37
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:36
 msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `FullPassTable`."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:89
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:86
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:86
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:86
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:86
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:86
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:79
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:83
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:83
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:83
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:83
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:83
 msgid "You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `GuidanceTag`."
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:143
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:140
 msgid "You must provide a `first` or `last` value to properly paginate the `HTTPS` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `HTTPS`."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:181
-#: src/organization/loaders/load-organization-connections-by-user-id.js:180
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:177
+#: src/organization/loaders/load-organization-connections-by-user-id.js:176
 msgid "You must provide a `first` or `last` value to properly paginate the `Organization` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Organization`."
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:129
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:126
 msgid "You must provide a `first` or `last` value to properly paginate the `SPF` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SPF`."
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:167
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:164
 msgid "You must provide a `first` or `last` value to properly paginate the `SSL` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SSL`."
 
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:39
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:36
 msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SpfFailureTable`."
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:112
-#: src/verified-domains/loaders/load-verified-domain-connections.js:112
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:110
+#: src/verified-domains/loaders/load-verified-domain-connections.js:110
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedDomain`."
 
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:166
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:167
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:163
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:164
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedOrganization`."
 
@@ -1049,31 +1048,31 @@ msgstr "Vous devez fournir une valeur `year` pour accéder à la connexion `Dmar
 
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:118
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:208
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:86
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:86
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:83
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:83
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:225
-#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:86
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:178
-#: src/domain/loaders/load-domain-connections-by-user-id.js:178
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:167
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:133
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:183
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:176
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:136
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:133
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:133
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:133
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:133
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:133
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:228
-#: src/organization/loaders/load-organization-connections-by-user-id.js:227
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:159
-#: src/verified-domains/loaders/load-verified-domain-connections.js:159
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:213
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:214
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:190
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:214
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:83
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:83
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:166
+#: src/domain/loaders/load-domain-connections-by-user-id.js:175
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:164
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:130
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:180
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:173
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:126
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:130
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:224
+#: src/organization/loaders/load-organization-connections-by-user-id.js:223
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:157
+#: src/verified-domains/loaders/load-verified-domain-connections.js:157
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:210
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:211
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:187
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:211
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "`{argSet}` doit être de type `number` et non `{typeSet}`."
 
@@ -1082,23 +1081,23 @@ msgstr "`{argSet}` doit être de type `number` et non `{typeSet}`."
 msgid "`{argSet}` on the `Affiliation` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `Affiliation` ne peut être inférieur à zéro."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:107
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:104
 msgid "`{argSet}` on the `DKIMResults` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DKIMResults` ne peut être inférieur à zéro."
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:132
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:129
 msgid "`{argSet}` on the `DKIM` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DKIM` ne peut être inférieur à zéro."
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:157
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:154
 msgid "`{argSet}` on the `DMARC` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DMARC` ne peut être inférieur à zéro."
 
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:60
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:57
 msgid "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DkimFailureTable` ne peut être inférieur à zéro."
 
-#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:60
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:57
 msgid "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro."
 
@@ -1106,52 +1105,52 @@ msgstr "`{argSet}` sur la connexion `DmarcFailureTable` ne peut être inférieur
 msgid "`{argSet}` on the `DmarcSummaries` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:152
-#: src/domain/loaders/load-domain-connections-by-user-id.js:152
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:140
+#: src/domain/loaders/load-domain-connections-by-user-id.js:149
 msgid "`{argSet}` on the `Domain` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `Domain` ne peut être inférieur à zéro."
 
-#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:58
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:57
 msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `FullPassTable` ne peut être inférieur à zéro."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:110
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:107
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:107
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:107
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:107
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:107
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:100
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:104
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:104
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:104
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:104
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:104
 msgid "`{argSet}` on the `GuidanceTag` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `GuidanceTag` ne peut être inférieure à zéro."
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:164
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:161
 msgid "`{argSet}` on the `HTTPS` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `HTTPS` ne peut être inférieur à zéro."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:202
-#: src/organization/loaders/load-organization-connections-by-user-id.js:201
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:198
+#: src/organization/loaders/load-organization-connections-by-user-id.js:197
 msgid "`{argSet}` on the `Organization` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `Organization` ne peut être inférieure à zéro."
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:150
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:147
 msgid "`{argSet}` on the `SPF` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `SPF` ne peut être inférieure à zéro."
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:188
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:185
 msgid "`{argSet}` on the `SSL` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `SSL` ne peut être inférieur à zéro."
 
-#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:60
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:57
 msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `SpfFailureTable` ne peut être inférieur à zéro."
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:133
-#: src/verified-domains/loaders/load-verified-domain-connections.js:133
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:131
+#: src/verified-domains/loaders/load-verified-domain-connections.js:131
 msgid "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro."
 
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:187
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:188
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:184
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:185
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro."
 
