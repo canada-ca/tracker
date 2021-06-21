@@ -22,19 +22,19 @@ export const TrackerButton = React.forwardRef(
     } else if (variant === 'primary hover') {
       color = 'gray.50'
       bg = 'primary'
-      borderColor = 'primary'
-      borderWidth = '1px'
-      hoverOb.bg = 'primary'
-      hoverOb.borderColor = 'accent'
-      hoverOb.color = 'accent'
-    } else if (variant === 'primary white') {
-      color = 'gray.50'
-      bg = 'primary'
       borderColor = 'gray.50'
       borderWidth = '1px'
       hoverOb.bg = 'primary'
       hoverOb.borderColor = 'accent'
       hoverOb.color = 'accent'
+    } else if (variant === 'primary white') {
+      color = 'primary'
+      bg = 'gray.50'
+      borderColor = 'gray.50'
+      borderWidth = '1px'
+      hoverOb.bg = 'accent'
+      hoverOb.borderColor = 'accent'
+      hoverOb.color = 'primary'
     } else if (variant === 'outline') {
       color = 'primary2'
       bg = 'transparent'
