@@ -9,6 +9,7 @@ module.exports = {
     '.module.js',
     'locale',
     'index.js',
+    'env.js',
   ],
   testTimeout: 50000,
 }
