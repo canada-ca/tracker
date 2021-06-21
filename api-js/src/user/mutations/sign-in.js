@@ -106,7 +106,7 @@ export const signIn = new mutationWithClientMutationId({
               `
           } catch (err) {
             console.error(
-              `Database error occurred when inserting ${user._key} TFA code: ${err}`,
+              `Database error occurred when inserting TFA code for user: ${user._key}: ${err}`,
             )
             throw new Error(i18n._(t`Unable to sign in, please try again.`))
           }

@@ -13,7 +13,6 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
 
-
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const mockNotify = jest.fn()
@@ -958,7 +957,86 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
+            `Database error occurred when inserting TFA code for user: ${user._key}: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('database error occurs when setting refresh code', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+          `
+
+          const userNameLoader = loadUserByUserName({ query })
+
+          const mockedQuery = jest
+            .fn()
+            .mockResolvedValueOnce(query)
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
+                    }
+                    ... on AuthResult {
+                      authToken
+                      refreshToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query: mockedQuery,
+              uuidv4,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to sign in, please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Database error occurred.`,
           ])
         })
       })
@@ -1837,7 +1915,86 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
+            `Database error occurred when inserting TFA code for user: ${user._key}: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('database error occurs when setting refresh code', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+          `
+
+          const userNameLoader = loadUserByUserName({ query })
+
+          const mockedQuery = jest
+            .fn()
+            .mockResolvedValueOnce(query)
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
+                    }
+                    ... on AuthResult {
+                      authToken
+                      refreshToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query: mockedQuery,
+              uuidv4,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Database error occurred.`,
           ])
         })
       })
