@@ -195,7 +195,11 @@ describe('given a loadUserByUserName dataloader', () => {
           try {
             await loader.load(userName)
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) utilisateur(s). Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -218,7 +222,11 @@ describe('given a loadUserByUserName dataloader', () => {
           try {
             await loader.load(userName)
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) utilisateur(s). Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

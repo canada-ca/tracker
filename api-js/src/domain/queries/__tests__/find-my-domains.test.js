@@ -364,7 +364,11 @@ describe('given findMyDomainsQuery', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Impossible d'interroger le(s) domaine(s). Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

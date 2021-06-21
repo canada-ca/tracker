@@ -671,10 +671,9 @@ describe('given the load affiliations by org id function', () => {
           en: { plurals: {} },
           fr: { plurals: {} },
         },
-        locales: ['en', 'fr'],
+        locales: ['en'],
         messages: {
           en: englishMessages.messages,
-          fr: frenchMessages.messages,
         },
       })
     })
@@ -697,7 +696,7 @@ describe('given the load affiliations by org id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
+                'Passing both `first` and `last` to paginate the `Affiliation` connection is not supported.',
               ),
             )
           }
@@ -725,7 +724,7 @@ describe('given the load affiliations by org id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `You must provide a \`first\` or \`last\` value to properly paginate the \`affiliation\`.`,
+                'You must provide a `first` or `last` value to properly paginate the `Affiliation` connection.',
               ),
             )
           }
@@ -757,7 +756,7 @@ describe('given the load affiliations by org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `affiliations` cannot be less than zero.',
+                  '`first` on the `Affiliation` connection cannot be less than zero.',
                 ),
               )
             }
@@ -787,7 +786,7 @@ describe('given the load affiliations by org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `affiliations` cannot be less than zero.',
+                  '`last` on the `Affiliation` connection cannot be less than zero.',
                 ),
               )
             }
@@ -819,7 +818,7 @@ describe('given the load affiliations by org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `1000` records on the `affiliations` exceeds the `first` limit of 100 records.',
+                  'Requesting `1000` records on the `Affiliation` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -849,7 +848,7 @@ describe('given the load affiliations by org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `200` records on the `affiliations` exceeds the `last` limit of 100 records.',
+                  'Requesting `200` records on the `Affiliation` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -1008,9 +1007,8 @@ describe('given the load affiliations by org id function', () => {
           en: { plurals: {} },
           fr: { plurals: {} },
         },
-        locales: ['en', 'fr'],
+        locales: ['fr'],
         messages: {
-          en: englishMessages.messages,
           fr: frenchMessages.messages,
         },
       })
@@ -1032,7 +1030,11 @@ describe('given the load affiliations by org id function', () => {
           try {
             await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                `Passer à la fois \`first\` et \`last\` pour paginer la connexion \`Affiliation\` n'est pas supporté.`,
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -1056,7 +1058,11 @@ describe('given the load affiliations by org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
+            expect(err).toEqual(
+              new Error(
+                `Vous devez fournir une valeur \`first\` ou \`last\` pour paginer correctement la connexion \`Affiliation\`.`,
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -1084,7 +1090,11 @@ describe('given the load affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  `\`first\` sur la connexion \`Affiliation\` ne peut être inférieur à zéro.`,
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadAffiliationConnectionsByOrgId.`,
@@ -1110,7 +1120,11 @@ describe('given the load affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  `\`last\` sur la connexion \`Affiliation\` ne peut être inférieur à zéro.`,
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadAffiliationConnectionsByOrgId.`,
@@ -1138,7 +1152,11 @@ describe('given the load affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  `La demande d'enregistrements \`1000\` sur la connexion \`Affiliation\` dépasse la limite \`first\` de 100 enregistrements.`,
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: loadAffiliationConnectionsByOrgId.`,
@@ -1164,7 +1182,11 @@ describe('given the load affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  `La demande d'enregistrements \`200\` sur la connexion \`Affiliation\` dépasse la limite \`last\` de 100 enregistrements.`,
+                ),
+              )
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 200 for: loadAffiliationConnectionsByOrgId.`,
@@ -1194,7 +1216,11 @@ describe('given the load affiliations by org id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -1225,7 +1251,11 @@ describe('given the load affiliations by org id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -1259,7 +1289,11 @@ describe('given the load affiliations by org id function', () => {
           try {
             await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                `Impossible de demander l'affiliation (s). Veuillez réessayer.`,
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -1291,7 +1325,11 @@ describe('given the load affiliations by org id function', () => {
           try {
             await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                `Impossible de charger l'affiliation (s). Veuillez réessayer.`,
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

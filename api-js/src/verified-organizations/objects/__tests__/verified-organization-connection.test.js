@@ -13,7 +13,8 @@ describe('given the verified organization connection object', () => {
   describe('testing its field resolvers', () => {
     describe('testing the totalCount resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = verifiedOrganizationConnection.connectionType.getFields()
+        const demoType =
+          verifiedOrganizationConnection.connectionType.getFields()
 
         expect(demoType.totalCount.resolve({ totalCount: 1 })).toEqual(1)
       })

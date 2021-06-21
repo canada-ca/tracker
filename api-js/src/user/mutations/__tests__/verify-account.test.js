@@ -250,7 +250,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'Unable to verify account. Please request a new email.',
+                  description:
+                    'Unable to verify account. Please request a new email.',
                 },
               },
             },
@@ -636,7 +637,8 @@ describe('user send password reset email', () => {
           data: {
             verifyAccount: {
               result: {
-                status: 'todo',
+                status:
+                  "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email.",
               },
             },
           },
@@ -756,7 +758,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -830,7 +833,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -904,7 +908,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -978,7 +983,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -1053,7 +1059,11 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de vérifier le compte. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

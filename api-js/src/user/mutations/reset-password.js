@@ -103,7 +103,7 @@ export const resetPassword = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`New passwords do not match. Please try again.`),
+        description: i18n._(t`New passwords do not match.`),
       }
     }
 
@@ -115,9 +115,7 @@ export const resetPassword = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Password does not requirements. Please try again.`,
-        ),
+        description: i18n._(t`Password does not meet requirements.`),
       }
     }
 

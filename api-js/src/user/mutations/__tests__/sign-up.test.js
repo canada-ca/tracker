@@ -1805,7 +1805,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Le mot de passe ne répond pas aux exigences.',
                 },
               },
             },
@@ -1882,7 +1882,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Les mots de passe ne correspondent pas.',
                 },
               },
             },
@@ -1968,7 +1968,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Courriel déjà utilisé.',
                 },
               },
             },
@@ -2085,7 +2085,8 @@ describe('testing user sign up', () => {
                 signUp: {
                   result: {
                     code: 400,
-                    description: 'todo',
+                    description:
+                      "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation.",
                   },
                 },
               },
@@ -2174,7 +2175,8 @@ describe('testing user sign up', () => {
                 signUp: {
                   result: {
                     code: 400,
-                    description: 'todo',
+                    description:
+                      "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation.",
                   },
                 },
               },
@@ -2256,7 +2258,9 @@ describe('testing user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
+          ]
 
           expect(response.errors).toEqual(error)
 
@@ -2370,7 +2374,9 @@ describe('testing user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
+          ]
 
           expect(response.errors).toEqual(error)
 
@@ -2450,7 +2456,9 @@ describe('testing user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
+          ]
 
           expect(response.errors).toEqual(error)
 

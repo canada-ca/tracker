@@ -650,7 +650,7 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'New passwords do not match. Please try again.',
+                  description: 'New passwords do not match.',
                 },
               },
             },
@@ -722,8 +722,7 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Password does not requirements. Please try again.',
+                  description: 'Password does not meet requirements.',
                 },
               },
             },
@@ -794,9 +793,7 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Invalid token, please request a new one.'),
-          ]
+          const error = [new GraphQLError('Invalid token, please sign in.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -952,7 +949,7 @@ describe('reset users password', () => {
           data: {
             resetPassword: {
               result: {
-                status: 'todo',
+                status: 'Le mot de passe a été réinitialisé avec succès.',
               },
             },
           },
@@ -1079,7 +1076,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -1144,7 +1142,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -1209,7 +1208,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
                 },
               },
             },
@@ -1284,7 +1284,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de réinitialiser le mot de passe. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -1356,7 +1357,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Les nouveaux mots de passe ne correspondent pas.',
                 },
               },
             },
@@ -1428,7 +1430,7 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Le mot de passe ne répond pas aux exigences.',
                 },
               },
             },
@@ -1499,7 +1501,9 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Jeton invalide, veuillez vous connecter.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1569,7 +1573,11 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

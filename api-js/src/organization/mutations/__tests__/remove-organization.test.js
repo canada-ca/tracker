@@ -708,7 +708,8 @@ describe('removing an organization', () => {
               data: {
                 removeOrganization: {
                   result: {
-                    status: 'todo',
+                    status:
+                      "A réussi à supprimer l'organisation : secretariat-conseil-tresor.",
                     organization: {
                       name: 'Secrétariat du Conseil Trésor du Canada',
                     },
@@ -863,7 +864,8 @@ describe('removing an organization', () => {
               data: {
                 removeOrganization: {
                   result: {
-                    status: 'todo',
+                    status:
+                      "A réussi à supprimer l'organisation : secretariat-conseil-tresor.",
                     organization: {
                       name: 'Secrétariat du Conseil Trésor du Canada',
                     },
@@ -1023,7 +1025,8 @@ describe('removing an organization', () => {
             data: {
               removeOrganization: {
                 result: {
-                  status: 'todo',
+                  status:
+                    "A réussi à supprimer l'organisation : secretariat-conseil-tresor.",
                   organization: {
                     name: 'Secrétariat du Conseil Trésor du Canada',
                   },
@@ -1733,7 +1736,8 @@ describe('removing an organization', () => {
               removeOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de supprimer une organisation inconnue.',
                 },
               },
             },
@@ -1863,7 +1867,8 @@ describe('removing an organization', () => {
                 removeOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à supprimer l'organisation.",
                   },
                 },
               },
@@ -1939,7 +1944,8 @@ describe('removing an organization', () => {
                 removeOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer l'organisation.",
                   },
                 },
               },
@@ -2044,7 +2050,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de supprimer l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2113,7 +2123,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de supprimer l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2182,7 +2196,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de supprimer l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

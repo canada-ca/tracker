@@ -189,7 +189,11 @@ describe('given the sendOrgInviteEmail function', () => {
             orgName: 'Test Org',
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible d'envoyer l'e-mail d'invitation à l'org. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

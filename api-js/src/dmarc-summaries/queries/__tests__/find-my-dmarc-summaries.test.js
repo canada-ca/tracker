@@ -435,7 +435,11 @@ describe('given the findMyDmarcSummaries query', () => {
               },
             },
           )
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Erreur d'authentification. Veuillez vous connecter.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -492,7 +496,11 @@ describe('given the findMyDmarcSummaries query', () => {
               },
             },
           )
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

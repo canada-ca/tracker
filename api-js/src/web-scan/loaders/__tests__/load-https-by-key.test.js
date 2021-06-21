@@ -174,7 +174,11 @@ describe('given the loadHttpsByKey function', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de trouver le(s) scan(s) HTTPS. Veuillez réessayer.',
+              ),
+            )
           }
           expect(consoleErrorOutput).toEqual([
             `Database error occurred when user: 1234 running loadHttpsByKey: Error: Database error occurred.`,
@@ -194,7 +198,11 @@ describe('given the loadHttpsByKey function', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer.',
+              ),
+            )
           }
           expect(consoleErrorOutput).toEqual([
             `Cursor error occurred when user: 1234 running loadHttpsByKey: Error: Cursor error occurred.`,

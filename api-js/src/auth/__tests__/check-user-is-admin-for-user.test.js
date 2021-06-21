@@ -369,7 +369,11 @@ describe('given the checkUserIsAdminForUser', () => {
               userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
-            expect(err).toEqual(Error('todo'))
+            expect(err).toEqual(
+              Error(
+                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `Database error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
@@ -396,7 +400,11 @@ describe('given the checkUserIsAdminForUser', () => {
               userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
-            expect(err).toEqual(Error('todo'))
+            expect(err).toEqual(
+              Error(
+                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `Database error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
@@ -424,7 +432,11 @@ describe('given the checkUserIsAdminForUser', () => {
               userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
-            expect(err).toEqual(Error('todo'))
+            expect(err).toEqual(
+              Error(
+                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `Cursor error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
@@ -457,7 +469,11 @@ describe('given the checkUserIsAdminForUser', () => {
               userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
-            expect(err).toEqual(Error('todo'))
+            expect(err).toEqual(
+              Error(
+                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+              ),
+            )
           }
           expect(consoleOutput).toEqual([
             `Cursor error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,

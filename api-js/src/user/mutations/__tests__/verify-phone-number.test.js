@@ -417,7 +417,8 @@ describe('user send password reset email', () => {
                 user: {
                   displayName: 'Test Account',
                 },
-                status: 'todo',
+                status:
+                  "Le numéro de téléphone a été vérifié avec succès, et la méthode d'envoi de la TFA a été réglée sur le texte.",
               },
             },
           },
@@ -524,7 +525,8 @@ describe('user send password reset email', () => {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
                 },
               },
             },
@@ -580,7 +582,8 @@ describe('user send password reset email', () => {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Le code à deux facteurs est incorrect. Veuillez réessayer.',
                 },
               },
             },
@@ -635,7 +638,11 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

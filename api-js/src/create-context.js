@@ -101,19 +101,21 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
 
-export const createContext = (context) => async ({ req, res, connection }) => {
-  if (connection) {
-    req = {
-      headers: {
-        authorization: connection.context.authorization,
-      },
-      language: connection.context.language,
+export const createContext =
+  (context) =>
+  async ({ req, res, connection }) => {
+    if (connection) {
+      req = {
+        headers: {
+          authorization: connection.context.authorization,
+        },
+        language: connection.context.language,
+      }
+      return createContextObject({ context, req, res })
+    } else {
+      return createContextObject({ context, req, res })
     }
-    return createContextObject({ context, req, res })
-  } else {
-    return createContextObject({ context, req, res })
   }
-}
 
 const createContextObject = ({ context, req: request, res: response }) => {
   const { query } = context
@@ -183,9 +185,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         i18n,
       }),
-      loadAggregateGuidanceTagConnectionsByTagId: loadAggregateGuidanceTagConnectionsByTagId(
-        { query, userKey, i18n, cleanseInput },
-      ),
+      loadAggregateGuidanceTagConnectionsByTagId:
+        loadAggregateGuidanceTagConnectionsByTagId({
+          query,
+          userKey,
+          i18n,
+          cleanseInput,
+        }),
       loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
         userKey,
@@ -209,13 +215,12 @@ const createContextObject = ({ context, req: request, res: response }) => {
           i18n,
         }),
       }),
-      loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
-        {
+      loadDmarcSummaryEdgeByDomainIdAndPeriod:
+        loadDmarcSummaryEdgeByDomainIdAndPeriod({
           query,
           userKey,
           i18n,
-        },
-      ),
+        }),
       loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query, userKey, i18n }),
       loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
         query,
@@ -294,66 +299,61 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         i18n,
       }),
-      loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId(
-        {
+      loadDkimGuidanceTagConnectionsByTagId:
+        loadDkimGuidanceTagConnectionsByTagId({
           query,
           userKey,
           cleanseInput,
           i18n,
-        },
-      ),
+        }),
       loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
         query,
         userKey,
         i18n,
       }),
-      loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId(
-        {
+      loadDmarcGuidanceTagConnectionsByTagId:
+        loadDmarcGuidanceTagConnectionsByTagId({
           query,
           userKey,
           cleanseInput,
           i18n,
-        },
-      ),
+        }),
       loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
         query,
         userKey,
         i18n,
       }),
-      loadHttpsGuidanceTagConnectionsByTagId: loadHttpsGuidanceTagConnectionsByTagId(
-        {
+      loadHttpsGuidanceTagConnectionsByTagId:
+        loadHttpsGuidanceTagConnectionsByTagId({
           query,
           userKey,
           cleanseInput,
           i18n,
-        },
-      ),
+        }),
       loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
         query,
         userKey,
         i18n,
       }),
-      loadSpfGuidanceTagConnectionsByTagId: loadSpfGuidanceTagConnectionsByTagId(
-        {
+      loadSpfGuidanceTagConnectionsByTagId:
+        loadSpfGuidanceTagConnectionsByTagId({
           query,
           userKey,
           cleanseInput,
           i18n,
-        },
-      ),
+        }),
       loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
         query,
         userKey,
         i18n,
       }),
-      loadSslGuidanceTagConnectionsByTagId: loadSslGuidanceTagConnectionsByTagId(
-        {
+      loadSslGuidanceTagConnectionsByTagId:
+        loadSslGuidanceTagConnectionsByTagId({
           query,
           userKey,
           cleanseInput,
           i18n,
-        },
-      ),
+        }),
       loadOrgByKey: loadOrgByKey({
         query,
         language: request.language,
@@ -403,13 +403,12 @@ const createContextObject = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
-        {
+      loadVerifiedDomainConnectionsByOrgId:
+        loadVerifiedDomainConnectionsByOrgId({
           query,
           cleanseInput,
           i18n,
-        },
-      ),
+        }),
       loadVerifiedOrgByKey: loadVerifiedOrgByKey({
         query,
         language: request.language,
@@ -420,14 +419,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
         language: request.language,
         i18n,
       }),
-      loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
-        {
+      loadVerifiedOrgConnectionsByDomainId:
+        loadVerifiedOrgConnectionsByDomainId({
           query,
           language: request.language,
           cleanseInput,
           i18n,
-        },
-      ),
+        }),
       loadVerifiedOrgConnections: loadVerifiedOrgConnections({
         query,
         language: request.language,

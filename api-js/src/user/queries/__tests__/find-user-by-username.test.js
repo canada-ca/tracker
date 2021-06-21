@@ -532,7 +532,9 @@ describe('given the findUserByUsername query', () => {
               },
             },
           )
-          expect(response.errors).toEqual([new GraphQLError('todo')])
+          expect(response.errors).toEqual([
+            new GraphQLError("L'utilisateur n'a pas pu être interrogé."),
+          ])
         })
       })
       describe('if the user is only a user for their organization(s)', () => {
@@ -585,7 +587,9 @@ describe('given the findUserByUsername query', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(`L'utilisateur n'a pas pu être interrogé.`),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

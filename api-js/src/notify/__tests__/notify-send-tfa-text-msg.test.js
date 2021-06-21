@@ -4,10 +4,8 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendTfaTextMsg } from '../index'
 
-const {
-  NOTIFICATION_TWO_FACTOR_CODE_EN,
-  NOTIFICATION_TWO_FACTOR_CODE_FR,
-} = process.env
+const { NOTIFICATION_TWO_FACTOR_CODE_EN, NOTIFICATION_TWO_FACTOR_CODE_FR } =
+  process.env
 
 describe('given the sendTfaTextMsg function', () => {
   let i18n
@@ -176,7 +174,11 @@ describe('given the sendTfaTextMsg function', () => {
             user,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible d'envoyer le message d'authentification à deux facteurs. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

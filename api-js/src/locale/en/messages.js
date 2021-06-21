@@ -1,14 +1,10 @@
 /*eslint-disable*/ module.exports = {
   messages: {
-    'Authentication error. Please sign in again.':
-      'Authentication error. Please sign in again.',
     'Authentication error. Please sign in.':
       'Authentication error. Please sign in.',
     'Cannot query affiliations on organization without admin permission or higher.':
       'Cannot query affiliations on organization without admin permission or higher.',
     'Email already in use.': 'Email already in use.',
-    'Error when retrieving dmarc report information. Please try again.':
-      'Error when retrieving dmarc report information. Please try again.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
@@ -19,10 +15,8 @@
       'Incorrect token value. Please request a new email.',
     'Incorrect username or password. Please try again.':
       'Incorrect username or password. Please try again.',
-    'Invalid token, please request a new one.':
-      'Invalid token, please request a new one.',
-    'New passwords do not match. Please try again.':
-      'New passwords do not match. Please try again.',
+    'Invalid token, please sign in.': 'Invalid token, please sign in.',
+    'New passwords do not match.': 'New passwords do not match.',
     'No organization with the provided slug could be found.':
       'No organization with the provided slug could be found.',
     'No verified domain with the provided domain could be found.':
@@ -35,6 +29,10 @@
       'Organization name already in use, please choose another and try again.',
     'Organization name already in use. Please try again with a different name.':
       'Organization name already in use. Please try again with a different name.',
+    'Ownership check error. Unable to request domain information.':
+      'Ownership check error. Unable to request domain information.',
+    'Passing both `first` and `last` to paginate the `Affiliation` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `Affiliation` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.':
       'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DKIM` connection is not supported.':
@@ -45,6 +43,10 @@
       'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `Domain` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `Domain` connection is not supported.',
     'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.':
@@ -63,16 +65,8 @@
       'Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported.',
     'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.':
       'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
-      'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
-    'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `domain` connection is not supported.',
     'Password does not meet requirements.':
       'Password does not meet requirements.',
-    'Password does not requirements. Please try again.':
-      'Password does not requirements. Please try again.',
     'Password was successfully reset.': 'Password was successfully reset.',
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
@@ -115,6 +109,14 @@
     'Phone number has been successfully set, you will receive a verification text message shortly.':
       'Phone number has been successfully set, you will receive a verification text message shortly.',
     'Profile successfully updated.': 'Profile successfully updated.',
+    'Requesting `{amount}` records on the `Affiliation` connection exceeds the `{argSet}` limit of 100 records.':
+      [
+        'Requesting `',
+        ['amount'],
+        '` records on the `Affiliation` connection exceeds the `',
+        ['argSet'],
+        '` limit of 100 records.',
+      ],
     'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
       [
         'Requesting `',
@@ -128,6 +130,22 @@
         'Requesting `',
         ['amount'],
         '` records on the `DmarcFailureTable` connection exceeds the `',
+        ['argSet'],
+        '` limit of 100 records.',
+      ],
+    'Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
+      [
+        'Requesting `',
+        ['amount'],
+        '` records on the `DmarcSummaries` connection exceeds the `',
+        ['argSet'],
+        '` limit of 100 records.',
+      ],
+    'Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records.':
+      [
+        'Requesting `',
+        ['amount'],
+        '` records on the `Domain` connection exceeds the `',
         ['argSet'],
         '` limit of 100 records.',
       ],
@@ -176,30 +194,6 @@
         'Requesting `',
         ['amount'],
         '` records on the `VerifiedOrganization` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `affiliations` exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `dmarcSummaries` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `domain` connection exceeds the `',
         ['argSet'],
         '` limit of 100 records.',
       ],
@@ -508,6 +502,8 @@
       'Username not available, please try another.',
     'Verification error. Please verify your account via email to access content.':
       'Verification error. Please verify your account via email to access content.',
+    'You must provide a `first` or `last` value to properly paginate the `Affiliation` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `Affiliation` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DKIM` connection.':
@@ -518,6 +514,10 @@
       'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `Domain` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `Domain` connection.',
     'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.':
@@ -536,22 +536,21 @@
       'You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection.',
     'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.':
       'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
-      'You must provide a `first` or `last` value to properly paginate the `affiliation`.',
-    'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `domain` connection.',
-    'You must provide a `period` value to access the `dmarcSummaries` connection.':
-      'You must provide a `period` value to access the `dmarcSummaries` connection.',
-    'You must provide a `year` value to access the `dmarcSummaries` connection.':
-      'You must provide a `year` value to access the `dmarcSummaries` connection.',
+    'You must provide a `period` value to access the `DmarcSummaries` connection.':
+      'You must provide a `period` value to access the `DmarcSummaries` connection.',
+    'You must provide a `year` value to access the `DmarcSummaries` connection.':
+      'You must provide a `year` value to access the `DmarcSummaries` connection.',
     '`{argSet}` must be of type `number` not `{typeSet}`.': [
       '`',
       ['argSet'],
       '` must be of type `number` not `',
       ['typeSet'],
       '`.',
+    ],
+    '`{argSet}` on the `Affiliation` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `Affiliation` connection cannot be less than zero.',
     ],
     '`{argSet}` on the `DKIMResults` connection cannot be less than zero.': [
       '`',
@@ -580,6 +579,16 @@
         ['argSet'],
         '` on the `DmarcFailureTable` connection cannot be less than zero.',
       ],
+    '`{argSet}` on the `DmarcSummaries` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DmarcSummaries` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `Domain` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `Domain` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `FullPassTable` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -627,21 +636,6 @@
         ['argSet'],
         '` on the `VerifiedOrganization` connection cannot be less than zero.',
       ],
-    '`{argSet}` on the `affiliations` cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `affiliations` cannot be less than zero.',
-    ],
-    '`{argSet}` on the `dmarcSummaries` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `dmarcSummaries` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `domain` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `domain` connection cannot be less than zero.',
-    ],
     fail: 'fail',
     pass: 'pass',
   },
