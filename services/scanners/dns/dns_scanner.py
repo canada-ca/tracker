@@ -24,7 +24,9 @@ from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
+QUEUE_URL = os.getenv(
+    "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
+)
 
 
 def dispatch_results(payload, client):
@@ -44,10 +46,12 @@ async def scan_dmarc(domain):
         # Perform "checkdmarc" scan on provided domain.
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
-        logging.error(
-            f"Failed to check the given domains for DMARC/SPF records. ({e})"
-        )
+        logging.error(f"Failed to check the given domains for DMARC/SPF records. ({e})")
         return None
+
+    if scan_result["dmarc"].get("record", "null") == "null":
+        logging.info("DMARC scan completed")
+        return {"dmarc": {"missing": True}}
 
     for rua in scan_result["dmarc"]["tags"].get("rua", {}).get("value", []):
         # Retrieve 'rua' tag address.
@@ -126,11 +130,7 @@ async def scan_dmarc(domain):
                 ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
-
-    if scan_result["dmarc"].get("record", "null") == "null":
-        return {"dmarc": {"missing": True}}
-    else:
-        return scan_result
+    return scan_result
 
 
 def bitsize(x):
@@ -294,7 +294,7 @@ def Server(server_client=requests):
                         "results": processed_results,
                         "scan_type": "dns",
                         "uuid": uuid,
-                        "domain_key": domain_key
+                        "domain_key": domain_key,
                     }
                 )
                 logging.info(f"Scan results: {str(scan_results)}")
@@ -307,7 +307,17 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "dns", "uuid": uuid, "domain_key": domain_key, "results": {"dmarc": {"missing": True}, "dkim": {"missing": True}, "spf": {"missing": True}}}, server_client
+                {
+                    "scan_type": "dns",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                    "results": {
+                        "dmarc": {"missing": True},
+                        "dkim": {"missing": True},
+                        "spf": {"missing": True},
+                    },
+                },
+                server_client,
             )
             return PlainTextResponse(msg)
 
