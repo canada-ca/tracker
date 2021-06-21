@@ -585,7 +585,8 @@ describe('refresh users tokens', () => {
               refreshTokens: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                 },
               },
             },
@@ -657,7 +658,8 @@ describe('refresh users tokens', () => {
               refreshTokens: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                 },
               },
             },
@@ -727,7 +729,8 @@ describe('refresh users tokens', () => {
               refreshTokens: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                 },
               },
             },
@@ -797,7 +800,8 @@ describe('refresh users tokens', () => {
               refreshTokens: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                 },
               },
             },
@@ -869,7 +873,9 @@ describe('refresh users tokens', () => {
           )
 
           const error = [
-            new GraphQLError('todo'),
+            new GraphQLError(
+              'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
