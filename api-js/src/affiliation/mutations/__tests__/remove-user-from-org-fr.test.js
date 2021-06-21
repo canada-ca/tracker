@@ -1083,7 +1083,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                 },
               },
             },
@@ -1345,7 +1346,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                 },
               },
             },
