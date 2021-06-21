@@ -802,7 +802,8 @@ describe('create an organization', () => {
               createOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom de l'organisation est déjà utilisé. Veuillez réessayer avec un nom différent.",
                 },
               },
             },
@@ -895,7 +896,11 @@ describe('create an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer une organisation. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -988,7 +993,11 @@ describe('create an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer une organisation. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1085,7 +1094,11 @@ describe('create an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer une organisation. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

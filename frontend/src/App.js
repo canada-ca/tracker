@@ -32,6 +32,7 @@ const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
 const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
+const TermsConditionsPage = lazy(() => import('./TermsConditionsPage'))
 const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
@@ -128,6 +129,12 @@ export default function App() {
                 title={t`Reset Password`}
               />
 
+              <Page
+                path="/terms-and-conditions"
+                component={TermsConditionsPage}
+                title={t`Terms & Conditions`}
+              />
+
               <PrivatePage path="/organizations" title={t`Organizations`} exact>
                 <Organizations />
               </PrivatePage>
@@ -205,17 +212,11 @@ export default function App() {
             >
               <Trans>Privacy</Trans>
             </Link>
-            <Link
-              ml={4}
-              isExternal={true}
-              href={
-                i18n.locale === 'en'
-                  ? 'https://www.canada.ca/en/transparency/terms.html'
-                  : 'https://www.canada.ca/fr/transparence/avis.html'
-              }
-            >
+
+            <Link href="/terms-and-conditions" ml={4}>
               <Trans>Terms & conditions</Trans>
             </Link>
+
             <Link
               ml={4}
               href={'https://github.com/canada-ca/tracker/issues'}

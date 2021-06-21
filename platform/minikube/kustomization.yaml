@@ -5,6 +5,16 @@ resources:
 - domain-config.yaml
 components:
 - ../components/knative
+patchesJSON6902:
+- target:
+    group: install.istio.io
+    version: v1alpha1
+    kind: IstioOperator
+    name: istio-controlplane
+    namespace: istio-operator
+  patch: |-
+    - op: remove
+      path: /spec/components/pilot
 # We deal with namespaces separately, but knative includes one
 # patchesJSON6902:
 # - target:

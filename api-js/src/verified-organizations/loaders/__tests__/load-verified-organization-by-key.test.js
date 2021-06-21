@@ -322,7 +322,11 @@ describe('given a loadVerifiedOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -347,7 +351,11 @@ describe('given a loadVerifiedOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

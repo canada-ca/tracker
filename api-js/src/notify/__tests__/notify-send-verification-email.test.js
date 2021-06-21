@@ -188,7 +188,11 @@ describe('given the sendVerificationEmail function', () => {
             user,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible d'envoyer l'email de vérification. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

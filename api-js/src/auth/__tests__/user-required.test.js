@@ -175,7 +175,9 @@ describe('given a loadUserByKey dataloader', () => {
           })
           await testUserRequired()
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error("Erreur d'authentification. Veuillez vous connecter."),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -195,7 +197,9 @@ describe('given a loadUserByKey dataloader', () => {
           })
           await testUserRequired()
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error("Erreur d'authentification. Veuillez vous connecter."),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -221,7 +225,9 @@ describe('given a loadUserByKey dataloader', () => {
           })
           await testUserRequired()
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error("Erreur d'authentification. Veuillez vous connecter."),
+          )
         }
 
         expect(consoleOutput).toEqual([

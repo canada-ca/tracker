@@ -2,6 +2,8 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
+import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -11,7 +13,6 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
 
-const { SIGN_IN_KEY } = process.env
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const mockNotify = jest.fn()
@@ -35,12 +36,10 @@ describe('authenticate user account', () => {
     }))
     tokenize = jest.fn().mockReturnValue('token')
   })
-
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -73,6 +72,8 @@ describe('authenticate user account', () => {
         query,
         collections,
         transaction,
+        jwt,
+        uuidv4,
         auth: {
           bcrypt,
           tokenize,
@@ -94,11 +95,9 @@ describe('authenticate user account', () => {
     )
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
@@ -120,7 +119,7 @@ describe('authenticate user account', () => {
     })
     describe('given successful sign in', () => {
       describe('user has send method set to phone', () => {
-        it('returns sendMethod message and authentication token', async () => {
+        it('returns sendMethod message, authentication token and refresh token', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -150,6 +149,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -159,6 +159,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -231,6 +232,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -240,6 +242,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -312,6 +315,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -321,6 +325,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -342,6 +347,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                 },
               },
             },
@@ -392,6 +398,7 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
+                    refreshToken
                   }
                 }
               }
@@ -401,6 +408,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
@@ -447,6 +455,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -525,6 +534,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -538,6 +548,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -601,6 +612,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -614,6 +626,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -671,6 +684,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -684,6 +698,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -749,6 +764,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -762,6 +778,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -824,6 +841,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -837,6 +855,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -901,6 +920,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -914,6 +934,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -936,7 +957,86 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
+            `Database error occurred when inserting TFA code for user: ${user._key}: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('database error occurs when setting refresh code', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+          `
+
+          const userNameLoader = loadUserByUserName({ query })
+
+          const mockedQuery = jest
+            .fn()
+            .mockResolvedValueOnce(query)
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
+                    }
+                    ... on AuthResult {
+                      authToken
+                      refreshToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query: mockedQuery,
+              uuidv4,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to sign in, please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Database error occurred.`,
           ])
         })
       })
@@ -989,6 +1089,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1002,6 +1103,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1074,6 +1176,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1087,6 +1190,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1159,6 +1263,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1172,6 +1277,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1193,6 +1299,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                 },
               },
             },
@@ -1243,6 +1350,7 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
+                    refreshToken
                   }
                   ... on SignInError {
                     code
@@ -1256,6 +1364,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
@@ -1302,6 +1411,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1315,6 +1425,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1336,7 +1447,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
@@ -1379,6 +1491,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1392,6 +1505,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1413,7 +1527,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
@@ -1454,6 +1569,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1467,6 +1583,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1524,6 +1641,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1537,6 +1655,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1558,7 +1677,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 401,
-                  description: 'todo',
+                  description:
+                    'Trop de tentatives de connexion ont échoué, veuillez réinitialiser votre mot de passe et réessayer.',
                 },
               },
             },
@@ -1602,6 +1722,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1615,6 +1736,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1630,7 +1752,9 @@ describe('authenticate user account', () => {
               },
             },
           )
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1675,6 +1799,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1688,6 +1813,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1704,7 +1830,9 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1750,6 +1878,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1763,6 +1892,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1779,11 +1909,92 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
+            `Database error occurred when inserting TFA code for user: ${user._key}: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('database error occurs when setting refresh code', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+          `
+
+          const userNameLoader = loadUserByUserName({ query })
+
+          const mockedQuery = jest
+            .fn()
+            .mockResolvedValueOnce(query)
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
+                    }
+                    ... on AuthResult {
+                      authToken
+                      refreshToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query: mockedQuery,
+              uuidv4,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Impossible de se connecter, veuillez réessayer.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Database error occurred.`,
           ])
         })
       })

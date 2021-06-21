@@ -453,7 +453,11 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(new Error('todo'))
+            ).rejects.toEqual(
+              new Error(
+                'Impossible de récupérer les informations du rapport DMARC pour : test1.gc.ca',
+              ),
+            )
 
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
@@ -599,7 +603,11 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(new Error('todo'))
+            ).rejects.toEqual(
+              new Error(
+                'Impossible de récupérer les informations du rapport DMARC pour : test1.gc.ca',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
             ])

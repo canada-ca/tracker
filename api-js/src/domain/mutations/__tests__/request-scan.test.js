@@ -806,7 +806,7 @@ describe('requesting a one time scan', () => {
           const expectedResponse = {
             data: {
               requestScan: {
-                status: 'todo',
+                status: 'Un seul balayage a été effectué avec succès.',
               },
             },
           }
@@ -872,7 +872,7 @@ describe('requesting a one time scan', () => {
           const expectedResponse = {
             data: {
               requestScan: {
-                status: 'todo',
+                status: 'Un seul balayage a été effectué avec succès.',
               },
             },
           }
@@ -938,7 +938,7 @@ describe('requesting a one time scan', () => {
           const expectedResponse = {
             data: {
               requestScan: {
-                status: 'todo',
+                status: 'Un seul balayage a été effectué avec succès.',
               },
             },
           }
@@ -996,7 +996,11 @@ describe('requesting a one time scan', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de demander un scan unique sur un domaine inconnu.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1083,7 +1087,11 @@ describe('requesting a one time scan', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1143,7 +1151,11 @@ describe('requesting a one time scan', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1209,7 +1221,11 @@ describe('requesting a one time scan', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible d'envoyer un scan unique. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1268,7 +1284,11 @@ describe('requesting a one time scan', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible d'envoyer un scan unique. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1328,7 +1348,11 @@ describe('requesting a one time scan', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible d'envoyer un scan unique. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

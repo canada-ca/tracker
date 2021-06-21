@@ -1,4 +1,5 @@
 export * from './authenticate'
+export * from './refresh-tokens'
 export * from './remove-phone-number'
 export * from './reset-password'
 export * from './send-email-verification'

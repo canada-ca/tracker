@@ -1886,7 +1886,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
                     },
                   },
                 },
@@ -1981,7 +1982,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
                     },
                   },
                 },
@@ -2076,7 +2078,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
                     },
                   },
                 },
@@ -2167,7 +2170,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2259,7 +2263,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2351,7 +2356,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2460,7 +2466,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
                     },
                   },
                 },
@@ -2555,7 +2562,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
                     },
                   },
                 },
@@ -2646,7 +2654,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2738,7 +2747,8 @@ describe('invite user to org', () => {
                 data: {
                   inviteUserToOrg: {
                     result: {
-                      status: 'todo',
+                      status:
+                        "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                     },
                   },
                 },
@@ -2832,7 +2842,7 @@ describe('invite user to org', () => {
               inviteUserToOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: "Impossible de s'inviter à un org.",
                 },
               },
             },
@@ -2908,7 +2918,8 @@ describe('invite user to org', () => {
               inviteUserToOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible d'inviter un utilisateur à une organisation inconnue.",
                 },
               },
             },
@@ -3016,7 +3027,8 @@ describe('invite user to org', () => {
               inviteUserToOrg: {
                 result: {
                   code: 403,
-                  description: 'todo',
+                  description:
+                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
                 },
               },
             },
@@ -3124,7 +3136,8 @@ describe('invite user to org', () => {
               inviteUserToOrg: {
                 result: {
                   code: 403,
-                  description: 'todo',
+                  description:
+                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
                 },
               },
             },
@@ -3241,7 +3254,11 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -3317,7 +3334,11 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible d'inviter un utilisateur. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

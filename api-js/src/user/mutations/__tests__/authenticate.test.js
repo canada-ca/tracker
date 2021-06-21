@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -41,19 +42,15 @@ describe('authenticate user account', () => {
     }))
     mockTokenize = jest.fn().mockReturnValue('token')
   })
-
   beforeEach(async () => {
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('given successful authentication', () => {
     beforeEach(async () => {
       await collections.users.save({
@@ -65,7 +62,7 @@ describe('authenticate user account', () => {
         tfaCode: 123456,
       })
     })
-    it('returns users information and JWT', async () => {
+    it('returns users information and JWTs', async () => {
       let cursor = await query`
         FOR user IN users
           FILTER user.userName == "test.account@istio.actually.exists"
@@ -90,6 +87,7 @@ describe('authenticate user account', () => {
               result {
                 ... on AuthResult {
                   authToken
+                  refreshToken
                   user {
                     id
                     userName
@@ -110,6 +108,7 @@ describe('authenticate user account', () => {
         null,
         {
           query,
+          uuidv4,
           auth: {
             bcrypt,
             tokenize: mockTokenize,
@@ -129,6 +128,7 @@ describe('authenticate user account', () => {
           authenticate: {
             result: {
               authToken: 'token',
+              refreshToken: 'token',
               user: {
                 id: `${toGlobalId('users', user._key)}`,
                 userName: 'test.account@istio.actually.exists',
@@ -213,6 +213,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -284,6 +285,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -355,6 +357,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -443,6 +446,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -529,6 +533,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -609,6 +614,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -628,7 +634,8 @@ describe('authenticate user account', () => {
               authenticate: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'La valeur du jeton est incorrecte, veuillez vous connecter à nouveau.',
                 },
               },
             },
@@ -680,6 +687,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -699,7 +707,8 @@ describe('authenticate user account', () => {
               authenticate: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'La valeur du jeton est incorrecte, veuillez vous connecter à nouveau.',
                 },
               },
             },
@@ -751,6 +760,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -770,7 +780,8 @@ describe('authenticate user account', () => {
               authenticate: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de s'authentifier. Veuillez réessayer.",
                 },
               },
             },
@@ -839,6 +850,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -853,7 +865,9 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError('Code TFA incorrect. Veuillez vous reconnecter.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -923,6 +937,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query: mockedQuery,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -937,7 +952,11 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de s'authentifier. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

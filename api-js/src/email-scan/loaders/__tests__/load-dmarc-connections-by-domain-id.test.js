@@ -1407,7 +1407,11 @@ describe('when given the load dmarc connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DMARC`.',
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
@@ -1434,7 +1438,11 @@ describe('when given the load dmarc connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `DMARC` n'est pas supporté.",
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
@@ -1461,7 +1469,11 @@ describe('when given the load dmarc connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `DMARC` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcConnectionsByDomainId.`,
@@ -1487,7 +1499,11 @@ describe('when given the load dmarc connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `DMARC` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcConnectionsByDomainId.`,
@@ -1515,7 +1531,11 @@ describe('when given the load dmarc connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 1000 enregistrements sur la connexion `DMARC` dépasse la limite `first` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDmarcConnectionsByDomainId.`,
@@ -1541,7 +1561,11 @@ describe('when given the load dmarc connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 200 enregistrements sur la connexion `DMARC` dépasse la limite `last` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 200 for: loadDmarcConnectionsByDomainId.`,
@@ -1571,7 +1595,11 @@ describe('when given the load dmarc connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1602,7 +1630,11 @@ describe('when given the load dmarc connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1637,7 +1669,11 @@ describe('when given the load dmarc connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1671,7 +1707,11 @@ describe('when given the load dmarc connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([

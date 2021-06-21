@@ -61,7 +61,7 @@ describe('given a encoded token', () => {
         const testVerify = verifyToken({ i18n })
         expect(() => {
           testVerify({ token })
-        }).toThrow(Error('Invalid token, please request a new one.'))
+        }).toThrow(Error('Invalid token, please sign in.'))
         expect(consoleOutput).toEqual([
           `JWT was attempted to be verified but secret was incorrect.`,
         ])
@@ -95,7 +95,7 @@ describe('given a encoded token', () => {
         const testVerify = verifyToken({ i18n })
         expect(() => {
           testVerify({ token })
-        }).toThrow(Error('todo'))
+        }).toThrow(Error('Jeton invalide, veuillez vous connecter.'))
         expect(consoleOutput).toEqual([
           `JWT was attempted to be verified but secret was incorrect.`,
         ])

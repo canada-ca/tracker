@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -46,7 +47,6 @@ describe('testing user sign up', () => {
       get: (text) => text,
     }
   })
-
   let consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
@@ -58,16 +58,13 @@ describe('testing user sign up', () => {
 
     mockNotify = jest.fn()
   })
-
   afterEach(async () => {
     consoleOutput = []
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -102,6 +99,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -125,6 +123,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -154,6 +153,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', users[0]._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -189,6 +189,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -212,6 +213,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -298,6 +300,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -321,6 +324,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -352,6 +356,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', user._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -388,6 +393,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -411,6 +417,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -470,6 +477,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -493,6 +501,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -548,6 +557,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -571,6 +581,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -623,6 +634,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -646,6 +658,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -707,6 +720,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -730,6 +744,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -820,6 +835,7 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
+                        refreshToken
                         user {
                           id
                           userName
@@ -843,6 +859,7 @@ describe('testing user sign up', () => {
                 query,
                 collections,
                 transaction,
+                uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -908,6 +925,7 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
+                        refreshToken
                         user {
                           id
                           userName
@@ -931,6 +949,7 @@ describe('testing user sign up', () => {
                 query,
                 collections,
                 transaction,
+                uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -996,6 +1015,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1019,6 +1039,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction: mockedTransaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1108,6 +1129,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1131,6 +1153,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction: mockedTransaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1188,6 +1211,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1211,6 +1235,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction: mockedTransaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1275,6 +1300,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1298,6 +1324,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1327,6 +1354,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', user._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -1362,6 +1390,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1385,6 +1414,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1471,6 +1501,7 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
+                        refreshToken
                         user {
                           id
                           userName
@@ -1494,6 +1525,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1525,6 +1557,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', user._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -1561,6 +1594,7 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
+                        refreshToken
                         user {
                           id
                           userName
@@ -1584,6 +1618,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1643,6 +1678,7 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
+                        refreshToken
                         user {
                           id
                           userName
@@ -1666,6 +1702,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1721,6 +1758,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1744,6 +1782,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1766,7 +1805,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Le mot de passe ne répond pas aux exigences.',
                 },
               },
             },
@@ -1796,6 +1835,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1819,6 +1859,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1841,7 +1882,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Les mots de passe ne correspondent pas.',
                 },
               },
             },
@@ -1880,6 +1921,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -1903,6 +1945,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1925,7 +1968,7 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Courriel déjà utilisé.',
                 },
               },
             },
@@ -1993,6 +2036,7 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
+                        refreshToken
                         user {
                           id
                           userName
@@ -2016,6 +2060,7 @@ describe('testing user sign up', () => {
                 query,
                 collections,
                 transaction,
+                uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2040,7 +2085,8 @@ describe('testing user sign up', () => {
                 signUp: {
                   result: {
                     code: 400,
-                    description: 'todo',
+                    description:
+                      "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation.",
                   },
                 },
               },
@@ -2080,6 +2126,7 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
+                        refreshToken
                         user {
                           id
                           userName
@@ -2103,6 +2150,7 @@ describe('testing user sign up', () => {
                 query,
                 collections,
                 transaction,
+                uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
@@ -2127,7 +2175,8 @@ describe('testing user sign up', () => {
                 signUp: {
                   result: {
                     code: 400,
-                    description: 'todo',
+                    description:
+                      "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation.",
                   },
                 },
               },
@@ -2167,6 +2216,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -2190,6 +2240,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction: mockedTransaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -2207,7 +2258,9 @@ describe('testing user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
+          ]
 
           expect(response.errors).toEqual(error)
 
@@ -2277,6 +2330,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -2300,6 +2354,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction: mockedTransaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -2319,7 +2374,9 @@ describe('testing user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
+          ]
 
           expect(response.errors).toEqual(error)
 
@@ -2357,6 +2414,7 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
+                      refreshToken
                       user {
                         id
                         userName
@@ -2380,6 +2438,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction: mockedTransaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -2397,7 +2456,9 @@ describe('testing user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
+          ]
 
           expect(response.errors).toEqual(error)
 

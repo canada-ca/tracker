@@ -284,7 +284,8 @@ describe('removing an organization', () => {
             data: {
               verifyOrganization: {
                 result: {
-                  status: 'todo',
+                  status:
+                    "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                   organization: {
                     name: 'Secrétariat du Conseil Trésor du Canada',
                   },
@@ -1131,7 +1132,7 @@ describe('removing an organization', () => {
               verifyOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: "L'organisation a déjà été vérifiée.",
                 },
               },
             },
@@ -1248,7 +1249,8 @@ describe('removing an organization', () => {
               verifyOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier une organisation inconnue.',
                 },
               },
             },
@@ -1366,7 +1368,8 @@ describe('removing an organization', () => {
                 verifyOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à vérifier cette organisation.",
                   },
                 },
               },
@@ -1483,7 +1486,8 @@ describe('removing an organization', () => {
                 verifyOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à vérifier cette organisation.",
                   },
                 },
               },
@@ -1606,7 +1610,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de vérifier l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
 
@@ -1691,7 +1699,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de vérifier l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
 

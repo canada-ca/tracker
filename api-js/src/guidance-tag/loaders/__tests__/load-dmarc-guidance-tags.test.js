@@ -190,7 +190,11 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de trouver le(s) tag(s) d'orientation DMARC. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -215,7 +219,11 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de trouver le(s) tag(s) d'orientation DMARC. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([

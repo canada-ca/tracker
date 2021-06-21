@@ -133,6 +133,7 @@ export default function OrganizationInformation({
           data.removeOrganization.result.organization,
         )
 
+        // Set admin page org <Select> to none, as the current is removed
         setSelectedOrg('none')
 
         cache.evict({ id: removedOrgId })

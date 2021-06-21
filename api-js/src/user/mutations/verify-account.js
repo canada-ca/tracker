@@ -67,18 +67,6 @@ export const verifyAccount = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to verify account. Please request a new email.`),
-      }
-    }
-
-    // Make sure user ids match
-    if (tokenParameters.userKey !== user._key) {
-      console.warn(
-        `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
         description: i18n._(
           t`Unable to verify account. Please request a new email.`,
         ),

@@ -182,7 +182,11 @@ describe('given the sendAuthTextMsg function', () => {
           const mockedSendAuthTextMsg = sendAuthTextMsg({ notifyClient, i18n })
           await mockedSendAuthTextMsg({ user })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible d'envoyer un message texte d'authentification. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

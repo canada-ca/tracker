@@ -6,7 +6,7 @@ const { CIPHER_KEY } = process.env
 describe('given an encrypted phone number field', () => {
   describe('phone number field is a valid phone number', () => {
     it('returns the decrypted phone number', () => {
-      const originalPhoneNumber = "+12345678912"
+      const originalPhoneNumber = '+12345678912'
 
       const phoneDetails = {
         iv: crypto.randomBytes(12).toString('hex'),

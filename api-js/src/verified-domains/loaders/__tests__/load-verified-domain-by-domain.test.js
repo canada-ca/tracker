@@ -198,7 +198,11 @@ describe('given a loadVerifiedDomainsById dataloader', () => {
           try {
             await loader.load('domain.ca')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -219,7 +223,11 @@ describe('given a loadVerifiedDomainsById dataloader', () => {
           try {
             await loader.load('domain.ca')
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

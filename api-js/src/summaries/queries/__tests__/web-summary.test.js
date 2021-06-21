@@ -221,7 +221,11 @@ describe('given webSummary query', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              'Impossible de charger le résumé web. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

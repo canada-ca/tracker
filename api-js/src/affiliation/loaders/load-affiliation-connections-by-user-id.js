@@ -158,7 +158,7 @@ export const loadAffiliationConnectionsByUserId =
       )
       throw new Error(
         i18n._(
-          t`You must provide a \`first\` or \`last\` value to properly paginate the \`affiliation\`.`,
+          t`You must provide a \`first\` or \`last\` value to properly paginate the \`Affiliation\` connection.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -167,7 +167,7 @@ export const loadAffiliationConnectionsByUserId =
       )
       throw new Error(
         i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`affiliation\` is not supported.`,
+          t`Passing both \`first\` and \`last\` to paginate the \`Affiliation\` connection is not supported.`,
         ),
       )
     } else if (typeof first === 'number' || typeof last === 'number') {
@@ -179,7 +179,7 @@ export const loadAffiliationConnectionsByUserId =
         )
         throw new Error(
           i18n._(
-            t`\`${argSet}\` on the \`affiliations\` cannot be less than zero.`,
+            t`\`${argSet}\` on the \`Affiliation\` connection cannot be less than zero.`,
           ),
         )
       } else if (first > 100 || last > 100) {
@@ -190,7 +190,7 @@ export const loadAffiliationConnectionsByUserId =
         )
         throw new Error(
           i18n._(
-            t`Requesting \`${amount}\` records on the \`affiliations\` exceeds the \`${argSet}\` limit of 100 records.`,
+            t`Requesting \`${amount}\` records on the \`Affiliation\` connection exceeds the \`${argSet}\` limit of 100 records.`,
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {

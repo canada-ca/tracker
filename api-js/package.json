@@ -50,6 +50,7 @@
     "notifications-node-client": "^5.1.0",
     "psl": "^1.8.0",
     "url-slug": "^3.0.2",
+    "uuid": "^8.3.2",
     "validator": "^13.6.0"
   },
   "devDependencies": {

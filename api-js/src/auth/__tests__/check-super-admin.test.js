@@ -241,7 +241,11 @@ describe('given the check super admin function', () => {
             })
             await testSuperAdmin()
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de vérifier l'autorisation. Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -266,7 +270,11 @@ describe('given the check super admin function', () => {
             })
             await testSuperAdmin()
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de vérifier l'autorisation. Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

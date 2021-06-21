@@ -5,7 +5,6 @@ import { GraphQLJSON } from 'graphql-scalars'
 import { dkimType, dkimResultType } from '../index'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 
-
 describe('given the dkim result object', () => {
   describe('testing its field definitions', () => {
     it('has an id field', () => {
@@ -78,7 +77,6 @@ describe('given the dkim result object', () => {
     })
   })
   describe('testing its field resolvers', () => {
-
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
         const demoType = dkimResultType.getFields()

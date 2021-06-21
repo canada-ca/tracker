@@ -6,6 +6,8 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 
+const { REFRESH_KEY } = process.env
+
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
   description:
@@ -54,6 +56,7 @@ export const signUp = new mutationWithClientMutationId({
       query,
       transaction,
       request,
+      uuidv4,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
       notify: { sendVerificationEmail },
@@ -109,6 +112,8 @@ export const signUp = new mutationWithClientMutationId({
     // Hash Users Password
     const hashedPassword = bcrypt.hashSync(password, 10)
 
+    const refreshId = uuidv4()
+
     // Create User Structure for insert
     const user = {
       displayName: displayName,
@@ -119,6 +124,7 @@ export const signUp = new mutationWithClientMutationId({
       emailValidated: false,
       failedLoginAttempts: 0,
       tfaSendMethod: 'none',
+      refreshId,
     }
 
     // Generate list of collections names
@@ -223,8 +229,13 @@ export const signUp = new mutationWithClientMutationId({
 
     const returnUser = await loadUserByKey.load(insertedUser._key)
 
-    // Generate JWT
+    // Generate JWTs
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
+    const refreshToken = tokenize({
+      parameters: { userKey: user._key, uuid: refreshId },
+      expPeriod: 168,
+      secret: String(REFRESH_KEY),
+    })
 
     const verifyUrl = `${request.protocol}://${request.get(
       'host',
@@ -237,6 +248,7 @@ export const signUp = new mutationWithClientMutationId({
     return {
       _type: 'authResult',
       token,
+      refreshToken,
       user: returnUser,
     }
   },

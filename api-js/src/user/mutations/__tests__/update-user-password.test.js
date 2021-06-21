@@ -2,6 +2,9 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
+import jwt from 'jsonwebtoken'
+
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -72,6 +75,8 @@ describe('authenticate user account', () => {
         query,
         collections,
         transaction,
+        jwt,
+        uuidv4,
         auth: {
           bcrypt,
           tokenize,
@@ -577,7 +582,7 @@ describe('authenticate user account', () => {
           data: {
             updateUserPassword: {
               result: {
-                status: 'todo',
+                status: 'Le mot de passe a été mis à jour avec succès.',
               },
             },
           },
@@ -698,7 +703,8 @@ describe('authenticate user account', () => {
               updateUserPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour le mot de passe, le mot de passe actuel ne correspond pas. Veuillez réessayer.',
                 },
               },
             },
@@ -763,7 +769,8 @@ describe('authenticate user account', () => {
               updateUserPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour le mot de passe, les nouveaux mots de passe ne correspondent pas. Veuillez réessayer.',
                 },
               },
             },
@@ -828,7 +835,8 @@ describe('authenticate user account', () => {
               updateUserPassword: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour le mot de passe, les mots de passe ne correspondent pas aux exigences. Veuillez réessayer.',
                 },
               },
             },
@@ -895,7 +903,11 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le mot de passe. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

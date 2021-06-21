@@ -355,7 +355,9 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError('Impossible de trouver le domaine demandé.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
@@ -405,7 +407,11 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide pour récupérer ce domaine.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])

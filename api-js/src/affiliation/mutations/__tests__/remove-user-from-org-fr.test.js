@@ -262,7 +262,8 @@ describe('removing a user from an organization', () => {
               data: {
                 removeUserFromOrg: {
                   result: {
-                    status: 'todo',
+                    status:
+                      "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
                       id: toGlobalId('users', user._key),
                       userName: 'test.account@istio.actually.exists',
@@ -483,7 +484,8 @@ describe('removing a user from an organization', () => {
               data: {
                 removeUserFromOrg: {
                   result: {
-                    status: 'todo',
+                    status:
+                      "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
                       id: toGlobalId('users', user._key),
                       userName: 'test.account@istio.actually.exists',
@@ -753,7 +755,8 @@ describe('removing a user from an organization', () => {
               data: {
                 removeUserFromOrg: {
                   result: {
-                    status: 'todo',
+                    status:
+                      "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
                       id: toGlobalId('users', user._key),
                       userName: 'test.account@istio.actually.exists',
@@ -954,7 +957,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de supprimer un utilisateur d'une organisation inconnue.",
                 },
               },
             },
@@ -1079,7 +1083,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                 },
               },
             },
@@ -1214,7 +1219,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de supprimer un utilisateur qui n'appartient déjà plus à cette organisation.",
                 },
               },
             },
@@ -1340,7 +1346,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                 },
               },
             },
@@ -1466,7 +1473,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de supprimer un utilisateur de l'organisation.",
                 },
               },
             },
@@ -1588,7 +1596,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de supprimer un utilisateur inconnu de l'organisation.",
                 },
               },
             },
@@ -1725,7 +1734,11 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1854,7 +1867,11 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de supprimer un utilisateur de l'organisation. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1988,7 +2005,11 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de supprimer un utilisateur de l'organisation. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
