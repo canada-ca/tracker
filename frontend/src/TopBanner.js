@@ -44,8 +44,8 @@ export const TopBanner = (props) => {
             to="/"
             variant="primary hover"
             mx={1}
-            px={{base:1, md:3}}
-            fontSize={{ base: 'xs', md: 'md' }}
+            px={3}
+            display={{ base: 'none', md: 'inline' }}
             onClick={() => {
               logout()
               toast({
@@ -66,8 +66,8 @@ export const TopBanner = (props) => {
              variant="primary white"
              to="/sign-in"
              mx={1}
-             px={{base:1, md:3}}
-             fontSize={{ base: 'xs', md: 'md' }}
+             px={3}
+             display={{ base: 'none', md: 'inline' }}
            >
              <Trans>Sign In</Trans>
            </TrackerButton>
@@ -79,8 +79,8 @@ export const TopBanner = (props) => {
              variant="primary hover"
              to="/create-user"
              mx={1}
-             px={{base:1, md:3}}
-             fontSize={{ base: 'xs', md: 'md' }}
+             px={3}
+             display={{ base: 'none', md: 'inline' }}
            >
              <Trans>Create Account</Trans>
            </TrackerButton>
