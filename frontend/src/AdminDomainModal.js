@@ -237,6 +237,7 @@ export function AdminDomainModal({
                               {values.selectors.map((_selector, index) => (
                                 <React.Fragment key={index}>
                                   <TrackerButton
+                                    data-testid="remove-dkim-selector"
                                     type="button"
                                     variant="danger"
                                     p="3"
@@ -286,6 +287,7 @@ export function AdminDomainModal({
                               ))}
                             </Grid>
                             <TrackerButton
+                              data-testid="add-dkim-selector"
                               type="button"
                               variant="primary"
                               px="2"
