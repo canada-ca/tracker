@@ -49,6 +49,10 @@ async def scan_dmarc(domain):
         )
         return None
 
+    if scan_result["dmarc"].get("record", "null") == "null":
+        logging.info("DMARC scan completed")
+        return {"dmarc": {"missing": True}}
+
     for rua in scan_result["dmarc"]["tags"].get("rua", {}).get("value", []):
         # Retrieve 'rua' tag address.
         rua_addr = rua["address"]
@@ -126,11 +130,7 @@ async def scan_dmarc(domain):
                 ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
-
-    if scan_result["dmarc"].get("record", "null") == "null":
-        return {"dmarc": {"missing": True}}
-    else:
-        return scan_result
+    return scan_result
 
 
 def bitsize(x):
