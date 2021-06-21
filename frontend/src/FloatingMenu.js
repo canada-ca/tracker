@@ -157,6 +157,10 @@ export const FloatingMenu = () => {
                     <FloatingMenuLink to="/sign-in" text={t`Sign In`} />
                   )}
 
+                  {!isLoggedIn() && (
+                    <FloatingMenuLink to="/create-user" text={t`Create Account`} />
+                  )}
+
                   <Divider
                     borderWidth="2px"
                     borderColor="accent"
