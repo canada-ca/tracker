@@ -35,6 +35,7 @@ const Toggler = props => {
         size={10}
         alignItems='center'
         justifyContent='center'
+        borderRadius='0.25rem'
       >
         {locale}
       </PseudoBox>
