@@ -1914,7 +1914,8 @@ describe('updating a domain', () => {
                 updateDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -2000,7 +2001,8 @@ describe('updating a domain', () => {
                 updateDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
