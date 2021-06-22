@@ -801,6 +801,10 @@ msgstr "Modifier le nom d'affichage"
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
+#: src/AdminDomainModal.js:196
+msgid "Add Domain Details"
+msgstr "Ajouter les détails du domaine"
+
 #: src/EditableUserEmail.js:148
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
