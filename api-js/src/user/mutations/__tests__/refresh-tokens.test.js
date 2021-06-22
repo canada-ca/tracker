@@ -16,7 +16,7 @@ import { tokenize } from '../../../auth'
 const { DB_PASS: rootPass, DB_URL: url, REFRESH_KEY } = process.env
 
 describe('refresh users tokens', () => {
-  let query, drop, truncate, schema, collections, user
+  let query, drop, truncate, schema, collections, transaction, user
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -32,7 +32,7 @@ describe('refresh users tokens', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    ;({ query, drop, truncate, collections } = await ensure({
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
       url,
@@ -100,6 +100,8 @@ describe('refresh users tokens', () => {
         null,
         {
           query,
+          collections,
+          transaction,
           uuidv4,
           jwt,
           auth: {
@@ -193,6 +195,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -265,6 +269,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -335,6 +341,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -405,6 +413,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -437,12 +447,14 @@ describe('refresh users tokens', () => {
         })
       })
     })
-    describe('database error occurs', () => {
+    describe('transaction step error occurs', () => {
       describe('when upserting new refreshId', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction step error')),
+          })
 
           const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
@@ -480,7 +492,9 @@ describe('refresh users tokens', () => {
             null,
             {
               i18n,
-              query: mockedQuery,
+              query,
+              collections,
+              transaction: mockedTransaction,
               uuidv4,
               jwt,
               auth: {
@@ -501,7 +515,81 @@ describe('refresh users tokens', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when attempting to refresh tokens for user: ${user._key}: Error: Database error occurred.`,
+            `Transaction step error occurred when attempting to refresh tokens for user: ${user._key}: Error: Transaction step error`,
+          ])
+        })
+      })
+    })
+    describe('transaction commit error occurs', () => {
+      describe('when upserting new refreshId', () => {
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest.fn().mockReturnValue({}),
+            commit: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction commit error')),
+          })
+
+          const authToken = tokenize({ parameters: { userKey: user._key } })
+          const refreshToken = tokenize({
+            parameters: { userKey: user._key, uuid: '1234' },
+            expPeriod: 168,
+            secret: String(REFRESH_KEY),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                refreshTokens (
+                  input: {
+                    authToken: "${authToken}"
+                    refreshToken: "${refreshToken}"
+                  }
+                ) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      refreshToken
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction: mockedTransaction,
+              uuidv4,
+              jwt,
+              auth: {
+                tokenize: jest.fn().mockReturnValue('token'),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to refresh tokens, please sign in.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Transaction commit error occurred while user: ${user._key} attempted to refresh tokens: Error: Transaction commit error`,
           ])
         })
       })
@@ -566,6 +654,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -639,6 +729,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -710,6 +802,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -781,6 +875,8 @@ describe('refresh users tokens', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               uuidv4,
               jwt,
               auth: {
@@ -814,12 +910,14 @@ describe('refresh users tokens', () => {
         })
       })
     })
-    describe('database error occurs', () => {
+    describe('transaction step error occurs', () => {
       describe('when upserting new refreshId', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction step error')),
+          })
 
           const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
@@ -857,7 +955,9 @@ describe('refresh users tokens', () => {
             null,
             {
               i18n,
-              query: mockedQuery,
+              query,
+              collections,
+              transaction: mockedTransaction,
               uuidv4,
               jwt,
               auth: {
@@ -880,7 +980,83 @@ describe('refresh users tokens', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when attempting to refresh tokens for user: ${user._key}: Error: Database error occurred.`,
+            `Transaction step error occurred when attempting to refresh tokens for user: ${user._key}: Error: Transaction step error`,
+          ])
+        })
+      })
+    })
+    describe('transaction commit error occurs', () => {
+      describe('when upserting new refreshId', () => {
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest.fn().mockReturnValue({}),
+            commit: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction commit error')),
+          })
+
+          const authToken = tokenize({ parameters: { userKey: user._key } })
+          const refreshToken = tokenize({
+            parameters: { userKey: user._key, uuid: '1234' },
+            expPeriod: 168,
+            secret: String(REFRESH_KEY),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                refreshTokens (
+                  input: {
+                    authToken: "${authToken}"
+                    refreshToken: "${refreshToken}"
+                  }
+                ) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      refreshToken
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction: mockedTransaction,
+              uuidv4,
+              jwt,
+              auth: {
+                tokenize: jest.fn().mockReturnValue('token'),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Transaction commit error occurred while user: ${user._key} attempted to refresh tokens: Error: Transaction commit error`,
           ])
         })
       })
