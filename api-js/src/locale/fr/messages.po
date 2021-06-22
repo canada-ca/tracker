@@ -262,7 +262,7 @@ msgstr "Erreur de permission, pas d'administrateur pour cet utilisateur."
 msgid "Phone number has been successfully removed."
 msgstr "Le numéro de téléphone a été supprimé avec succès."
 
-#: src/user/mutations/set-phone-number.js:109
+#: src/user/mutations/set-phone-number.js:131
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification."
 
@@ -822,7 +822,8 @@ msgstr "Impossible d'envoyer le message d'authentification à deux facteurs. Veu
 msgid "Unable to send verification email. Please try again."
 msgstr "Impossible d'envoyer l'email de vérification. Veuillez réessayer."
 
-#: src/user/mutations/set-phone-number.js:95
+#: src/user/mutations/set-phone-number.js:108
+#: src/user/mutations/set-phone-number.js:117
 msgid "Unable to set phone number, please try again."
 msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 
