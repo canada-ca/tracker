@@ -352,7 +352,7 @@ msgstr "Requesting {amount} records on the `SSL` connection exceeds the `{argSet
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
 
-#: src/user/mutations/verify-account.js:99
+#: src/user/mutations/verify-account.js:121
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
@@ -926,12 +926,13 @@ msgstr "Unable to update user's role. Please try again."
 msgid "Unable to update your own role."
 msgstr "Unable to update your own role."
 
-#: src/user/mutations/verify-account.js:53
-#: src/user/mutations/verify-account.js:71
+#: src/user/mutations/verify-account.js:55
+#: src/user/mutations/verify-account.js:73
 msgid "Unable to verify account. Please request a new email."
 msgstr "Unable to verify account. Please request a new email."
 
-#: src/user/mutations/verify-account.js:89
+#: src/user/mutations/verify-account.js:102
+#: src/user/mutations/verify-account.js:111
 msgid "Unable to verify account. Please try again."
 msgstr "Unable to verify account. Please try again."
 

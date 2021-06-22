@@ -352,7 +352,7 @@ msgstr "La demande de {amount} enregistrements sur la connexion `SSL` dépasse l
 msgid "Successfully dispatched one time scan."
 msgstr "Un seul balayage a été effectué avec succès."
 
-#: src/user/mutations/verify-account.js:99
+#: src/user/mutations/verify-account.js:121
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
@@ -926,12 +926,13 @@ msgstr "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessa
 msgid "Unable to update your own role."
 msgstr "Impossible de mettre à jour votre propre rôle."
 
-#: src/user/mutations/verify-account.js:53
-#: src/user/mutations/verify-account.js:71
+#: src/user/mutations/verify-account.js:55
+#: src/user/mutations/verify-account.js:73
 msgid "Unable to verify account. Please request a new email."
 msgstr "Impossible de vérifier le compte. Veuillez demander un nouvel e-mail."
 
-#: src/user/mutations/verify-account.js:89
+#: src/user/mutations/verify-account.js:102
+#: src/user/mutations/verify-account.js:111
 msgid "Unable to verify account. Please try again."
 msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 
