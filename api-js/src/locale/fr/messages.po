@@ -35,7 +35,7 @@ msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de réinitia
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception."
 
-#: src/user/mutations/authenticate.js:126
+#: src/user/mutations/authenticate.js:148
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "Code TFA incorrect. Veuillez vous reconnecter."
 
@@ -44,7 +44,7 @@ msgid "Incorrect token value. Please request a new email."
 msgstr "La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail."
 
 #: src/user/mutations/sign-in.js:62
-#: src/user/mutations/sign-in.js:248
+#: src/user/mutations/sign-in.js:250
 msgid "Incorrect username or password. Please try again."
 msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer."
 
@@ -384,7 +384,7 @@ msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisatio
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Le numéro de téléphone a été vérifié avec succès, et la méthode d'envoi de la TFA a été réglée sur le texte."
 
-#: src/user/mutations/authenticate.js:59
+#: src/user/mutations/authenticate.js:61
 msgid "Token value incorrect, please sign in again."
 msgstr "La valeur du jeton est incorrecte, veuillez vous connecter à nouveau."
 
@@ -404,8 +404,9 @@ msgstr "La longueur du code à deux facteurs est incorrecte. Veuillez réessayer
 msgid "Unable to add user to organization. Please try again."
 msgstr "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer."
 
-#: src/user/mutations/authenticate.js:74
-#: src/user/mutations/authenticate.js:108
+#: src/user/mutations/authenticate.js:76
+#: src/user/mutations/authenticate.js:121
+#: src/user/mutations/authenticate.js:130
 msgid "Unable to authenticate. Please try again."
 msgstr "Impossible de s'authentifier. Veuillez réessayer."
 
@@ -828,8 +829,8 @@ msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 #: src/user/mutations/sign-in.js:135
 #: src/user/mutations/sign-in.js:183
 #: src/user/mutations/sign-in.js:192
-#: src/user/mutations/sign-in.js:229
-#: src/user/mutations/sign-in.js:238
+#: src/user/mutations/sign-in.js:231
+#: src/user/mutations/sign-in.js:240
 msgid "Unable to sign in, please try again."
 msgstr "Impossible de se connecter, veuillez réessayer."
 
