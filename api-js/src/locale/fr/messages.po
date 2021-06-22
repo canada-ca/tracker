@@ -175,7 +175,7 @@ msgstr "Le mot de passe ne répond pas aux exigences."
 msgid "Password was successfully reset."
 msgstr "Le mot de passe a été réinitialisé avec succès."
 
-#: src/user/mutations/update-user-password.js:112
+#: src/user/mutations/update-user-password.js:134
 msgid "Password was successfully updated."
 msgstr "Le mot de passe a été mis à jour avec succès."
 
@@ -874,19 +874,20 @@ msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 msgid "Unable to update organization. Please try again."
 msgstr "Impossible de mettre à jour l'organisation. Veuillez réessayer."
 
-#: src/user/mutations/update-user-password.js:60
+#: src/user/mutations/update-user-password.js:62
 msgid "Unable to update password, current password does not match. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe, le mot de passe actuel ne correspond pas. Veuillez réessayer."
 
-#: src/user/mutations/update-user-password.js:74
+#: src/user/mutations/update-user-password.js:76
 msgid "Unable to update password, new passwords do not match. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe, les nouveaux mots de passe ne correspondent pas. Veuillez réessayer."
 
-#: src/user/mutations/update-user-password.js:88
+#: src/user/mutations/update-user-password.js:90
 msgid "Unable to update password, passwords do not match requirements. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe, les mots de passe ne correspondent pas aux exigences. Veuillez réessayer."
 
-#: src/user/mutations/update-user-password.js:106
+#: src/user/mutations/update-user-password.js:119
+#: src/user/mutations/update-user-password.js:128
 msgid "Unable to update password. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe. Veuillez réessayer."
 
