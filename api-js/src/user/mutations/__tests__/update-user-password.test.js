@@ -5,7 +5,6 @@ import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
-
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
@@ -37,12 +36,10 @@ describe('authenticate user account', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -105,16 +102,13 @@ describe('authenticate user account', () => {
     user = await userCursor.next()
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     consoleOutput.length = 0
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -159,6 +153,8 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             userKey: user._key,
             auth: {
               bcrypt,
@@ -281,6 +277,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -347,6 +345,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -413,6 +413,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -450,69 +452,147 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when updating password', () => {
-        it('returns an error message', async () => {
-          const userNameLoader = loadUserByUserName({ query })
-          const idLoader = loadUserByKey({ query })
+      describe('transaction step error occurs', () => {
+        describe('when updating password', () => {
+          it('returns an error message', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction step error')),
+            })
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "newtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserPassword(
+                    input: {
+                      currentPassword: "testpassword123"
+                      updatedPassword: "newtestpassword123"
+                      updatedPasswordConfirm: "newtestpassword123"
                     }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on UpdateUserPasswordResultType {
+                        status
+                      }
+                      ... on UpdateUserPasswordError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-                loadUserByKey: idLoader,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError('Unable to update password. Please try again.'),
-          ]
+            const error = [
+              new GraphQLError('Unable to update password. Please try again.'),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to update their password: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: ${user._key} attempted to update their password: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when updating password', () => {
+          it('returns an error message', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction commit error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserPassword(
+                    input: {
+                      currentPassword: "testpassword123"
+                      updatedPassword: "newtestpassword123"
+                      updatedPasswordConfirm: "newtestpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserPasswordResultType {
+                        status
+                      }
+                      ... on UpdateUserPasswordError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update password. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error ocurred when user: ${user._key} attempted to update their password: Error: Transaction commit error`,
+            ])
+          })
         })
       })
     })
@@ -561,6 +641,8 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             userKey: user._key,
             auth: {
               bcrypt,
@@ -683,6 +765,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -749,6 +833,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -815,6 +901,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -852,71 +940,151 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when updating password', () => {
-        it('returns an error message', async () => {
-          const userNameLoader = loadUserByUserName({ query })
-          const idLoader = loadUserByKey({ query })
+      describe('transaction step error occurs', () => {
+        describe('when updating password', () => {
+          it('returns an error message', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction step error')),
+            })
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "newtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserPassword(
+                    input: {
+                      currentPassword: "testpassword123"
+                      updatedPassword: "newtestpassword123"
+                      updatedPasswordConfirm: "newtestpassword123"
                     }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on UpdateUserPasswordResultType {
+                        status
+                      }
+                      ... on UpdateUserPasswordError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-                loadUserByKey: idLoader,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              'Impossible de mettre à jour le mot de passe. Veuillez réessayer.',
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                'Impossible de mettre à jour le mot de passe. Veuillez réessayer.',
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to update their password: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: ${user._key} attempted to update their password: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when updating password', () => {
+          it('returns an error message', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction commit error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserPassword(
+                    input: {
+                      currentPassword: "testpassword123"
+                      updatedPassword: "newtestpassword123"
+                      updatedPasswordConfirm: "newtestpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserPasswordResultType {
+                        status
+                      }
+                      ... on UpdateUserPasswordError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de mettre à jour le mot de passe. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error ocurred when user: ${user._key} attempted to update their password: Error: Transaction commit error`,
+            ])
+          })
         })
       })
     })
