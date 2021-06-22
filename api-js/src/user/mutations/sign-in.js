@@ -34,6 +34,8 @@ export const signIn = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      collections,
+      transaction,
       uuidv4,
       auth: { tokenize, bcrypt },
       loaders: { loadUserByUserName },
@@ -75,18 +77,29 @@ export const signIn = new mutationWithClientMutationId({
         ),
       }
     } else {
+      // Generate list of collections names
+      const collectionStrings = []
+      for (const property in collections) {
+        collectionStrings.push(property.toString())
+      }
+
+      // Setup Transaction
+      const trx = await transaction(collectionStrings)
+
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {
         // Reset Failed Login attempts
         try {
-          await query`
-            WITH users
-            FOR u IN users
-              UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
-          `
+          await trx.step(
+            () => query`
+              WITH users
+              FOR u IN users
+                UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
+            `,
+          )
         } catch (err) {
           console.error(
-            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
+            `Transaction step error ocurred when resetting failed login attempts for user: ${user._key}: ${err}`,
           )
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
@@ -97,16 +110,27 @@ export const signIn = new mutationWithClientMutationId({
 
           // Insert TFA code into DB
           try {
-            await query`
-              WITH users
-              UPSERT { _key: ${user._key} }
-                INSERT { tfaCode: ${tfaCode} }
-                UPDATE { tfaCode: ${tfaCode} }
-                IN users
-              `
+            await trx.step(
+              () => query`
+                WITH users
+                UPSERT { _key: ${user._key} }
+                  INSERT { tfaCode: ${tfaCode} }
+                  UPDATE { tfaCode: ${tfaCode} }
+                  IN users
+                `,
+            )
           } catch (err) {
             console.error(
-              `Database error occurred when inserting TFA code for user: ${user._key}: ${err}`,
+              `Transaction step error occurred when inserting TFA code for user: ${user._key}: ${err}`,
+            )
+            throw new Error(i18n._(t`Unable to sign in, please try again.`))
+          }
+
+          try {
+            await trx.commit()
+          } catch (err) {
+            console.error(
+              `Transaction commit error occurred while user: ${user._key} attempted to tfa sign in: ${err}`,
             )
             throw new Error(i18n._(t`Unable to sign in, please try again.`))
           }
@@ -143,16 +167,27 @@ export const signIn = new mutationWithClientMutationId({
           const refreshId = uuidv4()
 
           try {
-            await query`
-              WITH users
-              UPSERT { _key: ${user._key} }
-                INSERT { refreshId: ${refreshId} }
-                UPDATE { refreshId: ${refreshId} }
-                IN users
-            `
+            await trx.step(
+              () => query`
+                WITH users
+                UPSERT { _key: ${user._key} }
+                  INSERT { refreshId: ${refreshId} }
+                  UPDATE { refreshId: ${refreshId} }
+                  IN users
+              `,
+            )
           } catch (err) {
             console.error(
-              `Database error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: ${err}`,
+              `Transaction step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: ${err}`,
+            )
+            throw new Error(i18n._(t`Unable to sign in, please try again.`))
+          }
+
+          try {
+            await trx.commit()
+          } catch (err) {
+            console.error(
+              `Transaction commit error occurred while user: ${user._key} attempted a regular sign in: ${err}`,
             )
             throw new Error(i18n._(t`Unable to sign in, please try again.`))
           }
@@ -180,19 +215,31 @@ export const signIn = new mutationWithClientMutationId({
       } else {
         try {
           // Increase users failed login attempts
-          await query`
-            WITH users
-            FOR u IN users
-              UPDATE ${user._key} WITH { failedLoginAttempts: ${
-            user.failedLoginAttempts + 1
-          } } IN users
-          `
+          await trx.step(
+            () => query`
+              WITH users
+              FOR u IN users
+                UPDATE ${user._key} WITH { 
+                  failedLoginAttempts: ${user.failedLoginAttempts + 1} 
+                } IN users
+            `,
+          )
         } catch (err) {
           console.error(
-            `Database error ocurred when incrementing user: ${user._key} failed login attempts: ${err}`,
+            `Transaction step error ocurred when incrementing failed login attempts for user: ${user._key}: ${err}`,
           )
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
+
+        try {
+          await trx.commit()
+        } catch (err) {
+          console.error(
+            `Transaction commit error occurred while user: ${user._key} failed to sign in: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to sign in, please try again.`))
+        }
+
         console.warn(
           `User attempted to authenticate: ${user._key} with invalid credentials.`,
         )
