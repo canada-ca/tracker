@@ -274,32 +274,27 @@ def Server(server_client=requests):
             logging.info("Performing scan...")
             dmarc_results = scan_dmarc(domain)
 
-            try:
-                iter(selectors)
+            if len(selectors) > 0:
                 dkim_results = await scan_dkim(domain, selectors)
-            except TypeError:
+            else:
                 logging.info("No DKIM selector strings provided")
-                dkim_results = {}
-                pass
+                dkim_results = {"missing": True}
 
             scan_results = await dmarc_results
             scan_results["dkim"] = dkim_results
 
-            if scan_results["dmarc"] != {"missing": True}:
 
-                processed_results = process_results(scan_results)
+            processed_results = process_results(scan_results)
 
-                outbound_payload = json.dumps(
-                    {
-                        "results": processed_results,
-                        "scan_type": "dns",
-                        "uuid": uuid,
-                        "domain_key": domain_key,
-                    }
-                )
-                logging.info(f"Scan results: {str(scan_results)}")
-            else:
-                raise Exception("DNS scan not completed")
+            outbound_payload = json.dumps(
+                {
+                    "results": processed_results,
+                    "scan_type": "dns",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                }
+            )
+            logging.info(f"Scan results: {str(scan_results)}")
 
         except Exception as e:
             signal.alarm(0)
