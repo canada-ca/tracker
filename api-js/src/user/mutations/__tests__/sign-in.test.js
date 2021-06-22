@@ -818,7 +818,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error ocurred when resetting failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+              `Trx step error ocurred when resetting failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
             ])
           })
         })
@@ -898,7 +898,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error occurred when inserting TFA code for user: ${user._key}: Error: Transaction Step Error`,
+              `Trx step error occurred when inserting TFA code for user: ${user._key}: Error: Transaction Step Error`,
             ])
           })
         })
@@ -978,7 +978,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Transaction Step Error`,
+              `Trx step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Transaction Step Error`,
             ])
           })
         })
@@ -1050,7 +1050,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error ocurred when incrementing failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+              `Trx step error ocurred when incrementing failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
             ])
           })
         })
@@ -1132,7 +1132,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} attempted to tfa sign in: Error: Transaction Step Error`,
+              `Trx commit error occurred while user: ${user._key} attempted to tfa sign in: Error: Transaction Step Error`,
             ])
           })
         })
@@ -1212,7 +1212,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} attempted a regular sign in: Error: Transaction Step Error`,
+              `Trx commit error occurred while user: ${user._key} attempted a regular sign in: Error: Transaction Step Error`,
             ])
           })
         })
@@ -1285,7 +1285,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} failed to sign in: Error: Transaction Step Error`,
+              `Trx commit error occurred while user: ${user._key} failed to sign in: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2028,7 +2028,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error ocurred when resetting failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+              `Trx step error ocurred when resetting failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2110,7 +2110,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error occurred when inserting TFA code for user: ${user._key}: Error: Transaction Step Error`,
+              `Trx step error occurred when inserting TFA code for user: ${user._key}: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2192,7 +2192,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Transaction Step Error`,
+              `Trx step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2266,7 +2266,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error ocurred when incrementing failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+              `Trx step error ocurred when incrementing failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2350,7 +2350,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} attempted to tfa sign in: Error: Transaction Step Error`,
+              `Trx commit error occurred while user: ${user._key} attempted to tfa sign in: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2432,7 +2432,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} attempted a regular sign in: Error: Transaction Step Error`,
+              `Trx commit error occurred while user: ${user._key} attempted a regular sign in: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2507,7 +2507,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} failed to sign in: Error: Transaction Step Error`,
+              `Trx commit error occurred while user: ${user._key} failed to sign in: Error: Transaction Step Error`,
             ])
           })
         })

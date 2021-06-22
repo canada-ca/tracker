@@ -99,7 +99,7 @@ export const signIn = new mutationWithClientMutationId({
           )
         } catch (err) {
           console.error(
-            `Transaction step error ocurred when resetting failed login attempts for user: ${user._key}: ${err}`,
+            `Trx step error ocurred when resetting failed login attempts for user: ${user._key}: ${err}`,
           )
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
@@ -121,7 +121,7 @@ export const signIn = new mutationWithClientMutationId({
             )
           } catch (err) {
             console.error(
-              `Transaction step error occurred when inserting TFA code for user: ${user._key}: ${err}`,
+              `Trx step error occurred when inserting TFA code for user: ${user._key}: ${err}`,
             )
             throw new Error(i18n._(t`Unable to sign in, please try again.`))
           }
@@ -130,7 +130,7 @@ export const signIn = new mutationWithClientMutationId({
             await trx.commit()
           } catch (err) {
             console.error(
-              `Transaction commit error occurred while user: ${user._key} attempted to tfa sign in: ${err}`,
+              `Trx commit error occurred while user: ${user._key} attempted to tfa sign in: ${err}`,
             )
             throw new Error(i18n._(t`Unable to sign in, please try again.`))
           }
@@ -178,7 +178,7 @@ export const signIn = new mutationWithClientMutationId({
             )
           } catch (err) {
             console.error(
-              `Transaction step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: ${err}`,
+              `Trx step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: ${err}`,
             )
             throw new Error(i18n._(t`Unable to sign in, please try again.`))
           }
@@ -187,7 +187,7 @@ export const signIn = new mutationWithClientMutationId({
             await trx.commit()
           } catch (err) {
             console.error(
-              `Transaction commit error occurred while user: ${user._key} attempted a regular sign in: ${err}`,
+              `Trx commit error occurred while user: ${user._key} attempted a regular sign in: ${err}`,
             )
             throw new Error(i18n._(t`Unable to sign in, please try again.`))
           }
@@ -226,7 +226,7 @@ export const signIn = new mutationWithClientMutationId({
           )
         } catch (err) {
           console.error(
-            `Transaction step error ocurred when incrementing failed login attempts for user: ${user._key}: ${err}`,
+            `Trx step error ocurred when incrementing failed login attempts for user: ${user._key}: ${err}`,
           )
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
@@ -235,7 +235,7 @@ export const signIn = new mutationWithClientMutationId({
           await trx.commit()
         } catch (err) {
           console.error(
-            `Transaction commit error occurred while user: ${user._key} failed to sign in: ${err}`,
+            `Trx commit error occurred while user: ${user._key} failed to sign in: ${err}`,
           )
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }

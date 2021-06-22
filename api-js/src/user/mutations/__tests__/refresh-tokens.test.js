@@ -515,7 +515,7 @@ describe('refresh users tokens', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction step error occurred when attempting to refresh tokens for user: ${user._key}: Error: Transaction step error`,
+            `Trx step error occurred when attempting to refresh tokens for user: ${user._key}: Error: Transaction step error`,
           ])
         })
       })
@@ -589,7 +589,7 @@ describe('refresh users tokens', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction commit error occurred while user: ${user._key} attempted to refresh tokens: Error: Transaction commit error`,
+            `Trx commit error occurred while user: ${user._key} attempted to refresh tokens: Error: Transaction commit error`,
           ])
         })
       })
@@ -980,7 +980,7 @@ describe('refresh users tokens', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction step error occurred when attempting to refresh tokens for user: ${user._key}: Error: Transaction step error`,
+            `Trx step error occurred when attempting to refresh tokens for user: ${user._key}: Error: Transaction step error`,
           ])
         })
       })
@@ -1056,7 +1056,7 @@ describe('refresh users tokens', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction commit error occurred while user: ${user._key} attempted to refresh tokens: Error: Transaction commit error`,
+            `Trx commit error occurred while user: ${user._key} attempted to refresh tokens: Error: Transaction commit error`,
           ])
         })
       })

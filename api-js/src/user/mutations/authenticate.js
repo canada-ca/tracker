@@ -116,7 +116,7 @@ export const authenticate = new mutationWithClientMutationId({
         )
       } catch (err) {
         console.error(
-          `Transaction step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: ${err}`,
+          `Trx step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: ${err}`,
         )
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
@@ -125,7 +125,7 @@ export const authenticate = new mutationWithClientMutationId({
         await trx.commit()
       } catch (err) {
         console.error(
-          `Transaction commit error occurred while user: ${user._key} attempted to authenticate: ${err}`,
+          `Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`,
         )
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }

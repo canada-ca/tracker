@@ -569,7 +569,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: Error: Transaction step error`,
+              `Trx step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: Error: Transaction step error`,
             ])
           })
         })
@@ -663,7 +663,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction step error`,
+              `Trx commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction step error`,
             ])
           })
         })
@@ -1083,7 +1083,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: Error: Transaction step error`,
+              `Trx step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: Error: Transaction step error`,
             ])
           })
         })
@@ -1179,7 +1179,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction step error`,
+              `Trx commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction step error`,
             ])
           })
         })
