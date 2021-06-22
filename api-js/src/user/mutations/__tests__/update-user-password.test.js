@@ -217,6 +217,8 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             auth: {
               bcrypt,
               tokenize,
@@ -617,6 +619,8 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             auth: {
               bcrypt,
               tokenize,

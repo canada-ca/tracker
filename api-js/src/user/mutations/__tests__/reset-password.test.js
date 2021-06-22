@@ -218,6 +218,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             jwt,
             uuidv4,
             auth: {
@@ -988,6 +990,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             uuidv4,
             jwt,
             auth: {
