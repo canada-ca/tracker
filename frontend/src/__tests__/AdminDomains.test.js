@@ -178,7 +178,7 @@ describe('<AdminDomains />', () => {
       })
 
       await waitFor(() => {
-        expect(getByText(/Edit Domain Details/)).toBeInTheDocument()
+        expect(getByText(/Add Domain Details/)).toBeInTheDocument()
         const confirmBtn = getByText(/Confirm/)
         fireEvent.click(confirmBtn)
       })
@@ -269,7 +269,7 @@ describe('<AdminDomains />', () => {
       })
 
       await waitFor(() => {
-        expect(getByText(/Edit Domain Details/)).toBeInTheDocument()
+        expect(getByText(/Add Domain Details/)).toBeInTheDocument()
         const confirmBtn = getByText(/Confirm/)
         fireEvent.click(confirmBtn)
       })
@@ -363,9 +363,8 @@ describe('<AdminDomains />', () => {
       })
 
       await waitFor(() => {
-        const addDomain = getByText(/Add Domain/i)
+        const addDomain = getByText(/Add Domain/)
         fireEvent.click(addDomain)
-        expect(queryByText(/Edit Domain Details/)).toBeInTheDocument()
       })
 
       const confirmBtn = getByText(/Confirm/)
@@ -448,7 +447,7 @@ describe('<AdminDomains />', () => {
       fireEvent.click(addDomainBtn)
 
       await waitFor(() => {
-        expect(queryByText(/Edit Domain Details/)).toBeInTheDocument()
+        expect(queryByText(/Add Domain Details/)).toBeInTheDocument()
       })
 
       const domainInput = getByLabelText(/Domain URL:/)

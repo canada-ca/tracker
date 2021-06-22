@@ -217,31 +217,38 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   return (
     <Stack mb="6" w="100%">
-      <Stack flexDirection={['column', 'row']} align="center" isInline>
-        <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
-          <InputLeftElement>
-            <Icon name="plus-square" color="gray.300" />
-          </InputLeftElement>
-          <Input
-            type="text"
-            placeholder={t`Domain URL`}
-            onChange={(e) => setNewDomainUrl(e.target.value)}
-          />
-        </InputGroup>
-        <TrackerButton
-          width={['100%', '25%']}
-          variant="primary"
-          onClick={() => {
-            setSelectorInputList([])
-            setEditingDomainUrl(newDomainUrl)
-            setMutation('create')
-            updateOnOpen()
-          }}
-        >
-          <Icon name="add" />
-          <Trans>Add Domain</Trans>
-        </TrackerButton>
-      </Stack>
+      <form
+        id="form"
+        onSubmit={async (e) => {
+          e.preventDefault() // prevents page from refreshing
+          setSelectorInputList([])
+          setEditingDomainUrl(newDomainUrl)
+          setMutation('create')
+          updateOnOpen()
+        }}
+      >
+        <Stack flexDirection={['column', 'row']} align="center" isInline>
+          <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
+            <InputLeftElement>
+              <Icon name="plus-square" color="gray.300" />
+            </InputLeftElement>
+            <Input
+              type="text"
+              placeholder={t`Domain URL`}
+              onChange={(e) => setNewDomainUrl(e.target.value)}
+            />
+          </InputGroup>
+          <TrackerButton
+            id="addDomainBtn"
+            width={['100%', '25%']}
+            variant="primary"
+            type="submit"
+          >
+            <Icon name="add" />
+            <Trans>Add Domain</Trans>
+          </TrackerButton>
+        </Stack>
+      </form>
 
       {adminDomainList}
 

@@ -190,7 +190,11 @@ export function AdminDomainModal({
               {({ handleSubmit, isSubmitting, values, errors }) => (
                 <form id="form" onSubmit={handleSubmit}>
                   <ModalHeader>
-                    <Trans>Edit Domain Details</Trans>
+                    {mutation === 'update' ? (
+                      <Trans>Edit Domain Details</Trans>
+                    ) : (
+                      <Trans>Add Domain Details</Trans>
+                    )}
                   </ModalHeader>
                   <ModalCloseButton />
                   <ModalBody>
