@@ -266,7 +266,7 @@ msgstr "Phone number has been successfully removed."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:119
+#: src/user/mutations/update-user-profile.js:141
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -891,7 +891,8 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:110
+#: src/user/mutations/update-user-profile.js:123
+#: src/user/mutations/update-user-profile.js:132
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -959,7 +960,7 @@ msgstr "User could not be queried."
 msgid "User role was updated successfully."
 msgstr "User role was updated successfully."
 
-#: src/user/mutations/update-user-profile.js:71
+#: src/user/mutations/update-user-profile.js:73
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 
