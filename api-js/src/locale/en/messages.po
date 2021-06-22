@@ -39,7 +39,7 @@ msgstr "If an account with this username is found, an email verification link wi
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "Incorrect TFA code. Please sign in again."
 
-#: src/user/mutations/reset-password.js:64
+#: src/user/mutations/reset-password.js:66
 msgid "Incorrect token value. Please request a new email."
 msgstr "Incorrect token value. Please request a new email."
 
@@ -52,7 +52,7 @@ msgstr "Incorrect username or password. Please try again."
 msgid "Invalid token, please sign in."
 msgstr "Invalid token, please sign in."
 
-#: src/user/mutations/reset-password.js:106
+#: src/user/mutations/reset-password.js:108
 msgid "New passwords do not match."
 msgstr "New passwords do not match."
 
@@ -166,12 +166,12 @@ msgstr "Passing both `first` and `last` to paginate the `VerifiedDomain` connect
 msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 
-#: src/user/mutations/reset-password.js:118
+#: src/user/mutations/reset-password.js:120
 #: src/user/mutations/sign-up.js:82
 msgid "Password does not meet requirements."
 msgstr "Password does not meet requirements."
 
-#: src/user/mutations/reset-password.js:142
+#: src/user/mutations/reset-password.js:168
 msgid "Password was successfully reset."
 msgstr "Password was successfully reset."
 
@@ -777,12 +777,13 @@ msgstr "Unable to remove user from unknown organization."
 msgid "Unable to request a one time scan on an unknown domain."
 msgstr "Unable to request a one time scan on an unknown domain."
 
-#: src/user/mutations/reset-password.js:93
+#: src/user/mutations/reset-password.js:95
 msgid "Unable to reset password. Please request a new email."
 msgstr "Unable to reset password. Please request a new email."
 
-#: src/user/mutations/reset-password.js:80
-#: src/user/mutations/reset-password.js:135
+#: src/user/mutations/reset-password.js:82
+#: src/user/mutations/reset-password.js:152
+#: src/user/mutations/reset-password.js:161
 msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
