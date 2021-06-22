@@ -180,13 +180,8 @@ export const FloatingMenu = () => {
                   />
 
                   <FloatingMenuLink
-                    to={
-                      i18n.locale === 'en'
-                        ? 'https://www.canada.ca/en/transparency/terms.html'
-                        : 'https://www.canada.ca/fr/transparence/avis.html'
-                    }
+                    to="/terms-and-conditions"
                     text={t`Terms & conditions`}
-                    isExternal
                   />
 
                   <FloatingMenuLink
