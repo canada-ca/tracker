@@ -43,8 +43,8 @@ msgstr "Code TFA incorrect. Veuillez vous reconnecter."
 msgid "Incorrect token value. Please request a new email."
 msgstr "La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail."
 
-#: src/user/mutations/sign-in.js:60
-#: src/user/mutations/sign-in.js:203
+#: src/user/mutations/sign-in.js:62
+#: src/user/mutations/sign-in.js:248
 msgid "Incorrect username or password. Please try again."
 msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer."
 
@@ -352,7 +352,7 @@ msgstr "La demande de {amount} enregistrements sur la connexion `SSL` dépasse l
 msgid "Successfully dispatched one time scan."
 msgstr "Un seul balayage a été effectué avec succès."
 
-#: src/user/mutations/verify-account.js:113
+#: src/user/mutations/verify-account.js:99
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
@@ -388,7 +388,7 @@ msgstr "Le numéro de téléphone a été vérifié avec succès, et la méthode
 msgid "Token value incorrect, please sign in again."
 msgstr "La valeur du jeton est incorrecte, veuillez vous connecter à nouveau."
 
-#: src/user/mutations/sign-in.js:74
+#: src/user/mutations/sign-in.js:76
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Trop de tentatives de connexion ont échoué, veuillez réinitialiser votre mot de passe et réessayer."
 
@@ -823,10 +823,13 @@ msgstr "Impossible d'envoyer l'email de vérification. Veuillez réessayer."
 msgid "Unable to set phone number, please try again."
 msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 
-#: src/user/mutations/sign-in.js:91
-#: src/user/mutations/sign-in.js:111
-#: src/user/mutations/sign-in.js:157
-#: src/user/mutations/sign-in.js:194
+#: src/user/mutations/sign-in.js:104
+#: src/user/mutations/sign-in.js:126
+#: src/user/mutations/sign-in.js:135
+#: src/user/mutations/sign-in.js:183
+#: src/user/mutations/sign-in.js:192
+#: src/user/mutations/sign-in.js:229
+#: src/user/mutations/sign-in.js:238
 msgid "Unable to sign in, please try again."
 msgstr "Impossible de se connecter, veuillez réessayer."
 
@@ -919,11 +922,10 @@ msgstr "Impossible de mettre à jour votre propre rôle."
 
 #: src/user/mutations/verify-account.js:53
 #: src/user/mutations/verify-account.js:71
-#: src/user/mutations/verify-account.js:85
 msgid "Unable to verify account. Please request a new email."
 msgstr "Impossible de vérifier le compte. Veuillez demander un nouvel e-mail."
 
-#: src/user/mutations/verify-account.js:103
+#: src/user/mutations/verify-account.js:89
 msgid "Unable to verify account. Please try again."
 msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 
