@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { string } from 'prop-types'
 import { Stack, SimpleGrid, Divider, useToast, Icon } from '@chakra-ui/core'
 import { useMutation, useQuery } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { QUERY_CURRENT_USER } from './graphql/queries'
 import { t, Trans } from '@lingui/macro'
 import EditableUserLanguage from './EditableUserLanguage'
@@ -17,7 +17,7 @@ import { TrackerButton } from './TrackerButton'
 import { SEND_EMAIL_VERIFICATION } from './graphql/mutations'
 
 export default function UserPage() {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
   const [emailSent, setEmailSent] = useState(false)
   const [sendEmailVerification, { error }] = useMutation(

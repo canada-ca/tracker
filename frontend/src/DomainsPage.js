@@ -22,7 +22,7 @@ import {
   IconButton,
 } from '@chakra-ui/core'
 import { PAGINATED_DOMAINS as FORWARD } from './graphql/queries'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -33,7 +33,7 @@ import { RelayPaginationControls } from './RelayPaginationControls'
 import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function DomainsPage() {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')

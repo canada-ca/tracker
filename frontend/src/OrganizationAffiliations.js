@@ -6,14 +6,14 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { ListOf } from './ListOf'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { UserCard } from './UserCard'
 
 export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const {
     loading,
     isLoadingMore,

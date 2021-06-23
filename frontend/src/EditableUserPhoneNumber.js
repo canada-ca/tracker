@@ -22,7 +22,7 @@ import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { object, number, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
@@ -31,7 +31,7 @@ import AuthenticateField from './AuthenticateField'
 
 function EditableUserPhoneNumber({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
   const initialFocusRef = useRef()
   const verifyRef = useRef()
@@ -160,7 +160,7 @@ function EditableUserPhoneNumber({ detailValue }) {
                 // Submit update detail mutation
                 await setPhoneNumber({
                   variables: {
-                    phoneNumber: ('+' + values.phoneNumber),
+                    phoneNumber: '+' + values.phoneNumber,
                   },
                 })
               }}

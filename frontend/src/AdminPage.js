@@ -5,7 +5,7 @@ import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from './graphql/queries'
 import { useQuery } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { TrackerButton } from './TrackerButton'
@@ -13,7 +13,7 @@ import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
 
 export default function AdminPage() {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
   const toast = useToast()

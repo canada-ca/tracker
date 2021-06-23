@@ -3,7 +3,7 @@ import { Stack, useToast, Box, Heading } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { LoadingMessage } from './LoadingMessage'
 import { Formik } from 'formik'
 import { useHistory, Link as RouteLink } from 'react-router-dom'
@@ -14,9 +14,9 @@ import CreateOrganizationField from './CreateOrganizationField'
 import { i18n } from '@lingui/core'
 
 export default function CreateOrganizationPage() {
-  const { currentUser } = useUserState()
   const toast = useToast()
   const history = useHistory()
+  const { currentUser } = useUserVar()
 
   const validationSchema = object().shape({
     nameEN: string().required(i18n._(fieldRequirements.field.required.message)),

@@ -1,7 +1,7 @@
 import React from 'react'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { useLingui } from '@lingui/react'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { Trans, t } from '@lingui/macro'
 import sigEn from './images/goc-header-logo-en.svg'
 import sigFr from './images/goc-header-logo-fr.svg'
@@ -12,7 +12,7 @@ import { Link as RouteLink } from 'react-router-dom'
 
 export const TopBanner = (props) => {
   const { i18n } = useLingui()
-  const { isLoggedIn, logout } = useUserState()
+  const { isLoggedIn, logout } = useUserVar()
   const toast = useToast()
 
   return (
@@ -36,61 +36,61 @@ export const TopBanner = (props) => {
             />
           </Box>
 
-          <Box ml='auto'/>
+          <Box ml="auto" />
 
           {isLoggedIn() ? (
-           <TrackerButton
-            as={RouteLink}
-            to="/"
-            variant="primary hover"
-            mx={1}
-            px={3}
-            display={{ base: 'none', md: 'inline' }}
-            onClick={() => {
-              logout()
-              toast({
-               title: t`Sign Out.`,
-               description: t`You have successfully been signed out.`,
-               status: 'success',
-               duration: 9000,
-               isClosable: true,
-               position: 'top-left',
-              })
-            }}
-           >
-             <Trans>Sign Out</Trans>
-           </TrackerButton>
-         ) : (
-           <TrackerButton
-             as={RouteLink}
-             variant="primary white"
-             to="/sign-in"
-             mx={1}
-             px={3}
-             display={{ base: 'none', md: 'inline' }}
-           >
-             <Trans>Sign In</Trans>
-           </TrackerButton>
-         )}
+            <TrackerButton
+              as={RouteLink}
+              to="/"
+              variant="primary hover"
+              mx={1}
+              px={3}
+              display={{ base: 'none', md: 'inline' }}
+              onClick={() => {
+                logout()
+                toast({
+                  title: t`Sign Out.`,
+                  description: t`You have successfully been signed out.`,
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                  position: 'top-left',
+                })
+              }}
+            >
+              <Trans>Sign Out</Trans>
+            </TrackerButton>
+          ) : (
+            <TrackerButton
+              as={RouteLink}
+              variant="primary white"
+              to="/sign-in"
+              mx={1}
+              px={3}
+              display={{ base: 'none', md: 'inline' }}
+            >
+              <Trans>Sign In</Trans>
+            </TrackerButton>
+          )}
 
-         {!isLoggedIn() && (
-           <TrackerButton
-             as={RouteLink}
-             variant="primary hover"
-             to="/create-user"
-             mx={1}
-             px={3}
-             display={{ base: 'none', md: 'inline' }}
-           >
-             <Trans>Create Account</Trans>
-           </TrackerButton>
-         )}
+          {!isLoggedIn() && (
+            <TrackerButton
+              as={RouteLink}
+              variant="primary hover"
+              to="/create-user"
+              mx={1}
+              px={3}
+              display={{ base: 'none', md: 'inline' }}
+            >
+              <Trans>Create Account</Trans>
+            </TrackerButton>
+          )}
 
-         <Box py={4}>
-           <LocaleSwitcher />
-         </Box>
+          <Box py={4}>
+            <LocaleSwitcher />
+          </Box>
         </Flex>
       </Layout>
     </Flex>
-  );
+  )
 }

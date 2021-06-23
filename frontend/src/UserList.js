@@ -32,7 +32,7 @@ import {
   UPDATE_USER_ROLE,
 } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { Formik, useFormik } from 'formik'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
@@ -45,7 +45,7 @@ import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const [addedUserName, setAddedUserName] = useState()
   const [selectedRemoveUser, setSelectedRemoveUser] = useState()
 

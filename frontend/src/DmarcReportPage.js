@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { useQuery } from '@apollo/client'
 import {
   DMARC_REPORT_GRAPH,
@@ -32,7 +32,7 @@ import { useDocumentTitle } from './useDocumentTitle'
 import { Layout } from './Layout'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
   const { i18n } = useLingui()

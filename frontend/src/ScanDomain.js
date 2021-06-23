@@ -10,11 +10,11 @@ import { LoadingMessage } from './LoadingMessage'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string } from 'yup'
 import DomainField from './DomainField'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 
 export function ScanDomain() {
   const toast = useToast()
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const validationSchema = object().shape({
     domain: string().required(
       i18n._(fieldRequirements.domainUrl.required.message),

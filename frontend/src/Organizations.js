@@ -17,7 +17,7 @@ import {
   Text,
 } from '@chakra-ui/core'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from './graphql/queries'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -32,7 +32,7 @@ export default function Organisations() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(10)
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)

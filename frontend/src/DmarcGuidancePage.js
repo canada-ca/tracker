@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
 import {
@@ -23,7 +23,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
 
 export default function DmarcGuidancePage() {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const { domainSlug } = useParams()
 
   useDocumentTitle(`${domainSlug}`)
@@ -56,7 +56,7 @@ export default function DmarcGuidancePage() {
   const dmarcPhase = data.findDomainByDomain.dmarcPhase
 
   return (
-    <Stack spacing="25px" mb="6" px="4" mx="auto" minW='100%'>
+    <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
       <PseudoBox d={{ md: 'flex' }}>
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}

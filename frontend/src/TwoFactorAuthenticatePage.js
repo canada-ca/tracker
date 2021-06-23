@@ -6,7 +6,7 @@ import { Box, Heading, useToast, Stack } from '@chakra-ui/core'
 import { useHistory, useParams, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { AUTHENTICATE } from './graphql/mutations'
 import AuthenticateField from './AuthenticateField'
 import { fieldRequirements } from './fieldRequirements'
@@ -16,7 +16,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function TwoFactorAuthenticatePage() {
-  const { login } = useUserState()
+  const { login } = useUserVar()
   const history = useHistory()
   const location = useLocation()
   const toast = useToast()

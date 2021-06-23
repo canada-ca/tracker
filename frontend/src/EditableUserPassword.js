@@ -21,7 +21,7 @@ import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { UPDATE_USER_PASSWORD } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
@@ -30,7 +30,7 @@ import { TrackerButton } from './TrackerButton'
 
 function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
   const initialFocusRef = useRef()
 

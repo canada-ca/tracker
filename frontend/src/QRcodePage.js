@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { Box, Stack, Text, Button } from '@chakra-ui/core'
 import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { GENERATE_OTP_URL } from './graphql/queries'
 import QRCode from 'qrcode.react'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -11,7 +11,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 
 export default function QRcodePage() {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const history = useHistory()
 
   // This function generates the URL when the page loads

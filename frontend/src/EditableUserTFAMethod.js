@@ -14,7 +14,7 @@ import { t, Trans } from '@lingui/macro'
 import { Formik, Field } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { TrackerButton } from './TrackerButton'
 
 function EditableUserTFAMethod({
@@ -22,7 +22,7 @@ function EditableUserTFAMethod({
   emailValidated,
   phoneValidated,
 }) {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(

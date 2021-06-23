@@ -5,7 +5,7 @@ import { object, string } from 'yup'
 import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { SIGN_UP } from './graphql/mutations'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import EmailField from './EmailField'
 import PasswordConfirmation from './PasswordConfirmation'
 import LanguageSelect from './LanguageSelect'
@@ -16,10 +16,10 @@ import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { activate } from './i18n.config'
-import { TermsConditionsPage } from  './TermsConditionsPage'
+import { TermsConditionsPage } from './TermsConditionsPage'
 
 export default function CreateUserPage() {
-  const { login } = useUserState()
+  const { login } = useUserVar()
   const history = useHistory()
   const toast = useToast()
   const userOrgToken = useParams().userOrgToken || ''
@@ -155,7 +155,14 @@ export default function CreateUserPage() {
 
             <LanguageSelect name="lang" width="100%" mb="4" />
 
-            <Box overflow='scroll' height='20em' border="1px" borderColor="gray.200" p={4} m={4}>
+            <Box
+              overflow="scroll"
+              height="20em"
+              border="1px"
+              borderColor="gray.200"
+              p={4}
+              m={4}
+            >
               <TermsConditionsPage />
             </Box>
 

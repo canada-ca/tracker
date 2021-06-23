@@ -3,21 +3,21 @@ import { Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset } from '@chakra-ui/core'
+import { CSSReset, Flex, Link } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 // import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
-import { useUserState } from './UserState'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
 import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
+import { useUserVar } from './useUserVar'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -42,7 +42,8 @@ const CreateOrganizationPage = lazy(() => import('./CreateOrganizationPage'))
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
-  const { currentUser, isLoggedIn } = useUserState()
+
+  const { currentUser, isLoggedIn } = useUserVar()
 
   return (
     <>
@@ -198,9 +199,7 @@ export default function App() {
         </Main>
         <FloatingMenu />
 
-        <Footer
-          display={{ base: 'none', md: 'inline' }}
-        >
+        <Footer display={{ base: 'none', md: 'inline' }}>
           <div>
             <Link
               isExternal={true}

@@ -33,7 +33,7 @@ import {
   array as yupArray,
 } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
@@ -44,7 +44,7 @@ import { AdminDomainModal } from './AdminDomainModal'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const toast = useToast()
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()

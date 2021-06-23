@@ -15,7 +15,7 @@ import {
   Icon,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { useParams, Link as RouteLink } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -27,7 +27,7 @@ import { useDocumentTitle } from './useDocumentTitle'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
 
   useDocumentTitle(`${orgSlug}`)

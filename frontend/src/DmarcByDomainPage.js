@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
 import {
   Box,
@@ -28,7 +28,7 @@ import { useDebouncedFunction } from './useDebouncedFunction'
 import { Link as RouteLink } from 'react-router-dom'
 
 export default function DmarcByDomainPage() {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const { i18n } = useLingui()
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState('LAST30DAYS')

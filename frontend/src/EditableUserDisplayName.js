@@ -23,14 +23,14 @@ import { i18n } from '@lingui/core'
 import DisplayNameField from './DisplayNameField'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 import { TrackerButton } from './TrackerButton'
 
 function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
   const initialFocusRef = useRef()
 

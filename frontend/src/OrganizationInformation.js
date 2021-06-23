@@ -22,7 +22,7 @@ import {
 import { func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { ORGANIZATION_INFORMATION } from './graphql/queries'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 import { LoadingMessage } from './LoadingMessage'
 import { t, Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -39,7 +39,7 @@ export default function OrganizationInformation({
   removeOrgCallback: setSelectedOrg,
   ...props
 }) {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
   const {
     isOpen: isRemovalOpen,

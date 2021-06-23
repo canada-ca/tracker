@@ -25,7 +25,7 @@ import { Field, Formik, FieldArray } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
 import { UPDATE_DOMAIN, CREATE_DOMAIN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserState } from './UserState'
+import { useUserVar } from './useUserVar'
 
 export function AdminDomainModal({
   isOpen,
@@ -38,7 +38,7 @@ export function AdminDomainModal({
   orgSlug,
   mutation,
 }) {
-  const { currentUser } = useUserState()
+  const { currentUser } = useUserVar()
   const toast = useToast()
   const initialFocusRef = useRef()
 
