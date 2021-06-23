@@ -64,11 +64,11 @@ describe('<App/>', () => {
             </UserStateProvider>
           </MockedProvider>,
         )
-        const domains = await waitFor(() =>
+        const signIn = await waitFor(() =>
           getByText(/Sign in with your username and password./i),
         )
         await waitFor(() => {
-          expect(domains).toBeInTheDocument()
+          expect(signIn).toBeInTheDocument()
         })
       })
     })

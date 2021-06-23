@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from 'react'
-import { Switch } from 'react-router-dom'
+import React, { lazy, Suspense, useEffect } from 'react'
+import { Switch, useHistory, useLocation } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -18,6 +18,9 @@ import { FloatingMenu } from './FloatingMenu'
 import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
+import { useMutation } from '@apollo/client'
+import { REFRESH_TOKENS } from './graphql/mutations'
+import { activate } from './i18n.config'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -42,7 +45,51 @@ const CreateOrganizationPage = lazy(() => import('./CreateOrganizationPage'))
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
-  const { currentUser, isLoggedIn } = useUserState()
+  const { currentUser, isLoggedIn, login } = useUserState()
+  const history = useHistory()
+  const location = useLocation()
+  const localStorage = window.localStorage
+  const { from } = location.state || { from: { pathname: '/' } }
+
+  const [refreshTokens, { loading }] = useMutation(REFRESH_TOKENS, {
+    onError(error) {
+      console.error(error.message)
+    },
+    onCompleted({ refreshTokens }) {
+      if (refreshTokens.result.__typename === 'AuthResult') {
+        login({
+          jwt: refreshTokens.result.authToken,
+          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
+          userName: refreshTokens.result.user.userName,
+        })
+        localStorage.setItem('authToken', refreshTokens.result.authToken)
+        localStorage.setItem('refreshToken', refreshTokens.result.refreshToken)
+        if (refreshTokens.result.user.preferredLang === 'ENGLISH')
+          activate('en')
+        else if (refreshTokens.result.user.preferredLang === 'FRENCH')
+          activate('fr')
+        // redirect to current page.
+        history.push(from)
+      }
+      // Non server side error occurs
+      else if (refreshTokens.result.__typename === 'AuthenticateError')
+        console.log('Unable to sign in to your account, please try again.')
+      else console.log('Incorrect refreshTokens.result typename.')
+    },
+  })
+
+  useEffect(() => {
+    const oldAuth = localStorage.getItem('authToken')
+    const oldRefresh = localStorage.getItem('refreshToken')
+
+    oldAuth &&
+      oldRefresh &&
+      refreshTokens({
+        variables: { authToken: oldAuth, refreshToken: oldRefresh },
+      })
+  }, [localStorage, refreshTokens])
+
+  if (loading) return <LoadingMessage />
 
   return (
     <>
@@ -198,9 +245,7 @@ export default function App() {
         </Main>
         <FloatingMenu />
 
-        <Footer
-          display={{ base: 'none', md: 'inline' }}
-        >
+        <Footer display={{ base: 'none', md: 'inline' }}>
           <div>
             <Link
               isExternal={true}

@@ -21,6 +21,7 @@ export default function SignInPage() {
   const history = useHistory()
   const location = useLocation()
   const toast = useToast()
+  const localStorage = window.localStorage
 
   const { from } = location.state || { from: { pathname: '/' } }
 
@@ -47,12 +48,13 @@ export default function SignInPage() {
     onCompleted({ signIn }) {
       // 2FA not enabled
       if (signIn.result.__typename === 'AuthResult') {
-        console.log(signIn.result?.refreshToken)
         login({
           jwt: signIn.result.authToken,
           tfaSendMethod: signIn.result.user.tfaSendMethod,
           userName: signIn.result.user.userName,
         })
+        localStorage.setItem('authToken', signIn.result.authToken)
+        localStorage.setItem('refreshToken', signIn.result.refreshToken)
         if (signIn.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signIn.result.user.preferredLang === 'FRENCH') activate('fr')
         // redirect to the home page.

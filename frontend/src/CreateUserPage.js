@@ -23,6 +23,7 @@ export default function CreateUserPage() {
   const history = useHistory()
   const toast = useToast()
   const userOrgToken = useParams().userOrgToken || ''
+  const localStorage = window.localStorage
 
   const validationSchema = object().shape({
     email: string()
@@ -61,12 +62,13 @@ export default function CreateUserPage() {
     },
     onCompleted({ signUp }) {
       if (signUp.result.__typename === 'AuthResult') {
-        console.log(signUp.result?.refreshToken)
         login({
           jwt: signUp.result.authToken,
           tfaSendMethod: signUp.result.user.tfaSendMethod,
           userName: signUp.result.user.userName,
         })
+        localStorage.setItem('authToken', signUp.result.authToken)
+        localStorage.setItem('refreshToken', signUp.result.refreshToken)
         if (signUp.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signUp.result.user.preferredLang === 'FRENCH') activate('fr')
         // redirect to the home page.

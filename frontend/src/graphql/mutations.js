@@ -515,16 +515,18 @@ export const REFRESH_TOKENS = gql`
         ... on AuthResult {
           authToken
           refreshToken
-          __typename
+          user {
+            id
+            userName
+            tfaSendMethod
+            preferredLang
+          }
         }
         ... on AuthenticateError {
           code
           description
-          __typename
         }
-        __typename
       }
-      __typename
     }
   }
 `

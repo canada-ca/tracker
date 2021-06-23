@@ -23,6 +23,7 @@ export default function TwoFactorAuthenticatePage() {
   const { i18n } = useLingui()
   const { sendMethod, authenticateToken } = useParams()
   const { from } = location.state || { from: { pathname: '/' } }
+  const localStorage = window.localStorage
 
   const validationSchema = object().shape({
     twoFactorCode: number()
@@ -46,12 +47,13 @@ export default function TwoFactorAuthenticatePage() {
     onCompleted({ authenticate }) {
       // User successfully completes tfa validation
       if (authenticate.result.__typename === 'AuthResult') {
-        console.log(authenticate.result?.refreshToken)
         login({
           jwt: authenticate.result.authToken,
           tfaSendMethod: authenticate.result.user.tfaSendMethod,
           userName: authenticate.result.user.userName,
         })
+        localStorage.setItem('authToken', authenticate.result.authToken)
+        localStorage.setItem('refreshToken', authenticate.result.refreshToken)
         if (authenticate.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (authenticate.result.user.preferredLang === 'FRENCH')
           activate('fr')
