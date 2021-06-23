@@ -17,7 +17,7 @@ import { FloatingMenu } from './FloatingMenu'
 import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
-import { useUserVar } from './useUserVar'
+import { useUserVar } from './UserState'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))

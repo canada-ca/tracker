@@ -5,8 +5,9 @@ import { cleanup, render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -24,12 +25,8 @@ describe('<TopBanner />', () => {
   it('renders using the language prop correctly', () => {
     const { getByAltText } = render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{
-            userName: null,
-            jwt: null,
-            tfaSendMethod: null,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <MemoryRouter initialEntries={['/']}>
@@ -38,7 +35,7 @@ describe('<TopBanner />', () => {
               </I18nProvider>
             </MemoryRouter>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     expect(getByAltText('Symbol of the Government of Canada'))

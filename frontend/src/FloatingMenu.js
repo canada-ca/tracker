@@ -22,7 +22,7 @@ import { TrackerButton } from './TrackerButton'
 import { t, Trans } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
 import { useLingui } from '@lingui/react'
-import { useUserVar } from './useUserVar'
+import { useUserVar } from './UserState'
 
 export const FloatingMenu = () => {
   const { i18n } = useLingui()

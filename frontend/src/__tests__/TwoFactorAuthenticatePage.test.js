@@ -7,8 +7,9 @@ import TwoFactorAuthenticatePage from '../TwoFactorAuthenticatePage'
 import { AUTHENTICATE } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { createMemoryHistory } from 'history'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -24,8 +25,8 @@ describe('<TwoFactorAuthenticatePage />', () => {
   it('renders correctly', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -39,7 +40,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -54,12 +55,12 @@ describe('<TwoFactorAuthenticatePage />', () => {
         it('displays an error message', async () => {
           const { getByText } = render(
             <MockedProvider>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -75,7 +76,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
           const submitButton = getByText('Submit')
@@ -133,8 +134,12 @@ describe('<TwoFactorAuthenticatePage />', () => {
 
       const { container, getByRole } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -145,7 +150,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                 </Router>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

@@ -1,30 +1,47 @@
-import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
-
-import { UserState, UserStateProvider, useUserState } from '../UserState'
+import React, { useState } from 'react'
+import { render, waitFor } from '@testing-library/react'
+import { UserVarProvider, useUserVar } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
+import { makeVar, useReactiveVar } from '@apollo/client'
+import userEvent from '@testing-library/user-event'
 
-describe('useUserState()', () => {
+const UserStateExample = () => {
+  const { login, logout, currentUser, isLoggedIn } = useUserVar()
+  const [newJWT, setNewJWT] = useState('')
+
+  const newJWTHandler = (e) => {
+    setNewJWT(e.target.value)
+  }
+  return (
+    <div>
+      <p>Current JWT: {currentUser.jwt}</p>
+      <p>Is logged in: {isLoggedIn().toString()}</p>
+
+      <label htmlFor="jwt">New JWT: </label>
+      <input type="text" id="jwt" value={newJWT} onChange={newJWTHandler} />
+
+      <button onClick={() => login({ jwt: newJWT })}>Login</button>
+      <button onClick={logout}>Logout</button>
+    </div>
+  )
+}
+
+describe('UserVarProvider', () => {
   it('provides the UserState context via a Hook', async () => {
     let userState
 
     function Foo() {
-      const state = useUserState()
-      userState = state
+      userState = useUserVar()
       return <p>asdf</p>
     }
 
     render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{
-            userName: null,
-            jwt: null,
-            tfaSendMethod: null,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <Foo />
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() =>
@@ -38,184 +55,73 @@ describe('useUserState()', () => {
   })
 })
 
-describe('<UserStateProvider/>', () => {
-  describe('given an initial state', () => {
-    let initialState
-    beforeEach(() => {
-      initialState = {
-        userName: null,
-        jwt: null,
-        tfaSendMethod: null,
-      }
-    })
+describe('<UserVarProvider/>', () => {
+  it('is logged out - can login', () => {
+    const { getByText, getByRole } = render(
+      // MockedProvider is required as userState is capable of clearing apollo cache
+      <MockedProvider>
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+        >
+          <UserStateExample />
+        </UserVarProvider>
+      </MockedProvider>,
+    )
 
-    it('sets the currentUser and supplies functions to change user state', () => {
-      let providedState
+    const currentJWTParagraph = getByText(/Current JWT:/)
+    const isLoggedInParagraph = getByText(/Is logged in/)
+    const newJWTInput = getByRole('textbox', { name: /New JWT:/ })
+    const loginButton = getByRole('button', { name: /Login/ })
 
-      render(
-        <MockedProvider>
-          <UserStateProvider initialState={initialState}>
-            <UserState>
-              {(value) => {
-                providedState = value
-                return <p>{value.currentUser.userName}</p>
-              }}
-            </UserState>
-          </UserStateProvider>
-        </MockedProvider>,
-      )
-      expect(providedState).toMatchObject({
-        currentUser: { jwt: null, tfaSendMethod: null, userName: null },
-        isLoggedIn: expect.any(Function),
-        login: expect.any(Function),
-        logout: expect.any(Function),
-      })
-    })
+    const newJWTValue = 'some-new-JWT'
 
-    describe('state altering functions', () => {
-      describe('login()', () => {
-        it('sets the currentUser to the values provided', async () => {
-          const testUser = {
-            jwt: 'string',
-            tfaSendMethod: true,
-            userName: 'foo@example.com',
-          }
+    // Expect logged out
+    expect(currentJWTParagraph).toHaveTextContent(/^Current JWT:\s*$/)
+    expect(isLoggedInParagraph).toHaveTextContent(/false/)
 
-          const { getByTestId } = render(
-            <MockedProvider>
-              <UserStateProvider initialState={initialState}>
-                <UserState>
-                  {({ currentUser, login }) => {
-                    return (
-                      <div>
-                        <p data-testid="username">{currentUser.userName}</p>
-                        <button
-                          data-testid="loginbutton"
-                          onClick={() => login(testUser)}
-                        />
-                      </div>
-                    )
-                  }}
-                </UserState>
-              </UserStateProvider>
-            </MockedProvider>,
-          )
+    // Log in
+    userEvent.type(newJWTInput, newJWTValue)
+    userEvent.click(loginButton)
 
-          fireEvent.click(getByTestId('loginbutton'))
+    // Expect logged in
+    expect(currentJWTParagraph).toHaveTextContent(
+      new RegExp(`Current JWT: ${newJWTValue}`),
+    )
+    expect(isLoggedInParagraph).toHaveTextContent(/true/)
+  })
 
-          await waitFor(() => {
-            expect(getByTestId('username').innerHTML).toEqual('foo@example.com')
-          })
-        })
-      })
-      describe('logout()', () => {
-        it('sets the currentUser to initialState', async () => {
-          let currentUser, login, logout
+  it('is logged in - can logout', () => {
+    const defaultJWT = 'defaultJWT'
+    const { getByText, getByRole } = render(
+      // MockedProvider is required as userState is capable of clearing apollo cache
+      <MockedProvider>
+        <UserVarProvider
+          userVar={makeVar({
+            jwt: defaultJWT,
+            tfaSendMethod: null,
+            userName: null,
+          })}
+        >
+          <UserStateExample />
+        </UserVarProvider>
+      </MockedProvider>,
+    )
 
-          const testUser = {
-            jwt: 'string',
-            tfaSendMethod: true,
-            userName: 'foo@example.com',
-          }
+    const currentJWTParagraph = getByText(/Current JWT:/)
+    const isLoggedInParagraph = getByText(/Is logged in/)
+    const logoutButton = getByRole('button', { name: /Logout/ })
 
-          render(
-            <MockedProvider>
-              <UserStateProvider initialState={initialState}>
-                <UserState>
-                  {(state) => {
-                    const { currentUser: cu, login: li, logout: lo } = state
-                    currentUser = cu
-                    login = li
-                    logout = lo
-                    return <p data-testid="username">{cu.userName}</p>
-                  }}
-                </UserState>
-              </UserStateProvider>
-            </MockedProvider>,
-          )
+    // Expect logged in
+    expect(currentJWTParagraph).toHaveTextContent(
+      new RegExp(`Current JWT: ${defaultJWT}`),
+    )
+    expect(isLoggedInParagraph).toHaveTextContent(/true/)
 
-          await waitFor(() => login(testUser))
+    // Log out
+    userEvent.click(logoutButton)
 
-          await waitFor(() => {
-            expect(currentUser).toMatchObject(testUser)
-          })
-
-          await waitFor(() => logout())
-
-          await waitFor(() => {
-            expect(currentUser).toMatchObject(initialState)
-          })
-        })
-      })
-      describe('isLoggedIn()', () => {
-        it('returns true if currentUser object values differ from initialState', async () => {
-          const testUser = {
-            jwt: 'string',
-            tfaSendMethod: true,
-            userName: 'foo@example.com',
-          }
-
-          let isLoggedIn, login
-
-          render(
-            <MockedProvider>
-              <UserStateProvider initialState={initialState}>
-                <UserState>
-                  {(state) => {
-                    const { isLoggedIn: ili, login: li } = state
-                    isLoggedIn = ili
-                    login = li
-                    return (
-                      <p data-testid="username">{state.currentUser.userName}</p>
-                    )
-                  }}
-                </UserState>
-              </UserStateProvider>
-            </MockedProvider>,
-          )
-
-          await waitFor(() => login(testUser))
-
-          await waitFor(() => {
-            expect(isLoggedIn()).toEqual(true)
-          })
-        })
-
-        it('returns false if currentUser object values match initialState', async () => {
-          const testUser = {
-            jwt: 'string',
-            tfaSendMethod: true,
-            userName: 'foo@example.com',
-          }
-
-          let isLoggedIn, logout, login
-
-          render(
-            <MockedProvider>
-              <UserStateProvider initialState={initialState}>
-                <UserState>
-                  {(state) => {
-                    const { isLoggedIn: ili, login: li, logout: lo } = state
-                    isLoggedIn = ili
-                    login = li
-                    logout = lo
-                    return (
-                      <p data-testid="username">{state.currentUser.userName}</p>
-                    )
-                  }}
-                </UserState>
-              </UserStateProvider>
-            </MockedProvider>,
-          )
-
-          await waitFor(() => login(testUser))
-          await waitFor(() => logout())
-
-          await waitFor(() => {
-            expect(isLoggedIn()).toEqual(false)
-          })
-        })
-      })
-    })
+    // Expect logged out
+    expect(currentJWTParagraph).toHaveTextContent(/^Current JWT:\s*$/)
+    expect(isLoggedInParagraph).toHaveTextContent(/false/)
   })
 })

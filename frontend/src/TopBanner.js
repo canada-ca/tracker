@@ -1,7 +1,7 @@
 import React from 'react'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { useLingui } from '@lingui/react'
-import { useUserVar } from './useUserVar'
+import { useUserVar } from './UserState'
 import { t, Trans } from '@lingui/macro'
 import sigEn from './images/goc-header-logo-en.svg'
 import sigFr from './images/goc-header-logo-fr.svg'

@@ -7,10 +7,11 @@ import OrganizationInformation from '../OrganizationInformation'
 import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { ORGANIZATION_INFORMATION } from '../graphql/queries'
 import userEvent from '@testing-library/user-event'
 import { createCache } from '../client'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -109,8 +110,12 @@ describe('<OrganizationInformation />', () => {
       it('displays the organization information', async () => {
         const { queryByText, findByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -122,7 +127,7 @@ describe('<OrganizationInformation />', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 
@@ -134,8 +139,12 @@ describe('<OrganizationInformation />', () => {
       it('organization editing area is hidden', async () => {
         const { queryByText, findByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -147,7 +156,7 @@ describe('<OrganizationInformation />', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 
@@ -208,8 +217,12 @@ describe('<OrganizationInformation />', () => {
 
         const { getByText, getByRole, findByRole, findByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -221,7 +234,7 @@ describe('<OrganizationInformation />', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 
@@ -261,8 +274,12 @@ describe('<OrganizationInformation />', () => {
       it('blocks the user from removing until entering the org name', async () => {
         const { getByText, getByRole, findByRole } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -274,7 +291,7 @@ describe('<OrganizationInformation />', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 
@@ -311,12 +328,12 @@ describe('<OrganizationInformation />', () => {
           it('updates the organization', async () => {
             const { getByText, getByRole, findByRole, findByText } = render(
               <MockedProvider mocks={mocks} cache={createCache()}>
-                <UserStateProvider
-                  initialState={{
-                    userName: null,
+                <UserVarProvider
+                  userVar={makeVar({
                     jwt: null,
                     tfaSendMethod: null,
-                  }}
+                    userName: null,
+                  })}
                 >
                   <ThemeProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
@@ -328,7 +345,7 @@ describe('<OrganizationInformation />', () => {
                       </MemoryRouter>
                     </I18nProvider>
                   </ThemeProvider>
-                </UserStateProvider>
+                </UserVarProvider>
               </MockedProvider>,
             )
 
@@ -381,12 +398,12 @@ describe('<OrganizationInformation />', () => {
           it('shows user error toast', async () => {
             const { getByText, getByRole, findByRole, findByText } = render(
               <MockedProvider mocks={mocks} cache={createCache()}>
-                <UserStateProvider
-                  initialState={{
-                    userName: null,
+                <UserVarProvider
+                  userVar={makeVar({
                     jwt: null,
                     tfaSendMethod: null,
-                  }}
+                    userName: null,
+                  })}
                 >
                   <ThemeProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
@@ -398,7 +415,7 @@ describe('<OrganizationInformation />', () => {
                       </MemoryRouter>
                     </I18nProvider>
                   </ThemeProvider>
-                </UserStateProvider>
+                </UserVarProvider>
               </MockedProvider>,
             )
 

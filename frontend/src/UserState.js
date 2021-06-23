@@ -1,16 +1,23 @@
 import React, { useContext } from 'react'
 import { makeVar, useApolloClient, useReactiveVar } from '@apollo/client'
-import { object, node } from 'prop-types'
+import { node, func } from 'prop-types'
 
 const UserVarContext = React.createContext({})
-const { Provider, Consumer } = UserVarContext
+const { Provider } = UserVarContext
 
-export function UserVarProvider({ userVar = makeVar({}), children }) {
+export function UserVarProvider({
+  userVar = makeVar({ jwt: null, tfaSendMethod: null, userName: null }),
+  children,
+}) {
   const client = useApolloClient()
   const currentUser = useReactiveVar(userVar)
 
   const isLoggedIn = () => {
-    return Object.keys(currentUser).length > 0
+    return !!(
+      currentUser?.jwt ||
+      currentUser?.userName ||
+      currentUser?.tfaSendMethod
+    )
   }
 
   const login = (newUserState) => {
@@ -18,7 +25,7 @@ export function UserVarProvider({ userVar = makeVar({}), children }) {
   }
 
   const logout = async () => {
-    userVar({})
+    userVar({ jwt: null, userName: null, tfaSendMethod: null })
     await client.resetStore()
   }
 
@@ -33,10 +40,8 @@ export function UserVarProvider({ userVar = makeVar({}), children }) {
 }
 
 UserVarProvider.propTypes = {
-  userVar: object.isRequired,
+  userVar: func.isRequired,
   children: node.isRequired,
 }
-
-export const UserVar = Consumer
 
 export const useUserVar = () => useContext(UserVarContext)

@@ -58,7 +58,11 @@ export function createCache() {
 
 export const cache = createCache()
 
-export const currentUserVar = makeVar({})
+export const currentUserVar = makeVar({
+  jwt: null,
+  tfaSendMethod: null,
+  userName: null,
+})
 
 const httpLink = createHttpLink({
   uri: '/graphql',

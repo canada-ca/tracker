@@ -1,8 +1,8 @@
 import React from 'react'
-import {node} from 'prop-types'
-import {Redirect, useLocation} from 'react-router-dom'
-import {useUserVar} from './useUserVar'
-import {Page} from './Page'
+import { node } from 'prop-types'
+import { Redirect, useLocation } from 'react-router-dom'
+import { useUserVar } from './UserState'
+import { Page } from './Page'
 
 // A wrapper for <Page> that redirects to the login
 // screen if you're not yet authenticated.

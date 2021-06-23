@@ -11,7 +11,7 @@ import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
-import { useUserVar } from './useUserVar'
+import { useUserVar } from './UserState'
 import { useLingui } from '@lingui/react'
 import { activate } from './i18n.config'
 

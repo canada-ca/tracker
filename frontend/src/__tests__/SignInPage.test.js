@@ -7,8 +7,9 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -25,8 +26,12 @@ describe('<SignInPage />', () => {
     it('displays an error message', async () => {
       const { container, getByText } = render(
         <MockedProvider>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -35,7 +40,7 @@ describe('<SignInPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -55,8 +60,12 @@ describe('<SignInPage />', () => {
     it('displays an error message', async () => {
       const { container } = render(
         <MockedProvider>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -65,7 +74,7 @@ describe('<SignInPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -123,8 +132,12 @@ describe('<SignInPage />', () => {
 
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -133,7 +146,7 @@ describe('<SignInPage />', () => {
                   </Router>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 
@@ -204,8 +217,12 @@ describe('<SignInPage />', () => {
 
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -214,7 +231,7 @@ describe('<SignInPage />', () => {
                   </Router>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 
