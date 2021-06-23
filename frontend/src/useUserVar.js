@@ -2,8 +2,8 @@ import React, { useContext } from 'react'
 import { makeVar, useApolloClient, useReactiveVar } from '@apollo/client'
 import { object, node } from 'prop-types'
 
-const UserStateContext = React.createContext({})
-const { Provider, Consumer } = UserStateContext
+const UserVarContext = React.createContext({})
+const { Provider, Consumer } = UserVarContext
 
 export function UserVarProvider({ userVar = makeVar({}), children }) {
   const client = useApolloClient()
@@ -39,4 +39,4 @@ UserVarProvider.propTypes = {
 
 export const UserVar = Consumer
 
-export const useUserVar = () => useContext(UserStateContext)
+export const useUserVar = () => useContext(UserVarContext)
