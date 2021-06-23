@@ -70,7 +70,7 @@ const headersLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: currentUserVar().jwt,
+      ...(currentUserVar().jwt && { authorization: currentUserVar().jwt }),
       'Accept-Language': language,
     },
   }
