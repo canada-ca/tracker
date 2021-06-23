@@ -617,13 +617,8 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      affiliations(first: 1) {
+      affiliations {
         totalCount
-        edges {
-          node {
-            id
-          }
-        }
       }
     }
   }
