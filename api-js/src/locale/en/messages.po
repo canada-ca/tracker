@@ -380,7 +380,7 @@ msgstr "Successfully sent invitation to service, and organization email."
 msgid "Successfully verified organization: {0}."
 msgstr "Successfully verified organization: {0}."
 
-#: src/user/mutations/verify-phone-number.js:94
+#: src/user/mutations/verify-phone-number.js:118
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Successfully verified phone number, and set TFA send method to text."
 
@@ -392,11 +392,11 @@ msgstr "Token value incorrect, please sign in again."
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Too many failed login attempts, please reset your password, and try again."
 
-#: src/user/mutations/verify-phone-number.js:61
+#: src/user/mutations/verify-phone-number.js:63
 msgid "Two factor code is incorrect. Please try again."
 msgstr "Two factor code is incorrect. Please try again."
 
-#: src/user/mutations/verify-phone-number.js:48
+#: src/user/mutations/verify-phone-number.js:50
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "Two factor code length is incorrect. Please try again."
 
@@ -848,7 +848,8 @@ msgstr "Unable to sign up, please contact org admin for a new invite."
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
-#: src/user/mutations/verify-phone-number.js:79
+#: src/user/mutations/verify-phone-number.js:92
+#: src/user/mutations/verify-phone-number.js:103
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "Unable to two factor authenticate. Please try again."
 

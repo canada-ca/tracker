@@ -380,7 +380,7 @@ msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisatio
 msgid "Successfully verified organization: {0}."
 msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisation."
 
-#: src/user/mutations/verify-phone-number.js:94
+#: src/user/mutations/verify-phone-number.js:118
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Le numéro de téléphone a été vérifié avec succès, et la méthode d'envoi de la TFA a été réglée sur le texte."
 
@@ -392,11 +392,11 @@ msgstr "La valeur du jeton est incorrecte, veuillez vous connecter à nouveau."
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Trop de tentatives de connexion ont échoué, veuillez réinitialiser votre mot de passe et réessayer."
 
-#: src/user/mutations/verify-phone-number.js:61
+#: src/user/mutations/verify-phone-number.js:63
 msgid "Two factor code is incorrect. Please try again."
 msgstr "Le code à deux facteurs est incorrect. Veuillez réessayer."
 
-#: src/user/mutations/verify-phone-number.js:48
+#: src/user/mutations/verify-phone-number.js:50
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "La longueur du code à deux facteurs est incorrecte. Veuillez réessayer."
 
@@ -848,7 +848,8 @@ msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organ
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
-#: src/user/mutations/verify-phone-number.js:79
+#: src/user/mutations/verify-phone-number.js:92
+#: src/user/mutations/verify-phone-number.js:103
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "Impossible de s'authentifier par deux facteurs. Veuillez réessayer."
 
