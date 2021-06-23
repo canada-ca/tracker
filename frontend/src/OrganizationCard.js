@@ -61,7 +61,7 @@ export function OrganizationCard({
         as={!smallDevice ? RouteLink : ''}
         to={`${path}/${slug}`}
       >
-        <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
+        <Box flexShrink="0" width={{base:'100%', md:'30%', lg:'50%'}} mb={['2', '0']}>
           <Stack isInline align="center">
             <Text
               fontSize={['lg', 'md']}
