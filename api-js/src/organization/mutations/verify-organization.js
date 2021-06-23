@@ -98,8 +98,8 @@ export const verifyOrganization = new mutationWithClientMutationId({
     // Upsert new org details
     try {
       await trx.step(
-        async () =>
-          await query`
+        () =>
+          query`
             WITH organizations
             UPSERT { _key: ${orgKey} }
               INSERT ${currentOrg}
@@ -110,6 +110,28 @@ export const verifyOrganization = new mutationWithClientMutationId({
     } catch (err) {
       console.error(
         `Transaction error occurred while upserting verified org: ${orgKey}, err: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to verify organization. Please try again.`),
+      )
+    }
+
+    // Set all affiliation owner fields to false
+    try {
+      await trx.step(
+        () => query`
+          WITH affiliations, organizations, users
+          FOR v, e IN 1..1 OUTBOUND ${currentOrg._id} affiliations
+            UPSERT { _key: e._key }
+              INSERT { owner: false }
+              UPDATE { owner: false }
+              IN affiliations
+          RETURN e
+        `,
+      )
+    } catch (err) {
+      console.error(
+        `Trx step error occurred when clearing owners for org: ${orgKey}: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to verify organization. Please try again.`),
