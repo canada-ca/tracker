@@ -88,12 +88,11 @@ export function OrganizationCard({
           ml={{ md: 2 }}
           mr={{ md: 2 }}
           mb={['2', '0']}
+          align="center"
         >
-          <Stack isInline align="center">
-            <Text fontWeight="semibold">
-              <Trans>Services: {domainCount}</Trans>
-            </Text>
-          </Stack>
+          <Text fontWeight="semibold">
+            <Trans>Services: {domainCount}</Trans>
+          </Text>
         </Box>
         <Divider orientation="vertical" />
         <Box
