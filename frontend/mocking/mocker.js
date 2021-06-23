@@ -1,13 +1,15 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { addMocksToSchema } from '@graphql-tools/mock'
 import { getTypeNames } from './faked_schema'
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer, PubSub } from 'apollo-server'
 import faker from 'faker'
 import { connectionFromArray } from 'graphql-relay/lib/connection/arrayconnection'
 import { getStringOfDomains } from './helpers/getStringOfDomains'
 import { getDmarcTableResults } from './helpers/getDmarcTableResults'
 import { getDkimSelectors } from './helpers/getDkimSelectors'
 import { getCanadianLocation } from './helpers/getCanadianLocation'
+
+const pubsub = new PubSub()
 
 const schemaString = getTypeNames()
 
@@ -472,6 +474,8 @@ const getConnectionObject = (store, args, resolveInfo) => {
   }
 }
 
+const NEW_DKIM_DATA = 'NEW_DKIM_DATA'
+
 // Create a new schema with mocks and resolvers
 const schemaWithMocks = addMocksToSchema({
   schema,
@@ -514,6 +518,15 @@ const schemaWithMocks = addMocksToSchema({
       },
     },
     Mutation: {
+      requestScan: async (_, _args, _context, _resolveInfo) => {
+        // await pubsub.publish(DKIM_SCAN_DATA, {
+        //   dkimScanData: { results: { selector: 'SELECTOR' } },
+        // })
+
+        return {
+          status: 'Scan requested.',
+        }
+      },
       updateOrganization: (_, args, _context, _resolveInfo) => {
         Object.entries(args.input).forEach((entry) => {
           const [key, value] = entry
@@ -570,6 +583,11 @@ const schemaWithMocks = addMocksToSchema({
         if (obj.authToken) return 'AuthResult'
       },
     },
+    Subscription: {
+      dkimScanData: {
+        subscribe: (_, _args, _context) => pubsub.asyncIterator(NEW_DKIM_DATA),
+      },
+    },
   }),
 })
 
@@ -579,6 +597,9 @@ const server = new ApolloServer({
     const token = req.headers.authorization
 
     return { token }
+  },
+  subscriptions: {
+    path: '/subscriptions',
   },
 })
 

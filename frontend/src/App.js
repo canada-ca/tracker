@@ -198,9 +198,7 @@ export default function App() {
         </Main>
         <FloatingMenu />
 
-        <Footer
-          display={{ base: 'none', md: 'inline' }}
-        >
+        <Footer display={{ base: 'none', md: 'inline' }}>
           <div>
             <Link
               isExternal={true}
