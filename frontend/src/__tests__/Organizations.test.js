@@ -8,7 +8,6 @@ import Organizations from '../Organizations'
 import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
 
 const i18n = setupI18n({
@@ -118,20 +117,16 @@ describe('<Organisations />', () => {
 
       const { getByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={['/organizations']}
-                  initialIndex={0}
-                >
-                  <Organizations />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={['/organizations']}
+                initialIndex={0}
+              >
+                <Organizations />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -278,22 +273,18 @@ describe('<Organisations />', () => {
 
       const { getAllByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <Router history={history}>
-                  <Switch>
-                    <Route
-                      path="/organizations"
-                      render={() => <Organizations />}
-                    />
-                  </Switch>
-                </Router>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <Router history={history}>
+                <Switch>
+                  <Route
+                    path="/organizations"
+                    render={() => <Organizations />}
+                  />
+                </Switch>
+              </Router>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -409,22 +400,18 @@ describe('<Organisations />', () => {
 
         const { getByText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <Switch>
-                      <Route
-                        path="/organizations"
-                        render={() => <Organizations />}
-                      />
-                    </Switch>
-                  </Router>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <Switch>
+                    <Route
+                      path="/organizations"
+                      render={() => <Organizations />}
+                    />
+                  </Switch>
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
           </MockedProvider>,
         )
 
@@ -630,22 +617,18 @@ describe('<Organisations />', () => {
 
         const { queryByText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <Switch>
-                      <Route
-                        path="/organizations"
-                        render={() => <Organizations />}
-                      />
-                    </Switch>
-                  </Router>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <Switch>
+                    <Route
+                      path="/organizations"
+                      render={() => <Organizations />}
+                    />
+                  </Switch>
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
           </MockedProvider>,
         )
 

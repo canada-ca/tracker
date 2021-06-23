@@ -4,7 +4,6 @@ import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
 import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 import ForgotPasswordPage from '../ForgotPasswordPage'
@@ -44,24 +43,16 @@ describe('<ForgotPasswordPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={['/forgot-password']}
-                      initialIndex={0}
-                    >
-                      <ForgotPasswordPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter
+                    initialEntries={['/forgot-password']}
+                    initialIndex={0}
+                  >
+                    <ForgotPasswordPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -88,27 +79,23 @@ describe('<ForgotPasswordPage />', () => {
     it('successfully submits', async () => {
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={mocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={['/forgot-password']}
-                  initialIndex={0}
-                >
-                  <Router history={history}>
-                    <Switch>
-                      <Route
-                        path="/forgot-password"
-                        render={() => <ForgotPasswordPage />}
-                      />
-                    </Switch>
-                  </Router>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={['/forgot-password']}
+                initialIndex={0}
+              >
+                <Router history={history}>
+                  <Switch>
+                    <Route
+                      path="/forgot-password"
+                      render={() => <ForgotPasswordPage />}
+                    />
+                  </Switch>
+                </Router>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 

@@ -1,12 +1,11 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
-import { MemoryRouter, Route, Switch, Router } from 'react-router-dom'
+import { theme, ThemeProvider } from '@chakra-ui/core'
+import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
 import DmarcByDomainPage from '../DmarcByDomainPage'
 import { rawDmarcReportSummaryTableData } from '../fixtures/dmarcReportSummaryTable'
 import { createMemoryHistory } from 'history'
@@ -52,17 +51,13 @@ describe('<DmarcByDomainPage />', () => {
   it('renders page header', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <DmarcByDomainPage />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <DmarcByDomainPage />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/^DMARC Summaries$/i))
@@ -71,17 +66,13 @@ describe('<DmarcByDomainPage />', () => {
   it('renders date selector', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <DmarcByDomainPage />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <DmarcByDomainPage />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
       </MockedProvider>,
     )
     await waitFor(() => getByText(/Showing data for period:/i))
@@ -91,17 +82,13 @@ describe('<DmarcByDomainPage />', () => {
     it('renders summary table', async () => {
       const { getByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <DmarcByDomainPage />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <DmarcByDomainPage />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
       await waitFor(() => getByText(/Total Messages/i))
@@ -110,17 +97,13 @@ describe('<DmarcByDomainPage />', () => {
     it('displays domains', async () => {
       const { getByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <DmarcByDomainPage />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <DmarcByDomainPage />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
       await waitFor(() => {
@@ -136,24 +119,20 @@ describe('<DmarcByDomainPage />', () => {
 
       const { getByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <Router history={history}>
-                    <Switch>
-                      <Route
-                        path="/dmarc-summaries"
-                        render={() => <DmarcByDomainPage />}
-                      />
-                    </Switch>
-                  </Router>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <Router history={history}>
+                  <Switch>
+                    <Route
+                      path="/dmarc-summaries"
+                      render={() => <DmarcByDomainPage />}
+                    />
+                  </Switch>
+                </Router>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -170,17 +149,13 @@ describe('<DmarcByDomainPage />', () => {
       it('next button goes to next page', async () => {
         const { getByText, queryByText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <DmarcByDomainPage />
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <DmarcByDomainPage />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
           </MockedProvider>,
         )
         // don't expect last domain
@@ -202,17 +177,13 @@ describe('<DmarcByDomainPage />', () => {
       it('increases items per page', async () => {
         const { queryByText, getByLabelText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <DmarcByDomainPage />
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <DmarcByDomainPage />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
           </MockedProvider>,
         )
 

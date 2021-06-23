@@ -6,7 +6,6 @@ import { MemoryRouter } from 'react-router-dom'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
 
 const i18n = setupI18n({
@@ -53,17 +52,13 @@ describe('<UserPage />', () => {
   it('renders without error', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserStateProvider
-          initialState={{ userName, jwt: 'string', tfaSendMethod: null }}
-        >
-          <MemoryRouter initialEntries={['/']}>
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <UserPage />
-              </I18nProvider>
-            </ThemeProvider>
-          </MemoryRouter>
-        </UserStateProvider>
+        <MemoryRouter initialEntries={['/']}>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <UserPage />
+            </I18nProvider>
+          </ThemeProvider>
+        </MemoryRouter>
       </MockedProvider>,
     )
     await waitFor(() => expect(queryByText(userName)).toBeInTheDocument())

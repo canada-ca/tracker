@@ -4,7 +4,6 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagList } from '../GuidanceTagList'
 import { MockedProvider } from '@apollo/client/testing'
@@ -39,23 +38,19 @@ describe('<GuidanceTagList />', () => {
   it('renders negative guidance tags', async () => {
     const { getAllByText } = render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <GuidanceTagList
-                  negativeTags={negativeTags}
-                  neutralTags={neutralTags}
-                  positiveTags={positiveTags}
-                  selector={selector}
-                  categoryName={categoryName}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <GuidanceTagList
+                negativeTags={negativeTags}
+                neutralTags={neutralTags}
+                positiveTags={positiveTags}
+                selector={selector}
+                categoryName={categoryName}
+              />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/DKIM-missing/i))
@@ -63,23 +58,19 @@ describe('<GuidanceTagList />', () => {
   it('renders neutral guidance tags', async () => {
     const { getAllByText } = render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <GuidanceTagList
-                  negativeTags={negativeTags}
-                  neutralTags={neutralTags}
-                  positiveTags={positiveTags}
-                  selector={selector}
-                  categoryName={categoryName}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <GuidanceTagList
+                negativeTags={negativeTags}
+                neutralTags={neutralTags}
+                positiveTags={positiveTags}
+                selector={selector}
+                categoryName={categoryName}
+              />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
       </MockedProvider>,
     )
     await waitFor(() =>
@@ -89,23 +80,19 @@ describe('<GuidanceTagList />', () => {
   it('renders positive guidance tags', async () => {
     const { getAllByText } = render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <GuidanceTagList
-                  negativeTags={negativeTags}
-                  neutralTags={neutralTags}
-                  positiveTags={positiveTags}
-                  selector={selector}
-                  categoryName={categoryName}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <GuidanceTagList
+                negativeTags={negativeTags}
+                neutralTags={neutralTags}
+                positiveTags={positiveTags}
+                selector={selector}
+                categoryName={categoryName}
+              />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
       </MockedProvider>,
     )
     await waitFor(() =>

@@ -7,7 +7,6 @@ import CreateUserPage from '../CreateUserPage'
 import { SIGN_UP } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -43,22 +42,18 @@ describe('<CreateUserPage />', () => {
   it('renders', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={mocks}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/create-user/invited-token-test']}
-                initialIndex={0}
-              >
-                <Route path="/create-user/:userOrgToken?">
-                  <CreateUserPage />
-                </Route>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter
+              initialEntries={['/create-user/invited-token-test']}
+              initialIndex={0}
+            >
+              <Route path="/create-user/:userOrgToken?">
+                <CreateUserPage />
+              </Route>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
       </MockedProvider>,
     )
 
@@ -73,22 +68,18 @@ describe('<CreateUserPage />', () => {
     it('displays a notification', async () => {
       const { queryByText } = render(
         <MockedProvider mocks={mocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={['/create-user/invited-token-test']}
-                  initialIndex={0}
-                >
-                  <Route path="/create-user/:userOrgToken?">
-                    <CreateUserPage />
-                  </Route>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={['/create-user/invited-token-test']}
+                initialIndex={0}
+              >
+                <Route path="/create-user/:userOrgToken?">
+                  <CreateUserPage />
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -108,21 +99,13 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -142,21 +125,13 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -178,21 +153,13 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -215,21 +182,13 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -250,21 +209,13 @@ describe('<CreateUserPage />', () => {
         it('displays required message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -282,21 +233,13 @@ describe('<CreateUserPage />', () => {
         it('displays error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -321,21 +264,13 @@ describe('<CreateUserPage />', () => {
         it('displays password length message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -362,21 +297,13 @@ describe('<CreateUserPage />', () => {
         it('displays matching error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <CreateUserPage />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <CreateUserPage />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -403,17 +330,13 @@ describe('<CreateUserPage />', () => {
     it('fails to create account', async () => {
       const { container, getByText } = render(
         <MockedProvider mocks={mocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <CreateUserPage />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <CreateUserPage />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 

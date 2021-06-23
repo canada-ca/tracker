@@ -1,16 +1,15 @@
 import React from 'react'
 import UserList from '../UserList'
 import {
-  UPDATE_USER_ROLE,
   INVITE_USER_TO_ORG,
   REMOVE_USER_FROM_ORG,
+  UPDATE_USER_ROLE,
 } from '../graphql/mutations'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
 import { createCache } from '../client'
@@ -113,26 +112,18 @@ describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
     const { getByText } = render(
       <MockedProvider mocks={successMocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <UserList
-                  permission={'SUPER_ADMIN'}
-                  usersPerPage={10}
-                  orgSlug={'test-org.slug'}
-                  orgId={rawOrgUserListData.findOrganizationBySlug.id}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']}>
+              <UserList
+                permission={'SUPER_ADMIN'}
+                usersPerPage={10}
+                orgSlug={'test-org.slug'}
+                orgId={rawOrgUserListData.findOrganizationBySlug.id}
+              />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
       </MockedProvider>,
     )
 
@@ -159,24 +150,16 @@ describe('<UserList />', () => {
         findAllByLabelText,
       } = render(
         <MockedProvider mocks={successMocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testadmin@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <UserList
-                  permission={'SUPER_ADMIN'}
-                  usersPerPage={10}
-                  orgSlug={'test-org.slug'}
-                  orgId={rawOrgUserListData.findOrganizationBySlug.id}
-                />
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <UserList
+                permission={'SUPER_ADMIN'}
+                usersPerPage={10}
+                orgSlug={'test-org.slug'}
+                orgId={rawOrgUserListData.findOrganizationBySlug.id}
+              />
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -217,26 +200,18 @@ describe('<UserList />', () => {
     it('successfully invites user to org', async () => {
       const { getByText, getByLabelText } = render(
         <MockedProvider mocks={successMocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']}>
-                  <UserList
-                    permission={'SUPER_ADMIN'}
-                    usersPerPage={10}
-                    orgSlug={'test-org.slug'}
-                    orgId={rawOrgUserListData.findOrganizationBySlug.id}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
+                <UserList
+                  permission={'SUPER_ADMIN'}
+                  usersPerPage={10}
+                  orgSlug={'test-org.slug'}
+                  orgId={rawOrgUserListData.findOrganizationBySlug.id}
+                />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -256,26 +231,18 @@ describe('<UserList />', () => {
     it('successfully removes user from org', async () => {
       const { getAllByLabelText, queryByText, getByText } = render(
         <MockedProvider mocks={successMocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']}>
-                  <UserList
-                    permission={'SUPER_ADMIN'}
-                    usersPerPage={10}
-                    orgSlug={'test-org.slug'}
-                    orgId={rawOrgUserListData.findOrganizationBySlug.id}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
+                <UserList
+                  permission={'SUPER_ADMIN'}
+                  usersPerPage={10}
+                  orgSlug={'test-org.slug'}
+                  orgId={rawOrgUserListData.findOrganizationBySlug.id}
+                />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 

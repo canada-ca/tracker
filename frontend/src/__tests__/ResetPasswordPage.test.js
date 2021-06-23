@@ -5,7 +5,6 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
 import ResetPasswordPage from '../ResetPasswordPage'
 import { RESET_PASSWORD } from '../graphql/mutations'
 
@@ -73,28 +72,20 @@ describe('<ResetPasswordPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={successMocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                      ]}
-                      initialIndex={0}
-                    >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter
+                    initialEntries={[
+                      '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                    ]}
+                    initialIndex={0}
+                  >
+                    <Route path="/reset-password/:resetToken">
+                      <ResetPasswordPage />
+                    </Route>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -114,28 +105,20 @@ describe('<ResetPasswordPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={successMocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
-                  jwt: null,
-                  tfaSendMethod: null,
-                }}
-              >
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                      ]}
-                      initialIndex={0}
-                    >
-                      <Route path="/reset-password/:resetToken">
-                        <ResetPasswordPage />
-                      </Route>
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
-              </UserStateProvider>
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter
+                    initialEntries={[
+                      '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                    ]}
+                    initialIndex={0}
+                  >
+                    <Route path="/reset-password/:resetToken">
+                      <ResetPasswordPage />
+                    </Route>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
             </MockedProvider>,
           )
 
@@ -155,24 +138,20 @@ describe('<ResetPasswordPage />', () => {
     it('succeeds in reseting the password', async () => {
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={successMocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/reset-password/:resetToken">
-                    <ResetPasswordPage />
-                  </Route>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={[
+                  '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                ]}
+                initialIndex={0}
+              >
+                <Route path="/reset-password/:resetToken">
+                  <ResetPasswordPage />
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -191,24 +170,20 @@ describe('<ResetPasswordPage />', () => {
     it('fails in reseting the password', async () => {
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={failMocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/reset-password/:resetToken">
-                    <ResetPasswordPage />
-                  </Route>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={[
+                  '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                ]}
+                initialIndex={0}
+              >
+                <Route path="/reset-password/:resetToken">
+                  <ResetPasswordPage />
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 

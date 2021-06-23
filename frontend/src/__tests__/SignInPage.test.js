@@ -7,7 +7,6 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 
 const i18n = setupI18n({
@@ -25,17 +24,13 @@ describe('<SignInPage />', () => {
     it('displays an error message', async () => {
       const { container, getByText } = render(
         <MockedProvider>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <SignInPage />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <SignInPage />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -55,17 +50,13 @@ describe('<SignInPage />', () => {
     it('displays an error message', async () => {
       const { container } = render(
         <MockedProvider>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <SignInPage />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <SignInPage />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
         </MockedProvider>,
       )
 
@@ -123,17 +114,13 @@ describe('<SignInPage />', () => {
 
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <SignInPage />
-                  </Router>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <SignInPage />
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
           </MockedProvider>,
         )
 
@@ -204,17 +191,13 @@ describe('<SignInPage />', () => {
 
         const { container, getByRole } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-            >
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <Router history={history}>
-                    <SignInPage />
-                  </Router>
-                </I18nProvider>
-              </ThemeProvider>
-            </UserStateProvider>
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <SignInPage />
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
           </MockedProvider>,
         )
 
