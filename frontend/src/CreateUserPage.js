@@ -16,7 +16,7 @@ import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { activate } from './i18n.config'
-import { TermsConditionsPage } from  './TermsConditionsPage'
+import { TermsConditionsPage } from './TermsConditionsPage'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -61,6 +61,7 @@ export default function CreateUserPage() {
     },
     onCompleted({ signUp }) {
       if (signUp.result.__typename === 'AuthResult') {
+        console.log(signUp.result?.refreshToken)
         login({
           jwt: signUp.result.authToken,
           tfaSendMethod: signUp.result.user.tfaSendMethod,
@@ -155,7 +156,14 @@ export default function CreateUserPage() {
 
             <LanguageSelect name="lang" width="100%" mb="4" />
 
-            <Box overflow='scroll' height='20em' border="1px" borderColor="gray.200" p={4} m={4}>
+            <Box
+              overflow="scroll"
+              height="20em"
+              border="1px"
+              borderColor="gray.200"
+              p={4}
+              m={4}
+            >
               <TermsConditionsPage />
             </Box>
 

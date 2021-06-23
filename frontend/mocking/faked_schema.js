@@ -2231,6 +2231,9 @@ export const getTypeNames = () => gql`
     # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
     authenticate(input: AuthenticateInput!): AuthenticatePayload
 
+    # This mutation allows users to give their current auth token, and refresh token, and receive a freshly updated auth token.
+    refreshTokens(input: RefreshTokensInput!): RefreshTokensPayload
+
     # This mutation allows for users to remove a phone number from their account.
     removePhoneNumber(input: RemovePhoneNumberInput!): RemovePhoneNumberPayload
 
@@ -2645,6 +2648,9 @@ export const getTypeNames = () => gql`
     # JWT used for accessing controlled content.
     authToken: String
 
+    # JWT used to refresh authentication token.
+    refreshToken: String
+
     # User that has just been created or signed in.
     user: PersonalUser
   }
@@ -2664,6 +2670,24 @@ export const getTypeNames = () => gql`
 
     # The JWT that is retrieved from the sign in mutation.
     authenticateToken: String!
+    clientMutationId: String
+  }
+
+  type RefreshTokensPayload {
+    # Refresh tokens union returning either a 'authResult' or 'authenticateError' object.
+    result: RefreshTokensUnion
+    clientMutationId: String
+  }
+
+  # This union is used with the 'refreshTokens' mutation, allowing for the user to refresh their tokens, and support any errors that may occur
+  union RefreshTokensUnion = AuthResult | AuthenticateError
+
+  input RefreshTokensInput {
+    # The users current authentication token.
+    authToken: String!
+
+    # The users current refresh token.
+    refreshToken: String!
     clientMutationId: String
   }
 

@@ -506,4 +506,27 @@ export const UPDATE_ORGANIZATION = gql`
   }
 `
 
+export const REFRESH_TOKENS = gql`
+  mutation RefreshTokens($authToken: String!, $refreshToken: String!) {
+    refreshTokens(
+      input: { authToken: $authToken, refreshToken: $refreshToken }
+    ) {
+      result {
+        ... on AuthResult {
+          authToken
+          refreshToken
+          __typename
+        }
+        ... on AuthenticateError {
+          code
+          description
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+  }
+`
+
 export default ''

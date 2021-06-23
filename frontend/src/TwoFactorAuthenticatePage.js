@@ -46,6 +46,7 @@ export default function TwoFactorAuthenticatePage() {
     onCompleted({ authenticate }) {
       // User successfully completes tfa validation
       if (authenticate.result.__typename === 'AuthResult') {
+        console.log(authenticate.result?.refreshToken)
         login({
           jwt: authenticate.result.authToken,
           tfaSendMethod: authenticate.result.user.tfaSendMethod,

@@ -5,6 +5,7 @@ export const Authorization = {
     requiredFields: gql`
       fragment RequiredAuthResultFields on AuthResult {
         authToken
+        refreshToken
         user {
           id
           userName

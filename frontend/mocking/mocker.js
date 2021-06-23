@@ -53,6 +53,7 @@ const mocks = {
     ]),
   AuthResult: () => ({
     authToken: faker.datatype.uuid(),
+    refreshToken: faker.datatype.uuid(),
   }),
   CategoryPercentages: () => {
     let maxNumber = 100
@@ -555,6 +556,7 @@ const schemaWithMocks = addMocksToSchema({
         return {
           result: {
             authToken: uuid,
+            refreshToken: uuid,
             user,
           },
         }

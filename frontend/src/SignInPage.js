@@ -47,6 +47,7 @@ export default function SignInPage() {
     onCompleted({ signIn }) {
       // 2FA not enabled
       if (signIn.result.__typename === 'AuthResult') {
+        console.log(signIn.result?.refreshToken)
         login({
           jwt: signIn.result.authToken,
           tfaSendMethod: signIn.result.user.tfaSendMethod,
@@ -54,9 +55,9 @@ export default function SignInPage() {
         })
         if (signIn.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signIn.result.user.preferredLang === 'FRENCH') activate('fr')
-        // // redirect to the home page.
+        // redirect to the home page.
         history.push(from)
-        // // Display a welcome message
+        // Display a welcome message
         toast({
           title: i18n._(t`Sign In.`),
           description: i18n._(t`Welcome, you are successfully signed in!`),
@@ -141,7 +142,7 @@ export default function SignInPage() {
               variant="primary"
               isLoading={isSubmitting}
               type="submit"
-              width='100%'
+              width="100%"
               mb={5}
             >
               <Trans>Sign In</Trans>
