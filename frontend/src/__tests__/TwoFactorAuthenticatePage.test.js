@@ -7,6 +7,7 @@ import TwoFactorAuthenticatePage from '../TwoFactorAuthenticatePage'
 import { AUTHENTICATE } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { createMemoryHistory } from 'history'
 
 const i18n = setupI18n({
@@ -23,18 +24,22 @@ describe('<TwoFactorAuthenticatePage />', () => {
   it('renders correctly', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter
-              initialEntries={['/authenticate/phone/authenticate-token-test']}
-              initialIndex={0}
-            >
-              <Route path="/authenticate/:sendMethod/:authenticateToken">
-                <TwoFactorAuthenticatePage />
-              </Route>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={['/authenticate/phone/authenticate-token-test']}
+                initialIndex={0}
+              >
+                <Route path="/authenticate/:sendMethod/:authenticateToken">
+                  <TwoFactorAuthenticatePage />
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
 
@@ -49,20 +54,28 @@ describe('<TwoFactorAuthenticatePage />', () => {
         it('displays an error message', async () => {
           const { getByText } = render(
             <MockedProvider>
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter
-                    initialEntries={[
-                      '/authenticate/phone/authenticate-token-test',
-                    ]}
-                    initialIndex={0}
-                  >
-                    <Route path="/authenticate/:sendMethod/:authenticateToken">
-                      <TwoFactorAuthenticatePage />
-                    </Route>
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter
+                      initialEntries={[
+                        '/authenticate/phone/authenticate-token-test',
+                      ]}
+                      initialIndex={0}
+                    >
+                      <Route path="/authenticate/:sendMethod/:authenticateToken">
+                        <TwoFactorAuthenticatePage />
+                      </Route>
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
             </MockedProvider>,
           )
           const submitButton = getByText('Submit')
@@ -120,15 +133,19 @@ describe('<TwoFactorAuthenticatePage />', () => {
 
       const { container, getByRole } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <Router history={history}>
-                <Route path="/authenticate/:sendMethod/:authenticateToken">
-                  <TwoFactorAuthenticatePage />
-                </Route>
-              </Router>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <Route path="/authenticate/:sendMethod/:authenticateToken">
+                    <TwoFactorAuthenticatePage />
+                  </Route>
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 

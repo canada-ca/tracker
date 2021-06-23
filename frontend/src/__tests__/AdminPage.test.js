@@ -1,11 +1,12 @@
 import React from 'react'
+import { UserStateProvider } from '../UserState'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../graphql/queries'
 import AdminPage from '../AdminPage'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { waitFor, render, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 
 const i18n = setupI18n({
@@ -163,13 +164,21 @@ describe('<AdminPage />', () => {
   it('renders if user not an admin', async () => {
     const { getByText } = render(
       <MockedProvider mocks={empty} addTypename={false}>
-        <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
-            <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-              <AdminPage />
-            </MemoryRouter>
-          </ThemeProvider>
-        </I18nProvider>
+        <UserStateProvider
+          initialState={{
+            userName: 'me',
+            jwt: 'longstring',
+            tfaSendMethod: null,
+          }}
+        >
+          <I18nProvider i18n={i18n}>
+            <ThemeProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                <AdminPage />
+              </MemoryRouter>
+            </ThemeProvider>
+          </I18nProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
 
@@ -184,13 +193,21 @@ describe('<AdminPage />', () => {
   it('renders correctly', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
-            <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-              <AdminPage />
-            </MemoryRouter>
-          </ThemeProvider>
-        </I18nProvider>
+        <UserStateProvider
+          initialState={{
+            userName: 'me',
+            jwt: 'longstring',
+            tfaSendMethod: null,
+          }}
+        >
+          <I18nProvider i18n={i18n}>
+            <ThemeProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                <AdminPage />
+              </MemoryRouter>
+            </ThemeProvider>
+          </I18nProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
 
@@ -204,13 +221,21 @@ describe('<AdminPage />', () => {
     it('displays info for admin', async () => {
       const { getByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-                <AdminPage />
-              </MemoryRouter>
-            </ThemeProvider>
-          </I18nProvider>
+          <UserStateProvider
+            initialState={{
+              userName: 'me',
+              jwt: 'longstring',
+              tfaSendMethod: null,
+            }}
+          >
+            <I18nProvider i18n={i18n}>
+              <ThemeProvider theme={theme}>
+                <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                  <AdminPage />
+                </MemoryRouter>
+              </ThemeProvider>
+            </I18nProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 

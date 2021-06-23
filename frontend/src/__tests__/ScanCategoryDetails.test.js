@@ -5,6 +5,7 @@ import { render, waitFor } from '@testing-library/react'
 import ScanCategoryDetails from '../ScanCategoryDetails'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { MockedProvider } from '@apollo/client/testing'
 
@@ -33,16 +34,20 @@ describe('<ScanCategoryDetails />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
       <MockedProvider>
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <ScanCategoryDetails
-                categoryName={categoryName}
-                categoryData={categoryData}
-              />
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <ScanCategoryDetails
+                  categoryName={categoryName}
+                  categoryData={categoryData}
+                />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/HTTPS/i))

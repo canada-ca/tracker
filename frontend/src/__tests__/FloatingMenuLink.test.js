@@ -4,6 +4,7 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import { FloatingMenuLink } from '../FloatingMenuLink'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
@@ -22,13 +23,21 @@ describe('<FloatingMenuLink>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <MemoryRouter initialEntries={['/']}>
-          <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
-              <FloatingMenuLink to="/sign-in" text="Sign In" />
-            </ThemeProvider>
-          </I18nProvider>
-        </MemoryRouter>
+        <UserStateProvider
+          initialState={{
+            userName: 'testUserName@email.com',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <MemoryRouter initialEntries={['/']}>
+            <I18nProvider i18n={i18n}>
+              <ThemeProvider theme={theme}>
+                <FloatingMenuLink to="/sign-in" text="Sign In" />
+              </ThemeProvider>
+            </I18nProvider>
+          </MemoryRouter>
+        </UserStateProvider>
       </MockedProvider>,
     )
     await waitFor(() => expect(getByText(/Sign In/i)).toBeInTheDocument())
@@ -40,20 +49,28 @@ describe('<FloatingMenuLink>', () => {
 
       const { getByText } = render(
         <MockedProvider>
-          <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
-                <FloatingMenuLink to="/sign-in" text="Sign In" />
-                <Route
-                  path="*"
-                  render={({ _history, location }) => {
-                    wLocation = location
-                    return null
-                  }}
-                />
-              </ThemeProvider>
-            </I18nProvider>
-          </MemoryRouter>
+          <UserStateProvider
+            initialState={{
+              userName: 'testUserName@email.com',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <MemoryRouter initialEntries={['/']}>
+              <I18nProvider i18n={i18n}>
+                <ThemeProvider theme={theme}>
+                  <FloatingMenuLink to="/sign-in" text="Sign In" />
+                  <Route
+                    path="*"
+                    render={({ _history, location }) => {
+                      wLocation = location
+                      return null
+                    }}
+                  />
+                </ThemeProvider>
+              </I18nProvider>
+            </MemoryRouter>
+          </UserStateProvider>
         </MockedProvider>,
       )
       const signInLink = getByText(/Sign In/i)

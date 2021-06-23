@@ -7,6 +7,7 @@ import CreateOrganizationPage from '../CreateOrganizationPage'
 import { CREATE_ORGANIZATION } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -37,13 +38,17 @@ describe('<CreateOrganizationPage />', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks}>
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <CreateOrganizationPage />
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <CreateOrganizationPage />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
 
@@ -56,13 +61,17 @@ describe('<CreateOrganizationPage />', () => {
     it('displays an error message when incorrect format is used', async () => {
       const { container, getByText } = render(
         <MockedProvider mocks={mocks}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <CreateOrganizationPage />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <CreateOrganizationPage />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -83,13 +92,17 @@ describe('<CreateOrganizationPage />', () => {
     it('displays an error message when input is too large', async () => {
       const { container, getByText } = render(
         <MockedProvider mocks={mocks}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <CreateOrganizationPage />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <CreateOrganizationPage />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 

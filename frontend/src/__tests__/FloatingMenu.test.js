@@ -4,6 +4,7 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import { FloatingMenu } from '../FloatingMenu'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
@@ -22,13 +23,21 @@ describe('<FloatingMenu>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <MemoryRouter initialEntries={['/']}>
-          <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
-              <FloatingMenu />
-            </ThemeProvider>
-          </I18nProvider>
-        </MemoryRouter>
+        <UserStateProvider
+          initialState={{
+            userName: 'testUserName@email.com',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <MemoryRouter initialEntries={['/']}>
+            <I18nProvider i18n={i18n}>
+              <ThemeProvider theme={theme}>
+                <FloatingMenu />
+              </ThemeProvider>
+            </I18nProvider>
+          </MemoryRouter>
+        </UserStateProvider>
       </MockedProvider>,
     )
     await waitFor(() => expect(getByText(/Menu/i)).toBeInTheDocument())
@@ -37,13 +46,21 @@ describe('<FloatingMenu>', () => {
     it('opens the menu', async () => {
       const { getByText } = render(
         <MockedProvider>
-          <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
-                <FloatingMenu />
-              </ThemeProvider>
-            </I18nProvider>
-          </MemoryRouter>
+          <UserStateProvider
+            initialState={{
+              userName: 'testUserName@email.com',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <MemoryRouter initialEntries={['/']}>
+              <I18nProvider i18n={i18n}>
+                <ThemeProvider theme={theme}>
+                  <FloatingMenu />
+                </ThemeProvider>
+              </I18nProvider>
+            </MemoryRouter>
+          </UserStateProvider>
         </MockedProvider>,
       )
       const menuButton = getByText(/Menu/i)
@@ -59,13 +76,21 @@ describe('<FloatingMenu>', () => {
       it('closes the menu', async () => {
         const { getByText, queryByText } = render(
           <MockedProvider>
-            <MemoryRouter initialEntries={['/']}>
-              <I18nProvider i18n={i18n}>
-                <ThemeProvider theme={theme}>
-                  <FloatingMenu />
-                </ThemeProvider>
-              </I18nProvider>
-            </MemoryRouter>
+            <UserStateProvider
+              initialState={{
+                userName: 'testUserName@email.com',
+                jwt: 'string',
+                tfaSendMethod: false,
+              }}
+            >
+              <MemoryRouter initialEntries={['/']}>
+                <I18nProvider i18n={i18n}>
+                  <ThemeProvider theme={theme}>
+                    <FloatingMenu />
+                  </ThemeProvider>
+                </I18nProvider>
+              </MemoryRouter>
+            </UserStateProvider>
           </MockedProvider>,
         )
         const menuButton = getByText(/Menu/i)
@@ -93,20 +118,28 @@ describe('<FloatingMenu>', () => {
 
         const { getByText } = render(
           <MockedProvider>
-            <MemoryRouter initialEntries={['/']}>
-              <I18nProvider i18n={i18n}>
-                <ThemeProvider theme={theme}>
-                  <FloatingMenu />
-                  <Route
-                    path="*"
-                    render={({ _history, location }) => {
-                      wLocation = location
-                      return null
-                    }}
-                  />
-                </ThemeProvider>
-              </I18nProvider>
-            </MemoryRouter>
+            <UserStateProvider
+              initialState={{
+                userName: 'testUserName@email.com',
+                jwt: 'string',
+                tfaSendMethod: false,
+              }}
+            >
+              <MemoryRouter initialEntries={['/']}>
+                <I18nProvider i18n={i18n}>
+                  <ThemeProvider theme={theme}>
+                    <FloatingMenu />
+                    <Route
+                      path="*"
+                      render={({ _history, location }) => {
+                        wLocation = location
+                        return null
+                      }}
+                    />
+                  </ThemeProvider>
+                </I18nProvider>
+              </MemoryRouter>
+            </UserStateProvider>
           </MockedProvider>,
         )
         const menuButton = getByText(/Menu/i)

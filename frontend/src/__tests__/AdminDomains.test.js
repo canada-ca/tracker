@@ -1,8 +1,9 @@
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { waitFor, render, fireEvent } from '@testing-library/react'
+import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
+import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { AdminDomains } from '../AdminDomains'
 import { MockedProvider } from '@apollo/client/testing'
@@ -42,17 +43,25 @@ describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <AdminDomains
-                orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                orgSlug="test-org.slug"
-                domainsPerPage={4}
-              />
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
+                <AdminDomains
+                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  orgSlug="test-org.slug"
+                  domainsPerPage={4}
+                />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
 
@@ -75,17 +84,25 @@ describe('<AdminDomains />', () => {
 
     const { getByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']}>
-              <AdminDomains
-                orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                orgSlug={'test-org.slug'}
-                domainsPerPage={4}
-              />
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']}>
+                <AdminDomains
+                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  orgSlug={'test-org.slug'}
+                  domainsPerPage={4}
+                />
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
 
@@ -133,17 +150,25 @@ describe('<AdminDomains />', () => {
 
       const { getByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug={'test-org.slug'}
-                  domainsPerPage={4}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -210,17 +235,25 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByPlaceholderText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug={'test-org.slug'}
-                  domainsPerPage={4}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -296,17 +329,25 @@ describe('<AdminDomains />', () => {
         queryAllByText,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug={'test-org.slug'}
-                  domainsPerPage={4}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -376,17 +417,25 @@ describe('<AdminDomains />', () => {
         queryAllByText,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug={'test-org.slug'}
-                  domainsPerPage={4}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -466,17 +515,25 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByTestId, queryByText, queryAllByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug={'test-org.slug'}
-                  domainsPerPage={4}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -537,17 +594,25 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByLabelText, getByTestId } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']}>
-                <AdminDomains
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                  orgSlug={'test-org.slug'}
-                  domainsPerPage={4}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{
+              userName: 'testuser@testemail.gc.ca',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 

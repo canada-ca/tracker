@@ -7,6 +7,7 @@ import DmarcGuidancePage from '../DmarcGuidancePage'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import matchMediaPolyfill from 'mq-polyfill'
 
@@ -55,18 +56,22 @@ describe('<DmarcGuidancePage />', () => {
     window.resizeTo(1024, 768)
     const { getByText } = render(
       <MockedProvider addTypename={false} mocks={mocks}>
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter
-              initialEntries={['/domains/forces.gc.ca']}
-              initialIndex={0}
-            >
-              <Route path="/domains/:domainSlug">
-                <DmarcGuidancePage />
-              </Route>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={['/domains/forces.gc.ca']}
+                initialIndex={0}
+              >
+                <Route path="/domains/:domainSlug">
+                  <DmarcGuidancePage />
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
 

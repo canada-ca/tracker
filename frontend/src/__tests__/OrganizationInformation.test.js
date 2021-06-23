@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -7,6 +7,7 @@ import OrganizationInformation from '../OrganizationInformation'
 import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { ORGANIZATION_INFORMATION } from '../graphql/queries'
 import userEvent from '@testing-library/user-event'
 import { createCache } from '../client'
@@ -108,16 +109,20 @@ describe('<OrganizationInformation />', () => {
       it('displays the organization information', async () => {
         const { queryByText, findByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <OrganizationInformation
-                    orgSlug="test-org"
-                    removeOrgCallback={() => {}}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
           </MockedProvider>,
         )
 
@@ -129,16 +134,20 @@ describe('<OrganizationInformation />', () => {
       it('organization editing area is hidden', async () => {
         const { queryByText, findByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <OrganizationInformation
-                    orgSlug="test-org"
-                    removeOrgCallback={() => {}}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
           </MockedProvider>,
         )
 
@@ -199,16 +208,20 @@ describe('<OrganizationInformation />', () => {
 
         const { getByText, getByRole, findByRole, findByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <OrganizationInformation
-                    orgSlug="test-org"
-                    removeOrgCallback={() => {}}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
           </MockedProvider>,
         )
 
@@ -248,16 +261,20 @@ describe('<OrganizationInformation />', () => {
       it('blocks the user from removing until entering the org name', async () => {
         const { getByText, getByRole, findByRole } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <OrganizationInformation
-                    orgSlug="test-org"
-                    removeOrgCallback={() => {}}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <OrganizationInformation
+                      orgSlug="test-org"
+                      removeOrgCallback={() => {}}
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
           </MockedProvider>,
         )
 
@@ -294,16 +311,24 @@ describe('<OrganizationInformation />', () => {
           it('updates the organization', async () => {
             const { getByText, getByRole, findByRole, findByText } = render(
               <MockedProvider mocks={mocks} cache={createCache()}>
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <OrganizationInformation
-                        orgSlug="test-org"
-                        removeOrgCallback={() => {}}
-                      />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
+                <UserStateProvider
+                  initialState={{
+                    userName: null,
+                    jwt: null,
+                    tfaSendMethod: null,
+                  }}
+                >
+                  <ThemeProvider theme={theme}>
+                    <I18nProvider i18n={i18n}>
+                      <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                        <OrganizationInformation
+                          orgSlug="test-org"
+                          removeOrgCallback={() => {}}
+                        />
+                      </MemoryRouter>
+                    </I18nProvider>
+                  </ThemeProvider>
+                </UserStateProvider>
               </MockedProvider>,
             )
 
@@ -356,16 +381,24 @@ describe('<OrganizationInformation />', () => {
           it('shows user error toast', async () => {
             const { getByText, getByRole, findByRole, findByText } = render(
               <MockedProvider mocks={mocks} cache={createCache()}>
-                <ThemeProvider theme={theme}>
-                  <I18nProvider i18n={i18n}>
-                    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                      <OrganizationInformation
-                        orgSlug="test-org"
-                        removeOrgCallback={() => {}}
-                      />
-                    </MemoryRouter>
-                  </I18nProvider>
-                </ThemeProvider>
+                <UserStateProvider
+                  initialState={{
+                    userName: null,
+                    jwt: null,
+                    tfaSendMethod: null,
+                  }}
+                >
+                  <ThemeProvider theme={theme}>
+                    <I18nProvider i18n={i18n}>
+                      <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                        <OrganizationInformation
+                          orgSlug="test-org"
+                          removeOrgCallback={() => {}}
+                        />
+                      </MemoryRouter>
+                    </I18nProvider>
+                  </ThemeProvider>
+                </UserStateProvider>
               </MockedProvider>,
             )
 

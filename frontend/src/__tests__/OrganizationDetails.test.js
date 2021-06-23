@@ -3,6 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { theme, ThemeProvider } from '@chakra-ui/core'
+import { UserStateProvider } from '../UserState'
 import { ORG_DETAILS_PAGE } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -114,14 +115,22 @@ describe('<OrganizationDetails />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MockedProvider mocks={mocks} addTypename={false}>
-              <MemoryRouter
-                initialEntries={['/organizations/tbs-sct-gc-ca']}
-                initialIndex={0}
+              <UserStateProvider
+                initialState={{
+                  userName: 'user@example.com',
+                  jwt: 'somestring',
+                  tfaSendMethod: null,
+                }}
               >
-                <Route path="/organizations/:orgSlug">
-                  <OrganizationDetails />
-                </Route>
-              </MemoryRouter>
+                <MemoryRouter
+                  initialEntries={['/organizations/tbs-sct-gc-ca']}
+                  initialIndex={0}
+                >
+                  <Route path="/organizations/:orgSlug">
+                    <OrganizationDetails />
+                  </Route>
+                </MemoryRouter>
+              </UserStateProvider>
             </MockedProvider>
           </I18nProvider>
         </ThemeProvider>,

@@ -3,6 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
 import AdminPanel from '../AdminPanel'
 import { MemoryRouter, Route } from 'react-router-dom'
@@ -45,19 +46,27 @@ describe('<AdminPanel />', () => {
   it('renders both a domain list and user list', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
-            <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-              <Route path="/admin">
-                <AdminPanel
-                  orgSlug="test-org.slug"
-                  permission="ADMIN"
-                  orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                />
-              </Route>
-            </MemoryRouter>
-          </ThemeProvider>
-        </I18nProvider>
+        <UserStateProvider
+          initialState={{
+            userName: 'testuser@testemail.gc.ca',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <I18nProvider i18n={i18n}>
+            <ThemeProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                <Route path="/admin">
+                  <AdminPanel
+                    orgSlug="test-org.slug"
+                    permission="ADMIN"
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  />
+                </Route>
+              </MemoryRouter>
+            </ThemeProvider>
+          </I18nProvider>
+        </UserStateProvider>
       </MockedProvider>,
     )
     await waitFor(() => {

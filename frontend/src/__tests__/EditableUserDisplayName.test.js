@@ -4,6 +4,7 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import EditableUserDisplayName from '../EditableUserDisplayName'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
@@ -23,13 +24,21 @@ describe('<EditableUserDisplayName>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider addTypename={false}>
-        <MemoryRouter initialEntries={['/']}>
-          <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
-              <EditableUserDisplayName />
-            </ThemeProvider>
-          </I18nProvider>
-        </MemoryRouter>
+        <UserStateProvider
+          initialState={{
+            userName: 'testUserName@email.com',
+            jwt: 'string',
+            tfaSendMethod: false,
+          }}
+        >
+          <MemoryRouter initialEntries={['/']}>
+            <I18nProvider i18n={i18n}>
+              <ThemeProvider theme={theme}>
+                <EditableUserDisplayName />
+              </ThemeProvider>
+            </I18nProvider>
+          </MemoryRouter>
+        </UserStateProvider>
       </MockedProvider>,
     )
     await waitFor(() => expect(getByText(/Edit/i)).toBeInTheDocument())
@@ -38,13 +47,21 @@ describe('<EditableUserDisplayName>', () => {
     it('opens the modal', async () => {
       const { getByText } = render(
         <MockedProvider addTypename={false}>
-          <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
-                <EditableUserDisplayName />
-              </ThemeProvider>
-            </I18nProvider>
-          </MemoryRouter>
+          <UserStateProvider
+            initialState={{
+              userName: 'testUserName@email.com',
+              jwt: 'string',
+              tfaSendMethod: false,
+            }}
+          >
+            <MemoryRouter initialEntries={['/']}>
+              <I18nProvider i18n={i18n}>
+                <ThemeProvider theme={theme}>
+                  <EditableUserDisplayName />
+                </ThemeProvider>
+              </I18nProvider>
+            </MemoryRouter>
+          </UserStateProvider>
         </MockedProvider>,
       )
       const editButton = getByText(/Edit/i)
@@ -61,13 +78,21 @@ describe('<EditableUserDisplayName>', () => {
         it('displays field error', async () => {
           const { getByText } = render(
             <MockedProvider addTypename={false}>
-              <MemoryRouter initialEntries={['/']}>
-                <I18nProvider i18n={i18n}>
-                  <ThemeProvider theme={theme}>
-                    <EditableUserDisplayName />
-                  </ThemeProvider>
-                </I18nProvider>
-              </MemoryRouter>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
+                <MemoryRouter initialEntries={['/']}>
+                  <I18nProvider i18n={i18n}>
+                    <ThemeProvider theme={theme}>
+                      <EditableUserDisplayName />
+                    </ThemeProvider>
+                  </I18nProvider>
+                </MemoryRouter>
+              </UserStateProvider>
             </MockedProvider>,
           )
           const editButton = getByText(/Edit/i)
@@ -118,13 +143,21 @@ describe('<EditableUserDisplayName>', () => {
 
           const { queryByText, getByText, getByLabelText } = render(
             <MockedProvider addTypename={false} mocks={mocks}>
-              <MemoryRouter initialEntries={['/']}>
-                <I18nProvider i18n={i18n}>
-                  <ThemeProvider theme={theme}>
-                    <EditableUserDisplayName />
-                  </ThemeProvider>
-                </I18nProvider>
-              </MemoryRouter>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
+                <MemoryRouter initialEntries={['/']}>
+                  <I18nProvider i18n={i18n}>
+                    <ThemeProvider theme={theme}>
+                      <EditableUserDisplayName />
+                    </ThemeProvider>
+                  </I18nProvider>
+                </MemoryRouter>
+              </UserStateProvider>
             </MockedProvider>,
           )
           const editButton = getByText(/Edit/i)
@@ -171,13 +204,21 @@ describe('<EditableUserDisplayName>', () => {
 
           const { queryByText, getByText, getByLabelText } = render(
             <MockedProvider addTypename={false} mocks={mocks}>
-              <MemoryRouter initialEntries={['/']}>
-                <I18nProvider i18n={i18n}>
-                  <ThemeProvider theme={theme}>
-                    <EditableUserDisplayName />
-                  </ThemeProvider>
-                </I18nProvider>
-              </MemoryRouter>
+              <UserStateProvider
+                initialState={{
+                  userName: 'testUserName@email.com',
+                  jwt: 'string',
+                  tfaSendMethod: false,
+                }}
+              >
+                <MemoryRouter initialEntries={['/']}>
+                  <I18nProvider i18n={i18n}>
+                    <ThemeProvider theme={theme}>
+                      <EditableUserDisplayName />
+                    </ThemeProvider>
+                  </I18nProvider>
+                </MemoryRouter>
+              </UserStateProvider>
             </MockedProvider>,
           )
           const editButton = getByText(/Edit/i)

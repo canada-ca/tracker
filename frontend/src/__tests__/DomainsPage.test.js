@@ -1,11 +1,12 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { PAGINATED_DOMAINS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
 import DomainsPage from '../DomainsPage'
 import { createMemoryHistory } from 'history'
@@ -176,13 +177,17 @@ describe('<DomainsPage />', () => {
     it('displays a list of domains', async () => {
       const { queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <DomainsPage />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <DomainsPage />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -194,13 +199,17 @@ describe('<DomainsPage />', () => {
     it('handles an empty list of domains', async () => {
       const { queryByText } = render(
         <MockedProvider mocks={empty} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <DomainsPage />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <DomainsPage />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -217,17 +226,21 @@ describe('<DomainsPage />', () => {
       it('takes user to DMARC Report page', async () => {
         const { getAllByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <Router history={history}>
-                    <Switch>
-                      <Route path="/domains" render={() => <DomainsPage />} />
-                    </Switch>
-                  </Router>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                    <Router history={history}>
+                      <Switch>
+                        <Route path="/domains" render={() => <DomainsPage />} />
+                      </Switch>
+                    </Router>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
           </MockedProvider>,
         )
 
@@ -243,17 +256,21 @@ describe('<DomainsPage />', () => {
       it('takes user to Guidance page', async () => {
         const { getAllByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <Router history={history}>
-                    <Switch>
-                      <Route path="/domains" render={() => <DomainsPage />} />
-                    </Switch>
-                  </Router>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                    <Router history={history}>
+                      <Switch>
+                        <Route path="/domains" render={() => <DomainsPage />} />
+                      </Switch>
+                    </Router>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>
           </MockedProvider>,
         )
 
@@ -270,13 +287,24 @@ describe('<DomainsPage />', () => {
         it('correctly filters results', async () => {
           const { getByPlaceholderText, queryByText } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <DomainsPage />
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter
+                      initialEntries={['/domains']}
+                      initialIndex={0}
+                    >
+                      <DomainsPage />
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
             </MockedProvider>,
           )
 
@@ -301,13 +329,24 @@ describe('<DomainsPage />', () => {
         it('changes sorting order', async () => {
           const { getByTestId } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
-              <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                    <DomainsPage />
-                  </MemoryRouter>
-                </I18nProvider>
-              </ThemeProvider>
+              <UserStateProvider
+                initialState={{
+                  userName: null,
+                  jwt: null,
+                  tfaSendMethod: null,
+                }}
+              >
+                <ThemeProvider theme={theme}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter
+                      initialEntries={['/domains']}
+                      initialIndex={0}
+                    >
+                      <DomainsPage />
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ThemeProvider>
+              </UserStateProvider>
             </MockedProvider>,
           )
 

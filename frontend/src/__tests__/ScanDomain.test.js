@@ -5,6 +5,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
 import { ScanDomain } from '../ScanDomain'
 import { REQUEST_SCAN } from '../graphql/mutations'
@@ -47,13 +48,17 @@ describe('<ScanDomain />', () => {
     it('returns error message', async () => {
       const { getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <ScanDomain />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <ScanDomain />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
@@ -72,13 +77,17 @@ describe('<ScanDomain />', () => {
     it('submits a domain for scan', async () => {
       const { container, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <ScanDomain />
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <ScanDomain />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>
         </MockedProvider>,
       )
 
