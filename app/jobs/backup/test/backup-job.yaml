@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backup-service
+  namespace: db
+  labels:
+    job: backup
+spec:
+  template:
+    spec:
+      containers:
+        - name: upload
+          image: rclone/rclone
+          command: ["/bin/sh", "-c"]
+          args: ["rclone copy /tmp/dump :gcs:gc-tracker-backups/tracker-backup-$(date -I)"]
+          env:
+          - name: RCLONE_GCS_PROJECT_NUMBER
+            value: "958151870606"
+          - name: RCLONE_GCS_BUCKET_POLICY_ONLY
+            value: "true"
+          volumeMounts:
+            - name: dump
+              mountPath: /tmp/dump
+      volumes:
+        - name: dump
+          emptyDir: {}
+      restartPolicy: Never
+
