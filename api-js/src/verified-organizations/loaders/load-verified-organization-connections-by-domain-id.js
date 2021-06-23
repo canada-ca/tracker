@@ -196,9 +196,9 @@ export const loadVerifiedOrgConnectionsByDomainId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`org._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(org._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`org._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(org._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -388,7 +388,7 @@ export const loadVerifiedOrgConnectionsByDomainId =
           FILTER org._key IN verifiedOrgs
           LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
           ${hasNextPageFilter}
-          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(org._key) ${sortString} LIMIT 1
           RETURN org
       ) > 0 ? true : false)
       
@@ -397,7 +397,7 @@ export const loadVerifiedOrgConnectionsByDomainId =
           FILTER org._key IN verifiedOrgs
           LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
           ${hasPreviousPageFilter}
-          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(org._key) ${sortString} LIMIT 1
           RETURN org
       ) > 0 ? true : false)
       
