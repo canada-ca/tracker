@@ -1,29 +1,22 @@
 import React from 'react'
 import { string } from 'prop-types'
-import { Heading, Stack, Select, useToast } from '@chakra-ui/core'
+import { Heading, Select, Stack, useToast } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
-import { Formik, Field } from 'formik'
+import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
-import { useUserVar } from './useUserVar'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 
 function EditableUserLanguage({ currentLang }) {
-  const { currentUser } = useUserVar()
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       onError: ({ message }) => {
         toast({
           title: t`An error occurred while updating your language.`,

@@ -1,20 +1,19 @@
 import React from 'react'
-import { useUserVar } from './useUserVar'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
 import {
   Heading,
-  Stack,
   Icon,
   Link,
   PseudoBox,
-  Tabs,
-  TabList,
-  TabPanels,
+  Stack,
   Tab,
+  TabList,
   TabPanel,
+  TabPanels,
+  Tabs,
 } from '@chakra-ui/core'
-import { useParams, Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, useParams } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -23,17 +22,11 @@ import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
 
 export default function DmarcGuidancePage() {
-  const { currentUser } = useUserVar()
   const { domainSlug } = useParams()
 
   useDocumentTitle(`${domainSlug}`)
 
   const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     variables: {
       domain: domainSlug,
     },

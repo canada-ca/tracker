@@ -1,31 +1,30 @@
 import React, { useRef } from 'react'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
-  Stack,
-  Text,
+  Box,
+  FormControl,
+  FormLabel,
+  Grid,
   Icon,
   Input,
-  SlideIn,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  FormLabel,
-  FormControl,
-  Box,
-  Grid,
+  ModalHeader,
+  ModalOverlay,
+  SlideIn,
+  Stack,
+  Text,
   useToast,
 } from '@chakra-ui/core'
-import { string, array, bool, object, func } from 'prop-types'
+import { array, bool, func, object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
-import { Field, Formik, FieldArray } from 'formik'
+import { Field, FieldArray, Formik } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
-import { UPDATE_DOMAIN, CREATE_DOMAIN } from './graphql/mutations'
+import { CREATE_DOMAIN, UPDATE_DOMAIN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserVar } from './useUserVar'
 
 export function AdminDomainModal({
   isOpen,
@@ -38,17 +37,11 @@ export function AdminDomainModal({
   orgSlug,
   mutation,
 }) {
-  const { currentUser } = useUserVar()
   const toast = useToast()
   const initialFocusRef = useRef()
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     onError(error) {
       toast({
         title: t`An error occurred.`,
@@ -95,11 +88,7 @@ export function AdminDomainModal({
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
+
     onError(error) {
       toast({
         title: t`An error occurred.`,

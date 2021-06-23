@@ -1,12 +1,12 @@
 import React from 'react'
 import { PseudoBox, Spinner, Stack } from '@chakra-ui/core'
-import { string, any, bool } from 'prop-types'
+import { any, bool, string } from 'prop-types'
 
 export const TrackerButton = React.forwardRef(
   ({ variant, isLoading, children, ...props }, ref) => {
     let color = 'black'
     let bg = 'gray.100'
-    const hoverOb = {bg: 'gray.200'}
+    const hoverOb = { bg: 'gray.200' }
     let borderColor = null
     let borderWidth = null
 

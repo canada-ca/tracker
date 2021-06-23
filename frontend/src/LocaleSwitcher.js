@@ -1,17 +1,17 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
-import { locales, activate } from './i18n.config'
+import { activate, locales } from './i18n.config'
 import { Box, PseudoBox, VisuallyHidden } from '@chakra-ui/core'
 import { useApolloClient } from '@apollo/client'
 
-const Toggler = props => {
+const Toggler = (props) => {
   const { locale } = props // eslint-disable-line
 
   const client = useApolloClient()
 
   return (
     <PseudoBox
-      as='button'
+      as="button"
       key={locale}
       padding={0}
       onClick={() => {
@@ -20,26 +20,27 @@ const Toggler = props => {
       _focus={{
         outline: `3px solid accent`,
       }}
-      bg='primary'
-      color='#fff'
+      bg="primary"
+      color="#fff"
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
       <PseudoBox
         aria-hidden
-        d='flex'
-        bg='gray.100'
-        color='primary'
-        textTransform='uppercase'
-        fontWeight='bold'
-        fontSize='lg'
+        d="flex"
+        bg="gray.100"
+        color="primary"
+        textTransform="uppercase"
+        fontWeight="bold"
+        fontSize="lg"
         size={10}
-        alignItems='center'
-        justifyContent='center'
-        borderRadius='0.25rem'
+        alignItems="center"
+        justifyContent="center"
+        borderRadius="0.25rem"
       >
         {locale}
       </PseudoBox>
-    </PseudoBox>)
+    </PseudoBox>
+  )
 }
 
 export function LocaleSwitcher() {

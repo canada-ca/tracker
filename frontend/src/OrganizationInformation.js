@@ -22,7 +22,6 @@ import {
 import { func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { ORGANIZATION_INFORMATION } from './graphql/queries'
-import { useUserVar } from './useUserVar'
 import { LoadingMessage } from './LoadingMessage'
 import { t, Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -39,7 +38,6 @@ export default function OrganizationInformation({
   removeOrgCallback: setSelectedOrg,
   ...props
 }) {
-  const { currentUser } = useUserVar()
   const toast = useToast()
   const {
     isOpen: isRemovalOpen,
@@ -51,11 +49,6 @@ export default function OrganizationInformation({
   const [isEditingOrg, setIsEditingOrg] = useState(false)
 
   const { loading, error, data } = useQuery(ORGANIZATION_INFORMATION, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     variables: {
       orgSlug,
     },
@@ -75,11 +68,6 @@ export default function OrganizationInformation({
   const [removeOrganization, { loading: removeOrgLoading }] = useMutation(
     REMOVE_ORGANIZATION,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       onError: ({ message }) => {
         toast({
           title: t`An error occurred while removing this organization.`,
@@ -144,11 +132,6 @@ export default function OrganizationInformation({
   const [updateOrganization, { loading: updateOrgLoading }] = useMutation(
     UPDATE_ORGANIZATION,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       onError: ({ message }) => {
         toast({
           title: t`An error occurred while updating this organization.`,

@@ -3,20 +3,19 @@ import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import {
-  IconButton,
   Heading,
-  Stack,
-  useToast,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
   Icon,
+  IconButton,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useToast,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
-import { useUserVar } from './useUserVar'
-import { useParams, Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, useParams } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -27,18 +26,13 @@ import { useDocumentTitle } from './useDocumentTitle'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
-  const { currentUser } = useUserVar()
   const toast = useToast()
 
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
+
     onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({

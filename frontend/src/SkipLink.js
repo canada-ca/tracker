@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import PropTypes from 'prop-types'
-import { jsx, css } from '@emotion/core'
+import { css, jsx } from '@emotion/core'
 import { Link } from '@chakra-ui/core'
 
 const makeInvisible = css`

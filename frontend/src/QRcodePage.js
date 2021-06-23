@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Stack, Text, Button } from '@chakra-ui/core'
+import { Box, Button, Stack, Text } from '@chakra-ui/core'
 import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { useUserVar } from './useUserVar'

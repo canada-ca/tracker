@@ -1,27 +1,27 @@
 import React, { useCallback, useRef, useState } from 'react'
 import {
+  Box,
+  Divider,
   FormLabel,
-  Stack,
   Icon,
+  Input,
   InputGroup,
   InputLeftElement,
-  Input,
-  Text,
-  useToast,
-  Select,
-  Box,
-  useDisclosure,
-  SlideIn,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  Divider,
+  ModalHeader,
+  ModalOverlay,
+  Select,
+  SlideIn,
+  Stack,
+  Text,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/core'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { UserCard } from './UserCard'
 import { number, string } from 'prop-types'
@@ -32,7 +32,6 @@ import {
   UPDATE_USER_ROLE,
 } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
-import { useUserVar } from './useUserVar'
 import { Formik, useFormik } from 'formik'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
@@ -45,7 +44,6 @@ import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
-  const { currentUser } = useUserVar()
   const [addedUserName, setAddedUserName] = useState()
   const [selectedRemoveUser, setSelectedRemoveUser] = useState()
 
@@ -111,7 +109,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: usersPerPage,
     variables: { orgSlug, search: debouncedSearchUser },
     relayRoot: 'findOrganizationBySlug.affiliations',
@@ -123,11 +120,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     updateUserRole,
     { loading: _updateLoading, error: _updateError },
   ] = useMutation(UPDATE_USER_ROLE, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     onError(updateError) {
       toast({
         title: updateError.message,
@@ -177,11 +169,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     {
       refetchQueries: ['PaginatedOrgAffiliations'],
       awaitRefetchQueries: true,
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
+
       onError(error) {
         toast({
           title: t`An error occurred.`,
@@ -231,7 +219,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     {
       refetchQueries: ['PaginatedOrgAffiliations'],
       awaitRefetchQueries: true,
-      context: { headers: { authorization: currentUser.jwt } },
+
       onError(error) {
         toast({
           title: t`An error occurred.`,

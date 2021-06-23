@@ -22,7 +22,7 @@ export const Navigation = ({ children, ...props }) => {
       <Flex
         maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
         mx="auto"
-        px={{md: 2, lg: 4 }}
+        px={{ md: 2, lg: 4 }}
         w="100%"
         align="center"
         direction="row"
@@ -31,7 +31,7 @@ export const Navigation = ({ children, ...props }) => {
           isInline
           alignItems="center"
           flexWrap="wrap"
-          spacing={{md: 4, lg: 6 }}
+          spacing={{ md: 4, lg: 6 }}
           w="100%"
         >
           {React.Children.map(children, (child) => {

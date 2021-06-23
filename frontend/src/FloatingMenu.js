@@ -2,24 +2,24 @@ import { FloatingMenuLink } from './FloatingMenuLink'
 import React from 'react'
 import { Link as RouteLink } from 'react-router-dom'
 import {
-  Stack,
+  Box,
   Button,
+  Divider,
   Drawer,
   DrawerBody,
+  DrawerContent,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
-  useDisclosure,
-  Box,
-  Link,
-  Divider,
-  Image,
-  useToast,
   Heading,
+  Image,
+  Link,
+  Stack,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
 import { useLingui } from '@lingui/react'
 import { useUserVar } from './useUserVar'

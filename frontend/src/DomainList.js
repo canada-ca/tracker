@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { List, ListItem } from '@chakra-ui/core'
-import { string, arrayOf, func, shape, object } from 'prop-types'
+import { arrayOf, func, object, shape, string } from 'prop-types'
 
 export function DomainList({ domains = [], ...props }) {
   const elements = []

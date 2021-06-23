@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { TrackerButton } from './TrackerButton'
 import { Formik } from 'formik'
@@ -10,22 +10,15 @@ import { LoadingMessage } from './LoadingMessage'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string } from 'yup'
 import DomainField from './DomainField'
-import { useUserVar } from './useUserVar'
 
 export function ScanDomain() {
   const toast = useToast()
-  const { currentUser } = useUserVar()
   const validationSchema = object().shape({
     domain: string().required(
       i18n._(fieldRequirements.domainUrl.required.message),
     ),
   })
   const [requestScan, { loading }] = useMutation(REQUEST_SCAN, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     onError(error) {
       toast({
         title: error.message,

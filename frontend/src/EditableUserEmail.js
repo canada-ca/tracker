@@ -1,18 +1,18 @@
 import React, { useRef } from 'react'
 import { string } from 'prop-types'
 import {
-  Icon,
   Heading,
+  Icon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  SlideIn,
   Stack,
   Text,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  SlideIn,
   useDisclosure,
   useToast,
 } from '@chakra-ui/core'
@@ -22,7 +22,6 @@ import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserVar } from './useUserVar'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
@@ -30,18 +29,12 @@ import { TrackerButton } from './TrackerButton'
 
 function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { currentUser } = useUserVar()
   const toast = useToast()
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       onError: ({ message }) => {
         toast({
           title: t`An error occurred while updating your email address.`,
