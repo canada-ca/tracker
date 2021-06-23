@@ -53,7 +53,7 @@ async def scan_dmarc(domain):
         logging.info("DMARC scan completed")
         return {"dmarc": {"missing": True}}
 
-    for rua in scan_result["dmarc"]["tags"].get("rua", {}).get("value", []):
+    for rua in scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []):
         # Retrieve 'rua' tag address.
         rua_addr = rua["address"]
 
@@ -91,7 +91,7 @@ async def scan_dmarc(domain):
                 logging.error(f"Failed to validate rua address {rua_domain}: {e}")
                 rua["accepting"] = "undetermined"
 
-    for ruf in scan_result["dmarc"]["tags"].get("ruf", {}).get("value", []):
+    for ruf in scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []):
         # Retrieve 'ruf' tag address.
         ruf_addr = ruf["address"]
 
@@ -274,6 +274,7 @@ def Server(server_client=requests):
             logging.info("Performing scan...")
             dmarc_results = scan_dmarc(domain)
 
+            # If there are no selectors, we can't get any DKIM results
             if len(selectors) > 0:
                 dkim_results = await scan_dkim(domain, selectors)
             else:
