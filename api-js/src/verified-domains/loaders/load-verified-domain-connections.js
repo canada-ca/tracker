@@ -143,9 +143,9 @@ export const loadVerifiedDomainConnections =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`domain._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(domain._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`domain._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(domain._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -273,7 +273,7 @@ export const loadVerifiedDomainConnections =
       FOR domain IN domains
         FILTER domain._key IN domainIds
         ${hasNextPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
+        SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
         RETURN domain
     ) > 0 ? true : false)
     
@@ -281,7 +281,7 @@ export const loadVerifiedDomainConnections =
       FOR domain IN domains
         FILTER domain._key IN domainIds
         ${hasPreviousPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
+        SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
         RETURN domain
     ) > 0 ? true : false)
     

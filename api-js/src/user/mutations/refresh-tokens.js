@@ -33,6 +33,8 @@ export const refreshTokens = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      collections,
+      transaction,
       uuidv4,
       jwt,
       auth: { tokenize },
@@ -109,17 +111,37 @@ export const refreshTokens = new mutationWithClientMutationId({
 
     const newRefreshId = uuidv4()
 
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collectionStrings)
+
     try {
-      await query`
-        WITH users
-        UPSERT { _key: ${user._key} }
-          INSERT { refreshId: ${newRefreshId} }
-          UPDATE { refreshId: ${newRefreshId} }
-          IN users
-      `
+      await trx.step(
+        () => query`
+          WITH users
+          UPSERT { _key: ${user._key} }
+            INSERT { refreshId: ${newRefreshId} }
+            UPDATE { refreshId: ${newRefreshId} }
+            IN users
+        `,
+      )
     } catch (err) {
       console.error(
-        `Database error occurred when attempting to refresh tokens for user: ${authUserKey}: ${err}`,
+        `Trx step error occurred when attempting to refresh tokens for user: ${authUserKey}: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Trx commit error occurred while user: ${user._key} attempted to refresh tokens: ${err}`,
       )
       throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
     }

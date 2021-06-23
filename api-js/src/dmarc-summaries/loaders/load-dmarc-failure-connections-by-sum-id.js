@@ -69,9 +69,9 @@ export const loadDmarcFailConnectionsBySumId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`SORT dmarcFail.id ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`SORT TO_NUMBER(dmarcFail.id) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`SORT dmarcFail.id DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`SORT TO_NUMBER(dmarcFail.id) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -113,14 +113,14 @@ export const loadDmarcFailConnectionsBySumId =
       LET hasNextPage = (LENGTH(
         FOR dmarcFail IN dmarcFailures
           FILTER TO_NUMBER(dmarcFail.id) > TO_NUMBER(LAST(retrievedDmarcFailure).id)
-          SORT dmarcFail.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(dmarcFail.id) ${sortString} LIMIT 1
           RETURN dmarcFail
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         FOR dmarcFail IN dmarcFailures
           FILTER TO_NUMBER(dmarcFail.id) < TO_NUMBER(FIRST(retrievedDmarcFailure).id)
-          SORT dmarcFail.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(dmarcFail.id) ${sortString} LIMIT 1
           RETURN dmarcFail
       ) > 0 ? true : false)
 

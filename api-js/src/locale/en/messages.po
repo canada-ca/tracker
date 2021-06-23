@@ -35,16 +35,16 @@ msgstr "If an account with this username is found, a password reset link will be
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "If an account with this username is found, an email verification link will be found in your inbox."
 
-#: src/user/mutations/authenticate.js:126
+#: src/user/mutations/authenticate.js:148
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "Incorrect TFA code. Please sign in again."
 
-#: src/user/mutations/reset-password.js:64
+#: src/user/mutations/reset-password.js:66
 msgid "Incorrect token value. Please request a new email."
 msgstr "Incorrect token value. Please request a new email."
 
-#: src/user/mutations/sign-in.js:60
-#: src/user/mutations/sign-in.js:203
+#: src/user/mutations/sign-in.js:62
+#: src/user/mutations/sign-in.js:250
 msgid "Incorrect username or password. Please try again."
 msgstr "Incorrect username or password. Please try again."
 
@@ -52,7 +52,7 @@ msgstr "Incorrect username or password. Please try again."
 msgid "Invalid token, please sign in."
 msgstr "Invalid token, please sign in."
 
-#: src/user/mutations/reset-password.js:106
+#: src/user/mutations/reset-password.js:108
 msgid "New passwords do not match."
 msgstr "New passwords do not match."
 
@@ -166,16 +166,16 @@ msgstr "Passing both `first` and `last` to paginate the `VerifiedDomain` connect
 msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 
-#: src/user/mutations/reset-password.js:118
+#: src/user/mutations/reset-password.js:120
 #: src/user/mutations/sign-up.js:82
 msgid "Password does not meet requirements."
 msgstr "Password does not meet requirements."
 
-#: src/user/mutations/reset-password.js:142
+#: src/user/mutations/reset-password.js:168
 msgid "Password was successfully reset."
 msgstr "Password was successfully reset."
 
-#: src/user/mutations/update-user-password.js:112
+#: src/user/mutations/update-user-password.js:134
 msgid "Password was successfully updated."
 msgstr "Password was successfully updated."
 
@@ -262,11 +262,11 @@ msgstr "Permission error, not an admin for this user."
 msgid "Phone number has been successfully removed."
 msgstr "Phone number has been successfully removed."
 
-#: src/user/mutations/set-phone-number.js:109
+#: src/user/mutations/set-phone-number.js:131
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:119
+#: src/user/mutations/update-user-profile.js:141
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -352,7 +352,7 @@ msgstr "Requesting {amount} records on the `SSL` connection exceeds the `{argSet
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
 
-#: src/user/mutations/verify-account.js:113
+#: src/user/mutations/verify-account.js:121
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
@@ -380,23 +380,23 @@ msgstr "Successfully sent invitation to service, and organization email."
 msgid "Successfully verified organization: {0}."
 msgstr "Successfully verified organization: {0}."
 
-#: src/user/mutations/verify-phone-number.js:94
+#: src/user/mutations/verify-phone-number.js:118
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Successfully verified phone number, and set TFA send method to text."
 
-#: src/user/mutations/authenticate.js:59
+#: src/user/mutations/authenticate.js:61
 msgid "Token value incorrect, please sign in again."
 msgstr "Token value incorrect, please sign in again."
 
-#: src/user/mutations/sign-in.js:74
+#: src/user/mutations/sign-in.js:76
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Too many failed login attempts, please reset your password, and try again."
 
-#: src/user/mutations/verify-phone-number.js:61
+#: src/user/mutations/verify-phone-number.js:63
 msgid "Two factor code is incorrect. Please try again."
 msgstr "Two factor code is incorrect. Please try again."
 
-#: src/user/mutations/verify-phone-number.js:48
+#: src/user/mutations/verify-phone-number.js:50
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "Two factor code length is incorrect. Please try again."
 
@@ -404,8 +404,9 @@ msgstr "Two factor code length is incorrect. Please try again."
 msgid "Unable to add user to organization. Please try again."
 msgstr "Unable to add user to organization. Please try again."
 
-#: src/user/mutations/authenticate.js:74
-#: src/user/mutations/authenticate.js:108
+#: src/user/mutations/authenticate.js:76
+#: src/user/mutations/authenticate.js:121
+#: src/user/mutations/authenticate.js:130
 msgid "Unable to authenticate. Please try again."
 msgstr "Unable to authenticate. Please try again."
 
@@ -707,11 +708,12 @@ msgstr "Unable to query affiliation(s). Please try again."
 msgid "Unable to query domain(s). Please try again."
 msgstr "Unable to query domain(s). Please try again."
 
-#: src/user/mutations/refresh-tokens.js:60
-#: src/user/mutations/refresh-tokens.js:75
-#: src/user/mutations/refresh-tokens.js:92
-#: src/user/mutations/refresh-tokens.js:106
-#: src/user/mutations/refresh-tokens.js:124
+#: src/user/mutations/refresh-tokens.js:62
+#: src/user/mutations/refresh-tokens.js:77
+#: src/user/mutations/refresh-tokens.js:94
+#: src/user/mutations/refresh-tokens.js:108
+#: src/user/mutations/refresh-tokens.js:137
+#: src/user/mutations/refresh-tokens.js:146
 msgid "Unable to refresh tokens, please sign in."
 msgstr "Unable to refresh tokens, please sign in."
 
@@ -775,12 +777,13 @@ msgstr "Unable to remove user from unknown organization."
 msgid "Unable to request a one time scan on an unknown domain."
 msgstr "Unable to request a one time scan on an unknown domain."
 
-#: src/user/mutations/reset-password.js:93
+#: src/user/mutations/reset-password.js:95
 msgid "Unable to reset password. Please request a new email."
 msgstr "Unable to reset password. Please request a new email."
 
-#: src/user/mutations/reset-password.js:80
-#: src/user/mutations/reset-password.js:135
+#: src/user/mutations/reset-password.js:82
+#: src/user/mutations/reset-password.js:152
+#: src/user/mutations/reset-password.js:161
 msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
@@ -819,14 +822,18 @@ msgstr "Unable to send two factor authentication message. Please try again."
 msgid "Unable to send verification email. Please try again."
 msgstr "Unable to send verification email. Please try again."
 
-#: src/user/mutations/set-phone-number.js:95
+#: src/user/mutations/set-phone-number.js:108
+#: src/user/mutations/set-phone-number.js:117
 msgid "Unable to set phone number, please try again."
 msgstr "Unable to set phone number, please try again."
 
-#: src/user/mutations/sign-in.js:91
-#: src/user/mutations/sign-in.js:111
-#: src/user/mutations/sign-in.js:157
-#: src/user/mutations/sign-in.js:194
+#: src/user/mutations/sign-in.js:104
+#: src/user/mutations/sign-in.js:126
+#: src/user/mutations/sign-in.js:135
+#: src/user/mutations/sign-in.js:183
+#: src/user/mutations/sign-in.js:192
+#: src/user/mutations/sign-in.js:231
+#: src/user/mutations/sign-in.js:240
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
@@ -841,7 +848,8 @@ msgstr "Unable to sign up, please contact org admin for a new invite."
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
-#: src/user/mutations/verify-phone-number.js:79
+#: src/user/mutations/verify-phone-number.js:92
+#: src/user/mutations/verify-phone-number.js:103
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "Unable to two factor authenticate. Please try again."
 
@@ -867,23 +875,25 @@ msgstr "Unable to update domain. Please try again."
 msgid "Unable to update organization. Please try again."
 msgstr "Unable to update organization. Please try again."
 
-#: src/user/mutations/update-user-password.js:60
+#: src/user/mutations/update-user-password.js:62
 msgid "Unable to update password, current password does not match. Please try again."
 msgstr "Unable to update password, current password does not match. Please try again."
 
-#: src/user/mutations/update-user-password.js:74
+#: src/user/mutations/update-user-password.js:76
 msgid "Unable to update password, new passwords do not match. Please try again."
 msgstr "Unable to update password, new passwords do not match. Please try again."
 
-#: src/user/mutations/update-user-password.js:88
+#: src/user/mutations/update-user-password.js:90
 msgid "Unable to update password, passwords do not match requirements. Please try again."
 msgstr "Unable to update password, passwords do not match requirements. Please try again."
 
-#: src/user/mutations/update-user-password.js:106
+#: src/user/mutations/update-user-password.js:119
+#: src/user/mutations/update-user-password.js:128
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:110
+#: src/user/mutations/update-user-profile.js:123
+#: src/user/mutations/update-user-profile.js:132
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -917,13 +927,13 @@ msgstr "Unable to update user's role. Please try again."
 msgid "Unable to update your own role."
 msgstr "Unable to update your own role."
 
-#: src/user/mutations/verify-account.js:53
-#: src/user/mutations/verify-account.js:71
-#: src/user/mutations/verify-account.js:85
+#: src/user/mutations/verify-account.js:55
+#: src/user/mutations/verify-account.js:73
 msgid "Unable to verify account. Please request a new email."
 msgstr "Unable to verify account. Please request a new email."
 
-#: src/user/mutations/verify-account.js:103
+#: src/user/mutations/verify-account.js:102
+#: src/user/mutations/verify-account.js:111
 msgid "Unable to verify account. Please try again."
 msgstr "Unable to verify account. Please try again."
 
@@ -952,7 +962,7 @@ msgstr "User could not be queried."
 msgid "User role was updated successfully."
 msgstr "User role was updated successfully."
 
-#: src/user/mutations/update-user-profile.js:71
+#: src/user/mutations/update-user-profile.js:73
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 

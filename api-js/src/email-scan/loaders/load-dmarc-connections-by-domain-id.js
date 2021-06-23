@@ -166,9 +166,9 @@ export const loadDmarcConnectionsByDomainId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`dmarcScan._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(dmarcScan._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`dmarcScan._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(dmarcScan._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -277,7 +277,7 @@ export const loadDmarcConnectionsByDomainId =
         FOR dmarcScan IN dmarc
           FILTER dmarcScan._key IN dmarcKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} dmarcScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(dmarcScan._key) ${sortString} LIMIT 1
           RETURN dmarcScan
       ) > 0 ? true : false)
 
@@ -285,7 +285,7 @@ export const loadDmarcConnectionsByDomainId =
         FOR dmarcScan IN dmarc
           FILTER dmarcScan._key IN dmarcKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} dmarcScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(dmarcScan._key) ${sortString} LIMIT 1
           RETURN dmarcScan
       ) > 0 ? true : false)
 
