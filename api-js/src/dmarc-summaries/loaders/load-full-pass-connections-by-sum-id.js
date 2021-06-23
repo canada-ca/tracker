@@ -69,9 +69,9 @@ export const loadFullPassConnectionsBySumId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`SORT fullPass.id ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`SORT TO_NUMBER(fullPass.id) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`SORT fullPass.id DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`SORT TO_NUMBER(fullPass.id) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -112,14 +112,14 @@ export const loadFullPassConnectionsBySumId =
       LET hasNextPage = (LENGTH(
         FOR fullPass IN fullPasses
           FILTER TO_NUMBER(fullPass.id) > TO_NUMBER(LAST(retrievedFullPass).id)
-          SORT fullPass.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(fullPass.id) ${sortString} LIMIT 1
           RETURN fullPass
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         FOR fullPass IN fullPasses
           FILTER TO_NUMBER(fullPass.id) < TO_NUMBER(FIRST(retrievedFullPass).id)
-          SORT fullPass.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(fullPass.id) ${sortString} LIMIT 1
           RETURN fullPass
       ) > 0 ? true : false)
 

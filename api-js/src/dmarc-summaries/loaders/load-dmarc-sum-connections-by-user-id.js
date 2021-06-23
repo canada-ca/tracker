@@ -211,9 +211,9 @@ export const loadDmarcSummaryConnectionsByUserId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`summary._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(summary._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`summary._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(summary._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -430,7 +430,7 @@ export const loadDmarcSummaryConnectionsByUserId =
             RETURN v
         )
         ${hasNextPageFilter}
-        SORT ${sortByField} summary._key ${sortString} LIMIT 1
+        SORT ${sortByField} TO_NUMBER(summary._key) ${sortString} LIMIT 1
         RETURN summary
     ) > 0 ? true : false)
 
@@ -442,7 +442,7 @@ export const loadDmarcSummaryConnectionsByUserId =
             RETURN v
         )
         ${hasPreviousPageFilter}
-        SORT ${sortByField} summary._key ${sortString} LIMIT 1
+        SORT ${sortByField} TO_NUMBER(summary._key) ${sortString} LIMIT 1
         RETURN summary
     ) > 0 ? true : false)
 
