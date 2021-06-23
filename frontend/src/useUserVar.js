@@ -1,20 +1,20 @@
 import { useApolloClient, useReactiveVar } from '@apollo/client'
 import { currentUserVar } from './client'
 
-export const useUserVar = () => {
+export const useUserVar = (userVar = currentUserVar) => {
   const client = useApolloClient()
-  const currentUser = useReactiveVar(currentUserVar)
+  const currentUser = useReactiveVar(userVar)
 
   const isLoggedIn = () => {
     return Object.keys(currentUser).length > 0
   }
 
   const login = (newUserState) => {
-    currentUserVar(newUserState)
+    userVar(newUserState)
   }
 
   const logout = async () => {
-    currentUserVar({})
+    userVar({})
     await client.resetStore()
   }
 
