@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { UserVarProvider, useUserVar } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
-import { makeVar, useReactiveVar } from '@apollo/client'
+import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 
 const UserStateExample = () => {
