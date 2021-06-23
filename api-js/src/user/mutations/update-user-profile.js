@@ -43,6 +43,8 @@ export const updateUserProfile = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      collections,
+      transaction,
       userKey,
       auth: { userRequired },
       loaders: { loadUserByKey, loadUserByUserName },
@@ -95,17 +97,37 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod: tfaSendMethod,
     }
 
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collectionStrings)
+
     try {
-      await query`
-        WITH users
-        UPSERT { _key: ${user._key} }
-          INSERT ${updatedUser}
-          UPDATE ${updatedUser} 
-          IN users
-      `
+      await trx.step(
+        () => query`
+          WITH users
+          UPSERT { _key: ${user._key} }
+            INSERT ${updatedUser}
+            UPDATE ${updatedUser} 
+            IN users
+        `,
+      )
     } catch (err) {
       console.error(
-        `Database error ocurred when user: ${user._key} attempted to update their profile: ${err}`,
+        `Trx step error ocurred when user: ${user._key} attempted to update their profile: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Trx commit error ocurred when user: ${user._key} attempted to update their profile: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }

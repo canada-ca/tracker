@@ -43,7 +43,6 @@ describe('reset users password', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     await graphql(
       schema,
@@ -96,15 +95,12 @@ describe('reset users password', () => {
     )
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -160,6 +156,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             auth: {
               bcrypt,
               tokenize,
@@ -218,6 +216,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             jwt,
             uuidv4,
             auth: {
@@ -291,6 +291,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             auth: {
               bcrypt,
               tokenize,
@@ -350,6 +352,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -416,6 +420,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -482,6 +488,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -557,6 +565,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -630,6 +640,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -702,6 +714,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -778,6 +792,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -801,76 +817,161 @@ describe('reset users password', () => {
           ])
         })
       })
-      describe('database error occurs when updating user password', () => {
-        it('returns an error message', async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await userCursor.next()
+      describe('transaction step error occurs', () => {
+        describe('when updating users password', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const userKeyLoader = loadUserByKey({ query })
 
-          const userNameLoader = loadUserByUserName({ query })
-          const userKeyLoader = loadUserByKey({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const resetToken = tokenize({
-            parameters: { userKey: user._key, currentPassword: user.password },
+            const resetToken = tokenize({
+              parameters: {
+                userKey: user._key,
+                currentPassword: user.password,
+              },
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction step error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  resetPassword (
+                    input: {
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
+                      resetToken: "${resetToken}"
+                    }
+                  ) {
+                    result {
+                      ... on ResetPasswordError {
+                        code
+                        description
+                      }
+                      ... on ResetPasswordResult {
+                        status
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: userKeyLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to reset password. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: ${user._key} attempted to reset their password: Error: Transaction step error`,
+            ])
           })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when updating users password', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const userKeyLoader = loadUserByKey({ query })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              resetPassword (
-                input: {
-                  password: "testpassword123"
-                  confirmPassword: "testpassword123"
-                  resetToken: "${resetToken}"
-                }
-              ) {
-                result {
-                  ... on ResetPasswordError {
-                    code
-                    description
+            const resetToken = tokenize({
+              parameters: {
+                userKey: user._key,
+                currentPassword: user.password,
+              },
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction commit error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  resetPassword (
+                    input: {
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
+                      resetToken: "${resetToken}"
+                    }
+                  ) {
+                    result {
+                      ... on ResetPasswordError {
+                        code
+                        description
+                      }
+                      ... on ResetPasswordResult {
+                        status
+                      }
+                    }
                   }
-                  ... on ResetPasswordResult {
-                    status
-                  }
                 }
-              }
-            }
-          `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
-                verifyToken: verifyToken({}),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: userKeyLoader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-                loadUserByKey: userKeyLoader,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError('Unable to reset password. Please try again.'),
-          ]
+            const error = [
+              new GraphQLError('Unable to reset password. Please try again.'),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to reset their password: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction commit error`,
+            ])
+          })
         })
       })
     })
@@ -930,6 +1031,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             auth: {
               bcrypt,
               tokenize,
@@ -988,6 +1091,8 @@ describe('reset users password', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
             uuidv4,
             jwt,
             auth: {
@@ -1056,6 +1161,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1122,6 +1229,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1188,6 +1297,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1264,6 +1375,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1337,6 +1450,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1410,6 +1525,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1486,6 +1603,8 @@ describe('reset users password', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1511,78 +1630,165 @@ describe('reset users password', () => {
           ])
         })
       })
-      describe('database error occurs when updating user password', () => {
-        it('returns an error message', async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await userCursor.next()
+      describe('transaction step error occurs', () => {
+        describe('when updating users password', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const userKeyLoader = loadUserByKey({ query })
 
-          const userNameLoader = loadUserByUserName({ query })
-          const userKeyLoader = loadUserByKey({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const resetToken = tokenize({
-            parameters: { userKey: user._key, currentPassword: user.password },
+            const resetToken = tokenize({
+              parameters: {
+                userKey: user._key,
+                currentPassword: user.password,
+              },
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction step error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  resetPassword (
+                    input: {
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
+                      resetToken: "${resetToken}"
+                    }
+                  ) {
+                    result {
+                      ... on ResetPasswordError {
+                        code
+                        description
+                      }
+                      ... on ResetPasswordResult {
+                        status
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: userKeyLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: ${user._key} attempted to reset their password: Error: Transaction step error`,
+            ])
           })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when updating users password', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const userKeyLoader = loadUserByKey({ query })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              resetPassword (
-                input: {
-                  password: "testpassword123"
-                  confirmPassword: "testpassword123"
-                  resetToken: "${resetToken}"
-                }
-              ) {
-                result {
-                  ... on ResetPasswordError {
-                    code
-                    description
+            const resetToken = tokenize({
+              parameters: {
+                userKey: user._key,
+                currentPassword: user.password,
+              },
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction commit error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  resetPassword (
+                    input: {
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
+                      resetToken: "${resetToken}"
+                    }
+                  ) {
+                    result {
+                      ... on ResetPasswordError {
+                        code
+                        description
+                      }
+                      ... on ResetPasswordResult {
+                        status
+                      }
+                    }
                   }
-                  ... on ResetPasswordResult {
-                    status
-                  }
                 }
-              }
-            }
-          `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
-                verifyToken: verifyToken({}),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: userKeyLoader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-                loadUserByKey: userKeyLoader,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to reset their password: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction commit error`,
+            ])
+          })
         })
       })
     })
