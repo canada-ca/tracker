@@ -173,9 +173,9 @@ export const loadHttpsConnectionsByDomainId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`httpsScan._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(httpsScan._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`httpsScan._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(httpsScan._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -290,7 +290,7 @@ export const loadHttpsConnectionsByDomainId =
         FOR httpsScan IN https
           FILTER httpsScan._key IN httpsKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(httpsScan._key) ${sortString} LIMIT 1
           RETURN httpsScan
       ) > 0 ? true : false)
       
@@ -298,7 +298,7 @@ export const loadHttpsConnectionsByDomainId =
         FOR httpsScan IN https
           FILTER httpsScan._key IN httpsKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(httpsScan._key) ${sortString} LIMIT 1
           RETURN httpsScan
       ) > 0 ? true : false)
 

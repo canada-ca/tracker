@@ -152,9 +152,9 @@ export const loadDomainConnectionsByOrgId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`domain._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(domain._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`domain._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(domain._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -305,7 +305,7 @@ export const loadDomainConnectionsByOrgId =
       ${loopString}
         FILTER domain._key IN domainKeys
         ${hasNextPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
+        SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
         RETURN domain
     ) > 0 ? true : false)
     
@@ -313,7 +313,7 @@ export const loadDomainConnectionsByOrgId =
       ${loopString}
         FILTER domain._key IN domainKeys
         ${hasPreviousPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
+        SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
         RETURN domain
     ) > 0 ? true : false)
     

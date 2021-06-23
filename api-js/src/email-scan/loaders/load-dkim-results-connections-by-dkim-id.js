@@ -116,9 +116,9 @@ export const loadDkimResultConnectionsByDkimId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`dkimResult._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(dkimResult._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`dkimResult._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(dkimResult._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -216,7 +216,7 @@ export const loadDkimResultConnectionsByDkimId =
         FOR dkimResult IN dkimResults
           FILTER dkimResult._key IN dkimResultKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(dkimResult._key) ${sortString} LIMIT 1
           RETURN dkimResult
       ) > 0 ? true : false)
       
@@ -224,7 +224,7 @@ export const loadDkimResultConnectionsByDkimId =
         FOR dkimResult IN dkimResults
           FILTER dkimResult._key IN dkimResultKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(dkimResult._key) ${sortString} LIMIT 1
           RETURN dkimResult
       ) > 0 ? true : false)
 
