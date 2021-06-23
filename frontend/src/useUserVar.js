@@ -1,7 +1,11 @@
-import { useApolloClient, useReactiveVar } from '@apollo/client'
-import { currentUserVar } from './client'
+import React, { useContext } from 'react'
+import { makeVar, useApolloClient, useReactiveVar } from '@apollo/client'
+import { object, node } from 'prop-types'
 
-export const useUserVar = (userVar = currentUserVar) => {
+const UserStateContext = React.createContext({})
+const { Provider, Consumer } = UserStateContext
+
+export function UserVarProvider({ userVar = makeVar({}), children }) {
   const client = useApolloClient()
   const currentUser = useReactiveVar(userVar)
 
@@ -18,10 +22,21 @@ export const useUserVar = (userVar = currentUserVar) => {
     await client.resetStore()
   }
 
-  return {
+  const userState = {
     currentUser,
     isLoggedIn,
     login,
     logout,
   }
+
+  return <Provider value={userState}>{children}</Provider>
 }
+
+UserVarProvider.propTypes = {
+  userVar: object.isRequired,
+  children: node.isRequired,
+}
+
+export const UserVar = Consumer
+
+export const useUserVar = () => useContext(UserStateContext)
