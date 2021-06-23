@@ -57,9 +57,9 @@ export default function TwoFactorAuthenticatePage() {
         if (authenticate.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (authenticate.result.user.preferredLang === 'FRENCH')
           activate('fr')
-        // // redirect to the home page.
+        // redirect to the home page.
         history.replace(from)
-        // // Display a welcome message
+        // Display a welcome message
         toast({
           title: i18n._(t`Sign In.`),
           description: i18n._(t`Welcome, you are successfully signed in!`),

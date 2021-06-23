@@ -47,7 +47,7 @@ describe('<App/>', () => {
       })
     })
 
-    describe('/domains', () => {
+    describe('/sign-in', () => {
       it('renders the sign-in page', async () => {
         const { getByText } = render(
           <MockedProvider>
