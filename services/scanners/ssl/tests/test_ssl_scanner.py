@@ -15,4 +15,4 @@ def test_scan():
 
     res = test_client.post("/", json=test_payload)
 
-    assert "SSL scan completed" in res.text
+    assert "Scan completed" == res.text
