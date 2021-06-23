@@ -12,7 +12,6 @@ import {
 import { useRouteMatch, Link as RouteLink } from 'react-router-dom'
 import { string, number, bool, object } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { TrackerButton } from './TrackerButton'
 
 export function OrganizationCard({
   name,
