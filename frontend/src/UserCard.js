@@ -5,14 +5,32 @@ import { string } from 'prop-types'
 export function UserCard({ userName, displayName, role }) {
   return (
     <PseudoBox width="100%" p="8">
-      <Stack isInline align="center" mb={['1', '0']}>
-        <Box width="50%">
+      <Box
+        align="center"
+        mb={['1', '0']}
+        width="100%"
+      >
+        <Box
+          width={{sm:"100%", md:"50%"}}
+          display={{sm:"block", md:"inline-block"}}
+          align={{sm:"left", md:"center"}}
+        >
           <Text fontSize="md" wordBreak="break-all">
             {userName}
           </Text>
         </Box>
-        <Box width="40%">{displayName}</Box>
-        <Box width="10%">
+        <Box
+          width={{sm:"100%", md:"40%"}}
+          display={{sm:"block", md:"inline-block"}}
+          align={{sm:"left", md:"center"}}
+        >
+          {displayName}
+        </Box>
+        <Box
+          width={{sm:"100%", md:"10%"}}
+          display={{sm:"block", md:"inline-block"}}
+          align={{sm:"left", md:"center"}}
+        >
           {role && (
             <Badge
               color="primary"
@@ -25,7 +43,7 @@ export function UserCard({ userName, displayName, role }) {
             </Badge>
           )}
         </Box>
-      </Stack>
+      </Box>
     </PseudoBox>
   )
 }
