@@ -20,7 +20,7 @@ from dkim.util import InvalidTagValueList
 from multiprocessing import Process, Manager
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
-from starlette.responses import PlainTextResponse, JSONResponse
+from starlette.responses import Response
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 TIMEOUT = 80  # 80 second scan timeout
