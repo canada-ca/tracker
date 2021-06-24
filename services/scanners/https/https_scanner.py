@@ -8,7 +8,8 @@ import emoji
 import traceback
 import asyncio
 import datetime as dt
-from multiprocessing import Process, Manager
+from ctypes import c_char_p
+from multiprocessing import Process, Queue
 from scan import https
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
@@ -19,6 +20,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 MIN_HSTS_AGE = 31536000  # one year
 TIMEOUT = 80  # 80 second scan timeout
+RES_QUEUE = Queue()
 
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
@@ -34,23 +36,20 @@ def dispatch_results(payload, client):
     logging.info("Scan results dispatched to result queue")
 
 
-def scan_https(domain, res_dict):
+def scan_https(domain):
     try:
         # Run https-scanner
-        res_dict["results"] = https.run([domain])
-
-        # Return scan results for the designated domain
-        return res_dict
+        RES_QUEUE.put(https.run([domain]).get(domain))
     except Exception as e:
         logging.error(f"An error occurred while scanning domain: {e}")
-        return None
+        RES_QUEUE.put({})
 
 
 def process_results(results):
     logging.info("Processing HTTPS scan results...")
     report = {}
 
-    if results is None or results == {}:
+    if results == {}:
         report = {"missing": True}
 
     else:
@@ -178,6 +177,7 @@ def Server(server_client=requests):
             if time.time() >= end:
                 proc.terminate()
                 proc.join()
+                logging.error("Timeout while scanning")
                 raise ScanTimeoutException("Scan timed out")
             time.sleep(interval)
 
@@ -199,30 +199,23 @@ def Server(server_client=requests):
         logging.info("Performing scan...")
 
         try:
-            manager = Manager()
-            result_dict = manager.dict()
-            p = Process(target=scan_https, args=(domain, result_dict))
+            p = Process(target=scan_https, args=(domain,))
             wait_timeout(p, TIMEOUT)
         except ScanTimeoutException:
             return Response("Timeout occurred while scanning", status_code=500)
+        scan_results = RES_QUEUE.get()
 
-        scan_results = result_dict.values()[0].get(domain)
+        processed_results = process_results(scan_results)
 
-        if scan_results is not None:
-
-            processed_results = process_results(scan_results)
-
-            outbound_payload = json.dumps(
-                {
-                    "results": processed_results,
-                    "scan_type": "https",
-                    "uuid": uuid,
-                    "domain_key": domain_key,
-                }
-            )
-            logging.info(f"Scan results: {str(processed_results)}")
-        else:
-            raise Exception("HTTPS scan not completed")
+        outbound_payload = json.dumps(
+            {
+                "results": processed_results,
+                "scan_type": "https",
+                "uuid": uuid,
+                "domain_key": domain_key,
+            }
+        )
+        logging.info(f"Scan results: {str(processed_results)}")
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time

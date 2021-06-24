@@ -10,7 +10,7 @@ import traceback
 import scapy
 import datetime as dt
 from enum import Enum
-from multiprocessing import Process, Manager
+from multiprocessing import Process, Queue
 from OpenSSL import SSL
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
@@ -29,6 +29,7 @@ from sslyze.server_setting import (
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 TIMEOUT = 80  # 80 second scan timeout
+RES_QUEUE = Queue()
 
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
@@ -110,12 +111,13 @@ def get_supported_tls(highest_supported, domain):
     return supported
 
 
-def scan_ssl(domain, res_dict):
+def scan_ssl(domain):
     try:
         server_info = get_server_info(domain)
     except ConnectionToServerFailed as e:
         logging.error(f"Failed to connect to {domain}: {e.error_message}")
-        return {}
+        RES_QUEUE.put({})
+        return
 
     highest_tls_supported = str(
         server_info.tls_probing_result.highest_tls_version_supported
@@ -213,8 +215,7 @@ def scan_ssl(domain, res_dict):
             for curve in result.supported_curves:
                 res["supported_curves"].append(curve.name)
 
-    res_dict["results"] = res
-    return res_dict
+    RES_QUEUE.put(res)
 
 
 def process_results(results):
@@ -223,7 +224,7 @@ def process_results(results):
 
     # Get cipher/protocol data via sslyze for a host.
 
-    if results is None or results == {}:
+    if results == {}:
         report = {"missing": True}
 
     else:
@@ -272,6 +273,7 @@ def Server(server_client=requests):
             if time.time() >= end:
                 proc.terminate()
                 proc.join()
+                logging.error("Timeout while scanning")
                 raise ScanTimeoutException("Scan timed out")
             time.sleep(interval)
 
@@ -293,31 +295,8 @@ def Server(server_client=requests):
         logging.info("Performing scan...")
 
         try:
-            manager = Manager()
-            result_dict = manager.dict()
-            p = Process(target=scan_ssl, args=(domain, result_dict))
+            p = Process(target=scan_ssl, args=(domain,))
             wait_timeout(p, TIMEOUT)
-
-            scan_results = result_dict.values()[0]
-
-            if scan_results is not None:
-
-                processed_results = process_results(scan_results)
-
-                outbound_payload = json.dumps(
-                    {
-                        "results": processed_results,
-                        "scan_type": "ssl",
-                        "uuid": uuid,
-                        "domain_key": domain_key,
-                    }
-                )
-                logging.info(f"Scan results: {str(scan_results)}")
-            else:
-                raise Exception("SSL scan not completed")
-
-        except ScanTimeoutException:
-            return Response("Timeout occurred while scanning", status_code=500)
 
         except ServerHostnameCouldNotBeResolved as e:
             logging.error(f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})")
@@ -331,6 +310,23 @@ def Server(server_client=requests):
                 server_client,
             )
             return Response("Designated domain could not be resolved", status_code=500)
+
+        except ScanTimeoutException:
+            return Response("Timeout occurred while scanning", status_code=500)
+
+        scan_results = RES_QUEUE.get()
+
+        processed_results = process_results(scan_results)
+
+        outbound_payload = json.dumps(
+            {
+                "results": processed_results,
+                "scan_type": "ssl",
+                "uuid": uuid,
+                "domain_key": domain_key,
+            }
+        )
+        logging.info(f"Scan results: {str(scan_results)}")
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time

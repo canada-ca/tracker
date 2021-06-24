@@ -17,13 +17,14 @@ from dns import resolver
 from dkim import dnsplug, crypto, KeyFormatError
 from dkim.crypto import *
 from dkim.util import InvalidTagValueList
-from multiprocessing import Process, Manager
+from multiprocessing import Process, Queue
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import Response
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 TIMEOUT = 80  # 80 second scan timeout
+RES_QUEUE = Queue()
 
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
@@ -39,8 +40,7 @@ def dispatch_results(payload, client):
     logging.info("Scan results dispatched to result queue")
 
 
-def scan_dmarc(domain, res_dict):
-
+def scan_dmarc(domain):
     logging.info("Initiating DMARC scan")
 
     # Single-item list to pass off to check_domains function.
@@ -52,7 +52,8 @@ def scan_dmarc(domain, res_dict):
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error(f"Failed to check the given domains for DMARC/SPF records. ({e})")
-        return None
+        RES_QUEUE.put({})
+        return
 
     if scan_result["dmarc"].get("record", "null") == "null":
         logging.info("DMARC scan completed")
@@ -135,10 +136,8 @@ def scan_dmarc(domain, res_dict):
                 ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
-  
-    res_dict["dmarc_results"] = scan_result
 
-    return res_dict
+    RES_QUEUE.put(scan_result)
 
 
 def bitsize(x):
@@ -184,7 +183,7 @@ def load_pk(name, s=None):
     return pk, keysize, ktag
 
 
-def scan_dkim(domain, selectors, res_dict):
+def scan_dkim(domain, selectors):
 
     logging.info("Initiating DKIM scan")
 
@@ -229,26 +228,25 @@ def scan_dkim(domain, selectors, res_dict):
 
     logging.info("DKIM scan completed")
 
-    res_dict["dkim_results"] = record
-    return res_dict
+    RES_QUEUE.put(record)
 
 
 def process_results(results):
     logging.info("Processing DNS scan results...")
 
-    if results:
-        report = {
-            "dmarc": results["dmarc"],
-            "spf": results["spf"],
-            "mx": results["mx"],
-            "dkim": results["dkim"],
-        }
-    else:
+    if results == {}:
         report = {
             "dmarc": {"missing": True},
             "spf": {"missing": True},
             "mx": {"missing": True},
             "dkim": {"missing": True},
+        }
+    else:
+        report = {
+            "dmarc": results["dmarc"],
+            "spf": results["spf"],
+            "mx": results["mx"],
+            "dkim": results["dkim"],
         }
 
     logging.info(f"Processed DNS scan results: {str(report)}")
@@ -272,6 +270,7 @@ def Server(server_client=requests):
             if time.time() >= end:
                 proc.terminate()
                 proc.join()
+                logging.error("Timeout while scanning")
                 raise ScanTimeoutException("Scan timed out")
             time.sleep(interval)
 
@@ -294,17 +293,14 @@ def Server(server_client=requests):
         logging.info("Performing scan...")
 
         try:
-            manager = Manager()
-            result_dict = manager.dict()
-            p = Process(target=scan_dmarc, args=(domain, result_dict))
+            p = Process(target=scan_dmarc, args=(domain,))
             wait_timeout(p, TIMEOUT)
-            scan_results = result_dict.values()[0]
+            scan_results = RES_QUEUE.get()
             if scan_results:
               if len(selectors) != 0:
-                  result_dict = manager.dict()
-                  p = Process(target=scan_dkim, args=(domain, selectors, result_dict))
+                  p = Process(target=scan_dkim, args=(domain, selectors,))
                   wait_timeout(p, TIMEOUT)
-                  scan_results["dkim"] = result_dict.values()[0]
+                  scan_results["dkim"] = RES_QUEUE.get()
         except ScanTimeoutException:
             return Response("Timeout occurred while scanning", status_code=500)
 
