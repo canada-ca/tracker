@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/core'
+import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
 import { AdminDomains } from './AdminDomains'

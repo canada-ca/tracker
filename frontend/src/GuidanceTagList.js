@@ -2,12 +2,12 @@ import React from 'react'
 import { array, string } from 'prop-types'
 import {
   Box,
+  Collapse,
   Divider,
   Heading,
   Icon,
   Stack,
   Text,
-  Collapse,
 } from '@chakra-ui/core'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { Trans } from '@lingui/macro'

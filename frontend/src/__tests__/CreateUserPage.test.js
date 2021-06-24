@@ -7,7 +7,8 @@ import CreateUserPage from '../CreateUserPage'
 import { SIGN_UP } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -43,8 +44,8 @@ describe('<CreateUserPage />', () => {
   it('renders', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={mocks}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -58,7 +59,7 @@ describe('<CreateUserPage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -73,8 +74,12 @@ describe('<CreateUserPage />', () => {
     it('displays a notification', async () => {
       const { queryByText } = render(
         <MockedProvider mocks={mocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -88,7 +93,7 @@ describe('<CreateUserPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -108,12 +113,12 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -122,7 +127,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -142,12 +147,12 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -156,7 +161,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -178,12 +183,12 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -192,7 +197,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -215,12 +220,12 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -229,7 +234,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -250,12 +255,12 @@ describe('<CreateUserPage />', () => {
         it('displays required message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -264,7 +269,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -282,12 +287,12 @@ describe('<CreateUserPage />', () => {
         it('displays error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -296,7 +301,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -321,12 +326,12 @@ describe('<CreateUserPage />', () => {
         it('displays password length message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -335,7 +340,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -362,12 +367,12 @@ describe('<CreateUserPage />', () => {
         it('displays matching error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -376,7 +381,7 @@ describe('<CreateUserPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -403,8 +408,12 @@ describe('<CreateUserPage />', () => {
     it('fails to create account', async () => {
       const { container, getByText } = render(
         <MockedProvider mocks={mocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -413,7 +422,7 @@ describe('<CreateUserPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

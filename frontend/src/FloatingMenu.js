@@ -2,31 +2,31 @@ import { FloatingMenuLink } from './FloatingMenuLink'
 import React from 'react'
 import { Link as RouteLink } from 'react-router-dom'
 import {
-  Stack,
+  Box,
   Button,
+  Divider,
   Drawer,
   DrawerBody,
+  DrawerContent,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
-  useDisclosure,
-  Box,
-  Link,
-  Divider,
-  Image,
-  useToast,
   Heading,
+  Image,
+  Link,
+  Stack,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
 import { useLingui } from '@lingui/react'
-import { useUserState } from './UserState'
+import { useUserVar } from './UserState'
 
 export const FloatingMenu = () => {
   const { i18n } = useLingui()
-  const { _currentUser, isLoggedIn, logout } = useUserState()
+  const { _currentUser, isLoggedIn, logout } = useUserVar()
   const toast = useToast()
 
   const {
@@ -48,8 +48,12 @@ export const FloatingMenu = () => {
       p="4px"
       display={{ base: 'static', md: 'none' }}
     >
-      <Stack isInline width="100%" rounded="md" spacing={0}
-        fontSize={{base:'60%', sm:'100%'}}
+      <Stack
+        isInline
+        width="100%"
+        rounded="md"
+        spacing={0}
+        fontSize={{ base: '60%', sm: '100%' }}
       >
         <Link as={RouteLink} to="/organizations" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
@@ -158,7 +162,10 @@ export const FloatingMenu = () => {
                   )}
 
                   {!isLoggedIn() && (
-                    <FloatingMenuLink to="/create-user" text={t`Create Account`} />
+                    <FloatingMenuLink
+                      to="/create-user"
+                      text={t`Create Account`}
+                    />
                   )}
 
                   <Divider

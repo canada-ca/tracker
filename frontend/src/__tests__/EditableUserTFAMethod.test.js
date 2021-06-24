@@ -4,10 +4,11 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import EditableUserTFAMethod from '../EditableUserTFAMethod'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,12 +24,8 @@ describe('<EditableUserTFAMethod />', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider addTypename={false}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testUserName@email.com',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
@@ -37,7 +34,7 @@ describe('<EditableUserTFAMethod />', () => {
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => expect(getByText(/Save/i)).toBeInTheDocument())
@@ -70,12 +67,8 @@ describe('<EditableUserTFAMethod />', () => {
 
     const { getByText, getByTestId } = render(
       <MockedProvider addTypename={false} mocks={mocks}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testUserName@email.com',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
@@ -88,7 +81,7 @@ describe('<EditableUserTFAMethod />', () => {
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -127,12 +120,8 @@ describe('<EditableUserTFAMethod />', () => {
 
     const { getByText, getByTestId } = render(
       <MockedProvider addTypename={false} mocks={mocks}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testUserName@email.com',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
@@ -145,7 +134,7 @@ describe('<EditableUserTFAMethod />', () => {
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 

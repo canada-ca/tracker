@@ -1,28 +1,27 @@
 import React, { useCallback, useState } from 'react'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
 import {
   Box,
   Divider,
+  Flex,
   Heading,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  TabPanels,
+  Icon,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
-  Icon,
-  Text,
   Select,
-  Flex,
   Stack,
-  IconButton,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
 } from '@chakra-ui/core'
 import { PAGINATED_DOMAINS as FORWARD } from './graphql/queries'
-import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -33,7 +32,6 @@ import { RelayPaginationControls } from './RelayPaginationControls'
 import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function DomainsPage() {
-  const { currentUser } = useUserState()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
@@ -60,7 +58,6 @@ export default function DomainsPage() {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
     relayRoot: 'findMyDomains',
     variables: {

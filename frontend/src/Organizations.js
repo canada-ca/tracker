@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
 import {
-  Heading,
   Box,
   Divider,
   Flex,
+  Heading,
   Icon,
   IconButton,
   Input,
@@ -17,7 +17,6 @@ import {
   Text,
 } from '@chakra-ui/core'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from './graphql/queries'
-import { useUserState } from './UserState'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -32,7 +31,6 @@ export default function Organisations() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(10)
-  const { currentUser } = useUserState()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -54,7 +52,6 @@ export default function Organisations() {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
     variables: {
       field: orderField,
       direction: orderDirection,

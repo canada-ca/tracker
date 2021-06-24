@@ -4,10 +4,11 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import { FloatingMenu } from '../FloatingMenu'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,12 +24,8 @@ describe('<FloatingMenu>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{
-            userName: 'testUserName@email.com',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
@@ -37,7 +34,7 @@ describe('<FloatingMenu>', () => {
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => expect(getByText(/Menu/i)).toBeInTheDocument())
@@ -46,12 +43,12 @@ describe('<FloatingMenu>', () => {
     it('opens the menu', async () => {
       const { getByText } = render(
         <MockedProvider>
-          <UserStateProvider
-            initialState={{
-              userName: 'testUserName@email.com',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
@@ -60,7 +57,7 @@ describe('<FloatingMenu>', () => {
                 </ThemeProvider>
               </I18nProvider>
             </MemoryRouter>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
       const menuButton = getByText(/Menu/i)
@@ -76,12 +73,12 @@ describe('<FloatingMenu>', () => {
       it('closes the menu', async () => {
         const { getByText, queryByText } = render(
           <MockedProvider>
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
@@ -90,7 +87,7 @@ describe('<FloatingMenu>', () => {
                   </ThemeProvider>
                 </I18nProvider>
               </MemoryRouter>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
         const menuButton = getByText(/Menu/i)
@@ -118,12 +115,12 @@ describe('<FloatingMenu>', () => {
 
         const { getByText } = render(
           <MockedProvider>
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
@@ -139,7 +136,7 @@ describe('<FloatingMenu>', () => {
                   </ThemeProvider>
                 </I18nProvider>
               </MemoryRouter>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
         const menuButton = getByText(/Menu/i)

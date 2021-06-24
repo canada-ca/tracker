@@ -1,8 +1,9 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Text, Link, ListItem, Stack } from '@chakra-ui/core'
+import { Link, ListItem, Stack, Text } from '@chakra-ui/core'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
-import { string, number } from 'prop-types'
+import { number, string } from 'prop-types'
+
 export function Organization({ name, slug, domainCount, ...rest }) {
   const { path, _url } = useRouteMatch()
   return (

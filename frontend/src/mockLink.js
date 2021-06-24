@@ -6,9 +6,9 @@ const errorLink = new ApolloLink((operation, forward) => {
   const observer = forward(operation)
   // errors will be sent to the errorCallback
   observer.subscribe({
-    error: e => console.log('caught error with errorLink:', e),
+    error: (e) => console.log('caught error with errorLink:', e),
   })
-  return observer.map(data => {
+  return observer.map((data) => {
     console.log(`ending request for ${operation.operationName}`)
     return data
   })
