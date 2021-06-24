@@ -27,6 +27,7 @@ import { useDocumentTitle } from './useDocumentTitle'
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
   const toast = useToast()
+  const isAdmin = true
 
   useDocumentTitle(`${orgSlug}`)
 
@@ -85,9 +86,11 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          <Tab>
-            <Trans>Users</Trans>
-          </Tab>
+          {isAdmin && (
+            <Tab>
+              <Trans>Users</Trans>
+            </Tab>
+          )}
         </TabList>
 
         <TabPanels>
@@ -107,11 +110,13 @@ export default function OrganizationDetails() {
               <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
-            </ErrorBoundary>
-          </TabPanel>
+          {isAdmin && (
+            <TabPanel>
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
+              </ErrorBoundary>
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </Layout>
