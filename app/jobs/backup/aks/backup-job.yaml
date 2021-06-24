@@ -12,7 +12,7 @@ spec:
         - name: upload
           image: rclone/rclone
           command: ["/bin/sh", "-c"]
-          args: ["rclone copy /tmp/dump :azureblob:gc-tracker-backups/tracker-backup-$(date -I)"]
+          args: ["rclone copy /tmp/dump :azureblob:dbdump/tracker-backup-$(date -I)"]
           env:
           - name: RCLONE_AZUREBLOB_ACCOUNT
             secretKeyRef:
