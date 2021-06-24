@@ -8,7 +8,7 @@ import frenchMessages from '../../locale/fr/messages'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the check domain ownership function', () => {
+describe('given the checkOrgOwner function', () => {
   describe('given a successful check', () => {
     let query, drop, truncate, collections, user, org
     beforeAll(async () => {
