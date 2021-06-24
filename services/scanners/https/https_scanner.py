@@ -35,7 +35,6 @@ def dispatch_results(payload, client):
 
 
 def scan_https(domain, res_dict):
-    time.sleep(20)
     try:
         # Run https-scanner
         res_dict["results"] = https.run([domain])
