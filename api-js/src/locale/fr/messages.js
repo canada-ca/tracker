@@ -381,6 +381,8 @@
       'Impossible de charger le résumé du courrier. Veuillez réessayer.',
     'Unable to load organization(s). Please try again.':
       "Impossible de charger l'organisation (s). Veuillez réessayer.",
+    'Unable to load owner information. Please try again.':
+      'Impossible de charger les informations sur le propriétaire. Veuillez réessayer.',
     'Unable to load summary. Please try again.':
       'Impossible de charger le résumé. Veuillez réessayer.',
     'Unable to load user(s). Please try again.':

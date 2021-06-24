@@ -669,6 +669,11 @@ msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 msgid "Unable to load organization(s). Please try again."
 msgstr "Impossible de charger l'organisation (s). Veuillez réessayer."
 
+#: src/auth/check-org-owner.js:22
+#: src/auth/check-org-owner.js:34
+msgid "Unable to load owner information. Please try again."
+msgstr "Impossible de charger les informations sur le propriétaire. Veuillez réessayer."
+
 #: src/summaries/loaders/load-chart-summary-by-key.js:19
 #: src/summaries/loaders/load-chart-summary-by-key.js:31
 msgid "Unable to load summary. Please try again."

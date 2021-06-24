@@ -669,6 +669,11 @@ msgstr "Unable to load mail summary. Please try again."
 msgid "Unable to load organization(s). Please try again."
 msgstr "Unable to load organization(s). Please try again."
 
+#: src/auth/check-org-owner.js:22
+#: src/auth/check-org-owner.js:34
+msgid "Unable to load owner information. Please try again."
+msgstr "Unable to load owner information. Please try again."
+
 #: src/summaries/loaders/load-chart-summary-by-key.js:19
 #: src/summaries/loaders/load-chart-summary-by-key.js:31
 msgid "Unable to load summary. Please try again."
