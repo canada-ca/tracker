@@ -1,12 +1,11 @@
 import React from 'react'
-import { Stack, useToast, Box, Heading } from '@chakra-ui/core'
-import { Trans, t } from '@lingui/macro'
+import { Box, Heading, Stack, useToast } from '@chakra-ui/core'
+import { t, Trans } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserState } from './UserState'
 import { LoadingMessage } from './LoadingMessage'
 import { Formik } from 'formik'
-import { useHistory, Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { TrackerButton } from './TrackerButton'
 import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
@@ -14,7 +13,6 @@ import CreateOrganizationField from './CreateOrganizationField'
 import { i18n } from '@lingui/core'
 
 export default function CreateOrganizationPage() {
-  const { currentUser } = useUserState()
   const toast = useToast()
   const history = useHistory()
 
@@ -66,11 +64,6 @@ export default function CreateOrganizationPage() {
   })
 
   const [createOrganization, { loading }] = useMutation(CREATE_ORGANIZATION, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     onError(error) {
       toast({
         title: t`An error occurred.`,

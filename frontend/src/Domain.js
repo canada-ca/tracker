@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
-import { Stack, Box, Link, Icon, Text, ListItem } from '@chakra-ui/core'
+import { Box, Icon, Link, ListItem, Stack, Text } from '@chakra-ui/core'
 import { sanitizeUrl } from './sanitizeUrl'
 import { Link as RouteLink } from 'react-router-dom'
 

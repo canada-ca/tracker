@@ -1,6 +1,6 @@
 import React from 'react'
-import { Box, Text, Grid } from '@chakra-ui/core'
-import { string, func, array, bool } from 'prop-types'
+import { Box, Grid, Text } from '@chakra-ui/core'
+import { array, bool, func, string } from 'prop-types'
 
 const CustomTooltipContent = ({
   label,

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { object, string } from 'prop-types'
-import { Box, Heading, Collapse, Divider, Text, Stack } from '@chakra-ui/core'
+import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
 import { GuidanceTagList } from './GuidanceTagList'
 import WithPseudoBox from './withPseudoBox'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
 function ScanCategoryDetails({ categoryName, categoryData }) {
   const [showCategory, setShowCategory] = useState(true)

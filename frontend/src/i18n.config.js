@@ -1,5 +1,5 @@
 import { i18n } from '@lingui/core'
-import { fr, en } from 'make-plural/plurals'
+import { en, fr } from 'make-plural/plurals'
 
 i18n.loadLocaleData('en', { plurals: en })
 i18n.loadLocaleData('fr', { plurals: fr })

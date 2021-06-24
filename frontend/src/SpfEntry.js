@@ -1,6 +1,6 @@
 import React from 'react'
-import { Box, Stack, Text, Divider } from '@chakra-ui/core'
-import { string, bool } from 'prop-types'
+import { Box, Divider, Stack, Text } from '@chakra-ui/core'
+import { bool, string } from 'prop-types'
 
 export function SpfEntry(props) {
   return (

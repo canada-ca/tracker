@@ -1,10 +1,10 @@
 import React from 'react'
-import { object, arrayOf, number, string, func } from 'prop-types'
+import { arrayOf, func, number, object, string } from 'prop-types'
 import { Box, Image, Text } from '@chakra-ui/core'
 import { scaleOrdinal } from 'd3'
-import { Trans } from "@lingui/macro"
+import { Trans } from '@lingui/macro'
 import { useArcs } from './useArcs'
-import { ZigZag, CrossHatch, Dots, Stripes } from './patterns'
+import { CrossHatch, Dots, Stripes, ZigZag } from './patterns'
 import trackerLogo from './images/tracker_v-03.png'
 
 export const Doughnut = ({
@@ -37,10 +37,26 @@ export const Doughnut = ({
 
   const patternDefs = (
     <defs>
-      <Stripes angle={45} background={data[1] ? data[1].color : '#000'} color="#fff" />
-      <Dots size={1} background={data[2] ? data[2].color : '#000'} color="#fff" />
-      <CrossHatch width={0.8} background={data[3] ? data[3].color : '#000'} color="#fff" />
-      <ZigZag width={0.4} background={data[4] ? data[4].color : '#000'} color="#fff" />
+      <Stripes
+        angle={45}
+        background={data[1] ? data[1].color : '#000'}
+        color="#fff"
+      />
+      <Dots
+        size={1}
+        background={data[2] ? data[2].color : '#000'}
+        color="#fff"
+      />
+      <CrossHatch
+        width={0.8}
+        background={data[3] ? data[3].color : '#000'}
+        color="#fff"
+      />
+      <ZigZag
+        width={0.4}
+        background={data[4] ? data[4].color : '#000'}
+        color="#fff"
+      />
     </defs>
   )
 

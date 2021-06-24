@@ -10,11 +10,12 @@ import { MemoryRouter } from 'react-router-dom'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
 import { createCache } from '../client'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -113,12 +114,8 @@ describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
     const { getByText } = render(
       <MockedProvider mocks={successMocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -132,7 +129,7 @@ describe('<UserList />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -159,12 +156,12 @@ describe('<UserList />', () => {
         findAllByLabelText,
       } = render(
         <MockedProvider mocks={successMocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testadmin@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -176,7 +173,7 @@ describe('<UserList />', () => {
                 />
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -217,12 +214,12 @@ describe('<UserList />', () => {
     it('successfully invites user to org', async () => {
       const { getByText, getByLabelText } = render(
         <MockedProvider mocks={successMocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -236,7 +233,7 @@ describe('<UserList />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -256,12 +253,12 @@ describe('<UserList />', () => {
     it('successfully removes user from org', async () => {
       const { getAllByLabelText, queryByText, getByText } = render(
         <MockedProvider mocks={successMocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -275,7 +272,7 @@ describe('<UserList />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

@@ -1,13 +1,13 @@
 import React from 'react'
 import { node } from 'prop-types'
 import { Redirect, useLocation } from 'react-router-dom'
-import { useUserState } from './UserState'
+import { useUserVar } from './UserState'
 import { Page } from './Page'
 
 // A wrapper for <Page> that redirects to the login
 // screen if you're not yet authenticated.
 export default function PrivatePage({ children, title, setTitle, ...rest }) {
-  const { isLoggedIn } = useUserState()
+  const { isLoggedIn } = useUserVar()
   const location = useLocation()
   return (
     <Page

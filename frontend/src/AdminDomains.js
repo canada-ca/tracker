@@ -1,39 +1,38 @@
 import React, { useCallback, useState } from 'react'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import {
-  Stack,
-  Text,
-  InputGroup,
-  InputLeftElement,
+  Box,
+  Divider,
   Icon,
   Input,
-  useToast,
-  useDisclosure,
-  SlideIn,
+  InputGroup,
+  InputLeftElement,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  Divider,
-  Box,
+  ModalHeader,
+  ModalOverlay,
+  SlideIn,
+  Stack,
+  Text,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/core'
 import { Domain } from './Domain'
-import { string, number } from 'prop-types'
+import { number, string } from 'prop-types'
 import { ListOf } from './ListOf'
 import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'
 import { REMOVE_DOMAIN } from './graphql/mutations'
 import {
+  array as yupArray,
   object as yupObject,
   string as yupString,
-  array as yupArray,
 } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
-import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
@@ -44,7 +43,6 @@ import { AdminDomainModal } from './AdminDomainModal'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const toast = useToast()
-  const { currentUser } = useUserState()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
@@ -77,7 +75,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
     variables: { orgSlug, search: debouncedSearchTerm },
     relayRoot: 'findOrganizationBySlug.domains',
@@ -94,11 +91,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [removeDomain, { loading: removeDomainLoading }] = useMutation(
     REMOVE_DOMAIN,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       refetchQueries: ['PaginatedOrgDomains'],
       onError(error) {
         toast({

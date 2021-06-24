@@ -4,11 +4,12 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import EditableUserPhoneNumber from '../EditableUserPhoneNumber'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 import { VERIFY_PHONE_NUMBER, SET_PHONE_NUMBER } from '../graphql/mutations'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -25,12 +26,12 @@ describe('<EditableUserPhoneNumber />', () => {
     const { getByText } = render(
       <Suspense fallback="test loading">
         <MockedProvider addTypename={false}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testUserName@email.com',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
@@ -39,7 +40,7 @@ describe('<EditableUserPhoneNumber />', () => {
                 </ThemeProvider>
               </I18nProvider>
             </MemoryRouter>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>
       </Suspense>,
     )
@@ -50,12 +51,12 @@ describe('<EditableUserPhoneNumber />', () => {
       const { getByText } = render(
         <Suspense fallback="test loading">
           <MockedProvider addTypename={false}>
-            <UserStateProvider
-              initialState={{
-                userName: 'testUserName@email.com',
-                jwt: 'string',
-                tfaSendMethod: false,
-              }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
@@ -64,7 +65,7 @@ describe('<EditableUserPhoneNumber />', () => {
                   </ThemeProvider>
                 </I18nProvider>
               </MemoryRouter>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>
         </Suspense>,
       )
@@ -83,12 +84,12 @@ describe('<EditableUserPhoneNumber />', () => {
           const { getByText } = render(
             <Suspense fallback="test loading">
               <MockedProvider addTypename={false}>
-                <UserStateProvider
-                  initialState={{
-                    userName: 'testUserName@email.com',
-                    jwt: 'string',
-                    tfaSendMethod: false,
-                  }}
+                <UserVarProvider
+                  userVar={makeVar({
+                    jwt: null,
+                    tfaSendMethod: null,
+                    userName: null,
+                  })}
                 >
                   <MemoryRouter initialEntries={['/']}>
                     <I18nProvider i18n={i18n}>
@@ -97,7 +98,7 @@ describe('<EditableUserPhoneNumber />', () => {
                       </ThemeProvider>
                     </I18nProvider>
                   </MemoryRouter>
-                </UserStateProvider>
+                </UserVarProvider>
               </MockedProvider>
             </Suspense>,
           )
@@ -171,12 +172,12 @@ describe('<EditableUserPhoneNumber />', () => {
           const { queryByText, getByText, getByLabelText } = render(
             <Suspense fallback="test loading">
               <MockedProvider addTypename={false} mocks={mocks}>
-                <UserStateProvider
-                  initialState={{
-                    userName: 'testUserName@email.com',
-                    jwt: 'string',
-                    tfaSendMethod: false,
-                  }}
+                <UserVarProvider
+                  userVar={makeVar({
+                    jwt: null,
+                    tfaSendMethod: null,
+                    userName: null,
+                  })}
                 >
                   <MemoryRouter initialEntries={['/']}>
                     <I18nProvider i18n={i18n}>
@@ -185,7 +186,7 @@ describe('<EditableUserPhoneNumber />', () => {
                       </ThemeProvider>
                     </I18nProvider>
                   </MemoryRouter>
-                </UserStateProvider>
+                </UserVarProvider>
               </MockedProvider>
             </Suspense>,
           )

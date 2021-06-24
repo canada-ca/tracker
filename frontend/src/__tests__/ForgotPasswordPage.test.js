@@ -4,11 +4,12 @@ import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
 import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 import ForgotPasswordPage from '../ForgotPasswordPage'
 import { createMemoryHistory } from 'history'
+import { makeVar } from '@apollo/client'
 
 const mocks = [
   {
@@ -44,12 +45,12 @@ describe('<ForgotPasswordPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={mocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -61,7 +62,7 @@ describe('<ForgotPasswordPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -88,8 +89,12 @@ describe('<ForgotPasswordPage />', () => {
     it('successfully submits', async () => {
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={mocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -108,7 +113,7 @@ describe('<ForgotPasswordPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

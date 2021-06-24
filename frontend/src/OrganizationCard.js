@@ -1,16 +1,16 @@
 import React from 'react'
 import {
-  Text,
+  Box,
+  Divider,
+  Icon,
   ListItem,
   Progress,
   PseudoBox,
-  Box,
   Stack,
-  Divider,
-  Icon,
+  Text,
 } from '@chakra-ui/core'
-import { useRouteMatch, Link as RouteLink } from 'react-router-dom'
-import { string, number, bool, object } from 'prop-types'
+import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
+import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { TrackerButton } from './TrackerButton'
 
