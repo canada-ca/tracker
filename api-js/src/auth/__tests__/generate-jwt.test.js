@@ -17,7 +17,7 @@ describe('tokenize()', () => {
 describe('tokenize()', () => {
   describe('when no iat/exp parameters are passed', () => {
     it('expires in 1 hour (3600 seconds) by default', () => {
-      const token = tokenize({secret: 'foo' })
+      const token = tokenize({ secret: 'foo' })
 
       const decoded = jwt.verify(token, 'foo')
       expect(decoded.exp - decoded.iat).toEqual(3600)

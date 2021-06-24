@@ -686,7 +686,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
           try {
             await connectionLoader({ ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcFailureTable`.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -712,7 +716,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
           try {
             await connectionLoader({ ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `DmarcFailureTable` n'est pas supporté.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -738,7 +746,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             try {
               await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `101` sur la connexion `DkimFailureTable` dépasse la limite `first` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -763,7 +775,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             try {
               await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `101` sur la connexion `DkimFailureTable` dépasse la limite `last` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -790,7 +806,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             try {
               await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -815,7 +835,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             try {
               await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -847,7 +871,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -879,7 +907,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -906,7 +938,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
           try {
             await connectionLoader({ ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible de charger les données d'échec DMARC. Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -937,7 +973,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de charger les données d'échec DMARC. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -970,7 +1010,11 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de charger les données d'échec DMARC. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

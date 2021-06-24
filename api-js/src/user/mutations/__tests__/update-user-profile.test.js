@@ -16,7 +16,7 @@ import { loadUserByUserName, loadUserByKey } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, collections, schema, i18n
+  let query, drop, truncate, collections, transaction, schema, i18n
 
   let consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -30,7 +30,7 @@ describe('authenticate user account', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
       url,
@@ -38,7 +38,6 @@ describe('authenticate user account', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -52,11 +51,9 @@ describe('authenticate user account', () => {
     })
     consoleOutput = []
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
@@ -110,6 +107,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -183,6 +182,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -254,6 +255,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -354,6 +357,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -452,6 +457,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -535,6 +542,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -616,6 +625,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -698,6 +709,8 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
+                collections,
+                transaction,
                 userKey: user._key,
                 auth: {
                   bcrypt,
@@ -779,6 +792,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -815,79 +830,159 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when updating profile', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
+      describe('given a transaction step error', () => {
+        describe('when updating profile', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const userNameLoader = loadUserByUserName({ query })
-          const idLoader = loadUserByKey({ query })
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction step error')),
+            })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        id
-                      }
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: {
+                      displayName: "John Smith"
+                      userName: "john.smith@istio.actually.works"
+                      preferredLang: ENGLISH
                     }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          id
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-                loadUserByKey: idLoader,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError('Unable to update profile. Please try again.'),
-          ]
+            const error = [
+              new GraphQLError('Unable to update profile. Please try again.'),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to update their profile: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('given a transaction step error', () => {
+        describe('when updating profile', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction commit error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: {
+                      displayName: "John Smith"
+                      userName: "john.smith@istio.actually.works"
+                      preferredLang: ENGLISH
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          id
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update profile. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction commit error`,
+            ])
+          })
         })
       })
     })
@@ -941,6 +1036,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -967,7 +1064,7 @@ describe('authenticate user account', () => {
                   user: {
                     displayName: 'John Doe',
                   },
-                  status: 'todo',
+                  status: 'Le profil a été mis à jour avec succès.',
                 },
               },
             },
@@ -1014,6 +1111,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -1040,7 +1139,7 @@ describe('authenticate user account', () => {
                   user: {
                     userName: 'john.doe@istio.actually.works',
                   },
-                  status: 'todo',
+                  status: 'Le profil a été mis à jour avec succès.',
                 },
               },
             },
@@ -1085,6 +1184,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -1111,7 +1212,7 @@ describe('authenticate user account', () => {
                   user: {
                     preferredLang: 'ENGLISH',
                   },
-                  status: 'todo',
+                  status: 'Le profil a été mis à jour avec succès.',
                 },
               },
             },
@@ -1185,6 +1286,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -1211,7 +1314,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'PHONE',
                       },
-                      status: 'todo',
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1283,6 +1386,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -1309,7 +1414,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'NONE',
                       },
-                      status: 'todo',
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1366,6 +1471,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -1392,7 +1499,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'EMAIL',
                       },
-                      status: 'todo',
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1447,6 +1554,8 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
+                  collections,
+                  transaction,
                   userKey: user._key,
                   auth: {
                     bcrypt,
@@ -1473,7 +1582,7 @@ describe('authenticate user account', () => {
                       user: {
                         tfaSendMethod: 'NONE',
                       },
-                      status: 'todo',
+                      status: 'Le profil a été mis à jour avec succès.',
                     },
                   },
                 },
@@ -1529,6 +1638,8 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
+                collections,
+                transaction,
                 userKey: user._key,
                 auth: {
                   bcrypt,
@@ -1555,7 +1666,7 @@ describe('authenticate user account', () => {
                     user: {
                       tfaSendMethod: 'NONE',
                     },
-                    status: 'todo',
+                    status: 'Le profil a été mis à jour avec succès.',
                   },
                 },
               },
@@ -1610,6 +1721,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -1634,7 +1747,8 @@ describe('authenticate user account', () => {
               updateUserProfile: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre.",
                 },
               },
             },
@@ -1646,77 +1760,163 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when updating profile', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
+      describe('given a transaction step error', () => {
+        describe('when updating profile', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const userNameLoader = loadUserByUserName({ query })
-          const idLoader = loadUserByKey({ query })
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction step error')),
+            })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        id
-                      }
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: {
+                      displayName: "John Smith"
+                      userName: "john.smith@istio.actually.works"
+                      preferredLang: ENGLISH
                     }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          id
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-                loadUserByKey: idLoader,
-              },
-            },
-          )
+            )
 
-          const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de mettre à jour le profil. Veuillez réessayer.',
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to update their profile: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('given a transaction step error', () => {
+        describe('when updating profile', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const idLoader = loadUserByKey({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction commit error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: {
+                      displayName: "John Smith"
+                      userName: "john.smith@istio.actually.works"
+                      preferredLang: ENGLISH
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          id
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                  loadUserByKey: idLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de mettre à jour le profil. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction commit error`,
+            ])
+          })
         })
       })
     })

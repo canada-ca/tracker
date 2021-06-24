@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -42,10 +42,10 @@ describe('given findOrganizationBySlugQuery', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
     org = await collections.organizations.save({
       orgDetails: {
@@ -80,15 +80,12 @@ describe('given findOrganizationBySlugQuery', () => {
     })
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -146,6 +143,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -160,14 +158,13 @@ describe('given findOrganizationBySlugQuery', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
-                  {
+                loadAffiliationConnectionsByOrgId:
+                  loadAffiliationConnectionsByOrgId({
                     query,
                     userKey: user._key,
                     cleanseInput,
                     i18n,
-                  },
-                ),
+                  }),
               },
             },
           )
@@ -226,6 +223,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -281,6 +279,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -363,6 +362,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -377,14 +377,13 @@ describe('given findOrganizationBySlugQuery', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
-                  {
+                loadAffiliationConnectionsByOrgId:
+                  loadAffiliationConnectionsByOrgId({
                     query,
                     userKey: user._key,
                     cleanseInput,
                     i18n,
-                  },
-                ),
+                  }),
               },
             },
           )
@@ -457,6 +456,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -468,7 +468,11 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Permission refusée : Impossible de récupérer l'organisation spécifiée.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -508,6 +512,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -519,7 +524,11 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Aucune organisation avec le slug fourni n'a pu être trouvée.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

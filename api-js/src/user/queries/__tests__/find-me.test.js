@@ -79,13 +79,12 @@ describe('given the findMe query', () => {
             }),
           },
           loaders: {
-            loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId(
-              {
+            loadAffiliationConnectionsByUserId:
+              loadAffiliationConnectionsByUserId({
                 query,
                 userKey: user._key,
                 cleanseInput,
-              },
-            ),
+              }),
           },
         },
       )

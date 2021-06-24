@@ -28,8 +28,8 @@ else
 		kustomize build app/creds/dev | kubectl apply -f -
 endif
 
-.PHONY: backup
-backup:
+.PHONY: dbdump
+dbdump:
 		arangodump --include-system-collections true --server.database track_dmarc --output-directory $(to)
 
 .PHONY: restore
@@ -69,6 +69,10 @@ app:
 scans:
 		kubectl apply -n scanners -f app/jobs/scan-job.yaml
 		kubectl apply -n scanners -f app/jobs/core-job.yaml
+
+.PHONY: backup
+backup:
+		kustomize build app/jobs/backup/$(env) | kubectl apply -f -
 
 .PHONY: superadmin
 superadmin:
@@ -113,6 +117,7 @@ credentials:
 		DB_URL=http://arangodb.db:8529
 		DB_NAME=track_dmarc
 		AUTHENTICATED_KEY=alonghash
+		REFRESH_KEY=alonghash
 		SIGN_IN_KEY=alonghash
 		CIPHER_KEY=1234averyveryveryveryverylongkey
 		NOTIFICATION_API_KEY=test_key-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

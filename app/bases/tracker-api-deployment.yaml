@@ -19,7 +19,7 @@ spec:
         app: tracker-api
     spec:
       containers:
-      - image: gcr.io/track-compliance/api-js:master-1da8adc-1623420063 # {"$imagepolicy": "flux-system:api"}
+      - image: gcr.io/track-compliance/api-js:master-0778214-1624458080 # {"$imagepolicy": "flux-system:api"}
         name: api
         ports:
         - containerPort: 4000
@@ -49,6 +49,11 @@ spec:
             secretKeyRef:
               name: api
               key: AUTHENTICATED_KEY
+        - name: REFRESH_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: REFRESH_KEY
         - name: SIGN_IN_KEY
           valueFrom:
             secretKeyRef:

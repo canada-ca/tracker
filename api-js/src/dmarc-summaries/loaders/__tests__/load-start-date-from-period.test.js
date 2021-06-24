@@ -246,7 +246,11 @@ describe('given the loadStartDateFromPeriod', () => {
             try {
               loader({ period: 'january', year: '2021' })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'Impossible de sélectionner le(s) rapport(s) DMARC pour cette période et cette année.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -283,7 +287,11 @@ describe('given the loadStartDateFromPeriod', () => {
             try {
               loader({ period: 'thirtyDays', year: '2021' })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'Impossible de sélectionner le(s) rapport(s) DMARC pour cette période et cette année.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([

@@ -391,7 +391,11 @@ describe('given the organization object', () => {
                 },
               )
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Impossible d'interroger les affiliations sur l'organisation sans l'autorisation de l'administrateur ou plus.",
+                ),
+              )
             }
           })
         })

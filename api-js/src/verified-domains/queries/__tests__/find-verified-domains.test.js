@@ -141,11 +141,8 @@ describe('given findVerifiedDomains query', () => {
               query,
               cleanseInput,
             }),
-            loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
-              query,
-              'en',
-              cleanseInput,
-            ),
+            loadVerifiedOrgConnectionsByDomainId:
+              loadVerifiedOrgConnectionsByDomainId(query, 'en', cleanseInput),
           },
         },
       )
@@ -229,11 +226,12 @@ describe('given findVerifiedDomains query', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
-                  query,
-                  'en',
-                  cleanseInput,
-                ),
+                loadVerifiedOrgConnectionsByDomainId:
+                  loadVerifiedOrgConnectionsByDomainId(
+                    query,
+                    'en',
+                    cleanseInput,
+                  ),
               },
             },
           )
@@ -311,11 +309,12 @@ describe('given findVerifiedDomains query', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
-                  query,
-                  'en',
-                  cleanseInput,
-                ),
+                loadVerifiedOrgConnectionsByDomainId:
+                  loadVerifiedOrgConnectionsByDomainId(
+                    query,
+                    'en',
+                    cleanseInput,
+                  ),
               },
             },
           )

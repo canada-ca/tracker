@@ -10,6 +10,11 @@ export const authResultType = new GraphQLObjectType({
       description: `JWT used for accessing controlled content.`,
       resolve: ({ token }) => token,
     },
+    refreshToken: {
+      type: GraphQLString,
+      description: `JWT used to refresh authentication token.`,
+      resolve: ({ refreshToken }) => refreshToken,
+    },
     user: {
       type: userPersonalType,
       description: `User that has just been created or signed in.`,

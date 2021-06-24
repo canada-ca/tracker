@@ -9,7 +9,7 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
 
@@ -39,22 +39,19 @@ describe('removing an organization', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('given a successful org removal', () => {
     let org, domain, i18n
     beforeEach(async () => {
@@ -196,6 +193,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -211,9 +209,9 @@ describe('removing an organization', () => {
                   result: {
                     status:
                       'Successfully removed organization: treasury-board-secretariat.',
-                      organization: {
-                        name: 'Treasury Board of Canada Secretariat',
-                      },
+                    organization: {
+                      name: 'Treasury Board of Canada Secretariat',
+                    },
                   },
                 },
               },
@@ -265,6 +263,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -274,19 +273,23 @@ describe('removing an organization', () => {
               },
             )
 
-            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrgCursor =
+              await query`FOR org IN organizations RETURN org`
             const testOrg = await testOrgCursor.next()
             expect(testOrg).toEqual(undefined)
 
-            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomainCursor =
+              await query`FOR domain IN domains RETURN domain`
             const testDomain = await testDomainCursor.next()
             expect(testDomain).toEqual(undefined)
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkimCursor =
+              await query`FOR dkimScan IN dkim RETURN dkimScan`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(undefined)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarcCursor =
+              await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(undefined)
 
@@ -294,7 +297,8 @@ describe('removing an organization', () => {
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(undefined)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttpsCursor =
+              await query`FOR httpsScan IN https RETURN httpsScan`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(undefined)
 
@@ -345,6 +349,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -360,9 +365,9 @@ describe('removing an organization', () => {
                   result: {
                     status:
                       'Successfully removed organization: treasury-board-secretariat.',
-                      organization: {
-                        name: 'Treasury Board of Canada Secretariat',
-                      },
+                    organization: {
+                      name: 'Treasury Board of Canada Secretariat',
+                    },
                   },
                 },
               },
@@ -414,6 +419,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -423,19 +429,23 @@ describe('removing an organization', () => {
               },
             )
 
-            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrgCursor =
+              await query`FOR org IN organizations RETURN org`
             const testOrg = await testOrgCursor.next()
             expect(testOrg).toEqual(undefined)
 
-            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomainCursor =
+              await query`FOR domain IN domains RETURN domain`
             const testDomain = await testDomainCursor.next()
             expect(testDomain).toEqual(undefined)
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkimCursor =
+              await query`FOR dkimScan IN dkim RETURN dkimScan`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(undefined)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarcCursor =
+              await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(undefined)
 
@@ -443,7 +453,8 @@ describe('removing an organization', () => {
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(undefined)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttpsCursor =
+              await query`FOR httpsScan IN https RETURN httpsScan`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(undefined)
 
@@ -499,6 +510,7 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -514,9 +526,9 @@ describe('removing an organization', () => {
                 result: {
                   status:
                     'Successfully removed organization: treasury-board-secretariat.',
-                    organization: {
-                      name: 'Treasury Board of Canada Secretariat',
-                    },
+                  organization: {
+                    name: 'Treasury Board of Canada Secretariat',
+                  },
                 },
               },
             },
@@ -565,6 +577,7 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -578,15 +591,18 @@ describe('removing an organization', () => {
           const testOrg = await testOrgCursor.next()
           expect(testOrg).toEqual(undefined)
 
-          const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+          const testDomainCursor =
+            await query`FOR domain IN domains RETURN domain`
           const testDomain = await testDomainCursor.next()
           expect(testDomain).toEqual(undefined)
 
-          const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+          const testDkimCursor =
+            await query`FOR dkimScan IN dkim RETURN dkimScan`
           const testDkim = await testDkimCursor.next()
           expect(testDkim).toEqual(undefined)
 
-          const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+          const testDmarcCursor =
+            await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
           const testDmarc = await testDmarcCursor.next()
           expect(testDmarc).toEqual(undefined)
 
@@ -594,7 +610,8 @@ describe('removing an organization', () => {
           const testSpf = await testSpfCursor.next()
           expect(testSpf).toEqual(undefined)
 
-          const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+          const testHttpsCursor =
+            await query`FOR httpsScan IN https RETURN httpsScan`
           const testHttps = await testHttpsCursor.next()
           expect(testHttps).toEqual(undefined)
 
@@ -677,6 +694,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -690,7 +708,8 @@ describe('removing an organization', () => {
               data: {
                 removeOrganization: {
                   result: {
-                    status: 'todo',
+                    status:
+                      "A réussi à supprimer l'organisation : secretariat-conseil-tresor.",
                     organization: {
                       name: 'Secrétariat du Conseil Trésor du Canada',
                     },
@@ -745,6 +764,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -754,19 +774,23 @@ describe('removing an organization', () => {
               },
             )
 
-            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrgCursor =
+              await query`FOR org IN organizations RETURN org`
             const testOrg = await testOrgCursor.next()
             expect(testOrg).toEqual(undefined)
 
-            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomainCursor =
+              await query`FOR domain IN domains RETURN domain`
             const testDomain = await testDomainCursor.next()
             expect(testDomain).toEqual(undefined)
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkimCursor =
+              await query`FOR dkimScan IN dkim RETURN dkimScan`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(undefined)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarcCursor =
+              await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(undefined)
 
@@ -774,7 +798,8 @@ describe('removing an organization', () => {
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(undefined)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttpsCursor =
+              await query`FOR httpsScan IN https RETURN httpsScan`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(undefined)
 
@@ -825,6 +850,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -838,7 +864,8 @@ describe('removing an organization', () => {
               data: {
                 removeOrganization: {
                   result: {
-                    status: 'todo',
+                    status:
+                      "A réussi à supprimer l'organisation : secretariat-conseil-tresor.",
                     organization: {
                       name: 'Secrétariat du Conseil Trésor du Canada',
                     },
@@ -893,6 +920,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -902,19 +930,23 @@ describe('removing an organization', () => {
               },
             )
 
-            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrgCursor =
+              await query`FOR org IN organizations RETURN org`
             const testOrg = await testOrgCursor.next()
             expect(testOrg).toEqual(undefined)
 
-            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomainCursor =
+              await query`FOR domain IN domains RETURN domain`
             const testDomain = await testDomainCursor.next()
             expect(testDomain).toEqual(undefined)
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkimCursor =
+              await query`FOR dkimScan IN dkim RETURN dkimScan`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(undefined)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarcCursor =
+              await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(undefined)
 
@@ -922,7 +954,8 @@ describe('removing an organization', () => {
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(undefined)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttpsCursor =
+              await query`FOR httpsScan IN https RETURN httpsScan`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(undefined)
 
@@ -978,6 +1011,7 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -991,7 +1025,8 @@ describe('removing an organization', () => {
             data: {
               removeOrganization: {
                 result: {
-                  status: 'todo',
+                  status:
+                    "A réussi à supprimer l'organisation : secretariat-conseil-tresor.",
                   organization: {
                     name: 'Secrétariat du Conseil Trésor du Canada',
                   },
@@ -1043,6 +1078,7 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -1056,15 +1092,18 @@ describe('removing an organization', () => {
           const testOrg = await testOrgCursor.next()
           expect(testOrg).toEqual(undefined)
 
-          const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+          const testDomainCursor =
+            await query`FOR domain IN domains RETURN domain`
           const testDomain = await testDomainCursor.next()
           expect(testDomain).toEqual(undefined)
 
-          const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+          const testDkimCursor =
+            await query`FOR dkimScan IN dkim RETURN dkimScan`
           const testDkim = await testDkimCursor.next()
           expect(testDkim).toEqual(undefined)
 
-          const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+          const testDmarcCursor =
+            await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
           const testDmarc = await testDmarcCursor.next()
           expect(testDmarc).toEqual(undefined)
 
@@ -1072,7 +1111,8 @@ describe('removing an organization', () => {
           const testSpf = await testSpfCursor.next()
           expect(testSpf).toEqual(undefined)
 
-          const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+          const testHttpsCursor =
+            await query`FOR httpsScan IN https RETURN httpsScan`
           const testHttps = await testHttpsCursor.next()
           expect(testHttps).toEqual(undefined)
 
@@ -1139,6 +1179,7 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -1268,6 +1309,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1344,6 +1386,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1454,6 +1497,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1526,6 +1570,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1598,6 +1643,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1675,6 +1721,7 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -1689,7 +1736,8 @@ describe('removing an organization', () => {
               removeOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de supprimer une organisation inconnue.',
                 },
               },
             },
@@ -1804,6 +1852,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1818,7 +1867,8 @@ describe('removing an organization', () => {
                 removeOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à supprimer l'organisation.",
                   },
                 },
               },
@@ -1879,6 +1929,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1893,7 +1944,8 @@ describe('removing an organization', () => {
                 removeOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer l'organisation.",
                   },
                 },
               },
@@ -1988,6 +2040,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1997,7 +2050,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de supprimer l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2056,6 +2113,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2065,7 +2123,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de supprimer l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2124,6 +2186,7 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2133,7 +2196,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de supprimer l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

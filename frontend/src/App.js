@@ -8,7 +8,7 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
+import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 // import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
@@ -32,6 +32,7 @@ const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
 const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
+const TermsConditionsPage = lazy(() => import('./TermsConditionsPage'))
 const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
@@ -41,8 +42,7 @@ const CreateOrganizationPage = lazy(() => import('./CreateOrganizationPage'))
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
-  const toast = useToast()
-  const { currentUser, isLoggedIn, logout } = useUserState()
+  const { currentUser, isLoggedIn } = useUserState()
 
   return (
     <>
@@ -92,30 +92,6 @@ export default function App() {
               <Trans>Admin Profile</Trans>
             </Link>
           )}
-
-          {isLoggedIn() ? (
-            <Link
-              to="/"
-              onClick={() => {
-                logout()
-                toast({
-                  title: t`Sign Out.`,
-                  description: t`You have successfully been signed out.`,
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                  position: 'top-left',
-                })
-              }}
-              ml={[null, 'auto']}
-            >
-              <Trans>Sign Out</Trans>
-            </Link>
-          ) : (
-            <Link to="/sign-in" ml={[null, 'auto']}>
-              <Trans>Sign In</Trans>
-            </Link>
-          )}
         </Navigation>
 
         {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
@@ -151,6 +127,12 @@ export default function App() {
                 path="/reset-password/:resetToken"
                 component={ResetPasswordPage}
                 title={t`Reset Password`}
+              />
+
+              <Page
+                path="/terms-and-conditions"
+                component={TermsConditionsPage}
+                title={t`Terms & Conditions`}
               />
 
               <PrivatePage path="/organizations" title={t`Organizations`} exact>
@@ -230,17 +212,11 @@ export default function App() {
             >
               <Trans>Privacy</Trans>
             </Link>
-            <Link
-              ml={4}
-              isExternal={true}
-              href={
-                i18n.locale === 'en'
-                  ? 'https://www.canada.ca/en/transparency/terms.html'
-                  : 'https://www.canada.ca/fr/transparence/avis.html'
-              }
-            >
+
+            <Link href="/terms-and-conditions" ml={4}>
               <Trans>Terms & conditions</Trans>
             </Link>
+
             <Link
               ml={4}
               href={'https://github.com/canada-ca/tracker/issues'}

@@ -117,7 +117,8 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             sendEmailVerification: {
-              status: 'todo',
+              status:
+                "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception.",
             },
           },
         }
@@ -184,7 +185,8 @@ describe('user send password reset email', () => {
             const expectedResult = {
               data: {
                 sendEmailVerification: {
-                  status: 'todo',
+                  status:
+                    "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception.",
                 },
               },
             }

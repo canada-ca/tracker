@@ -1,6 +1,5 @@
 import { setupI18n } from '@lingui/core'
 import { ensure, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
@@ -10,15 +9,14 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
+import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('removing an organization', () => {
-  let query, drop, truncate, schema, collections, transaction, i18n
-
+  let query, drop, truncate, schema, collections, transaction, i18n, user
   beforeAll(async () => {
     // Generate DB Items
     ;({ query, drop, truncate, collections, transaction } = await ensure({
@@ -34,73 +32,28 @@ describe('removing an organization', () => {
       mutation: createMutationSchema(),
     })
   })
-
   let consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            result {
-              ... on AuthResult {
-                user {
-                  id
-                }
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        collections,
-        transaction,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          loadUserByUserName: loadUserByUserName({ query }),
-        },
-        notify: {
-          sendVerificationEmail: jest.fn(),
-        },
-        request: {
-          protocol: 'https',
-          get: (text) => text,
-        },
-      },
-    )
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
+    })
     consoleOutput = []
   })
-
+  afterEach(async () => {
+    await truncate()
+  })
   afterAll(async () => {
     await drop()
   })
-
   describe('given a successful org verification', () => {
-    let org, user
+    let org
     beforeEach(async () => {
       org = await collections.organizations.save({
         verified: false,
@@ -127,9 +80,6 @@ describe('removing an organization', () => {
           },
         },
       })
-      user = await loadUserByUserName({ query }).load(
-        'test.account@istio.actually.exists',
-      )
       await collections.affiliations.save({
         _from: org._id,
         _to: user._id,
@@ -199,6 +149,7 @@ describe('removing an organization', () => {
                   }),
                   i18n,
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -223,9 +174,9 @@ describe('removing an organization', () => {
                 result: {
                   status:
                     'Successfully verified organization: treasury-board-secretariat.',
-                    organization: {
-                      name: 'Treasury Board of Canada Secretariat',
-                    },
+                  organization: {
+                    name: 'Treasury Board of Canada Secretariat',
+                  },
                 },
               },
             },
@@ -310,6 +261,7 @@ describe('removing an organization', () => {
                   }),
                   i18n,
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -332,7 +284,8 @@ describe('removing an organization', () => {
             data: {
               verifyOrganization: {
                 result: {
-                  status: 'todo',
+                  status:
+                    "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                   organization: {
                     name: 'Secrétariat du Conseil Trésor du Canada',
                   },
@@ -375,7 +328,7 @@ describe('removing an organization', () => {
         })
       })
       describe('organization is already verified', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: true,
@@ -402,9 +355,6 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await loadUserByUserName({ query }).load(
-            'test.account@istio.actually.exists',
-          )
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -458,6 +408,7 @@ describe('removing an organization', () => {
                   }),
                   i18n,
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -494,7 +445,7 @@ describe('removing an organization', () => {
         })
       })
       describe('organization is not found', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: true,
@@ -521,9 +472,6 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await loadUserByUserName({ query }).load(
-            'test.account@istio.actually.exists',
-          )
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -577,6 +525,7 @@ describe('removing an organization', () => {
                   }),
                   i18n,
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -614,7 +563,7 @@ describe('removing an organization', () => {
       })
       describe('user permission is not super admin', () => {
         describe('users permission level is admin', () => {
-          let org, user
+          let org
           beforeEach(async () => {
             org = await collections.organizations.save({
               verified: false,
@@ -641,9 +590,6 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await loadUserByUserName({ query }).load(
-              'test.account@istio.actually.exists',
-            )
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -697,6 +643,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -733,7 +680,7 @@ describe('removing an organization', () => {
           })
         })
         describe('users permission level is user', () => {
-          let org, user
+          let org
           beforeEach(async () => {
             org = await collections.organizations.save({
               verified: true,
@@ -760,9 +707,6 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await loadUserByUserName({ query }).load(
-              'test.account@istio.actually.exists',
-            )
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -816,6 +760,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -854,7 +799,7 @@ describe('removing an organization', () => {
         })
       })
       describe('transaction error occurs', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -881,9 +826,6 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await loadUserByUserName({ query }).load(
-            'test.account@istio.actually.exists',
-          )
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -947,6 +889,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1035,6 +978,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1084,7 +1028,7 @@ describe('removing an organization', () => {
         })
       })
       describe('organization is already verified', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: true,
@@ -1111,9 +1055,6 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await loadUserByUserName({ query }).load(
-            'test.account@istio.actually.exists',
-          )
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1167,6 +1108,7 @@ describe('removing an organization', () => {
                   }),
                   i18n,
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -1190,7 +1132,7 @@ describe('removing an organization', () => {
               verifyOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: "L'organisation a déjà été vérifiée.",
                 },
               },
             },
@@ -1203,7 +1145,7 @@ describe('removing an organization', () => {
         })
       })
       describe('organization is not found', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: true,
@@ -1230,9 +1172,6 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await loadUserByUserName({ query }).load(
-            'test.account@istio.actually.exists',
-          )
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1286,6 +1225,7 @@ describe('removing an organization', () => {
                   }),
                   i18n,
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: { cleanseInput },
               loaders: {
@@ -1309,7 +1249,8 @@ describe('removing an organization', () => {
               verifyOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier une organisation inconnue.',
                 },
               },
             },
@@ -1323,7 +1264,7 @@ describe('removing an organization', () => {
       })
       describe('user permission is not super admin', () => {
         describe('users permission level is admin', () => {
-          let org, user
+          let org
           beforeEach(async () => {
             org = await collections.organizations.save({
               verified: false,
@@ -1350,9 +1291,6 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await loadUserByUserName({ query }).load(
-              'test.account@istio.actually.exists',
-            )
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -1406,6 +1344,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1429,7 +1368,8 @@ describe('removing an organization', () => {
                 verifyOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à vérifier cette organisation.",
                   },
                 },
               },
@@ -1442,7 +1382,7 @@ describe('removing an organization', () => {
           })
         })
         describe('users permission level is user', () => {
-          let org, user
+          let org
           beforeEach(async () => {
             org = await collections.organizations.save({
               verified: true,
@@ -1469,9 +1409,6 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await loadUserByUserName({ query }).load(
-              'test.account@istio.actually.exists',
-            )
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -1525,6 +1462,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1548,7 +1486,8 @@ describe('removing an organization', () => {
                 verifyOrganization: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à vérifier cette organisation.",
                   },
                 },
               },
@@ -1562,7 +1501,7 @@ describe('removing an organization', () => {
         })
       })
       describe('transaction error occurs', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -1589,9 +1528,6 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await loadUserByUserName({ query }).load(
-            'test.account@istio.actually.exists',
-          )
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1655,6 +1591,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1673,7 +1610,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de vérifier l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
 
@@ -1739,6 +1680,7 @@ describe('removing an organization', () => {
                     }),
                     i18n,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1757,7 +1699,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                "Impossible de vérifier l'organisation. Veuillez réessayer.",
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
 

@@ -1911,7 +1911,7 @@ describe('given the load domain connections by user id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `You must provide a \`first\` or \`last\` value to properly paginate the \`domain\` connection.`,
+                `You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`,
               ),
             )
           }
@@ -1941,7 +1941,7 @@ describe('given the load domain connections by user id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `Passing both \`first\` and \`last\` to paginate the \`domain\` connection is not supported.`,
+                `Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`,
               ),
             )
           }
@@ -1971,7 +1971,7 @@ describe('given the load domain connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `1000` records on the `domain` connection exceeds the `first` limit of 100 records.',
+                  'Requesting `1000` records on the `Domain` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -2000,7 +2000,7 @@ describe('given the load domain connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `1000` records on the `domain` connection exceeds the `last` limit of 100 records.',
+                  'Requesting `1000` records on the `Domain` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -2031,7 +2031,7 @@ describe('given the load domain connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`first\` on the \`domain\` connection cannot be less than zero.`,
+                  `\`first\` on the \`Domain\` connection cannot be less than zero.`,
                 ),
               )
             }
@@ -2060,7 +2060,7 @@ describe('given the load domain connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`last\` on the \`domain\` connection cannot be less than zero.`,
+                  `\`last\` on the \`Domain\` connection cannot be less than zero.`,
                 ),
               )
             }
@@ -2247,7 +2247,11 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Domain`.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -2273,7 +2277,11 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `Domain` n'est pas supporté.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -2299,7 +2307,11 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `1000` sur la connexion `Domain` dépasse la limite `first` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -2324,7 +2336,11 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `1000` sur la connexion `Domain` dépasse la limite `last` de 100 enregistrements.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -2351,7 +2367,11 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `Domain` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -2376,7 +2396,11 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `Domain` ne peut être inférieur à zéro.',
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -2407,7 +2431,11 @@ describe('given the load domain connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -2438,7 +2466,11 @@ describe('given the load domain connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -2474,7 +2506,11 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Impossible d'interroger le(s) domaine(s). Veuillez réessayer.",
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
@@ -2508,7 +2544,11 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Impossible de charger le(s) domaine(s). Veuillez réessayer.',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([

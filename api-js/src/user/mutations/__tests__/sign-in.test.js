@@ -2,6 +2,8 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
+import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -11,7 +13,6 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
 
-const { SIGN_IN_KEY } = process.env
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const mockNotify = jest.fn()
@@ -35,12 +36,10 @@ describe('authenticate user account', () => {
     }))
     tokenize = jest.fn().mockReturnValue('token')
   })
-
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -73,6 +72,8 @@ describe('authenticate user account', () => {
         query,
         collections,
         transaction,
+        jwt,
+        uuidv4,
         auth: {
           bcrypt,
           tokenize,
@@ -94,11 +95,9 @@ describe('authenticate user account', () => {
     )
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
@@ -120,7 +119,7 @@ describe('authenticate user account', () => {
     })
     describe('given successful sign in', () => {
       describe('user has send method set to phone', () => {
-        it('returns sendMethod message and authentication token', async () => {
+        it('returns sendMethod message, authentication token and refresh token', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -150,6 +149,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -159,6 +159,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -231,6 +234,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -240,6 +244,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -312,6 +319,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                   }
                 }
@@ -321,6 +329,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -342,6 +353,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                 },
               },
             },
@@ -392,6 +404,7 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
+                    refreshToken
                   }
                 }
               }
@@ -401,6 +414,9 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
@@ -447,6 +463,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -460,6 +477,8 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
               auth: {
                 bcrypt,
                 tokenize,
@@ -525,6 +544,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -538,6 +558,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -601,6 +624,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -614,6 +638,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -671,6 +698,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -684,6 +712,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -717,227 +748,546 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when incrementing failed login attempts', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
+      describe('transaction step error occurs', () => {
+        describe('when resetting failed login attempts', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const userNameLoader = loadUserByUserName({ query })
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "newpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
-                    }
-                    ... on SignInError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-          const error = [
-            new GraphQLError('Unable to sign in, please try again.'),
-          ]
+            )
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when incrementing user: ${user._key} failed login attempts: Error: Database error occurred.`,
-          ])
+            const error = [
+              new GraphQLError('Unable to sign in, please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when resetting failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('when inserting tfa code', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'email' } IN users
+            `
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to sign in, please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when inserting TFA code for user: ${user._key}: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('when setting refresh id', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'none' } IN users
+            `
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to sign in, please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('when incrementing failed login attempts', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "newpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+            const error = [
+              new GraphQLError('Unable to sign in, please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when incrementing failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+            ])
+          })
         })
       })
-      describe('database error occurs when failed logins are being reset', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
-          `
-
-          const userNameLoader = loadUserByUserName({ query })
-
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
+      describe('transaction commit error occurs', () => {
+        describe('during tfa sign in', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'email' } IN users
             `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
-                    }
-                    ... on SignInError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError('Unable to sign in, please try again.'),
-          ]
+            const error = [
+              new GraphQLError('Unable to sign in, please try again.'),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} attempted to tfa sign in: Error: Transaction Step Error`,
+            ])
+          })
         })
-      })
-      describe('database error occurs when setting tfa code', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
-          `
-
-          const userNameLoader = loadUserByUserName({ query })
-
-          const mockedQuery = jest
-            .fn()
-            .mockResolvedValueOnce(query)
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
+        describe('during regular sign in', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'none' } IN users
             `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
-                    }
-                    ... on SignInError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError('Unable to sign in, please try again.'),
-          ]
+            const error = [
+              new GraphQLError('Unable to sign in, please try again.'),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} attempted a regular sign in: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('during failed login', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "newpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+            const error = [
+              new GraphQLError('Unable to sign in, please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} failed to sign in: Error: Transaction Step Error`,
+            ])
+          })
         })
       })
     })
@@ -989,6 +1339,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1002,6 +1353,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1074,6 +1428,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1087,6 +1442,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1159,6 +1517,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1172,6 +1531,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1193,6 +1555,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
+                  refreshToken: 'token',
                 },
               },
             },
@@ -1243,6 +1606,7 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
+                    refreshToken
                   }
                   ... on SignInError {
                     code
@@ -1256,6 +1620,9 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
+            collections,
+            transaction,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
@@ -1302,6 +1669,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1315,6 +1683,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1336,7 +1707,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
@@ -1379,6 +1751,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1392,6 +1765,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1413,7 +1789,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
@@ -1454,6 +1831,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1467,6 +1845,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1524,6 +1905,7 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
+                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1537,6 +1919,9 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
+              collections,
+              transaction,
+              uuidv4,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1558,7 +1943,8 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   code: 401,
-                  description: 'todo',
+                  description:
+                    'Trop de tentatives de connexion ont échoué, veuillez réinitialiser votre mot de passe et réessayer.',
                 },
               },
             },
@@ -1570,221 +1956,560 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when incrementing failed login attempts', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
+      describe('transaction step error occurs', () => {
+        describe('when resetting failed login attempts', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
 
-          const userNameLoader = loadUserByUserName({ query })
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "newpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
-                    }
-                    ... on SignInError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-          const error = [new GraphQLError('todo')]
+            )
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when incrementing user: ${user._key} failed login attempts: Error: Database error occurred.`,
-          ])
+            const error = [
+              new GraphQLError(
+                'Impossible de se connecter, veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when resetting failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('when inserting tfa code', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'email' } IN users
+            `
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de se connecter, veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when inserting TFA code for user: ${user._key}: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('when setting refresh id', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'none' } IN users
+            `
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de se connecter, veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when attempting to setting refresh tokens for user: ${user._key} during sign in: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('when incrementing failed login attempts', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "newpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+            const error = [
+              new GraphQLError(
+                'Impossible de se connecter, veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when incrementing failed login attempts for user: ${user._key}: Error: Transaction Step Error`,
+            ])
+          })
         })
       })
-      describe('database error occurs when failed logins are being reset', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
-          `
-
-          const userNameLoader = loadUserByUserName({ query })
-
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
+      describe('transaction commit error occurs', () => {
+        describe('during tfa sign in', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'email' } IN users
             `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
-                    }
-                    ... on SignInError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
+            )
 
-          const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de se connecter, veuillez réessayer.',
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} attempted to tfa sign in: Error: Transaction Step Error`,
+            ])
+          })
         })
-      })
-      describe('database error occurs when setting tfa code', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
-          `
-
-          const userNameLoader = loadUserByUserName({ query })
-
-          const mockedQuery = jest
-            .fn()
-            .mockResolvedValueOnce(query)
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
+        describe('during regular sign in', () => {
+          it('throws an error', async () => {
+            await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH { tfaSendMethod: 'none' } IN users
             `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
-                    }
-                    ... on SignInError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              auth: {
-                bcrypt,
-                tokenize,
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
+            )
 
-          const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de se connecter, veuillez réessayer.',
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} attempted a regular sign in: Error: Transaction Step Error`,
+            ])
+          })
+        })
+        describe('during failed login', () => {
+          it('throws an error', async () => {
+            const userNameLoader = loadUserByUserName({ query })
+            const user = await userNameLoader.load(
+              'test.account@istio.actually.exists',
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction Step Error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "newpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                        refreshToken
+                      }
+                      ... on SignInError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: userNameLoader,
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+            const error = [
+              new GraphQLError(
+                'Impossible de se connecter, veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred while user: ${user._key} failed to sign in: Error: Transaction Step Error`,
+            ])
+          })
         })
       })
     })

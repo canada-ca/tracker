@@ -9,7 +9,11 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkDomainPermission, userRequired } from '../../../auth'
+import {
+  checkDomainPermission,
+  userRequired,
+  verifiedRequired,
+} from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 
@@ -35,7 +39,6 @@ describe('given findDomainByDomain query', () => {
   afterEach(() => {
     consoleOutput.length = 0
   })
-
   describe('given successful domain retrieval', () => {
     beforeAll(async () => {
       // Generate DB Items
@@ -50,6 +53,7 @@ describe('given findDomainByDomain query', () => {
     beforeEach(async () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
       })
       org = await collections.organizations.save({
         orgDetails: {
@@ -138,6 +142,7 @@ describe('given findDomainByDomain query', () => {
                 userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
               }),
+              verifiedRequired: verifiedRequired({}),
             },
             validators: {
               cleanseInput,
@@ -221,6 +226,7 @@ describe('given findDomainByDomain query', () => {
                   userRequired: jest.fn().mockReturnValue({
                     _key: '1',
                   }),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: {
                   cleanseInput,
@@ -272,6 +278,7 @@ describe('given findDomainByDomain query', () => {
                   userRequired: jest.fn().mockReturnValue({
                     _key: '1',
                   }),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: {
                   cleanseInput,
@@ -335,6 +342,7 @@ describe('given findDomainByDomain query', () => {
                 userRequired: jest.fn().mockReturnValue({
                   _key: '1',
                 }),
+                verifiedRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -347,7 +355,9 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError('Impossible de trouver le domaine demandé.'),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
@@ -384,6 +394,7 @@ describe('given findDomainByDomain query', () => {
                 userRequired: jest.fn().mockReturnValue({
                   _key: '1',
                 }),
+                verifiedRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -396,7 +407,11 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide pour récupérer ce domaine.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])

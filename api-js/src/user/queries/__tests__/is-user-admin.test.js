@@ -1,6 +1,6 @@
 import { setupI18n } from '@lingui/core'
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema } from 'graphql'
+import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 
 import { databaseOptions } from '../../../../database-options'
 import { checkPermission, userRequired } from '../../../auth'
@@ -13,7 +13,7 @@ import frenchMessages from '../../../locale/fr/messages'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the isUserAdmin query', () => {
-  let query, drop, truncate, schema, collections, org, i18n, user
+  let query, drop, truncate, schema, collections, org, user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -220,6 +220,7 @@ describe('given the isUserAdmin query', () => {
     })
   })
   describe('users language is set to english', () => {
+    let i18n
     beforeAll(() => {
       i18n = setupI18n({
         locale: 'en',
@@ -227,10 +228,9 @@ describe('given the isUserAdmin query', () => {
           en: { plurals: {} },
           fr: { plurals: {} },
         },
-        locales: ['en', 'fr'],
+        locales: ['en'],
         messages: {
           en: englishMessages.messages,
-          fr: frenchMessages.messages,
         },
       })
     })
@@ -240,39 +240,37 @@ describe('given the isUserAdmin query', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        try {
-          await graphql(
-            schema,
-            `
-              query {
-                isUserAdmin
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query: mockedQuery,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
+        const response = await graphql(
+          schema,
+          `
+            query {
+              isUserAdmin
+            }
+          `,
+          null,
+          {
+            i18n,
+            userKey: user._key,
+            query: mockedQuery,
+            auth: {
+              checkPermission: checkPermission({ userKey: user._key, query }),
+              userRequired: userRequired({
+                userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
-              },
+              }),
             },
-          )
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Unable to verify if user is an admin, please try again.',
-            ),
-          )
-        }
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
+          },
+        )
+        const error = [
+          new GraphQLError(
+            `Unable to verify if user is an admin, please try again.`,
+          ),
+        ]
 
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
           `Database error occurred when user: ${user._key} was seeing if they were an admin, err: Error: Database error occurred.`,
         ])
@@ -280,16 +278,15 @@ describe('given the isUserAdmin query', () => {
     })
   })
   describe('users language is set to french', () => {
+    let i18n
     beforeAll(() => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
           fr: { plurals: {} },
         },
-        locales: ['en', 'fr'],
+        locales: ['fr'],
         messages: {
-          en: englishMessages.messages,
           fr: frenchMessages.messages,
         },
       })
@@ -300,35 +297,38 @@ describe('given the isUserAdmin query', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        try {
-          await graphql(
-            schema,
-            `
-              query {
-                isUserAdmin
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query: mockedQuery,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
+        const response = await graphql(
+          schema,
+          `
+            query {
+              isUserAdmin
+            }
+          `,
+          null,
+          {
+            i18n,
+            userKey: user._key,
+            query: mockedQuery,
+            auth: {
+              checkPermission: checkPermission({ userKey: user._key, query }),
+              userRequired: userRequired({
+                userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
-              },
+              }),
             },
-          )
-        } catch (err) {
-          expect(err).toEqual(new Error('todo'))
-        }
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
+          },
+        )
 
+        const error = [
+          new GraphQLError(
+            `Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer.`,
+          ),
+        ]
+
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
           `Database error occurred when user: ${user._key} was seeing if they were an admin, err: Error: Database error occurred.`,
         ])

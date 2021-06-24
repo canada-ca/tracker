@@ -46,6 +46,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
+          verifiedRequired: jest.fn(),
         })(connectionParams, webSocket)
 
         expect(onConnect.language).toEqual('en')
@@ -76,6 +77,7 @@ describe('given the customOnConnect function', () => {
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
+          verifiedRequired: jest.fn(),
         })(connectionParams, webSocket)
 
         expect(onConnect.language).toEqual('fr')
@@ -107,6 +109,7 @@ describe('given the customOnConnect function', () => {
         verifyToken,
         userRequired: mockedUserRequired,
         loadUserByKey: jest.fn(),
+        verifiedRequired: jest.fn(),
       })(connectionParams, webSocket)
 
       expect(onConnect.authorization).toEqual(token)
@@ -153,7 +156,7 @@ describe('given the customOnConnect function', () => {
             createI18n,
             verifyToken,
             userRequired,
-            loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn()}),
+            loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn() }),
           })(connectionParams, webSocket)
         } catch (err) {
           expect(err).toEqual(
@@ -184,10 +187,12 @@ describe('given the customOnConnect function', () => {
             createI18n,
             verifyToken,
             userRequired,
-            loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn()}),
+            loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn() }),
           })(connectionParams, webSocket)
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error("Erreur d'authentification. Veuillez vous connecter."),
+          )
         }
         expect(consoleOutput).toEqual([
           'User attempted to access controlled content, but userKey was undefined.',

@@ -976,7 +976,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `GuidanceTag`.',
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
@@ -1004,7 +1008,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `GuidanceTag` n'est pas supporté.",
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
@@ -1032,7 +1040,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `GuidanceTag` ne peut être inférieure à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcGuidanceTagConnectionsByTagId.`,
@@ -1059,7 +1071,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `GuidanceTag` ne peut être inférieure à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcGuidanceTagConnectionsByTagId.`,
@@ -1088,7 +1104,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `1000` sur la connexion `GuidanceTag` dépasse la limite `first` de 100 enregistrements.",
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDmarcGuidanceTagConnectionsByTagId.`,
@@ -1115,7 +1135,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "La demande d'enregistrements `500` sur la connexion `GuidanceTag` dépasse la limite `last` de 100 enregistrements.",
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: loadDmarcGuidanceTagConnectionsByTagId.`,
@@ -1147,7 +1171,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1180,7 +1208,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1215,7 +1247,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1249,7 +1285,11 @@ describe('when given the load dmarc guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([

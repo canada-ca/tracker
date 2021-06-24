@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backup-service
+  namespace: db
+  labels:
+    job: backup
+spec:
+  template:
+    spec:
+      containers:
+        - name: upload
+          image: rclone/rclone
+          command: ["/bin/sh", "-c"]
+          args: ["rclone copy /tmp/dump :azureblob:dbdump/tracker-backup-$(date -I)"]
+          env:
+          - name: RCLONE_AZUREBLOB_ACCOUNT
+            secretKeyRef:
+              name: az-dbdump-account
+              key: AZUREBLOB_ACCOUNT
+          - name: RCLONE_AZUREBLOB_KEY
+            secretKeyRef:
+              name: az-dbdump-sak
+              key: AZUREBLOB_KEY
+          volumeMounts:
+            - name: dump
+              mountPath: /tmp/dump
+      volumes:
+        - name: dump
+          emptyDir: {}
+      restartPolicy: Never

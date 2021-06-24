@@ -222,7 +222,7 @@ describe('given the check permission function', () => {
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
               expect(err).toEqual(
-                new Error('Authentication error. Please sign in again.'),
+                new Error('Authentication error. Please sign in.'),
               )
             }
 
@@ -251,7 +251,7 @@ describe('given the check permission function', () => {
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
               expect(err).toEqual(
-                new Error('Authentication error. Please sign in again.'),
+                new Error('Authentication error. Please sign in.'),
               )
             }
 
@@ -355,7 +355,11 @@ describe('given the check permission function', () => {
               })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Erreur d'authentification. Veuillez vous connecter.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -382,7 +386,11 @@ describe('given the check permission function', () => {
               })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Erreur d'authentification. Veuillez vous connecter.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -409,7 +417,11 @@ describe('given the check permission function', () => {
               })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Impossible de vérifier l'autorisation. Veuillez réessayer.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([
@@ -441,7 +453,11 @@ describe('given the check permission function', () => {
               })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  "Impossible de vérifier l'autorisation. Veuillez réessayer.",
+                ),
+              )
             }
 
             expect(consoleOutput).toEqual([

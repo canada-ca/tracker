@@ -1048,7 +1048,11 @@ describe('when given the load dkim results connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DKIMResults`.',
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
@@ -1075,7 +1079,11 @@ describe('when given the load dkim results connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `DKIMResults` n'est pas supporté.",
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDkimResultConnectionsByDkimId.`,
@@ -1102,7 +1110,11 @@ describe('when given the load dkim results connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `DKIMResults` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadDkimResultConnectionsByDkimId.`,
@@ -1128,7 +1140,11 @@ describe('when given the load dkim results connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `DKIMResults` ne peut être inférieur à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadDkimResultConnectionsByDkimId.`,
@@ -1156,7 +1172,11 @@ describe('when given the load dkim results connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 1000 enregistrements sur la connexion `DKIMResults` dépasse la limite `first` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDkimResultConnectionsByDkimId.`,
@@ -1182,7 +1202,11 @@ describe('when given the load dkim results connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 500 enregistrements sur la connexion `DKIMResults` dépasse la limite `last` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: loadDkimResultConnectionsByDkimId.`,
@@ -1212,7 +1236,11 @@ describe('when given the load dkim results connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1243,7 +1271,11 @@ describe('when given the load dkim results connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1277,7 +1309,11 @@ describe('when given the load dkim results connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) résultat(s) DKIM. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1310,7 +1346,11 @@ describe('when given the load dkim results connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) résultat(s) DKIM. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([

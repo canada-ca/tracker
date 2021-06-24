@@ -16,10 +16,13 @@ describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, collections, schema, i18n, user
-
+  let query, drop, truncate, collections, transaction, schema, i18n, user
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
       url,
@@ -31,11 +34,6 @@ describe('user send password reset email', () => {
       mutation: createMutationSchema(),
     })
   })
-
-  const consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -50,12 +48,10 @@ describe('user send password reset email', () => {
       tfaCode: 123456,
     })
   })
-
   afterEach(async () => {
     consoleOutput.length = 0
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
@@ -102,6 +98,8 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
@@ -159,6 +157,8 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
@@ -212,6 +212,8 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
@@ -269,6 +271,8 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
@@ -299,11 +303,15 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('database error occurs on upsert', () => {
-        it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+    })
+    describe('given a transaction step error', () => {
+      describe('when upserting users phone validation status', () => {
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction step error')),
+          })
 
           const response = await graphql(
             schema,
@@ -329,7 +337,9 @@ describe('user send password reset email', () => {
             {
               i18n,
               userKey: user._key,
-              query: mockedQuery,
+              query,
+              collections,
+              transaction: mockedTransaction,
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
@@ -350,7 +360,69 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when upserting the tfaValidate field for ${user._key}: Error: Database error occurred.`,
+            `Trx step error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction step error`,
+          ])
+        })
+      })
+    })
+    describe('given a transaction commit error', () => {
+      describe('when committing changes', () => {
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest.fn().mockReturnValue({}),
+            commit: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction commit error')),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
+                  result {
+                    ... on VerifyPhoneNumberResult {
+                      status
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on VerifyPhoneNumberError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userKey: user._key,
+              query,
+              collections,
+              transaction: mockedTransaction,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to two factor authenticate. Please try again.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Trx commit error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction commit error`,
           ])
         })
       })
@@ -398,6 +470,8 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
@@ -417,7 +491,8 @@ describe('user send password reset email', () => {
                 user: {
                   displayName: 'Test Account',
                 },
-                status: 'todo',
+                status:
+                  "Le numéro de téléphone a été vérifié avec succès, et la méthode d'envoi de la TFA a été réglée sur le texte.",
               },
             },
           },
@@ -454,6 +529,8 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
@@ -507,6 +584,8 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
@@ -524,7 +603,8 @@ describe('user send password reset email', () => {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
                 },
               },
             },
@@ -563,6 +643,8 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
@@ -580,7 +662,8 @@ describe('user send password reset email', () => {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Le code à deux facteurs est incorrect. Veuillez réessayer.',
                 },
               },
             },
@@ -592,11 +675,15 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('database error occurs on upsert', () => {
-        it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+    })
+    describe('given a transaction step error', () => {
+      describe('when upserting users phone validation status', () => {
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction step error')),
+          })
 
           const response = await graphql(
             schema,
@@ -622,7 +709,9 @@ describe('user send password reset email', () => {
             {
               i18n,
               userKey: user._key,
-              query: mockedQuery,
+              query,
+              collections,
+              transaction: mockedTransaction,
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
@@ -635,11 +724,77 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when upserting the tfaValidate field for ${user._key}: Error: Database error occurred.`,
+            `Trx step error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction step error`,
+          ])
+        })
+      })
+    })
+    describe('given a transaction commit error', () => {
+      describe('when committing changes', () => {
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest.fn().mockReturnValue({}),
+            commit: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction commit error')),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
+                  result {
+                    ... on VerifyPhoneNumberResult {
+                      status
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on VerifyPhoneNumberError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userKey: user._key,
+              query,
+              collections,
+              transaction: mockedTransaction,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Trx commit error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction commit error`,
           ])
         })
       })

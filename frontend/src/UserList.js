@@ -83,7 +83,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       userForm.setFieldValue('userName', '')
       setDebouncedSearchUser('')
       setAddedUserName(values.userName)
-      addUser({
+      await addUser({
         variables: {
           userName: values.userName,
           requestedRole: values.roleSelect,
@@ -308,7 +308,11 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 <Icon name="minus" />
               </TrackerButton>
             </Stack>
-            <UserCard userName={node.user.userName} displayName={node.user.displayName} role={userRole} />
+            <UserCard
+              userName={node.user.userName}
+              displayName={node.user.displayName}
+              role={userRole}
+            />
           </Stack>
           <Divider borderColor="gray.900" />
         </Box>
@@ -379,7 +383,12 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             </Select>
           </Stack>
 
-          <TrackerButton w={['100%', '25%']} variant="primary" type="submit">
+          <TrackerButton
+            w={['100%', '25%']}
+            variant="primary"
+            type="submit"
+            isLoading={userForm.isSubmitting}
+          >
             <Icon name="add" />
             <Trans>Invite User</Trans>
           </TrackerButton>

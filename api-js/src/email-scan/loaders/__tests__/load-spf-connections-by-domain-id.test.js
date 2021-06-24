@@ -1297,7 +1297,11 @@ describe('when given the load spf connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `SPF`.',
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSpfConnectionsByDomainId.`,
@@ -1324,7 +1328,11 @@ describe('when given the load spf connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `SPF` n'est pas supporté.",
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSpfConnectionsByDomainId.`,
@@ -1351,7 +1359,11 @@ describe('when given the load spf connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`first` sur la connexion `SPF` ne peut être inférieure à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: loadSpfConnectionsByDomainId.`,
@@ -1377,7 +1389,11 @@ describe('when given the load spf connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  '`last` sur la connexion `SPF` ne peut être inférieure à zéro.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: loadSpfConnectionsByDomainId.`,
@@ -1405,7 +1421,11 @@ describe('when given the load spf connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 1000 enregistrements sur la connexion `SPF` dépasse la limite `first` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: loadSpfConnectionsByDomainId.`,
@@ -1431,7 +1451,11 @@ describe('when given the load spf connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(new Error('todo'))
+              expect(err).toEqual(
+                new Error(
+                  'La demande de 500 enregistrements sur la connexion `SPF` dépasse la limite `last` de 100 enregistrements.',
+                ),
+              )
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: loadSpfConnectionsByDomainId.`,
@@ -1461,7 +1485,11 @@ describe('when given the load spf connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1492,7 +1520,11 @@ describe('when given the load spf connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1527,7 +1559,11 @@ describe('when given the load spf connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) scan(s) SPF. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1561,7 +1597,11 @@ describe('when given the load spf connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Impossible de charger le(s) scan(s) SPF. Veuillez réessayer.',
+            ),
+          )
         }
 
         expect(consoleErrorOutput).toEqual([

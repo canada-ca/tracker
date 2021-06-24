@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
 
-const { SIGN_IN_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_KEY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -32,6 +32,9 @@ export const authenticate = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      collections,
+      transaction,
+      uuidv4,
       auth: { tokenize, verifyToken },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -76,18 +79,53 @@ export const authenticate = new mutationWithClientMutationId({
 
     // Check to see if security token matches the user submitted one
     if (authenticationCode === user.tfaCode) {
-      const token = tokenize({ parameters: { userKey: user._key } })
+      const refreshId = uuidv4()
 
-      // Reset Failed Login attempts
+      const token = tokenize({ parameters: { userKey: user._key } })
+      const refreshToken = tokenize({
+        parameters: { userKey: user._key, uuid: refreshId },
+        expPeriod: 168,
+        secret: String(REFRESH_KEY),
+      })
+
+      // Generate list of collections names
+      const collectionStrings = []
+      for (const property in collections) {
+        collectionStrings.push(property.toString())
+      }
+
+      // Setup Transaction
+      const trx = await transaction(collectionStrings)
+
+      // Reset tfa code attempts, and set refresh code
       try {
-        await query`
-          WITH users
-          FOR u IN users
-            UPDATE ${user._key} WITH { tfaCode: null } IN users
-        `
+        await trx.step(
+          () => query`
+            WITH users
+            UPSERT { _key: ${user._key} }
+              INSERT {
+                tfaCode: null,
+                refreshId: ${refreshId}
+              }
+              UPDATE {
+                tfaCode: null,
+                refreshId: ${refreshId}
+              }
+              IN users
+          `,
+        )
       } catch (err) {
         console.error(
-          `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
+          `Trx step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+      }
+
+      try {
+        await trx.commit()
+      } catch (err) {
+        console.error(
+          `Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`,
         )
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
@@ -100,6 +138,7 @@ export const authenticate = new mutationWithClientMutationId({
       return {
         _type: 'authResult',
         token,
+        refreshToken,
         user,
       }
     } else {

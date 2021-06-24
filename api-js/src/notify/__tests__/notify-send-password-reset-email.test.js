@@ -4,10 +4,8 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendPasswordResetEmail } from '../index'
 
-const {
-  NOTIFICATION_PASSWORD_RESET_EN,
-  NOTIFICATION_PASSWORD_RESET_FR,
-} = process.env
+const { NOTIFICATION_PASSWORD_RESET_EN, NOTIFICATION_PASSWORD_RESET_FR } =
+  process.env
 
 describe('given the sendPasswordResetEmail function', () => {
   let i18n
@@ -193,7 +191,11 @@ describe('given the sendPasswordResetEmail function', () => {
             resetUrl: 'reset.url',
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              "Impossible d'envoyer l'email de réinitialisation du mot de passe. Veuillez réessayer.",
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([

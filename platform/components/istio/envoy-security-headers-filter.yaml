@@ -16,7 +16,7 @@ spec:
           filter:
             name: "envoy.http_connection_manager"
             subFilter:
-              name: "envoy.router"
+              name: "envoy.filters.http.router"
     patch: # Patch outgoing requests for ITPIN 6.1.2: has HSTS enabled
       operation: INSERT_BEFORE
       value:

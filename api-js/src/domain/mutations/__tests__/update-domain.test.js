@@ -9,7 +9,7 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -41,22 +41,19 @@ describe('updating a domain', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('given a successful domain update', () => {
     let org, domain
     beforeEach(async () => {
@@ -138,6 +135,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -209,6 +207,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -281,6 +280,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -358,6 +358,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -429,6 +430,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -501,6 +503,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -578,6 +581,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -649,6 +653,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -721,6 +726,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -817,6 +823,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -900,6 +907,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -1047,6 +1055,7 @@ describe('updating a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1133,6 +1142,7 @@ describe('updating a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1247,6 +1257,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -1369,6 +1380,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -1486,6 +1498,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -1563,6 +1576,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -1647,6 +1661,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -1665,7 +1680,8 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour un domaine inconnu.',
                 },
               },
             },
@@ -1730,6 +1746,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -1748,7 +1765,8 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de mettre à jour le domaine dans un org inconnu.',
                 },
               },
             },
@@ -1877,6 +1895,7 @@ describe('updating a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1895,7 +1914,8 @@ describe('updating a domain', () => {
                 updateDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -1962,6 +1982,7 @@ describe('updating a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 validators: {
                   cleanseInput,
@@ -1980,7 +2001,8 @@ describe('updating a domain', () => {
                 updateDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -2075,6 +2097,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -2093,7 +2116,8 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée.",
                 },
               },
             },
@@ -2196,6 +2220,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -2209,7 +2234,11 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2311,6 +2340,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -2324,7 +2354,11 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2386,6 +2420,7 @@ describe('updating a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -2399,7 +2434,11 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = [
+            new GraphQLError(
+              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

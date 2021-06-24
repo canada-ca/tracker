@@ -9,7 +9,7 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired } from '../../../auth'
+import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -40,22 +40,19 @@ describe('removing a domain', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
     consoleOutput.length = 0
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -227,6 +224,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -297,6 +295,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -357,6 +356,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -367,23 +367,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(true)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(true)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan.spf`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(true)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan.https`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(true)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan.ssl`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(true)
             })
@@ -462,6 +467,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -532,6 +538,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -592,6 +599,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -602,23 +610,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(true)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(true)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan.spf`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(true)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan.https`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(true)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan.ssl`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(true)
             })
@@ -674,6 +687,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -744,6 +758,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -804,6 +819,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -814,23 +830,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(undefined)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(undefined)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(undefined)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(undefined)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(undefined)
             })
@@ -878,6 +899,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -948,6 +970,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1008,6 +1031,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1018,23 +1042,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(undefined)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(undefined)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(undefined)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(undefined)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(undefined)
             })
@@ -1184,6 +1213,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1254,6 +1284,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1314,6 +1345,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1324,23 +1356,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(true)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(true)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan.spf`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(true)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan.https`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(true)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan.ssl`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(true)
             })
@@ -1390,6 +1427,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1460,6 +1498,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1520,6 +1559,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1530,23 +1570,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(undefined)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(undefined)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(undefined)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(undefined)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(undefined)
             })
@@ -1595,6 +1640,7 @@ describe('removing a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               validators: { cleanseInput },
               loaders: {
@@ -1669,6 +1715,7 @@ describe('removing a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               validators: { cleanseInput },
               loaders: {
@@ -1785,6 +1832,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1863,6 +1911,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1934,6 +1983,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2051,6 +2101,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2122,6 +2173,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2256,6 +2308,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2380,6 +2433,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2467,6 +2521,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: userLoader,
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2548,6 +2603,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: userLoader,
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2625,6 +2681,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2820,6 +2877,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2834,7 +2892,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -2890,6 +2949,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2950,6 +3010,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2960,23 +3021,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(true)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(true)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan.spf`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(true)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan.https`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(true)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan.ssl`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(true)
             })
@@ -3056,6 +3122,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3070,7 +3137,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3126,6 +3194,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3186,6 +3255,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3196,23 +3266,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(true)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(true)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan.spf`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(true)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan.https`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(true)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan.ssl`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(true)
             })
@@ -3268,6 +3343,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3282,7 +3358,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3338,6 +3415,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3398,6 +3476,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3408,23 +3487,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(undefined)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(undefined)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(undefined)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(undefined)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(undefined)
             })
@@ -3472,6 +3556,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3486,7 +3571,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3542,6 +3628,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3602,6 +3689,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3612,23 +3700,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(undefined)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(undefined)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(undefined)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(undefined)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(undefined)
             })
@@ -3778,6 +3871,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3792,7 +3886,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3848,6 +3943,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3908,6 +4004,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3918,23 +4015,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(true)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(true)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan.spf`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(true)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan.https`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(true)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan.ssl`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(true)
             })
@@ -3984,6 +4086,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3998,7 +4101,8 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `todo`,
+                      status:
+                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -4054,6 +4158,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -4114,6 +4219,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: loadUserByKey({ query }),
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -4124,23 +4230,28 @@ describe('removing a domain', () => {
                 },
               )
 
-              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkimCursor =
+                await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
               expect(testDkim).toEqual(undefined)
 
-              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarcCursor =
+                await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
               const testDmarc = await testDmarcCursor.next()
               expect(testDmarc).toEqual(undefined)
 
-              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpfCursor =
+                await query`FOR spfScan IN spf RETURN spfScan`
               const testSpf = await testSpfCursor.next()
               expect(testSpf).toEqual(undefined)
 
-              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttpsCursor =
+                await query`FOR httpsScan IN https RETURN httpsScan`
               const testHttps = await testHttpsCursor.next()
               expect(testHttps).toEqual(undefined)
 
-              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSslCursor =
+                await query`FOR sslScan IN ssl RETURN sslScan`
               const testSsl = await testSslCursor.next()
               expect(testSsl).toEqual(undefined)
             })
@@ -4189,6 +4300,7 @@ describe('removing a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               validators: { cleanseInput },
               loaders: {
@@ -4204,7 +4316,7 @@ describe('removing a domain', () => {
               removeDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description: 'Impossible de supprimer un domaine inconnu.',
                 },
               },
             },
@@ -4263,6 +4375,7 @@ describe('removing a domain', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               validators: { cleanseInput },
               loaders: {
@@ -4278,7 +4391,8 @@ describe('removing a domain', () => {
               removeDomain: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Impossible de supprimer le domaine d'une organisation inconnue.",
                 },
               },
             },
@@ -4378,6 +4492,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4393,7 +4508,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -4455,6 +4571,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4470,7 +4587,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -4525,6 +4643,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4540,7 +4659,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
                   },
                 },
               },
@@ -4641,6 +4761,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4656,7 +4777,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
                   },
                 },
               },
@@ -4711,6 +4833,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4726,7 +4849,8 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'todo',
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
                   },
                 },
               },
@@ -4838,6 +4962,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4848,7 +4973,11 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -4952,6 +5081,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4962,7 +5092,11 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -5037,6 +5171,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: userLoader,
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -5047,7 +5182,11 @@ describe('removing a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de supprimer le domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -5116,6 +5255,7 @@ describe('removing a domain', () => {
                       userKey: user._key,
                       loadUserByKey: userLoader,
                     }),
+                    verifiedRequired: verifiedRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -5126,7 +5266,11 @@ describe('removing a domain', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = [
+                new GraphQLError(
+                  'Impossible de supprimer le domaine. Veuillez réessayer.',
+                ),
+              ]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -5191,6 +5335,7 @@ describe('removing a domain', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -5201,7 +5346,11 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le domaine. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

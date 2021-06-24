@@ -17,10 +17,10 @@ describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, collections, schema, request, i18n
+  let query, drop, truncate, collections, transaction, schema, request, i18n
 
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections } = await ensure({
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
       url,
@@ -114,6 +114,8 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               verifyToken: verifyToken({}),
             },
@@ -182,6 +184,8 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               verifyToken: verifyToken({}),
             },
@@ -233,6 +237,8 @@ describe('user send password reset email', () => {
               request,
               userKey: 1,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -250,7 +256,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'Unable to verify account. Please request a new email.',
+                  description:
+                    'Unable to verify account. Please request a new email.',
                 },
               },
             },
@@ -307,6 +314,8 @@ describe('user send password reset email', () => {
               request,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -382,6 +391,8 @@ describe('user send password reset email', () => {
               request,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -457,6 +468,8 @@ describe('user send password reset email', () => {
               request,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -487,7 +500,7 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('database error occurs when upserting validation', () => {
+      describe('transaction step error occurs', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -497,27 +510,32 @@ describe('user send password reset email', () => {
             emailValidated: false,
           })
         })
-        it('returns an error message', async () => {
-          const cursor = await query`
+        describe('when upserting validation', () => {
+          it('throws an error', async () => {
+            const cursor = await query`
                 FOR user IN users
                     FILTER user.userName == "test.account@istio.actually.exists"
                     RETURN user
               `
-          const user = await cursor.next()
+            const user = await cursor.next()
 
-          const token = tokenize({
-            parameters: { userKey: user._key },
-          })
+            const token = tokenize({
+              parameters: { userKey: user._key },
+            })
 
-          const loader = loadUserByKey({ query })
+            const loader = loadUserByKey({ query })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction step error occurred.'),
+                ),
+            })
 
-          const response = await graphql(
-            schema,
-            `
+            const response = await graphql(
+              schema,
+              `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -532,32 +550,117 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: user._key,
-              query: mockedQuery,
-              auth: {
-                verifyToken: verifyToken({}),
+              null,
+              {
+                i18n,
+                request,
+                userKey: user._key,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByKey: loader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loader,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError('Unable to verify account. Please try again.'),
-          ]
+            const error = [
+              new GraphQLError('Unable to verify account. Please try again.'),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when upserting email validation for user: ${user._key}: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        beforeEach(async () => {
+          await collections.users.save({
+            userName: 'test.account@istio.actually.exists',
+            displayName: 'Test Account',
+            preferredLang: 'english',
+            tfaValidated: false,
+            emailValidated: false,
+          })
+        })
+        describe('when upserting validation', () => {
+          it('throws an error', async () => {
+            const cursor = await query`
+                FOR user IN users
+                    FILTER user.userName == "test.account@istio.actually.exists"
+                    RETURN user
+              `
+            const user = await cursor.next()
+
+            const token = tokenize({
+              parameters: { userKey: user._key },
+            })
+
+            const loader = loadUserByKey({ query })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction step error occurred.'),
+                ),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyAccount(input: { verifyTokenString: "${token}" }) {
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                userKey: user._key,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByKey: loader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to verify account. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
+            ])
+          })
         })
       })
     })
@@ -620,6 +723,8 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               verifyToken: verifyToken({}),
             },
@@ -636,7 +741,8 @@ describe('user send password reset email', () => {
           data: {
             verifyAccount: {
               result: {
-                status: 'todo',
+                status:
+                  "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email.",
               },
             },
           },
@@ -688,6 +794,8 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
+            collections,
+            transaction,
             auth: {
               verifyToken: verifyToken({}),
             },
@@ -739,6 +847,8 @@ describe('user send password reset email', () => {
               request,
               userKey: 1,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -756,7 +866,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -813,6 +924,8 @@ describe('user send password reset email', () => {
               request,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -830,7 +943,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -887,6 +1001,8 @@ describe('user send password reset email', () => {
               request,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -904,7 +1020,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -961,6 +1078,8 @@ describe('user send password reset email', () => {
               request,
               userKey: user._key,
               query,
+              collections,
+              transaction,
               auth: {
                 verifyToken: verifyToken({}),
               },
@@ -978,7 +1097,8 @@ describe('user send password reset email', () => {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -990,7 +1110,7 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('database error occurs when upserting validation', () => {
+      describe('transaction step error occurs', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -1000,27 +1120,32 @@ describe('user send password reset email', () => {
             emailValidated: false,
           })
         })
-        it('returns an error message', async () => {
-          const cursor = await query`
+        describe('when upserting validation', () => {
+          it('throws an error', async () => {
+            const cursor = await query`
                 FOR user IN users
                     FILTER user.userName == "test.account@istio.actually.exists"
                     RETURN user
               `
-          const user = await cursor.next()
+            const user = await cursor.next()
 
-          const token = tokenize({
-            parameters: { userKey: user._key },
-          })
+            const token = tokenize({
+              parameters: { userKey: user._key },
+            })
 
-          const loader = loadUserByKey({ query })
+            const loader = loadUserByKey({ query })
 
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction step error occurred.'),
+                ),
+            })
 
-          const response = await graphql(
-            schema,
-            `
+            const response = await graphql(
+              schema,
+              `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -1035,30 +1160,121 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: user._key,
-              query: mockedQuery,
-              auth: {
-                verifyToken: verifyToken({}),
+              null,
+              {
+                i18n,
+                request,
+                userKey: user._key,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByKey: loader,
+                },
               },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loader,
-              },
-            },
-          )
+            )
 
-          const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de vérifier le compte. Veuillez réessayer.',
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when upserting email validation for user: ${user._key}: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        beforeEach(async () => {
+          await collections.users.save({
+            userName: 'test.account@istio.actually.exists',
+            displayName: 'Test Account',
+            preferredLang: 'english',
+            tfaValidated: false,
+            emailValidated: false,
+          })
+        })
+        describe('when upserting validation', () => {
+          it('throws an error', async () => {
+            const cursor = await query`
+                FOR user IN users
+                    FILTER user.userName == "test.account@istio.actually.exists"
+                    RETURN user
+              `
+            const user = await cursor.next()
+
+            const token = tokenize({
+              parameters: { userKey: user._key },
+            })
+
+            const loader = loadUserByKey({ query })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction step error occurred.'),
+                ),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyAccount(input: { verifyTokenString: "${token}" }) {
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                userKey: user._key,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByKey: loader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de vérifier le compte. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
+            ])
+          })
         })
       })
     })

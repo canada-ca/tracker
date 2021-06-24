@@ -31,13 +31,13 @@ export const fieldRequirements = {
   },
   phoneNumber: {
     matches: {
-      message: t`Phone number must be a valid phone number of the form +17895551234 (10-15 digits)`,
+      message: t`Phone number must be a valid phone number that is 10-15 digits long`,
     },
     required: { message: t`Phone number field must not be empty` },
   },
   acronym: {
     matches: {
-      regex: /^[A-Z]+(?:_[A-Z]+)*$/g,
+      regex: /^[A-Z]+(?:_[A-Z]+)*$/gm,
       message: t`Acronyms can only use upper case letters and underscores`,
     },
     max: {
@@ -47,5 +47,12 @@ export const fieldRequirements = {
   },
   field: {
     required: { message: t`This field cannot be empty` },
+  },
+  selector: {
+    required: { message: t`Selector cannot be empty` },
+    matches: {
+      regex: /^([\S]+)([.]_domainkey)$/gm,
+      message: t`Selector must be string ending in '._domainkey'`,
+    },
   },
 }

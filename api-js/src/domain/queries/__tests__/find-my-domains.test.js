@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkSuperAdmin, userRequired } from '../../../auth'
+import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
 import { loadDomainConnectionsByUserId } from '../../loaders'
 import { loadUserByKey } from '../../../user'
 
@@ -22,7 +22,6 @@ describe('given findMyDomainsQuery', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
   beforeAll(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
@@ -36,7 +35,6 @@ describe('given findMyDomainsQuery', () => {
   afterEach(async () => {
     consoleOutput.length = 0
   })
-
   describe('given successful retrieval of domains', () => {
     let domainOne, domainTwo
     beforeAll(async () => {
@@ -54,6 +52,7 @@ describe('given findMyDomainsQuery', () => {
         displayName: 'Test Account',
         userName: 'test.account@istio.actually.exists',
         preferredLang: 'french',
+        emailValidated: true,
       })
 
       org = await collections.organizations.save({
@@ -169,6 +168,7 @@ describe('given findMyDomainsQuery', () => {
                   i18n,
                 }),
               }),
+              verifiedRequired: verifiedRequired({}),
             },
             loaders: {
               loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
@@ -272,7 +272,8 @@ describe('given findMyDomainsQuery', () => {
               userKey: 1,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: jest.fn(),
+                userRequired: jest.fn().mockReturnValue({}),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
                 loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
@@ -349,7 +350,8 @@ describe('given findMyDomainsQuery', () => {
               userKey: 1,
               auth: {
                 checkSuperAdmin: jest.fn(),
-                userRequired: jest.fn(),
+                userRequired: jest.fn().mockReturnValue({}),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
                 loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
@@ -362,7 +364,11 @@ describe('given findMyDomainsQuery', () => {
             },
           )
 
-          const error = [new GraphQLError(`todo`)]
+          const error = [
+            new GraphQLError(
+              "Impossible d'interroger le(s) domaine(s). Veuillez réessayer.",
+            ),
+          ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

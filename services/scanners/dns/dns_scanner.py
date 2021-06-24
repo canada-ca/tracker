@@ -25,7 +25,9 @@ from starlette.responses import Response
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 TIMEOUT = 80  # 80 second scan timeout
 
-QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
+QUEUE_URL = os.getenv(
+    "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
+)
 
 
 class ScanTimeoutException(BaseException):
@@ -49,10 +51,12 @@ def scan_dmarc(domain, res_dict):
         # Perform "checkdmarc" scan on provided domain.
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
-        logging.error(
-            f"Failed to check the given domains for DMARC/SPF records. ({e})"
-        )
+        logging.error(f"Failed to check the given domains for DMARC/SPF records. ({e})")
         return None
+
+    if scan_result["dmarc"].get("record", "null") == "null":
+        logging.info("DMARC scan completed")
+        return {"dmarc": {"missing": True}}
 
     for rua in scan_result["dmarc"]["tags"].get("rua", {}).get("value", []):
         # Retrieve 'rua' tag address.
@@ -131,11 +135,8 @@ def scan_dmarc(domain, res_dict):
                 ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
-
-    if scan_result["dmarc"].get("record", "null") == "null":
-        res_dict["dmarc_results"] = {"dmarc": {"missing": True}}
-    else:
-        res_dict["dmarc_results"] = scan_result
+  
+    res_dict["dmarc_results"] = scan_result
 
     return res_dict
 
@@ -235,7 +236,7 @@ def scan_dkim(domain, selectors, res_dict):
 def process_results(results):
     logging.info("Processing DNS scan results...")
 
-    if results is not None and results != {}:
+    if results:
         report = {
             "dmarc": results["dmarc"],
             "spf": results["spf"],
@@ -298,29 +299,26 @@ def Server(server_client=requests):
             p = Process(target=scan_dmarc, args=(domain, result_dict))
             wait_timeout(p, TIMEOUT)
             scan_results = result_dict.values()[0]
-
-            if len(selectors) != 0:
-                p = Process(target=scan_dkim, args=(domain, selectors, result_dict))
-                wait_timeout(p, TIMEOUT)
-                scan_results["dkim"] = result_dict.values()[1]
+            if scan_results:
+              if len(selectors) != 0:
+                  result_dict = manager.dict()
+                  p = Process(target=scan_dkim, args=(domain, selectors, result_dict))
+                  wait_timeout(p, TIMEOUT)
+                  scan_results["dkim"] = result_dict.values()[0]
         except ScanTimeoutException:
             return Response("Timeout occurred while scanning", status_code=500)
 
-        if scan_results["dmarc"] != {"missing": True}:
+        processed_results = process_results(scan_results)
 
-            processed_results = process_results(scan_results)
-
-            outbound_payload = json.dumps(
-                {
-                    "results": processed_results,
-                    "scan_type": "dns",
-                    "uuid": uuid,
-                    "domain_key": domain_key
-                }
-            )
-            logging.info(f"Scan results: {str(scan_results)}")
-        else:
-            raise Exception("DNS scan not completed")
+        outbound_payload = json.dumps(
+            {
+                "results": processed_results,
+                "scan_type": "dns",
+                "uuid": uuid,
+                "domain_key": domain_key
+            }
+        )
+        logging.info(f"Scan results: {str(processed_results)}")
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time

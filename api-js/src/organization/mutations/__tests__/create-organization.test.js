@@ -9,7 +9,7 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { userRequired } from '../../../auth'
+import { userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug } from '../../loaders'
 
@@ -39,22 +39,19 @@ describe('create an organization', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
   beforeEach(async () => {
     consoleOutput.length = 0
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
     })
   })
-
   afterEach(async () => {
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
-
   describe('given a successful org creation', () => {
     describe('language is set to english', () => {
       it('returns the organizations information', async () => {
@@ -111,6 +108,7 @@ describe('create an organization', () => {
                 userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
               }),
+              verifiedRequired: verifiedRequired({}),
             },
             loaders: {
               loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
@@ -211,6 +209,7 @@ describe('create an organization', () => {
                 userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
               }),
+              verifiedRequired: verifiedRequired({}),
             },
             loaders: {
               loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
@@ -360,6 +359,7 @@ describe('create an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
@@ -458,6 +458,7 @@ describe('create an organization', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 loaders: {
                   loadOrgBySlug: orgLoader,
@@ -554,6 +555,7 @@ describe('create an organization', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 loaders: {
                   loadOrgBySlug: orgLoader,
@@ -654,6 +656,7 @@ describe('create an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 loaders: {
                   loadOrgBySlug: orgLoader,
@@ -781,6 +784,7 @@ describe('create an organization', () => {
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
                 }),
+                verifiedRequired: verifiedRequired({}),
               },
               loaders: {
                 loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
@@ -798,7 +802,8 @@ describe('create an organization', () => {
               createOrganization: {
                 result: {
                   code: 400,
-                  description: 'todo',
+                  description:
+                    "Le nom de l'organisation est déjà utilisé. Veuillez réessayer avec un nom différent.",
                 },
               },
             },
@@ -878,6 +883,7 @@ describe('create an organization', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 loaders: {
                   loadOrgBySlug: orgLoader,
@@ -890,7 +896,11 @@ describe('create an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer une organisation. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -970,6 +980,7 @@ describe('create an organization', () => {
                     userKey: user._key,
                     loadUserByKey: userLoader,
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 loaders: {
                   loadOrgBySlug: orgLoader,
@@ -982,7 +993,11 @@ describe('create an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer une organisation. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1066,6 +1081,7 @@ describe('create an organization', () => {
                     userKey: user._key,
                     loadUserByKey: loadUserByKey({ query }),
                   }),
+                  verifiedRequired: verifiedRequired({}),
                 },
                 loaders: {
                   loadOrgBySlug: orgLoader,
@@ -1078,7 +1094,11 @@ describe('create an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de créer une organisation. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

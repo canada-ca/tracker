@@ -623,7 +623,7 @@ describe('testing the removePhoneNumber mutation', () => {
             data: {
               removePhoneNumber: {
                 result: {
-                  status: 'todo',
+                  status: 'Le numéro de téléphone a été supprimé avec succès.',
                 },
               },
             },
@@ -803,7 +803,7 @@ describe('testing the removePhoneNumber mutation', () => {
             data: {
               removePhoneNumber: {
                 result: {
-                  status: 'todo',
+                  status: 'Le numéro de téléphone a été supprimé avec succès.',
                 },
               },
             },
@@ -990,7 +990,11 @@ describe('testing the removePhoneNumber mutation', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le numéro de téléphone. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1043,7 +1047,11 @@ describe('testing the removePhoneNumber mutation', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le numéro de téléphone. Veuillez réessayer.',
+              ),
+            ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

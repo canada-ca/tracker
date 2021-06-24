@@ -290,7 +290,11 @@ describe('given the check domain permission function', () => {
             })
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Erreur de vérification des permissions. Impossible de demander des informations sur le domaine.',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `Database error when retrieving super admin claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
@@ -312,7 +316,11 @@ describe('given the check domain permission function', () => {
             })
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'Erreur de vérification des permissions. Impossible de demander des informations sur le domaine.',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `Database error when retrieving affiliated organization claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
             ])

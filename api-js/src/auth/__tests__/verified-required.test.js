@@ -83,9 +83,8 @@ describe('given the verifiedRequired function', () => {
           en: { plurals: {} },
           fr: { plurals: {} },
         },
-        locales: ['en', 'fr'],
+        locales: ['fr'],
         messages: {
-          en: englishMessages.messages,
           fr: frenchMessages.messages,
         },
       })
@@ -106,7 +105,11 @@ describe('given the verifiedRequired function', () => {
         try {
           verifiedFunc({ user })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error(
+              'Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu.',
+            ),
+          )
         }
       })
     })

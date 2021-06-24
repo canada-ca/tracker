@@ -19,4 +19,4 @@ patchesJSON6902:
     - op: add
       path: /spec/components/ingressGateways/0/k8s/serviceAnnotations
       value:
-        service.beta.kubernetes.io/azure-load-balancer-internal: true
+        service.beta.kubernetes.io/azure-load-balancer-internal: "true"

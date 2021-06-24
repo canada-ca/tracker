@@ -47,7 +47,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
 
   const webSummary =
     categoryName === 'https' ? (
-      <Box bg="gray.200" px="2">
+      <Box bg="gray.100" px="2" py="1">
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Implementation:</Trans>
@@ -82,7 +82,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         </Stack>
       </Box>
     ) : categoryName === 'ssl' ? (
-      <Box bg="gray.200" px="2">
+      <Box bg="gray.100" px="2" py="1">
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>CCS Injection Vulnerability:</Trans>
