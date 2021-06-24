@@ -12,7 +12,6 @@ import {
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { TrackerButton } from './TrackerButton'
 
 export function OrganizationCard({
   name,
@@ -118,18 +117,6 @@ export function OrganizationCard({
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
-        <Stack mt="4" fontSize="xl" w="100%">
-          <TrackerButton
-            variant="primary"
-            as={RouteLink}
-            to={`${path}/${slug}`}
-            display={{ md: 'none' }}
-          >
-            <Text whiteSpace="noWrap">
-              <Trans>View Details</Trans>
-            </Text>
-          </TrackerButton>
-        </Stack>
       </PseudoBox>
     </ListItem>
   )
