@@ -27,11 +27,11 @@ msgstr "Cannot query affiliations on organization without admin permission or hi
 msgid "Email already in use."
 msgstr "Email already in use."
 
-#: src/user/mutations/send-password-reset.js:64
+#: src/user/mutations/send-password-reset.js:62
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
 msgstr "If an account with this username is found, a password reset link will be found in your inbox."
 
-#: src/user/mutations/send-email-verification.js:63
+#: src/user/mutations/send-email-verification.js:61
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "If an account with this username is found, an email verification link will be found in your inbox."
 
@@ -117,8 +117,8 @@ msgstr "Passing both `first` and `last` to paginate the `DmarcFailureTable` conn
 msgid "Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:135
-#: src/domain/loaders/load-domain-connections-by-user-id.js:144
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:147
+#: src/domain/loaders/load-domain-connections-by-user-id.js:156
 msgid "Passing both `first` and `last` to paginate the `Domain` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `Domain` connection is not supported."
 
@@ -287,8 +287,8 @@ msgstr "Requesting `{amount}` records on the `DmarcFailureTable` connection exce
 msgid "Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:158
-#: src/domain/loaders/load-domain-connections-by-user-id.js:167
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:170
+#: src/domain/loaders/load-domain-connections-by-user-id.js:179
 msgid "Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records."
 
@@ -360,7 +360,7 @@ msgstr "Successfully email verified account, and set TFA send method to email."
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
-#: src/domain/mutations/remove-domain.js:329
+#: src/domain/mutations/remove-domain.js:335
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "Successfully removed domain: {0} from {1}."
 
@@ -635,9 +635,9 @@ msgstr "Unable to load SSL scan(s). Please try again."
 msgid "Unable to load affiliation(s). Please try again."
 msgstr "Unable to load affiliation(s). Please try again."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:343
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:353
-#: src/domain/loaders/load-domain-connections-by-user-id.js:378
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:364
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:374
+#: src/domain/loaders/load-domain-connections-by-user-id.js:394
 msgid "Unable to load domain(s). Please try again."
 msgstr "Unable to load domain(s). Please try again."
 
@@ -713,7 +713,7 @@ msgstr "Unable to load web summary. Please try again."
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "Unable to query affiliation(s). Please try again."
 
-#: src/domain/loaders/load-domain-connections-by-user-id.js:368
+#: src/domain/loaders/load-domain-connections-by-user-id.js:384
 msgid "Unable to query domain(s). Please try again."
 msgstr "Unable to query domain(s). Please try again."
 
@@ -736,13 +736,13 @@ msgid "Unable to remove domain from unknown organization."
 msgstr "Unable to remove domain from unknown organization."
 
 #: src/domain/mutations/remove-domain.js:125
-#: src/domain/mutations/remove-domain.js:137
-#: src/domain/mutations/remove-domain.js:172
-#: src/domain/mutations/remove-domain.js:188
-#: src/domain/mutations/remove-domain.js:269
-#: src/domain/mutations/remove-domain.js:287
-#: src/domain/mutations/remove-domain.js:309
-#: src/domain/mutations/remove-domain.js:320
+#: src/domain/mutations/remove-domain.js:139
+#: src/domain/mutations/remove-domain.js:176
+#: src/domain/mutations/remove-domain.js:194
+#: src/domain/mutations/remove-domain.js:275
+#: src/domain/mutations/remove-domain.js:293
+#: src/domain/mutations/remove-domain.js:315
+#: src/domain/mutations/remove-domain.js:326
 msgid "Unable to remove domain. Please try again."
 msgstr "Unable to remove domain. Please try again."
 
@@ -1013,8 +1013,8 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Dma
 msgid "You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:126
-#: src/domain/loaders/load-domain-connections-by-user-id.js:135
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:138
+#: src/domain/loaders/load-domain-connections-by-user-id.js:147
 msgid "You must provide a `first` or `last` value to properly paginate the `Domain` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `Domain` connection."
 
@@ -1077,8 +1077,8 @@ msgstr "You must provide a `year` value to access the `DmarcSummaries` connectio
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:231
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:83
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:83
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:173
-#: src/domain/loaders/load-domain-connections-by-user-id.js:182
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:185
+#: src/domain/loaders/load-domain-connections-by-user-id.js:194
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:170
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:136
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:186
@@ -1129,8 +1129,8 @@ msgstr "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zer
 msgid "`{argSet}` on the `DmarcSummaries` connection cannot be less than zero."
 msgstr "`{argSet}` on the `DmarcSummaries` connection cannot be less than zero."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:147
-#: src/domain/loaders/load-domain-connections-by-user-id.js:156
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:159
+#: src/domain/loaders/load-domain-connections-by-user-id.js:168
 msgid "`{argSet}` on the `Domain` connection cannot be less than zero."
 msgstr "`{argSet}` on the `Domain` connection cannot be less than zero."
 
