@@ -75,6 +75,7 @@ class Endpoint(object):
         self.hsts_all_subdomains = None
         self.hsts_preload = None
         self.hsts_preloaded = None
+        self.https_cert_revoked = False
 
     def url_for(self, protocol, host, base_domain):
         if host == "root":
