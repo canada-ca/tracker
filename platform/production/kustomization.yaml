@@ -15,7 +15,7 @@ patchesJSON6902:
   patch: |-
     - op: add
       path: /spec/components/ingressGateways/0/k8s/service/loadBalancerIP
-      value: 10.58.10.59
+      value: 10.59.10.59
     - op: add
       path: /spec/components/ingressGateways/0/k8s/serviceAnnotations
       value:
