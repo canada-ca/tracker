@@ -460,7 +460,7 @@ def process_dns(results, domain_key, uuid, db):
             elif sp_tag == "reject":
                 tags["dmarc"].append("dmarc19")
 
-    if (results["spf"].get("error") == "missing":) or (
+    if (results["spf"].get("error") == "missing") or (
         results["spf"].get("record", "null") == "null"
     ):
         tags["spf"].append("spf2")
