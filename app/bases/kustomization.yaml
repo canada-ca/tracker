@@ -19,7 +19,8 @@ resources:
 - knative/config/queues.yaml
 - knative/config/config.yaml
 - knative/config/autoscan.yaml
-- knative/config/core.yaml
+- knative/config/guidance.yaml
+- knative/config/summaries.yaml
 - knative/config/dmarc-report.yaml
 - knative/config/redis.yaml
 - tracker-api-deployment.yaml

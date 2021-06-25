@@ -1,5 +1,0 @@
-emoji
-pytest
-gql[all]
-pretend
-python-arango
