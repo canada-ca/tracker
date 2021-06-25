@@ -64,15 +64,14 @@ export function OrganizationCard({
         <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
           <Stack isInline align="center">
             <Text
-              mt="1"
               fontSize={['lg', 'md']}
               fontWeight="semibold"
-              as="u"
+              textDecoration="underline"
               isTruncated
             >
               {name}
             </Text>
-            <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold">
+            <Text fontSize={['lg', 'md']} fontWeight="semibold">
               ({acronym})
             </Text>
             {verified && (
