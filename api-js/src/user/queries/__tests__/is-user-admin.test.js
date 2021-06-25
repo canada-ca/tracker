@@ -1,12 +1,15 @@
 import { setupI18n } from '@lingui/core'
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
 import { databaseOptions } from '../../../../database-options'
 import { checkPermission, userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey } from '../../loaders'
+import { cleanseInput } from '../../../validators'
+import { loadOrgByKey } from '../../../organization/loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 
@@ -89,133 +92,290 @@ describe('given the isUserAdmin query', () => {
   })
 
   describe('given a successful query', () => {
-    describe('if the user is a super admin for an organization', () => {
-      beforeEach(async () => {
-        await query`
-          INSERT {
-            _from: ${org._id},
-            _to: ${user._id},
-            permission: "super_admin"
-          } INTO affiliations
-        `
-      })
-      it('will return true', async () => {
-        const response = await graphql(
-          schema,
+    describe('check if user is at least an admin for any org', () => {
+      describe('if the user is a super admin for an organization', () => {
+        beforeEach(async () => {
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "super_admin"
+            } INTO affiliations
           `
-            query {
-              isUserAdmin
-            }
-          `,
-          null,
-          {
-            userKey: user._key,
-            query: query,
-            auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
-              userRequired: userRequired({
-                userKey: user._key,
+        })
+        it('will return true', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin
+              }
+            `,
+            null,
+            {
+              userKey: user._key,
+              query: query,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-              }),
+                loadOrgByKey: loadOrgByKey({ query }),
+              },
+              validators: {
+                cleanseInput,
+              },
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
-            },
-          },
-        )
+          )
 
-        const expectedResponse = {
-          data: {
-            isUserAdmin: true,
-          },
-        }
-        expect(response).toEqual(expectedResponse)
+          const expectedResponse = {
+            data: {
+              isUserAdmin: true,
+            },
+          }
+          expect(response).toEqual(expectedResponse)
+        })
+      })
+      describe('if the user is an admin for an organization', () => {
+        beforeEach(async () => {
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "admin"
+            } INTO affiliations
+          `
+        })
+        it('will return true', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin
+              }
+            `,
+            null,
+            {
+              userKey: user._key,
+              query: query,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query }),
+              },
+              validators: {
+                cleanseInput,
+              },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              isUserAdmin: true,
+            },
+          }
+          expect(response).toEqual(expectedResponse)
+        })
+      })
+      describe('if the user is only a user for their organization(s)', () => {
+        beforeEach(async () => {
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "user"
+            } INTO affiliations
+          `
+        })
+        it('will return false', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin
+              }
+            `,
+            null,
+            {
+              userKey: user._key,
+              query: query,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query }),
+              },
+              validators: {
+                cleanseInput,
+              },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              isUserAdmin: false,
+            },
+          }
+          expect(response).toEqual(expectedResponse)
+        })
       })
     })
-    describe('if the user is an admin for an organization', () => {
-      beforeEach(async () => {
-        await query`
-          INSERT {
-            _from: ${org._id},
-            _to: ${user._id},
-            permission: "admin"
-          } INTO affiliations
-        `
-      })
-      it('will return true', async () => {
-        const response = await graphql(
-          schema,
+    describe('check to see if user is an admin for a specific organization', () => {
+      describe('if the user is a super admin for an organization', () => {
+        beforeEach(async () => {
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "super_admin"
+            } INTO affiliations
           `
-            query {
-              isUserAdmin
-            }
-          `,
-          null,
-          {
-            userKey: user._key,
-            query: query,
-            auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
-              userRequired: userRequired({
-                userKey: user._key,
+        })
+        it('will return true', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
+              }
+            `,
+            null,
+            {
+              userKey: user._key,
+              query: query,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-              }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              validators: {
+                cleanseInput,
+              },
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
-            },
-          },
-        )
+          )
 
-        const expectedResponse = {
-          data: {
-            isUserAdmin: true,
-          },
-        }
-        expect(response).toEqual(expectedResponse)
+          const expectedResponse = {
+            data: {
+              isUserAdmin: true,
+            },
+          }
+          expect(response).toEqual(expectedResponse)
+        })
       })
-    })
-    describe('if the user is only a user for their organization(s)', () => {
-      beforeEach(async () => {
-        await query`
-          INSERT {
-            _from: ${org._id},
-            _to: ${user._id},
-            permission: "user"
-          } INTO affiliations
-        `
-      })
-      it('will return false', async () => {
-        const response = await graphql(
-          schema,
+      describe('if the user is an admin for an organization', () => {
+        beforeEach(async () => {
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "admin"
+            } INTO affiliations
           `
-            query {
-              isUserAdmin
-            }
-          `,
-          null,
-          {
-            userKey: user._key,
-            query: query,
-            auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
-              userRequired: userRequired({
-                userKey: user._key,
+        })
+        it('will return true', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
+              }
+            `,
+            null,
+            {
+              userKey: user._key,
+              query: query,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
                 loadUserByKey: loadUserByKey({ query }),
-              }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              validators: {
+                cleanseInput,
+              },
             },
-            loaders: {
-              loadUserByKey: loadUserByKey({ query }),
-            },
-          },
-        )
+          )
 
-        const expectedResponse = {
-          data: {
-            isUserAdmin: false,
-          },
-        }
-        expect(response).toEqual(expectedResponse)
+          const expectedResponse = {
+            data: {
+              isUserAdmin: true,
+            },
+          }
+          expect(response).toEqual(expectedResponse)
+        })
+      })
+      describe('if the user is only a user for their organization(s)', () => {
+        beforeEach(async () => {
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "user"
+            } INTO affiliations
+          `
+        })
+        it('will return false', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
+              }
+            `,
+            null,
+            {
+              userKey: user._key,
+              query: query,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({ query }),
+                }),
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              },
+              validators: {
+                cleanseInput,
+              },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              isUserAdmin: false,
+            },
+          }
+          expect(response).toEqual(expectedResponse)
+        })
       })
     })
   })
@@ -261,6 +421,10 @@ describe('given the isUserAdmin query', () => {
             },
             loaders: {
               loadUserByKey: loadUserByKey({ query }),
+              loadOrgByKey: loadOrgByKey({ query }),
+            },
+            validators: {
+              cleanseInput,
             },
           },
         )
@@ -318,6 +482,10 @@ describe('given the isUserAdmin query', () => {
             },
             loaders: {
               loadUserByKey: loadUserByKey({ query }),
+              loadOrgByKey: loadOrgByKey({ query }),
+            },
+            validators: {
+              cleanseInput,
             },
           },
         )
