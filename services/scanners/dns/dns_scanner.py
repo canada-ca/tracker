@@ -15,7 +15,6 @@ import datetime as dt
 from checkdmarc import *
 from dns import resolver
 from dkim import dnsplug, crypto, KeyFormatError
-from dkim.crypto import *
 from dkim.util import InvalidTagValueList
 from multiprocessing import Process, Queue
 from starlette.applications import Starlette
@@ -173,7 +172,7 @@ def load_pk(name, s=None):
         pub[b"k"] = b"rsa"
     if pub[b"k"] == b"rsa":
         try:
-            pk = parse_public_key(base64.b64decode(pub[b"p"]))
+            pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
             keysize = bitsize(pk["modulus"])
         except KeyError:
             raise KeyFormatError(f"incomplete public key: {s}")
