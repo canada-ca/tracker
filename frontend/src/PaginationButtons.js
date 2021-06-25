@@ -1,6 +1,6 @@
 import React from 'react'
-import { number, func } from 'prop-types'
-import { Stack, Text, IconButton, Select } from '@chakra-ui/core'
+import { func, number } from 'prop-types'
+import { IconButton, Select, Stack, Text } from '@chakra-ui/core'
 
 export function PaginationButtons({
   perPage,
@@ -42,11 +42,11 @@ export function PaginationButtons({
         <Select
           w="30"
           value={perPage}
-          onChange={e => {
+          onChange={(e) => {
             setPerPage(Number(e.target.value))
           }}
         >
-          {[5, 10, 20].map(perPage => (
+          {[5, 10, 20].map((perPage) => (
             <option key={perPage} value={perPage}>
               Show {perPage}
             </option>

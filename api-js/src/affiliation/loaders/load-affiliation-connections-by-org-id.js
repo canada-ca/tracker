@@ -104,9 +104,9 @@ export const loadAffiliationConnectionsByOrgId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`affiliation._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(affiliation._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`affiliation._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(affiliation._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -225,7 +225,7 @@ export const loadAffiliationConnectionsByOrgId =
         FOR affiliation IN affiliations
           FILTER affiliation._key IN affiliationKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} affiliation._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(affiliation._key) ${sortString} LIMIT 1
           RETURN affiliation
       ) > 0 ? true : false)
 
@@ -233,7 +233,7 @@ export const loadAffiliationConnectionsByOrgId =
         FOR affiliation IN affiliations
           FILTER affiliation._key IN affiliationKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} affiliation._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(affiliation._key) ${sortString} LIMIT 1
           RETURN affiliation
       ) > 0 ? true : false)
 

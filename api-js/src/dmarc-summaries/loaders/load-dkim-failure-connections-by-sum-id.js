@@ -69,9 +69,9 @@ export const loadDkimFailConnectionsBySumId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`SORT dkimFail.id ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`SORT TO_NUMBER(dkimFail.id) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`SORT dkimFail.id DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`SORT TO_NUMBER(dkimFail.id) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -113,14 +113,14 @@ export const loadDkimFailConnectionsBySumId =
       LET hasNextPage = (LENGTH(
         FOR dkimFail IN dkimFailures
           FILTER TO_NUMBER(dkimFail.id) > TO_NUMBER(LAST(retrievedDkimFailure).id)
-          SORT dkimFail.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(dkimFail.id) ${sortString} LIMIT 1
           RETURN dkimFail
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         FOR dkimFail IN dkimFailures
           FILTER TO_NUMBER(dkimFail.id) < TO_NUMBER(FIRST(retrievedDkimFailure).id)
-          SORT dkimFail.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(dkimFail.id) ${sortString} LIMIT 1
           RETURN dkimFail
       ) > 0 ? true : false)
 

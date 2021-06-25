@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text, Box, Link } from '@chakra-ui/core'
+import { Box, Flex, Link, Text } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
 

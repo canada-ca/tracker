@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Text, Stack } from '@chakra-ui/core'
+import { Stack, Text } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 import { number, object, string } from 'prop-types'
 

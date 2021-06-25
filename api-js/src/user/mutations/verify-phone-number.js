@@ -27,6 +27,8 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       i18n,
       userKey,
       query,
+      collections,
+      transaction,
       auth: { userRequired },
       loaders: { loadUserByKey },
     },
@@ -62,30 +64,52 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       }
     }
 
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collectionStrings)
+
     // Update phoneValidated to be true
     try {
-      await query`
-        WITH users
-        UPSERT { _key: ${user._key} }
-          INSERT { phoneValidated: true }
-          UPDATE { phoneValidated: true }
-          IN users
-      `
+      await trx.step(
+        () => query`
+          WITH users
+          UPSERT { _key: ${user._key} }
+            INSERT { phoneValidated: true }
+            UPDATE { phoneValidated: true }
+            IN users
+        `,
+      )
     } catch (err) {
       console.error(
-        `Database error occurred when upserting the tfaValidate field for ${user._key}: ${err}`,
+        `Trx step error occurred when upserting the tfaValidate field for ${user._key}: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to two factor authenticate. Please try again.`),
       )
     }
 
-    console.info(
-      `User: ${user._key} successfully two factor authenticated their account.`,
-    )
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Trx commit error occurred when upserting the tfaValidate field for ${user._key}: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to two factor authenticate. Please try again.`),
+      )
+    }
 
     await loadUserByKey.clear(userKey)
     const updatedUser = await loadUserByKey.load(userKey)
+
+    console.info(
+      `User: ${user._key} successfully two factor authenticated their account.`,
+    )
 
     return {
       _type: 'success',

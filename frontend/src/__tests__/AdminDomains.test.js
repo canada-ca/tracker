@@ -1,9 +1,9 @@
 import React from 'react'
-import { waitFor, render, fireEvent } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { fireEvent, render, waitFor } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { AdminDomains } from '../AdminDomains'
 import { MockedProvider } from '@apollo/client/testing'
@@ -18,6 +18,7 @@ import {
   rawOrgDomainListData,
   rawOrgDomainListDataEmpty,
 } from '../fixtures/orgDomainListData'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -43,12 +44,8 @@ describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -61,7 +58,7 @@ describe('<AdminDomains />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -84,12 +81,8 @@ describe('<AdminDomains />', () => {
 
     const { getByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -102,7 +95,7 @@ describe('<AdminDomains />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -150,12 +143,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -168,7 +161,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -235,12 +228,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByPlaceholderText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -253,7 +246,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -329,12 +322,12 @@ describe('<AdminDomains />', () => {
         queryAllByText,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -347,7 +340,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -417,12 +410,12 @@ describe('<AdminDomains />', () => {
         queryAllByText,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -435,7 +428,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -515,12 +508,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByTestId, queryByText, queryAllByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -533,7 +526,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -594,12 +587,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByLabelText, getByTestId } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -612,7 +605,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

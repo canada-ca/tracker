@@ -6,20 +6,15 @@ import { MockedProvider } from '@apollo/client/testing'
 import DmarcReportPage from '../DmarcReportPage'
 import {
   DMARC_REPORT_GRAPH,
-  PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_FORWARD,
-  PAGINATED_DMARC_FAILURE_REPORT as DMARC_FAILURE_FORWARD,
-  PAGINATED_FULL_PASS_REPORT as FULL_PASS_FORWARD,
-  PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_FORWARD,
+  PAGINATED_DMARC_REPORT,
 } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { rawDmarcReportGraphData } from '../fixtures/dmarcReportGraphData'
-import { rawDkimFailureData } from '../fixtures/dkimFailureData'
-import { rawDmarcFailureData } from '../fixtures/dmarcFailureData'
-import { rawSpfFailureData } from '../fixtures/spfFailureData'
-import { rawFullPassData } from '../fixtures/fullPassData'
+import { rawDmarcReportData } from '../fixtures/dmarcReportData.js'
 import { createCache } from '../client'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -51,7 +46,7 @@ const mocks = [
   },
   {
     request: {
-      query: DKIM_FAILURE_FORWARD,
+      query: PAGINATED_DMARC_REPORT,
       variables: {
         domain: 'test-domain',
         month: 'LAST30DAYS',
@@ -60,46 +55,7 @@ const mocks = [
         after: '',
       },
     },
-    result: rawDkimFailureData,
-  },
-  {
-    request: {
-      query: DMARC_FAILURE_FORWARD,
-      variables: {
-        month: 'LAST30DAYS',
-        year: '2020',
-        domain: 'test-domain',
-        first: 50,
-        after: '',
-      },
-    },
-    result: rawDmarcFailureData,
-  },
-  {
-    request: {
-      query: SPF_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: rawSpfFailureData,
-  },
-  {
-    request: {
-      query: FULL_PASS_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: rawFullPassData,
+    result: rawDmarcReportData,
   },
 ]
 
@@ -107,8 +63,8 @@ describe('<DmarcReportPage />', () => {
   it('renders header', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -124,7 +80,7 @@ describe('<DmarcReportPage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/test-domain/i))
@@ -133,8 +89,8 @@ describe('<DmarcReportPage />', () => {
   it('renders date selector', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -150,7 +106,7 @@ describe('<DmarcReportPage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/Showing data for period:/i))
@@ -159,8 +115,8 @@ describe('<DmarcReportPage />', () => {
   it('renders bar graph', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -176,7 +132,7 @@ describe('<DmarcReportPage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/^Fail DKIM$/i))
@@ -185,8 +141,8 @@ describe('<DmarcReportPage />', () => {
   it('renders tables', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -202,7 +158,7 @@ describe('<DmarcReportPage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/DKIM Failures by IP Address/i))

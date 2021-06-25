@@ -141,9 +141,9 @@ export const loadDkimConnectionsByDomainId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`dkimScan._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(dkimScan._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`dkimScan._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(dkimScan._key) DESC LIMIT TO_NUMBER(${last})`
       } else {
         console.warn(
           `User: ${userKey} tried to have \`first\` and \`last\` arguments set for: loadDkimConnectionsByDomainId.`,
@@ -238,7 +238,7 @@ export const loadDkimConnectionsByDomainId =
         FOR dkimScan IN dkim
           FILTER dkimScan._key IN dkimKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} dkimScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(dkimScan._key) ${sortString} LIMIT 1
           RETURN dkimScan
       ) > 0 ? true : false)
       
@@ -246,7 +246,7 @@ export const loadDkimConnectionsByDomainId =
         FOR dkimScan IN dkim
           FILTER dkimScan._key IN dkimKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} dkimScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(dkimScan._key) ${sortString} LIMIT 1
           RETURN dkimScan
       ) > 0 ? true : false)
 

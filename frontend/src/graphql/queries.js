@@ -867,14 +867,14 @@ export const DMARC_REPORT_GRAPH = gql`
   }
 `
 
-export const PAGINATED_DKIM_FAILURE_REPORT = gql`
-  query PaginatedDkimFailureReport(
+export const PAGINATED_DMARC_REPORT = gql`
+  query PaginatedDmarcReport(
     $domain: DomainScalar!
     $month: PeriodEnums!
     $year: Year!
     $after: String
     $first: Int
-  ) {
+    ) {
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
@@ -884,6 +884,27 @@ export const PAGINATED_DKIM_FAILURE_REPORT = gql`
         month
         year
         detailTables {
+          fullPass(after: $after, first: $first) {
+            edges {
+              cursor
+              node {
+                sourceIpAddress
+                envelopeFrom
+                dkimDomains
+                dkimSelectors
+                dnsHost
+                headerFrom
+                spfDomains
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
           dkimFailure(after: $after, first: $first) {
             edges {
               node {
@@ -906,73 +927,6 @@ export const PAGINATED_DKIM_FAILURE_REPORT = gql`
               startCursor
             }
           }
-        }
-      }
-    }
-  }
-`
-
-export const PAGINATED_DMARC_FAILURE_REPORT = gql`
-  query PaginatedDmarcFailureReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $after: String
-    $first: Int
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain {
-          domain
-        }
-        month
-        year
-        detailTables {
-          dmarcFailure(after: $after, first: $first) {
-            edges {
-              node {
-                dkimDomains
-                dkimSelectors
-                disposition
-                dnsHost
-                envelopeFrom
-                headerFrom
-                sourceIpAddress
-                spfDomains
-                totalMessages
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-              hasPreviousPage
-              startCursor
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export const PAGINATED_SPF_FAILURE_REPORT = gql`
-  query PaginatedSpfFailureReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $after: String
-    $first: Int
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain {
-          domain
-        }
-        month
-        year
-        detailTables {
           spfFailure(after: $after, first: $first) {
             edges {
               node {
@@ -994,39 +948,16 @@ export const PAGINATED_SPF_FAILURE_REPORT = gql`
               startCursor
             }
           }
-        }
-      }
-    }
-  }
-`
-
-export const PAGINATED_FULL_PASS_REPORT = gql`
-  query PaginatedFullPassReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $first: Int
-    $after: String
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain {
-          domain
-        }
-        month
-        year
-        detailTables {
-          fullPass(after: $after, first: $first) {
+          dmarcFailure(after: $after, first: $first) {
             edges {
-              cursor
               node {
-                sourceIpAddress
-                envelopeFrom
                 dkimDomains
                 dkimSelectors
+                disposition
                 dnsHost
+                envelopeFrom
                 headerFrom
+                sourceIpAddress
                 spfDomains
                 totalMessages
               }

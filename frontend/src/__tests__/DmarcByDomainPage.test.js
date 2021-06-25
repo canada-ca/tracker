@@ -6,10 +6,11 @@ import { MockedProvider } from '@apollo/client/testing'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import DmarcByDomainPage from '../DmarcByDomainPage'
 import { rawDmarcReportSummaryTableData } from '../fixtures/dmarcReportSummaryTable'
 import { createMemoryHistory } from 'history'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -52,8 +53,8 @@ describe('<DmarcByDomainPage />', () => {
   it('renders page header', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -62,7 +63,7 @@ describe('<DmarcByDomainPage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => getAllByText(/^DMARC Summaries$/i))
@@ -71,8 +72,8 @@ describe('<DmarcByDomainPage />', () => {
   it('renders date selector', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -81,7 +82,7 @@ describe('<DmarcByDomainPage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => getByText(/Showing data for period:/i))
@@ -91,8 +92,12 @@ describe('<DmarcByDomainPage />', () => {
     it('renders summary table', async () => {
       const { getByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -101,7 +106,7 @@ describe('<DmarcByDomainPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
       await waitFor(() => getByText(/Total Messages/i))
@@ -110,8 +115,12 @@ describe('<DmarcByDomainPage />', () => {
     it('displays domains', async () => {
       const { getByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -120,7 +129,7 @@ describe('<DmarcByDomainPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
       await waitFor(() => {
@@ -136,8 +145,12 @@ describe('<DmarcByDomainPage />', () => {
 
       const { getByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -153,7 +166,7 @@ describe('<DmarcByDomainPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -170,8 +183,12 @@ describe('<DmarcByDomainPage />', () => {
       it('next button goes to next page', async () => {
         const { getByText, queryByText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -180,7 +197,7 @@ describe('<DmarcByDomainPage />', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
         // don't expect last domain
@@ -202,8 +219,12 @@ describe('<DmarcByDomainPage />', () => {
       it('increases items per page', async () => {
         const { queryByText, getByLabelText } = render(
           <MockedProvider mocks={mocks} addTypename={false}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -212,7 +233,7 @@ describe('<DmarcByDomainPage />', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 

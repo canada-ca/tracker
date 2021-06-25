@@ -1,16 +1,16 @@
 import React from 'react'
-import { func, oneOfType, shape, string, elementType } from 'prop-types'
+import { elementType, func, oneOfType, shape, string } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Icon,
+  IconButton,
   Input,
   InputGroup,
-  InputRightElement,
   InputLeftElement,
-  Icon,
-  FormErrorMessage,
-  IconButton,
-  FormLabel,
+  InputRightElement,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox.js'

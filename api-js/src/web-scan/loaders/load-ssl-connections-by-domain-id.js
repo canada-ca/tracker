@@ -197,9 +197,9 @@ export const loadSslConnectionByDomainId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`sslScan._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(sslScan._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`sslScan._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(sslScan._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -338,7 +338,7 @@ export const loadSslConnectionByDomainId =
         FOR sslScan IN ssl
           FILTER sslScan._key IN sslKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(sslScan._key) ${sortString} LIMIT 1
           RETURN sslScan
       ) > 0 ? true : false)
       
@@ -346,7 +346,7 @@ export const loadSslConnectionByDomainId =
         FOR sslScan IN ssl
           FILTER sslScan._key IN sslKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(sslScan._key) ${sortString} LIMIT 1
           RETURN sslScan
       ) > 0 ? true : false)
 

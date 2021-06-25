@@ -1,5 +1,10 @@
 import 'isomorphic-unfetch'
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  makeVar,
+} from '@apollo/client'
 import { relayStylePagination } from '@apollo/client/utilities'
 import { setContext } from '@apollo/client/link/context'
 import { i18n } from '@lingui/core'
@@ -53,22 +58,29 @@ export function createCache() {
 
 export const cache = createCache()
 
+export const currentUserVar = makeVar({
+  jwt: null,
+  tfaSendMethod: null,
+  userName: null,
+})
+
 const httpLink = createHttpLink({
   uri: '/graphql',
 })
 
-const languageLink = setContext((_, { headers }) => {
+const headersLink = setContext((_, { headers }) => {
   const language = i18n.locale
 
   return {
     headers: {
       ...headers,
+      ...(currentUserVar().jwt && { authorization: currentUserVar().jwt }),
       'Accept-Language': language,
     },
   }
 })
 
 export const client = new ApolloClient({
-  link: languageLink.concat(httpLink),
+  link: headersLink.concat(httpLink),
   cache,
 })

@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backup-service
+  namespace: db
+  labels:
+    job: backup
+spec:
+  template:
+    spec:
+      serviceAccountName: backup-service
+      initContainers:
+        - name: dump
+          image: "arangodb:3.7.11"
+          env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: arangodb
+                key: username
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: arangodb
+                key: password
+          args:
+            - "arangodump"
+            - "--server.endpoint=tcp://arangodb:8529"
+            - "--server.username=$(DB_USER)"
+            - "--server.password=$(DB_PASS)"
+            - "--server.database=track_dmarc"
+            - "--output-directory=/tmp/dump"
+          volumeMounts:
+            - name: dump
+              mountPath: /tmp/dump
+      containers:
+      volumes:
+        - name: dump
+          emptyDir: {}
+      restartPolicy: Never

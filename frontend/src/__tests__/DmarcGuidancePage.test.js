@@ -7,9 +7,10 @@ import DmarcGuidancePage from '../DmarcGuidancePage'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import matchMediaPolyfill from 'mq-polyfill'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -56,8 +57,8 @@ describe('<DmarcGuidancePage />', () => {
     window.resizeTo(1024, 768)
     const { getByText } = render(
       <MockedProvider addTypename={false} mocks={mocks}>
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -71,7 +72,7 @@ describe('<DmarcGuidancePage />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 

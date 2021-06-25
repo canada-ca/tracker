@@ -1,18 +1,17 @@
 import React from 'react'
 import {
-  Text,
+  Box,
+  Divider,
+  Icon,
   ListItem,
   Progress,
   PseudoBox,
-  Box,
   Stack,
-  Divider,
-  Icon,
+  Text,
 } from '@chakra-ui/core'
-import { useRouteMatch, Link as RouteLink } from 'react-router-dom'
-import { string, number, bool, object } from 'prop-types'
+import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
+import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { TrackerButton } from './TrackerButton'
 
 export function OrganizationCard({
   name,
@@ -65,15 +64,14 @@ export function OrganizationCard({
         <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
           <Stack isInline align="center">
             <Text
-              mt="1"
               fontSize={['lg', 'md']}
               fontWeight="semibold"
-              as="u"
+              textDecoration="underline"
               isTruncated
             >
               {name}
             </Text>
-            <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold">
+            <Text fontSize={['lg', 'md']} fontWeight="semibold">
               ({acronym})
             </Text>
             {verified && (
@@ -118,18 +116,6 @@ export function OrganizationCard({
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
-        <Stack mt="4" fontSize="xl" w="100%">
-          <TrackerButton
-            variant="primary"
-            as={RouteLink}
-            to={`${path}/${slug}`}
-            display={{ md: 'none' }}
-          >
-            <Text whiteSpace="noWrap">
-              <Trans>View Details</Trans>
-            </Text>
-          </TrackerButton>
-        </Stack>
       </PseudoBox>
     </ListItem>
   )
