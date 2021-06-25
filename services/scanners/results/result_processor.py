@@ -82,7 +82,7 @@ def process_https(results, domain_key, uuid, db):
             if isinstance(hsts, str):
                 hsts = hsts.lower()
 
-                if hsts == "hsts max age too short": 
+                if hsts == "hsts max age too short":
                     negative_tags.append("https10")
 
                 elif hsts == "no hsts":
@@ -182,7 +182,7 @@ def process_https(results, domain_key, uuid, db):
         logging.info("HTTPS Scan inserted into database")
 
     else:
-        publish_results(httpsResults, "https", uuid)
+        publish_results({"domainKey": domain_key, "results": httpsResults}, "https", uuid)
         logging.info("HTTPS Scan published to redis")
 
 
@@ -304,7 +304,7 @@ def process_ssl(results, guidance, domain_key, uuid, db):
         logging.info("SSL Scan inserted into database")
 
     else:
-        publish_results(sslResults, "ssl", uuid)
+        publish_results({"domainKey": domain_key, "results": sslResults}, "ssl", uuid)
         logging.info("SSL Scan published to redis")
 
 
@@ -890,9 +890,9 @@ def process_dns(results, domain_key, uuid, db):
         logging.info("DNS Scans inserted into database")
 
     else:
-        publish_results(dmarcResults, "dmarc", uuid)
-        publish_results(spfResults, "spf", uuid)
-        publish_results(dkimResults, "dkim", uuid)
+        publish_results({"domainKey": domain_key, "results": dmarcResults}, "dmarc", uuid)
+        publish_results({"domainKey": domain_key, "results": spfResults}, "spf", uuid)
+        publish_results({"domainKey": domain_key, "results": dkimResults}, "dkim", uuid)
         logging.info("DNS Scans published to redis")
 
 
