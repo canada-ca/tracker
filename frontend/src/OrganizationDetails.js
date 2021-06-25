@@ -14,7 +14,7 @@ import {
   Tabs,
   useToast,
 } from '@chakra-ui/core'
-import { ORG_DETAILS_PAGE } from './graphql/queries'
+import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from './graphql/queries'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -27,7 +27,6 @@ import { useDocumentTitle } from './useDocumentTitle'
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
   const toast = useToast()
-  const isAdmin = true
 
   useDocumentTitle(`${orgSlug}`)
 
@@ -46,6 +45,31 @@ export default function OrganizationDetails() {
       })
     },
   })
+
+  const orgId = data?.organization?.id
+  const { data: isAdminData } = useQuery(IS_USER_ADMIN, {
+    skip: !orgId,
+    variables: { orgId: orgId },
+
+    onError: (error) => {
+      const [_, message] = error.message.split(': ')
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
+  let isAdmin = false
+  if (isAdminData?.isUserAdmin) {
+    isAdmin = isAdminData.isUserAdmin
+
+  }
+  console.log("isAdmin: " + isAdmin)
 
   let orgName = ''
   if (data?.organization) {
