@@ -843,7 +843,9 @@ def process_dns(results, domain_key, uuid, db):
                 elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
                     dkim_statuses.append("pass")
 
-            if any(i == "fail" for i in dkim_statuses):
+            if len(dkim_statuses) == 0:
+                dkim_status = "fail"
+            elif any(i == "fail" for i in dkim_statuses):
                 dkim_status = "fail"
             else:
                 dkim_status = "pass"
