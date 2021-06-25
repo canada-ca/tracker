@@ -1,0 +1,54 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: start_testdb
+    entrypoint: /bin/sh
+    args: ["-c", "docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb"]
+
+  - name: mikewilliamson/wait-for
+    id: wait_testdb
+    args: ['testdb:8529']
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-results
+    dir: services/summaries
+    entrypoint: /bin/sh
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: services/summaries
+    args:
+      - '-c'
+      - |
+        echo "gcr.io/$PROJECT_ID/services/summaries:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-results-if-master
+    entrypoint: 'bash'
+    dir: services/summaries
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
+      else
+        exit 0
+      fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-results-if-master
+    entrypoint: 'bash'
+    dir: services/summaries
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         image=$(cat /workspace/imagename)
+         docker push $image
+       else
+         exit 0
+       fi
