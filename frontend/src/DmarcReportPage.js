@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import {
   DMARC_REPORT_GRAPH,
-  PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_FORWARD,
-  PAGINATED_DMARC_FAILURE_REPORT as DMARC_FAILURE_FORWARD,
-  PAGINATED_FULL_PASS_REPORT as FULL_PASS_FORWARD,
-  PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_FORWARD,
+  PAGINATED_DMARC_REPORT,
 } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import {
@@ -60,8 +57,11 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
   })
 
-  const { loading: dkimLoading, error: dkimError, data: dkimData } = useQuery(
-    DKIM_FAILURE_FORWARD,
+  const {
+    loading: tableLoading,
+    error: tableError,
+    data: tableData,
+  } = useQuery(PAGINATED_DMARC_REPORT,
     {
       variables: {
         month: selectedPeriod,
@@ -72,48 +72,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       },
     },
   )
-
-  const {
-    loading: dmarcFailureLoading,
-    error: dmarcFailureError,
-    data: dmarcFailureData,
-  } = useQuery(DMARC_FAILURE_FORWARD, {
-    variables: {
-      month: selectedPeriod,
-      year: selectedYear,
-      domain: domainSlug,
-      first: 50,
-      after: '',
-    },
-  })
-
-  const {
-    loading: spfFailureLoading,
-    error: spfFailureError,
-    data: spfFailureData,
-  } = useQuery(SPF_FAILURE_FORWARD, {
-    variables: {
-      month: selectedPeriod,
-      year: selectedYear,
-      domain: domainSlug,
-      first: 50,
-      after: '',
-    },
-  })
-
-  const {
-    loading: fullPassLoading,
-    error: fullPassError,
-    data: fullPassData,
-  } = useQuery(FULL_PASS_FORWARD, {
-    variables: {
-      month: selectedPeriod,
-      year: selectedYear,
-      domain: domainSlug,
-      first: 50,
-      after: '',
-    },
-  })
 
   const options = [
     <option
@@ -319,7 +277,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   let dkimFailureTable
 
   // Set DKIM Failure Table Loading
-  if (dkimLoading) {
+  if (tableLoading) {
     dkimFailureTable = (
       <LoadingMessage>
         <Trans>DKIM Failure Table</Trans>
@@ -328,7 +286,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
   // DKIM Failure query no longer loading, check if data exists
   else if (
-    dkimData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
       ?.dkimFailure?.edges.length > 0
   ) {
     const dkimFailureColumns = [
@@ -351,7 +309,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     ]
 
     // Convert boolean values to string and properly format
-    const dkimFailureNodes = dkimData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
+    const dkimFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
       (edge) => {
         const node = { ...edge.node }
         node.dkimAligned = node.dkimAligned.toString()
@@ -373,8 +331,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // Display DKIM Failure if found
-  else if (dkimError) {
-    dkimFailureTable = <ErrorFallbackMessage error={dkimError} />
+  else if (tableError) {
+    dkimFailureTable = <ErrorFallbackMessage error={tableError} />
   }
   // If no data exists for DKIM Failure table, display message saying so
   else {
@@ -389,7 +347,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   let fullPassTable
 
   // Set Fully Aligned Table Loading
-  if (fullPassLoading) {
+  if (tableLoading) {
     fullPassTable = (
       <LoadingMessage>
         <Trans>Fully Aligned Table</Trans>
@@ -398,7 +356,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
   // Full pass query no longer loading, check if data exists
   else if (
-    fullPassData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
       ?.fullPass?.edges.length > 0
   ) {
     const fullPassColumns = [
@@ -419,7 +377,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     ]
 
     // Convert boolean values to string and properly format
-    const fullPassNodes = fullPassData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
+    const fullPassNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
       (edge) => {
         return { ...edge.node }
       },
@@ -438,8 +396,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // Display Fully Aligned Error if found
-  else if (fullPassError) {
-    fullPassTable = <ErrorFallbackMessage error={fullPassError} />
+  else if (tableError) {
+    fullPassTable = <ErrorFallbackMessage error={tableError} />
   }
   // If no data exists for Fully Aligned table, display message saying so
   else {
@@ -454,7 +412,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   let spfFailureTable
 
   // Set SPF Failure Table Loading
-  if (spfFailureLoading) {
+  if (tableLoading) {
     spfFailureTable = (
       <LoadingMessage>
         <Trans>SPF Failure Table</Trans>
@@ -463,7 +421,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
   // SPF Failure query no longer loading, check if data exists
   else if (
-    spfFailureData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
       ?.spfFailure?.edges.length > 0
   ) {
     const spfFailureColumns = [
@@ -484,7 +442,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       },
     ]
     // Convert boolean values to string and properly format
-    const spfFailureNodes = spfFailureData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
+    const spfFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
       (edge) => {
         const node = { ...edge.node }
         node.spfAligned = node.spfAligned.toString()
@@ -506,8 +464,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // Display SPF Failure if found
-  else if (spfFailureError) {
-    spfFailureTable = <ErrorFallbackMessage error={spfFailureError} />
+  else if (tableError) {
+    spfFailureTable = <ErrorFallbackMessage error={tableError} />
   }
   // If no data exists for SPF Failure table, display message saying so
   else {
@@ -522,7 +480,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   let dmarcFailureTable
 
   // Set DMARC Failure Table Loading
-  if (dmarcFailureLoading) {
+  if (tableLoading) {
     dmarcFailureTable = (
       <LoadingMessage>
         <Trans>DMARC Failure Table</Trans>
@@ -531,7 +489,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
   // DMARC Failure query no longer loading, check if data exists
   else if (
-    dmarcFailureData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
       ?.dmarcFailure?.edges.length > 0
   ) {
     const dmarcFailureColumns = [
@@ -553,7 +511,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     ]
 
     // Convert boolean values to string and properly format
-    const dmarcFailureNodes = dmarcFailureData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
+    const dmarcFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
       (edge) => {
         return { ...edge.node }
       },
@@ -573,8 +531,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // Display DMARC Failure if found
-  else if (dmarcFailureError) {
-    dmarcFailureTable = <ErrorFallbackMessage error={dmarcFailureError} />
+  else if (tableError) {
+    dmarcFailureTable = <ErrorFallbackMessage error={tableError} />
   }
   // If no data exists for DMARC Failure table, display message saying so
   else {
@@ -588,8 +546,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
       {fullPassTable}
-      {spfFailureTable}
       {dkimFailureTable}
+      {spfFailureTable}
       {dmarcFailureTable}
     </ErrorBoundary>
   )
