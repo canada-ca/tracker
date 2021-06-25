@@ -7,14 +7,14 @@ import json
 import emoji
 import asyncio
 import traceback
-import signal
 import scapy
 import datetime as dt
 from enum import Enum
+from multiprocessing import Process, Queue
 from OpenSSL import SSL
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
-from starlette.responses import PlainTextResponse, JSONResponse
+from starlette.responses import Response
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed, ServerHostnameCouldNotBeResolved
 from sslyze.plugins.scan_commands import ScanCommand
@@ -28,9 +28,16 @@ from sslyze.server_setting import (
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+TIMEOUT = 80  # 80 second scan timeout
+RES_QUEUE = Queue()
+
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
 )
+
+
+class ScanTimeoutException(BaseException):
+    pass
 
 
 class TlsVersionEnum(Enum):
@@ -109,7 +116,8 @@ def scan_ssl(domain):
         server_info = get_server_info(domain)
     except ConnectionToServerFailed as e:
         logging.error(f"Failed to connect to {domain}: {e.error_message}")
-        return {}
+        RES_QUEUE.put({})
+        return
 
     highest_tls_supported = str(
         server_info.tls_probing_result.highest_tls_version_supported
@@ -207,7 +215,7 @@ def scan_ssl(domain):
             for curve in result.supported_curves:
                 res["supported_curves"].append(curve.name)
 
-    return res
+    RES_QUEUE.put(res)
 
 
 def process_results(results):
@@ -216,7 +224,7 @@ def process_results(results):
 
     # Get cipher/protocol data via sslyze for a host.
 
-    if results is None or results == {}:
+    if results == {}:
         report = {"missing": True}
 
     else:
@@ -249,52 +257,49 @@ def process_results(results):
 
 
 def Server(server_client=requests):
+
+
+    def wait_timeout(proc, seconds):
+        proc.start()
+        start = time.time()
+        end = start + seconds
+        interval = min(seconds / 1000.0, .25)
+
+        while True:
+            result = proc.is_alive()
+            if not result:
+                proc.join()
+                return
+            if time.time() >= end:
+                proc.terminate()
+                proc.join()
+                logging.error("Timeout while scanning")
+                raise ScanTimeoutException("Scan timed out")
+            time.sleep(interval)
+
+
     async def scan(scan_request):
 
         logging.info("Scan request received")
         inbound_payload = await scan_request.json()
 
-        def timeout_handler(signum, frame):
-            msg = "Timeout while performing scan"
-            logging.error(msg)
-            return PlainTextResponse(msg)
+        start_time = dt.datetime.now()
+        try:
+            domain = inbound_payload["domain"]
+            uuid = inbound_payload["uuid"]
+            domain_key = inbound_payload["domain_key"]
+        except KeyError:
+            logging.error(f"Invalid scan request format received: {str(inbound_payload)}")
+            return Response("Invalid Format", status_code=400)
+
+        logging.info("Performing scan...")
 
         try:
-            start_time = dt.datetime.now()
-            signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(80)
-            try:
-                domain = inbound_payload["domain"]
-                uuid = inbound_payload["uuid"]
-                domain_key = inbound_payload["domain_key"]
-            except KeyError:
-                msg = f"Invalid scan request format received: {str(inbound_payload)}"
-                logging.error(msg)
-                return PlainTextResponse(msg)
-
-            logging.info("Performing scan...")
-            scan_results = scan_ssl(domain)
-
-            if scan_results is not None:
-
-                processed_results = process_results(scan_results)
-
-                outbound_payload = json.dumps(
-                    {
-                        "results": processed_results,
-                        "scan_type": "ssl",
-                        "uuid": uuid,
-                        "domain_key": domain_key,
-                    }
-                )
-                logging.info(f"Scan results: {str(scan_results)}")
-            else:
-                raise Exception("SSL scan not completed")
+            p = Process(target=scan_ssl, args=(domain,))
+            wait_timeout(p, TIMEOUT)
 
         except ServerHostnameCouldNotBeResolved as e:
-            signal.alarm(0)
-            msg = f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
-            logging.error(msg)
+            logging.error(f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})")
             dispatch_results(
                 {
                     "scan_type": "ssl",
@@ -304,35 +309,36 @@ def Server(server_client=requests):
                 },
                 server_client,
             )
-            return PlainTextResponse(msg)
+            return Response("Designated domain could not be resolved", status_code=500)
 
-        except Exception as e:
-            signal.alarm(0)
-            msg = f"An unexpected error occurred while attempting to process SSL scan request: ({type(e).__name__}: {str(e)})"
-            logging.error(msg)
-            logging.error(f"Full traceback: {traceback.format_exc()}")
-            dispatch_results(
-                {
-                    "scan_type": "ssl",
-                    "uuid": uuid,
-                    "domain_key": domain_key,
-                    "results": {"missing": True},
-                },
-                server_client,
-            )
-            return PlainTextResponse(msg)
+        except ScanTimeoutException:
+            return Response("Timeout occurred while scanning", status_code=500)
 
-        signal.alarm(0)
+        scan_results = RES_QUEUE.get()
+
+        processed_results = process_results(scan_results)
+
+        outbound_payload = json.dumps(
+            {
+                "results": processed_results,
+                "scan_type": "ssl",
+                "uuid": uuid,
+                "domain_key": domain_key,
+            }
+        )
+        logging.info(f"Scan results: {str(scan_results)}")
+
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
         dispatch_results(outbound_payload, server_client)
-        msg = f"SSL scan completed in {elapsed_time.total_seconds()} seconds."
-        logging.info(msg)
 
-        return PlainTextResponse(msg)
+        logging.info(f"SSL scan completed in {elapsed_time.total_seconds()} seconds.")
+        return Response("Scan completed")
+
 
     async def startup():
         logging.info(emoji.emojize("ASGI server started :rocket:"))
+
 
     async def shutdown():
         logging.info(emoji.emojize("ASGI server shutting down..."))

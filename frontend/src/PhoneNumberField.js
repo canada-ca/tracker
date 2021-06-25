@@ -3,12 +3,7 @@ import { lazyWithRetry } from './LazyWithRetry'
 import { string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-} from '@chakra-ui/core'
+import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/core'
 import { useField, useFormikContext } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 import { fieldRequirements } from './fieldRequirements'

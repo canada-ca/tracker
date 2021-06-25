@@ -1,18 +1,18 @@
 import React, { useRef, useState } from 'react'
 import { string } from 'prop-types'
 import {
-  Icon,
   Heading,
+  Icon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  SlideIn,
   Stack,
   Text,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  SlideIn,
   useDisclosure,
   useToast,
 } from '@chakra-ui/core'
@@ -22,8 +22,7 @@ import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { useUserState } from './UserState'
-import { object, number, string as yupString } from 'yup'
+import { number, object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
@@ -31,7 +30,6 @@ import AuthenticateField from './AuthenticateField'
 
 function EditableUserPhoneNumber({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { currentUser } = useUserState()
   const toast = useToast()
   const initialFocusRef = useRef()
   const verifyRef = useRef()
@@ -41,11 +39,6 @@ function EditableUserPhoneNumber({ detailValue }) {
   const [setPhoneNumber, { error: _setPhoneNumberError }] = useMutation(
     SET_PHONE_NUMBER,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       onError: ({ message }) => {
         toast({
           title: t`An error occurred while updating your phone number.`,
@@ -86,11 +79,6 @@ function EditableUserPhoneNumber({ detailValue }) {
   const [verifyPhoneNumber, { error: __verifyPhoneNumberError }] = useMutation(
     VERIFY_PHONE_NUMBER,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       onError: ({ message }) => {
         toast({
           title: t`An error occurred while verifying your phone number.`,
@@ -160,7 +148,7 @@ function EditableUserPhoneNumber({ detailValue }) {
                 // Submit update detail mutation
                 await setPhoneNumber({
                   variables: {
-                    phoneNumber: ('+' + values.phoneNumber),
+                    phoneNumber: '+' + values.phoneNumber,
                   },
                 })
               }}

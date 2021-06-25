@@ -1,18 +1,18 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
+  Box,
   FormControl,
   FormErrorMessage,
+  FormLabel,
+  Icon,
+  IconButton,
   Input,
+  InputGroup,
   InputLeftElement,
   InputRightElement,
-  InputGroup,
-  Icon,
   Spinner,
-  Box,
   Stack,
-  FormLabel,
-  IconButton,
 } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { useField } from 'formik'

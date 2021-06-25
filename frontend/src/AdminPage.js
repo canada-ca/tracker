@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Stack, Text, Select, useToast, Icon, Divider } from '@chakra-ui/core'
-import { Trans, t } from '@lingui/macro'
+import { Divider, Icon, Select, Stack, Text, useToast } from '@chakra-ui/core'
+import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from './graphql/queries'
 import { useQuery } from '@apollo/client'
-import { useUserState } from './UserState'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { TrackerButton } from './TrackerButton'
@@ -13,17 +12,11 @@ import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
 
 export default function AdminPage() {
-  const { currentUser } = useUserState()
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
   const toast = useToast()
 
   const { loading, error, data } = useQuery(ADMIN_AFFILIATIONS, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     fetchPolicy: 'cache-and-network',
     variables: {
       first: 100,
@@ -45,11 +38,6 @@ export default function AdminPage() {
   })
 
   const { data: isSA } = useQuery(IS_USER_SUPER_ADMIN, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({

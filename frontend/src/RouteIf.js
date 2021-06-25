@@ -1,6 +1,6 @@
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
-import { bool, string, node } from 'prop-types'
+import { Redirect, Route } from 'react-router-dom'
+import { bool, node, string } from 'prop-types'
 
 export function RouteIf({ children, alternate, condition, ...rest }) {
   return (

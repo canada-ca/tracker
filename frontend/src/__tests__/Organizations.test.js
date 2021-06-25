@@ -8,8 +8,9 @@ import Organizations from '../Organizations'
 import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { createCache } from '../client'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -118,8 +119,12 @@ describe('<Organisations />', () => {
 
       const { getByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -131,7 +136,7 @@ describe('<Organisations />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -278,8 +283,12 @@ describe('<Organisations />', () => {
 
       const { getAllByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -293,7 +302,7 @@ describe('<Organisations />', () => {
                 </Router>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -409,8 +418,12 @@ describe('<Organisations />', () => {
 
         const { getByText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -424,7 +437,7 @@ describe('<Organisations />', () => {
                   </Router>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 
@@ -630,8 +643,12 @@ describe('<Organisations />', () => {
 
         const { queryByText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -645,7 +662,7 @@ describe('<Organisations />', () => {
                   </Router>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
 

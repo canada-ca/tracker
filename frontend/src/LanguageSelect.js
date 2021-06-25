@@ -2,10 +2,10 @@ import React from 'react'
 import { useField } from 'formik'
 import { string } from 'prop-types'
 import {
-  Select,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Select,
 } from '@chakra-ui/core'
 import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'

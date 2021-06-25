@@ -11,12 +11,12 @@ import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
-import { useUserState } from './UserState'
+import { useUserVar } from './UserState'
 import { useLingui } from '@lingui/react'
 import { activate } from './i18n.config'
 
 export default function SignInPage() {
-  const { login } = useUserState()
+  const { login } = useUserVar()
   const { i18n } = useLingui()
   const history = useHistory()
   const location = useLocation()
@@ -141,7 +141,7 @@ export default function SignInPage() {
               variant="primary"
               isLoading={isSubmitting}
               type="submit"
-              width='100%'
+              width="100%"
               mb={5}
             >
               <Trans>Sign In</Trans>

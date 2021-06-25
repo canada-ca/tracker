@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { useTable, usePagination } from 'react-table'
+import { usePagination, useTable } from 'react-table'
 import { array } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, Text, Stack, Select, Input, IconButton } from '@chakra-ui/core'
+import { Box, IconButton, Input, Select, Stack, Text } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
 const Table = styled.table`

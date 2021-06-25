@@ -1,12 +1,47 @@
-import { GraphQLBoolean } from 'graphql'
 import { t } from '@lingui/macro'
+import { GraphQLBoolean, GraphQLID } from 'graphql'
+import { fromGlobalId } from 'graphql-relay'
 
 export const isUserAdmin = {
   type: GraphQLBoolean,
   description: 'Query used to check if the user has an admin role.',
-  resolve: async (_, __, { i18n, query, userKey, auth: { userRequired } }) => {
+  args: {
+    orgId: {
+      type: GraphQLID,
+      description:
+        'Optional org id to see if user is an admin for the requested org.',
+    },
+  },
+  resolve: async (
+    _,
+    args,
+    {
+      i18n,
+      query,
+      userKey,
+      auth: { checkPermission, userRequired },
+      loaders: { loadOrgByKey },
+      validators: { cleanseInput },
+    },
+  ) => {
+    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
+
     const user = await userRequired()
 
+    // check if for a specific org
+    if (orgKey !== '') {
+      const org = await loadOrgByKey.load(orgKey)
+
+      const permission = await checkPermission({ orgId: org._id })
+
+      if (permission === 'admin' || permission === 'super_admin') {
+        return true
+      }
+
+      return false
+    }
+
+    // check to see if user is an admin or higher for at least one org
     let userAdmin
     try {
       userAdmin = await query`
