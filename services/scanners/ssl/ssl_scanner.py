@@ -225,7 +225,7 @@ def process_results(results):
     # Get cipher/protocol data via sslyze for a host.
 
     if results == {}:
-        report = {"missing": True}
+        report = {"error": "missing"}
 
     else:
         for version in [
@@ -305,13 +305,22 @@ def Server(server_client=requests):
                     "scan_type": "ssl",
                     "uuid": uuid,
                     "domain_key": domain_key,
-                    "results": {"missing": True},
+                    "results": {"error": "unreachable"},
                 },
                 server_client,
             )
             return Response("Designated domain could not be resolved", status_code=500)
 
         except ScanTimeoutException:
+            dispatch_results(
+                {
+                    "scan_type": "ssl",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                    "results": {"error": "unreachable"},
+                },
+                server_client,
+            )
             return Response("Timeout occurred while scanning", status_code=500)
 
         scan_results = RES_QUEUE.get()
