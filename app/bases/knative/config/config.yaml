@@ -21,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/services/scanners/https:master-18d6827-1624628826 # {"$imagepolicy": "flux-system:https-scanner"}
+        image: gcr.io/track-compliance/services/scanners/https:master-0ecedc5-1624639317 # {"$imagepolicy": "flux-system:https-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
@@ -46,7 +46,7 @@ spec:
       containerConcurrency: 1
       containers:
       - name: result-processor
-        image: gcr.io/track-compliance/services/scanners/results:master-264de99-1624630136 # {"$imagepolicy": "flux-system:result-processor"}
+        image: gcr.io/track-compliance/services/scanners/results:master-0ecedc5-1624639317 # {"$imagepolicy": "flux-system:result-processor"}
         env:
         - name: DB_USER
           valueFrom:
@@ -115,7 +115,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: ssl-scanner
-        image: gcr.io/track-compliance/services/scanners/ssl:master-18d6827-1624628809 # {"$imagepolicy": "flux-system:ssl-scanner"}
+        image: gcr.io/track-compliance/services/scanners/ssl:master-0ecedc5-1624639308 # {"$imagepolicy": "flux-system:ssl-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
