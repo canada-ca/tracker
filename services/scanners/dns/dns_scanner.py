@@ -58,7 +58,7 @@ def scan_dmarc(domain):
         logging.info("DMARC scan completed")
         return {"dmarc": {"missing": True}}
 
-    for rua in scan_result["dmarc"]["tags"].get("rua", {}).get("value", []):
+    for rua in scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []):
         # Retrieve 'rua' tag address.
         rua_addr = rua["address"]
 
@@ -96,7 +96,7 @@ def scan_dmarc(domain):
                 logging.error(f"Failed to validate rua address {rua_domain}: {e}")
                 rua["accepting"] = "undetermined"
 
-    for ruf in scan_result["dmarc"]["tags"].get("ruf", {}).get("value", []):
+    for ruf in scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []):
         # Retrieve 'ruf' tag address.
         ruf_addr = ruf["address"]
 
@@ -296,10 +296,14 @@ def Server(server_client=requests):
             wait_timeout(p, TIMEOUT)
             scan_results = RES_QUEUE.get()
             if scan_results:
-              if len(selectors) != 0:
-                  p = Process(target=scan_dkim, args=(domain, selectors,))
-                  wait_timeout(p, TIMEOUT)
-                  scan_results["dkim"] = RES_QUEUE.get()
+                if len(selectors) != 0:
+                    p = Process(target=scan_dkim, args=(domain, selectors,))
+                    wait_timeout(p, TIMEOUT)
+                    scan_results["dkim"] = RES_QUEUE.get()
+                else:
+                    logging.info("No DKIM selector strings provided")
+                    scan_results["dkim"] = {"missing": True}
+
         except ScanTimeoutException:
             return Response("Timeout occurred while scanning", status_code=500)
 
