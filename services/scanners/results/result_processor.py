@@ -312,7 +312,7 @@ def process_dns(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
-    if results["dkim"].get("error") == "missing":
+    if not results["dkim"].get("error"):
         for selector in results["dkim"].keys():
             tags["dkim"][selector] = []
             key_size = results["dkim"][selector].get("key_size", None)
