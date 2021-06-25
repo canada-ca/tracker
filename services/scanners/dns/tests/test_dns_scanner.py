@@ -20,4 +20,4 @@ def test_scan():
 
     res = test_client.post("/", json=test_payload)
 
-    assert "DNS scan completed" in res.text
+    assert "Scan completed" == res.text
