@@ -38,9 +38,15 @@ def process_https(results, domain_key, uuid, db):
     positive_tags = []
     negative_tags = []
 
-    if results.get("missing", None) is not None:
+    if results.get("error") == "missing":
         negative_tags.append("https2")
+    elif results.get("error") == "unreachable":
+        neutral_tags.append("https15")
     else:
+        # Certificate does not match host name
+        if results.get("cert_bad_hostname"):
+            negative_tags.append("https5")
+
         # Implementation
         implementation = results.get("implementation", None)
 
@@ -76,7 +82,7 @@ def process_https(results, domain_key, uuid, db):
             if isinstance(hsts, str):
                 hsts = hsts.lower()
 
-                if hsts == "hsts max age too short":
+                if hsts == "hsts max age too short": 
                     negative_tags.append("https10")
 
                 elif hsts == "no hsts":
@@ -122,7 +128,7 @@ def process_https(results, domain_key, uuid, db):
 
         if revocation_status == "Revoked":
             negative_tags.append("https15")
-            
+
         elif revocation_status == "Unknown":
             neutral_tags.append("https16")
 
@@ -192,8 +198,10 @@ def process_ssl(results, guidance, domain_key, uuid, db):
     acceptable_curves = []
     weak_curves = []
 
-    if results.get("missing", None) is not None:
+    if results.get("error") == "missing":
         negative_tags.append("ssl2")
+    elif results.get("error") == "unreachable":
+        neutral_tags.append("ssl9")
     else:
         for cipher in results["cipher_list"]:
             if "RC4" in cipher:
@@ -239,7 +247,7 @@ def process_ssl(results, guidance, domain_key, uuid, db):
         if results["openssl_ccs_injection"]:
             negative_tags.append("ssl8")
 
-    
+
     sslResults = {
         "timestamp": timestamp,
         "strong_ciphers": strong_ciphers,
@@ -258,7 +266,7 @@ def process_ssl(results, guidance, domain_key, uuid, db):
         "positiveTags": positive_tags,
         "negativeTags": negative_tags,
     }
-    
+
     if uuid is None:
         try:
             sslEntry = db.collection("ssl").insert(sslResults)
@@ -304,7 +312,7 @@ def process_dns(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
-    if results["dkim"].get("missing", None) is None:
+    if results["dkim"].get("error") == "missing":
         for selector in results["dkim"].keys():
             tags["dkim"][selector] = []
             key_size = results["dkim"][selector].get("key_size", None)
@@ -352,7 +360,7 @@ def process_dns(results, domain_key, uuid, db):
             if t_enabled.lower() == "true":
                 tags["dkim"][selector].append("dkim13")
 
-    if results["dmarc"].get("missing", None) is not None:
+    if results["dmarc"].get("error") == "missing":
         tags["dmarc"].append("dmarc2")
     else:
 
@@ -452,7 +460,7 @@ def process_dns(results, domain_key, uuid, db):
             elif sp_tag == "reject":
                 tags["dmarc"].append("dmarc19")
 
-    if (results["spf"].get("missing", None) is not None) or (
+    if (results["spf"].get("error") == "missing":) or (
         results["spf"].get("record", "null") == "null"
     ):
         tags["spf"].append("spf2")
@@ -705,7 +713,7 @@ def process_dns(results, domain_key, uuid, db):
     }
 
     dkimResults = {}
-    if results["dkim"].get("missing", None) is None:
+    if results["dkim"].get("error") == "missing": is None:
         for selector in results["dkim"].keys():
             keyModulus = results["dkim"][selector]["public_key_modulus"]
 
@@ -843,9 +851,7 @@ def process_dns(results, domain_key, uuid, db):
                 elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
                     dkim_statuses.append("pass")
 
-            if len(dkim_statuses) == 0:
-                dkim_status = "fail"
-            elif any(i == "fail" for i in dkim_statuses):
+            if any(i == "fail" for i in dkim_statuses):
                 dkim_status = "fail"
             else:
                 dkim_status = "pass"
@@ -880,7 +886,7 @@ def process_dns(results, domain_key, uuid, db):
             return
 
         logging.info("DNS Scans inserted into database")
-        
+
     else:
         publish_results(dmarcResults, "dmarc", uuid)
         publish_results(spfResults, "spf", uuid)
