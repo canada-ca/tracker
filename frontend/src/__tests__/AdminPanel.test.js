@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
 import AdminPanel from '../AdminPanel'
 import { MemoryRouter, Route } from 'react-router-dom'
@@ -14,6 +14,7 @@ import {
   PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
 } from '../graphql/queries'
 import { createCache } from '../client'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -46,12 +47,8 @@ describe('<AdminPanel />', () => {
   it('renders both a domain list and user list', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <I18nProvider i18n={i18n}>
             <ThemeProvider theme={theme}>
@@ -66,7 +63,7 @@ describe('<AdminPanel />', () => {
               </MemoryRouter>
             </ThemeProvider>
           </I18nProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => {

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import {
   DMARC_REPORT_GRAPH,
@@ -32,7 +31,6 @@ import { useDocumentTitle } from './useDocumentTitle'
 import { Layout } from './Layout'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
-  const { currentUser } = useUserState()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
   const { i18n } = useLingui()
@@ -57,11 +55,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     error: graphError,
     data: graphData,
   } = useQuery(DMARC_REPORT_GRAPH, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     variables: {
       domain: domainSlug,
     },
@@ -70,9 +63,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { loading: dkimLoading, error: dkimError, data: dkimData } = useQuery(
     DKIM_FAILURE_FORWARD,
     {
-      context: {
-        headers: { authorization: currentUser.jwt },
-      },
       variables: {
         month: selectedPeriod,
         year: selectedYear,
@@ -88,9 +78,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     error: dmarcFailureError,
     data: dmarcFailureData,
   } = useQuery(DMARC_FAILURE_FORWARD, {
-    context: {
-      headers: { authorization: currentUser.jwt },
-    },
     variables: {
       month: selectedPeriod,
       year: selectedYear,
@@ -105,9 +92,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     error: spfFailureError,
     data: spfFailureData,
   } = useQuery(SPF_FAILURE_FORWARD, {
-    context: {
-      headers: { authorization: currentUser.jwt },
-    },
     variables: {
       month: selectedPeriod,
       year: selectedYear,
@@ -122,9 +106,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     error: fullPassError,
     data: fullPassData,
   } = useQuery(FULL_PASS_FORWARD, {
-    context: {
-      headers: { authorization: currentUser.jwt },
-    },
     variables: {
       month: selectedPeriod,
       year: selectedYear,

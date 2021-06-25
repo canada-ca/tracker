@@ -5,6 +5,7 @@ resources:
 - storage-classes.yaml
 patchesStrategicMerge:
 - publicgateway.yaml
+- backup-service-account.yaml
 - knative/config/queues.yaml
 replicas:
 - count: 2

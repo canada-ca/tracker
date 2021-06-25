@@ -27,6 +27,8 @@ export const verifyAccount = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      collections,
+      transaction,
       auth: { verifyToken },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -73,18 +75,38 @@ export const verifyAccount = new mutationWithClientMutationId({
       }
     }
 
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collectionStrings)
+
     // Verify users account
     try {
-      await query`
-        WITH users
-        UPSERT { _key: ${user._key} }
-          INSERT { emailValidated: true }
-          UPDATE { emailValidated: true }
-          IN users
-      `
+      await trx.step(
+        () => query`
+          WITH users
+          UPSERT { _key: ${user._key} }
+            INSERT { emailValidated: true }
+            UPDATE { emailValidated: true }
+            IN users
+        `,
+      )
     } catch (err) {
       console.error(
-        `Database error occurred when upserting email validation for user: ${user._key}: ${err}`,
+        `Trx step error occurred when upserting email validation for user: ${user._key}: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Trx commit error occurred when upserting email validation for user: ${user._key}: ${err}`,
       )
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }

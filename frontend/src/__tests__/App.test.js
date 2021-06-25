@@ -3,10 +3,11 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { cleanup, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import App from '../App'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -26,12 +27,12 @@ describe('<App/>', () => {
       it('renders the main page', async () => {
         const { getByText } = render(
           <MockedProvider>
-            <UserStateProvider
-              initialState={{
-                userName: null,
+            <UserVarProvider
+              userVar={makeVar({
                 jwt: null,
                 tfaSendMethod: null,
-              }}
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -40,7 +41,7 @@ describe('<App/>', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
         await waitFor(() => expect(getByText(/Track digital security/i)))
@@ -51,8 +52,12 @@ describe('<App/>', () => {
       it('renders the sign-in page', async () => {
         const { getByText } = render(
           <MockedProvider>
-            <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -61,7 +66,7 @@ describe('<App/>', () => {
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
-            </UserStateProvider>
+            </UserVarProvider>
           </MockedProvider>,
         )
         const domains = await waitFor(() =>

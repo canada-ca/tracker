@@ -5,9 +5,10 @@ import { MemoryRouter } from 'react-router-dom'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { GENERATE_OTP_URL } from '../graphql/queries'
 import { setupI18n } from '@lingui/core'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -40,12 +41,12 @@ describe('<QRcodePage />', () => {
       ]
       const { queryByText, getByRole } = render(
         <MockedProvider mocks={mocks}>
-          <UserStateProvider
-            initialState={{
-              userName: email,
+          <UserVarProvider
+            userVar={makeVar({
               jwt: null,
               tfaSendMethod: null,
-            }}
+              userName: email,
+            })}
           >
             <MemoryRouter initialEntries={['/']}>
               <ThemeProvider theme={theme}>
@@ -54,7 +55,7 @@ describe('<QRcodePage />', () => {
                 </I18nProvider>
               </ThemeProvider>
             </MemoryRouter>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

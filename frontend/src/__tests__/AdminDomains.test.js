@@ -1,9 +1,9 @@
 import React from 'react'
-import { waitFor, render, fireEvent } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { fireEvent, render, waitFor } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { AdminDomains } from '../AdminDomains'
 import { MockedProvider } from '@apollo/client/testing'
@@ -18,6 +18,7 @@ import {
   rawOrgDomainListData,
   rawOrgDomainListDataEmpty,
 } from '../fixtures/orgDomainListData'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -43,12 +44,8 @@ describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -61,7 +58,7 @@ describe('<AdminDomains />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -84,12 +81,8 @@ describe('<AdminDomains />', () => {
 
     const { getByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserStateProvider
-          initialState={{
-            userName: 'testuser@testemail.gc.ca',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -102,7 +95,7 @@ describe('<AdminDomains />', () => {
               </MemoryRouter>
             </I18nProvider>
           </ThemeProvider>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
 
@@ -131,6 +124,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
+              selectors: [],
             },
           },
           result: {
@@ -149,12 +143,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -167,13 +161,22 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
       await waitFor(() => {
         const addDomain = getByText(/Add Domain/i)
         fireEvent.click(addDomain)
+      })
+
+      await waitFor(() => {
+        expect(getByText(/Add Domain Details/)).toBeInTheDocument()
+        const confirmBtn = getByText(/Confirm/)
+        fireEvent.click(confirmBtn)
+      })
+
+      await waitFor(() => {
         const error = getByText(/Domain url field must not be empty/i)
         expect(error).toBeInTheDocument()
       })
@@ -190,10 +193,22 @@ describe('<AdminDomains />', () => {
         },
         {
           request: {
+            query: FORWARD,
+            variables: {
+              first: 4,
+              orgSlug: 'test-org.slug',
+              search: 'random text dot com',
+            },
+          },
+          result: { data: rawOrgDomainListData },
+        },
+        {
+          request: {
             query: CREATE_DOMAIN,
             variables: {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
+              selectors: [],
             },
           },
           result: {
@@ -213,12 +228,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByPlaceholderText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -231,7 +246,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -244,12 +259,20 @@ describe('<AdminDomains />', () => {
         })
         const addDomain = getByText(/Add Domain/i)
         fireEvent.click(addDomain)
-        const error = getByText(/An error occurred./i)
-        expect(error).toBeInTheDocument()
       })
+
+      await waitFor(() => {
+        expect(getByText(/Add Domain Details/)).toBeInTheDocument()
+        const confirmBtn = getByText(/Confirm/)
+        fireEvent.click(confirmBtn)
+      })
+
+      // await waitFor(() => {
+      //   expect(getByText(/Unable to create new domain./i)).toBeInTheDocument()
+      // })
     })
 
-    it('returns a success when correct input is given', async () => {
+    it('returns a success when valid URL is given', async () => {
       const mocks = [
         {
           request: {
@@ -260,10 +283,22 @@ describe('<AdminDomains />', () => {
         },
         {
           request: {
+            query: FORWARD,
+            variables: {
+              first: 4,
+              orgSlug: 'test-org.slug',
+              search: 'test.domain.gc.ca',
+            },
+          },
+          result: { data: rawOrgDomainListData },
+        },
+        {
+          request: {
             query: CREATE_DOMAIN,
             variables: {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
+              selectors: [],
             },
           },
           result: {
@@ -280,14 +315,19 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByPlaceholderText, queryByText } = render(
+      const {
+        getByText,
+        getByPlaceholderText,
+        queryByText,
+        queryAllByText,
+      } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -300,7 +340,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -315,12 +355,124 @@ describe('<AdminDomains />', () => {
         },
       })
 
-      const addDomain = getByText(/Add Domain/i)
-      fireEvent.click(addDomain)
+      await waitFor(() => {
+        const addDomain = getByText(/Add Domain/)
+        fireEvent.click(addDomain)
+      })
 
-      // await waitFor(() => {
-      //   expect(queryByText(/Domain added/i)).toBeInTheDocument()
-      // })
+      const confirmBtn = getByText(/Confirm/)
+      fireEvent.click(confirmBtn)
+
+      await waitFor(() => {
+        const successMessages = queryAllByText(/Domain added/i)
+        expect(successMessages[0]).toBeInTheDocument()
+      })
+    })
+
+    it('succeeds when DKIM selectors are added', async () => {
+      const mocks = [
+        {
+          request: {
+            query: FORWARD,
+            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+          },
+          result: { data: rawOrgDomainListData },
+        },
+        {
+          request: {
+            query: CREATE_DOMAIN,
+            variables: {
+              orgId: rawOrgDomainListData.findOrganizationBySlug.id,
+              domain: 'test.domain.gc.ca',
+              selectors: ['selector1._domainkey'],
+            },
+          },
+          result: {
+            data: {
+              createDomain: {
+                result: {
+                  domain: 'lauretta.name',
+                  __typename: 'Domain',
+                },
+                __typename: 'CreateDomainPayload',
+              },
+            },
+          },
+        },
+      ]
+
+      const {
+        getByText,
+        getByLabelText,
+        queryByText,
+        getByTestId,
+        getByPlaceholderText,
+        queryAllByText,
+      } = render(
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+
+      await waitFor(() => {
+        expect(queryByText(/Add Domain/)).toBeInTheDocument()
+      })
+
+      const addDomainBtn = getByText(/Add Domain/)
+      fireEvent.click(addDomainBtn)
+
+      await waitFor(() => {
+        expect(queryByText(/Add Domain Details/)).toBeInTheDocument()
+      })
+
+      const domainInput = getByLabelText(/Domain URL:/)
+      fireEvent.change(domainInput, { target: { value: 'test.domain.gc.ca' } })
+
+      const addSelectorBtn = getByTestId(/add-dkim-selector/)
+      fireEvent.click(addSelectorBtn)
+
+      await waitFor(() => {
+        expect(queryByText(/Selector cannot be empty/)).toBeInTheDocument()
+      })
+
+      const selectorInput = getByPlaceholderText(/DKIM Selector/)
+      fireEvent.change(selectorInput, { target: { value: 'selector1' } })
+
+      await waitFor(() => {
+        expect(
+          queryByText(/Selector must be string ending in '._domainkey'/),
+        ).toBeInTheDocument()
+      })
+
+      fireEvent.change(selectorInput, {
+        target: { value: 'selector1._domainkey' },
+      })
+
+      const confirmBtn = getByText(/Confirm/)
+      fireEvent.click(confirmBtn)
+
+      await waitFor(() => {
+        const successMessages = queryAllByText(/Domain added/i)
+        expect(successMessages[0]).toBeInTheDocument()
+      })
     })
   })
 
@@ -356,12 +508,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByTestId, queryByText, queryAllByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -374,7 +526,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -401,53 +553,6 @@ describe('<AdminDomains />', () => {
 
   // TODO updateDomain mutation
   describe('editing a domain', () => {
-    it('returns an error when no input is given', async () => {
-      const mocks = [
-        {
-          request: {
-            query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
-          },
-          result: { data: rawOrgDomainListData },
-        },
-      ]
-
-      const { getByText, getByTestId, getAllByText } = render(
-        <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
-          >
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']}>
-                  <AdminDomains
-                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                    orgSlug={'test-org.slug'}
-                    domainsPerPage={4}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>
-          </UserStateProvider>
-        </MockedProvider>,
-      )
-
-      await waitFor(() => {
-        const editDomain = getByTestId('edit-1')
-        fireEvent.click(editDomain)
-        const editText = getByText(/Edit Domain Details/i)
-        expect(editText).toBeInTheDocument()
-        const confirm = getByText('Confirm')
-        fireEvent.click(confirm)
-        const error = getAllByText(/Domain url field must not be empty/i)
-        expect(error[0]).toBeInTheDocument()
-      })
-    })
-
     it('successfully edits domain URL', async () => {
       const mocks = [
         {
@@ -482,12 +587,12 @@ describe('<AdminDomains />', () => {
 
       const { getByText, getByLabelText, getByTestId } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserStateProvider
-            initialState={{
-              userName: 'testuser@testemail.gc.ca',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -500,7 +605,7 @@ describe('<AdminDomains />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

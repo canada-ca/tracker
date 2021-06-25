@@ -159,9 +159,9 @@ export const loadSpfConnectionsByDomainId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`spfScan._key ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`TO_NUMBER(spfScan._key) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`spfScan._key DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`TO_NUMBER(spfScan._key) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -264,7 +264,7 @@ export const loadSpfConnectionsByDomainId =
         FOR spfScan IN spf
           FILTER spfScan._key IN spfKeys
           ${hasNextPageFilter}
-          SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(spfScan._key) ${sortString} LIMIT 1
           RETURN spfScan
       ) > 0 ? true : false)
       
@@ -272,7 +272,7 @@ export const loadSpfConnectionsByDomainId =
         FOR spfScan IN spf
           FILTER spfScan._key IN spfKeys
           ${hasPreviousPageFilter}
-          SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
+          SORT ${sortByField} TO_NUMBER(spfScan._key) ${sortString} LIMIT 1
           RETURN spfScan
       ) > 0 ? true : false)
 

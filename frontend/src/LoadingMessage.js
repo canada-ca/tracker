@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, Text, Spinner } from '@chakra-ui/core'
+import { Spinner, Stack, Text } from '@chakra-ui/core'
 import { any } from 'prop-types'
 import { Trans } from '@lingui/macro'
 

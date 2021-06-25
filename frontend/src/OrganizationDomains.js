@@ -7,13 +7,11 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { DomainCard } from './DomainCard'
 import { ListOf } from './ListOf'
-import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
 export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
-  const { currentUser } = useUserState()
   const {
     loading,
     isLoadingMore,
@@ -25,7 +23,6 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
     variables: { slug: orgSlug },
     recordsPerPage: domainsPerPage,
     relayRoot: 'findOrganizationBySlug.domains',

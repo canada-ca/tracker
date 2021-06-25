@@ -28,8 +28,8 @@ else
 		kustomize build app/creds/dev | kubectl apply -f -
 endif
 
-.PHONY: backup
-backup:
+.PHONY: dbdump
+dbdump:
 		arangodump --include-system-collections true --server.database track_dmarc --output-directory $(to)
 
 .PHONY: restore
@@ -69,6 +69,10 @@ app:
 scans:
 		kubectl apply -n scanners -f app/jobs/scan-job.yaml
 		kubectl apply -n scanners -f app/jobs/core-job.yaml
+
+.PHONY: backup
+backup:
+		kustomize build app/jobs/backup/$(env) | kubectl apply -f -
 
 .PHONY: superadmin
 superadmin:

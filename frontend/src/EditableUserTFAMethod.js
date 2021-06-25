@@ -1,20 +1,19 @@
 import React from 'react'
 import { bool, string } from 'prop-types'
 import {
-  Heading,
-  Stack,
-  Select,
-  useToast,
-  Box,
-  Icon,
   Badge,
+  Box,
+  Heading,
+  Icon,
+  Select,
+  Stack,
+  useToast,
 } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { t, Trans } from '@lingui/macro'
-import { Formik, Field } from 'formik'
+import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
-import { useUserState } from './UserState'
 import { TrackerButton } from './TrackerButton'
 
 function EditableUserTFAMethod({
@@ -22,17 +21,11 @@ function EditableUserTFAMethod({
   emailValidated,
   phoneValidated,
 }) {
-  const { currentUser } = useUserState()
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
     {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
       onError: ({ message }) => {
         toast({
           title: t`An error occurred while updating your TFA send method.`,

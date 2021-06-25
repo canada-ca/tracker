@@ -2,15 +2,11 @@ import React, { lazy } from 'react'
 import { string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-} from '@chakra-ui/core'
+import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/core'
 import { useField, useFormikContext } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 import { fieldRequirements } from './fieldRequirements'
+
 const PhoneInput = lazy(() => import('react-phone-input-2'))
 
 const PhoneNumberField = WithPseudoBox(function PhoneNumberField({

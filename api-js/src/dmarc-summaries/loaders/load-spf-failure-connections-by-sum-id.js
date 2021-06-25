@@ -69,9 +69,9 @@ export const loadSpfFailureConnectionsBySumId =
           ),
         )
       } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-        limitTemplate = aql`SORT spfFail.id ASC LIMIT TO_NUMBER(${first})`
+        limitTemplate = aql`SORT TO_NUMBER(spfFail.id) ASC LIMIT TO_NUMBER(${first})`
       } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-        limitTemplate = aql`SORT spfFail.id DESC LIMIT TO_NUMBER(${last})`
+        limitTemplate = aql`SORT TO_NUMBER(spfFail.id) DESC LIMIT TO_NUMBER(${last})`
       }
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -112,14 +112,14 @@ export const loadSpfFailureConnectionsBySumId =
       LET hasNextPage = (LENGTH(
         FOR spfFail IN spfFailures
           FILTER TO_NUMBER(spfFail.id) > TO_NUMBER(LAST(retrievedSpfFailure).id)
-          SORT spfFail.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(spfFail.id) ${sortString} LIMIT 1
           RETURN spfFail
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         FOR spfFail IN spfFailures
           FILTER TO_NUMBER(spfFail.id) < TO_NUMBER(FIRST(retrievedSpfFailure).id)
-          SORT spfFail.id ${sortString} LIMIT 1
+          SORT TO_NUMBER(spfFail.id) ${sortString} LIMIT 1
           RETURN spfFail
       ) > 0 ? true : false)
 
