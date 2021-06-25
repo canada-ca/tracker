@@ -56,7 +56,7 @@ def scan_dmarc(domain):
 
     if scan_result["dmarc"].get("record", "null") == "null":
         logging.info("DMARC scan completed")
-        return {"dmarc": {"missing": True}}
+        return {"dmarc": {"error": "missing"}}
 
     for rua in scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []):
         # Retrieve 'rua' tag address.
@@ -223,7 +223,7 @@ def scan_dkim(domain, selectors):
             logging.error(
                 f"Failed to perform DomainKeys Identified Mail scan on given domain: {domain}, (selector: {selector}): {str(e)}"
             )
-            record[selector] = {"missing": True}
+            record[selector] = {"error": "missing"}
 
     logging.info("DKIM scan completed")
 
@@ -235,10 +235,10 @@ def process_results(results):
 
     if results == {}:
         report = {
-            "dmarc": {"missing": True},
-            "spf": {"missing": True},
-            "mx": {"missing": True},
-            "dkim": {"missing": True},
+            "dmarc": {"error": "missing"},
+            "spf": {"error": "missing"},
+            "mx": {"error": "missing"},
+            "dkim": {"error": "missing"},
         }
     else:
         report = {
@@ -302,7 +302,7 @@ def Server(server_client=requests):
                     scan_results["dkim"] = RES_QUEUE.get()
                 else:
                     logging.info("No DKIM selector strings provided")
-                    scan_results["dkim"] = {"missing": True}
+                    scan_results["dkim"] = {"error": "missing"}
 
         except ScanTimeoutException:
             return Response("Timeout occurred while scanning", status_code=500)
