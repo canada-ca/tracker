@@ -49,8 +49,8 @@ def process_results(results):
     logging.info("Processing HTTPS scan results...")
     report = {}
 
-    if results == {}:
-        report = {"missing": True}
+    if results == {} or not results["Live"]:
+        report = {"error": "missing"}
 
     else:
         # Assumes that HTTPS would be technically present, with or without issues
@@ -59,16 +59,14 @@ def process_results(results):
         else:
             if results["Valid HTTPS"]:
                 https = "Valid HTTPS"  # Yes
-            elif results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]:
+            elif results["HTTPS Bad Chain"]:
                 https = "Bad Chain"  # Yes
-            else:
-                https = "Bad Hostname"  # No
 
         report["implementation"] = https
 
         # Is HTTPS enforced?
 
-        if https in ["Downgrades HTTPS", "Bad Hostname"]:
+        if https == "Downgrades HTTPS":
             behavior = "Not Enforced"  # N/A
 
         else:
@@ -105,7 +103,7 @@ def process_results(results):
             hsts_age = None
 
         # Otherwise, without HTTPS there can be no HSTS for the domain directly.
-        if https == "Downgrades HTTPS" or https == "Bad Hostname":
+        if https == "Downgrades HTTPS":
             hsts = "No HSTS"  # N/A (considered 'No')
 
         else:
@@ -156,6 +154,7 @@ def process_results(results):
         report["expired_cert"] = expired
         report["self_signed_cert"] = self_signed
         report["cert_revocation_status"] = revoked
+        report["cert_bad_hostname"] = results["HTTPS Bad Hostname"]
 
     return report
 
@@ -202,6 +201,15 @@ def Server(server_client=requests):
             p = Process(target=scan_https, args=(domain,))
             wait_timeout(p, TIMEOUT)
         except ScanTimeoutException:
+            outbound_payload = json.dumps(
+                {
+                    "results": {"error": "unreachable"},
+                    "scan_type": "https",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                }
+            )
+            dispatch_results(outbound_payload, server_client)
             return Response("Timeout occurred while scanning", status_code=500)
         scan_results = RES_QUEUE.get()
 
