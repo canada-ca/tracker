@@ -23,7 +23,7 @@ export default function TwoFactorAuthenticatePage() {
   const { i18n } = useLingui()
   const { sendMethod, authenticateToken } = useParams()
   const { from } = location.state || { from: { pathname: '/' } }
-  const localStorage = window.localStorage
+  const { localStorage } = window
 
   const validationSchema = object().shape({
     twoFactorCode: number()

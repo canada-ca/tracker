@@ -23,7 +23,7 @@ export default function CreateUserPage() {
   const history = useHistory()
   const toast = useToast()
   const userOrgToken = useParams().userOrgToken || ''
-  const localStorage = window.localStorage
+  const { localStorage } = window
 
   const validationSchema = object().shape({
     email: string()

@@ -21,7 +21,7 @@ export default function SignInPage() {
   const history = useHistory()
   const location = useLocation()
   const toast = useToast()
-  const localStorage = window.localStorage
+  const { localStorage } = window
 
   const { from } = location.state || { from: { pathname: '/' } }
 

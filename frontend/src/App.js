@@ -48,7 +48,7 @@ export default function App() {
   const { currentUser, isLoggedIn, login } = useUserState()
   const history = useHistory()
   const location = useLocation()
-  const localStorage = window.localStorage
+  const { localStorage } = window
   const { from } = location.state || { from: { pathname: '/' } }
 
   const [refreshTokens, { loading }] = useMutation(REFRESH_TOKENS, {
@@ -73,8 +73,8 @@ export default function App() {
       }
       // Non server side error occurs
       else if (refreshTokens.result.__typename === 'AuthenticateError')
-        console.log('Unable to sign in to your account, please try again.')
-      else console.log('Incorrect refreshTokens.result typename.')
+        console.warn('Refresh period has expired. Please sign in again.')
+      else console.error('Incorrect refreshTokens.result typename.')
     },
   })
 
