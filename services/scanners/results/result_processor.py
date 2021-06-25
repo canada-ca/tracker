@@ -713,7 +713,7 @@ def process_dns(results, domain_key, uuid, db):
     }
 
     dkimResults = {}
-    if results["dkim"].get("error") == "missing": is None:
+    if not results["dkim"].get("error"):
         for selector in results["dkim"].keys():
             keyModulus = results["dkim"][selector]["public_key_modulus"]
 
