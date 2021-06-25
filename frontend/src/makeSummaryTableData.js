@@ -4,7 +4,7 @@
 */
 
 import React from 'react'
-import { Icon } from '@chakra-ui/core'
+import {Icon} from '@chakra-ui/core'
 
 const range = len => {
   const arr = []

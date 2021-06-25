@@ -3,10 +3,10 @@ import { elementType, func, oneOfType, shape, string } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
-  Input,
-  InputGroup,
   FormErrorMessage,
   FormLabel,
+  Input,
+  InputGroup,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'

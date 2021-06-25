@@ -4,10 +4,11 @@ import { theme, ThemeProvider } from '@chakra-ui/core'
 import { FloatingMenuLink } from '../FloatingMenuLink'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,12 +24,8 @@ describe('<FloatingMenuLink>', () => {
   it('renders', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <UserStateProvider
-          initialState={{
-            userName: 'testUserName@email.com',
-            jwt: 'string',
-            tfaSendMethod: false,
-          }}
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
@@ -37,7 +34,7 @@ describe('<FloatingMenuLink>', () => {
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
-        </UserStateProvider>
+        </UserVarProvider>
       </MockedProvider>,
     )
     await waitFor(() => expect(getByText(/Sign In/i)).toBeInTheDocument())
@@ -49,12 +46,12 @@ describe('<FloatingMenuLink>', () => {
 
       const { getByText } = render(
         <MockedProvider>
-          <UserStateProvider
-            initialState={{
-              userName: 'testUserName@email.com',
-              jwt: 'string',
-              tfaSendMethod: false,
-            }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
@@ -70,7 +67,7 @@ describe('<FloatingMenuLink>', () => {
                 </ThemeProvider>
               </I18nProvider>
             </MemoryRouter>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
       const signInLink = getByText(/Sign In/i)

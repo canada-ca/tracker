@@ -7,15 +7,13 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 import canada from './theme/canada'
-import { UserStateProvider } from './UserState'
-import { client } from './client'
+import { client, currentUserVar } from './client'
 import { ApolloProvider } from '@apollo/client'
+import { UserVarProvider } from './UserState'
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <UserStateProvider
-      initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
-    >
+    <UserVarProvider userVar={currentUserVar}>
       <ThemeProvider theme={canada}>
         <I18nProvider i18n={i18n}>
           <Router>
@@ -23,7 +21,7 @@ ReactDOM.render(
           </Router>
         </I18nProvider>
       </ThemeProvider>
-    </UserStateProvider>
+    </UserVarProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 )

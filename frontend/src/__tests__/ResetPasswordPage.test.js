@@ -5,9 +5,10 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserStateProvider } from '../UserState'
+import { UserVarProvider } from '../UserState'
 import ResetPasswordPage from '../ResetPasswordPage'
 import { RESET_PASSWORD } from '../graphql/mutations'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -73,12 +74,12 @@ describe('<ResetPasswordPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={successMocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -94,7 +95,7 @@ describe('<ResetPasswordPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -114,12 +115,12 @@ describe('<ResetPasswordPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <MockedProvider mocks={successMocks}>
-              <UserStateProvider
-                initialState={{
-                  userName: null,
+              <UserVarProvider
+                userVar={makeVar({
                   jwt: null,
                   tfaSendMethod: null,
-                }}
+                  userName: null,
+                })}
               >
                 <ThemeProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
@@ -135,7 +136,7 @@ describe('<ResetPasswordPage />', () => {
                     </MemoryRouter>
                   </I18nProvider>
                 </ThemeProvider>
-              </UserStateProvider>
+              </UserVarProvider>
             </MockedProvider>,
           )
 
@@ -155,8 +156,12 @@ describe('<ResetPasswordPage />', () => {
     it('succeeds in reseting the password', async () => {
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={successMocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -172,7 +177,7 @@ describe('<ResetPasswordPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 
@@ -191,8 +196,12 @@ describe('<ResetPasswordPage />', () => {
     it('fails in reseting the password', async () => {
       const { container, queryByText, getByText } = render(
         <MockedProvider mocks={failMocks}>
-          <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -208,7 +217,7 @@ describe('<ResetPasswordPage />', () => {
                 </MemoryRouter>
               </I18nProvider>
             </ThemeProvider>
-          </UserStateProvider>
+          </UserVarProvider>
         </MockedProvider>,
       )
 

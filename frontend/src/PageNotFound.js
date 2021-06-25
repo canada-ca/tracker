@@ -1,5 +1,5 @@
 import React from 'react'
-import { Heading, Box, Text, Icon, Stack, Divider } from '@chakra-ui/core'
+import { Box, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 
 export default function PageNotFound() {

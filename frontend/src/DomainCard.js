@@ -1,16 +1,16 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import {
-  Text,
-  ListItem,
   Box,
-  Icon,
-  Stack,
   Divider,
   Flex,
+  Icon,
+  ListItem,
+  Stack,
+  Text,
 } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
-import { object, string, bool } from 'prop-types'
+import { bool, object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 
 export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {

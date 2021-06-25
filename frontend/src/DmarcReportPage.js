@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import {
   DMARC_REPORT_GRAPH,
@@ -29,7 +28,6 @@ import { useDocumentTitle } from './useDocumentTitle'
 import { Layout } from './Layout'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
-  const { currentUser } = useUserState()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
   const { i18n } = useLingui()
@@ -54,11 +52,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     error: graphError,
     data: graphData,
   } = useQuery(DMARC_REPORT_GRAPH, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
     variables: {
       domain: domainSlug,
     },
@@ -70,9 +63,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     data: tableData,
   } = useQuery(PAGINATED_DMARC_REPORT,
     {
-      context: {
-        headers: { authorization: currentUser.jwt },
-      },
       variables: {
         month: selectedPeriod,
         year: selectedYear,
