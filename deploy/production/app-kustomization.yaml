@@ -1,0 +1,9 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: flux-system
+spec:
+  path: ./app/production
+
