@@ -1,21 +1,27 @@
 import React, { useState } from 'react'
-import { string } from 'prop-types'
+import { string, bool } from 'prop-types'
 import { Divider, Icon, SimpleGrid, Stack, useToast } from '@chakra-ui/core'
-import { useMutation, useQuery } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { QUERY_CURRENT_USER } from './graphql/queries'
 import { t, Trans } from '@lingui/macro'
 import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
 import EditableUserPassword from './EditableUserPassword'
-import { LoadingMessage } from './LoadingMessage'
-import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import EditableUserTFAMethod from './EditableUserTFAMethod'
 import EditableUserPhoneNumber from './EditableUserPhoneNumber'
 import { TrackerButton } from './TrackerButton'
 import { SEND_EMAIL_VERIFICATION } from './graphql/mutations'
 
-export default function UserPage() {
+export default function UserPage({
+  displayName,
+  userName,
+  preferredLang,
+  phoneNumber,
+  tfaSendMethod,
+  emailValidated,
+  phoneValidated,
+}) {
   const toast = useToast()
   const [emailSent, setEmailSent] = useState(false)
   const [sendEmailVerification, { error }] = useMutation(
@@ -45,33 +51,10 @@ export default function UserPage() {
     },
   )
 
-  const {
-    loading: queryUserLoading,
-    error: queryUserError,
-    data: queryUserData,
-  } = useQuery(QUERY_CURRENT_USER, {})
-
-  if (queryUserLoading) {
-    return (
-      <LoadingMessage>
-        <Trans>Account Settings</Trans>
-      </LoadingMessage>
-    )
-  }
-
-  if (queryUserError) {
-    return <ErrorFallbackMessage error={queryUserError} />
-  }
-
-  const {
-    displayName,
-    userName,
-    preferredLang,
-    phoneNumber,
-    tfaSendMethod,
-    emailValidated,
-    phoneValidated,
-  } = queryUserData?.userPage
+  const [tfa, setTfa] = React.useState({
+    emailValidated: emailValidated,
+    phoneValidated: phoneValidated,
+  })
 
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} width="100%">
@@ -92,14 +75,13 @@ export default function UserPage() {
       </Stack>
 
       <Stack p={25} spacing={4}>
-        <EditableUserPhoneNumber detailValue={phoneNumber} />
+        <EditableUserPhoneNumber detailValue={phoneNumber} updateTfa={setTfa} tfa={tfa} />
 
         <Divider />
 
         <EditableUserTFAMethod
           currentTFAMethod={tfaSendMethod}
-          emailValidated={emailValidated}
-          phoneValidated={phoneValidated}
+          tfa={tfa}
         />
 
         {!emailValidated && (
@@ -119,4 +101,12 @@ export default function UserPage() {
   )
 }
 
-UserPage.propTypes = { userName: string }
+UserPage.propTypes = {
+  displayName: string,
+  userName: string,
+  preferredLang: string,
+  phoneNumber: string,
+  tfaSendMethod: string,
+  emailValidated: bool,
+  phoneValidated: bool,
+ }

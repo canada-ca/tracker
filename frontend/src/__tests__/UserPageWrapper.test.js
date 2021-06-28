@@ -1,5 +1,5 @@
 import React from 'react'
-import UserPage from '../UserPage'
+import UserPageWrapper from '../UserPageWrapper'
 import { setupI18n } from '@lingui/core'
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
@@ -20,7 +20,7 @@ const i18n = setupI18n({
   },
 })
 
-describe('<UserPage />', () => {
+describe('<UserPageWrapper />', () => {
   const userName = 'testuser@testemail.gc.ca'
   const displayName = 'Test User'
   const preferredLang = 'ENGLISH'
@@ -60,15 +60,7 @@ describe('<UserPage />', () => {
           <MemoryRouter initialEntries={['/']}>
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <UserPage 
-                  userName={userName}
-                  displayName={displayName}
-                  preferredLang={preferredLang}
-                  phoneNumber={phoneNumber}
-                  tfaSendMethod={tfaSendMethod}
-                  phoneValidated={phoneValidated}
-                  emailValidated={emailValidated}
-                />
+                <UserPageWrapper />
               </I18nProvider>
             </ThemeProvider>
           </MemoryRouter>

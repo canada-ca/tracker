@@ -30,7 +30,12 @@ describe('<EditableUserTFAMethod />', () => {
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ThemeProvider theme={theme}>
-                <EditableUserTFAMethod />
+                <EditableUserTFAMethod
+                  tfa={{
+                    emailValidated: true,
+                    phoneValidated: true,
+                  }}
+                />
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
@@ -75,8 +80,10 @@ describe('<EditableUserTFAMethod />', () => {
               <ThemeProvider theme={theme}>
                 <EditableUserTFAMethod
                   currentTFAMethod="NONE"
-                  emailValidated={true}
-                  phoneValidated={true}
+                  tfa={{
+                    emailValidated: true,
+                    phoneValidated: true,
+                  }}
                 />
               </ThemeProvider>
             </I18nProvider>
@@ -128,8 +135,10 @@ describe('<EditableUserTFAMethod />', () => {
               <ThemeProvider theme={theme}>
                 <EditableUserTFAMethod
                   currentTFAMethod="NONE"
-                  emailValidated={true}
-                  phoneValidated={true}
+                  tfa={{
+                    emailValidated: true,
+                    phoneValidated: true,
+                  }}
                 />
               </ThemeProvider>
             </I18nProvider>

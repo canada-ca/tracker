@@ -22,7 +22,7 @@ import { useUserVar } from './UserState'
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
-const UserPage = lazy(() => import('./UserPage'))
+const UserPageWrapper = lazy(() => import('./UserPageWrapper'))
 const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
@@ -179,7 +179,7 @@ export default function App() {
               </PrivatePage>
 
               <PrivatePage path="/user" title={t`Your Account`}>
-                <UserPage username={currentUser.userName} />
+                <UserPageWrapper username={currentUser.userName} />
               </PrivatePage>
 
               <Page path="/validate/:verifyToken" title={t`Email Verification`}>

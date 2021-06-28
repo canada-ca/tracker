@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { string } from 'prop-types'
+import { string, shape, bool, func } from 'prop-types'
 import {
   Heading,
   Icon,
@@ -28,7 +28,11 @@ import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
 import AuthenticateField from './AuthenticateField'
 
-function EditableUserPhoneNumber({ detailValue }) {
+function EditableUserPhoneNumber({
+  detailValue,
+  tfa,
+  updateTfa,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -52,6 +56,11 @@ function EditableUserPhoneNumber({ detailValue }) {
       onCompleted({ setPhoneNumber }) {
         if (setPhoneNumber.result.__typename === 'SetPhoneNumberResult') {
           setPhoneCodeSent(true)
+          updateTfa({
+            ...tfa,
+            emailValidated: tfa.emailValidated,
+            phoneValidated: false,
+          })
         } else if (setPhoneNumber.result.__typename === 'SetPhoneNumberError') {
           toast({
             title: t`Unable to update your phone number, please try again.`,
@@ -91,6 +100,11 @@ function EditableUserPhoneNumber({ detailValue }) {
       },
       onCompleted({ verifyPhoneNumber }) {
         if (verifyPhoneNumber.result.__typename === 'VerifyPhoneNumberResult') {
+          updateTfa({
+            ...tfa,
+            emailValidated: tfa.emailValidated,
+            phoneValidated: true,
+          })
           toast({
             title: t`Changed User Phone Number`,
             description: t`You have successfully updated your phone number.`,
@@ -304,6 +318,11 @@ function EditableUserPhoneNumber({ detailValue }) {
 
 EditableUserPhoneNumber.propTypes = {
   detailValue: string,
+  tfa: shape({
+    emailValidated: bool,
+    phoneValidated: bool,
+  }),
+  updateTfa: func,
 }
 
 export default WithPseudoBox(EditableUserPhoneNumber)

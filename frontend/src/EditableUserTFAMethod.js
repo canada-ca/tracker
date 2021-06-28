@@ -1,5 +1,5 @@
 import React from 'react'
-import { bool, string } from 'prop-types'
+import { bool, shape, string } from 'prop-types'
 import {
   Badge,
   Box,
@@ -18,8 +18,7 @@ import { TrackerButton } from './TrackerButton'
 
 function EditableUserTFAMethod({
   currentTFAMethod,
-  emailValidated,
-  phoneValidated,
+  tfa,
 }) {
   const toast = useToast()
 
@@ -81,8 +80,8 @@ function EditableUserTFAMethod({
         <Box p="1">
           <Icon
             size="icons.lg"
-            name={emailValidated ? 'check' : 'close'}
-            color={emailValidated ? 'green.500' : 'red.500'}
+            name={tfa.emailValidated ? 'check' : 'close'}
+            color={tfa.emailValidated ? 'green.500' : 'red.500'}
             pr={2}
           />
           <Badge variant="outline" color="gray.900">
@@ -92,8 +91,8 @@ function EditableUserTFAMethod({
         <Box p="1">
           <Icon
             size="icons.lg"
-            name={phoneValidated ? 'check' : 'close'}
-            color={phoneValidated ? 'green.500' : 'red.500'}
+            name={tfa.phoneValidated ? 'check' : 'close'}
+            color={tfa.phoneValidated ? 'green.500' : 'red.500'}
             pr={2}
           />
           <Badge variant="outline" color="gray.900">
@@ -124,8 +123,8 @@ function EditableUserTFAMethod({
                 w={['40%', '57%']}
               >
                 <option value="NONE">{t`None`}</option>
-                {emailValidated && <option value="EMAIL">{t`Email`}</option>}
-                {phoneValidated && <option value="PHONE">{t`Phone`}</option>}
+                {tfa.emailValidated && <option value="EMAIL">{t`Email`}</option>}
+                {tfa.phoneValidated && <option value="PHONE">{t`Phone`}</option>}
               </Field>
               <TrackerButton
                 type="submitBtn"
@@ -144,8 +143,10 @@ function EditableUserTFAMethod({
 
 EditableUserTFAMethod.propTypes = {
   currentTFAMethod: string,
-  emailValidated: bool,
-  phoneValidated: bool,
+  tfa: shape({
+    emailValidated: bool,
+    phoneValidated: bool,
+  }),
 }
 
 export default WithPseudoBox(EditableUserTFAMethod)
