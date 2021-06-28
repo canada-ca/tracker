@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 # Copy local code to the container image.
-ENV HOME /core
+ENV HOME /summaries
 WORKDIR $HOME
 COPY . ./
 
@@ -19,4 +19,4 @@ RUN apt-get install -y --no-install-recommends \
 # Install dependencies.
 RUN pip3 install --pre -r requirements.txt
 
-CMD ["python3", "core.py"]
+CMD ["python3", "summaries.py"]

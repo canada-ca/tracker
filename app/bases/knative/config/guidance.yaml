@@ -1,10 +1,10 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: core
+  name: guidance
   namespace: scanners
 spec:
-  schedule: "59 23 * * *"
+  schedule: "59 22 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0
@@ -14,8 +14,8 @@ spec:
       template:
         spec:
           containers:
-          - name: core
-            image: gcr.io/track-compliance/services/core:master-73c3c88-1622826669 # {"$imagepolicy": "flux-system:core"}
+          - name: guidance
+            image: gcr.io/track-compliance/services/guidance:master-73c3c88-1622826669 # {"$imagepolicy": "flux-system:guidance"}
             env:
               - name: DB_USER
                 valueFrom:

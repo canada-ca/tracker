@@ -2,8 +2,8 @@
 apiVersion: image.toolkit.fluxcd.io/v1alpha2
 kind: ImageRepository
 metadata:
-  name: core
+  name: summaries
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/services/core
+  image: gcr.io/track-compliance/services/summaries
   interval: 5m0s
