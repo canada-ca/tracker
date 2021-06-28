@@ -30,14 +30,6 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
     client = ArangoClient(hosts=connection_string)
     db = client.db(name, username=user, password=password)
 
-    if not db.has_collection("scanSummaries"):
-        db.create_collection(
-            "scanSummaries",
-            replication_factor=3,
-            shard_count=6,
-            write_concern=1,
-        )
-
     for scan_type in SCAN_TYPES:
         scan_pass = 0
         scan_fail = 0
@@ -80,14 +72,6 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
     connection_string = f"http://{host}:{port}"
     client = ArangoClient(hosts=connection_string)
     db = client.db(name, username=user, password=password)
-
-    if not db.has_collection("chartSummaries"):
-        db.create_collection(
-            "chartSummaries",
-            replication_factor=3,
-            shard_count=6,
-            write_concern=1,
-        )
 
     for chart_type, scan_types in CHARTS.items():
         pass_count = 0
