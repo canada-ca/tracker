@@ -2,14 +2,14 @@
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
 kind: ImagePolicy
 metadata:
-  name: summaries
+  name: guidance
   namespace: flux-system
 spec:
   filterTags:
     extract: $ts
     pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
   imageRepositoryRef:
-    name: summaries
+    name: guidance
   policy:
     numerical:
       order: asc
