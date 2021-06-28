@@ -15,6 +15,7 @@ from OpenSSL import SSL
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import Response
+from socket import gaierror
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed, ServerHostnameCouldNotBeResolved
 from sslyze.plugins.scan_commands import ScanCommand
@@ -114,16 +115,24 @@ def get_supported_tls(highest_supported, domain):
 def scan_ssl(domain):
     try:
         server_info = get_server_info(domain)
+
+        highest_tls_supported = str(
+            server_info.tls_probing_result.highest_tls_version_supported
+        ).split(".")[1]
+
+        tls_supported = get_supported_tls(highest_tls_supported, domain)
     except ConnectionToServerFailed as e:
         logging.error(f"Failed to connect to {domain}: {e.error_message}")
         RES_QUEUE.put({})
         return
-
-    highest_tls_supported = str(
-        server_info.tls_probing_result.highest_tls_version_supported
-    ).split(".")[1]
-
-    tls_supported = get_supported_tls(highest_tls_supported, domain)
+    except ServerHostnameCouldNotBeResolved as e:
+        logging.error(f"{domain} could not be resolved: {e.error_message}")
+        RES_QUEUE.put({})
+        return
+    except gaierror as e:
+        logging.error(f"Could not retrieve address info for {domain} {e.error_message}")
+        RES_QUEUE.put({})
+        return
 
     scanner = Scanner()
 
@@ -212,8 +221,9 @@ def scan_ssl(domain):
             logging.info("Parsing Elliptic Curve Scan results...")
             res["supports_ecdh_key_exchange"] = result.supports_ecdh_key_exchange
             res["supported_curves"] = []
-            for curve in result.supported_curves:
-                res["supported_curves"].append(curve.name)
+            if result.supported_curves:
+                for curve in result.supported_curves:
+                    res["supported_curves"].append(curve.name)
 
     RES_QUEUE.put(res)
 
@@ -222,11 +232,8 @@ def process_results(results):
     logging.info("Processing SSL scan results...")
     report = {}
 
-    # Get cipher/protocol data via sslyze for a host.
-
     if results == {}:
-        report = {"error": "missing"}
-
+        report = {"error": "unreachable"}
     else:
         for version in [
             "SSL_2_0",
@@ -250,7 +257,7 @@ def process_results(results):
         report["supports_ecdh_key_exchange"] = results.get(
             "supports_ecdh_key_exchange", False
         )
-        report["supported_curves"] = results["supported_curves"]
+        report["supported_curves"] = results.get("supported_curves", [])
 
     logging.info(f"Processed SSL scan results: {str(report)}")
     return report
@@ -294,34 +301,8 @@ def Server(server_client=requests):
 
         logging.info("Performing scan...")
 
-        try:
-            p = Process(target=scan_ssl, args=(domain,))
-            wait_timeout(p, TIMEOUT)
-
-        except ServerHostnameCouldNotBeResolved as e:
-            logging.error(f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})")
-            dispatch_results(
-                {
-                    "scan_type": "ssl",
-                    "uuid": uuid,
-                    "domain_key": domain_key,
-                    "results": {"error": "unreachable"},
-                },
-                server_client,
-            )
-            return Response("Designated domain could not be resolved", status_code=500)
-
-        except ScanTimeoutException:
-            dispatch_results(
-                {
-                    "scan_type": "ssl",
-                    "uuid": uuid,
-                    "domain_key": domain_key,
-                    "results": {"error": "unreachable"},
-                },
-                server_client,
-            )
-            return Response("Timeout occurred while scanning", status_code=500)
+        p = Process(target=scan_ssl, args=(domain,))
+        wait_timeout(p, TIMEOUT)
 
         scan_results = RES_QUEUE.get()
 

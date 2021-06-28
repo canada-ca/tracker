@@ -198,9 +198,7 @@ def process_ssl(results, guidance, domain_key, uuid, db):
     acceptable_curves = []
     weak_curves = []
 
-    if results.get("error") == "missing":
-        negative_tags.append("ssl2")
-    elif results.get("error") == "unreachable":
+    if results.get("error") == "unreachable":
         neutral_tags.append("ssl9")
     else:
         for cipher in results["cipher_list"]:
