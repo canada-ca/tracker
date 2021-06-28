@@ -325,6 +325,8 @@ export const SET_PHONE_NUMBER = gql`
           user {
             id
             phoneNumber
+            phoneValidated
+            tfaSendMethod
           }
         }
         ... on SetPhoneNumberError {
@@ -345,6 +347,7 @@ export const VERIFY_PHONE_NUMBER = gql`
           user {
             id
             phoneNumber
+            phoneValidated
           }
         }
         ... on VerifyPhoneNumberError {
