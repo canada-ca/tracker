@@ -4,7 +4,7 @@ metadata:
   name: summaries
   namespace: scanners
 spec:
-  schedule: "0 5 * * *"
+  schedule: "30 10 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0
