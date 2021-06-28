@@ -29,6 +29,7 @@
     "arango-tools": "^0.5.0",
     "arangojs": "^7.5.0",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dataloader": "^2.0.0",
