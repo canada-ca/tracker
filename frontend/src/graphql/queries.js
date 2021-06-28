@@ -1342,6 +1342,7 @@ export const ADMIN_AFFILIATIONS = gql`
     $orderBy: OrganizationOrder
     $isAdmin: Boolean
     $includeSuperAdminOrg: Boolean
+    $search: String
   ) {
     findMyOrganizations(
       after: $after
@@ -1351,6 +1352,7 @@ export const ADMIN_AFFILIATIONS = gql`
       orderBy: $orderBy
       isAdmin: $isAdmin
       includeSuperAdminOrg: $includeSuperAdminOrg
+      search: $search
     ) {
       edges {
         node {
