@@ -155,6 +155,7 @@ export const UPDATE_USER_PROFILE = gql`
           user {
             id
             displayName
+            userName
             preferredLang
             tfaSendMethod
           }
