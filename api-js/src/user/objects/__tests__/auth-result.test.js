@@ -10,12 +10,6 @@ describe('given the auth result gql object', () => {
       expect(demoType).toHaveProperty('authToken')
       expect(demoType.authToken.type).toMatchObject(GraphQLString)
     })
-    it('has an refreshToken field', () => {
-      const demoType = authResultType.getFields()
-
-      expect(demoType).toHaveProperty('refreshToken')
-      expect(demoType.refreshToken.type).toMatchObject(GraphQLString)
-    })
     it('has a user field', () => {
       const demoType = authResultType.getFields()
 
@@ -32,15 +26,6 @@ describe('given the auth result gql object', () => {
         expect(demoType.authToken.resolve({ token: 'authToken' })).toEqual(
           'authToken',
         )
-      })
-    })
-    describe('testing the refreshToken resolver', () => {
-      it('returns the resolved field', () => {
-        const demoType = authResultType.getFields()
-
-        expect(
-          demoType.refreshToken.resolve({ refreshToken: 'refreshToken' }),
-        ).toEqual('refreshToken')
       })
     })
     describe('testing the user field', () => {
