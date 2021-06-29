@@ -83,6 +83,9 @@ describe('testing user sign up', () => {
     describe('given a successful sign up', () => {
       describe('when user is not signing up without an invite token', () => {
         it('returns auth result with user info', async () => {
+          const mockedCookie = jest.fn()
+          const mockedResponse = { cookie: mockedCookie }
+
           const response = await graphql(
             schema,
             `
@@ -99,7 +102,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -123,6 +125,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              response: mockedResponse,
               uuidv4,
               auth: {
                 bcrypt,
@@ -153,7 +156,6 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
-                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', users[0]._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -168,6 +170,12 @@ describe('testing user sign up', () => {
           }
 
           expect(response).toEqual(expectedResult)
+          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            httpOnly: true,
+            maxAge: 86400000,
+            sameSite: true,
+            secure: false,
+          })
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists successfully created a new account.',
           ])
@@ -189,7 +197,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -283,6 +290,9 @@ describe('testing user sign up', () => {
           })
         })
         it('returns auth result with user info', async () => {
+          const mockedCookie = jest.fn()
+          const mockedResponse = { cookie: mockedCookie }
+
           const response = await graphql(
             schema,
             `
@@ -300,7 +310,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -324,6 +333,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              response: mockedResponse,
               uuidv4,
               auth: {
                 bcrypt,
@@ -356,7 +366,6 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
-                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', user._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -371,6 +380,12 @@ describe('testing user sign up', () => {
           }
 
           expect(response).toEqual(expectedResult)
+          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            httpOnly: true,
+            maxAge: 86400000,
+            sameSite: true,
+            secure: false,
+          })
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists successfully created a new account.',
           ])
@@ -393,7 +408,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -477,7 +491,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -557,7 +570,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -634,7 +646,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -720,7 +731,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -835,7 +845,6 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
-                        refreshToken
                         user {
                           id
                           userName
@@ -925,7 +934,6 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
-                        refreshToken
                         user {
                           id
                           userName
@@ -1015,7 +1023,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -1129,7 +1136,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -1211,7 +1217,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -1284,6 +1289,9 @@ describe('testing user sign up', () => {
     describe('given successful sign up', () => {
       describe('when user is not signing up without an invite token', () => {
         it('returns auth result with user info', async () => {
+          const mockedCookie = jest.fn()
+          const mockedResponse = { cookie: mockedCookie }
+
           const response = await graphql(
             schema,
             `
@@ -1300,7 +1308,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -1324,6 +1331,7 @@ describe('testing user sign up', () => {
               query,
               collections,
               transaction,
+              response: mockedResponse,
               uuidv4,
               auth: {
                 bcrypt,
@@ -1354,7 +1362,6 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
-                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', user._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -1369,6 +1376,12 @@ describe('testing user sign up', () => {
           }
 
           expect(response).toEqual(expectedResult)
+          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            httpOnly: true,
+            maxAge: 86400000,
+            sameSite: true,
+            secure: false,
+          })
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists successfully created a new account.',
           ])
@@ -1390,7 +1403,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -1484,6 +1496,9 @@ describe('testing user sign up', () => {
           })
         })
         it('returns auth result with user info', async () => {
+          const mockedCookie = jest.fn()
+          const mockedResponse = { cookie: mockedCookie }
+
           const response = await graphql(
             schema,
             `
@@ -1501,7 +1516,6 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
-                        refreshToken
                         user {
                           id
                           userName
@@ -1526,6 +1540,7 @@ describe('testing user sign up', () => {
               collections,
               transaction,
               uuidv4,
+              response: mockedResponse,
               auth: {
                 bcrypt,
                 tokenize: mockTokenize,
@@ -1557,7 +1572,6 @@ describe('testing user sign up', () => {
               signUp: {
                 result: {
                   authToken: 'token',
-                  refreshToken: 'token',
                   user: {
                     id: `${toGlobalId('users', user._key)}`,
                     userName: 'test.account@istio.actually.exists',
@@ -1572,6 +1586,12 @@ describe('testing user sign up', () => {
           }
 
           expect(response).toEqual(expectedResult)
+          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            httpOnly: true,
+            maxAge: 86400000,
+            sameSite: true,
+            secure: false,
+          })
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists successfully created a new account.',
           ])
@@ -1594,7 +1614,6 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
-                        refreshToken
                         user {
                           id
                           userName
@@ -1678,7 +1697,6 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
-                        refreshToken
                         user {
                           id
                           userName
@@ -1758,7 +1776,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -1835,7 +1852,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -1921,7 +1937,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -2036,7 +2051,6 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
-                        refreshToken
                         user {
                           id
                           userName
@@ -2126,7 +2140,6 @@ describe('testing user sign up', () => {
                     result {
                       ... on AuthResult {
                         authToken
-                        refreshToken
                         user {
                           id
                           userName
@@ -2216,7 +2229,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -2330,7 +2342,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName
@@ -2414,7 +2425,6 @@ describe('testing user sign up', () => {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         id
                         userName

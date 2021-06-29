@@ -6,7 +6,7 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 
-const { REFRESH_KEY } = process.env
+const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -56,6 +56,7 @@ export const signUp = new mutationWithClientMutationId({
       query,
       transaction,
       request,
+      response,
       uuidv4,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
@@ -124,7 +125,12 @@ export const signUp = new mutationWithClientMutationId({
       emailValidated: false,
       failedLoginAttempts: 0,
       tfaSendMethod: 'none',
-      refreshId,
+      refreshInfo: {
+        refreshId,
+        expiresAt: new Date(
+          new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        ),
+      },
     }
 
     // Generate list of collections names
@@ -232,11 +238,6 @@ export const signUp = new mutationWithClientMutationId({
 
     // Generate JWTs
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
-    const refreshToken = tokenize({
-      parameters: { userKey: user._key, uuid: refreshId },
-      expPeriod: 168,
-      secret: String(REFRESH_KEY),
-    })
 
     const verifyUrl = `${request.protocol}://${request.get(
       'host',
@@ -244,12 +245,24 @@ export const signUp = new mutationWithClientMutationId({
 
     await sendVerificationEmail({ user: returnUser, verifyUrl })
 
+    const refreshToken = tokenize({
+      parameters: { userKey: user._key, uuid: refreshId },
+      expPeriod: 168,
+      secret: String(REFRESH_KEY),
+    })
+
+    response.cookie('refresh_token', refreshToken, {
+      maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+      httpOnly: true,
+      secure: false,
+      sameSite: true,
+    })
+
     console.info(`User: ${userName} successfully created a new account.`)
 
     return {
       _type: 'authResult',
       token,
-      refreshToken,
       user: returnUser,
     }
   },
