@@ -177,32 +177,32 @@ export const loadVerifiedDomainConnectionsByOrgId =
       /* istanbul ignore else */
       if (orderBy.field === 'domain') {
         domainField = aql`domain.domain`
-        hasNextPageDocumentField = aql`DOCUMENT(domains, LAST(retrievedDomains)._key).domain`
-        hasPreviousPageDocumentField = aql`DOCUMENT(domains, FIRST(retrievedDomains)._key).domain`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).domain`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).domain`
       } else if (orderBy.field === 'last-ran') {
         domainField = aql`domain.lastRan`
-        hasNextPageDocumentField = aql`DOCUMENT(domains, LAST(retrievedDomains)._key).lastRan`
-        hasPreviousPageDocumentField = aql`DOCUMENT(domains, FIRST(retrievedDomains)._key).lastRan`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).lastRan`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).lastRan`
       } else if (orderBy.field === 'dkim-status') {
         domainField = aql`domain.status.dkim`
-        hasNextPageDocumentField = aql`DOCUMENT(domains, LAST(retrievedDomains)._key).status.dkim`
-        hasPreviousPageDocumentField = aql`DOCUMENT(domains, FIRST(retrievedDomains)._key).status.dkim`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.dkim`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.dkim`
       } else if (orderBy.field === 'dmarc-status') {
         domainField = aql`domain.status.dmarc`
-        hasNextPageDocumentField = aql`DOCUMENT(domains, LAST(retrievedDomains)._key).status.dmarc`
-        hasPreviousPageDocumentField = aql`DOCUMENT(domains, FIRST(retrievedDomains)._key).status.dmarc`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.dmarc`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.dmarc`
       } else if (orderBy.field === 'https-status') {
         domainField = aql`domain.status.https`
-        hasNextPageDocumentField = aql`DOCUMENT(domains, LAST(retrievedDomains)._key).status.https`
-        hasPreviousPageDocumentField = aql`DOCUMENT(domains, FIRST(retrievedDomains)._key).status.https`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.https`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.https`
       } else if (orderBy.field === 'spf-status') {
         domainField = aql`domain.status.spf`
-        hasNextPageDocumentField = aql`DOCUMENT(domains, LAST(retrievedDomains)._key).status.spf`
-        hasPreviousPageDocumentField = aql`DOCUMENT(domains, FIRST(retrievedDomains)._key).status.spf`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.spf`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.spf`
       } else if (orderBy.field === 'ssl-status') {
         domainField = aql`domain.status.ssl`
-        hasNextPageDocumentField = aql`DOCUMENT(domains, LAST(retrievedDomains)._key).status.ssl`
-        hasPreviousPageDocumentField = aql`DOCUMENT(domains, FIRST(retrievedDomains)._key).status.ssl`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.ssl`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.ssl`
       }
 
       hasNextPageFilter = aql`
