@@ -11,18 +11,8 @@ sys_db.create_database("test")
 
 # Establish DB connection
 db = arango_client.db("test", username="", password="")
-db.create_collection(
-    "scanSummaries",
-    replication_factor=3,
-    shard_count=6,
-    write_concern=1,
-)
-db.create_collection(
-    "chartSummaries",
-    replication_factor=3,
-    shard_count=6,
-    write_concern=1,
-)
+db.create_collection("scanSummaries")
+db.create_collection("chartSummaries")
 graph = db.create_graph("compliance")
 domains = graph.create_vertex_collection("domains")
 orgs = graph.create_vertex_collection("organizations")
