@@ -189,6 +189,7 @@ describe('reset users password', () => {
         ])
 
         consoleOutput.length = 0
+        const mockedResponse = { cookie: jest.fn() }
 
         const testSignIn = await graphql(
           schema,
@@ -219,6 +220,7 @@ describe('reset users password', () => {
             collections,
             transaction,
             jwt,
+            response: mockedResponse,
             uuidv4,
             auth: {
               bcrypt,
@@ -1064,6 +1066,7 @@ describe('reset users password', () => {
         ])
 
         consoleOutput.length = 0
+        const mockedResponse = { cookie: jest.fn() }
 
         const testSignIn = await graphql(
           schema,
@@ -1094,6 +1097,7 @@ describe('reset users password', () => {
             collections,
             transaction,
             uuidv4,
+            response: mockedResponse,
             jwt,
             auth: {
               bcrypt,
