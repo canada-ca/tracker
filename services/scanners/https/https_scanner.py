@@ -53,14 +53,14 @@ def process_results(results):
         report = {"error": "missing"}
 
     else:
-        # Assumes that HTTPS would be technically present, with or without issues
-        if results["Downgrades HTTPS"]:
+        if results["Valid HTTPS"]:
+            https = "Valid HTTPS"  # Yes
+        elif results["HTTPS Bad Chain"]:
+            https = "Bad Chain"  # Yes
+        elif results["Downgrades HTTPS"]:
             https = "Downgrades HTTPS"  # No
         else:
-            if results["Valid HTTPS"]:
-                https = "Valid HTTPS"  # Yes
-            elif results["HTTPS Bad Chain"]:
-                https = "Bad Chain"  # Yes
+            https = "No HTTPS"
 
         report["implementation"] = https
 

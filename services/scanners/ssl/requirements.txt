@@ -10,3 +10,4 @@ pretend
 uvloop
 httptools
 scapy
+sockets
