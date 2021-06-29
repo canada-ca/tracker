@@ -62,7 +62,7 @@ describe('authenticate user account', () => {
         tfaCode: 123456,
       })
     })
-    it('returns users information and JWTs', async () => {
+    it('returns users information and JWT', async () => {
       let cursor = await query`
         FOR user IN users
           FILTER user.userName == "test.account@istio.actually.exists"
@@ -74,6 +74,10 @@ describe('authenticate user account', () => {
         parameters: { userKey: user._key },
         secret: String(SIGN_IN_KEY),
       })
+
+      const mockedCookie = jest.fn()
+      const mockedResponse = { cookie: mockedCookie }
+
       const response = await graphql(
         schema,
         `
@@ -87,7 +91,6 @@ describe('authenticate user account', () => {
               result {
                 ... on AuthResult {
                   authToken
-                  refreshToken
                   user {
                     id
                     userName
@@ -111,6 +114,7 @@ describe('authenticate user account', () => {
           collections,
           transaction,
           uuidv4,
+          response: mockedResponse,
           auth: {
             bcrypt,
             tokenize: mockTokenize,
@@ -130,7 +134,6 @@ describe('authenticate user account', () => {
           authenticate: {
             result: {
               authToken: 'token',
-              refreshToken: 'token',
               user: {
                 id: `${toGlobalId('users', user._key)}`,
                 userName: 'test.account@istio.actually.exists',
@@ -152,7 +155,16 @@ describe('authenticate user account', () => {
       user = await cursor.next()
 
       expect(response).toEqual(expectedResult)
+      
       expect(user.tfaCode).toEqual(null)
+
+      expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+        httpOnly: true,
+        maxAge: 86400000,
+        sameSite: true,
+        secure: false,
+      })
+
       expect(consoleOutput).toEqual([
         `User: ${user._key} successfully authenticated their account.`,
       ])

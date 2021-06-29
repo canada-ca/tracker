@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
 
-const { SIGN_IN_KEY, REFRESH_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -31,6 +31,7 @@ export const authenticate = new mutationWithClientMutationId({
     args,
     {
       i18n,
+      response,
       query,
       collections,
       transaction,
@@ -81,12 +82,14 @@ export const authenticate = new mutationWithClientMutationId({
     if (authenticationCode === user.tfaCode) {
       const refreshId = uuidv4()
 
-      const token = tokenize({ parameters: { userKey: user._key } })
-      const refreshToken = tokenize({
-        parameters: { userKey: user._key, uuid: refreshId },
-        expPeriod: 168,
-        secret: String(REFRESH_KEY),
-      })
+      const refreshInfo = {
+        refreshInfo: {
+          refreshId,
+          expiresAt: new Date(
+            new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+          ),
+        },
+      }
 
       // Generate list of collections names
       const collectionStrings = []
@@ -105,11 +108,11 @@ export const authenticate = new mutationWithClientMutationId({
             UPSERT { _key: ${user._key} }
               INSERT {
                 tfaCode: null,
-                refreshId: ${refreshId}
+                refreshInfo: ${refreshInfo}
               }
               UPDATE {
                 tfaCode: null,
-                refreshId: ${refreshId}
+                refreshInfo: ${refreshInfo}
               }
               IN users
           `,
@@ -130,10 +133,23 @@ export const authenticate = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
+      const token = tokenize({ parameters: { userKey: user._key } })
+      const refreshToken = tokenize({
+        parameters: { userKey: user._key, uuid: refreshId },
+        expPeriod: 168,
+        secret: String(REFRESH_KEY),
+      })
+
+      response.cookie('refresh_token', refreshToken, {
+        maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        httpOnly: true,
+        secure: false,
+        sameSite: true,
+      })
+
       console.info(
         `User: ${user._key} successfully authenticated their account.`,
       )
-      user.id = user._key
 
       return {
         _type: 'authResult',
