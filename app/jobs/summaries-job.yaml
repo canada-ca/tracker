@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: summaries-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: summaries
+        image: gcr.io/track-compliance/services/summaries:master-c834906-1624980945 # {"$imagepolicy": "flux-system:summaries"}
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_PASS
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_HOST
+        - name: DB_PORT
+          value: "8529"
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: DB_NAME
+      restartPolicy: Never
+  backoffLimit: 4
