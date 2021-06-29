@@ -267,6 +267,7 @@
       'Successfully removed user from organization.',
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
+    'Successfully signed out.': 'Successfully signed out.',
     'Successfully verified organization: {0}.': [
       'Successfully verified organization: ',
       ['0'],

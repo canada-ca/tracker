@@ -271,6 +271,7 @@
       "L'utilisateur a été retiré de l'organisation avec succès.",
     'Successfully sent invitation to service, and organization email.':
       "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+    'Successfully signed out.': "J'ai réussi à me déconnecter.",
     'Successfully verified organization: {0}.':
       "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
     'Successfully verified phone number, and set TFA send method to text.':

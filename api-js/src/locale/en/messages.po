@@ -23,7 +23,7 @@ msgstr "Authentication error. Please sign in."
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
-#: src/user/mutations/sign-up.js:108
+#: src/user/mutations/sign-up.js:109
 msgid "Email already in use."
 msgstr "Email already in use."
 
@@ -35,7 +35,7 @@ msgstr "If an account with this username is found, a password reset link will be
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "If an account with this username is found, an email verification link will be found in your inbox."
 
-#: src/user/mutations/authenticate.js:148
+#: src/user/mutations/authenticate.js:164
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "Incorrect TFA code. Please sign in again."
 
@@ -43,8 +43,8 @@ msgstr "Incorrect TFA code. Please sign in again."
 msgid "Incorrect token value. Please request a new email."
 msgstr "Incorrect token value. Please request a new email."
 
-#: src/user/mutations/sign-in.js:62
-#: src/user/mutations/sign-in.js:250
+#: src/user/mutations/sign-in.js:63
+#: src/user/mutations/sign-in.js:262
 msgid "Incorrect username or password. Please try again."
 msgstr "Incorrect username or password. Please try again."
 
@@ -167,7 +167,7 @@ msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` co
 msgstr "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
 
 #: src/user/mutations/reset-password.js:120
-#: src/user/mutations/sign-up.js:82
+#: src/user/mutations/sign-up.js:83
 msgid "Password does not meet requirements."
 msgstr "Password does not meet requirements."
 
@@ -179,7 +179,7 @@ msgstr "Password was successfully reset."
 msgid "Password was successfully updated."
 msgstr "Password was successfully updated."
 
-#: src/user/mutations/sign-up.js:94
+#: src/user/mutations/sign-up.js:95
 msgid "Passwords do not match."
 msgstr "Passwords do not match."
 
@@ -356,7 +356,7 @@ msgstr "Successfully dispatched one time scan."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:195
+#: src/affiliation/mutations/invite-user-to-org.js:196
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
@@ -376,7 +376,11 @@ msgstr "Successfully removed user from organization."
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "Successfully sent invitation to service, and organization email."
 
-#: src/organization/mutations/verify-organization.js:135
+#: src/user/mutations/sign-out.js:25
+msgid "Successfully signed out."
+msgstr "Successfully signed out."
+
+#: src/organization/mutations/verify-organization.js:157
 msgid "Successfully verified organization: {0}."
 msgstr "Successfully verified organization: {0}."
 
@@ -384,11 +388,11 @@ msgstr "Successfully verified organization: {0}."
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Successfully verified phone number, and set TFA send method to text."
 
-#: src/user/mutations/authenticate.js:61
+#: src/user/mutations/authenticate.js:62
 msgid "Token value incorrect, please sign in again."
 msgstr "Token value incorrect, please sign in again."
 
-#: src/user/mutations/sign-in.js:76
+#: src/user/mutations/sign-in.js:77
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Too many failed login attempts, please reset your password, and try again."
 
@@ -400,13 +404,13 @@ msgstr "Two factor code is incorrect. Please try again."
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "Two factor code length is incorrect. Please try again."
 
-#: src/affiliation/mutations/invite-user-to-org.js:169
+#: src/affiliation/mutations/invite-user-to-org.js:170
 msgid "Unable to add user to organization. Please try again."
 msgstr "Unable to add user to organization. Please try again."
 
-#: src/user/mutations/authenticate.js:76
-#: src/user/mutations/authenticate.js:121
-#: src/user/mutations/authenticate.js:130
+#: src/user/mutations/authenticate.js:77
+#: src/user/mutations/authenticate.js:124
+#: src/user/mutations/authenticate.js:133
 msgid "Unable to authenticate. Please try again."
 msgstr "Unable to authenticate. Please try again."
 
@@ -435,8 +439,8 @@ msgid "Unable to create domain. Please try again."
 msgstr "Unable to create domain. Please try again."
 
 #: src/organization/mutations/create-organization.js:206
-#: src/organization/mutations/create-organization.js:228
-#: src/organization/mutations/create-organization.js:239
+#: src/organization/mutations/create-organization.js:229
+#: src/organization/mutations/create-organization.js:240
 msgid "Unable to create organization. Please try again."
 msgstr "Unable to create organization. Please try again."
 
@@ -530,7 +534,7 @@ msgstr "Unable to find verified organization(s). Please try again."
 msgid "Unable to invite user to unknown organization."
 msgstr "Unable to invite user to unknown organization."
 
-#: src/affiliation/mutations/invite-user-to-org.js:185
+#: src/affiliation/mutations/invite-user-to-org.js:186
 msgid "Unable to invite user. Please try again."
 msgstr "Unable to invite user. Please try again."
 
@@ -708,12 +712,13 @@ msgstr "Unable to query affiliation(s). Please try again."
 msgid "Unable to query domain(s). Please try again."
 msgstr "Unable to query domain(s). Please try again."
 
+#: src/user/mutations/refresh-tokens.js:48
 #: src/user/mutations/refresh-tokens.js:62
 #: src/user/mutations/refresh-tokens.js:77
-#: src/user/mutations/refresh-tokens.js:94
-#: src/user/mutations/refresh-tokens.js:108
-#: src/user/mutations/refresh-tokens.js:137
-#: src/user/mutations/refresh-tokens.js:146
+#: src/user/mutations/refresh-tokens.js:92
+#: src/user/mutations/refresh-tokens.js:104
+#: src/user/mutations/refresh-tokens.js:140
+#: src/user/mutations/refresh-tokens.js:149
 msgid "Unable to refresh tokens, please sign in."
 msgstr "Unable to refresh tokens, please sign in."
 
@@ -827,24 +832,24 @@ msgstr "Unable to send verification email. Please try again."
 msgid "Unable to set phone number, please try again."
 msgstr "Unable to set phone number, please try again."
 
-#: src/user/mutations/sign-in.js:104
-#: src/user/mutations/sign-in.js:126
-#: src/user/mutations/sign-in.js:135
-#: src/user/mutations/sign-in.js:183
-#: src/user/mutations/sign-in.js:192
-#: src/user/mutations/sign-in.js:231
-#: src/user/mutations/sign-in.js:240
+#: src/user/mutations/sign-in.js:105
+#: src/user/mutations/sign-in.js:127
+#: src/user/mutations/sign-in.js:136
+#: src/user/mutations/sign-in.js:188
+#: src/user/mutations/sign-in.js:197
+#: src/user/mutations/sign-in.js:243
+#: src/user/mutations/sign-in.js:252
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
-#: src/user/mutations/sign-up.js:182
-#: src/user/mutations/sign-up.js:196
+#: src/user/mutations/sign-up.js:188
+#: src/user/mutations/sign-up.js:202
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Unable to sign up, please contact org admin for a new invite."
 
-#: src/user/mutations/sign-up.js:158
-#: src/user/mutations/sign-up.js:217
-#: src/user/mutations/sign-up.js:227
+#: src/user/mutations/sign-up.js:164
+#: src/user/mutations/sign-up.js:224
+#: src/user/mutations/sign-up.js:234
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
@@ -941,12 +946,13 @@ msgstr "Unable to verify account. Please try again."
 msgid "Unable to verify if user is a super admin, please try again."
 msgstr "Unable to verify if user is a super admin, please try again."
 
-#: src/user/queries/is-user-admin.js:23
+#: src/user/queries/is-user-admin.js:58
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Unable to verify if user is an admin, please try again."
 
 #: src/organization/mutations/verify-organization.js:115
-#: src/organization/mutations/verify-organization.js:126
+#: src/organization/mutations/verify-organization.js:137
+#: src/organization/mutations/verify-organization.js:148
 msgid "Unable to verify organization. Please try again."
 msgstr "Unable to verify organization. Please try again."
 
