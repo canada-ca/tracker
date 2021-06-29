@@ -5,7 +5,7 @@ import { t } from '@lingui/macro'
 
 import { signInUnion } from '../../user'
 
-const { SIGN_IN_KEY, REFRESH_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
 
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
@@ -37,6 +37,7 @@ export const signIn = new mutationWithClientMutationId({
       collections,
       transaction,
       uuidv4,
+      response,
       auth: { tokenize, bcrypt },
       loaders: { loadUserByUserName },
       validators: { cleanseInput },
@@ -165,14 +166,18 @@ export const signIn = new mutationWithClientMutationId({
           }
         } else {
           const refreshId = uuidv4()
+          const refreshInfo = {
+            refreshId,
+            expiresAt: new Date(new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000),
+          }
 
           try {
             await trx.step(
               () => query`
                 WITH users
                 UPSERT { _key: ${user._key} }
-                  INSERT { refreshId: ${refreshId} }
-                  UPDATE { refreshId: ${refreshId} }
+                  INSERT { refreshInfo: ${refreshInfo} }
+                  UPDATE { refreshInfo: ${refreshInfo} }
                   IN users
               `,
             )
@@ -195,10 +200,18 @@ export const signIn = new mutationWithClientMutationId({
           const token = tokenize({
             parameters: { userKey: user._key },
           })
+
           const refreshToken = tokenize({
             parameters: { userKey: user._key, uuid: refreshId },
             expPeriod: 168,
             secret: String(REFRESH_KEY),
+          })
+
+          response.cookie('refresh_token', refreshToken, {
+            maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+            httpOnly: true,
+            secure: false,
+            sameSite: true,
           })
 
           console.info(
@@ -209,7 +222,6 @@ export const signIn = new mutationWithClientMutationId({
             _type: 'regular',
             token,
             user,
-            refreshToken,
           }
         }
       } else {

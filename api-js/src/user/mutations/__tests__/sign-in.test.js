@@ -149,7 +149,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                   }
                 }
@@ -197,7 +196,9 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
+
           expect(mockNotify).toHaveBeenCalledWith({ user })
+
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -234,7 +235,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                   }
                 }
@@ -302,6 +302,9 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
           `
 
+          const mockedCookie = jest.fn()
+          const mockedResponse = { cookie: mockedCookie }
+
           const response = await graphql(
             schema,
             `
@@ -319,7 +322,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                   }
                 }
@@ -331,6 +333,7 @@ describe('authenticate user account', () => {
               query,
               collections,
               transaction,
+              response: mockedResponse,
               uuidv4,
               auth: {
                 bcrypt,
@@ -353,7 +356,6 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
-                  refreshToken: 'token',
                 },
               },
             },
@@ -367,6 +369,12 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
+          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            httpOnly: true,
+            maxAge: 86400000,
+            sameSite: true,
+            secure: false,
+          })
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -404,7 +412,6 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
-                    refreshToken
                   }
                 }
               }
@@ -463,7 +470,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -544,7 +550,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -624,7 +629,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -698,7 +702,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -779,7 +782,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -859,7 +861,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -939,7 +940,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -1012,7 +1012,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -1093,7 +1092,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -1173,7 +1171,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -1247,7 +1244,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -1339,7 +1335,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1428,7 +1423,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1500,6 +1494,9 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
           `
 
+          const mockedCookie = jest.fn()
+          const mockedResponse = { cookie: mockedCookie }
+
           const response = await graphql(
             schema,
             `
@@ -1517,7 +1514,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1533,6 +1529,7 @@ describe('authenticate user account', () => {
               query,
               collections,
               transaction,
+              response: mockedResponse,
               uuidv4,
               auth: {
                 bcrypt,
@@ -1555,7 +1552,6 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   authToken: 'token',
-                  refreshToken: 'token',
                 },
               },
             },
@@ -1569,6 +1565,12 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
+          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            httpOnly: true,
+            maxAge: 86400000,
+            sameSite: true,
+            secure: false,
+          })
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -1606,7 +1608,6 @@ describe('authenticate user account', () => {
                   }
                   ... on AuthResult {
                     authToken
-                    refreshToken
                   }
                   ... on SignInError {
                     code
@@ -1669,7 +1670,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1751,7 +1751,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1831,7 +1830,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1905,7 +1903,6 @@ describe('authenticate user account', () => {
                     }
                     ... on AuthResult {
                       authToken
-                      refreshToken
                     }
                     ... on SignInError {
                       code
@@ -1987,7 +1984,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -2069,7 +2065,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -2151,7 +2146,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -2226,7 +2220,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -2309,7 +2302,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -2391,7 +2383,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
@@ -2467,7 +2458,6 @@ describe('authenticate user account', () => {
                       }
                       ... on AuthResult {
                         authToken
-                        refreshToken
                       }
                       ... on SignInError {
                         code
