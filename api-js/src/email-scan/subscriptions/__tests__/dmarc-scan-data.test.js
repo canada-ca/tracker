@@ -16,6 +16,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadDmarcGuidanceTagByTagId } from '../../../guidance-tag/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,8 @@ describe('given the dmarcScanData subscription', () => {
     dmarcScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain
 
   beforeAll(async () => {
     options = {
@@ -95,6 +97,10 @@ describe('given the dmarcScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
   })
 
   afterEach(async () => {
@@ -127,7 +133,10 @@ describe('given the dmarcScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(dmarcScan),
+                    JSON.stringify({
+                      domainKey: domain._key,
+                      results: dmarcScan,
+                    }),
                   )
                 },
               )
@@ -164,6 +173,9 @@ describe('given the dmarcScanData subscription', () => {
       parse(`
       subscription {
         dmarcScanData {
+          domain {
+            domain
+          }
           dmarcPhase
           record
           pPolicy
@@ -222,6 +234,7 @@ describe('given the dmarcScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
             query,
             userKey: '1',
@@ -237,6 +250,9 @@ describe('given the dmarcScanData subscription', () => {
     const expectedResult = {
       data: {
         dmarcScanData: {
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
           record: 'record',
           pPolicy: 'pPolicy',
           spPolicy: 'spPolicy',

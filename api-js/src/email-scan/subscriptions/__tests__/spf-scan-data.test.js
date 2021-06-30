@@ -16,6 +16,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,8 @@ describe('given the spfScanData subscription', () => {
     spfScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain
 
   beforeAll(async () => {
     options = {
@@ -94,6 +96,10 @@ describe('given the spfScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
   })
 
   afterEach(async () => {
@@ -126,7 +132,10 @@ describe('given the spfScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(spfScan),
+                    JSON.stringify({
+                      domainKey: domain._key,
+                      results: spfScan,
+                    }),
                   )
                 },
               )
@@ -163,6 +172,9 @@ describe('given the spfScanData subscription', () => {
       parse(`
       subscription {
         spfScanData {
+          domain {
+            domain
+          }
           lookups
           record
           spfDefault
@@ -219,6 +231,7 @@ describe('given the spfScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
             query,
             userKey: '1',
@@ -234,6 +247,9 @@ describe('given the spfScanData subscription', () => {
     const expectedResult = {
       data: {
         spfScanData: {
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
           lookups: 1,
           record: 'record',
           spfDefault: 'spfDefault',
