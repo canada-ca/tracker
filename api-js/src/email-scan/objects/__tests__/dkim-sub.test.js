@@ -3,11 +3,18 @@ import { GraphQLList } from 'graphql'
 
 import { databaseOptions } from '../../../../database-options'
 import { dkimResultSubType, dkimSubType } from '../index'
+import { domainType } from '../../../domain/objects'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dkimSubType object', () => {
   describe('testing its field definitions', () => {
+    it('has a domain field', () => {
+      const demoType = dkimSubType.getFields()
+
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(domainType)
+    })
     it('has results field', () => {
       const demoType = dkimSubType.getFields()
 
@@ -18,6 +25,34 @@ describe('given the dkimSubType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
+    describe('testing the domain resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dkimSubType.getFields()
+        const expectedResult = {
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
+          _type: 'domain',
+          id: '1',
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
+
+        await expect(
+          demoType.domain.resolve(
+            { domainKey: '1' },
+            {},
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
     describe('testing the results resolver', () => {
       let drop, truncate, collections, dkimGT
 
