@@ -355,7 +355,7 @@ function DmarcReportTable({ ...props }) {
           <Box ml="auto" />
 
           {infoState && (
-            <InfoButton label="More Info" state={infoState} changeState={changeInfoState} />
+            <InfoButton label="Glossary" state={infoState} changeState={changeInfoState} />
           )}
         </Stack>
 

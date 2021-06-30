@@ -122,7 +122,7 @@ export default function Organisations() {
 
         <Box ml="auto" />
 
-        <InfoButton label="More Info" state={infoState} changeState={changeInfoState} />
+        <InfoButton label="Glossary" state={infoState} changeState={changeInfoState} />
       </Stack>
 
       <InfoPanel
