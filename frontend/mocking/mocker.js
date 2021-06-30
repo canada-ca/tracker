@@ -474,7 +474,11 @@ const getConnectionObject = (store, args, resolveInfo) => {
   }
 }
 
-const NEW_DKIM_DATA = 'NEW_DKIM_DATA'
+const NEW_DKIM_DATA_STREAM = 'NEW_DKIM_DATA'
+const NEW_DMARC_DATA_STREAM = 'NEW_DMARC_DATA'
+const NEW_SPF_DATA_STREAM = 'NEW_SPF_DATA'
+const NEW_HTTPS_DATA_STREAM = 'NEW_HTTPS_DATA'
+const NEW_SSL_DATA_STREAM = 'NEW_SLL_DATA'
 
 // Create a new schema with mocks and resolvers
 const schemaWithMocks = addMocksToSchema({
@@ -518,10 +522,41 @@ const schemaWithMocks = addMocksToSchema({
       },
     },
     Mutation: {
-      requestScan: async (_, _args, _context, _resolveInfo) => {
-        // await pubsub.publish(DKIM_SCAN_DATA, {
-        //   dkimScanData: { results: { selector: 'SELECTOR' } },
-        // })
+      requestScan: async (_, _args, context, _resolveInfo) => {
+        const dkimScanData = store.get('DkimSub', faker.datatype.uuid())
+        setTimeout(() => {
+          pubsub.publish(`${NEW_DKIM_DATA_STREAM}/${context.token}`, {
+            dkimScanData: dkimScanData,
+          })
+        }, Math.random() * 1000)
+
+        const dmarcScanData = store.get('DmarcSub', faker.datatype.uuid())
+        setTimeout(() => {
+          pubsub.publish(`${NEW_DMARC_DATA_STREAM}/${context.token}`, {
+            dmarcScanData: dmarcScanData,
+          })
+        }, Math.random() * 1000)
+
+        const spfScanData = store.get('SpfSub', faker.datatype.uuid())
+        setTimeout(() => {
+          pubsub.publish(`${NEW_SPF_DATA_STREAM}/${context.token}`, {
+            spfScanData: spfScanData,
+          })
+        }, Math.random() * 1000)
+
+        const httpsScanData = store.get('HttpsSub', faker.datatype.uuid())
+        setTimeout(() => {
+          pubsub.publish(`${NEW_HTTPS_DATA_STREAM}/${context.token}`, {
+            httpsScanData: httpsScanData,
+          })
+        }, Math.random() * 1000)
+
+        const sslScanData = store.get('SslSub', faker.datatype.uuid())
+        setTimeout(() => {
+          pubsub.publish(`${NEW_SSL_DATA_STREAM}/${context.token}`, {
+            sslScanData: sslScanData,
+          })
+        }, Math.random() * 1000)
 
         return {
           status: 'Scan requested.',
@@ -585,7 +620,30 @@ const schemaWithMocks = addMocksToSchema({
     },
     Subscription: {
       dkimScanData: {
-        subscribe: (_, _args, _context) => pubsub.asyncIterator(NEW_DKIM_DATA),
+        resolve: () => {},
+        subscribe: (_, _args, context) =>
+          pubsub.asyncIterator(`${NEW_DKIM_DATA_STREAM}/${context.token}`),
+      },
+      dmarcScanData: {
+        subscribe: (_, _args, context) => {
+          const stream = `${NEW_DMARC_DATA_STREAM}/${context.token}`
+
+          return pubsub.asyncIterator(
+            `${NEW_DMARC_DATA_STREAM}/${context.token}`,
+          )
+        },
+      },
+      spfScanData: {
+        subscribe: (_, _args, context) =>
+          pubsub.asyncIterator(`${NEW_SPF_DATA_STREAM}/${context.token}`),
+      },
+      httpsScanData: {
+        subscribe: (_, _args, context) =>
+          pubsub.asyncIterator(`${NEW_HTTPS_DATA_STREAM}/${context.token}`),
+      },
+      sslScanData: {
+        subscribe: (_, _args, context) =>
+          pubsub.asyncIterator(`${NEW_SSL_DATA_STREAM}/${context.token}`),
       },
     },
   }),
@@ -593,13 +651,26 @@ const schemaWithMocks = addMocksToSchema({
 
 const server = new ApolloServer({
   schema: schemaWithMocks,
-  context: ({ req }) => {
+  context: ({ req, connection }) => {
+    if (connection) {
+      // Operation is a Subscription
+      const token = connection.context.authorization
+
+      return { token }
+    }
+
     const token = req.headers.authorization
 
     return { token }
   },
   subscriptions: {
-    path: '/subscriptions',
+    onConnect: (connectionParams, _websocket) => {
+      if (connectionParams.authorization) {
+        return connectionParams
+      }
+
+      throw new Error(`Authentication error. Please sign in.`)
+    },
   },
 })
 

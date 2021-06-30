@@ -24,6 +24,11 @@ export function createCache() {
           findMyOrganizations: relayStylePagination(['isAdmin']),
         },
       },
+      // Subscription: {
+      //   fields: {
+      //     dmarcScanData
+      //   },
+      // },
       Organization: {
         fields: {
           domains: relayStylePagination(),
@@ -70,18 +75,39 @@ export const currentUserVar = makeVar({
 })
 
 const httpLink = createHttpLink({
-  uri: 'https://tracker.alpha.canada.ca/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? 'https://tracker.alpha.canada.ca/graphql'
+      : '/graphql',
 })
 
+const headersLink = setContext((_, { headers }) => {
+  const language = i18n.locale
+
+  return {
+    headers: {
+      ...headers,
+      ...(currentUserVar().jwt && { authorization: currentUserVar().jwt }),
+      'Accept-Language': language,
+    },
+  }
+})
+
+const httpLinkWithHeaders = headersLink.concat(httpLink)
+
 const wsLink = new WebSocketLink({
-  uri: 'wss://tracker.alpha.canada.ca/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? 'wss://tracker.alpha.canada.ca/graphql'
+      : 'ws://localhost:3000/graphql',
+
   options: {
+    lazy: true,
+    reconnect: true,
     connectionParams: () => {
       return {
-        headers: {
-          'Accept-Language': i18n.locale,
-          authentication: currentUserVar().jwt,
-        },
+        'Accept-Language': i18n.locale,
+        authorization: currentUserVar().jwt,
       }
     },
   },
@@ -96,22 +122,10 @@ const splitLink = split(
     )
   },
   wsLink,
-  httpLink,
+  httpLinkWithHeaders,
 )
 
-const headersLink = setContext((_, { headers }) => {
-  const language = i18n.locale
-
-  return {
-    headers: {
-      ...headers,
-      ...(currentUserVar().jwt && { authorization: currentUserVar().jwt }),
-      'Accept-Language': language,
-    },
-  }
-})
-
 export const client = new ApolloClient({
-  link: headersLink.concat(splitLink),
+  link: splitLink,
   cache,
 })

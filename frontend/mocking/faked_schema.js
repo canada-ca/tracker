@@ -3382,6 +3382,12 @@ export const getTypeNames = () => gql`
 
   # Individual one-off scans results for the given dkim selector.
   type DkimResultSub {
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The time when the scan was initiated.
+    timestamp: Date
+
     # The selector the scan was ran on.
     selector: String
 
@@ -3406,6 +3412,12 @@ export const getTypeNames = () => gql`
 
   # DMARC gql object containing the fields for the \`dkimScanData\` subscription.
   type DmarcSub {
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The time when the scan was initiated.
+    timestamp: Date
+
     # DMARC record retrieved during scan.
     record: String
 
@@ -3435,6 +3447,12 @@ export const getTypeNames = () => gql`
 
   # SPF gql object containing the fields for the \`dkimScanData\` subscription.
   type SpfSub {
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The time when the scan was initiated.
+    timestamp: Date
+
     # The amount of DNS lookups.
     lookups: Int
 
@@ -3459,6 +3477,12 @@ export const getTypeNames = () => gql`
 
   # HTTPS gql object containing the fields for the \`dkimScanData\` subscription.
   type HttpsSub {
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The time when the scan was initiated.
+    timestamp: Date
+
     # State of the HTTPS implementation on the server and any issues therein.
     implementation: String
 
@@ -3489,6 +3513,12 @@ export const getTypeNames = () => gql`
 
   # SSL gql object containing the fields for the \`dkimScanData\` subscription.
   type SslSub {
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The time when the scan was initiated.
+    timestamp: Date
+
     # List of ciphers in use by the server deemed to be "acceptable".
     acceptableCiphers: [String]
 

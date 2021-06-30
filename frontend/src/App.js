@@ -18,6 +18,7 @@ import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
+import RequestScanNotificationHandler from './RequestScanNotificationHandler'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -47,6 +48,7 @@ export default function App() {
 
   return (
     <>
+      <RequestScanNotificationHandler minHeight="200px" />
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />
