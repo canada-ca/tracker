@@ -10,12 +10,13 @@ import {
   GraphQLID,
 } from 'graphql'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
+import { toGlobalId } from 'graphql-relay'
 
 import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
-import { toGlobalId } from 'graphql-relay'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,8 @@ describe('given the spfScanData subscription', () => {
     sslScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain
 
   beforeAll(async () => {
     options = {
@@ -108,6 +110,10 @@ describe('given the spfScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
   })
 
   afterEach(async () => {
@@ -140,7 +146,10 @@ describe('given the spfScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${SSL_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(sslScan),
+                    JSON.stringify({
+                      domainKey: domain._key,
+                      results: sslScan,
+                    }),
                   )
                 },
               )
@@ -177,6 +186,9 @@ describe('given the spfScanData subscription', () => {
       parse(`
       subscription {
         sslScanData {
+          domain {
+            domain
+          }
           acceptableCiphers
           acceptableCurves
           ccsInjectionVulnerable
@@ -239,6 +251,7 @@ describe('given the spfScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
             query,
             userKey: '1',
@@ -254,6 +267,9 @@ describe('given the spfScanData subscription', () => {
     const expectedResult = {
       data: {
         sslScanData: {
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
           acceptableCiphers: [
             'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
             'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',

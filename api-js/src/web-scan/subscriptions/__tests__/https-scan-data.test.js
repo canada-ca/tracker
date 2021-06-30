@@ -16,6 +16,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,8 @@ describe('given the httpsScanData subscription', () => {
     httpsScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain
 
   beforeAll(async () => {
     options = {
@@ -95,6 +97,10 @@ describe('given the httpsScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
   })
 
   afterEach(async () => {
@@ -127,7 +133,10 @@ describe('given the httpsScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${HTTPS_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(httpsScan),
+                    JSON.stringify({
+                      domainKey: domain._key,
+                      results: httpsScan,
+                    }),
                   )
                 },
               )
@@ -165,6 +174,9 @@ describe('given the httpsScanData subscription', () => {
       parse(`
       subscription {
         httpsScanData {
+          domain {
+            domain
+          }
           implementation
           enforced
           hsts
@@ -223,6 +235,7 @@ describe('given the httpsScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
             query,
             userKey: '1',
@@ -238,6 +251,9 @@ describe('given the httpsScanData subscription', () => {
     const expectedResult = {
       data: {
         httpsScanData: {
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
           implementation: 'Valid HTTPS',
           enforced: 'Strict',
           hsts: 'No HSTS',
