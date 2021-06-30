@@ -215,6 +215,7 @@ describe('authenticate user account', () => {
             query,
             collections,
             transaction,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
@@ -703,6 +704,7 @@ describe('authenticate user account', () => {
             query,
             collections,
             transaction,
+            uuidv4,
             auth: {
               bcrypt,
               tokenize,
