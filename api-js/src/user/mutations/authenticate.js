@@ -168,7 +168,6 @@ export const authenticate = new mutationWithClientMutationId({
       return {
         _type: 'authResult',
         token,
-        refreshToken,
         user,
       }
     } else {
