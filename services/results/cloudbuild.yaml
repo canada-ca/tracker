@@ -10,23 +10,23 @@ steps:
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-results
-    dir: services/scanners/results
+    dir: services/results
     entrypoint: /bin/sh
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: services/scanners/results
+    dir: services/results
     args:
       - '-c'
       - |
-        echo "gcr.io/$PROJECT_ID/services/scanners/results:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/services/results:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-results-if-master
     entrypoint: 'bash'
-    dir: services/scanners/results
+    dir: services/results
     args:
       -  '-c'
       - |
@@ -41,7 +41,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: push-results-if-master
     entrypoint: 'bash'
-    dir: services/scanners/results
+    dir: services/results
     args:
       - '-c'
       - |

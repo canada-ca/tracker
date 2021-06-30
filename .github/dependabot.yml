@@ -6,105 +6,105 @@ updates:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: npm
   directory: "/api-js"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
   directory: "/ci"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/clients/python"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
   directory: "/frontend"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: npm
   directory: "/frontend"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-    
+
 - package-ecosystem: docker
   directory: "/services/auto-scan"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/services/auto-scan"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-    
+
 - package-ecosystem: docker
   directory: "/services/core"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/services/core"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
   directory: "/services/dmarc-report"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: npm
   directory: "/services/dmarc-report"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
   directory: "/services/result-queue"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/services/result-queue"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
   directory: "/services/scanners/dns"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/services/scanners/dns"
   schedule:
@@ -118,67 +118,66 @@ updates:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/services/scanners/https"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
-  directory: "/services/scanners/results"
+  directory: "/services/results"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-    
+
 - package-ecosystem: pip
-  directory: "/services/scanners/results"
+  directory: "/services/results"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
   directory: "/services/scanners/ssl"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/services/scanners/ssl"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-    
+
 - package-ecosystem: docker
   directory: "/services/scan-queue"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: pip
   directory: "/services/scan-queue"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: docker
   directory: "/services/super-admin"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
+
 - package-ecosystem: npm
   directory: "/services/super-admin"
   schedule:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
-  
