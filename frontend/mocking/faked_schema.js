@@ -96,7 +96,10 @@ export const getTypeNames = () => gql`
     ): SharedUser
 
     # Query used to check if the user has an admin role.
-    isUserAdmin: Boolean
+    isUserAdmin(
+      # The organization that you want to check for admin permissions on.
+      orgId: ID!
+    ): Boolean
 
     # Query used to check if the user has a super admin role.
     isUserSuperAdmin: Boolean

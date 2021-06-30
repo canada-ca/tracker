@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { theme, ThemeProvider } from '@chakra-ui/core'
 import { UserVarProvider } from '../UserState'
-import { ORG_DETAILS_PAGE } from '../graphql/queries'
+import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import OrganizationDetails from '../OrganizationDetails'
@@ -110,6 +110,17 @@ describe('<OrganizationDetails />', () => {
             },
           },
         },
+        {
+          request: {
+            query: IS_USER_ADMIN,
+            variables: { orgId: 'ODk3MDg5MzI2MA==' },
+          },
+          result: {
+            data: {
+              isUserAdmin: true,
+            },
+          },
+        },
       ]
 
       const { getByText } = render(
@@ -139,6 +150,7 @@ describe('<OrganizationDetails />', () => {
 
       await waitFor(() => {
         expect(getByText(name)).toBeInTheDocument()
+        expect(getByText('Users')).toBeInTheDocument()
       })
     })
   })

@@ -1368,3 +1368,9 @@ export const IS_USER_SUPER_ADMIN = gql`
     isUserSuperAdmin
   }
 `
+
+export const IS_USER_ADMIN = gql`
+  query IsUserAdmin($orgId: ID!) {
+    isUserAdmin(orgId: $orgId)
+  }
+`
