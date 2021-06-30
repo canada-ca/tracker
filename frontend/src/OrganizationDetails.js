@@ -67,9 +67,7 @@ export default function OrganizationDetails() {
   let isAdmin = false
   if (isAdminData?.isUserAdmin) {
     isAdmin = isAdminData.isUserAdmin
-
   }
-  console.log("isAdmin: " + isAdmin)
 
   let orgName = ''
   if (data?.organization) {
