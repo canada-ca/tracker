@@ -22,7 +22,7 @@ export default function AdminPage() {
     nextFetchPolicy: 'cache-first',
     variables: {
       first: 100,
-      orderBy: { field: 'ACRONYM', direction: 'ASC' },
+      orderBy: { field: 'NAME', direction: 'ASC' },
       isAdmin: true,
       includeSuperAdminOrg: true,
     },
@@ -63,8 +63,8 @@ export default function AdminPage() {
 
   const options = []
   data.findMyOrganizations?.edges.forEach((edge) => {
-    const { slug, acronym, id } = edge.node
-    options.push({ label: acronym, value: { slug: slug, id: id } })
+    const { slug, name, id } = edge.node
+    options.push({ label: name, value: { slug: slug, id: id } })
   })
 
   if (options.length > 1) {
@@ -79,7 +79,7 @@ export default function AdminPage() {
             <Text fontWeight="bold" fontSize="2xl">
               <Trans>Organization: </Trans>
             </Text>
-            <Box w="25%" mx="2">
+            <Box w={['100%', '60%']} mx="2">
               <Select
                 onChange={(opt) => {
                   setOrgDetails(opt.value)

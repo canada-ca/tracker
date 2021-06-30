@@ -874,7 +874,7 @@ export const PAGINATED_DMARC_REPORT = gql`
     $year: Year!
     $after: String
     $first: Int
-    ) {
+  ) {
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
@@ -1342,7 +1342,6 @@ export const ADMIN_AFFILIATIONS = gql`
     $orderBy: OrganizationOrder
     $isAdmin: Boolean
     $includeSuperAdminOrg: Boolean
-    $search: String
   ) {
     findMyOrganizations(
       after: $after
@@ -1359,6 +1358,7 @@ export const ADMIN_AFFILIATIONS = gql`
           id
           acronym
           slug
+          name
         }
       }
     }
