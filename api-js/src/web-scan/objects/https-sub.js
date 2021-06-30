@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
+import { domainType } from '../../domain/objects'
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const httpsSubType = new GraphQLObjectType({
@@ -8,6 +9,14 @@ export const httpsSubType = new GraphQLObjectType({
   description:
     'HTTPS gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ domainKey }, _, { loaders: { loadDomainByKey } }) => {
+        const domain = await loadDomainByKey.load(domainKey)
+        return domain
+      },
+    },
     implementation: {
       type: GraphQLString,
       description: `State of the HTTPS implementation on the server and any issues therein.`,
