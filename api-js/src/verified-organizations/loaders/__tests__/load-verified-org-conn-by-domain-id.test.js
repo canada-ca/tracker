@@ -173,7 +173,7 @@ describe('given the load organizations connection function', () => {
           domainTwo,
           domainThree
 
-        beforeEach(async () => {
+        beforeAll(async () => {
           ;({ query, drop, truncate, collections } = await ensure({
             type: 'database',
             name: dbNameFromFile(__filename),
@@ -181,6 +181,8 @@ describe('given the load organizations connection function', () => {
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
           }))
+        })
+        beforeEach(async () => {
           org = await collections.organizations.save(orgOneData)
           orgTwo = await collections.organizations.save(orgTwoData)
 
