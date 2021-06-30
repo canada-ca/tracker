@@ -6,11 +6,18 @@ import { databaseOptions } from '../../../../database-options'
 import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { httpsSubType } from '../index'
+import { domainType } from '../../../domain/objects'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the httpsSubType object', () => {
   describe('testing its field definitions', () => {
+    it('has a domain field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(domainType)
+    })
     it('has implementation field', () => {
       const demoType = httpsSubType.getFields()
 
@@ -73,6 +80,35 @@ describe('given the httpsSubType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
+    describe('testing the domain resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = httpsSubType.getFields()
+
+        const expectedResult = {
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
+          _type: 'domain',
+          id: '1',
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
+
+        await expect(
+          demoType.domain.resolve(
+            { domainKey: '1' },
+            {},
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
     describe('testing the implementation resolver', () => {
       it('returns the parsed value', () => {
         const demoType = httpsSubType.getFields()

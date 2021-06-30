@@ -16,6 +16,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadDkimGuidanceTagById } from '../../../guidance-tag/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,8 @@ describe('given the dkimScanData subscription', () => {
     dkimScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain
 
   beforeAll(async () => {
     options = {
@@ -97,6 +99,10 @@ describe('given the dkimScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
   })
 
   afterEach(async () => {
@@ -129,7 +135,10 @@ describe('given the dkimScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${DKIM_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(dkimScan),
+                    JSON.stringify({
+                      domainKey: domain._key,
+                      results: dkimScan,
+                    }),
                   )
                 },
               )
@@ -166,6 +175,9 @@ describe('given the dkimScanData subscription', () => {
       parse(`
       subscription {
         dkimScanData {
+          domain {
+            domain
+          }
           results {
             selector
             record
@@ -224,6 +236,7 @@ describe('given the dkimScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadDkimGuidanceTagById: loadDkimGuidanceTagById({
             query,
             userKey: '1',
@@ -239,6 +252,9 @@ describe('given the dkimScanData subscription', () => {
     const expectedResult = {
       data: {
         dkimScanData: {
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
           results: [
             {
               selector: 'selector',
