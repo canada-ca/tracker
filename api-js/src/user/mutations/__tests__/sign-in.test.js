@@ -289,95 +289,198 @@ describe('authenticate user account', () => {
         })
       })
       describe('user has send method set to none', () => {
-        it('returns an auth result with an auth token', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          let user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
-          `
-
-          const mockedCookie = jest.fn()
-          const mockedResponse = { cookie: mockedCookie }
-
-          const response = await graphql(
-            schema,
+        describe('user has rememberMe set to false', () => {
+          it('returns an auth result with an auth token', async () => {
+            let cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
             `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+            let user = await cursor.next()
+
+            await query`
+              FOR user IN users
+                UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+            `
+
+            const mockedCookie = jest.fn()
+            const mockedResponse = { cookie: mockedCookie }
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              response: mockedResponse,
-              uuidv4,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              signIn: {
-                result: {
-                  authToken: 'token',
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                response: mockedResponse,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: loadUserByUserName({ query }),
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
                 },
               },
-            },
-          }
+            )
 
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await cursor.next()
+            const expectedResponse = {
+              data: {
+                signIn: {
+                  result: {
+                    authToken: 'token',
+                  },
+                },
+              },
+            }
 
-          expect(response).toEqual(expectedResponse)
-          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-            httpOnly: true,
-            maxAge: 86400000,
-            sameSite: true,
-            secure: false,
+            cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
+            `
+            user = await cursor.next()
+
+            expect(response).toEqual(expectedResponse)
+            expect(mockedCookie).toHaveBeenCalledWith(
+              'refresh_token',
+              'token',
+              {
+                httpOnly: true,
+                expires: 0,
+                sameSite: true,
+                secure: false,
+              },
+            )
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully signed in, and sent auth msg.`,
+            ])
           })
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
+        })
+        describe('user has rememberMe set to true', () => {
+          it('returns an auth result with an auth token', async () => {
+            let cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
+            `
+            let user = await cursor.next()
+
+            await query`
+              FOR user IN users
+                UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+            `
+
+            const mockedCookie = jest.fn()
+            const mockedResponse = { cookie: mockedCookie }
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                      rememberMe: true
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                response: mockedResponse,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: loadUserByUserName({ query }),
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+
+            const expectedResponse = {
+              data: {
+                signIn: {
+                  result: {
+                    authToken: 'token',
+                  },
+                },
+              },
+            }
+
+            cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
+            `
+            user = await cursor.next()
+
+            expect(response).toEqual(expectedResponse)
+            expect(mockedCookie).toHaveBeenCalledWith(
+              'refresh_token',
+              'token',
+              {
+                httpOnly: true,
+                maxAge: 86400000,
+                sameSite: true,
+                secure: false,
+              },
+            )
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully signed in, and sent auth msg.`,
+            ])
+          })
         })
       })
     })
@@ -1481,99 +1584,198 @@ describe('authenticate user account', () => {
         })
       })
       describe('user has send method set to none', () => {
-        it('returns an auth result with an auth token', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          let user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
-          `
-
-          const mockedCookie = jest.fn()
-          const mockedResponse = { cookie: mockedCookie }
-
-          const response = await graphql(
-            schema,
+        describe('user has rememberMe set to false', () => {
+          it('returns an auth result with an auth token', async () => {
+            let cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
             `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  result {
-                    ... on TFASignInResult {
-                      authenticateToken
-                      sendMethod
+            let user = await cursor.next()
+
+            await query`
+              FOR user IN users
+                UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+            `
+
+            const mockedCookie = jest.fn()
+            const mockedResponse = { cookie: mockedCookie }
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
                     }
-                    ... on AuthResult {
-                      authToken
-                    }
-                    ... on SignInError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              response: mockedResponse,
-              uuidv4,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              signIn: {
-                result: {
-                  authToken: 'token',
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                response: mockedResponse,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: loadUserByUserName({ query }),
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
                 },
               },
-            },
-          }
+            )
 
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await cursor.next()
+            const expectedResponse = {
+              data: {
+                signIn: {
+                  result: {
+                    authToken: 'token',
+                  },
+                },
+              },
+            }
 
-          expect(response).toEqual(expectedResponse)
-          expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-            httpOnly: true,
-            maxAge: 86400000,
-            sameSite: true,
-            secure: false,
+            cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
+            `
+            user = await cursor.next()
+
+            expect(response).toEqual(expectedResponse)
+            expect(mockedCookie).toHaveBeenCalledWith(
+              'refresh_token',
+              'token',
+              {
+                httpOnly: true,
+                expires: 0,
+                sameSite: true,
+                secure: false,
+              },
+            )
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully signed in, and sent auth msg.`,
+            ])
           })
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
+        })
+        describe('user has rememberMe set to true', () => {
+          it('returns an auth result with an auth token', async () => {
+            let cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
+            `
+            let user = await cursor.next()
+
+            await query`
+              FOR user IN users
+                UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
+            `
+
+            const mockedCookie = jest.fn()
+            const mockedResponse = { cookie: mockedCookie }
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  signIn(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "testpassword123"
+                      rememberMe: true
+                    }
+                  ) {
+                    result {
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
+                      }
+                      ... on AuthResult {
+                        authToken
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                response: mockedResponse,
+                uuidv4,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: loadUserByUserName({ query }),
+                },
+                notify: {
+                  sendAuthEmail: mockNotify,
+                },
+              },
+            )
+
+            const expectedResponse = {
+              data: {
+                signIn: {
+                  result: {
+                    authToken: 'token',
+                  },
+                },
+              },
+            }
+
+            cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN MERGE({ id: user._key }, user)
+            `
+            user = await cursor.next()
+
+            expect(response).toEqual(expectedResponse)
+            expect(mockedCookie).toHaveBeenCalledWith(
+              'refresh_token',
+              'token',
+              {
+                httpOnly: true,
+                maxAge: 86400000,
+                sameSite: true,
+                secure: false,
+              },
+            )
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully signed in, and sent auth msg.`,
+            ])
+          })
         })
       })
     })

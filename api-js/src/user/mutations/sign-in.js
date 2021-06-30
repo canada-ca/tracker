@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
@@ -19,6 +19,12 @@ export const signIn = new mutationWithClientMutationId({
     password: {
       type: GraphQLNonNull(GraphQLString),
       description: 'The password the user signed up with',
+    },
+    rememberMe: {
+      type: GraphQLBoolean,
+      defaultValue: false,
+      description:
+        'Whether or not the user wants to stay signed in after leaving the site.',
     },
   }),
   outputFields: () => ({
@@ -47,6 +53,7 @@ export const signIn = new mutationWithClientMutationId({
     // Cleanse input
     const userName = cleanseInput(args.userName).toLowerCase()
     const password = cleanseInput(args.password)
+    const rememberMe = args.rememberMe
 
     // Gather user who just signed in
     let user = await loadUserByUserName.load(userName)
@@ -105,6 +112,15 @@ export const signIn = new mutationWithClientMutationId({
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
 
+        const refreshId = uuidv4()
+        const refreshInfo = {
+          refreshId,
+          expiresAt: new Date(
+            new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+          ),
+          rememberMe,
+        }
+
         if (user.tfaSendMethod !== 'none') {
           // Generate TFA code
           const tfaCode = Math.floor(100000 + Math.random() * 900000)
@@ -115,8 +131,14 @@ export const signIn = new mutationWithClientMutationId({
               () => query`
                 WITH users
                 UPSERT { _key: ${user._key} }
-                  INSERT { tfaCode: ${tfaCode} }
-                  UPDATE { tfaCode: ${tfaCode} }
+                  INSERT { 
+                    tfaCode: ${tfaCode},
+                    refreshInfo: ${refreshInfo}
+                  }
+                  UPDATE { 
+                    tfaCode: ${tfaCode},
+                    refreshInfo: ${refreshInfo}
+                  }
                   IN users
                 `,
             )
@@ -165,12 +187,6 @@ export const signIn = new mutationWithClientMutationId({
             authenticateToken,
           }
         } else {
-          const refreshId = uuidv4()
-          const refreshInfo = {
-            refreshId,
-            expiresAt: new Date(new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000),
-          }
-
           try {
             await trx.step(
               () => query`
@@ -207,12 +223,25 @@ export const signIn = new mutationWithClientMutationId({
             secret: String(REFRESH_KEY),
           })
 
-          response.cookie('refresh_token', refreshToken, {
-            maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+          // if the user does not want to stay logged in, create http session cookie
+          let cookieData = {
             httpOnly: true,
             secure: false,
             sameSite: true,
-          })
+            expires: 0,
+          }
+
+          // if user wants to stay logged in create normal http cookie
+          if (rememberMe) {
+            cookieData = {
+              maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+              httpOnly: true,
+              secure: false,
+              sameSite: true,
+            }
+          }
+
+          response.cookie('refresh_token', refreshToken, cookieData)
 
           console.info(
             `User: ${user._key} successfully signed in, and sent auth msg.`,
