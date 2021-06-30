@@ -110,6 +110,7 @@ export const refreshTokens = new mutationWithClientMutationId({
 
     const refreshInfo = {
       refreshId: newRefreshId,
+      rememberMe: user.refreshInfo.rememberMe,
       expiresAt: new Date(
         new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
       ),
@@ -160,12 +161,25 @@ export const refreshTokens = new mutationWithClientMutationId({
       secret: String(REFRESH_KEY),
     })
 
-    response.cookie('refresh_token', newRefreshToken, {
-      maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+    // if the user does not want to stay logged in, create http session cookie
+    let cookieData = {
       httpOnly: true,
       secure: false,
       sameSite: true,
-    })
+      expires: 0,
+    }
+
+    // if user wants to stay logged in create normal http cookie
+    if (user.refreshInfo.rememberMe) {
+      cookieData = {
+        maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        httpOnly: true,
+        secure: false,
+        sameSite: true,
+      }
+    }
+
+    response.cookie('refresh_token', newRefreshToken, cookieData)
 
     return {
       _type: 'authResult',

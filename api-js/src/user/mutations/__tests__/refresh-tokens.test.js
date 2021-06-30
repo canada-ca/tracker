@@ -40,20 +40,6 @@ describe('refresh users tokens', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'english',
-      phoneValidated: false,
-      emailValidated: false,
-      tfaCode: null,
-      refreshInfo: {
-        refreshId: '1234',
-        expiresAt: '2021-07-01T12:00:00',
-      },
-    })
-  })
   afterEach(async () => {
     consoleOutput.length = 0
     await truncate()
@@ -63,91 +49,211 @@ describe('refresh users tokens', () => {
   })
 
   describe('given a successful refresh', () => {
-    it('returns a new auth, and refresh token', async () => {
-      const refreshToken = tokenize({
-        parameters: { userKey: user._key, uuid: '1234' },
-        expPeriod: 168,
-        secret: String(REFRESH_KEY),
+    describe('user has rememberMe disabled', () => {
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+          phoneValidated: false,
+          emailValidated: false,
+          tfaCode: null,
+          refreshInfo: {
+            refreshId: '1234',
+            expiresAt: '2021-07-01T12:00:00',
+            rememberMe: false,
+          },
+        })
       })
-      const mockedRequest = { cookies: { refresh_token: refreshToken } }
+      it('returns a new auth, and refresh token', async () => {
+        const refreshToken = tokenize({
+          parameters: { userKey: user._key, uuid: '1234' },
+          expPeriod: 168,
+          secret: String(REFRESH_KEY),
+        })
+        const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
-      const mockedFormat = jest
-        .fn()
-        .mockReturnValueOnce('2021-06-30T12:00:00')
-        .mockReturnValueOnce('2021-07-01T12:00:00')
-      const mockedMoment = jest.fn().mockReturnValue({
-        format: mockedFormat,
-        isAfter: jest.fn().mockReturnValue(false),
-      })
+        const mockedFormat = jest
+          .fn()
+          .mockReturnValueOnce('2021-06-30T12:00:00')
+          .mockReturnValueOnce('2021-07-01T12:00:00')
+        const mockedMoment = jest.fn().mockReturnValue({
+          format: mockedFormat,
+          isAfter: jest.fn().mockReturnValue(false),
+        })
 
-      const mockedCookie = jest.fn()
-      const mockedResponse = { cookie: mockedCookie }
+        const mockedCookie = jest.fn()
+        const mockedResponse = { cookie: mockedCookie }
 
-      const response = await graphql(
-        schema,
-        `
-          mutation {
-            refreshTokens(input: {}) {
-              result {
-                ... on AuthResult {
-                  authToken
-                  user {
-                    displayName
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              refreshTokens(input: {}) {
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      displayName
+                    }
                   }
-                }
-                ... on AuthenticateError {
-                  code
-                  description
+                  ... on AuthenticateError {
+                    code
+                    description
+                  }
                 }
               }
             }
-          }
-        `,
-        null,
-        {
-          query,
-          collections,
-          transaction,
-          uuidv4,
-          jwt,
-          moment: mockedMoment,
-          request: mockedRequest,
-          response: mockedResponse,
-          auth: {
-            tokenize: jest.fn().mockReturnValue('token'),
+          `,
+          null,
+          {
+            query,
+            collections,
+            transaction,
+            uuidv4,
+            jwt,
+            moment: mockedMoment,
+            request: mockedRequest,
+            response: mockedResponse,
+            auth: {
+              tokenize: jest.fn().mockReturnValue('token'),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
           },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            loadUserByKey: loadUserByKey({ query }),
-          },
-        },
-      )
+        )
 
-      const expectedResult = {
-        data: {
-          refreshTokens: {
-            result: {
-              authToken: 'token',
-              user: {
-                displayName: 'Test Account',
+        const expectedResult = {
+          data: {
+            refreshTokens: {
+              result: {
+                authToken: 'token',
+                user: {
+                  displayName: 'Test Account',
+                },
               },
             },
           },
-        },
-      }
+        }
 
-      expect(response).toEqual(expectedResult)
-      expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-        httpOnly: true,
-        maxAge: 86400000,
-        sameSite: true,
-        secure: false,
+        expect(response).toEqual(expectedResult)
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+          httpOnly: true,
+          expires: 0,
+          sameSite: true,
+          secure: false,
+        })
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully refreshed their tokens.`,
+        ])
       })
-      expect(consoleOutput).toEqual([
-        `User: ${user._key} successfully refreshed their tokens.`,
-      ])
+    })
+    describe('user has rememberMe enabled', () => {
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+          phoneValidated: false,
+          emailValidated: false,
+          tfaCode: null,
+          refreshInfo: {
+            refreshId: '1234',
+            expiresAt: '2021-07-01T12:00:00',
+            rememberMe: true,
+          },
+        })
+      })
+      it('returns a new auth, and refresh token', async () => {
+        const refreshToken = tokenize({
+          parameters: { userKey: user._key, uuid: '1234' },
+          expPeriod: 168,
+          secret: String(REFRESH_KEY),
+        })
+        const mockedRequest = { cookies: { refresh_token: refreshToken } }
+
+        const mockedFormat = jest
+          .fn()
+          .mockReturnValueOnce('2021-06-30T12:00:00')
+          .mockReturnValueOnce('2021-07-01T12:00:00')
+        const mockedMoment = jest.fn().mockReturnValue({
+          format: mockedFormat,
+          isAfter: jest.fn().mockReturnValue(false),
+        })
+
+        const mockedCookie = jest.fn()
+        const mockedResponse = { cookie: mockedCookie }
+
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              refreshTokens(input: {}) {
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      displayName
+                    }
+                  }
+                  ... on AuthenticateError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            query,
+            collections,
+            transaction,
+            uuidv4,
+            jwt,
+            moment: mockedMoment,
+            request: mockedRequest,
+            response: mockedResponse,
+            auth: {
+              tokenize: jest.fn().mockReturnValue('token'),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
+          },
+        )
+
+        const expectedResult = {
+          data: {
+            refreshTokens: {
+              result: {
+                authToken: 'token',
+                user: {
+                  displayName: 'Test Account',
+                },
+              },
+            },
+          },
+        }
+
+        expect(response).toEqual(expectedResult)
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+          httpOnly: true,
+          maxAge: 86400000,
+          sameSite: true,
+          secure: false,
+        })
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully refreshed their tokens.`,
+        ])
+      })
     })
   })
   describe('users language is set to english', () => {
@@ -163,6 +269,20 @@ describe('refresh users tokens', () => {
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
+        },
+      })
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'english',
+        phoneValidated: false,
+        emailValidated: false,
+        tfaCode: null,
+        refreshInfo: {
+          refreshId: '1234',
+          expiresAt: '2021-07-01T12:00:00',
         },
       })
     })
@@ -713,6 +833,20 @@ describe('refresh users tokens', () => {
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
+        },
+      })
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'english',
+        phoneValidated: false,
+        emailValidated: false,
+        tfaCode: null,
+        refreshInfo: {
+          refreshId: '1234',
+          expiresAt: '2021-07-01T12:00:00',
         },
       })
     })
