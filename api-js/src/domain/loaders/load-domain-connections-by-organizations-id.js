@@ -5,9 +5,6 @@ import { t } from '@lingui/macro'
 export const loadDomainConnectionsByOrgId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ orgId, after, before, first, last, ownership, orderBy, search }) => {
-    let afterTemplate = aql``
-    let beforeTemplate = aql``
-
     const userDBId = `users/${userKey}`
 
     let ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} claims RETURN v._key)`
@@ -16,6 +13,9 @@ export const loadDomainConnectionsByOrgId =
         ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} ownership RETURN v._key)`
       }
     }
+
+    let afterTemplate = aql``
+    let afterVar = aql``
 
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -29,29 +29,31 @@ export const loadDomainConnectionsByOrgId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(domains, ${afterId})`
+
         let documentField = aql``
         let domainField = aql``
         /* istanbul ignore else */
         if (orderBy.field === 'domain') {
-          documentField = aql`DOCUMENT(domains, ${afterId}).domain`
+          documentField = aql`afterVar.domain`
           domainField = aql`domain.domain`
         } else if (orderBy.field === 'last-ran') {
-          documentField = aql`DOCUMENT(domains, ${afterId}).lastRan`
+          documentField = aql`afterVar.lastRan`
           domainField = aql`domain.lastRan`
         } else if (orderBy.field === 'dkim-status') {
-          documentField = aql`DOCUMENT(domains, ${afterId}).status.dkim`
+          documentField = aql`afterVar.status.dkim`
           domainField = aql`domain.status.dkim`
         } else if (orderBy.field === 'dmarc-status') {
-          documentField = aql`DOCUMENT(domains, ${afterId}).status.dmarc`
+          documentField = aql`afterVar.status.dmarc`
           domainField = aql`domain.status.dmarc`
         } else if (orderBy.field === 'https-status') {
-          documentField = aql`DOCUMENT(domains, ${afterId}).status.https`
+          documentField = aql`afterVar.status.https`
           domainField = aql`domain.status.https`
         } else if (orderBy.field === 'spf-status') {
-          documentField = aql`DOCUMENT(domains, ${afterId}).status.spf`
+          documentField = aql`afterVar.status.spf`
           domainField = aql`domain.status.spf`
         } else if (orderBy.field === 'ssl-status') {
-          documentField = aql`DOCUMENT(domains, ${afterId}).status.ssl`
+          documentField = aql`afterVar.status.ssl`
           domainField = aql`domain.status.ssl`
         }
 
@@ -62,6 +64,9 @@ export const loadDomainConnectionsByOrgId =
       `
       }
     }
+
+    let beforeTemplate = aql``
+    let beforeVar = aql``
 
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
@@ -75,29 +80,31 @@ export const loadDomainConnectionsByOrgId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(domains, ${beforeId})`
+        
         let documentField = aql``
         let domainField = aql``
         /* istanbul ignore else */
         if (orderBy.field === 'domain') {
-          documentField = aql`DOCUMENT(domains, ${beforeId}).domain`
+          documentField = aql`beforeVar.domain`
           domainField = aql`domain.domain`
         } else if (orderBy.field === 'last-ran') {
-          documentField = aql`DOCUMENT(domains, ${beforeId}).lastRan`
+          documentField = aql`beforeVar.lastRan`
           domainField = aql`domain.lastRan`
         } else if (orderBy.field === 'dkim-status') {
-          documentField = aql`DOCUMENT(domains, ${beforeId}).status.dkim`
+          documentField = aql`beforeVar.status.dkim`
           domainField = aql`domain.status.dkim`
         } else if (orderBy.field === 'dmarc-status') {
-          documentField = aql`DOCUMENT(domains, ${beforeId}).status.dmarc`
+          documentField = aql`beforeVar.status.dmarc`
           domainField = aql`domain.status.dmarc`
         } else if (orderBy.field === 'https-status') {
-          documentField = aql`DOCUMENT(domains, ${beforeId}).status.https`
+          documentField = aql`beforeVar.status.https`
           domainField = aql`domain.status.https`
         } else if (orderBy.field === 'spf-status') {
-          documentField = aql`DOCUMENT(domains, ${beforeId}).status.spf`
+          documentField = aql`beforeVar.status.spf`
           domainField = aql`domain.status.spf`
         } else if (orderBy.field === 'ssl-status') {
-          documentField = aql`DOCUMENT(domains, ${beforeId}).status.ssl`
+          documentField = aql`beforeVar.status.ssl`
           domainField = aql`domain.status.ssl`
         }
 
@@ -289,6 +296,9 @@ export const loadDomainConnectionsByOrgId =
     ))
     
     ${domainQuery}
+
+    ${afterVar}
+    ${beforeVar}
 
     LET retrievedDomains = (
       ${loopString}
