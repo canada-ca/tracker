@@ -30,6 +30,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { useDebouncedFunction } from './useDebouncedFunction'
+import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
 export default function DomainsPage() {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -66,6 +67,10 @@ export default function DomainsPage() {
     },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
+  })
+
+  const [infoState, changeInfoState] = React.useState({
+    isHidden: true,
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -105,9 +110,48 @@ export default function DomainsPage() {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4" textAlign={{ base: 'center', md: 'left' }}>
-        <Trans>Domains</Trans>
-      </Heading>
+      <Stack direction="row" mb="4">
+        <Heading as="h1" textAlign="left">
+          <Trans>Domains</Trans>
+        </Heading>
+
+        <Box ml="auto" />
+
+        <InfoButton label='More Info' state={infoState} changeState={changeInfoState} />
+      </Stack>
+
+      <InfoPanel
+        state={infoState}
+      >
+        <InfoBox
+          title='Domain'
+          info='The domain address.'
+        />
+        <InfoBox
+          title='Last scanned'
+          info='The time the domain was last scanned by the system.'
+        />
+        <InfoBox
+          title='HTTPS'
+          info='Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.'
+        />
+        <InfoBox
+          title='SSL'
+          info='Shows if the domain meets the Secure Sockets Layer (SSL) requirements.'
+        />
+        <InfoBox
+          title='SPF'
+          info='Shows if the domain meets the Sender Policy Framework (SPF) requiremtns.'
+        />
+        <InfoBox
+          title='DKIM'
+          info='Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.'
+        />
+        <InfoBox
+          title='DMARC'
+          info='Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.'
+        />
+      </InfoPanel>
 
       <Tabs isFitted>
         <TabList mb="4">

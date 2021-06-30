@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
 import {
   Box,
+  Divider,
   Flex,
   Heading,
   Icon,
@@ -25,6 +26,7 @@ import { RelayPaginationControls } from './RelayPaginationControls'
 import { toConstantCase } from './helpers/toConstantCase'
 import { useDebouncedFunction } from './useDebouncedFunction'
 import { Link as RouteLink } from 'react-router-dom'
+import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -44,6 +46,10 @@ export default function DmarcByDomainPage() {
   })
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+
+  const [infoState, changeInfoState] = React.useState({
+    isHidden: true,
+  })
 
   const {
     loading,
@@ -269,9 +275,49 @@ export default function DmarcByDomainPage() {
 
   return (
     <Box width="100%" px="2">
-      <Heading as="h1" textAlign="center" size="lg" mb="4px">
-        <Trans>DMARC Summaries</Trans>
-      </Heading>
+      <Stack direction="row" mb="4">
+        <Heading as="h1" textAlign="left">
+          <Trans>DMARC Summaries</Trans>
+        </Heading>
+
+        <Box ml="auto" />
+
+        <InfoButton label="More Info" state={infoState} changeState={changeInfoState} />
+      </Stack>
+
+      <InfoPanel
+        state={infoState}
+      >
+        <InfoBox
+          title='Domain'
+          info='The domain address.'
+        />
+        <InfoBox
+          title='Total Messages'
+          info='Shows the total number of emails that have been sent by this domain during the selected time range.'
+        />
+        <InfoBox
+          title='Full Pass %'
+          info='Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.'
+        />
+        <InfoBox
+          title='Fail SPF %'
+          info='Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments.'
+        />
+        <InfoBox
+          title='Fail DKIM %'
+          info='Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments.'
+        />
+        <InfoBox
+          title='Full Fail %'
+          info='Shows the percentage of emails from the domain that fail both SPF and DKIM requirments.'
+        />
+        <Divider borderColor="gray.500" />
+        <Trans>
+          A more detaild breakdown of each domain can be found by clicking on its address in the first column.
+        </Trans>
+      </InfoPanel>
+
 
       <Stack isInline align="center" mb="4px">
         <Text fontWeight="bold" textAlign="center">
