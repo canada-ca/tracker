@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { GraphQLEmailAddress } from 'graphql-scalars'
@@ -39,6 +39,12 @@ export const signUp = new mutationWithClientMutationId({
       description:
         'A token sent by email, that will assign a user to an organization with a pre-determined role.',
     },
+    rememberMe: {
+      type: GraphQLBoolean,
+      defaultValue: false,
+      description:
+        'Whether or not the user wants to stay signed in after leaving the site.',
+    },
   }),
   outputFields: () => ({
     result: {
@@ -71,6 +77,7 @@ export const signUp = new mutationWithClientMutationId({
     const confirmPassword = cleanseInput(args.confirmPassword)
     const preferredLang = cleanseInput(args.preferredLang)
     const signUpToken = cleanseInput(args.signUpToken)
+    const rememberMe = args.rememberMe
 
     // Check to make sure password meets length requirement
     if (password.length < 12) {
@@ -127,6 +134,7 @@ export const signUp = new mutationWithClientMutationId({
       tfaSendMethod: 'none',
       refreshInfo: {
         refreshId,
+        rememberMe,
         expiresAt: new Date(
           new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
         ),
@@ -251,12 +259,25 @@ export const signUp = new mutationWithClientMutationId({
       secret: String(REFRESH_KEY),
     })
 
-    response.cookie('refresh_token', refreshToken, {
-      maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+    // if the user does not want to stay logged in, create http session cookie
+    let cookieData = {
       httpOnly: true,
       secure: false,
       sameSite: true,
-    })
+      expires: 0,
+    }
+
+    // if user wants to stay logged in create normal http cookie
+    if (rememberMe) {
+      cookieData = {
+        maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        httpOnly: true,
+        secure: false,
+        sameSite: true,
+      }
+    }
+
+    response.cookie('refresh_token', refreshToken, cookieData)
 
     console.info(`User: ${userName} successfully created a new account.`)
 
