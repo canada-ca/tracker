@@ -18,13 +18,12 @@ const i18n = setupI18n({
 describe('<InfoPanel>', () => {
   it('successfully renders with mocked data', async () => {
     const state = {
-      isHidden: false
+      isHidden: false,
     }
     const { getByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
-          <InfoPanel state={state}
-          >
+          <InfoPanel state={state}>
             <InfoBox
               title='Domain'
               info='The domain address.'
@@ -35,7 +34,7 @@ describe('<InfoPanel>', () => {
             />
           </InfoPanel>
         </I18nProvider>
-      </ThemeProvider>
+      </ThemeProvider>,
     )
 
     await waitFor(() => getByText(/The domain address./i))
@@ -48,11 +47,10 @@ describe('<InfoPanel>', () => {
           <I18nProvider i18n={i18n}>
               <InfoButton label="Glossary" />
           </I18nProvider>
-        </ThemeProvider>
+        </ThemeProvider>,
       )
 
       await waitFor(() => getByText(/Glossary/i))
     })
-
   })
 })
