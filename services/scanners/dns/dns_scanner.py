@@ -59,80 +59,88 @@ def scan_dmarc(domain):
         return {"dmarc": {"error": "missing"}}
 
     for rua in scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []):
-        # Retrieve 'rua' tag address.
-        rua_addr = rua["address"]
+        try:
+            # Retrieve 'rua' tag address.
+            rua_addr = rua["address"]
 
-        # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
-        rua_domain = rua_addr.split("@", 1)[1]
+            # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
+            rua_domain = rua_addr.split("@", 1)[1]
 
-        # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
-        extract = tldextract.TLDExtract(include_psl_private_domains=True)
-        extract.update()
-        parsed_domain = extract(domain)
-        org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
+            # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
+            extract = tldextract.TLDExtract(include_psl_private_domains=True)
+            extract.update()
+            parsed_domain = extract(domain)
+            org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
 
-        # Extract organizational domain from 'rua' domain
-        parsed_rua_domain = extract(rua_domain)
-        rua_org_domain = ".".join([parsed_rua_domain.domain, parsed_rua_domain.suffix])
+            # Extract organizational domain from 'rua' domain
+            parsed_rua_domain = extract(rua_domain)
+            rua_org_domain = ".".join([parsed_rua_domain.domain, parsed_rua_domain.suffix])
 
-        # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
-        if rua_org_domain == org_domain:
-            rua["accepting"] = True
-        else:
-            try:
-                # Request txt record to ensure that "rua" domain accepts DMARC reports.
-                rua_scan_result = resolver.query(
-                    f"{domain}._report._dmarc.{rua_domain}", "TXT"
-                )
-                rua_txt_value = (
-                    rua_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
-                )
-                # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
-                scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
-                    rua_txt_value == "v=DMARC1"
-                )
-                logging.info("External reporting arrangement verified.")
-            except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
-                logging.error(f"Failed to validate rua address {rua_domain}: {e}")
-                rua["accepting"] = "undetermined"
+            # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
+            if rua_org_domain == org_domain:
+                rua["accepting"] = True
+            else:
+                try:
+                    # Request txt record to ensure that "rua" domain accepts DMARC reports.
+                    rua_scan_result = resolver.query(
+                        f"{domain}._report._dmarc.{rua_domain}", "TXT"
+                    )
+                    rua_txt_value = (
+                        rua_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
+                    )
+                    # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
+                    scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
+                        rua_txt_value == "v=DMARC1"
+                    )
+                    logging.info("External reporting arrangement verified.")
+                except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
+                    logging.error(f"Failed to validate rua address {rua_domain} for domain={domain}: {e}")
+                    rua["accepting"] = "undetermined"
+        except (TypeError, KeyError) as e:
+            logging.error(f"Error occurred while attempting to validate rua address {rua_domain} for domain={domain}: {e}")
+            rua["accepting"] = "undetermined"
 
     for ruf in scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []):
-        # Retrieve 'ruf' tag address.
-        ruf_addr = ruf["address"]
+        try:
+            # Retrieve 'ruf' tag address.
+            ruf_addr = ruf["address"]
 
-        # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
-        ruf_domain = ruf_addr.split("@", 1)[1]
+            # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
+            ruf_domain = ruf_addr.split("@", 1)[1]
 
-        # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
-        extract = tldextract.TLDExtract(include_psl_private_domains=True)
-        extract.update()
-        parsed_domain = extract(domain)
-        org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
+            # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
+            extract = tldextract.TLDExtract(include_psl_private_domains=True)
+            extract.update()
+            parsed_domain = extract(domain)
+            org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
 
-        # Extract organizational domain from 'ruf' domain
-        parsed_ruf_domain = extract(ruf_domain)
-        ruf_org_domain = ".".join([parsed_ruf_domain.domain, parsed_ruf_domain.suffix])
+            # Extract organizational domain from 'ruf' domain
+            parsed_ruf_domain = extract(ruf_domain)
+            ruf_org_domain = ".".join([parsed_ruf_domain.domain, parsed_ruf_domain.suffix])
 
-        # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
-        if ruf_org_domain == org_domain:
-            ruf["accepting"] = True
-        else:
-            try:
-                # Request txt record to ensure that "ruf" domain accepts DMARC reports.
-                ruf_scan_result = resolver.query(
-                    f"{domain}._report._dmarc.{ruf_domain}", "TXT"
-                )
-                ruf_txt_value = (
-                    ruf_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
-                )
-                # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
-                scan_result["dmarc"]["tags"]["ruf"]["accepting"] = (
-                    ruf_txt_value == "v=DMARC1"
-                )
-                logging.info("External reporting arrangement verified.")
-            except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
-                logging.error(f"Failed to validate ruf address {ruf_domain}: {e}")
-                ruf["accepting"] = "undetermined"
+            # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
+            if ruf_org_domain == org_domain:
+                ruf["accepting"] = True
+            else:
+                try:
+                    # Request txt record to ensure that "ruf" domain accepts DMARC reports.
+                    ruf_scan_result = resolver.query(
+                        f"{domain}._report._dmarc.{ruf_domain}", "TXT"
+                    )
+                    ruf_txt_value = (
+                        ruf_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
+                    )
+                    # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
+                    scan_result["dmarc"]["tags"]["ruf"]["accepting"] = (
+                        ruf_txt_value == "v=DMARC1"
+                    )
+                    logging.info("External reporting arrangement verified.")
+                except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
+                    logging.error(f"Failed to validate ruf address {ruf_domain} for domain={domain}: {e}")
+                    ruf["accepting"] = "undetermined"
+        except (TypeError, KeyError) as e:
+            logging.error(f"Error occurred while attempting to validate ruf address {ruf_domain} for domain={domain}: {e}")
+            ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
 

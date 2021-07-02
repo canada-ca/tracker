@@ -122,15 +122,15 @@ def scan_ssl(domain):
 
         tls_supported = get_supported_tls(highest_tls_supported, domain)
     except ConnectionToServerFailed as e:
-        logging.error(f"Failed to connect to {domain}: {e.error_message}")
+        logging.error(f"Failed to connect to {domain}: {e}")
         RES_QUEUE.put({})
         return
     except ServerHostnameCouldNotBeResolved as e:
-        logging.error(f"{domain} could not be resolved: {e.error_message}")
+        logging.error(f"{domain} could not be resolved: {e}")
         RES_QUEUE.put({})
         return
     except gaierror as e:
-        logging.error(f"Could not retrieve address info for {domain} {e.error_message}")
+        logging.error(f"Could not retrieve address info for {domain} {e}")
         RES_QUEUE.put({})
         return
 
@@ -221,7 +221,7 @@ def scan_ssl(domain):
             logging.info("Parsing Elliptic Curve Scan results...")
             res["supports_ecdh_key_exchange"] = result.supports_ecdh_key_exchange
             res["supported_curves"] = []
-            if result.supported_curves:
+            if result.supported_curves is not None:
                 for curve in result.supported_curves:
                     res["supported_curves"].append(curve.name)
 
