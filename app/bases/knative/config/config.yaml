@@ -21,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/services/scanners/https:master-6fff5e6-1624966490 # {"$imagepolicy": "flux-system:https-scanner"}
+        image: gcr.io/track-compliance/services/scanners/https:master-c29f15d-1625248031 # {"$imagepolicy": "flux-system:https-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
@@ -115,7 +115,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: ssl-scanner
-        image: gcr.io/track-compliance/services/scanners/ssl:master-6fff5e6-1624966488 # {"$imagepolicy": "flux-system:ssl-scanner"}
+        image: gcr.io/track-compliance/services/scanners/ssl:master-c29f15d-1625248031 # {"$imagepolicy": "flux-system:ssl-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
@@ -140,7 +140,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/services/scanners/dns:master-0ecedc5-1624639303 # {"$imagepolicy": "flux-system:dns-scanner"}
+        image: gcr.io/track-compliance/services/scanners/dns:master-c29f15d-1625248022 # {"$imagepolicy": "flux-system:dns-scanner"}
 ---
 # K8s Service Account that runs `src`'s container.
 
