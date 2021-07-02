@@ -97,8 +97,6 @@ export function OrganizationCard({
         </Box>
 
         <Box
-          flexGrow={{ base: '1', md: '1' }}
-          flexBasis={{ md: '5em' }}
           mr={{ md: '1em' }}
           flexShrink={{ md: '0.5' }}
           minWidth={{ base: '100%', md: '3em' }}
@@ -112,9 +110,6 @@ export function OrganizationCard({
         </Box>
 
         <Box
-          flexGrow={{ md: '1' }}
-          flexBasis={{ md: '5em' }}
-          mr={{ md: '1em' }}
           flexShrink={{ md: '0.5' }}
           minWidth={{ base: '100%', md: '3em' }}
           textAlign="left"
