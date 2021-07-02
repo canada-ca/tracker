@@ -35,8 +35,18 @@ export const SIGN_UP = gql`
 `
 
 export const SIGN_IN = gql`
-  mutation signIn($userName: EmailAddress!, $password: String!) {
-    signIn(input: { userName: $userName, password: $password }) {
+  mutation signIn(
+    $userName: EmailAddress!
+    $password: String!
+    $rememberMe: Boolean
+  ) {
+    signIn(
+      input: {
+        userName: $userName
+        password: $password
+        rememberMe: $rememberMe
+      }
+    ) {
       result {
         ... on TFASignInResult {
           authenticateToken
@@ -505,6 +515,30 @@ export const UPDATE_ORGANIZATION = gql`
           description
         }
       }
+    }
+  }
+`
+
+export const REFRESH_TOKENS = gql`
+  mutation RefreshTokens {
+    refreshTokens(input: {}) {
+      result {
+        ... on AuthResult {
+          ...RequiredAuthResultFields
+        }
+        ... on AuthenticateError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const SIGN_OUT = gql`
+  mutation SignOut {
+    signOut(input: {}) {
+      status
     }
   }
 `
