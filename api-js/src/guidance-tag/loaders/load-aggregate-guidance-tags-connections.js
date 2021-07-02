@@ -52,7 +52,7 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
           beforeTemplateDirection = aql`<`
         }
 
-        beforeVar = aql`LET afterVar = DOCUMENT(aggregateGuidanceTags, ${beforeId})`
+        beforeVar = aql`LET beforeVar = DOCUMENT(aggregateGuidanceTags, ${beforeId})`
 
         let tagField, documentField
         /* istanbul ignore else */
