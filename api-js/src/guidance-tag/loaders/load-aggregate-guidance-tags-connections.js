@@ -6,6 +6,7 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ aggregateGuidanceTags, after, before, first, last, orderBy }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -16,17 +17,19 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
           afterTemplateDirection = aql`>`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(aggregateGuidanceTags, ${afterId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(aggregateGuidanceTags, ${afterId})._key`
+          documentField = aql`afterVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(aggregateGuidanceTags, ${afterId}).tagName`
+          documentField = aql`afterVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(aggregateGuidanceTags, ${afterId}).guidance`
+          documentField = aql`afterVar.guidance`
         }
 
         afterTemplate = aql`
@@ -38,6 +41,7 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -48,17 +52,19 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
           beforeTemplateDirection = aql`<`
         }
 
+        beforeVar = aql`LET afterVar = DOCUMENT(aggregateGuidanceTags, ${beforeId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(aggregateGuidanceTags, ${beforeId})._key`
+          documentField = aql`beforeVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(aggregateGuidanceTags, ${beforeId}).tagName`
+          documentField = aql`beforeVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(aggregateGuidanceTags, ${beforeId}).guidance`
+          documentField = aql`beforeVar.guidance`
         }
 
         beforeTemplate = aql`
@@ -190,6 +196,10 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
     try {
       aggregateGuidanceTagInfoCursor = await query`
       WITH aggregateGuidanceTags
+
+      ${afterVar}
+      ${beforeVar}
+      
       LET retrievedAggregateGuidanceTags = (
         FOR tag IN aggregateGuidanceTags
           FILTER tag._key IN ${aggregateGuidanceTags}
