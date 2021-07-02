@@ -28,8 +28,6 @@ kind: Service
 metadata:
   name: result-processor
   namespace: scanners
-  labels:
-    app: scanners
 spec:
   template:
     metadata:
@@ -41,6 +39,9 @@ spec:
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "4"
+      labels:
+        app: scanners
+        role: result-processor
     spec:
       timeoutSeconds: 600
       containerConcurrency: 1
