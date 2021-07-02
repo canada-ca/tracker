@@ -533,6 +533,7 @@ export const REFRESH_TOKENS = gql`
       }
     }
   }
+  ${Authorization.fragments.requiredFields}
 `
 
 export const SIGN_OUT = gql`
