@@ -96,11 +96,10 @@ def process_results(results):
 
         ###
         # Characterize the presence and completeness of HSTS.
+        hsts_age = results.get("HSTS Max Age", None)
 
-        if results["HSTS Max Age"]:
-            hsts_age = int(results["HSTS Max Age"])
-        else:
-            hsts_age = None
+        if hsts_age is not None:
+            hsts_age = int(hsts_age)
 
         # Otherwise, without HTTPS there can be no HSTS for the domain directly.
         if https == "Downgrades HTTPS":
