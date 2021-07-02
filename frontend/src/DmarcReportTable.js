@@ -7,7 +7,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import { array, bool, func, number, string } from 'prop-types'
+import { any, array, bool, func, number, shape, string } from 'prop-types'
 import {
   Box,
   Collapse,
@@ -24,6 +24,7 @@ import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 import { TrackerButton } from './TrackerButton'
+import { InfoButton } from './InfoPanel'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -134,6 +135,9 @@ function DmarcReportTable({ ...props }) {
     onSort,
     manualSort,
     manualFilters,
+    infoPanel,
+    infoState,
+    changeInfoState,
     ...rest
   } = props
   const [show, setShow] = React.useState(true)
@@ -337,15 +341,25 @@ function DmarcReportTable({ ...props }) {
     <Box ref={wrapperRef}>
       {titleButtonElement}
       <Collapse isOpen={show}>
-        {!manualFilters && (
-          <ReactTableGlobalFilter
-            preGlobalFilteredRows={preGlobalFilteredRows}
-            globalFilter={state.globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            mt="4px"
-            mb="4px"
-          />
-        )}
+        <Stack direction="row" my={2}>
+          {!manualFilters && (
+            <ReactTableGlobalFilter
+              preGlobalFilteredRows={preGlobalFilteredRows}
+              globalFilter={state.globalFilter}
+              setGlobalFilter={setGlobalFilter}
+              mt="4px"
+              mb="4px"
+            />
+          )}
+
+          <Box ml="auto" />
+
+          {infoState && (
+            <InfoButton label="Glossary" state={infoState} changeState={changeInfoState} />
+          )}
+        </Stack>
+
+        {infoPanel}
 
         <Box {...rest}>
           <Table {...getTableProps()} flatHeaders={flatHeaders}>
@@ -429,6 +443,11 @@ DmarcReportTable.propTypes = {
   onSort: func,
   manualSort: bool,
   manualFilters: bool,
+  infoPanel: any,
+  infoState: shape({
+    isHidden: bool,
+  }),
+  changeInfoState: func,
 }
 
 DmarcReportTable.defaultProps = {
