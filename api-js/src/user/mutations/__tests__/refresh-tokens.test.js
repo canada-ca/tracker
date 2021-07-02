@@ -40,100 +40,220 @@ describe('refresh users tokens', () => {
       options: databaseOptions({ rootPass }),
     }))
   })
-
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'english',
-      phoneValidated: false,
-      emailValidated: false,
-      tfaCode: null,
-      refreshId: '1234',
-    })
-  })
-
   afterEach(async () => {
     consoleOutput.length = 0
     await truncate()
   })
-
   afterAll(async () => {
     await drop()
   })
 
   describe('given a successful refresh', () => {
-    it('returns a new auth, and refresh token', async () => {
-      const authToken = tokenize({ parameters: { userKey: user._key } })
-      const refreshToken = tokenize({
-        parameters: { userKey: user._key, uuid: '1234' },
-        expPeriod: 168,
-        secret: String(REFRESH_KEY),
+    describe('user has rememberMe disabled', () => {
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+          phoneValidated: false,
+          emailValidated: false,
+          tfaCode: null,
+          refreshInfo: {
+            refreshId: '1234',
+            expiresAt: '2021-07-01T12:00:00',
+            rememberMe: false,
+          },
+        })
       })
+      it('returns a new auth, and refresh token', async () => {
+        const refreshToken = tokenize({
+          parameters: { userKey: user._key, uuid: '1234' },
+          expPeriod: 168,
+          secret: String(REFRESH_KEY),
+        })
+        const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
-      const response = await graphql(
-        schema,
-        `
-          mutation {
-            refreshTokens (
-              input: {
-                authToken: "${authToken}"
-                refreshToken: "${refreshToken}"
-              }
-            ) {
-              result {
-                ... on AuthResult {
-                  authToken
-                  refreshToken
-                  user {
-                    displayName
+        const mockedFormat = jest
+          .fn()
+          .mockReturnValueOnce('2021-06-30T12:00:00')
+          .mockReturnValueOnce('2021-07-01T12:00:00')
+        const mockedMoment = jest.fn().mockReturnValue({
+          format: mockedFormat,
+          isAfter: jest.fn().mockReturnValue(false),
+        })
+
+        const mockedCookie = jest.fn()
+        const mockedResponse = { cookie: mockedCookie }
+
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              refreshTokens(input: {}) {
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      displayName
+                    }
                   }
-                }
-                ... on AuthenticateError {
-                  code
-                  description
+                  ... on AuthenticateError {
+                    code
+                    description
+                  }
                 }
               }
             }
-          }
-        `,
-        null,
-        {
-          query,
-          collections,
-          transaction,
-          uuidv4,
-          jwt,
-          auth: {
-            tokenize: jest.fn().mockReturnValue('token'),
+          `,
+          null,
+          {
+            query,
+            collections,
+            transaction,
+            uuidv4,
+            jwt,
+            moment: mockedMoment,
+            request: mockedRequest,
+            response: mockedResponse,
+            auth: {
+              tokenize: jest.fn().mockReturnValue('token'),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
           },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            loadUserByKey: loadUserByKey({ query }),
-          },
-        },
-      )
+        )
 
-      const expectedResult = {
-        data: {
-          refreshTokens: {
-            result: {
-              authToken: 'token',
-              refreshToken: 'token',
-              user: {
-                displayName: 'Test Account',
+        const expectedResult = {
+          data: {
+            refreshTokens: {
+              result: {
+                authToken: 'token',
+                user: {
+                  displayName: 'Test Account',
+                },
               },
             },
           },
-        },
-      }
+        }
 
-      expect(response).toEqual(expectedResult)
-      expect(consoleOutput).toEqual([
-        `User: ${user._key} successfully refreshed their tokens.`,
-      ])
+        expect(response).toEqual(expectedResult)
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+          httpOnly: true,
+          expires: 0,
+          sameSite: true,
+          secure: false,
+        })
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully refreshed their tokens.`,
+        ])
+      })
+    })
+    describe('user has rememberMe enabled', () => {
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+          phoneValidated: false,
+          emailValidated: false,
+          tfaCode: null,
+          refreshInfo: {
+            refreshId: '1234',
+            expiresAt: '2021-07-01T12:00:00',
+            rememberMe: true,
+          },
+        })
+      })
+      it('returns a new auth, and refresh token', async () => {
+        const refreshToken = tokenize({
+          parameters: { userKey: user._key, uuid: '1234' },
+          expPeriod: 168,
+          secret: String(REFRESH_KEY),
+        })
+        const mockedRequest = { cookies: { refresh_token: refreshToken } }
+
+        const mockedFormat = jest
+          .fn()
+          .mockReturnValueOnce('2021-06-30T12:00:00')
+          .mockReturnValueOnce('2021-07-01T12:00:00')
+        const mockedMoment = jest.fn().mockReturnValue({
+          format: mockedFormat,
+          isAfter: jest.fn().mockReturnValue(false),
+        })
+
+        const mockedCookie = jest.fn()
+        const mockedResponse = { cookie: mockedCookie }
+
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              refreshTokens(input: {}) {
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      displayName
+                    }
+                  }
+                  ... on AuthenticateError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            query,
+            collections,
+            transaction,
+            uuidv4,
+            jwt,
+            moment: mockedMoment,
+            request: mockedRequest,
+            response: mockedResponse,
+            auth: {
+              tokenize: jest.fn().mockReturnValue('token'),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
+          },
+        )
+
+        const expectedResult = {
+          data: {
+            refreshTokens: {
+              result: {
+                authToken: 'token',
+                user: {
+                  displayName: 'Test Account',
+                },
+              },
+            },
+          },
+        }
+
+        expect(response).toEqual(expectedResult)
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+          httpOnly: true,
+          maxAge: 86400000,
+          sameSite: true,
+          secure: false,
+        })
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully refreshed their tokens.`,
+        ])
+      })
     })
   })
   describe('users language is set to english', () => {
@@ -152,33 +272,41 @@ describe('refresh users tokens', () => {
         },
       })
     })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'english',
+        phoneValidated: false,
+        emailValidated: false,
+        tfaCode: null,
+        refreshInfo: {
+          refreshId: '1234',
+          expiresAt: '2021-07-01T12:00:00',
+        },
+      })
+    })
     describe('given an unsuccessful refresh', () => {
-      describe('auth token is invalid', () => {
+      describe('refresh token is undefined', () => {
         it('returns an error', async () => {
-          const authToken = tokenize({
-            parameters: { userKey: user._key },
-            secret: 'invalid-token',
-          })
-          const refreshToken = tokenize({
-            parameters: { userKey: user._key, uuid: '1234' },
-            expPeriod: 168,
-            secret: String(REFRESH_KEY),
+          const mockedRequest = { cookies: {} }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -199,6 +327,8 @@ describe('refresh users tokens', () => {
               transaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -224,35 +354,35 @@ describe('refresh users tokens', () => {
 
           expect(response).toEqual(expectedResult)
           expect(consoleOutput).toEqual([
-            `User attempted to verify auth token to refresh it, however secret was incorrect: JsonWebTokenError: invalid signature`,
+            `User attempted to refresh tokens without refresh_token set.`,
           ])
         })
       })
       describe('refresh token is invalid', () => {
         it('returns an error', async () => {
-          const authToken = tokenize({
-            parameters: { userKey: user._key },
-          })
           const refreshToken = tokenize({
             parameters: { userKey: user._key, uuid: '1234' },
             expPeriod: 168,
             secret: 'invalid-token',
           })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
+          })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -273,6 +403,8 @@ describe('refresh users tokens', () => {
               transaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -298,105 +430,35 @@ describe('refresh users tokens', () => {
 
           expect(response).toEqual(expectedResult)
           expect(consoleOutput).toEqual([
-            `User attempted to verify refresh token, however it is invalid: JsonWebTokenError: invalid signature`,
+            `User attempted to verify refresh token, however the token is invalid: JsonWebTokenError: invalid signature`,
           ])
         })
       })
-      describe('user keys do not match', () => {
+      describe('user is undefined', () => {
         it('returns an error', async () => {
-          const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
             parameters: { userKey: '1234', uuid: '1234' },
             expPeriod: 168,
             secret: String(REFRESH_KEY),
           })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
-                  result {
-                    ... on AuthResult {
-                      authToken
-                      refreshToken
-                      user {
-                        displayName
-                      }
-                    }
-                    ... on AuthenticateError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              uuidv4,
-              jwt,
-              auth: {
-                tokenize: jest.fn().mockReturnValue('token'),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const expectedResult = {
-            data: {
-              refreshTokens: {
-                result: {
-                  code: 400,
-                  description: 'Unable to refresh tokens, please sign in.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User attempted to refresh their tokens however there was a mismatch with user keys authUserKey: ${user._key} !== refreshUserKey: 1234`,
-          ])
-        })
-      })
-      describe('refreshIds do not match', () => {
-        it('returns an error', async () => {
-          const authToken = tokenize({ parameters: { userKey: user._key } })
-          const refreshToken = tokenize({
-            parameters: { userKey: user._key, uuid: '5678' },
-            expPeriod: 168,
-            secret: String(REFRESH_KEY),
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -417,6 +479,8 @@ describe('refresh users tokens', () => {
               transaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -442,7 +506,159 @@ describe('refresh users tokens', () => {
 
           expect(response).toEqual(expectedResult)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to refresh tokens with an old refresh token.`,
+            `User: 1234 attempted to refresh tokens with an invalid user id.`,
+          ])
+        })
+      })
+      describe('if the token is expired', () => {
+        it('returns an error', async () => {
+          const refreshToken = tokenize({
+            parameters: { userKey: user._key, uuid: '1234' },
+            expPeriod: 168,
+            secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(true),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                refreshTokens(input: {}) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              uuidv4,
+              jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
+              auth: {
+                tokenize: jest.fn().mockReturnValue('token'),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              refreshTokens: {
+                result: {
+                  code: 400,
+                  description: 'Unable to refresh tokens, please sign in.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to refresh tokens with an expired uuid.`,
+          ])
+        })
+      })
+      describe('if the uuids do not match', () => {
+        it('returns an error', async () => {
+          const refreshToken = tokenize({
+            parameters: { userKey: user._key, uuid: '5678' },
+            expPeriod: 168,
+            secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                refreshTokens(input: {}) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              uuidv4,
+              jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
+              auth: {
+                tokenize: jest.fn().mockReturnValue('token'),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              refreshTokens: {
+                result: {
+                  code: 400,
+                  description: 'Unable to refresh tokens, please sign in.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to refresh tokens with non matching uuids.`,
           ])
         })
       })
@@ -456,27 +672,29 @@ describe('refresh users tokens', () => {
               .mockRejectedValue(new Error('Transaction step error')),
           })
 
-          const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
             parameters: { userKey: user._key, uuid: '1234' },
             expPeriod: 168,
             secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -497,6 +715,8 @@ describe('refresh users tokens', () => {
               transaction: mockedTransaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -530,27 +750,30 @@ describe('refresh users tokens', () => {
               .mockRejectedValue(new Error('Transaction commit error')),
           })
 
-          const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
             parameters: { userKey: user._key, uuid: '1234' },
             expPeriod: 168,
             secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -571,6 +794,8 @@ describe('refresh users tokens', () => {
               transaction: mockedTransaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -595,7 +820,7 @@ describe('refresh users tokens', () => {
       })
     })
   })
-  describe('users language is set to english', () => {
+  describe('users language is set to french', () => {
     let i18n
     beforeAll(() => {
       i18n = setupI18n({
@@ -611,33 +836,41 @@ describe('refresh users tokens', () => {
         },
       })
     })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'english',
+        phoneValidated: false,
+        emailValidated: false,
+        tfaCode: null,
+        refreshInfo: {
+          refreshId: '1234',
+          expiresAt: '2021-07-01T12:00:00',
+        },
+      })
+    })
     describe('given an unsuccessful refresh', () => {
-      describe('auth token is invalid', () => {
+      describe('refresh token is undefined', () => {
         it('returns an error', async () => {
-          const authToken = tokenize({
-            parameters: { userKey: user._key },
-            secret: 'invalid-token',
-          })
-          const refreshToken = tokenize({
-            parameters: { userKey: user._key, uuid: '1234' },
-            expPeriod: 168,
-            secret: String(REFRESH_KEY),
+          const mockedRequest = { cookies: {} }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -658,6 +891,8 @@ describe('refresh users tokens', () => {
               transaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -684,35 +919,35 @@ describe('refresh users tokens', () => {
 
           expect(response).toEqual(expectedResult)
           expect(consoleOutput).toEqual([
-            `User attempted to verify auth token to refresh it, however secret was incorrect: JsonWebTokenError: invalid signature`,
+            `User attempted to refresh tokens without refresh_token set.`,
           ])
         })
       })
       describe('refresh token is invalid', () => {
         it('returns an error', async () => {
-          const authToken = tokenize({
-            parameters: { userKey: user._key },
-          })
           const refreshToken = tokenize({
             parameters: { userKey: user._key, uuid: '1234' },
             expPeriod: 168,
             secret: 'invalid-token',
           })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
+          })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -733,6 +968,8 @@ describe('refresh users tokens', () => {
               transaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -759,106 +996,35 @@ describe('refresh users tokens', () => {
 
           expect(response).toEqual(expectedResult)
           expect(consoleOutput).toEqual([
-            `User attempted to verify refresh token, however it is invalid: JsonWebTokenError: invalid signature`,
+            `User attempted to verify refresh token, however the token is invalid: JsonWebTokenError: invalid signature`,
           ])
         })
       })
-      describe('user keys do not match', () => {
+      describe('user is undefined', () => {
         it('returns an error', async () => {
-          const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
             parameters: { userKey: '1234', uuid: '1234' },
             expPeriod: 168,
             secret: String(REFRESH_KEY),
           })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
-                  result {
-                    ... on AuthResult {
-                      authToken
-                      refreshToken
-                      user {
-                        displayName
-                      }
-                    }
-                    ... on AuthenticateError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              uuidv4,
-              jwt,
-              auth: {
-                tokenize: jest.fn().mockReturnValue('token'),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const expectedResult = {
-            data: {
-              refreshTokens: {
-                result: {
-                  code: 400,
-                  description:
-                    'Impossible de rafraîchir les jetons, veuillez vous connecter.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User attempted to refresh their tokens however there was a mismatch with user keys authUserKey: ${user._key} !== refreshUserKey: 1234`,
-          ])
-        })
-      })
-      describe('refreshIds do not match', () => {
-        it('returns an error', async () => {
-          const authToken = tokenize({ parameters: { userKey: user._key } })
-          const refreshToken = tokenize({
-            parameters: { userKey: user._key, uuid: '5678' },
-            expPeriod: 168,
-            secret: String(REFRESH_KEY),
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -879,6 +1045,8 @@ describe('refresh users tokens', () => {
               transaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -905,7 +1073,161 @@ describe('refresh users tokens', () => {
 
           expect(response).toEqual(expectedResult)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to refresh tokens with an old refresh token.`,
+            `User: 1234 attempted to refresh tokens with an invalid user id.`,
+          ])
+        })
+      })
+      describe('if the token is expired', () => {
+        it('returns an error', async () => {
+          const refreshToken = tokenize({
+            parameters: { userKey: user._key, uuid: '1234' },
+            expPeriod: 168,
+            secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(true),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                refreshTokens(input: {}) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              uuidv4,
+              jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
+              auth: {
+                tokenize: jest.fn().mockReturnValue('token'),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              refreshTokens: {
+                result: {
+                  code: 400,
+                  description:
+                    'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to refresh tokens with an expired uuid.`,
+          ])
+        })
+      })
+      describe('if the uuids do not match', () => {
+        it('returns an error', async () => {
+          const refreshToken = tokenize({
+            parameters: { userKey: user._key, uuid: '5678' },
+            expPeriod: 168,
+            secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                refreshTokens(input: {}) {
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              uuidv4,
+              jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
+              auth: {
+                tokenize: jest.fn().mockReturnValue('token'),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: loadUserByKey({ query }),
+              },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              refreshTokens: {
+                result: {
+                  code: 400,
+                  description:
+                    'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to refresh tokens with non matching uuids.`,
           ])
         })
       })
@@ -919,27 +1241,29 @@ describe('refresh users tokens', () => {
               .mockRejectedValue(new Error('Transaction step error')),
           })
 
-          const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
             parameters: { userKey: user._key, uuid: '1234' },
             expPeriod: 168,
             secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -960,6 +1284,8 @@ describe('refresh users tokens', () => {
               transaction: mockedTransaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
@@ -995,27 +1321,30 @@ describe('refresh users tokens', () => {
               .mockRejectedValue(new Error('Transaction commit error')),
           })
 
-          const authToken = tokenize({ parameters: { userKey: user._key } })
           const refreshToken = tokenize({
             parameters: { userKey: user._key, uuid: '1234' },
             expPeriod: 168,
             secret: String(REFRESH_KEY),
+          })
+          const mockedRequest = { cookies: { refresh_token: refreshToken } }
+
+          const mockedFormat = jest
+            .fn()
+            .mockReturnValueOnce('2021-06-30T12:00:00')
+            .mockReturnValueOnce('2021-07-01T12:00:00')
+          const mockedMoment = jest.fn().mockReturnValue({
+            format: mockedFormat,
+            isAfter: jest.fn().mockReturnValue(false),
           })
 
           const response = await graphql(
             schema,
             `
               mutation {
-                refreshTokens (
-                  input: {
-                    authToken: "${authToken}"
-                    refreshToken: "${refreshToken}"
-                  }
-                ) {
+                refreshTokens(input: {}) {
                   result {
                     ... on AuthResult {
                       authToken
-                      refreshToken
                       user {
                         displayName
                       }
@@ -1036,6 +1365,8 @@ describe('refresh users tokens', () => {
               transaction: mockedTransaction,
               uuidv4,
               jwt,
+              moment: mockedMoment,
+              request: mockedRequest,
               auth: {
                 tokenize: jest.fn().mockReturnValue('token'),
               },
