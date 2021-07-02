@@ -15,6 +15,7 @@ export const loadHttpsConnectionsByDomainId =
     orderBy,
   }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -27,26 +28,28 @@ export const loadHttpsConnectionsByDomainId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(https, ${afterId})`
+
         let documentField = aql``
         let httpsField = aql``
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
-          documentField = aql`DOCUMENT(https, ${afterId}).timestamp`
+          documentField = aql`afterVar.timestamp`
           httpsField = aql`httpsScan.timestamp`
         } else if (orderBy.field === 'implementation') {
-          documentField = aql`DOCUMENT(https, ${afterId}).implementation`
+          documentField = aql`afterVar.implementation`
           httpsField = aql`httpsScan.implementation`
         } else if (orderBy.field === 'enforced') {
-          documentField = aql`DOCUMENT(https, ${afterId}).enforced`
+          documentField = aql`afterVar.enforced`
           httpsField = aql`httpsScan.enforced`
         } else if (orderBy.field === 'hsts') {
-          documentField = aql`DOCUMENT(https, ${afterId}).hsts`
+          documentField = aql`afterVar.hsts`
           httpsField = aql`httpsScan.hsts`
         } else if (orderBy.field === 'hsts-age') {
-          documentField = aql`DOCUMENT(https, ${afterId}).hstsAge`
+          documentField = aql`afterVar.hstsAge`
           httpsField = aql`httpsScan.hstsAge`
         } else if (orderBy.field === 'preloaded') {
-          documentField = aql`DOCUMENT(https, ${afterId}).preloaded`
+          documentField = aql`afterVar.preloaded`
           httpsField = aql`httpsScan.preloaded`
         }
 
@@ -59,6 +62,8 @@ export const loadHttpsConnectionsByDomainId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
+
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -71,26 +76,28 @@ export const loadHttpsConnectionsByDomainId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(https, ${beforeId})`
+
         let documentField = aql``
         let httpsField = aql``
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
-          documentField = aql`DOCUMENT(https, ${beforeId}).timestamp`
+          documentField = aql`beforeVar.timestamp`
           httpsField = aql`httpsScan.timestamp`
         } else if (orderBy.field === 'implementation') {
-          documentField = aql`DOCUMENT(https, ${beforeId}).implementation`
+          documentField = aql`beforeVar.implementation`
           httpsField = aql`httpsScan.implementation`
         } else if (orderBy.field === 'enforced') {
-          documentField = aql`DOCUMENT(https, ${beforeId}).enforced`
+          documentField = aql`beforeVar.enforced`
           httpsField = aql`httpsScan.enforced`
         } else if (orderBy.field === 'hsts') {
-          documentField = aql`DOCUMENT(https, ${beforeId}).hsts`
+          documentField = aql`beforeVar.hsts`
           httpsField = aql`httpsScan.hsts`
         } else if (orderBy.field === 'hsts-age') {
-          documentField = aql`DOCUMENT(https, ${beforeId}).hstsAge`
+          documentField = aql`beforeVar.hstsAge`
           httpsField = aql`httpsScan.hstsAge`
         } else if (orderBy.field === 'preloaded') {
-          documentField = aql`DOCUMENT(https, ${beforeId}).preloaded`
+          documentField = aql`beforeVar.preloaded`
           httpsField = aql`httpsScan.preloaded`
         }
 
@@ -206,28 +213,28 @@ export const loadHttpsConnectionsByDomainId =
       /* istanbul ignore else */
       if (orderBy.field === 'timestamp') {
         httpsField = aql`httpsScan.timestamp`
-        hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).timestamp`
-        hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).timestamp`
+        hasNextPageDocumentField = aql`LAST(retrievedHttps).timestamp`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedHttps).timestamp`
       } else if (orderBy.field === 'implementation') {
         httpsField = aql`httpsScan.implementation`
-        hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).implementation`
-        hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).implementation`
+        hasNextPageDocumentField = aql`LAST(retrievedHttps).implementation`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedHttps).implementation`
       } else if (orderBy.field === 'enforced') {
         httpsField = aql`httpsScan.enforced`
-        hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).enforced`
-        hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).enforced`
+        hasNextPageDocumentField = aql`LAST(retrievedHttps).enforced`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedHttps).enforced`
       } else if (orderBy.field === 'hsts') {
         httpsField = aql`httpsScan.hsts`
-        hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).hsts`
-        hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).hsts`
+        hasNextPageDocumentField = aql`LAST(retrievedHttps).hsts`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedHttps).hsts`
       } else if (orderBy.field === 'hsts-age') {
         httpsField = aql`httpsScan.hstsAge`
-        hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).hstsAge`
-        hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).hstsAge`
+        hasNextPageDocumentField = aql`LAST(retrievedHttps).hstsAge`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedHttps).hstsAge`
       } else if (orderBy.field === 'preloaded') {
         httpsField = aql`httpsScan.preloaded`
-        hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).preloaded`
-        hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).preloaded`
+        hasNextPageDocumentField = aql`LAST(retrievedHttps).preloaded`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedHttps).preloaded`
       }
 
       hasNextPageFilter = aql`
@@ -272,6 +279,9 @@ export const loadHttpsConnectionsByDomainId =
       requestedHttpsInfo = await query`
       WITH domains, domainsHTTPS, https
       LET httpsKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsHTTPS RETURN v._key)
+
+      ${afterVar}
+      ${beforeVar}
 
       LET retrievedHttps = (
         FOR httpsScan IN https
