@@ -15,6 +15,7 @@ export const loadDmarcConnectionsByDomainId =
     orderBy,
   }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -27,23 +28,25 @@ export const loadDmarcConnectionsByDomainId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(dmarc, ${afterId})`
+
         let dmarcField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
           dmarcField = aql`dmarcScan.timestamp`
-          documentField = aql`DOCUMENT(dmarc, ${afterId}).timestamp`
+          documentField = aql`afterVar.timestamp`
         } else if (orderBy.field === 'record') {
           dmarcField = aql`dmarcScan.record`
-          documentField = aql`DOCUMENT(dmarc, ${afterId}).record`
+          documentField = aql`afterVar.record`
         } else if (orderBy.field === 'p-policy') {
           dmarcField = aql`dmarcScan.pPolicy`
-          documentField = aql`DOCUMENT(dmarc, ${afterId}).pPolicy`
+          documentField = aql`afterVar.pPolicy`
         } else if (orderBy.field === 'sp-policy') {
           dmarcField = aql`dmarcScan.spPolicy`
-          documentField = aql`DOCUMENT(dmarc, ${afterId}).spPolicy`
+          documentField = aql`afterVar.spPolicy`
         } else if (orderBy.field === 'pct') {
           dmarcField = aql`dmarcScan.pct`
-          documentField = aql`DOCUMENT(dmarc, ${afterId}).pct`
+          documentField = aql`afterVar.pct`
         }
 
         afterTemplate = aql`
@@ -55,6 +58,7 @@ export const loadDmarcConnectionsByDomainId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -67,23 +71,25 @@ export const loadDmarcConnectionsByDomainId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(dmarc, ${beforeId})`
+
         let dmarcField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
           dmarcField = aql`dmarcScan.timestamp`
-          documentField = aql`DOCUMENT(dmarc, ${beforeId}).timestamp`
+          documentField = aql`beforeVar.timestamp`
         } else if (orderBy.field === 'record') {
           dmarcField = aql`dmarcScan.record`
-          documentField = aql`DOCUMENT(dmarc, ${beforeId}).record`
+          documentField = aql`beforeVar.record`
         } else if (orderBy.field === 'p-policy') {
           dmarcField = aql`dmarcScan.pPolicy`
-          documentField = aql`DOCUMENT(dmarc, ${beforeId}).pPolicy`
+          documentField = aql`beforeVar.pPolicy`
         } else if (orderBy.field === 'sp-policy') {
           dmarcField = aql`dmarcScan.spPolicy`
-          documentField = aql`DOCUMENT(dmarc, ${beforeId}).spPolicy`
+          documentField = aql`beforeVar.spPolicy`
         } else if (orderBy.field === 'pct') {
           dmarcField = aql`dmarcScan.pct`
-          documentField = aql`DOCUMENT(dmarc, ${beforeId}).pct`
+          documentField = aql`beforeVar.pct`
         }
 
         beforeTemplate = aql`
@@ -198,24 +204,24 @@ export const loadDmarcConnectionsByDomainId =
       /* istanbul ignore else */
       if (orderBy.field === 'timestamp') {
         dmarcField = aql`dmarcScan.timestamp`
-        hasNextPageDocumentField = aql`DOCUMENT(dmarc, LAST(retrievedDmarcScans)._key).timestamp`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dmarc, FIRST(retrievedDmarcScans)._key).timestamp`
+        hasNextPageDocumentField = aql`LAST(retrievedDmarcScans).timestamp`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDmarcScans).timestamp`
       } else if (orderBy.field === 'record') {
         dmarcField = aql`dmarcScan.record`
-        hasNextPageDocumentField = aql`DOCUMENT(dmarc, LAST(retrievedDmarcScans)._key).record`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dmarc, FIRST(retrievedDmarcScans)._key).record`
+        hasNextPageDocumentField = aql`LAST(retrievedDmarcScans).record`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDmarcScans).record`
       } else if (orderBy.field === 'p-policy') {
         dmarcField = aql`dmarcScan.pPolicy`
-        hasNextPageDocumentField = aql`DOCUMENT(dmarc, LAST(retrievedDmarcScans)._key).pPolicy`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dmarc, FIRST(retrievedDmarcScans)._key).pPolicy`
+        hasNextPageDocumentField = aql`LAST(retrievedDmarcScans).pPolicy`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDmarcScans).pPolicy`
       } else if (orderBy.field === 'sp-policy') {
         dmarcField = aql`dmarcScan.spPolicy`
-        hasNextPageDocumentField = aql`DOCUMENT(dmarc, LAST(retrievedDmarcScans)._key).spPolicy`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dmarc, FIRST(retrievedDmarcScans)._key).spPolicy`
+        hasNextPageDocumentField = aql`LAST(retrievedDmarcScans).spPolicy`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDmarcScans).spPolicy`
       } else if (orderBy.field === 'pct') {
         dmarcField = aql`dmarcScan.pct`
-        hasNextPageDocumentField = aql`DOCUMENT(dmarc, LAST(retrievedDmarcScans)._key).pct`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dmarc, FIRST(retrievedDmarcScans)._key).pct`
+        hasNextPageDocumentField = aql`LAST(retrievedDmarcScans).pct`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDmarcScans).pct`
       }
 
       hasNextPageFilter = aql`
@@ -259,6 +265,9 @@ export const loadDmarcConnectionsByDomainId =
       dmarcScanInfoCursor = await query`
       WITH dmarc, domains, domainsDMARC
       LET dmarcKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDMARC RETURN v._key)
+
+      ${afterVar}
+      ${beforeVar}
 
       LET retrievedDmarcScans = (
         FOR dmarcScan IN dmarc
