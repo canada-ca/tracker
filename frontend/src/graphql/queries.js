@@ -1351,7 +1351,6 @@ export const ADMIN_AFFILIATIONS = gql`
       orderBy: $orderBy
       isAdmin: $isAdmin
       includeSuperAdminOrg: $includeSuperAdminOrg
-      search: $search
     ) {
       edges {
         node {

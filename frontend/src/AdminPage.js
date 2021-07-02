@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Stack, Text, useToast, Icon, Divider, Box } from '@chakra-ui/core'
+import {
+  Stack,
+  Text,
+  useToast,
+  Icon,
+  Divider,
+  Box,
+  // Button,
+} from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
@@ -10,7 +18,8 @@ import { LoadingMessage } from './LoadingMessage'
 import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
-import Select from 'react-select'
+// import Select from 'react-select'
+import { Dropdown } from './Dropdown'
 
 export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -76,11 +85,11 @@ export default function AdminPage() {
           </Text>
 
           <Stack flexDirection={['column', 'row']} align="center">
-            <Text fontWeight="bold" fontSize="2xl">
+            {/* <Text fontWeight="bold" fontSize="2xl">
               <Trans>Organization: </Trans>
-            </Text>
-            <Box w={['100%', '60%']} mx="2">
-              <Select
+            </Text> */}
+            <Box w={['100%', '50%']}>
+              {/* <Select
                 onChange={(opt) => {
                   setOrgDetails(opt.value)
                   setSelectedOrg(opt.label)
@@ -88,6 +97,15 @@ export default function AdminPage() {
                 placeholder={t`Select an organization`}
                 options={options}
                 isSearchable
+              /> */}
+              <Dropdown
+                options={options}
+                prompt={t`Select an organization`}
+                onChange={(opt) => {
+                  setOrgDetails(opt.value)
+                  setSelectedOrg(opt.label)
+                }}
+                value={selectedOrg}
               />
             </Box>
             <TrackerButton
