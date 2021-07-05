@@ -404,6 +404,17 @@ msgstr "Le code à deux facteurs est incorrect. Veuillez réessayer."
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "La longueur du code à deux facteurs est incorrecte. Veuillez réessayer."
 
+#: src/affiliation/mutations/leave-organization.js:48
+msgid "Unable leave organization."
+msgstr "Impossible de quitter l'organisation."
+
+#: src/affiliation/mutations/leave-organization.js:127
+#: src/affiliation/mutations/leave-organization.js:160
+#: src/affiliation/mutations/leave-organization.js:176
+#: src/affiliation/mutations/leave-organization.js:186
+msgid "Unable leave organization. Please try again."
+msgstr "Impossible de quitter l'organisation. Veuillez réessayer."
+
 #: src/affiliation/mutations/invite-user-to-org.js:170
 msgid "Unable to add user to organization. Please try again."
 msgstr "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer."
@@ -629,6 +640,10 @@ msgstr "Impossible de charger le(s) tag(s) d'orientation SSL. Veuillez réessaye
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:386
 msgid "Unable to load SSL scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) SSL. Veuillez réessayer."
+
+#: src/auth/check-user-belongs-to-org.js:22
+msgid "Unable to load affiliation information. Please try again."
+msgstr "Impossible de charger les informations d'affiliation. Veuillez réessayer."
 
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:266
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:449

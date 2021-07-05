@@ -255,6 +255,10 @@
       "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email.",
     'Successfully invited user to organization, and sent notification email.':
       "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
+    'Successfully left organization: {0}': [
+      "L'organisation a été quittée avec succès : ",
+      ['0'],
+    ],
     'Successfully removed domain: {0} from {1}.': [
       'A réussi à supprimer le domaine : ',
       ['0'],
@@ -284,6 +288,9 @@
       'Le code à deux facteurs est incorrect. Veuillez réessayer.',
     'Two factor code length is incorrect. Please try again.':
       'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
+    'Unable leave organization.': "Impossible de quitter l'organisation.",
+    'Unable leave organization. Please try again.':
+      "Impossible de quitter l'organisation. Veuillez réessayer.",
     'Unable to add user to organization. Please try again.':
       "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer.",
     'Unable to authenticate. Please try again.':
@@ -369,6 +376,8 @@
       "Impossible de charger le(s) tag(s) d'orientation SSL. Veuillez réessayer.",
     'Unable to load SSL scan(s). Please try again.':
       'Impossible de charger le(s) scan(s) SSL. Veuillez réessayer.',
+    'Unable to load affiliation information. Please try again.':
+      "Impossible de charger les informations d'affiliation. Veuillez réessayer.",
     'Unable to load affiliation(s). Please try again.':
       "Impossible de charger l'affiliation (s). Veuillez réessayer.",
     'Unable to load domain(s). Please try again.':

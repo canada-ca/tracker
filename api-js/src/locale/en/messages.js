@@ -251,6 +251,10 @@
       'Successfully email verified account, and set TFA send method to email.',
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
+    'Successfully left organization: {0}': [
+      'Successfully left organization: ',
+      ['0'],
+    ],
     'Successfully removed domain: {0} from {1}.': [
       'Successfully removed domain: ',
       ['0'],
@@ -283,6 +287,9 @@
       'Two factor code is incorrect. Please try again.',
     'Two factor code length is incorrect. Please try again.':
       'Two factor code length is incorrect. Please try again.',
+    'Unable leave organization.': 'Unable leave organization.',
+    'Unable leave organization. Please try again.':
+      'Unable leave organization. Please try again.',
     'Unable to add user to organization. Please try again.':
       'Unable to add user to organization. Please try again.',
     'Unable to authenticate. Please try again.':
@@ -369,6 +376,8 @@
       'Unable to load SSL guidance tag(s). Please try again.',
     'Unable to load SSL scan(s). Please try again.':
       'Unable to load SSL scan(s). Please try again.',
+    'Unable to load affiliation information. Please try again.':
+      'Unable to load affiliation information. Please try again.',
     'Unable to load affiliation(s). Please try again.':
       'Unable to load affiliation(s). Please try again.',
     'Unable to load domain(s). Please try again.':
