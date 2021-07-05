@@ -451,7 +451,7 @@ describe('given a successful leave', () => {
             leaveOrganization: {
               result: {
                 status:
-                "L'organisation a été quittée avec succès : treasury-board-secretariat",
+                  "L'organisation a été quittée avec succès : treasury-board-secretariat",
               },
             },
           },
@@ -849,27 +849,718 @@ describe('given a successful leave', () => {
   })
 })
 describe('given an unsuccessful leave', () => {
+  let schema, i18n
+
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
+  beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
+    // Create GQL Schema
+    schema = new GraphQLSchema({
+      query: createQuerySchema(),
+      mutation: createMutationSchema(),
+    })
+  })
+  afterEach(async () => {
+    consoleOutput.length = 0
+  })
   describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        locale: 'en',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
+        locales: ['en', 'fr'],
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
+        },
+      })
+    })
     describe('org cannot be found', () => {
-      it('returns an error message', async () => {})
+      it('returns an error message', async () => {
+        const response = await graphql(
+          schema,
+          `
+              mutation {
+                leaveOrganization (
+                  input: {
+                    orgId: "${toGlobalId('organizations', 123)}"
+                  }
+                ) {
+                  result {
+                    ... on LeaveOrganizationResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+          null,
+          {
+            i18n,
+            query: jest.fn(),
+            collections: jest.fn(),
+            transaction: jest.fn(),
+            userKey: '123',
+            auth: {
+              checkOrgOwner: jest.fn().mockReturnValue(false),
+              userRequired: jest.fn().mockReturnValue({
+                _key: '123',
+                emailValidated: true,
+              }),
+              verifiedRequired: verifiedRequired({ i18n }),
+            },
+            loaders: {
+              loadOrgByKey: {
+                load: jest.fn().mockReturnValue(undefined),
+              },
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        const expectedResult = {
+          data: {
+            leaveOrganization: {
+              result: {
+                code: 400,
+                description: 'Unable to leave undefined organization.',
+              },
+            },
+          },
+        }
+
+        expect(response).toEqual(expectedResult)
+        expect(consoleOutput).toEqual([
+          `User: 123 attempted to leave org: 123, however it's undefined.`,
+        ])
+      })
     })
     describe('user is an org owner', () => {
       describe('transaction step error occurs', () => {
         describe('when removing scan data', () => {
-          it('throws an error', async () => {})
+          it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: jest.fn(),
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove scan results for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
         })
         describe('when removing domain, affiliation, and org data', () => {
-          it('throws an error', async () => {})
+          it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: jest.fn(),
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove domain, affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
         })
       })
     })
     describe('user is not an org owner', () => {
       describe('when removing affiliation information', () => {
-        it('throws an error', async () => {})
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest
+              .fn()
+              .mockRejectedValue(new Error('Step error occurred.')),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', 123)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query: jest.fn(),
+              collections: jest.fn({ property: 'string' }),
+              transaction: mockedTransaction,
+              userKey: '123',
+              auth: {
+                checkOrgOwner: jest.fn().mockReturnValue(false),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: '123',
+                  emailValidated: true,
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable leave organization. Please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Trx step error occurred when removing user: 123 affiliation with org: 123 err: Error: Step error occurred.`,
+          ])
+        })
       })
     })
     describe('transaction commit error occurs', () => {
-      it('throws an error', async () => {})
+      it('throws an error', async () => {
+        const mockedTransaction = jest.fn().mockReturnValue({
+          step: jest.fn().mockReturnValue(new Error('Step error occurred.')),
+          commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
+        })
+
+        const response = await graphql(
+          schema,
+          `
+              mutation {
+                leaveOrganization (
+                  input: {
+                    orgId: "${toGlobalId('organizations', 123)}"
+                  }
+                ) {
+                  result {
+                    ... on LeaveOrganizationResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+          null,
+          {
+            i18n,
+            query: jest.fn(),
+            collections: jest.fn({ property: 'string' }),
+            transaction: mockedTransaction,
+            userKey: '123',
+            auth: {
+              checkOrgOwner: jest.fn().mockReturnValue(false),
+              userRequired: jest.fn().mockReturnValue({
+                _key: '123',
+                emailValidated: true,
+              }),
+              verifiedRequired: verifiedRequired({ i18n }),
+            },
+            loaders: {
+              loadOrgByKey: {
+                load: jest.fn().mockReturnValue({ _key: 123 }),
+              },
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        const error = [
+          new GraphQLError('Unable leave organization. Please try again.'),
+        ]
+
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `Trx commit error occurred when user: 123 attempted to leave org: 123. error: Error: Trx Commit Error`,
+        ])
+      })
+    })
+  })
+  describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        locale: 'fr',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
+        locales: ['en', 'fr'],
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
+        },
+      })
+    })
+    describe('org cannot be found', () => {
+      it('returns an error message', async () => {
+        const response = await graphql(
+          schema,
+          `
+              mutation {
+                leaveOrganization (
+                  input: {
+                    orgId: "${toGlobalId('organizations', 123)}"
+                  }
+                ) {
+                  result {
+                    ... on LeaveOrganizationResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+          null,
+          {
+            i18n,
+            query: jest.fn(),
+            collections: jest.fn(),
+            transaction: jest.fn(),
+            userKey: '123',
+            auth: {
+              checkOrgOwner: jest.fn().mockReturnValue(false),
+              userRequired: jest.fn().mockReturnValue({
+                _key: '123',
+                emailValidated: true,
+              }),
+              verifiedRequired: verifiedRequired({ i18n }),
+            },
+            loaders: {
+              loadOrgByKey: {
+                load: jest.fn().mockReturnValue(undefined),
+              },
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        const expectedResult = {
+          data: {
+            leaveOrganization: {
+              result: {
+                code: 400,
+                description:
+                  'Impossible de quitter une organisation non définie.',
+              },
+            },
+          },
+        }
+
+        expect(response).toEqual(expectedResult)
+        expect(consoleOutput).toEqual([
+          `User: 123 attempted to leave org: 123, however it's undefined.`,
+        ])
+      })
+    })
+    describe('user is an org owner', () => {
+      describe('transaction step error occurs', () => {
+        describe('when removing scan data', () => {
+          it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: jest.fn(),
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove scan results for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing domain, affiliation, and org data', () => {
+          it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: jest.fn(),
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove domain, affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+      })
+    })
+    describe('user is not an org owner', () => {
+      describe('when removing affiliation information', () => {
+        it('throws an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest
+              .fn()
+              .mockRejectedValue(new Error('Step error occurred.')),
+          })
+
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', 123)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query: jest.fn(),
+              collections: jest.fn({ property: 'string' }),
+              transaction: mockedTransaction,
+              userKey: '123',
+              auth: {
+                checkOrgOwner: jest.fn().mockReturnValue(false),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: '123',
+                  emailValidated: true,
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              "Impossible de quitter l'organisation. Veuillez réessayer.",
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Trx step error occurred when removing user: 123 affiliation with org: 123 err: Error: Step error occurred.`,
+          ])
+        })
+      })
+    })
+    describe('transaction commit error occurs', () => {
+      it('throws an error', async () => {
+        const mockedTransaction = jest.fn().mockReturnValue({
+          step: jest.fn().mockReturnValue(new Error('Step error occurred.')),
+          commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
+        })
+
+        const response = await graphql(
+          schema,
+          `
+              mutation {
+                leaveOrganization (
+                  input: {
+                    orgId: "${toGlobalId('organizations', 123)}"
+                  }
+                ) {
+                  result {
+                    ... on LeaveOrganizationResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+          null,
+          {
+            i18n,
+            query: jest.fn(),
+            collections: jest.fn({ property: 'string' }),
+            transaction: mockedTransaction,
+            userKey: '123',
+            auth: {
+              checkOrgOwner: jest.fn().mockReturnValue(false),
+              userRequired: jest.fn().mockReturnValue({
+                _key: '123',
+                emailValidated: true,
+              }),
+              verifiedRequired: verifiedRequired({ i18n }),
+            },
+            loaders: {
+              loadOrgByKey: {
+                load: jest.fn().mockReturnValue({ _key: 123 }),
+              },
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        const error = [
+          new GraphQLError(
+            "Impossible de quitter l'organisation. Veuillez réessayer.",
+          ),
+        ]
+
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `Trx commit error occurred when user: 123 attempted to leave org: 123. error: Error: Trx Commit Error`,
+        ])
+      })
     })
   })
 })

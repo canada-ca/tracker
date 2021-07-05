@@ -33,20 +33,22 @@ export const leaveOrganization = new mutationWithClientMutationId({
       validators: { cleanseInput },
     },
   ) => {
-    const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
 
     const user = await userRequired()
 
     verifiedRequired({ user })
 
-    const org = await loadOrgByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgKey)
 
     if (typeof org === 'undefined') {
-      console.warn(`org undefined`)
+      console.warn(
+        `User: ${user._key} attempted to leave org: ${orgKey}, however it's undefined.`,
+      )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable leave organization.`),
+        description: i18n._(t`Unable to leave undefined organization.`),
       }
     }
 
