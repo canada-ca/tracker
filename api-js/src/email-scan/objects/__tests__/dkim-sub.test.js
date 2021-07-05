@@ -32,6 +32,15 @@ describe('given the dkimSubType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
+    describe('testing the sharedId resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = httpsSubType.getFields()
+
+        expect(demoType.sharedId.resolve({ sharedId: 'sharedId' })).toEqual(
+          'sharedId',
+        )
+      })
+    })
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimSubType.getFields()
