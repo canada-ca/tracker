@@ -6,7 +6,11 @@ export const spfScanData = {
   type: spfSubType,
   description:
     'This subscription allows the user to receive spf data directly from the scanners in real time.',
-  resolve: ({ domainKey, results }) => ({ domainKey, ...results }),
+  resolve: ({ sharedId, domainKey, results }) => ({
+    sharedId,
+    domainKey,
+    ...results,
+  }),
   subscribe: async (_context, _args, { pubsubs: { spfPubSub }, userKey }) =>
     spfPubSub.asyncIterator(`${SPF_SCAN_CHANNEL}/${userKey}`),
 }

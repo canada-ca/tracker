@@ -88,6 +88,7 @@ def test_https():
         "uuid": None,
         "scan_type": "https",
         "domain_key": domain["_key"],
+        "shared_id": None
     }
 
     test_client.post("/", json=test_payload)
@@ -124,6 +125,7 @@ def test_ssl():
         "uuid": None,
         "scan_type": "ssl",
         "domain_key": domain["_key"],
+        "shared_id": None
     }
 
     test_client.post("/", json=test_payload)
@@ -153,6 +155,7 @@ def test_dns():
         "uuid": None,
         "scan_type": "dns",
         "domain_key": domain["_key"],
+        "shared_id": None
     }
 
     test_client.post("/", json=test_payload)

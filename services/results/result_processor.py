@@ -32,7 +32,7 @@ r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 def publish_results(results, scan_type, uuid):
     r.publish(f"scan/{scan_type}/{uuid}", json.dumps(results))
 
-def process_https(results, domain_key, uuid, db):
+def process_https(results, domain_key, uuid, db, shared_id):
     timestamp = str(datetime.datetime.utcnow())
     neutral_tags = []
     positive_tags = []
@@ -182,11 +182,11 @@ def process_https(results, domain_key, uuid, db):
         logging.info("HTTPS Scan inserted into database")
 
     else:
-        publish_results({"domainKey": domain_key, "results": httpsResults}, "https", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": httpsResults}, "https", uuid)
         logging.info("HTTPS Scan published to redis")
 
 
-def process_ssl(results, guidance, domain_key, uuid, db):
+def process_ssl(results, guidance, domain_key, uuid, db, shared_id):
     timestamp = str(datetime.datetime.utcnow())
     neutral_tags = []
     positive_tags = []
@@ -302,11 +302,11 @@ def process_ssl(results, guidance, domain_key, uuid, db):
         logging.info("SSL Scan inserted into database")
 
     else:
-        publish_results({"domainKey": domain_key, "results": sslResults}, "ssl", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": sslResults}, "ssl", uuid)
         logging.info("SSL Scan published to redis")
 
 
-def process_dns(results, domain_key, uuid, db):
+def process_dns(results, domain_key, uuid, db, shared_id):
     timestamp = str(datetime.datetime.utcnow())
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
@@ -888,9 +888,9 @@ def process_dns(results, domain_key, uuid, db):
         logging.info("DNS Scans inserted into database")
 
     else:
-        publish_results({"domainKey": domain_key, "results": dmarcResults}, "dmarc", uuid)
-        publish_results({"domainKey": domain_key, "results": spfResults}, "spf", uuid)
-        publish_results({"domainKey": domain_key, "results": dkimResults}, "dkim", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dmarcResults}, "dmarc", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": spfResults}, "spf", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dkimResults}, "dkim", uuid)
         logging.info("DNS Scans published to redis")
 
 
@@ -918,6 +918,7 @@ def Server(
                 scan_type = payload_dict["scan_type"]
                 uuid = payload_dict["uuid"]
                 domain_key = payload_dict["domain_key"]
+                shared_id = payload_dict["shared_id"]
                 logging.info(
                     f"Results received for {scan_type} scan (TIME={datetime.datetime.utcnow()})"
                 )
@@ -927,12 +928,12 @@ def Server(
                 return PlainTextResponse(msg)
 
             if scan_type == "https":
-                process_https(results, domain_key, uuid, db)
+                process_https(results, domain_key, uuid, db, shared_id)
             elif scan_type == "ssl":
                 guidance = tls_guidance()
-                process_ssl(results, guidance, domain_key, uuid, db)
+                process_ssl(results, guidance, domain_key, uuid, db, shared_id)
             else:
-                process_dns(results, domain_key, uuid, db)
+                process_dns(results, domain_key, uuid, db, shared_id)
 
             return PlainTextResponse(
                 f"{scan_type} results processed and inserted successfully (TIME={datetime.datetime.utcnow()})."

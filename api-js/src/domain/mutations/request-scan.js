@@ -1,11 +1,15 @@
 import { t } from '@lingui/macro'
 import { GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
+import { v4 as uuidv4 } from 'uuid'
 
 import { Domain } from '../../scalars'
 
-const { DNS_SCANNER_ENDPOINT, HTTPS_SCANNER_ENDPOINT, SSL_SCANNER_ENDPOINT } =
-  process.env
+const {
+  DNS_SCANNER_ENDPOINT,
+  HTTPS_SCANNER_ENDPOINT,
+  SSL_SCANNER_ENDPOINT,
+} = process.env
 
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
@@ -68,11 +72,14 @@ export const requestScan = new mutationWithClientMutationId({
       )
     }
 
+    const sharedId = uuidv4()
+
     const parameters = {
       domain_key: domain._key,
       domain: domain.domain,
       selectors: domain.selectors,
       uuid: userKey,
+      shared_id: sharedId,
     }
 
     try {

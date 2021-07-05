@@ -33,6 +33,7 @@ def dispatch_https(domain, client):
         "domain_key": domain["_key"],
         "domain": domain["domain"],
         "uuid": None,
+        "shared_id": None
     }
     client.post(QUEUE_URL + "/https", json=payload)
 
@@ -49,6 +50,7 @@ def dispatch_ssl(domain, client):
         "domain_key": domain["_key"],
         "domain": domain["domain"],
         "uuid": None,
+        "shared_id": None
     }
     client.post(QUEUE_URL + "/ssl", json=payload)
 
@@ -66,6 +68,7 @@ def dispatch_dns(domain, client):
         "domain": domain["domain"],
         "selectors": domain.get("selectors", None),
         "uuid": None,
+        "shared_id": None
     }
     client.post(QUEUE_URL + "/dns", json=payload)
 

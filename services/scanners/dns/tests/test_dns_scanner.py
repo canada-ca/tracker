@@ -16,6 +16,7 @@ def test_scan():
         "domain": "cyber.gc.ca",
         "domain_key": "domains/1",
         "selectors": ["selector1", "selector2"],
+        "shared_id": 1234
     }
 
     res = test_client.post("/", json=test_payload)

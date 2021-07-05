@@ -295,6 +295,7 @@ def Server(server_client=requests):
             domain = inbound_payload["domain"]
             uuid = inbound_payload["uuid"]
             domain_key = inbound_payload["domain_key"]
+            shared_id = inbound_payload["shared_id"]
         except KeyError:
             logging.error(f"Invalid scan request format received: {str(inbound_payload)}")
             return Response("Invalid Format", status_code=400)
@@ -314,6 +315,7 @@ def Server(server_client=requests):
                 "scan_type": "ssl",
                 "uuid": uuid,
                 "domain_key": domain_key,
+                "shared_id": shared_id
             }
         )
         logging.info(f"Scan results: {str(scan_results)}")

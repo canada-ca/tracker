@@ -14,6 +14,11 @@ export const spfSubType = new GraphQLObjectType({
   description:
     'SPF gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
+    sharedId: {
+      // TODO type: ID_TYPE,
+      description: `The shared id to match scans together.`,
+      resolve: async ({ sharedId }) => sharedId,
+    },
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,
