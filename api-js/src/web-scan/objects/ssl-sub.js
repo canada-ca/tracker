@@ -3,6 +3,7 @@ import {
   GraphQLList,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLID,
 } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
@@ -15,9 +16,9 @@ export const sslSubType = new GraphQLObjectType({
     'SSL gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
     sharedId: {
-      // TODO type: ID_TYPE,
+      type: GraphQLID,
       description: `The shared id to match scans together.`,
-      resolve: async ({ sharedId }) => sharedId,
+      resolve: ({ sharedId }) => sharedId,
     },
     domain: {
       type: domainType,
