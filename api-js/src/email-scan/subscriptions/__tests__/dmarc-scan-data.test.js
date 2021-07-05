@@ -40,7 +40,8 @@ describe('given the dmarcScanData subscription', () => {
     createSubscriptionMutation,
     redis,
     pub,
-    domain
+    domain,
+    sharedId
 
   beforeAll(async () => {
     options = {
@@ -101,6 +102,7 @@ describe('given the dmarcScanData subscription', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+    sharedId = 'some-shared-id'
   })
 
   afterEach(async () => {
@@ -134,6 +136,7 @@ describe('given the dmarcScanData subscription', () => {
                   pub.publish(
                     `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
                     JSON.stringify({
+                      sharedId: sharedId,
                       domainKey: domain._key,
                       results: dmarcScan,
                     }),
@@ -173,6 +176,7 @@ describe('given the dmarcScanData subscription', () => {
       parse(`
       subscription {
         dmarcScanData {
+          sharedId
           domain {
             domain
           }
@@ -250,6 +254,7 @@ describe('given the dmarcScanData subscription', () => {
     const expectedResult = {
       data: {
         dmarcScanData: {
+          sharedId: sharedId,
           domain: {
             domain: 'test.domain.gc.ca',
           },
