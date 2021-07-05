@@ -6,6 +6,7 @@ export const loadDkimGuidanceTagConnectionsByTagId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ dkimGuidanceTags, after, before, first, last, orderBy }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -18,17 +19,19 @@ export const loadDkimGuidanceTagConnectionsByTagId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(dkimGuidanceTags, ${afterId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(dkimGuidanceTags, ${afterId})._key`
+          documentField = aql`afterVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(dkimGuidanceTags, ${afterId}).tagName`
+          documentField = aql`afterVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(dkimGuidanceTags, ${afterId}).guidance`
+          documentField = aql`afterVar.guidance`
         }
 
         afterTemplate = aql`
@@ -40,6 +43,7 @@ export const loadDkimGuidanceTagConnectionsByTagId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -52,17 +56,19 @@ export const loadDkimGuidanceTagConnectionsByTagId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(dkimGuidanceTags, ${beforeId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(dkimGuidanceTags, ${beforeId})._key`
+          documentField = aql`beforeVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(dkimGuidanceTags, ${beforeId}).tagName`
+          documentField = aql`beforeVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(dkimGuidanceTags, ${beforeId}).guidance`
+          documentField = aql`beforeVar.guidance`
         }
 
         beforeTemplate = aql`
@@ -196,6 +202,10 @@ export const loadDkimGuidanceTagConnectionsByTagId =
     try {
       dkimGuidanceTagInfoCursor = await query`
       WITH dkimGuidanceTags
+
+      ${afterVar}
+      ${beforeVar}
+      
       LET retrievedDkimGuidanceTags = (
         FOR tag IN dkimGuidanceTags
           FILTER tag._key IN ${dkimGuidanceTags}
