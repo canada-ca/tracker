@@ -6,6 +6,7 @@ export const loadDkimResultConnectionsByDkimId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ dkimId, after, before, first, last, orderBy }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -18,17 +19,19 @@ export const loadDkimResultConnectionsByDkimId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(dkimResults, ${afterId})`
+
         let dkimResultField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'selector') {
           dkimResultField = aql`dkimResult.selector`
-          documentField = aql`DOCUMENT(dkimResults, ${afterId}).selector`
+          documentField = aql`afterVar.selector`
         } else if (orderBy.field === 'record') {
           dkimResultField = aql`dkimResult.record`
-          documentField = aql`DOCUMENT(dkimResults, ${afterId}).record`
+          documentField = aql`afterVar.record`
         } else if (orderBy.field === 'key-length') {
           dkimResultField = aql`dkimResult.keyLength`
-          documentField = aql`DOCUMENT(dkimResults, ${afterId}).keyLength`
+          documentField = aql`afterVar.keyLength`
         }
 
         afterTemplate = aql`
@@ -40,6 +43,7 @@ export const loadDkimResultConnectionsByDkimId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -52,17 +56,19 @@ export const loadDkimResultConnectionsByDkimId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(dkimResults, ${beforeId})`
+
         let dkimResultField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'selector') {
           dkimResultField = aql`dkimResult.selector`
-          documentField = aql`DOCUMENT(dkimResults, ${beforeId}).selector`
+          documentField = aql`beforeVar.selector`
         } else if (orderBy.field === 'record') {
           dkimResultField = aql`dkimResult.record`
-          documentField = aql`DOCUMENT(dkimResults, ${beforeId}).record`
+          documentField = aql`beforeVar.record`
         } else if (orderBy.field === 'key-length') {
           dkimResultField = aql`dkimResult.keyLength`
-          documentField = aql`DOCUMENT(dkimResults, ${beforeId}).keyLength`
+          documentField = aql`beforeVar.keyLength`
         }
 
         beforeTemplate = aql`
@@ -150,16 +156,16 @@ export const loadDkimResultConnectionsByDkimId =
       /* istanbul ignore else */
       if (orderBy.field === 'selector') {
         dkimResultField = aql`dkimResult.selector`
-        hasNextPageDocumentField = aql`DOCUMENT(dkimResults, LAST(retrievedDkimResults)._key).selector`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dkimResults, FIRST(retrievedDkimResults)._key).selector`
+        hasNextPageDocumentField = aql`LAST(retrievedDkimResults).selector`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDkimResults).selector`
       } else if (orderBy.field === 'record') {
         dkimResultField = aql`dkimResult.record`
-        hasNextPageDocumentField = aql`DOCUMENT(dkimResults, LAST(retrievedDkimResults)._key).record`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dkimResults, FIRST(retrievedDkimResults)._key).record`
+        hasNextPageDocumentField = aql`LAST(retrievedDkimResults).record`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDkimResults).record`
       } else if (orderBy.field === 'key-length') {
         dkimResultField = aql`dkimResult.keyLength`
-        hasNextPageDocumentField = aql`DOCUMENT(dkimResults, LAST(retrievedDkimResults)._key).keyLength`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dkimResults, FIRST(retrievedDkimResults)._key).keyLength`
+        hasNextPageDocumentField = aql`LAST(retrievedDkimResults).keyLength`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDkimResults).keyLength`
       }
 
       hasNextPageFilter = aql`
@@ -199,6 +205,9 @@ export const loadDkimResultConnectionsByDkimId =
       dkimResultsCursor = await query`
       WITH dkim, dkimResults, dkimToDkimResults
       LET dkimResultKeys = (FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults RETURN v._key)
+
+      ${afterVar}
+      ${beforeVar}
 
       LET retrievedDkimResults = (
         FOR dkimResult IN dkimResults

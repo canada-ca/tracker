@@ -15,6 +15,7 @@ export const loadSpfConnectionsByDomainId =
     orderBy,
   }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -27,20 +28,22 @@ export const loadSpfConnectionsByDomainId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(spf, ${afterId})`
+
         let spfField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
           spfField = aql`spfScan.timestamp`
-          documentField = aql`DOCUMENT(spf, ${afterId}).timestamp`
+          documentField = aql`afterVar.timestamp`
         } else if (orderBy.field === 'lookups') {
           spfField = aql`spfScan.lookups`
-          documentField = aql`DOCUMENT(spf, ${afterId}).lookups`
+          documentField = aql`afterVar.lookups`
         } else if (orderBy.field === 'record') {
           spfField = aql`spfScan.record`
-          documentField = aql`DOCUMENT(spf, ${afterId}).record`
+          documentField = aql`afterVar.record`
         } else if (orderBy.field === 'spf-default') {
           spfField = aql`spfScan.spfDefault`
-          documentField = aql`DOCUMENT(spf, ${afterId}).spfDefault`
+          documentField = aql`afterVar.spfDefault`
         }
 
         afterTemplate = aql`
@@ -52,6 +55,8 @@ export const loadSpfConnectionsByDomainId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
+
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -64,20 +69,22 @@ export const loadSpfConnectionsByDomainId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(spf, ${beforeId})`
+
         let spfField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
           spfField = aql`spfScan.timestamp`
-          documentField = aql`DOCUMENT(spf, ${beforeId}).timestamp`
+          documentField = aql`beforeVar.timestamp`
         } else if (orderBy.field === 'lookups') {
           spfField = aql`spfScan.lookups`
-          documentField = aql`DOCUMENT(spf, ${beforeId}).lookups`
+          documentField = aql`beforeVar.lookups`
         } else if (orderBy.field === 'record') {
           spfField = aql`spfScan.record`
-          documentField = aql`DOCUMENT(spf, ${beforeId}).record`
+          documentField = aql`beforeVar.record`
         } else if (orderBy.field === 'spf-default') {
           spfField = aql`spfScan.spfDefault`
-          documentField = aql`DOCUMENT(spf, ${beforeId}).spfDefault`
+          documentField = aql`beforeVar.spfDefault`
         }
 
         beforeTemplate = aql`
@@ -191,20 +198,20 @@ export const loadSpfConnectionsByDomainId =
       /* istanbul ignore else */
       if (orderBy.field === 'timestamp') {
         spfField = aql`spfScan.timestamp`
-        hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).timestamp`
-        hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).timestamp`
+        hasNextPageDocument = aql`LAST(retrievedSpfScans).timestamp`
+        hasPreviousPageDocument = aql`FIRST(retrievedSpfScans).timestamp`
       } else if (orderBy.field === 'lookups') {
         spfField = aql`spfScan.lookups`
-        hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).lookups`
-        hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).lookups`
+        hasNextPageDocument = aql`LAST(retrievedSpfScans).lookups`
+        hasPreviousPageDocument = aql`FIRST(retrievedSpfScans).lookups`
       } else if (orderBy.field === 'record') {
         spfField = aql`spfScan.record`
-        hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).record`
-        hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).record`
+        hasNextPageDocument = aql`LAST(retrievedSpfScans).record`
+        hasPreviousPageDocument = aql`FIRST(retrievedSpfScans).record`
       } else if (orderBy.field === 'spf-default') {
         spfField = aql`spfScan.spfDefault`
-        hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).spfDefault`
-        hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).spfDefault`
+        hasNextPageDocument = aql`LAST(retrievedSpfScans).spfDefault`
+        hasPreviousPageDocument = aql`FIRST(retrievedSpfScans).spfDefault`
       }
 
       hasNextPageFilter = aql`
@@ -246,6 +253,9 @@ export const loadSpfConnectionsByDomainId =
       spfScanInfoCursor = await query`
       WITH domains, domainsSPF, spf
       LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
+
+      ${afterVar}
+      ${beforeVar}
 
       LET retrievedSpfScans = (
         FOR spfScan IN spf

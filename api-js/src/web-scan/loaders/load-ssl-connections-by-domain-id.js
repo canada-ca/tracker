@@ -15,6 +15,7 @@ export const loadSslConnectionByDomainId =
     orderBy,
   }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -27,38 +28,40 @@ export const loadSslConnectionByDomainId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(ssl, ${afterId})`
+
         let documentField = aql``
         let sslField = aql``
         /* istanbul ignore else */
         if (orderBy.field === 'acceptable-ciphers') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).acceptable_ciphers`
+          documentField = aql`afterVar.acceptable_ciphers`
           sslField = aql`sslScan.acceptable_ciphers`
         } else if (orderBy.field === 'acceptable-curves') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).acceptable_curves`
+          documentField = aql`afterVar.acceptable_curves`
           sslField = aql`sslScan.acceptable_curves`
         } else if (orderBy.field === 'ccs-injection-vulnerable') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).ccs_injection_vulnerable`
+          documentField = aql`afterVar.ccs_injection_vulnerable`
           sslField = aql`sslScan.ccs_injection_vulnerable`
         } else if (orderBy.field === 'heartbleed-vulnerable') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).heartbleed_vulnerable`
+          documentField = aql`afterVar.heartbleed_vulnerable`
           sslField = aql`sslScan.heartbleed_vulnerable`
         } else if (orderBy.field === 'strong-ciphers') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).strong_ciphers`
+          documentField = aql`afterVar.strong_ciphers`
           sslField = aql`sslScan.strong_ciphers`
         } else if (orderBy.field === 'strong-curves') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).strong_curves`
+          documentField = aql`afterVar.strong_curves`
           sslField = aql`sslScan.strong_curves`
         } else if (orderBy.field === 'supports-ecdh-key-exchange') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).supports_ecdh_key_exchange`
+          documentField = aql`afterVar.supports_ecdh_key_exchange`
           sslField = aql`sslScan.supports_ecdh_key_exchange`
         } else if (orderBy.field === 'timestamp') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).timestamp`
+          documentField = aql`afterVar.timestamp`
           sslField = aql`sslScan.timestamp`
         } else if (orderBy.field === 'weak-ciphers') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).weak_ciphers`
+          documentField = aql`afterVar.weak_ciphers`
           sslField = aql`sslScan.weak_ciphers`
         } else if (orderBy.field === 'weak-curves') {
-          documentField = aql`DOCUMENT(ssl, ${afterId}).weak_curves`
+          documentField = aql`afterVar.weak_curves`
           sslField = aql`sslScan.weak_curves`
         }
 
@@ -71,6 +74,8 @@ export const loadSslConnectionByDomainId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
+
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -83,38 +88,40 @@ export const loadSslConnectionByDomainId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(ssl, ${beforeId})`
+
         let documentField = aql``
         let sslField = aql``
         /* istanbul ignore else */
         if (orderBy.field === 'acceptable-ciphers') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).acceptable_ciphers`
+          documentField = aql`beforeVar.acceptable_ciphers`
           sslField = aql`sslScan.acceptable_ciphers`
         } else if (orderBy.field === 'acceptable-curves') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).acceptable_curves`
+          documentField = aql`beforeVar.acceptable_curves`
           sslField = aql`sslScan.acceptable_curves`
         } else if (orderBy.field === 'ccs-injection-vulnerable') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).ccs_injection_vulnerable`
+          documentField = aql`beforeVar.ccs_injection_vulnerable`
           sslField = aql`sslScan.ccs_injection_vulnerable`
         } else if (orderBy.field === 'heartbleed-vulnerable') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).heartbleed_vulnerable`
+          documentField = aql`beforeVar.heartbleed_vulnerable`
           sslField = aql`sslScan.heartbleed_vulnerable`
         } else if (orderBy.field === 'strong-ciphers') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).strong_ciphers`
+          documentField = aql`beforeVar.strong_ciphers`
           sslField = aql`sslScan.strong_ciphers`
         } else if (orderBy.field === 'strong-curves') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).strong_curves`
+          documentField = aql`beforeVar.strong_curves`
           sslField = aql`sslScan.strong_curves`
         } else if (orderBy.field === 'supports-ecdh-key-exchange') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).supports_ecdh_key_exchange`
+          documentField = aql`beforeVar.supports_ecdh_key_exchange`
           sslField = aql`sslScan.supports_ecdh_key_exchange`
         } else if (orderBy.field === 'timestamp') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).timestamp`
+          documentField = aql`beforeVar.timestamp`
           sslField = aql`sslScan.timestamp`
         } else if (orderBy.field === 'weak-ciphers') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).weak_ciphers`
+          documentField = aql`beforeVar.weak_ciphers`
           sslField = aql`sslScan.weak_ciphers`
         } else if (orderBy.field === 'weak-curves') {
-          documentField = aql`DOCUMENT(ssl, ${beforeId}).weak_curves`
+          documentField = aql`beforeVar.weak_curves`
           sslField = aql`sslScan.weak_curves`
         }
 
@@ -229,44 +236,44 @@ export const loadSslConnectionByDomainId =
       /* istanbul ignore else */
       if (orderBy.field === 'acceptable-ciphers') {
         sslField = aql`sslScan.acceptable_ciphers`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).acceptable_ciphers`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).acceptable_ciphers`
+        hasNextPageDocument = aql`LAST(retrievedSsl).acceptable_ciphers`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).acceptable_ciphers`
       } else if (orderBy.field === 'acceptable-curves') {
         sslField = aql`sslScan.acceptable_curves`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).acceptable_curves`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).acceptable_curves`
+        hasNextPageDocument = aql`LAST(retrievedSsl).acceptable_curves`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).acceptable_curves`
       } else if (orderBy.field === 'ccs-injection-vulnerable') {
         sslField = aql`sslScan.ccs_injection_vulnerable`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).ccs_injection_vulnerable`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).ccs_injection_vulnerable`
+        hasNextPageDocument = aql`LAST(retrievedSsl).ccs_injection_vulnerable`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).ccs_injection_vulnerable`
       } else if (orderBy.field === 'heartbleed-vulnerable') {
         sslField = aql`sslScan.heartbleed_vulnerable`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).heartbleed_vulnerable`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).heartbleed_vulnerable`
+        hasNextPageDocument = aql`LAST(retrievedSsl).heartbleed_vulnerable`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).heartbleed_vulnerable`
       } else if (orderBy.field === 'strong-ciphers') {
         sslField = aql`sslScan.strong_ciphers`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).strong_ciphers`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).strong_ciphers`
+        hasNextPageDocument = aql`LAST(retrievedSsl).strong_ciphers`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).strong_ciphers`
       } else if (orderBy.field === 'strong-curves') {
         sslField = aql`sslScan.strong_curves`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).strong_curves`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).strong_curves`
+        hasNextPageDocument = aql`LAST(retrievedSsl).strong_curves`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).strong_curves`
       } else if (orderBy.field === 'supports-ecdh-key-exchange') {
         sslField = aql`sslScan.supports_ecdh_key_exchange`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).supports_ecdh_key_exchange`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).supports_ecdh_key_exchange`
+        hasNextPageDocument = aql`LAST(retrievedSsl).supports_ecdh_key_exchange`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).supports_ecdh_key_exchange`
       } else if (orderBy.field === 'timestamp') {
         sslField = aql`sslScan.timestamp`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).timestamp`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).timestamp`
+        hasNextPageDocument = aql`LAST(retrievedSsl).timestamp`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).timestamp`
       } else if (orderBy.field === 'weak-ciphers') {
         sslField = aql`sslScan.weak_ciphers`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).weak_ciphers`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).weak_ciphers`
+        hasNextPageDocument = aql`LAST(retrievedSsl).weak_ciphers`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).weak_ciphers`
       } else if (orderBy.field === 'weak-curves') {
         sslField = aql`sslScan.weak_curves`
-        hasNextPageDocument = aql`DOCUMENT(ssl, LAST(retrievedSsl)._key).weak_curves`
-        hasPreviousPageDocument = aql`DOCUMENT(ssl, FIRST(retrievedSsl)._key).weak_curves`
+        hasNextPageDocument = aql`LAST(retrievedSsl).weak_curves`
+        hasPreviousPageDocument = aql`FIRST(retrievedSsl).weak_curves`
       }
 
       hasNextPageFilter = aql`
@@ -321,6 +328,9 @@ export const loadSslConnectionByDomainId =
       WITH domains, domainsSSL, ssl
       LET sslKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL RETURN v._key)
 
+      ${afterVar}
+      ${beforeVar}
+      
       LET retrievedSsl = (
         FOR sslScan IN ssl
           FILTER sslScan._key IN sslKeys
