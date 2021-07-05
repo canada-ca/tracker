@@ -78,7 +78,7 @@ export const requestScan = new mutationWithClientMutationId({
       domain_key: domain._key,
       domain: domain.domain,
       selectors: domain.selectors,
-      uuid: userKey,
+      user_key: userKey,
       shared_id: sharedId,
     }
 

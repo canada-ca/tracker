@@ -293,7 +293,7 @@ def Server(server_client=requests):
         start_time = dt.datetime.now()
         try:
             domain = inbound_payload["domain"]
-            uuid = inbound_payload["uuid"]
+            user_key = inbound_payload["user_key"]
             domain_key = inbound_payload["domain_key"]
             shared_id = inbound_payload["shared_id"]
         except KeyError:
@@ -313,7 +313,7 @@ def Server(server_client=requests):
             {
                 "results": processed_results,
                 "scan_type": "ssl",
-                "uuid": uuid,
+                "user_key": user_key,
                 "domain_key": domain_key,
                 "shared_id": shared_id
             }
