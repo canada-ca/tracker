@@ -17,7 +17,7 @@ describe('given the spfSubType object', () => {
       const demoType = httpsSubType.getFields()
 
       expect(demoType).toHaveProperty('sharedId')
-      expect(demoType.implementation.type).toMatchObject(GraphQLID)
+      expect(demoType.sharedId.type).toMatchObject(GraphQLID)
     })
     it('has a domain field', () => {
       const demoType = spfSubType.getFields()
