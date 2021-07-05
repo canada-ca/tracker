@@ -1,5 +1,5 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { GraphQLString, GraphQLList, GraphQLInt } from 'graphql'
+import { GraphQLString, GraphQLList, GraphQLInt, GraphQLID } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
@@ -7,11 +7,18 @@ import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { spfSubType } from '../index'
 import { domainType } from '../../../domain/objects'
+import { httpsSubType } from '../../../web-scan'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the spfSubType object', () => {
   describe('testing its field definitions', () => {
+    it('has sharedId field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('sharedId')
+      expect(demoType.implementation.type).toMatchObject(GraphQLID)
+    })
     it('has a domain field', () => {
       const demoType = spfSubType.getFields()
 

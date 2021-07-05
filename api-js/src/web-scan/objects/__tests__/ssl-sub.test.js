@@ -1,17 +1,23 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { GraphQLBoolean, GraphQLList, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLID, GraphQLList, GraphQLString } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
-import { sslSubType } from '../index'
+import { httpsSubType, sslSubType } from '../index'
 import { domainType } from '../../../domain/objects'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the sslSubType object', () => {
   describe('testing field definitions', () => {
+    it('has sharedId field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('sharedId')
+      expect(demoType.implementation.type).toMatchObject(GraphQLID)
+    })
     it('has a domain field', () => {
       const demoType = sslSubType.getFields()
 
@@ -243,12 +249,12 @@ describe('given the sslSubType object', () => {
           'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
         ]
 
-        expect(demoType.weakCiphers.resolve({ weak_ciphers: ciphers })).toEqual(
-          [
-            'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
-            'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
-          ],
-        )
+        expect(
+          demoType.weakCiphers.resolve({ weak_ciphers: ciphers }),
+        ).toEqual([
+          'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+          'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+        ])
       })
     })
     describe('testing the weakCurves resolver', () => {
