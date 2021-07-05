@@ -4,6 +4,10 @@ metadata:
   name: scan-job
 spec:
   template:
+    metadata:
+      labels:
+        app: scanners
+        role: scan-job
     spec:
       containers:
       - name: scan
