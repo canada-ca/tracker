@@ -123,6 +123,11 @@ describe('removing a domain', () => {
             _from: domain._id,
             _to: dkim._id,
           })
+          const dkimResult = await collections.dkimResults.save({ dkimResult: true })
+          await collections.dkimToDkimResults.save({
+            _from: dkim._id,
+            _to: dkimResult._id,
+          })
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
             _from: domain._id,
@@ -367,6 +372,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+                await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+              const testDkimResult = await testDkimResultCursor.next()
+              expect(testDkimResult).toEqual(true)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
@@ -610,6 +620,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(true)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
@@ -830,6 +845,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+                await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+              const testDkimResult = await testDkimResultCursor.next()
+              expect(testDkimResult).toEqual(undefined)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
@@ -928,7 +948,7 @@ describe('removing a domain', () => {
                 `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
               ])
             })
-            it('does not remove domain', async () => {
+            it('removes domain', async () => {
               await graphql(
                 schema,
                 `
@@ -989,7 +1009,7 @@ describe('removing a domain', () => {
               const domainCheck = await domainCursor.next()
               expect(domainCheck).toEqual(undefined)
             })
-            it('does not remove all scan data', async () => {
+            it('removes all scan data', async () => {
               await graphql(
                 schema,
                 `
@@ -1041,6 +1061,11 @@ describe('removing a domain', () => {
                   },
                 },
               )
+
+              const testDkimResultCursor =
+                await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+              const testDkimResult = await testDkimResultCursor.next()
+              expect(testDkimResult).toEqual(undefined)
 
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan`
@@ -1110,6 +1135,11 @@ describe('removing a domain', () => {
           await collections.domainsDKIM.save({
             _from: domain._id,
             _to: dkim._id,
+          })
+          const dkimResult = await collections.dkimResults.save({ dkimResult: true })
+          await collections.dkimToDkimResults.save({
+            _from: dkim._id,
+            _to: dkimResult._id,
           })
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
@@ -1356,6 +1386,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(true)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
@@ -1456,7 +1491,7 @@ describe('removing a domain', () => {
                 `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
               ])
             })
-            it('does not remove domain', async () => {
+            it('removes domain', async () => {
               await graphql(
                 schema,
                 `
@@ -1517,7 +1552,7 @@ describe('removing a domain', () => {
               const domainCheck = await domainCursor.next()
               expect(domainCheck).toEqual(undefined)
             })
-            it('does not remove all scan data', async () => {
+            it('removes all scan data', async () => {
               await graphql(
                 schema,
                 `
@@ -1569,6 +1604,11 @@ describe('removing a domain', () => {
                   },
                 },
               )
+
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(undefined)
 
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan`
@@ -2775,6 +2815,11 @@ describe('removing a domain', () => {
             _from: domain._id,
             _to: dkim._id,
           })
+          const dkimResult = await collections.dkimResults.save({ dkimResult: true })
+          await collections.dkimToDkimResults.save({
+            _from: dkim._id,
+            _to: dkimResult._id,
+          })
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
             _from: domain._id,
@@ -3021,6 +3066,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(true)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
@@ -3266,6 +3316,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(true)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
@@ -3487,6 +3542,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(undefined)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan`
               const testDkim = await testDkimCursor.next()
@@ -3586,7 +3646,7 @@ describe('removing a domain', () => {
                 `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
               ])
             })
-            it('does not remove domain', async () => {
+            it('removes domain', async () => {
               await graphql(
                 schema,
                 `
@@ -3647,7 +3707,7 @@ describe('removing a domain', () => {
               const domainCheck = await domainCursor.next()
               expect(domainCheck).toEqual(undefined)
             })
-            it('does not remove all scan data', async () => {
+            it('removes all scan data', async () => {
               await graphql(
                 schema,
                 `
@@ -3699,6 +3759,11 @@ describe('removing a domain', () => {
                   },
                 },
               )
+
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(undefined)
 
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan`
@@ -3768,6 +3833,11 @@ describe('removing a domain', () => {
           await collections.domainsDKIM.save({
             _from: domain._id,
             _to: dkim._id,
+          })
+          const dkimResult = await collections.dkimResults.save({ dkimResult: true })
+          await collections.dkimToDkimResults.save({
+            _from: dkim._id,
+            _to: dkimResult._id,
           })
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
@@ -4015,6 +4085,11 @@ describe('removing a domain', () => {
                 },
               )
 
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(true)
+
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
               const testDkim = await testDkimCursor.next()
@@ -4116,7 +4191,7 @@ describe('removing a domain', () => {
                 `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
               ])
             })
-            it('does not remove domain', async () => {
+            it('removes domain', async () => {
               await graphql(
                 schema,
                 `
@@ -4177,7 +4252,7 @@ describe('removing a domain', () => {
               const domainCheck = await domainCursor.next()
               expect(domainCheck).toEqual(undefined)
             })
-            it('does not remove all scan data', async () => {
+            it('removes all scan data', async () => {
               await graphql(
                 schema,
                 `
@@ -4229,6 +4304,11 @@ describe('removing a domain', () => {
                   },
                 },
               )
+
+              const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(undefined)
 
               const testDkimCursor =
                 await query`FOR dkimScan IN dkim RETURN dkimScan`

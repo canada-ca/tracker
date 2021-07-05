@@ -141,6 +141,19 @@ export const removeDomain = new mutationWithClientMutationId({
           trx.step(async () => {
             await query`
               WITH claims, dkim, domains, domainsDKIM, organizations
+              LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+              FOR domainEdge in domainEdges
+                LET dkimEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
+                FOR dkimEdge IN dkimEdges
+                  LET dkimResultEdges = (FOR v, e IN 1..1 ANY dkimEdge.dkimId dkimToDkimResults RETURN { edgeKey: e._key, dkimResultId: e._to})
+                  LET removeDkimResultEdges = (FOR dkimResultEdge IN dkimResultEdges REMOVE dkimResultEdge.edgeKey IN dkimToDkimResults)
+                  LET removeDkimResult = (FOR dkimResultEdge IN dkimResultEdges LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key REMOVE key IN dkimResults)
+              RETURN true
+            `
+          }),
+          trx.step(async () => {
+            await query`
+              WITH claims, dkim, domains, domainsDKIM, organizations
               LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
               FOR domainEdge in domainEdges
                 LET dkimEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
