@@ -287,7 +287,6 @@
       'Two factor code is incorrect. Please try again.',
     'Two factor code length is incorrect. Please try again.':
       'Two factor code length is incorrect. Please try again.',
-    'Unable leave organization.': 'Unable leave organization.',
     'Unable leave organization. Please try again.':
       'Unable leave organization. Please try again.',
     'Unable to add user to organization. Please try again.':
@@ -344,6 +343,8 @@
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org.':
       'Unable to invite yourself to an org.',
+    'Unable to leave undefined organization.':
+      'Unable to leave undefined organization.',
     'Unable to load Aggregate guidance tag(s). Please try again.':
       'Unable to load Aggregate guidance tag(s). Please try again.',
     'Unable to load DKIM failure data. Please try again.':

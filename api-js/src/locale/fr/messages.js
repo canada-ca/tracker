@@ -288,7 +288,6 @@
       'Le code à deux facteurs est incorrect. Veuillez réessayer.',
     'Two factor code length is incorrect. Please try again.':
       'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
-    'Unable leave organization.': "Impossible de quitter l'organisation.",
     'Unable leave organization. Please try again.':
       "Impossible de quitter l'organisation. Veuillez réessayer.",
     'Unable to add user to organization. Please try again.':
@@ -344,6 +343,8 @@
     'Unable to invite user. Please try again.':
       "Impossible d'inviter un utilisateur. Veuillez réessayer.",
     'Unable to invite yourself to an org.': "Impossible de s'inviter à un org.",
+    'Unable to leave undefined organization.':
+      'Impossible de quitter une organisation non définie.',
     'Unable to load Aggregate guidance tag(s). Please try again.':
       "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez réessayer.",
     'Unable to load DKIM failure data. Please try again.':

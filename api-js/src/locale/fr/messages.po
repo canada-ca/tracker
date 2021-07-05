@@ -404,14 +404,10 @@ msgstr "Le code à deux facteurs est incorrect. Veuillez réessayer."
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "La longueur du code à deux facteurs est incorrecte. Veuillez réessayer."
 
-#: src/affiliation/mutations/leave-organization.js:48
-msgid "Unable leave organization."
-msgstr "Impossible de quitter l'organisation."
-
-#: src/affiliation/mutations/leave-organization.js:127
-#: src/affiliation/mutations/leave-organization.js:160
-#: src/affiliation/mutations/leave-organization.js:176
-#: src/affiliation/mutations/leave-organization.js:186
+#: src/affiliation/mutations/leave-organization.js:141
+#: src/affiliation/mutations/leave-organization.js:174
+#: src/affiliation/mutations/leave-organization.js:191
+#: src/affiliation/mutations/leave-organization.js:201
 msgid "Unable leave organization. Please try again."
 msgstr "Impossible de quitter l'organisation. Veuillez réessayer."
 
@@ -553,17 +549,8 @@ msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 msgid "Unable to invite yourself to an org."
 msgstr "Impossible de s'inviter à un org."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256
 msgid "Unable to load Aggregate guidance tag(s). Please try again."
-msgstr "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez réessayer."
-
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:13
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:141
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:153
-msgid "Unable to load DKIM failure data. Please try again."
-msgstr "Impossible de charger les données d'échec DKIM. Veuillez réessayer."
-
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:250
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:262
 msgid "Unable to load DKIM guidance tag(s). Please try again."
