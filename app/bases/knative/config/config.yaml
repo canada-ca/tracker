@@ -116,7 +116,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: ssl-scanner
-        image: gcr.io/track-compliance/services/scanners/ssl:master-b0e6547-1625576832 # {"$imagepolicy": "flux-system:ssl-scanner"}
+        image: gcr.io/track-compliance/services/scanners/ssl:master-99e4fb7-1625601445 # {"$imagepolicy": "flux-system:ssl-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
