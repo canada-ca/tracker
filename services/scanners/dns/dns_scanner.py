@@ -95,6 +95,7 @@ def scan_dmarc(domain):
                     logging.info("External reporting arrangement verified.")
                 except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
                     logging.error(f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={domain}: {e}")
+                    rua["accepting"] = "undetermined"
         except (TypeError, KeyError) as e:
             logging.error(f"Error occurred while attempting to validate rua address for domain={domain}: {e}")
 
@@ -138,7 +139,6 @@ def scan_dmarc(domain):
                     ruf["accepting"] = "undetermined"
         except (TypeError, KeyError) as e:
             logging.error(f"Error occurred while attempting to validate ruf address for domain={domain}: {e}")
-            ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
 
