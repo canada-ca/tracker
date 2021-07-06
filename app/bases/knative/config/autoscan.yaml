@@ -4,7 +4,7 @@ metadata:
   name: autoscan
   namespace: scanners
 spec:
-  schedule: "0 1 * * */2"
+  schedule: "0 */8 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0
