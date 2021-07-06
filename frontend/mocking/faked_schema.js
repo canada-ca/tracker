@@ -120,7 +120,10 @@ export const getTypeNames = () => gql`
     ): SharedUser
 
     # Query used to check if the user has an admin role.
-    isUserAdmin: Boolean
+    isUserAdmin(
+      # Optional org id to see if user is an admin for the requested org.
+      orgId: ID
+    ): Boolean
 
     # Query used to check if the user has a super admin role.
     isUserSuperAdmin: Boolean
@@ -2580,6 +2583,9 @@ export const getTypeNames = () => gql`
     # This mutation allows users to give their credentials and either signed in, re-directed to the tfa auth page, or given an error.
     signIn(input: SignInInput!): SignInPayload
 
+    # This mutation allows a user to sign out, and clear their cookies.
+    signOut(input: SignOutInput!): SignOutPayload
+
     # This mutation allows for new users to sign up for our sites services.
     signUp(input: SignUpInput!): SignUpPayload
 
@@ -2969,9 +2975,6 @@ export const getTypeNames = () => gql`
     # JWT used for accessing controlled content.
     authToken: String
 
-    # JWT used to refresh authentication token.
-    refreshToken: String
-
     # User that has just been created or signed in.
     user: PersonalUser
   }
@@ -3004,11 +3007,6 @@ export const getTypeNames = () => gql`
   union RefreshTokensUnion = AuthResult | AuthenticateError
 
   input RefreshTokensInput {
-    # The users current authentication token.
-    authToken: String!
-
-    # The users current refresh token.
-    refreshToken: String!
     clientMutationId: String
   }
 
@@ -3168,6 +3166,19 @@ export const getTypeNames = () => gql`
 
     # The password the user signed up with
     password: String!
+
+    # Whether or not the user wants to stay signed in after leaving the site.
+    rememberMe: Boolean = false
+    clientMutationId: String
+  }
+
+  type SignOutPayload {
+    # Status of the users signing-out.
+    status: String
+    clientMutationId: String
+  }
+
+  input SignOutInput {
     clientMutationId: String
   }
 
@@ -3207,6 +3218,9 @@ export const getTypeNames = () => gql`
 
     # A token sent by email, that will assign a user to an organization with a pre-determined role.
     signUpToken: String
+
+    # Whether or not the user wants to stay signed in after leaving the site.
+    rememberMe: Boolean = false
     clientMutationId: String
   }
 
@@ -3376,18 +3390,18 @@ export const getTypeNames = () => gql`
 
   # DKIM gql object containing the fields for the \`dkimScanData\` subscription.
   type DkimSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
+    # The domain the scan was ran on.
+    domain: Domain
+
     # Individual scans results for each dkim selector.
     results: [DkimResultSub]
   }
 
   # Individual one-off scans results for the given dkim selector.
   type DkimResultSub {
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The time when the scan was initiated.
-    timestamp: Date
-
     # The selector the scan was ran on.
     selector: String
 
@@ -3412,11 +3426,11 @@ export const getTypeNames = () => gql`
 
   # DMARC gql object containing the fields for the \`dkimScanData\` subscription.
   type DmarcSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
     # The domain the scan was ran on.
     domain: Domain
-
-    # The time when the scan was initiated.
-    timestamp: Date
 
     # DMARC record retrieved during scan.
     record: String
@@ -3447,11 +3461,11 @@ export const getTypeNames = () => gql`
 
   # SPF gql object containing the fields for the \`dkimScanData\` subscription.
   type SpfSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
     # The domain the scan was ran on.
     domain: Domain
-
-    # The time when the scan was initiated.
-    timestamp: Date
 
     # The amount of DNS lookups.
     lookups: Int
@@ -3477,11 +3491,11 @@ export const getTypeNames = () => gql`
 
   # HTTPS gql object containing the fields for the \`dkimScanData\` subscription.
   type HttpsSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
     # The domain the scan was ran on.
     domain: Domain
-
-    # The time when the scan was initiated.
-    timestamp: Date
 
     # State of the HTTPS implementation on the server and any issues therein.
     implementation: String
@@ -3513,11 +3527,11 @@ export const getTypeNames = () => gql`
 
   # SSL gql object containing the fields for the \`dkimScanData\` subscription.
   type SslSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
     # The domain the scan was ran on.
     domain: Domain
-
-    # The time when the scan was initiated.
-    timestamp: Date
 
     # List of ciphers in use by the server deemed to be "acceptable".
     acceptableCiphers: [String]
