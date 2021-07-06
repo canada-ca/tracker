@@ -67,7 +67,7 @@ export const DMARC_SCAN_DATA = gql`
       pPolicy
       spPolicy
       pct
-      negativeGuidanceTag {
+      negativeGuidanceTags {
         tagId
         tagName
         guidance
