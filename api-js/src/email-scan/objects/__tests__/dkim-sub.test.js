@@ -1,5 +1,5 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { GraphQLList } from 'graphql'
+import { GraphQLID, GraphQLList } from 'graphql'
 
 import { databaseOptions } from '../../../../database-options'
 import { dkimResultSubType, dkimSubType } from '../index'
@@ -9,6 +9,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dkimSubType object', () => {
   describe('testing its field definitions', () => {
+    it('has sharedId field', () => {
+      const demoType = dkimSubType.getFields()
+
+      expect(demoType).toHaveProperty('sharedId')
+      expect(demoType.sharedId.type).toMatchObject(GraphQLID)
+    })
     it('has a domain field', () => {
       const demoType = dkimSubType.getFields()
 
@@ -25,6 +31,15 @@ describe('given the dkimSubType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
+    describe('testing the sharedId resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = dkimSubType.getFields()
+
+        expect(demoType.sharedId.resolve({ sharedId: 'sharedId' })).toEqual(
+          'sharedId',
+        )
+      })
+    })
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimSubType.getFields()

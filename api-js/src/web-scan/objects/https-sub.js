@@ -1,4 +1,9 @@
-import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLID,
+  GraphQLString,
+  GraphQLList,
+} from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
@@ -9,6 +14,11 @@ export const httpsSubType = new GraphQLObjectType({
   description:
     'HTTPS gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
+    sharedId: {
+      type: GraphQLID,
+      description: `The shared id to match scans together.`,
+      resolve: ({ sharedId }) => sharedId,
+    },
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,

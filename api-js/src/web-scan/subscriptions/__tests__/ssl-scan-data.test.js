@@ -40,7 +40,8 @@ describe('given the spfScanData subscription', () => {
     createSubscriptionMutation,
     redis,
     pub,
-    domain
+    domain,
+    sharedId
 
   beforeAll(async () => {
     options = {
@@ -114,6 +115,7 @@ describe('given the spfScanData subscription', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+    sharedId = 'some-shared-id'
   })
 
   afterEach(async () => {
@@ -147,6 +149,7 @@ describe('given the spfScanData subscription', () => {
                   pub.publish(
                     `${SSL_SCAN_CHANNEL}/${subscriptionId}`,
                     JSON.stringify({
+                      sharedId: sharedId,
                       domainKey: domain._key,
                       results: sslScan,
                     }),
@@ -186,6 +189,7 @@ describe('given the spfScanData subscription', () => {
       parse(`
       subscription {
         sslScanData {
+          sharedId
           domain {
             domain
           }
@@ -267,6 +271,7 @@ describe('given the spfScanData subscription', () => {
     const expectedResult = {
       data: {
         sslScanData: {
+          sharedId: sharedId,
           domain: {
             domain: 'test.domain.gc.ca',
           },

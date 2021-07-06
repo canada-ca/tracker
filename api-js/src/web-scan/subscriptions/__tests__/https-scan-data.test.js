@@ -40,7 +40,8 @@ describe('given the httpsScanData subscription', () => {
     createSubscriptionMutation,
     redis,
     pub,
-    domain
+    domain,
+    sharedId
 
   beforeAll(async () => {
     options = {
@@ -101,6 +102,7 @@ describe('given the httpsScanData subscription', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+    sharedId = 'some-shared-id'
   })
 
   afterEach(async () => {
@@ -134,6 +136,7 @@ describe('given the httpsScanData subscription', () => {
                   pub.publish(
                     `${HTTPS_SCAN_CHANNEL}/${subscriptionId}`,
                     JSON.stringify({
+                      sharedId: sharedId,
                       domainKey: domain._key,
                       results: httpsScan,
                     }),
@@ -174,6 +177,7 @@ describe('given the httpsScanData subscription', () => {
       parse(`
       subscription {
         httpsScanData {
+          sharedId
           domain {
             domain
           }
@@ -251,6 +255,7 @@ describe('given the httpsScanData subscription', () => {
     const expectedResult = {
       data: {
         httpsScanData: {
+          sharedId: sharedId,
           domain: {
             domain: 'test.domain.gc.ca',
           },

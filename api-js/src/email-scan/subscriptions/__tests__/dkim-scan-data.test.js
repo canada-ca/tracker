@@ -40,7 +40,8 @@ describe('given the dkimScanData subscription', () => {
     createSubscriptionMutation,
     redis,
     pub,
-    domain
+    domain,
+    sharedId
 
   beforeAll(async () => {
     options = {
@@ -103,6 +104,7 @@ describe('given the dkimScanData subscription', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+    sharedId = 'some-shared-id'
   })
 
   afterEach(async () => {
@@ -136,6 +138,7 @@ describe('given the dkimScanData subscription', () => {
                   pub.publish(
                     `${DKIM_SCAN_CHANNEL}/${subscriptionId}`,
                     JSON.stringify({
+                      sharedId: sharedId,
                       domainKey: domain._key,
                       results: dkimScan,
                     }),
@@ -175,6 +178,7 @@ describe('given the dkimScanData subscription', () => {
       parse(`
       subscription {
         dkimScanData {
+          sharedId
           domain {
             domain
           }
@@ -252,6 +256,7 @@ describe('given the dkimScanData subscription', () => {
     const expectedResult = {
       data: {
         dkimScanData: {
+          sharedId: sharedId,
           domain: {
             domain: 'test.domain.gc.ca',
           },

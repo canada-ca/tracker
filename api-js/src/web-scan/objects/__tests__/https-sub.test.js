@@ -1,5 +1,5 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLString, GraphQLList, GraphQLID } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
@@ -12,6 +12,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the httpsSubType object', () => {
   describe('testing its field definitions', () => {
+    it('has sharedId field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('sharedId')
+      expect(demoType.sharedId.type).toMatchObject(GraphQLID)
+    })
     it('has a domain field', () => {
       const demoType = httpsSubType.getFields()
 
@@ -80,6 +86,15 @@ describe('given the httpsSubType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
+    describe('testing the sharedId resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = httpsSubType.getFields()
+
+        expect(demoType.sharedId.resolve({ sharedId: 'sharedId' })).toEqual(
+          'sharedId',
+        )
+      })
+    })
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsSubType.getFields()

@@ -29,10 +29,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 
-def publish_results(results, scan_type, uuid):
-    r.publish(f"scan/{scan_type}/{uuid}", json.dumps(results))
+def publish_results(results, scan_type, user_key):
+    r.publish(f"scan/{scan_type}/{user_key}", json.dumps(results))
 
-def process_https(results, domain_key, uuid, db):
+def process_https(results, domain_key, user_key, db, shared_id):
     timestamp = str(datetime.datetime.utcnow())
     neutral_tags = []
     positive_tags = []
@@ -145,7 +145,7 @@ def process_https(results, domain_key, uuid, db):
         "negativeTags": negative_tags,
         }
 
-    if uuid is None:
+    if user_key is None:
         try:
             httpsEntry = db.collection("https").insert(httpsResults)
             domain = db.collection("domains").get({"_key": domain_key})
@@ -182,11 +182,11 @@ def process_https(results, domain_key, uuid, db):
         logging.info("HTTPS Scan inserted into database")
 
     else:
-        publish_results({"domainKey": domain_key, "results": httpsResults}, "https", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": httpsResults}, "https", user_key)
         logging.info("HTTPS Scan published to redis")
 
 
-def process_ssl(results, guidance, domain_key, uuid, db):
+def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
     timestamp = str(datetime.datetime.utcnow())
     neutral_tags = []
     positive_tags = []
@@ -265,7 +265,7 @@ def process_ssl(results, guidance, domain_key, uuid, db):
         "negativeTags": negative_tags,
     }
 
-    if uuid is None:
+    if user_key is None:
         try:
             sslEntry = db.collection("ssl").insert(sslResults)
             domain = db.collection("domains").get({"_key": domain_key})
@@ -302,11 +302,11 @@ def process_ssl(results, guidance, domain_key, uuid, db):
         logging.info("SSL Scan inserted into database")
 
     else:
-        publish_results({"domainKey": domain_key, "results": sslResults}, "ssl", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": sslResults}, "ssl", user_key)
         logging.info("SSL Scan published to redis")
 
 
-def process_dns(results, domain_key, uuid, db):
+def process_dns(results, domain_key, user_key, db, shared_id):
     timestamp = str(datetime.datetime.utcnow())
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
@@ -794,7 +794,7 @@ def process_dns(results, domain_key, uuid, db):
                 }
             )
 
-    if uuid is None:
+    if user_key is None:
         try:
             dmarcEntry = db.collection("dmarc").insert(dmarcResults)
 
@@ -888,9 +888,9 @@ def process_dns(results, domain_key, uuid, db):
         logging.info("DNS Scans inserted into database")
 
     else:
-        publish_results({"domainKey": domain_key, "results": dmarcResults}, "dmarc", uuid)
-        publish_results({"domainKey": domain_key, "results": spfResults}, "spf", uuid)
-        publish_results({"domainKey": domain_key, "results": dkimResults}, "dkim", uuid)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dmarcResults}, "dmarc", user_key)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": spfResults}, "spf", user_key)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dkimResults}, "dkim", user_key)
         logging.info("DNS Scans published to redis")
 
 
@@ -916,8 +916,9 @@ def Server(
             try:
                 results = payload_dict["results"]
                 scan_type = payload_dict["scan_type"]
-                uuid = payload_dict["uuid"]
+                user_key = payload_dict["user_key"]
                 domain_key = payload_dict["domain_key"]
+                shared_id = payload_dict["shared_id"]
                 logging.info(
                     f"Results received for {scan_type} scan (TIME={datetime.datetime.utcnow()})"
                 )
@@ -927,12 +928,12 @@ def Server(
                 return PlainTextResponse(msg)
 
             if scan_type == "https":
-                process_https(results, domain_key, uuid, db)
+                process_https(results, domain_key, user_key, db, shared_id)
             elif scan_type == "ssl":
                 guidance = tls_guidance()
-                process_ssl(results, guidance, domain_key, uuid, db)
+                process_ssl(results, guidance, domain_key, user_key, db, shared_id)
             else:
-                process_dns(results, domain_key, uuid, db)
+                process_dns(results, domain_key, user_key, db, shared_id)
 
             return PlainTextResponse(
                 f"{scan_type} results processed and inserted successfully (TIME={datetime.datetime.utcnow()})."

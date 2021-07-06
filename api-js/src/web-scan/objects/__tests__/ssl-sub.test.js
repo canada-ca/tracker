@@ -1,5 +1,5 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { GraphQLBoolean, GraphQLList, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLID, GraphQLList, GraphQLString } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
@@ -12,6 +12,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the sslSubType object', () => {
   describe('testing field definitions', () => {
+    it('has sharedId field', () => {
+      const demoType = sslSubType.getFields()
+
+      expect(demoType).toHaveProperty('sharedId')
+      expect(demoType.sharedId.type).toMatchObject(GraphQLID)
+    })
     it('has a domain field', () => {
       const demoType = sslSubType.getFields()
 
@@ -116,6 +122,15 @@ describe('given the sslSubType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
+    describe('testing the sharedId resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = sslSubType.getFields()
+
+        expect(demoType.sharedId.resolve({ sharedId: 'sharedId' })).toEqual(
+          'sharedId',
+        )
+      })
+    })
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = sslSubType.getFields()
@@ -243,12 +258,12 @@ describe('given the sslSubType object', () => {
           'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
         ]
 
-        expect(demoType.weakCiphers.resolve({ weak_ciphers: ciphers })).toEqual(
-          [
-            'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
-            'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
-          ],
-        )
+        expect(
+          demoType.weakCiphers.resolve({ weak_ciphers: ciphers }),
+        ).toEqual([
+          'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+          'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+        ])
       })
     })
     describe('testing the weakCurves resolver', () => {

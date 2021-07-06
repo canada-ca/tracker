@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLList } from 'graphql'
+import { GraphQLObjectType, GraphQLList, GraphQLID } from 'graphql'
 
 import { domainType } from '../../domain/objects'
 import { dkimResultSubType } from './dkim-result-sub'
@@ -8,6 +8,11 @@ export const dkimSubType = new GraphQLObjectType({
   description:
     'DKIM gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
+    sharedId: {
+      type: GraphQLID,
+      description: `The shared id to match scans together.`,
+      resolve: ({ sharedId }) => sharedId,
+    },
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,
