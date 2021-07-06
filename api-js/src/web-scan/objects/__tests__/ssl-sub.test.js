@@ -5,7 +5,7 @@ import { GraphQLJSON } from 'graphql-scalars'
 import { databaseOptions } from '../../../../database-options'
 import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
-import { httpsSubType, sslSubType } from '../index'
+import { sslSubType } from '../index'
 import { domainType } from '../../../domain/objects'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -13,7 +13,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 describe('given the sslSubType object', () => {
   describe('testing field definitions', () => {
     it('has sharedId field', () => {
-      const demoType = httpsSubType.getFields()
+      const demoType = sslSubType.getFields()
 
       expect(demoType).toHaveProperty('sharedId')
       expect(demoType.sharedId.type).toMatchObject(GraphQLID)
@@ -124,7 +124,7 @@ describe('given the sslSubType object', () => {
   describe('testing its field resolvers', () => {
     describe('testing the sharedId resolver', () => {
       it('returns the parsed value', () => {
-        const demoType = httpsSubType.getFields()
+        const demoType = sslSubType.getFields()
 
         expect(demoType.sharedId.resolve({ sharedId: 'sharedId' })).toEqual(
           'sharedId',

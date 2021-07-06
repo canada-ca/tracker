@@ -7,14 +7,13 @@ import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { spfSubType } from '../index'
 import { domainType } from '../../../domain/objects'
-import { httpsSubType } from '../../../web-scan'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the spfSubType object', () => {
   describe('testing its field definitions', () => {
     it('has sharedId field', () => {
-      const demoType = httpsSubType.getFields()
+      const demoType = spfSubType.getFields()
 
       expect(demoType).toHaveProperty('sharedId')
       expect(demoType.sharedId.type).toMatchObject(GraphQLID)
@@ -77,7 +76,7 @@ describe('given the spfSubType object', () => {
   describe('testing its field resolvers', () => {
     describe('testing the sharedId resolver', () => {
       it('returns the parsed value', () => {
-        const demoType = httpsSubType.getFields()
+        const demoType = spfSubType.getFields()
 
         expect(demoType.sharedId.resolve({ sharedId: 'sharedId' })).toEqual(
           'sharedId',
