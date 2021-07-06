@@ -141,7 +141,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/services/scanners/dns:master-36f7e15-1625262245 # {"$imagepolicy": "flux-system:dns-scanner"}
+        image: gcr.io/track-compliance/services/scanners/dns:master-bf2e453-1625574951 # {"$imagepolicy": "flux-system:dns-scanner"}
 ---
 # K8s Service Account that runs `src`'s container.
 
