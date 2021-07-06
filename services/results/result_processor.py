@@ -310,7 +310,9 @@ def process_dns(results, domain_key, user_key, db, shared_id):
     timestamp = str(datetime.datetime.utcnow())
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
-    if not results["dkim"].get("error"):
+    valid_dkim = not results["dkim"].get("error")
+        
+    if valid_dkim:
         for selector in results["dkim"].keys():
             tags["dkim"][selector] = []
             key_size = results["dkim"][selector].get("key_size", None)
@@ -466,11 +468,12 @@ def process_dns(results, domain_key, user_key, db, shared_id):
         if results["spf"]["valid"]:
             tags["spf"].append("spf12")
 
-        for selector, data in results["dkim"].items():
-            if data.get("txt_record", None) is not None:
-                for key in data["txt_record"]:
-                    if (key == "a" or key == "include") and "spf3" not in tags["spf"]:
-                        tags["spf"].append("spf3")
+        if valid_dkim:
+            for selector, data in results["dkim"].items():
+                if data.get("txt_record", None) is not None:
+                    for key in data["txt_record"]:
+                        if (key == "a" or key == "include") and "spf3" not in tags["spf"]:
+                            tags["spf"].append("spf3")
 
         dmarc_record = results["dmarc"].get("record", None)
         if dmarc_record is not None:
