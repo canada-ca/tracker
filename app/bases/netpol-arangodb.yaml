@@ -20,14 +20,24 @@ spec:
       podSelector:
         matchLabels:
           app: tracker-api
-    # or result processor from the namespace 'scanners'
+    # or result processor, autoscan, or one-off 'scan-job' from the namespace 'scanners'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: scanners
       podSelector:
         matchLabels:
           role: result-processor
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: scanners
+      podSelector:
+        matchLabels:
           role: autoscan
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: scanners
+      podSelector:
+        matchLabels:
           role: scan-job
   egress:
   - to:
