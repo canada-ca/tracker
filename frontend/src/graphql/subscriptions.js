@@ -64,6 +64,7 @@ export const SSL_SCAN_DATA = gql`
       domain {
         domain
       }
+      timestamp
       acceptableCiphers
       acceptableCurves
       ccsInjectionVulnerable
@@ -73,6 +74,45 @@ export const SSL_SCAN_DATA = gql`
       supportsEcdhKeyExchange
       weakCiphers
       weakCurves
+      negativeGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+      neutralGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+      positiveGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
     }
   }
 `

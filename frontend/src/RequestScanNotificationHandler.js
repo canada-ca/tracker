@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useSubscription } from '@apollo/client'
+import { useSubscription, gql } from '@apollo/client'
 import {
   DKIM_SCAN_DATA,
   DMARC_SCAN_DATA,
@@ -10,6 +10,7 @@ import {
 import { Box, Heading, Text, useToast } from '@chakra-ui/core'
 import { useUserVar } from './UserState'
 import { t } from '@lingui/macro'
+import { ONE_TIME_SSL_SCANS, ONE_TIME_SSL_SCANS_SHORT } from './graphql/queries'
 
 export default function RequestScanNotificationHandler({ ...props }) {
   const { isLoggedIn } = useUserVar()

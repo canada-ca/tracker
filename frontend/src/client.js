@@ -5,6 +5,7 @@ import {
   InMemoryCache,
   makeVar,
   split,
+  gql,
 } from '@apollo/client'
 import {
   getMainDefinition,
@@ -13,6 +14,7 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { i18n } from '@lingui/core'
 import { WebSocketLink } from '@apollo/client/link/ws'
+import { READ_ONE_TIME_SCAN_GUIDANCE } from './graphql/queries'
 
 export function createCache() {
   return new InMemoryCache({
@@ -24,11 +26,35 @@ export function createCache() {
           findMyOrganizations: relayStylePagination(['isAdmin']),
         },
       },
-      // Subscription: {
-      //   fields: {
-      //     dmarcScanData
-      //   },
-      // },
+      Subscription: {
+        fields: {
+          dkimScanData: {
+            merge(existing = [], incoming) {
+              return [...existing, incoming]
+            },
+          },
+          dmarcScanData: {
+            merge(existing = [], incoming) {
+              return [...existing, incoming]
+            },
+          },
+          spfScanData: {
+            merge(existing = [], incoming) {
+              return [...existing, incoming]
+            },
+          },
+          httpsScanData: {
+            merge(existing = [], incoming) {
+              return [...existing, incoming]
+            },
+          },
+          sslScanData: {
+            merge(existing = [], incoming) {
+              return [...existing, incoming]
+            },
+          },
+        },
+      },
       Organization: {
         fields: {
           domains: relayStylePagination(),
@@ -78,7 +104,7 @@ const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? 'https://tracker.alpha.canada.ca/graphql'
-      : '/graphql',
+      : 'https://tracker.alpha.canada.ca/graphql',
 })
 
 const headersLink = setContext((_, { headers }) => {
@@ -99,7 +125,7 @@ const wsLink = new WebSocketLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? 'wss://tracker.alpha.canada.ca/graphql'
-      : 'ws://localhost:3000/graphql',
+      : 'wss://tracker.alpha.canada.ca/graphql',
 
   options: {
     lazy: true,
