@@ -12,6 +12,10 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: scanners
+            role: autoscan
         spec:
           containers:
           - name: autoscan

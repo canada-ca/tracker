@@ -27,6 +27,8 @@ spec:
       podSelector:
         matchLabels:
           role: result-processor
+          role: autoscan
+          role: scan-job
   egress:
   - to:
     - podSelector:
