@@ -294,7 +294,7 @@ def Server(server_client=requests):
             shared_id = inbound_payload["shared_id"]
         except KeyError:
             logging.error(f"Invalid scan request format received: {str(inbound_payload)}")
-            return Response(msg)
+            return Response("Invalid Format", status_code=400)
 
         logging.info("Performing scan...")
 
