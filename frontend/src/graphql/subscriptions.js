@@ -3,13 +3,54 @@ import { gql } from '@apollo/client'
 export const DKIM_SCAN_DATA = gql`
   subscription DkimScanData {
     dkimScanData {
+      sharedId
+      domain {
+        domain
+      }
       results {
-        domain {
-          domain
-        }
         selector
         record
         keyLength
+        negativeGuidanceTags {
+          tagId
+          tagName
+          guidance
+          refLinks {
+            description
+            refLink
+          }
+          refLinksTech {
+            description
+            refLink
+          }
+        }
+
+        neutralGuidanceTags {
+          tagId
+          tagName
+          guidance
+          refLinks {
+            description
+            refLink
+          }
+          refLinksTech {
+            description
+            refLink
+          }
+        }
+        positiveGuidanceTags {
+          tagId
+          tagName
+          guidance
+          refLinks {
+            description
+            refLink
+          }
+          refLinksTech {
+            description
+            refLink
+          }
+        }
       }
     }
   }
@@ -18,14 +59,53 @@ export const DKIM_SCAN_DATA = gql`
 export const DMARC_SCAN_DATA = gql`
   subscription DmarcScanData {
     dmarcScanData {
+      sharedId
       domain {
         domain
       }
-      timestamp
       record
       pPolicy
       spPolicy
       pct
+      negativeGuidanceTag {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+      neutralGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+      positiveGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
     }
   }
 `
@@ -33,12 +113,53 @@ export const DMARC_SCAN_DATA = gql`
 export const SPF_SCAN_DATA = gql`
   subscription SpfScanData {
     spfScanData {
+      sharedId
       domain {
         domain
       }
       lookups
       record
       spfDefault
+      negativeGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+      neutralGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+
+      positiveGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
     }
   }
 `
@@ -46,6 +167,7 @@ export const SPF_SCAN_DATA = gql`
 export const HTTPS_SCAN_DATA = gql`
   subscription HttpsScanData {
     httpsScanData {
+      sharedId
       domain {
         domain
       }
@@ -54,6 +176,45 @@ export const HTTPS_SCAN_DATA = gql`
       hsts
       hstsAge
       preloaded
+      negativeGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+      neutralGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
+      positiveGuidanceTags {
+        tagId
+        tagName
+        guidance
+        refLinks {
+          description
+          refLink
+        }
+        refLinksTech {
+          description
+          refLink
+        }
+      }
     }
   }
 `
@@ -61,10 +222,10 @@ export const HTTPS_SCAN_DATA = gql`
 export const SSL_SCAN_DATA = gql`
   subscription SslScanData {
     sslScanData {
+      sharedId
       domain {
         domain
       }
-      timestamp
       acceptableCiphers
       acceptableCurves
       ccsInjectionVulnerable
