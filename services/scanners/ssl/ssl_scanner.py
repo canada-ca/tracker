@@ -172,8 +172,8 @@ def scan_ssl(domain):
     res = {
         "TLS": {
             "supported": tls_supported,
-            "accepted_cipher_list": set(),
-            "rejected_cipher_list": set(),
+            "accepted_cipher_list": [],
+            "rejected_cipher_list": [],
         }
     }
 
@@ -184,17 +184,11 @@ def scan_ssl(domain):
         if name.endswith("suites"):
             logging.info("Parsing Cipher Suite Scan results...")
 
-            accepted_cipher_list = list()
             for c in result.accepted_cipher_suites:
-                accepted_cipher_list.append(c.cipher_suite.name)
+                res["TLS"]["accepted_cipher_list"].append(c.cipher_suite.name)
 
-            res["TLS"]["accepted_cipher_list"] = accepted_cipher_list
-
-            rejected_cipher_list = list()
             for c in result.rejected_cipher_suites:
-                rejected_cipher_list.append(c.cipher_suite.name)
-
-            res["TLS"]["rejected_cipher_list"] = rejected_cipher_list
+                res["TLS"]["rejected_cipher_list"].append(c.cipher_suite.name)
 
         elif name == "openssl_ccs_injection":
             logging.info("Parsing OpenSSL CCS Injection Vulnerability Scan results...")
