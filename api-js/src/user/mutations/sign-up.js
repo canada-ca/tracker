@@ -247,9 +247,7 @@ export const signUp = new mutationWithClientMutationId({
     // Generate JWTs
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
 
-    const verifyUrl = `${request.protocol}://${request.get(
-      'host',
-    )}/validate/${token}`
+    const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
     await sendVerificationEmail({ user: returnUser, verifyUrl })
 
