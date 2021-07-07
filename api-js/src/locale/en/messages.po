@@ -404,10 +404,16 @@ msgstr "Two factor code is incorrect. Please try again."
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "Two factor code length is incorrect. Please try again."
 
-#: src/affiliation/mutations/leave-organization.js:141
-#: src/affiliation/mutations/leave-organization.js:174
-#: src/affiliation/mutations/leave-organization.js:191
-#: src/affiliation/mutations/leave-organization.js:201
+#: src/affiliation/mutations/leave-organization.js:80
+#: src/affiliation/mutations/leave-organization.js:90
+#: src/affiliation/mutations/leave-organization.js:110
+#: src/affiliation/mutations/leave-organization.js:153
+#: src/affiliation/mutations/leave-organization.js:172
+#: src/affiliation/mutations/leave-organization.js:269
+#: src/affiliation/mutations/leave-organization.js:289
+#: src/affiliation/mutations/leave-organization.js:317
+#: src/affiliation/mutations/leave-organization.js:336
+#: src/affiliation/mutations/leave-organization.js:346
 msgid "Unable leave organization. Please try again."
 msgstr "Unable leave organization. Please try again."
 
