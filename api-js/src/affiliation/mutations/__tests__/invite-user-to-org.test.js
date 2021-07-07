@@ -436,7 +436,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'en',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -483,7 +483,7 @@ describe('invite user to org', () => {
                   requestedRole: 'super_admin',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
@@ -531,7 +531,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'en',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -578,7 +578,7 @@ describe('invite user to org', () => {
                   requestedRole: 'admin',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -627,7 +627,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'en',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -674,7 +674,7 @@ describe('invite user to org', () => {
                   requestedRole: 'user',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -928,7 +928,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'en',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -975,7 +975,7 @@ describe('invite user to org', () => {
                   requestedRole: 'admin',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -1024,7 +1024,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'en',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -1071,7 +1071,7 @@ describe('invite user to org', () => {
                   requestedRole: 'user',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -1124,7 +1124,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -1200,7 +1200,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -1303,7 +1303,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -1412,7 +1412,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -1521,7 +1521,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -1644,7 +1644,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -1724,7 +1724,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -2137,7 +2137,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'fr',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -2184,7 +2184,7 @@ describe('invite user to org', () => {
                   requestedRole: 'super_admin',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -2230,7 +2230,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'fr',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -2277,7 +2277,7 @@ describe('invite user to org', () => {
                   requestedRole: 'admin',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -2323,7 +2323,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'fr',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -2370,7 +2370,7 @@ describe('invite user to org', () => {
                   requestedRole: 'user',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -2621,7 +2621,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'fr',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -2668,7 +2668,7 @@ describe('invite user to org', () => {
                   requestedRole: 'admin',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -2714,7 +2714,7 @@ describe('invite user to org', () => {
                   i18n,
                   request: {
                     language: 'fr',
-                    protocol: 'http',
+                    protocol: 'https',
                     get: (text) => text,
                   },
                   query,
@@ -2761,7 +2761,7 @@ describe('invite user to org', () => {
                   requestedRole: 'user',
                 },
               })
-              const createAccountLink = `http://host/create-user/${token}`
+              const createAccountLink = `https://host/create-user/${token}`
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
@@ -2811,7 +2811,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -2887,7 +2887,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -2996,7 +2996,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -3105,7 +3105,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -3228,7 +3228,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
@@ -3308,7 +3308,7 @@ describe('invite user to org', () => {
               i18n,
               request: {
                 language: 'fr',
-                protocol: 'http',
+                protocol: 'https',
                 get: (text) => text,
               },
               query,
