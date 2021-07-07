@@ -249,9 +249,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
@@ -427,9 +425,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
@@ -729,9 +725,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
@@ -996,9 +990,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
@@ -1912,9 +1904,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
@@ -2090,9 +2080,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
@@ -2392,9 +2380,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
@@ -2659,9 +2645,7 @@ describe('testing user sign up', () => {
               i18n: {},
             }).load('test.account@istio.actually.exists')
 
-            const verifyUrl = `${request.protocol}://${request.get(
-              'host',
-            )}/validate/token`
+            const verifyUrl = `https://${request.get('host')}/validate/token`
 
             expect(mockNotify).toHaveBeenCalledWith({
               user: user,
