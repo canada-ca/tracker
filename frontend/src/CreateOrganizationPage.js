@@ -137,10 +137,10 @@ export default function CreateOrganizationPage() {
               nameFR: values.nameFR,
               acronymEN: values.acronymEN,
               acronymFR: values.acronymFR,
-              zoneEN: values.zoneEN,
-              zoneFR: values.zoneFR,
-              sectorEN: values.sectorEN,
-              sectorFR: values.sectorFR,
+              zoneEN: '',
+              zoneFR: '',
+              sectorEN: '',
+              sectorFR: '',
               countryEN: values.countryEN,
               countryFR: values.countryFR,
               provinceEN: values.provinceEN,
@@ -183,32 +183,6 @@ export default function CreateOrganizationPage() {
                 name="acronymFR"
                 language={t`French`}
                 label={t`Acronym`}
-              />
-            </Stack>
-
-            <Stack mb="4">
-              <CreateOrganizationField
-                name="zoneEN"
-                language={t`English`}
-                label={t`Zone`}
-              />
-              <CreateOrganizationField
-                name="zoneFR"
-                language={t`French`}
-                label={t`Zone`}
-              />
-            </Stack>
-
-            <Stack mb="4">
-              <CreateOrganizationField
-                name="sectorEN"
-                language={t`English`}
-                label={t`Sector`}
-              />
-              <CreateOrganizationField
-                name="sectorFR"
-                language={t`French`}
-                label={t`Sector`}
               />
             </Stack>
 
