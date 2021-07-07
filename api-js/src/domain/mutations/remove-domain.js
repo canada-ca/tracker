@@ -125,12 +125,12 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
-    // check to see if domain has dmarc summary data
+    // check to see if org removing domain has ownership
     let dmarcCountCursor
     try {
       dmarcCountCursor = await query`
         WITH domains, organizations, ownership
-        FOR v IN 1..1 OUTBOUND ${domain._id} ownership RETURN true
+        FOR v IN 1..1 OUTBOUND ${org._id} ownership RETURN true
       `
     } catch (err) {
       console.error(
@@ -148,54 +148,54 @@ export const removeDomain = new mutationWithClientMutationId({
     // Setup Trans action
     const trx = await transaction(collectionStrings)
 
-    if (countCursor.count <= 1) {
-      if (dmarcCountCursor === 1) {
-        try {
-          await trx.step(
-            () => query`
-              WITH ownership, organizations, domains, dmarcSummaries, domainsToDmarcSummaries
-              LET dmarcSummaryEdges = (
-                FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToDmarcSummaries 
-                  RETURN { edgeKey: e._key, dmarcSummaryId: e._to }
-              )
-              LET removeDmarcSummaryEdges = (
-                FOR dmarcSummaryEdge IN dmarcSummaryEdges 
-                  REMOVE dmarcSummaryEdge.edgeKey IN domainsToDmarcSummaries
-              )
-              LET removeDmarcSummary = (
-                FOR dmarcSummaryEdge IN dmarcSummaryEdges 
-                  LET key = PARSE_IDENTIFIER(dmarcSummaryEdge.dmarcSummaryId).key 
-                  REMOVE key IN dmarcSummaries
-              )
-              RETURN true
-            `,
-          )
-        } catch (err) {
-          console.error(
-            `Trx step error occurred when removing dmarc summary data for user: ${userKey} while attempting to remove domain: ${domain.slug}, error: ${err}`,
-          )
-          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-        }
-  
-        try {
-          await trx.step(
-            () => query`
-              WITH ownership, organizations, domains
-              LET domainEdges = (
-                FOR v, e IN 1..1 OUTBOUND ${domain._id} ownership
-                  REMOVE e._key IN ownership
-              )
-              RETURN true
-            `,
-          )
-        } catch (err) {
-          console.error(
-            `Trx step error occurred when removing ownership data for user: ${userKey} while attempting to remove domain: ${domain.slug}, error: ${err}`,
-          )
-          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-        }
+    if (dmarcCountCursor === 1) {
+      try {
+        await trx.step(
+          () => query`
+            WITH ownership, organizations, domains, dmarcSummaries, domainsToDmarcSummaries
+            LET dmarcSummaryEdges = (
+              FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToDmarcSummaries 
+                RETURN { edgeKey: e._key, dmarcSummaryId: e._to }
+            )
+            LET removeDmarcSummaryEdges = (
+              FOR dmarcSummaryEdge IN dmarcSummaryEdges 
+                REMOVE dmarcSummaryEdge.edgeKey IN domainsToDmarcSummaries
+            )
+            LET removeDmarcSummary = (
+              FOR dmarcSummaryEdge IN dmarcSummaryEdges 
+                LET key = PARSE_IDENTIFIER(dmarcSummaryEdge.dmarcSummaryId).key 
+                REMOVE key IN dmarcSummaries
+            )
+            RETURN true
+          `,
+        )
+      } catch (err) {
+        console.error(
+          `Trx step error occurred when removing dmarc summary data for user: ${userKey} while attempting to remove domain: ${domain.slug}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
-      
+
+      try {
+        await trx.step(
+          () => query`
+            WITH ownership, organizations, domains
+            LET domainEdges = (
+              FOR v, e IN 1..1 OUTBOUND ${domain._id} ownership
+                REMOVE e._key IN ownership
+            )
+            RETURN true
+          `,
+        )
+      } catch (err) {
+        console.error(
+          `Trx step error occurred when removing ownership data for user: ${userKey} while attempting to remove domain: ${domain.slug}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+      }
+    }
+
+    if (countCursor.count <= 1) {
       // Remove scan data
       try {
         await Promise.all([
