@@ -116,11 +116,25 @@ export const removeDomain = new mutationWithClientMutationId({
     try {
       countCursor = await query`
         WITH claims, domains, organizations
-        FOR v, e IN 1..1 ANY ${domain._id} claims RETURN True
+        FOR v, e IN 1..1 ANY ${domain._id} claims RETURN true
       `
     } catch (err) {
       console.error(
         `Database error occurred for user: ${userKey}, when counting domain claims for domain: ${domain.slug}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+    }
+
+    // check to see if domain has dmarc summary data
+    let dmarcCountCursor
+    try {
+      dmarcCountCursor = await query`
+        WITH domains, organizations, ownership
+        FOR v IN 1..1 OUTBOUND ${domain._id} ownership RETURN true
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred for user: ${userKey}, when counting ownership claims for domain: ${domain.slug}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
@@ -135,17 +149,64 @@ export const removeDomain = new mutationWithClientMutationId({
     const trx = await transaction(collectionStrings)
 
     if (countCursor.count <= 1) {
+      if (dmarcCountCursor === 1) {
+        try {
+          await trx.step(
+            () => query`
+              WITH ownership, organizations, domains, dmarcSummaries, domainsToDmarcSummaries
+              LET dmarcSummaryEdges = (
+                FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToDmarcSummaries 
+                  RETURN { edgeKey: e._key, dmarcSummaryId: e._to }
+              )
+              LET removeDmarcSummaryEdges = (
+                FOR dmarcSummaryEdge IN dmarcSummaryEdges 
+                  REMOVE dmarcSummaryEdge.edgeKey IN domainsToDmarcSummaries
+              )
+              LET removeDmarcSummary = (
+                FOR dmarcSummaryEdge IN dmarcSummaryEdges 
+                  LET key = PARSE_IDENTIFIER(dmarcSummaryEdge.dmarcSummaryId).key 
+                  REMOVE key IN dmarcSummaries
+              )
+              RETURN true
+            `,
+          )
+        } catch (err) {
+          console.error(
+            `Trx step error occurred when removing dmarc summary data for user: ${userKey} while attempting to remove domain: ${domain.slug}, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+        }
+  
+        try {
+          await trx.step(
+            () => query`
+              WITH ownership, organizations, domains
+              LET domainEdges = (
+                FOR v, e IN 1..1 OUTBOUND ${domain._id} ownership
+                  REMOVE e._key IN ownership
+              )
+              RETURN true
+            `,
+          )
+        } catch (err) {
+          console.error(
+            `Trx step error occurred when removing ownership data for user: ${userKey} while attempting to remove domain: ${domain.slug}, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+        }
+      }
+      
       // Remove scan data
       try {
         await Promise.all([
           trx.step(async () => {
             await query`
-              WITH claims, dkim, domains, domainsDKIM, organizations
-              LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+              WITH claims, dkim, domains, domainsDKIM, organizations, dkimToDkimResults, dkimResults
+              LET domainEdges = (FOR v, e IN 1..1 OUTBOUND ${org._id} claims RETURN { edgeKey: e._key, domainId: e._to })
               FOR domainEdge in domainEdges
-                LET dkimEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
+                LET dkimEdges = (FOR v, e IN 1..1 OUTBOUND domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
                 FOR dkimEdge IN dkimEdges
-                  LET dkimResultEdges = (FOR v, e IN 1..1 ANY dkimEdge.dkimId dkimToDkimResults RETURN { edgeKey: e._key, dkimResultId: e._to})
+                  LET dkimResultEdges = (FOR v, e IN 1..1 OUTBOUND dkimEdge.dkimId dkimToDkimResultsRETURN { edgeKey: e._key, dkimResultId: e._to })
                   LET removeDkimResultEdges = (FOR dkimResultEdge IN dkimResultEdges REMOVE dkimResultEdge.edgeKey IN dkimToDkimResults)
                   LET removeDkimResult = (FOR dkimResultEdge IN dkimResultEdges LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key REMOVE key IN dkimResults)
               RETURN true
@@ -209,7 +270,7 @@ export const removeDomain = new mutationWithClientMutationId({
         ])
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove scan data for ${domain.slug} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove scan data for ${domain.slug} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -227,7 +288,7 @@ export const removeDomain = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -249,7 +310,7 @@ export const removeDomain = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove claim for ${domain.slug} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove claim for ${domain.slug} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -260,7 +321,7 @@ export const removeDomain = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Transaction commit error occurred while user: ${userKey} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
+        `Trx commit error occurred while user: ${userKey} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
