@@ -133,7 +133,7 @@ describe('user send password reset email', () => {
           const token = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
           })
-          const resetUrl = `${request.protocol}://${request.get(
+          const resetUrl = `https://${request.get(
             'host',
           )}/reset-password/${token}`
 
@@ -277,7 +277,7 @@ describe('user send password reset email', () => {
           const token = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
           })
-          const resetUrl = `${request.protocol}://${request.get(
+          const resetUrl = `https://${request.get(
             'host',
           )}/reset-password/${token}`
 
