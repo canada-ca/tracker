@@ -53,7 +53,7 @@ describe('given a successful leave', () => {
     await drop()
   })
 
-  let org, domain
+  let org, domain, domain2
   beforeAll(() => {
     i18n = setupI18n({
       locale: 'en',
@@ -101,6 +101,14 @@ describe('given a successful leave', () => {
       _from: org._id,
       _to: domain._id,
     })
+    domain2 = await collections.domains.save({
+      domain: 'test.canada.ca',
+      slug: 'test-canada-ca',
+    })
+    await collections.claims.save({
+      _from: org._id,
+      _to: domain2._id,
+    })
     const dkim = await collections.dkim.save({ dkim: true })
     await collections.domainsDKIM.save({
       _from: domain._id,
@@ -133,6 +141,13 @@ describe('given a successful leave', () => {
       _from: domain._id,
       _to: ssl._id,
     })
+    const dmarcSummary = await collections.dmarcSummaries.save({
+      dmarcSummary: true,
+    })
+    await collections.domainsToDmarcSummaries.save({
+      _from: domain._id,
+      _to: dmarcSummary._id,
+    })
   })
   describe('user is an org owner', () => {
     beforeEach(async () => {
@@ -143,171 +158,171 @@ describe('given a successful leave', () => {
         owner: true,
       })
     })
-    it('removes all scan data', async () => {
-      await graphql(
-        schema,
-        `
-            mutation {
-              leaveOrganization (
-                input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                }
-              ) {
-                result {
-                  ... on LeaveOrganizationResult {
-                    status
+    describe('only one org claims the domains', () => {
+      describe('org is owner of dmarc data', () => {
+        beforeEach(async () => {
+          await collections.ownership.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('removes all dmarc summary data', async () => {
+          await graphql(
+            schema,
+            `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
                   }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
-        null,
-        {
-          i18n,
-          query,
-          collections,
-          transaction,
-          userKey: user._key,
-          auth: {
-            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
-            userRequired: userRequired({
+                `,
+            null,
+            {
               i18n,
-              userKey: user._key,
-              loadUserByKey: loadUserByKey({
-                query,
-                userKey: user._key,
-                i18n,
-              }),
-            }),
-            verifiedRequired: verifiedRequired({ i18n }),
-          },
-          loaders: {
-            loadOrgByKey: loadOrgByKey({
               query,
-              language: 'en',
-              i18n,
+              collections,
+              transaction,
               userKey: user._key,
-            }),
-          },
-          validators: { cleanseInput },
-        },
-      )
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
 
-      const testDkimResultCursor =
-        await query`FOR dkimResult IN dkimResults RETURN dkimResult`
-      const testDkimResult = await testDkimResultCursor.next()
-      expect(testDkimResult).toEqual(undefined)
+          const testOwnershipCursor =
+            await query`FOR owner IN ownership RETURN owner`
+          const testOwnership = await testOwnershipCursor.next()
+          expect(testOwnership).toEqual(undefined)
 
-      const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
-      const testDkim = await testDkimCursor.next()
-      expect(testDkim).toEqual(undefined)
+          const testDmarcSummaryCursor =
+            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+          const testDmarcSummary = await testDmarcSummaryCursor.next()
+          expect(testDmarcSummary).toEqual(undefined)
 
-      const testDmarcCursor =
-        await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
-      const testDmarc = await testDmarcCursor.next()
-      expect(testDmarc).toEqual(undefined)
-
-      const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
-      const testSpf = await testSpfCursor.next()
-      expect(testSpf).toEqual(undefined)
-
-      const testHttpsCursor =
-        await query`FOR httpsScan IN https RETURN httpsScan`
-      const testHttps = await testHttpsCursor.next()
-      expect(testHttps).toEqual(undefined)
-
-      const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
-      const testSsl = await testSslCursor.next()
-      expect(testSsl).toEqual(undefined)
-    })
-    it('removes all domain, affiliation, and org data', async () => {
-      await graphql(
-        schema,
-        `
-            mutation {
-              leaveOrganization (
-                input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                }
-              ) {
-                result {
-                  ... on LeaveOrganizationResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
-        null,
-        {
-          i18n,
-          query,
-          collections,
-          transaction,
-          userKey: user._key,
-          auth: {
-            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
-            userRequired: userRequired({
-              i18n,
-              userKey: user._key,
-              loadUserByKey: loadUserByKey({
-                query,
-                userKey: user._key,
-                i18n,
-              }),
-            }),
-            verifiedRequired: verifiedRequired({ i18n }),
-          },
-          loaders: {
-            loadOrgByKey: loadOrgByKey({
-              query,
-              language: 'en',
-              i18n,
-              userKey: user._key,
-            }),
-          },
-          validators: { cleanseInput },
-        },
-      )
-
-      const testOrgCursor = await query`FOR org IN organizations RETURN org`
-      const testOrg = await testOrgCursor.next()
-      expect(testOrg).toEqual(undefined)
-
-      const testDomainCursor = await query`FOR domain IN domains RETURN domain`
-      const testDomain = await testDomainCursor.next()
-      expect(testDomain).toEqual(undefined)
-
-      const testAffiliationCursor =
-        await query`FOR aff IN affiliations RETURN aff`
-      const testAffiliation = await testAffiliationCursor.next()
-      expect(testAffiliation).toEqual(undefined)
-    })
-    describe('users language is set to english', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'en',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
+          const testDomainsToDmarcSumCursor =
+            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+          const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
+          expect(testDomainsToDmarcSum).toEqual(undefined)
         })
       })
-      it('returns status success message', async () => {
-        const response = await graphql(
+      describe('org is not the owner of dmarc data', () => {
+        beforeEach(async () => {
+          await collections.ownership.save({
+            _from: 'organizations/1',
+            _to: domain._id,
+          })
+        })
+        it('does not remove all dmarc summary data', async () => {
+          await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const testOwnershipCursor =
+            await query`FOR owner IN ownership RETURN owner`
+          const testOwnership = await testOwnershipCursor.next()
+          expect(testOwnership).toBeDefined()
+
+          const testDmarcSummaryCursor =
+            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+          const testDmarcSummary = await testDmarcSummaryCursor.next()
+          expect(testDmarcSummary).toBeDefined()
+
+          const testDomainsToDmarcSumCursor =
+            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+          const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
+          expect(testDomainsToDmarcSum).toBeDefined()
+        })
+      })
+      it('removes all scan data', async () => {
+        await graphql(
           schema,
           `
               mutation {
@@ -360,40 +375,35 @@ describe('given a successful leave', () => {
           },
         )
 
-        const expectedResult = {
-          data: {
-            leaveOrganization: {
-              result: {
-                status:
-                  'Successfully left organization: treasury-board-secretariat',
-              },
-            },
-          },
-        }
+        const testDkimResultCursor =
+          await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+        const testDkimResult = await testDkimResultCursor.next()
+        expect(testDkimResult).toEqual(undefined)
 
-        expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-        ])
+        const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+        const testDkim = await testDkimCursor.next()
+        expect(testDkim).toEqual(undefined)
+
+        const testDmarcCursor =
+          await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+        const testDmarc = await testDmarcCursor.next()
+        expect(testDmarc).toEqual(undefined)
+
+        const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+        const testSpf = await testSpfCursor.next()
+        expect(testSpf).toEqual(undefined)
+
+        const testHttpsCursor =
+          await query`FOR httpsScan IN https RETURN httpsScan`
+        const testHttps = await testHttpsCursor.next()
+        expect(testHttps).toEqual(undefined)
+
+        const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+        const testSsl = await testSslCursor.next()
+        expect(testSsl).toEqual(undefined)
       })
-    })
-    describe('users language is set to french', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'fr',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
-      it('returns status success message', async () => {
-        const response = await graphql(
+      it('removes all domain, affiliation, and org data', async () => {
+        await graphql(
           schema,
           `
               mutation {
@@ -446,21 +456,781 @@ describe('given a successful leave', () => {
           },
         )
 
-        const expectedResult = {
-          data: {
-            leaveOrganization: {
-              result: {
-                status:
-                  "L'organisation a été quittée avec succès : treasury-board-secretariat",
+        const testOrgCursor = await query`FOR org IN organizations RETURN org`
+        const testOrg = await testOrgCursor.next()
+        expect(testOrg).toEqual(undefined)
+
+        const testDomainCursor =
+          await query`FOR domain IN domains RETURN domain`
+        const testDomain = await testDomainCursor.next()
+        expect(testDomain).toEqual(undefined)
+
+        const testAffiliationCursor =
+          await query`FOR aff IN affiliations RETURN aff`
+        const testAffiliation = await testAffiliationCursor.next()
+        expect(testAffiliation).toEqual(undefined)
+      })
+      describe('users language is set to english', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'en',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
+          })
+        })
+        it('returns status success message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              leaveOrganization: {
+                result: {
+                  status:
+                    'Successfully left organization: treasury-board-secretariat',
+                },
               },
             },
-          },
-        }
+          }
 
-        expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-        ])
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
+          ])
+        })
+      })
+      describe('users language is set to french', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'fr',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
+          })
+        })
+        it('returns status success message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              leaveOrganization: {
+                result: {
+                  status:
+                    "L'organisation a été quittée avec succès : treasury-board-secretariat",
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
+          ])
+        })
+      })
+    })
+    describe('multiple orgs claims the domains', () => {
+      let org2
+      beforeEach(async () => {
+        org2 = await collections.organizations.save({
+          orgDetails: {
+            en: {
+              slug: 'treasury-board-secretariat-2',
+              acronym: 'TBS',
+              name: 'Treasury Board of Canada Secretariat',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'secretariat-conseil-tresor-2',
+              acronym: 'SCT',
+              name: 'Secrétariat du Conseil Trésor du Canada',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+        await collections.claims.save({
+          _from: org2._id,
+          _to: domain._id,
+        })
+      })
+      describe('org is owner of dmarc data', () => {
+        beforeEach(async () => {
+          await collections.ownership.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('removes all dmarc summary data', async () => {
+          await graphql(
+            schema,
+            `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const testOwnershipCursor =
+            await query`FOR owner IN ownership RETURN owner`
+          const testOwnership = await testOwnershipCursor.next()
+          expect(testOwnership).toEqual(undefined)
+
+          const testDmarcSummaryCursor =
+            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+          const testDmarcSummary = await testDmarcSummaryCursor.next()
+          expect(testDmarcSummary).toEqual(undefined)
+
+          const testDomainsToDmarcSumCursor =
+            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+          const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
+          expect(testDomainsToDmarcSum).toEqual(undefined)
+        })
+      })
+      describe('org is not the owner of dmarc data', () => {
+        beforeEach(async () => {
+          await collections.ownership.save({
+            _from: org2._id,
+            _to: domain._id,
+          })
+        })
+        it('does not remove all dmarc summary data', async () => {
+          await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const testOwnershipCursor =
+            await query`FOR owner IN ownership RETURN owner`
+          const testOwnership = await testOwnershipCursor.next()
+          expect(testOwnership).toBeDefined()
+
+          const testDmarcSummaryCursor =
+            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+          const testDmarcSummary = await testDmarcSummaryCursor.next()
+          expect(testDmarcSummary).toBeDefined()
+
+          const testDomainsToDmarcSumCursor =
+            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+          const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
+          expect(testDomainsToDmarcSum).toBeDefined()
+        })
+      })
+      it('does not remove all scan data', async () => {
+        await graphql(
+          schema,
+          `
+              mutation {
+                leaveOrganization (
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                  }
+                ) {
+                  result {
+                    ... on LeaveOrganizationResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+          null,
+          {
+            i18n,
+            query,
+            collections,
+            transaction,
+            userKey: user._key,
+            auth: {
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              userRequired: userRequired({
+                i18n,
+                userKey: user._key,
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
+              }),
+              verifiedRequired: verifiedRequired({ i18n }),
+            },
+            loaders: {
+              loadOrgByKey: loadOrgByKey({
+                query,
+                language: 'en',
+                i18n,
+                userKey: user._key,
+              }),
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        const testDkimResultCursor =
+          await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+        const testDkimResult = await testDkimResultCursor.next()
+        expect(testDkimResult).toBeDefined()
+
+        const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+        const testDkim = await testDkimCursor.next()
+        expect(testDkim).toBeDefined()
+
+        const testDmarcCursor =
+          await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+        const testDmarc = await testDmarcCursor.next()
+        expect(testDmarc).toBeDefined()
+
+        const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+        const testSpf = await testSpfCursor.next()
+        expect(testSpf).toBeDefined()
+
+        const testHttpsCursor =
+          await query`FOR httpsScan IN https RETURN httpsScan`
+        const testHttps = await testHttpsCursor.next()
+        expect(testHttps).toBeDefined()
+
+        const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+        const testSsl = await testSslCursor.next()
+        expect(testSsl).toBeDefined()
+      })
+      it('does not remove all domain', async () => {
+        await graphql(
+          schema,
+          `
+              mutation {
+                leaveOrganization (
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                  }
+                ) {
+                  result {
+                    ... on LeaveOrganizationResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+          null,
+          {
+            i18n,
+            query,
+            collections,
+            transaction,
+            userKey: user._key,
+            auth: {
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              userRequired: userRequired({
+                i18n,
+                userKey: user._key,
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
+              }),
+              verifiedRequired: verifiedRequired({ i18n }),
+            },
+            loaders: {
+              loadOrgByKey: loadOrgByKey({
+                query,
+                language: 'en',
+                i18n,
+                userKey: user._key,
+              }),
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        const testDomainCursor =
+          await query`FOR domain IN domains RETURN domain`
+        const testDomain = await testDomainCursor.next()
+        expect(testDomain).toBeDefined()
+      })
+      it('removes affiliation, and org data', async () => {
+        await graphql(
+          schema,
+          `
+              mutation {
+                leaveOrganization (
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                  }
+                ) {
+                  result {
+                    ... on LeaveOrganizationResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+          null,
+          {
+            i18n,
+            query,
+            collections,
+            transaction,
+            userKey: user._key,
+            auth: {
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              userRequired: userRequired({
+                i18n,
+                userKey: user._key,
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
+              }),
+              verifiedRequired: verifiedRequired({ i18n }),
+            },
+            loaders: {
+              loadOrgByKey: loadOrgByKey({
+                query,
+                language: 'en',
+                i18n,
+                userKey: user._key,
+              }),
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        const testOrgCursor = await query`
+          FOR org IN organizations 
+          FILTER org.orgDetails.en.slug != "treasury-board-secretariat-2" 
+          RETURN org
+        `
+        const testOrg = await testOrgCursor.next()
+        expect(testOrg).toEqual(undefined)
+
+        const testAffiliationCursor =
+          await query`FOR aff IN affiliations RETURN aff`
+        const testAffiliation = await testAffiliationCursor.next()
+        expect(testAffiliation).toEqual(undefined)
+      })
+      describe('users language is set to english', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'en',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
+          })
+        })
+        it('returns status success message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              leaveOrganization: {
+                result: {
+                  status:
+                    'Successfully left organization: treasury-board-secretariat',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
+          ])
+        })
+      })
+      describe('users language is set to french', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'fr',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
+          })
+        })
+        it('returns status success message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  leaveOrganization (
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on LeaveOrganizationResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkOrgOwner: checkOrgOwner({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
+                }),
+                verifiedRequired: verifiedRequired({ i18n }),
+              },
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              leaveOrganization: {
+                result: {
+                  status:
+                    "L'organisation a été quittée avec succès : treasury-board-secretariat",
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResult)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
+          ])
+        })
       })
     })
   })
@@ -472,6 +1242,83 @@ describe('given a successful leave', () => {
         permission: 'admin',
         owner: false,
       })
+      await collections.ownership.save({
+        _from: 'organizations/1',
+        _to: domain._id,
+      })
+    })
+    it('does not remove all dmarc summary data', async () => {
+      await graphql(
+        schema,
+        `
+            mutation {
+              leaveOrganization (
+                input: {
+                  orgId: "${toGlobalId('organizations', org._key)}"
+                }
+              ) {
+                result {
+                  ... on LeaveOrganizationResult {
+                    status
+                  }
+                  ... on AffiliationError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+        null,
+        {
+          i18n,
+          query,
+          collections,
+          transaction,
+          userKey: user._key,
+          auth: {
+            checkOrgOwner: checkOrgOwner({
+              i18n,
+              query,
+              userKey: user._key,
+            }),
+            userRequired: userRequired({
+              i18n,
+              userKey: user._key,
+              loadUserByKey: loadUserByKey({
+                query,
+                userKey: user._key,
+                i18n,
+              }),
+            }),
+            verifiedRequired: verifiedRequired({ i18n }),
+          },
+          loaders: {
+            loadOrgByKey: loadOrgByKey({
+              query,
+              language: 'en',
+              i18n,
+              userKey: user._key,
+            }),
+          },
+          validators: { cleanseInput },
+        },
+      )
+
+      const testOwnershipCursor =
+        await query`FOR owner IN ownership RETURN owner`
+      const testOwnership = await testOwnershipCursor.next()
+      expect(testOwnership).toBeDefined()
+
+      const testDmarcSummaryCursor =
+        await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+      const testDmarcSummary = await testDmarcSummaryCursor.next()
+      expect(testDmarcSummary).toBeDefined()
+
+      const testDomainsToDmarcSumCursor =
+        await query`FOR item IN domainsToDmarcSummaries RETURN item`
+      const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
+      expect(testDomainsToDmarcSum).toBeDefined()
     })
     it('does not remove scan data', async () => {
       await graphql(
@@ -948,9 +1795,216 @@ describe('given an unsuccessful leave', () => {
       })
     })
     describe('user is an org owner', () => {
-      describe('transaction step error occurs', () => {
-        describe('when removing scan data', () => {
+      describe('database error occurs', () => {
+        describe('when querying domainInfo', () => {
           it('throws an error', async () => {
+            const mockedQuery = jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when querying dmarcSummaryCheck', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest
+              .fn()
+              .mockReturnValueOnce({
+                count: 1,
+                next: jest.fn().mockReturnValue({ count: 1 }),
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while checking for dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('cursor error occurs', () => {
+        describe('when getting domainInfo', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest
+                .fn()
+                .mockRejectedValue(new Error('Cursor error occurred.')),
+            })
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Cursor error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('transaction step error occurs', () => {
+        describe('when removing dmarcSummary data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
@@ -981,7 +2035,150 @@ describe('given an unsuccessful leave', () => {
               null,
               {
                 i18n,
-                query: jest.fn(),
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing ownership data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove ownership for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing scan data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
                 collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
@@ -1012,11 +2209,20 @@ describe('given an unsuccessful leave', () => {
             ])
           })
         })
-        describe('when removing domain, affiliation, and org data', () => {
+        describe('when removing domain', () => {
           it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
@@ -1050,7 +2256,7 @@ describe('given an unsuccessful leave', () => {
               null,
               {
                 i18n,
-                query: jest.fn(),
+                query: mockedQuery,
                 collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
@@ -1077,7 +2283,86 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove domain, affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove domains for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing affiliation, and org data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
             ])
           })
         })
@@ -1086,6 +2371,13 @@ describe('given an unsuccessful leave', () => {
     describe('user is not an org owner', () => {
       describe('when removing affiliation information', () => {
         it('throws an error', async () => {
+          const mockedQuery = jest.fn().mockReturnValue({
+            count: 1,
+            next: jest.fn().mockReturnValue({
+              count: 1,
+            }),
+          })
+
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest
               .fn()
@@ -1116,7 +2408,7 @@ describe('given an unsuccessful leave', () => {
             null,
             {
               i18n,
-              query: jest.fn(),
+              query: mockedQuery,
               collections: jest.fn({ property: 'string' }),
               transaction: mockedTransaction,
               userKey: '123',
@@ -1150,6 +2442,13 @@ describe('given an unsuccessful leave', () => {
     })
     describe('transaction commit error occurs', () => {
       it('throws an error', async () => {
+        const mockedQuery = jest.fn().mockReturnValue({
+          count: 1,
+          next: jest.fn().mockReturnValue({
+            count: 1,
+          }),
+        })
+
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(new Error('Step error occurred.')),
           commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
@@ -1179,7 +2478,7 @@ describe('given an unsuccessful leave', () => {
           null,
           {
             i18n,
-            query: jest.fn(),
+            query: mockedQuery,
             collections: jest.fn({ property: 'string' }),
             transaction: mockedTransaction,
             userKey: '123',
@@ -1211,7 +2510,7 @@ describe('given an unsuccessful leave', () => {
       })
     })
   })
-  describe('language is set to english', () => {
+  describe('language is set to french', () => {
     beforeAll(() => {
       i18n = setupI18n({
         locale: 'fr',
@@ -1292,9 +2591,222 @@ describe('given an unsuccessful leave', () => {
       })
     })
     describe('user is an org owner', () => {
-      describe('transaction step error occurs', () => {
-        describe('when removing scan data', () => {
+      describe('database error occurs', () => {
+        describe('when querying domainInfo', () => {
           it('throws an error', async () => {
+            const mockedQuery = jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when querying dmarcSummaryCheck', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest
+              .fn()
+              .mockReturnValueOnce({
+                count: 1,
+                next: jest.fn().mockReturnValue({ count: 1 }),
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while checking for dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('cursor error occurs', () => {
+        describe('when getting domainInfo', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest
+                .fn()
+                .mockRejectedValue(new Error('Cursor error occurred.')),
+            })
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Cursor error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('transaction step error occurs', () => {
+        describe('when removing dmarcSummary data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
@@ -1325,7 +2837,154 @@ describe('given an unsuccessful leave', () => {
               null,
               {
                 i18n,
-                query: jest.fn(),
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing ownership data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove ownership for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing scan data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
                 collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
@@ -1358,11 +3017,20 @@ describe('given an unsuccessful leave', () => {
             ])
           })
         })
-        describe('when removing domain, affiliation, and org data', () => {
+        describe('when removing domain', () => {
           it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
@@ -1396,7 +3064,7 @@ describe('given an unsuccessful leave', () => {
               null,
               {
                 i18n,
-                query: jest.fn(),
+                query: mockedQuery,
                 collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
@@ -1425,7 +3093,88 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove domain, affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove domains for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing affiliation, and org data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              count: 1,
+              next: jest.fn().mockReturnValue({
+                count: 1,
+              }),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
             ])
           })
         })
@@ -1434,6 +3183,13 @@ describe('given an unsuccessful leave', () => {
     describe('user is not an org owner', () => {
       describe('when removing affiliation information', () => {
         it('throws an error', async () => {
+          const mockedQuery = jest.fn().mockReturnValue({
+            count: 1,
+            next: jest.fn().mockReturnValue({
+              count: 1,
+            }),
+          })
+
           const mockedTransaction = jest.fn().mockReturnValue({
             step: jest
               .fn()
@@ -1464,7 +3220,7 @@ describe('given an unsuccessful leave', () => {
             null,
             {
               i18n,
-              query: jest.fn(),
+              query: mockedQuery,
               collections: jest.fn({ property: 'string' }),
               transaction: mockedTransaction,
               userKey: '123',
@@ -1500,6 +3256,13 @@ describe('given an unsuccessful leave', () => {
     })
     describe('transaction commit error occurs', () => {
       it('throws an error', async () => {
+        const mockedQuery = jest.fn().mockReturnValue({
+          count: 1,
+          next: jest.fn().mockReturnValue({
+            count: 1,
+          }),
+        })
+
         const mockedTransaction = jest.fn().mockReturnValue({
           step: jest.fn().mockReturnValue(new Error('Step error occurred.')),
           commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
@@ -1529,7 +3292,7 @@ describe('given an unsuccessful leave', () => {
           null,
           {
             i18n,
-            query: jest.fn(),
+            query: mockedQuery,
             collections: jest.fn({ property: 'string' }),
             transaction: mockedTransaction,
             userKey: '123',
