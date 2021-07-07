@@ -17,7 +17,7 @@ export default function CreateOrganizationPage() {
   const toast = useToast()
   const history = useHistory()
 
-  const [infoState, changeInfoState] = React.useState({
+  const [infoState, changeInfoState] = useState({
     isHidden: true,
   })
 
