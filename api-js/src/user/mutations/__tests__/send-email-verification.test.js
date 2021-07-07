@@ -132,9 +132,7 @@ describe('user send password reset email', () => {
         const token = tokenize({
           parameters: { userKey: user._key },
         })
-        const verifyUrl = `${request.protocol}://${request.get(
-          'host',
-        )}/validate/${token}`
+        const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
@@ -274,9 +272,7 @@ describe('user send password reset email', () => {
         const token = tokenize({
           parameters: { userKey: user._key },
         })
-        const verifyUrl = `${request.protocol}://${request.get(
-          'host',
-        )}/validate/${token}`
+        const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
