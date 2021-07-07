@@ -311,7 +311,7 @@ def process_dns(results, domain_key, user_key, db, shared_id):
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
     valid_dkim = not results["dkim"].get("error")
-        
+
     if valid_dkim:
         for selector in results["dkim"].keys():
             tags["dkim"][selector] = []
@@ -891,6 +891,7 @@ def process_dns(results, domain_key, user_key, db, shared_id):
         logging.info("DNS Scans inserted into database")
 
     else:
+        dmarcResults["phase"] = phase
         publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dmarcResults}, "dmarc", user_key)
         publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": spfResults}, "spf", user_key)
         publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dkimResults}, "dkim", user_key)
