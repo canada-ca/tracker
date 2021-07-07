@@ -1790,7 +1790,7 @@ describe('given an unsuccessful leave', () => {
 
         expect(response).toEqual(expectedResult)
         expect(consoleOutput).toEqual([
-          `User: 123 attempted to leave org: 123, however it's undefined.`,
+          `User 123 attempted to leave undefined organization: 123`,
         ])
       })
     })
@@ -2586,7 +2586,7 @@ describe('given an unsuccessful leave', () => {
 
         expect(response).toEqual(expectedResult)
         expect(consoleOutput).toEqual([
-          `User: 123 attempted to leave org: 123, however it's undefined.`,
+          `User 123 attempted to leave undefined organization: 123`,
         ])
       })
     })

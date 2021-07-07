@@ -43,7 +43,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
 
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${user._key} attempted to leave org: ${orgKey}, however it's undefined.`,
+        `User ${user._key} attempted to leave undefined organization: ${orgKey}`,
       )
       return {
         _type: 'error',
