@@ -24,31 +24,32 @@ export function createCache() {
           findMyDomains: relayStylePagination(),
           findMyDmarcSummaries: relayStylePagination(),
           findMyOrganizations: relayStylePagination(['isAdmin']),
-        },
-      },
-      Subscription: {
-        fields: {
-          dkimScanData: {
+          getOneTimeDkimScans: {
             merge(existing = [], incoming) {
               return [...existing, incoming]
             },
           },
-          dmarcScanData: {
+          getOneTimeDmarcScans: {
             merge(existing = [], incoming) {
               return [...existing, incoming]
             },
           },
-          spfScanData: {
+          getOneTimeHttpsScans: {
             merge(existing = [], incoming) {
               return [...existing, incoming]
             },
           },
-          httpsScanData: {
+          getOneTimeSslScans: {
             merge(existing = [], incoming) {
               return [...existing, incoming]
             },
           },
-          sslScanData: {
+          getOneTimeSpfScans: {
+            merge(existing = [], incoming) {
+              return [...existing, incoming]
+            },
+          },
+          getOneTimeScans: {
             merge(existing = [], incoming) {
               return [...existing, incoming]
             },

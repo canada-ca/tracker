@@ -523,40 +523,47 @@ const schemaWithMocks = addMocksToSchema({
     },
     Mutation: {
       requestScan: async (_, _args, context, _resolveInfo) => {
-        const dkimScanData = store.get('DkimSub', faker.datatype.uuid())
+        const scanUuid = faker.datatype.uuid()
+
+        store.set('DkimSub', scanUuid, 'sharedId', scanUuid)
+        const dkimScanData = store.get('DkimSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(`${NEW_DKIM_DATA_STREAM}/${context.token}`, {
             dkimScanData: dkimScanData,
           })
-        }, Math.random() * 1000)
+        }, Math.random() * 10000)
 
-        const dmarcScanData = store.get('DmarcSub', faker.datatype.uuid())
+        store.set('DmarcSub', scanUuid, 'sharedId', scanUuid)
+        const dmarcScanData = store.get('DmarcSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(`${NEW_DMARC_DATA_STREAM}/${context.token}`, {
             dmarcScanData: dmarcScanData,
           })
-        }, Math.random() * 1000)
+        }, Math.random() * 10000)
 
-        const spfScanData = store.get('SpfSub', faker.datatype.uuid())
+        store.set('SpfSub', scanUuid, 'sharedId', scanUuid)
+        const spfScanData = store.get('SpfSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(`${NEW_SPF_DATA_STREAM}/${context.token}`, {
             spfScanData: spfScanData,
           })
-        }, Math.random() * 1000)
+        }, Math.random() * 10000)
 
-        const httpsScanData = store.get('HttpsSub', faker.datatype.uuid())
+        store.set('HttpsSub', scanUuid, 'sharedId', scanUuid)
+        const httpsScanData = store.get('HttpsSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(`${NEW_HTTPS_DATA_STREAM}/${context.token}`, {
             httpsScanData: httpsScanData,
           })
-        }, Math.random() * 1000)
+        }, Math.random() * 10000)
 
-        const sslScanData = store.get('SslSub', faker.datatype.uuid())
+        store.set('SslSub', scanUuid, 'sharedId', scanUuid)
+        const sslScanData = store.get('SslSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(`${NEW_SSL_DATA_STREAM}/${context.token}`, {
             sslScanData: sslScanData,
           })
-        }, Math.random() * 1000)
+        }, Math.random() * 10000)
 
         return {
           status: 'Scan requested.',
@@ -620,18 +627,12 @@ const schemaWithMocks = addMocksToSchema({
     },
     Subscription: {
       dkimScanData: {
-        resolve: () => {},
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(`${NEW_DKIM_DATA_STREAM}/${context.token}`),
       },
       dmarcScanData: {
-        subscribe: (_, _args, context) => {
-          const stream = `${NEW_DMARC_DATA_STREAM}/${context.token}`
-
-          return pubsub.asyncIterator(
-            `${NEW_DMARC_DATA_STREAM}/${context.token}`,
-          )
-        },
+        subscribe: (_, _args, context) =>
+          pubsub.asyncIterator(`${NEW_DMARC_DATA_STREAM}/${context.token}`),
       },
       spfScanData: {
         subscribe: (_, _args, context) =>
