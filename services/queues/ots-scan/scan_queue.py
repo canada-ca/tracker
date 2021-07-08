@@ -35,7 +35,10 @@ default_queues = {"https": https_queue, "ssl": ssl_queue, "dns": dns_queue}
 
 
 def publish_update(scan_type, user_key, message):
-    ots_redis.publish(f"scan/{scan_type}/{user_key}", message)
+    try:
+        ots_redis.publish(f"scan/{scan_type}/{user_key}", message)
+    except Exception as e:
+        logging.error(f"Unexpected error occurred while attempting to publish update to redis queue: {traceback.format_exc()}")
 
 
 def Server(process_name, queues=default_queues):

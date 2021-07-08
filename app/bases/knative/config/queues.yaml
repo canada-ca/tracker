@@ -73,6 +73,17 @@ spec:
       containers:
         - name: ots-scan-queue
           image: gcr.io/track-compliance/services/ots-scan-queue
+          env:
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_PORT
 
 ---
 
@@ -99,3 +110,14 @@ spec:
       containers:
         - name: ots-result-queue
           image: gcr.io/track-compliance/services/ots-result-queue
+          env:
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_PORT
