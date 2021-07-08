@@ -166,7 +166,7 @@ describe('<AdminPage />', () => {
 
   describe('Organization select', () => {
     it('displays info for admin', async () => {
-      const { getByText } = render(
+      const { getByText, getByPlaceholderText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
@@ -194,7 +194,7 @@ describe('<AdminPage />', () => {
       })
 
       await waitFor(() => {
-        const orgSelect = getByText('Select an organization')
+        const orgSelect = getByPlaceholderText('Select an organization')
         fireEvent.change(orgSelect, { value: 'Wolf Group' })
       })
     })
