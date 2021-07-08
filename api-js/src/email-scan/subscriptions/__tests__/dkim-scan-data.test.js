@@ -106,7 +106,7 @@ describe('given the dkimScanData subscription', () => {
       slug: 'test-domain-gc-ca',
     })
     sharedId = 'some-shared-id'
-    status = 'PASS'
+    status = 'pass'
   })
 
   afterEach(async () => {
