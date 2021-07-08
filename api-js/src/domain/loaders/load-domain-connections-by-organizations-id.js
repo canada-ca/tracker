@@ -286,8 +286,8 @@ export const loadDomainConnectionsByOrgId =
     WITH affiliations, domains, organizations, users 
     
     LET domainKeys = UNIQUE(FLATTEN(
-      LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" OPTIONS {bfs: true} RETURN e.permission)
-      LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations OPTIONS {bfs: true} RETURN v._key)
+      LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
+      LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
       LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
       LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
       ${ownershipOrgsOnly}
