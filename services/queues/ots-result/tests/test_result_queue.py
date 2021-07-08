@@ -24,6 +24,7 @@ def client(app):
 def test_enqueue_dns(client):
     test_payload = {
         "scan_id": 1,
+        "user_key": "test",
         "domain": "cyber.gc.ca",
         "selectors": ["selector1._domainkey", "selector2._domainkey"],
     }
@@ -36,6 +37,7 @@ def test_enqueue_dns(client):
 def test_enqueue_https(client):
     test_payload = {
         "scan_id": 1,
+        "user_key": "test",
         "domain": "cyber.gc.ca",
     }
 
@@ -47,6 +49,7 @@ def test_enqueue_https(client):
 def test_enqueue_ssl(client):
     test_payload = {
         "scan_id": 1,
+        "user_key": "test",
         "domain": "cyber.gc.ca",
     }
 
