@@ -34,7 +34,7 @@ dns_queue = Queue("dns", connection=redis)
 default_queues = {"https": https_queue, "ssl": ssl_queue, "dns": dns_queue}
 
 
-def publish_update(results, scan_type, user_key, message):
+def publish_update(scan_type, user_key, message):
     ots_redis.publish(f"scan/{scan_type}/{user_key}", message)
 
 
