@@ -185,7 +185,7 @@ describe('given the dmarcScanData subscription', () => {
             domain
           }
           status
-          phase
+          dmarcPhase
           record
           pPolicy
           spPolicy
@@ -264,7 +264,7 @@ describe('given the dmarcScanData subscription', () => {
             domain: 'test.domain.gc.ca',
           },
           status: status.toUpperCase(),
-          phase: 'deploy',
+          dmarcPhase: 'deploy',
           record: 'record',
           pPolicy: 'pPolicy',
           spPolicy: 'spPolicy',
