@@ -9,6 +9,7 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { guidanceTagType } from '../../guidance-tag/objects'
+import { StatusEnum } from '../../enums'
 
 export const dmarcSubType = new GraphQLObjectType({
   name: 'DmarcSub',
@@ -27,6 +28,16 @@ export const dmarcSubType = new GraphQLObjectType({
         const domain = await loadDomainByKey.load(domainKey)
         return domain
       },
+    },
+    dmarcPhase: {
+      type: GraphQLString,
+      description: 'The current dmarc phase the domain is compliant to.',
+      resolve: ({ phase }) => phase,
+    },
+    status: {
+      type: StatusEnum,
+      description: 'The success status of the scan.',
+      resolve: ({ status }) => status,
     },
     record: {
       type: GraphQLString,

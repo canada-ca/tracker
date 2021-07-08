@@ -41,7 +41,8 @@ describe('given the spfScanData subscription', () => {
     redis,
     pub,
     domain,
-    sharedId
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -102,6 +103,7 @@ describe('given the spfScanData subscription', () => {
       slug: 'test-domain-gc-ca',
     })
     sharedId = 'some-shared-id'
+    status = 'PASS'
   })
 
   afterEach(async () => {
@@ -137,6 +139,7 @@ describe('given the spfScanData subscription', () => {
                     JSON.stringify({
                       sharedId: sharedId,
                       domainKey: domain._key,
+                      status: status,
                       results: spfScan,
                     }),
                   )
@@ -179,6 +182,7 @@ describe('given the spfScanData subscription', () => {
           domain {
             domain
           }
+          status
           lookups
           record
           spfDefault
@@ -255,6 +259,7 @@ describe('given the spfScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
+          status: status,
           lookups: 1,
           record: 'record',
           spfDefault: 'spfDefault',

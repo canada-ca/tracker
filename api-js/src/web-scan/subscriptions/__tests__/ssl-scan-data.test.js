@@ -41,7 +41,8 @@ describe('given the spfScanData subscription', () => {
     redis,
     pub,
     domain,
-    sharedId
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -116,6 +117,7 @@ describe('given the spfScanData subscription', () => {
       slug: 'test-domain-gc-ca',
     })
     sharedId = 'some-shared-id'
+    status = 'PASS'
   })
 
   afterEach(async () => {
@@ -151,6 +153,7 @@ describe('given the spfScanData subscription', () => {
                     JSON.stringify({
                       sharedId: sharedId,
                       domainKey: domain._key,
+                      status: status,
                       results: sslScan,
                     }),
                   )
@@ -193,6 +196,7 @@ describe('given the spfScanData subscription', () => {
           domain {
             domain
           }
+          status
           acceptableCiphers
           acceptableCurves
           ccsInjectionVulnerable
@@ -275,6 +279,7 @@ describe('given the spfScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
+          status: status,
           acceptableCiphers: [
             'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
             'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',

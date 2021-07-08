@@ -41,7 +41,8 @@ describe('given the httpsScanData subscription', () => {
     redis,
     pub,
     domain,
-    sharedId
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -103,6 +104,7 @@ describe('given the httpsScanData subscription', () => {
       slug: 'test-domain-gc-ca',
     })
     sharedId = 'some-shared-id'
+    status = 'PASS'
   })
 
   afterEach(async () => {
@@ -138,6 +140,7 @@ describe('given the httpsScanData subscription', () => {
                     JSON.stringify({
                       sharedId: sharedId,
                       domainKey: domain._key,
+                      status: status,
                       results: httpsScan,
                     }),
                   )
@@ -181,6 +184,7 @@ describe('given the httpsScanData subscription', () => {
           domain {
             domain
           }
+          status
           implementation
           enforced
           hsts
@@ -259,6 +263,7 @@ describe('given the httpsScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
+          status: status,
           implementation: 'Valid HTTPS',
           enforced: 'Strict',
           hsts: 'No HSTS',

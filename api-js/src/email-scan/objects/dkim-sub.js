@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLList, GraphQLID } from 'graphql'
 
 import { domainType } from '../../domain/objects'
+import { StatusEnum } from '../../enums/status'
 import { dkimResultSubType } from './dkim-result-sub'
 
 export const dkimSubType = new GraphQLObjectType({
@@ -20,6 +21,11 @@ export const dkimSubType = new GraphQLObjectType({
         const domain = await loadDomainByKey.load(domainKey)
         return domain
       },
+    },
+    status: {
+      type: StatusEnum,
+      description: 'The success status of the scan.',
+      resolve: ({ status }) => status,
     },
     results: {
       type: GraphQLList(dkimResultSubType),
