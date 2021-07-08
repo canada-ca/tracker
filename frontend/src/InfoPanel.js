@@ -4,63 +4,51 @@ import { Trans } from '@lingui/macro'
 import { Box, Stack } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
 
-
-export function InfoPanel({
-  state,
-  children,
-}) {
-
-  return(
+export function InfoPanel({ state, children }) {
+  return (
     <Box
       hidden={state.isHidden}
       border="2px"
       borderColor="gray.400"
       rounded="md"
-      p='1em'
-      my='1em'
+      p="1em"
+      my="1em"
     >
-      <Stack
-        direction='column'
-      >
-        {children}
-      </Stack>
+      <Stack direction="column">{children}</Stack>
     </Box>
   )
 }
 
-export function InfoBox({
-  title,
-  info,
-}) {
+export function InfoBox({ title, info }) {
   return (
-    <Box my='0.25em'>
-      <strong><Trans>{title}</Trans></strong>
+    <Box my="0.25em">
+      <strong>
+        <Trans>{title}</Trans>
+      </strong>
       <span>: </span>
       <Trans>{info}</Trans>
     </Box>
   )
 }
 
-export function InfoButton({
-  state,
-  changeState,
-  label,
-}) {
+export function InfoButton({ state, changeState, label, ...props }) {
   return (
     <TrackerButton
       variant="info"
       display="inline-block"
+      type="button"
       onClick={() => {
         changeState({
           ...state,
           isHidden: !state.isHidden,
         })
-    }}>
+      }}
+      {...props}
+    >
       <Trans> {label} </Trans>
     </TrackerButton>
   )
 }
-
 
 InfoPanel.propTypes = {
   state: shape({

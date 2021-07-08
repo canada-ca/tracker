@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Heading, Stack, useToast } from '@chakra-ui/core'
 import { t, Trans } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
@@ -11,10 +11,15 @@ import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import CreateOrganizationField from './CreateOrganizationField'
 import { i18n } from '@lingui/core'
+import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
 export default function CreateOrganizationPage() {
   const toast = useToast()
   const history = useHistory()
+
+  const [infoState, changeInfoState] = useState({
+    isHidden: true,
+  })
 
   const validationSchema = object().shape({
     nameEN: string().required(i18n._(fieldRequirements.field.required.message)),
@@ -153,14 +158,42 @@ export default function CreateOrganizationPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
+            <Heading as="h1" fontSize="2xl" textAlign="center">
               <Trans>
                 Create an organization by filling out the following info in both
                 English and French
               </Trans>
             </Heading>
+            <InfoButton
+              label="Glossary"
+              state={infoState}
+              changeState={changeInfoState}
+              mr="0"
+              ml="auto"
+              display="block"
+            />
 
-            <Stack mb="4">
+            <InfoPanel state={infoState}>
+              <InfoBox title="Name" info="The name of the Organization." />
+              <InfoBox
+                title="Acronym"
+                info="The acronym of the Organization."
+              />
+              <InfoBox
+                title="City"
+                info="The city the Organization is based in."
+              />
+              <InfoBox
+                title="Province"
+                info="The province the Organization is based in."
+              />
+              <InfoBox
+                title="Country"
+                info="The country the Organization is based in."
+              />
+            </InfoPanel>
+
+            <Stack mb="4" mt="4">
               <CreateOrganizationField
                 name="nameEN"
                 language={t`English`}
