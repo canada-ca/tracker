@@ -7,10 +7,22 @@ export const loadDomainConnectionsByOrgId =
   async ({ orgId, after, before, first, last, ownership, orderBy, search }) => {
     const userDBId = `users/${userKey}`
 
-    let ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} claims OPTIONS {bfs: true} RETURN v._key)`
+    let ownershipOrgsOnly = aql`
+      LET claimKeys = (
+        FOR v, e IN 1..1 OUTBOUND ${orgId} claims 
+          OPTIONS {bfs: true} 
+          RETURN v._key
+      )
+    `
     if (typeof ownership !== 'undefined') {
       if (ownership) {
-        ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} ownership OPTIONS {bfs: true} RETURN v._key)`
+        ownershipOrgsOnly = aql`
+          LET claimKeys = (
+            FOR v, e IN 1..1 OUTBOUND ${orgId} ownership 
+              OPTIONS {bfs: true} 
+              RETURN v._key
+          )
+        `
       }
     }
 

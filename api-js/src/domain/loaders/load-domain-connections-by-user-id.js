@@ -16,10 +16,22 @@ export const loadDomainConnectionsByUserId =
   }) => {
     const userDBId = `users/${userKey}`
 
-    let ownershipOrgsOnly = aql`LET claimDomainKeys = (FOR v, e IN 1..1 OUTBOUND orgId claims OPTIONS {bfs: true} RETURN v._key)`
+    let ownershipOrgsOnly = aql`
+      LET claimDomainKeys = (
+        FOR v, e IN 1..1 OUTBOUND orgId claims 
+          OPTIONS {bfs: true} 
+          RETURN v._key
+      )
+    `
     if (typeof ownership !== 'undefined') {
       if (ownership) {
-        ownershipOrgsOnly = aql`LET claimDomainKeys = (FOR v, e IN 1..1 OUTBOUND orgId ownership OPTIONS {bfs: true} RETURN v._key)`
+        ownershipOrgsOnly = aql`
+          LET claimDomainKeys = (
+            FOR v, e IN 1..1 OUTBOUND orgId ownership 
+              OPTIONS {bfs: true} 
+              RETURN v._key
+          )
+        `
       }
     }
 
@@ -286,7 +298,11 @@ export const loadDomainConnectionsByUserId =
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET domainKeys = UNIQUE(FLATTEN(
         LET keys = []
-        LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations OPTIONS {bfs: true} RETURN e._from)
+        LET orgIds = (
+          FOR v, e IN 1..1 ANY ${userDBId} affiliations
+            OPTIONS {bfs: true} 
+            RETURN e._from
+        )
         FOR orgId IN orgIds 
             ${ownershipOrgsOnly}
             RETURN APPEND(keys, claimDomainKeys)
