@@ -24,7 +24,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 # ConnectionPool for Redis server running in the same container as this app; see Dockerfile
 pool = ConnectionPool(host="127.0.0.1", port=6379, db=0)
 redis = Redis(connection_pool=pool)
-r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+ots_redis = Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 # RQ queues for scan dispatches, RQ workers must be running for jobs to be executed
 https_queue = Queue("https", connection=redis)
@@ -35,7 +35,7 @@ default_queues = {"https": https_queue, "ssl": ssl_queue, "dns": dns_queue}
 
 
 def publish_update(results, scan_type, user_key, message):
-    r.publish(f"scan/{scan_type}/{user_key}", message)
+    ots_redis.publish(f"scan/{scan_type}/{user_key}", message)
 
 
 def Server(process_name, queues=default_queues):

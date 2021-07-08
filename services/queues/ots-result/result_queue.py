@@ -21,7 +21,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 pool = ConnectionPool(host="127.0.0.1", port=6379, db=0)
 redis = Redis(connection_pool=pool)
-r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+ots_redis = Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 https_queue = Queue("https", connection=redis)
 ssl_queue = Queue("ssl", connection=redis)
@@ -31,7 +31,7 @@ default_queues = {"https": https_queue, "ssl": ssl_queue, "dns": dns_queue}
 
 
 def publish_update(results, scan_type, user_key, message):
-    r.publish(f"scan/{scan_type}/{user_key}", message)
+    ots_redis.publish(f"scan/{scan_type}/{user_key}", message)
 
 
 def Server(process_name, queues=default_queues):
