@@ -133,9 +133,9 @@ credentials:
 		SCALAR_COST=1
 		OBJECT_COST=1
 		LIST_FACTOR=1
-		DNS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/dns
-		HTTPS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/https
-		SSL_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/ssl
+		DNS_SCANNER_ENDPOINT=http://ots-scan-queue.scanners.svc.cluster.local/dns
+		HTTPS_SCANNER_ENDPOINT=http://ots-scan-queue.scanners.svc.cluster.local/https
+		SSL_SCANNER_ENDPOINT=http://ots-scan-queue.scanners.svc.cluster.local/ssl
 		NOTIFICATION_AUTHENTICATE_EMAIL_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_AUTHENTICATE_TEXT_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX

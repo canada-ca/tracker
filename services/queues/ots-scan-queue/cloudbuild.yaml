@@ -1,14 +1,14 @@
 steps:
   - name: 'gcr.io/track-compliance/ci'
     id: test-scan-queue
-    dir: services/scan-queue
+    dir: services/queues/scan-queue
     entrypoint: /bin/sh
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-scan-queue-if-master
     entrypoint: 'bash'
-    dir: services/scan-queue
+    dir: services/queues/scan-queue
     args:
     -  '-c'
     - |

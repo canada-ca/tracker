@@ -1,0 +1,8 @@
+gunicorn
+emoji
+pytest
+requests
+redis
+rq
+flask
+pretend

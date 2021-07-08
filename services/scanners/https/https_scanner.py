@@ -25,6 +25,9 @@ RES_QUEUE = Queue()
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
 )
+OTS_QUEUE_URL = os.getenv(
+    "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
+)
 
 
 class ScanTimeoutException(BaseException):
@@ -32,7 +35,8 @@ class ScanTimeoutException(BaseException):
 
 
 def dispatch_results(payload, client):
-    client.post(QUEUE_URL + "/https", json=payload)
+    queue = lambda payload : OTS_QUEUE_URL if(payload.get("user_key")) else QUEUE_URL
+    client.post(queue + "/https", json=json.dumps(payload))
     logging.info("Scan results dispatched to result queue")
 
 
@@ -216,15 +220,13 @@ def Server(server_client=requests):
 
         processed_results = process_results(scan_results)
 
-        outbound_payload = json.dumps(
-            {
-                "results": processed_results,
-                "scan_type": "https",
-                "user_key": user_key,
-                "domain_key": domain_key,
-                "shared_id": shared_id
-            }
-        )
+        outbound_payload = {
+            "results": processed_results,
+            "scan_type": "https",
+            "user_key": user_key,
+            "domain_key": domain_key,
+            "shared_id": shared_id
+        }
         logging.info(f"Scan results: {str(processed_results)}")
 
         end_time = dt.datetime.now()
