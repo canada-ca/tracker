@@ -7,10 +7,10 @@ export const loadDomainConnectionsByOrgId =
   async ({ orgId, after, before, first, last, ownership, orderBy, search }) => {
     const userDBId = `users/${userKey}`
 
-    let ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} claims RETURN v._key)`
+    let ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} claims OPTIONS {bfs: true} RETURN v._key)`
     if (typeof ownership !== 'undefined') {
       if (ownership) {
-        ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} ownership RETURN v._key)`
+        ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} ownership OPTIONS {bfs: true} RETURN v._key)`
       }
     }
 
@@ -286,8 +286,8 @@ export const loadDomainConnectionsByOrgId =
     WITH affiliations, domains, organizations, users 
     
     LET domainKeys = UNIQUE(FLATTEN(
-      LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
-      LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+      LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" OPTIONS {bfs: true} RETURN e.permission)
+      LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations OPTIONS {bfs: true} RETURN v._key)
       LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
       LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
       ${ownershipOrgsOnly}
