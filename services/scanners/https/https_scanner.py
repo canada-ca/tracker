@@ -28,15 +28,15 @@ QUEUE_URL = os.getenv(
 OTS_QUEUE_URL = os.getenv(
     "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
 )
+DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
 
 
 class ScanTimeoutException(BaseException):
     pass
 
 
-def dispatch_results(payload, client):
-    queue = lambda payload : OTS_QUEUE_URL if(payload.get("user_key")) else QUEUE_URL
-    client.post(queue + "/https", json=json.dumps(payload))
+def dispatch_results(payload, client, ots):
+    client.post(DEST_URL(ots) + "/https", json=json.dumps(payload))
     logging.info("Scan results dispatched to result queue")
 
 
@@ -231,7 +231,7 @@ def Server(server_client=requests):
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
-        dispatch_results(outbound_payload, server_client)
+        dispatch_results(outbound_payload, server_client, (user_key is not None))
 
         logging.info(f"HTTPS scan completed in {elapsed_time.total_seconds()} seconds.")
         return Response("Scan completed")
