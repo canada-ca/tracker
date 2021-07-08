@@ -259,7 +259,7 @@ describe('given the spfScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
-          status: status,
+          status: status.toUpperCase(),
           lookups: 1,
           record: 'record',
           spfDefault: 'spfDefault',

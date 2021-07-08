@@ -263,7 +263,7 @@ describe('given the httpsScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
-          status: status,
+          status: status.toUpperCase(),
           implementation: 'Valid HTTPS',
           enforced: 'Strict',
           hsts: 'No HSTS',

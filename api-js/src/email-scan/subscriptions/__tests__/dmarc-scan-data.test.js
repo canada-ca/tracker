@@ -263,7 +263,7 @@ describe('given the dmarcScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
-          status: status,
+          status: status.toUpperCase(),
           phase: 'deploy',
           record: 'record',
           pPolicy: 'pPolicy',

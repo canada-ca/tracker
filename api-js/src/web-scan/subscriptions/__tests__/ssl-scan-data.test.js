@@ -279,7 +279,7 @@ describe('given the spfScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
-          status: status,
+          status: status.toUpperCase(),
           acceptableCiphers: [
             'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
             'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',

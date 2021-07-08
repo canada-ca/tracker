@@ -264,7 +264,7 @@ describe('given the dkimScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
-          status: status,
+          status: status.toUpperCase(),
           results: [
             {
               selector: 'selector',
