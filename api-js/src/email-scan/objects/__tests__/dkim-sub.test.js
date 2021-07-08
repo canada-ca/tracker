@@ -4,6 +4,7 @@ import { GraphQLID, GraphQLList } from 'graphql'
 import { databaseOptions } from '../../../../database-options'
 import { dkimResultSubType, dkimSubType } from '../index'
 import { domainType } from '../../../domain/objects'
+import { StatusEnum } from '../../../enums'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -20,6 +21,12 @@ describe('given the dkimSubType object', () => {
 
       expect(demoType).toHaveProperty('domain')
       expect(demoType.domain.type).toMatchObject(domainType)
+    })
+    it('has a status field', () => {
+      const demoType = dkimSubType.getFields()
+
+      expect(demoType).toHaveProperty('status')
+      expect(demoType.status.type).toMatchObject(StatusEnum)
     })
     it('has results field', () => {
       const demoType = dkimSubType.getFields()
@@ -66,6 +73,13 @@ describe('given the dkimSubType object', () => {
             },
           ),
         ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the status resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = dkimSubType.getFields()
+
+        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
       })
     })
     describe('testing the results resolver', () => {
