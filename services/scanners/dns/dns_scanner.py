@@ -30,6 +30,7 @@ QUEUE_URL = os.getenv(
 )
 OTS_QUEUE_URL = os.getenv(
     "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
+)
 DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
 
 
