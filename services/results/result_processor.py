@@ -145,6 +145,12 @@ def process_https(results, domain_key, user_key, db, shared_id):
         "negativeTags": negative_tags,
         }
 
+    # get https status
+    if len(negative_tags) > 0:
+        https_status = "fail"
+    else:
+        https_status = "pass"
+
     if user_key is None:
         try:
             httpsEntry = db.collection("https").insert(httpsResults)
@@ -152,11 +158,6 @@ def process_https(results, domain_key, user_key, db, shared_id):
             db.collection("domainsHTTPS").insert(
                 {"_from": domain["_id"], "_to": httpsEntry["_id"]}
             )
-
-            if len(negative_tags) > 0:
-                https_status = "fail"
-            else:
-                https_status = "pass"
 
             if domain.get("status", None) == None:
                 domain.update(
@@ -182,7 +183,7 @@ def process_https(results, domain_key, user_key, db, shared_id):
         logging.info("HTTPS Scan inserted into database")
 
     else:
-        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": httpsResults}, "https", user_key)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "status": https_status, "results": httpsResults}, "https", user_key)
         logging.info("HTTPS Scan published to redis")
 
 
@@ -265,6 +266,12 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
         "negativeTags": negative_tags,
     }
 
+    # get ssl status
+    if len(negative_tags) > 0 or "ssl5" not in positive_tags:
+        ssl_status = "fail"
+    else:
+        ssl_status = "pass"
+
     if user_key is None:
         try:
             sslEntry = db.collection("ssl").insert(sslResults)
@@ -272,11 +279,6 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
             db.collection("domainsSSL").insert(
                 {"_from": domain["_id"], "_to": sslEntry["_id"]}
             )
-
-            if len(negative_tags) > 0 or "ssl5" not in positive_tags:
-                ssl_status = "fail"
-            else:
-                ssl_status = "pass"
 
             if domain.get("status", None) == None:
                 domain.update(
@@ -302,7 +304,7 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
         logging.info("SSL Scan inserted into database")
 
     else:
-        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": sslResults}, "ssl", user_key)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "status": ssl_status, "results": sslResults}, "ssl", user_key)
         logging.info("SSL Scan published to redis")
 
 
@@ -797,6 +799,47 @@ def process_dns(results, domain_key, user_key, db, shared_id):
                 }
             )
 
+    # get spf status
+    if "spf12" in tags["spf"]:
+        spf_status = "pass"
+    else:
+        spf_status = "fail"
+
+    # get dmarc status
+    if "dmarc23" in tags["dmarc"]:
+        dmarc_status = "pass"
+    else:
+        dmarc_status = "fail"
+
+    # get dkim statuses
+    dkim_statuses = []
+    for selector in tags["dkim"].keys():
+        if any(
+            i
+            in [
+                "dkim2",
+                "dkim3",
+                "dkim4",
+                "dkim5",
+                "dkim6",
+                "dkim9",
+                "dkim11",
+                "dkim12",
+            ]
+            for i in tags["dkim"][selector]
+        ):
+            dkim_statuses.append("fail")
+        elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
+            dkim_statuses.append("pass")
+
+    if len(dkim_statuses) == 0:
+        dkim_status = "fail"
+    elif any(i == "fail" for i in dkim_statuses):
+        dkim_status = "fail"
+    else:
+        dkim_status = "pass"
+
+
     if user_key is None:
         try:
             dmarcEntry = db.collection("dmarc").insert(dmarcResults)
@@ -821,43 +864,6 @@ def process_dns(results, domain_key, user_key, db, shared_id):
             db.collection("domainsDKIM").insert(
                 {"_from": domain["_id"], "_to": dkimEntry["_id"]}
             )
-
-            if "spf12" in tags["spf"]:
-                spf_status = "pass"
-            else:
-                spf_status = "fail"
-
-            if "dmarc23" in tags["dmarc"]:
-                dmarc_status = "pass"
-            else:
-                dmarc_status = "fail"
-
-            dkim_statuses = []
-            for selector in tags["dkim"].keys():
-                if any(
-                    i
-                    in [
-                        "dkim2",
-                        "dkim3",
-                        "dkim4",
-                        "dkim5",
-                        "dkim6",
-                        "dkim9",
-                        "dkim11",
-                        "dkim12",
-                    ]
-                    for i in tags["dkim"][selector]
-                ):
-                    dkim_statuses.append("fail")
-                elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
-                    dkim_statuses.append("pass")
-
-            if len(dkim_statuses) == 0:
-                dkim_status = "fail"
-            elif any(i == "fail" for i in dkim_statuses):
-                dkim_status = "fail"
-            else:
-                dkim_status = "pass"
 
             if domain.get("status", None) == None:
                 domain.update(
@@ -892,9 +898,9 @@ def process_dns(results, domain_key, user_key, db, shared_id):
 
     else:
         dmarcResults["phase"] = phase
-        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dmarcResults}, "dmarc", user_key)
-        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": spfResults}, "spf", user_key)
-        publish_results({"sharedId": shared_id, "domainKey": domain_key, "results": dkimResults}, "dkim", user_key)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "status": dmarc_status, "results": dmarcResults}, "dmarc", user_key)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "status": spf_status, "results": spfResults}, "spf", user_key)
+        publish_results({"sharedId": shared_id, "domainKey": domain_key, "status": dkim_status, "results": dkimResults}, "dkim", user_key)
         logging.info("DNS Scans published to redis")
 
 
