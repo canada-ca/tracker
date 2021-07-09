@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { any } from 'prop-types'
 import {
   Icon,
@@ -53,4 +53,4 @@ ReactTableGlobalFilter.propTypes = {
   setGlobalFilter: any,
 }
 
-export default WithPseudoBox(ReactTableGlobalFilter)
+export default WithWrapperBox(ReactTableGlobalFilter)

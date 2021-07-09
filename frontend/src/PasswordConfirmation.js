@@ -14,7 +14,7 @@ import {
   Spinner,
   Stack,
 } from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { useField } from 'formik'
 import { string } from 'prop-types'
 
@@ -172,4 +172,4 @@ PasswordConfirmation.propTypes = {
   confirmPasswordLabel: string,
 }
 
-export default WithPseudoBox(PasswordConfirmation)
+export default WithWrapperBox(PasswordConfirmation)

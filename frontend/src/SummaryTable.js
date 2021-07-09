@@ -4,7 +4,7 @@ import { usePagination, useTable } from 'react-table'
 import { array } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { Box, IconButton, Input, Select, Stack, Text } from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
 const Table = styled.table`
   & {
@@ -211,4 +211,4 @@ SummaryTable.propTypes = {
   columns: array.isRequired,
 }
 
-export default WithPseudoBox(SummaryTable)
+export default WithWrapperBox(SummaryTable)

@@ -13,9 +13,9 @@ import {
   Stack,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
-const AuthenticateField = WithPseudoBox(function AuthenticateField({
+const AuthenticateField = WithWrapperBox(function AuthenticateField({
   name,
   forwardedRef,
   sendMethod,

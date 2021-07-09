@@ -11,9 +11,9 @@ import {
   InputLeftElement,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
-const DisplayNameField = WithPseudoBox(function DisplayNameField({
+const DisplayNameField = WithWrapperBox(function DisplayNameField({
   name,
   label,
   forwardedRef,

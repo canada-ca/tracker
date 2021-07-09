@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/core'
 import { any, object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 
 function ScanCard({ scanType, scanData, status }) {
@@ -128,7 +128,7 @@ function ScanCard({ scanType, scanData, status }) {
   )
 }
 
-export default WithPseudoBox(ScanCard)
+export default WithWrapperBox(ScanCard)
 
 ScanCard.propTypes = {
   scanType: string,

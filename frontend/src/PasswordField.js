@@ -13,9 +13,9 @@ import {
   InputRightElement,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox.js'
+import WithWrapperBox from './WithWrapperBox.js'
 
-const PasswordField = WithPseudoBox(function PasswordField({
+const PasswordField = WithWrapperBox(function PasswordField({
   name,
   label,
   forwardedRef,
