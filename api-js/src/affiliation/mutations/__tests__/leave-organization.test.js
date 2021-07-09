@@ -638,7 +638,7 @@ describe('given a successful leave', () => {
               leaveOrganization: {
                 result: {
                   status:
-                    "L'organisation a été quittée avec succès : treasury-board-secretariat",
+                    "L'organisation a été quittée avec succès: treasury-board-secretariat",
                 },
               },
             },
@@ -1220,7 +1220,7 @@ describe('given a successful leave', () => {
               leaveOrganization: {
                 result: {
                   status:
-                    "L'organisation a été quittée avec succès : treasury-board-secretariat",
+                    "L'organisation a été quittée avec succès: treasury-board-secretariat",
                 },
               },
             },
@@ -1681,7 +1681,7 @@ describe('given a successful leave', () => {
             leaveOrganization: {
               result: {
                 status:
-                  "L'organisation a été quittée avec succès : treasury-board-secretariat",
+                  "L'organisation a été quittée avec succès: treasury-board-secretariat",
               },
             },
           },
