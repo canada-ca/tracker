@@ -6,12 +6,12 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
   Stack,
 } from '@chakra-ui/react'
+import { TwoFactorIcon } from './theme/Icons'
 import { useField } from 'formik'
 import WithWrapperBox from './WithWrapperBox'
 
@@ -58,7 +58,7 @@ const AuthenticateField = WithWrapperBox(function AuthenticateField({
         </FormLabel>
         <InputGroup width="fit-content">
           <InputLeftElement>
-            <Icon name="twoFactor" color="gray.300" size="1.25rem" />
+            <TwoFactorIcon color="gray.300" size="1.25rem" />
           </InputLeftElement>
           <Input
             {...field}

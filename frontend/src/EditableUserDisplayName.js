@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import { string } from 'prop-types'
 import {
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,6 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { PersonIcon } from './theme/Icons'
 import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
@@ -95,7 +95,7 @@ function EditableUserDisplayName({ detailValue }) {
       </Heading>
 
       <Stack isInline align="center">
-        <Icon name="person" size="icons.lg" color="gray.300" />
+        <PersonIcon size="icons.lg" color="gray.300" />
         <Text>{detailValue}</Text>
         <TrackerButton
           ml="auto"
