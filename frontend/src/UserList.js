@@ -20,7 +20,7 @@ import {
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { UserCard } from './UserCard'

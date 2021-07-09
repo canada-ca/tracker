@@ -18,11 +18,11 @@ import {
   Stack,
   Text,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { array, bool, func, object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 import { Field, FieldArray, Formik } from 'formik'
-import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
+import FormErrorMessage from '@chakra-ui/react/dist/FormErrorMessage'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 

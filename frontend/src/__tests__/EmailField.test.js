@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, string } from 'yup'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 import EmailField from '../EmailField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'

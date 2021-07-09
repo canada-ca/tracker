@@ -1,6 +1,6 @@
 import React from 'react'
 import { cleanup, render } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 import { SkipLink } from '../SkipLink'
 
 describe('SkipLinks', () => {

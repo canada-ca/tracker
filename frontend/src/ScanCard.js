@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/core'
+import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { any, object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
 import WithWrapperBox from './WithWrapperBox'

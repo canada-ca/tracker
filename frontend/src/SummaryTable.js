@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { usePagination, useTable } from 'react-table'
 import { array } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, IconButton, Input, Select, Stack, Text } from '@chakra-ui/core'
+import { Box, IconButton, Input, Select, Stack, Text } from '@chakra-ui/react'
 import WithWrapperBox from './WithWrapperBox'
 
 const Table = styled.table`

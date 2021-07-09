@@ -13,7 +13,7 @@ import {
   TabPanels,
   Tabs,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from './graphql/queries'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'

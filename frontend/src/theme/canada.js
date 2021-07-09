@@ -1,4 +1,4 @@
-import { theme as chakraTheme } from '@chakra-ui/core'
+import { theme as chakraTheme } from '@chakra-ui/react'
 import React from 'react'
 
 const shadows = {

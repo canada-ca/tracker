@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Divider, Stack, Text } from '@chakra-ui/core'
+import { Box, Divider, Stack, Text } from '@chakra-ui/react'
 import { bool, string } from 'prop-types'
 
 export function DkimEntry(props) {

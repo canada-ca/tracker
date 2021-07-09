@@ -7,7 +7,7 @@ import {
   Progress,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
@@ -52,7 +52,7 @@ export function OrganizationCard({
     <ListItem {...rest}>
       <Flex
         width="100%"
-        direction={{ base:'column', md: 'row'}}
+        direction={{ base: 'column', md: 'row' }}
         alignItems={{ base: 'flex-start', md: 'center' }}
         _hover={{ bg: ['', 'gray.100'] }}
         p="4"

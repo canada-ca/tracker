@@ -1,7 +1,7 @@
 import React from 'react'
 import { any, bool, func, shape, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, Stack } from '@chakra-ui/core'
+import { Box, Stack } from '@chakra-ui/react'
 import { TrackerButton } from './TrackerButton'
 
 export function InfoPanel({ state, children }) {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Divider, Image, SimpleGrid, Stack, Text } from '@chakra-ui/core'
+import { Box, Divider, Image, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import trackerLogo from './images/tracker_v-03.png'
 
 export function WelcomeMessage() {

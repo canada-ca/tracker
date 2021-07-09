@@ -17,7 +17,7 @@ import {
   Stack,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { TrackerButton } from './TrackerButton'
 import { t, Trans } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'

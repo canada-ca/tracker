@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 import { TopBanner } from '../TopBanner'
 import { cleanup, render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'

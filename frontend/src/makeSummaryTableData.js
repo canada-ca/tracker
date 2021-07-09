@@ -4,9 +4,9 @@
 */
 
 import React from 'react'
-import {Icon} from '@chakra-ui/core'
+import { Icon } from '@chakra-ui/react'
 
-const range = len => {
+const range = (len) => {
   const arr = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
@@ -38,7 +38,7 @@ const generateEmailStatusIcon = () => {
   return statusIcon
 }
 
-const newDomain = names => {
+const newDomain = (names) => {
   const ind = Math.floor(Math.random() * 13)
   return {
     host_domain: names[ind],

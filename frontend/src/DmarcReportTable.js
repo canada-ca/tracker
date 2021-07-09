@@ -18,7 +18,7 @@ import {
   Select,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import WithWrapperBox from './WithWrapperBox'

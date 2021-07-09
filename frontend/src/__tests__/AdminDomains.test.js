@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
 import { UserVarProvider } from '../UserState'

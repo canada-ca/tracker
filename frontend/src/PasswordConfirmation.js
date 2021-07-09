@@ -13,7 +13,7 @@ import {
   InputRightElement,
   Spinner,
   Stack,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import WithWrapperBox from './WithWrapperBox'
 import { useField } from 'formik'
 import { string } from 'prop-types'

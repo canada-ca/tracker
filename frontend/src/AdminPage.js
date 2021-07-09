@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Divider, Icon, Select, Stack, Text, useToast } from '@chakra-ui/core'
+import { Divider, Icon, Select, Stack, Text, useToast } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'

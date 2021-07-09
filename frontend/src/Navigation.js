@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link as ReactRouterLink } from 'react-router-dom'
-import { Flex, Stack } from '@chakra-ui/core'
+import { Flex, Stack } from '@chakra-ui/react'
 import { node } from 'prop-types'
 
 export const Navigation = ({ children, ...props }) => {

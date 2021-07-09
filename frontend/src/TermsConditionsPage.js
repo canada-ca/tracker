@@ -7,7 +7,7 @@ import {
   Link,
   List,
   ListItem,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -434,4 +434,4 @@ export function TermsConditionsPage() {
   )
 }
 
-export default TermsConditionsPage;
+export default TermsConditionsPage

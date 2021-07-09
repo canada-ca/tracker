@@ -1,5 +1,5 @@
 import React from 'react'
-import { Badge, Grid, Text } from '@chakra-ui/core'
+import { Badge, Grid, Text } from '@chakra-ui/react'
 import { string } from 'prop-types'
 
 export function UserCard({ userName, displayName, role }) {

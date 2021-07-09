@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, ListItem } from '@chakra-ui/core'
+import { List, ListItem } from '@chakra-ui/react'
 import { array, func } from 'prop-types'
 
 export function ListOf({ elements = [], ifEmpty, ...props }) {

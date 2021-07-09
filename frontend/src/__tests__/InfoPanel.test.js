@@ -1,7 +1,7 @@
 import React from 'react'
 import { InfoButton, InfoBox, InfoPanel } from '../InfoPanel'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
@@ -24,13 +24,10 @@ describe('<InfoPanel>', () => {
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <InfoPanel state={state}>
+            <InfoBox title="Domain" info="The domain address." />
             <InfoBox
-              title='Domain'
-              info='The domain address.'
-            />
-            <InfoBox
-              title='Total Messages'
-              info='Shows the total number of emails that have been sent by this domain during the selected time range.'
+              title="Total Messages"
+              info="Shows the total number of emails that have been sent by this domain during the selected time range."
             />
           </InfoPanel>
         </I18nProvider>
@@ -45,7 +42,7 @@ describe('<InfoPanel>', () => {
       const { getByText } = render(
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
-              <InfoButton label="Glossary" />
+            <InfoButton label="Glossary" />
           </I18nProvider>
         </ThemeProvider>,
       )

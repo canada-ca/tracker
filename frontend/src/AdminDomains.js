@@ -20,7 +20,7 @@ import {
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Domain } from './Domain'
 import { number, string } from 'prop-types'
 import { ListOf } from './ListOf'

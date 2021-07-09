@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { string } from 'prop-types'
-import { Divider, Icon, SimpleGrid, Stack, useToast } from '@chakra-ui/core'
+import { Divider, Icon, SimpleGrid, Stack, useToast } from '@chakra-ui/react'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from './graphql/queries'
 import { t, Trans } from '@lingui/macro'

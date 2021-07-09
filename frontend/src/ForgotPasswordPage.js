@@ -1,6 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/core'
+import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
 import EmailField from './EmailField'
 import { object, string } from 'yup'
 import { Formik } from 'formik'

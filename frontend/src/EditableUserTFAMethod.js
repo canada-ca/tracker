@@ -8,7 +8,7 @@ import {
   Select,
   Stack,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'

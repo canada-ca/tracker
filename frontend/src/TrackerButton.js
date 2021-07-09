@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Spinner, Stack } from '@chakra-ui/core'
+import { Box, Spinner, Stack } from '@chakra-ui/react'
 import { any, bool, string } from 'prop-types'
 
 export const TrackerButton = React.forwardRef(

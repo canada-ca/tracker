@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Divider, Text } from '@chakra-ui/core'
+import { Box, Divider, Text } from '@chakra-ui/react'
 import { PAGINATED_ORG_DOMAINS as FORWARD } from './graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
