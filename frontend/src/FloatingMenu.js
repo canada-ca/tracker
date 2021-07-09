@@ -36,11 +36,21 @@ export const FloatingMenu = () => {
   } = useDisclosure()
   const drawerBtnRef = React.useRef()
 
+  const StyledDivider = (
+    <Divider
+      orientation="vertical"
+      borderColor="accent"
+      borderWidth="2px"
+      height={{ base: '45px', sm: '64px' }}
+      ml={0}
+    />
+  )
+
   return (
     <Box
       // position="fixed" as "sticky" doesn't play nice with firefox for android
       position="fixed"
-      bottom={-1} // this gets rid of a small gap in firefox for android
+      bottom="-1px" // this gets rid of a small gap in firefox for android
       zIndex={2}
       height="min-content"
       width="100%"
@@ -60,34 +70,24 @@ export const FloatingMenu = () => {
             <Trans>Organizations</Trans>
           </TrackerButton>
         </Link>
-        <Divider
-          orientation="vertical"
-          borderColor="accent"
-          borderWidth="2px"
-          ml={0}
-        />
+
+        {StyledDivider}
+
         <Link as={RouteLink} to="/domains" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
             <Trans>Domains</Trans>
           </TrackerButton>
         </Link>
-        <Divider
-          orientation="vertical"
-          borderColor="accent"
-          borderWidth="2px"
-          ml={0}
-        />
+
+        {StyledDivider}
+
         <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
             <Trans>DMARC Summaries</Trans>
           </TrackerButton>
         </Link>
-        <Divider
-          orientation="vertical"
-          borderColor="accent"
-          borderWidth="2px"
-          ml={0}
-        />
+
+        {StyledDivider}
 
         <Box flex="1 1 0">
           <TrackerButton
@@ -126,7 +126,7 @@ export const FloatingMenu = () => {
               </DrawerHeader>
 
               <DrawerBody px="24px" py="16px">
-                <Stack spacing="16px">
+                <Stack spacing="16px" align="end">
                   <FloatingMenuLink to="/" text={t`Home`} />
 
                   <FloatingMenuLink to="/user" text={t`Account Settings`} />

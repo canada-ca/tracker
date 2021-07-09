@@ -19,7 +19,8 @@ export function PhaseBanner({ phase, children }) {
             minW="inherit"
             minH="inherit"
             mr={4}
-            py={0}
+            py={1}
+            size="lg"
           >
             {phase}
           </Tag>

@@ -116,7 +116,7 @@ export default function OrganizationDetails() {
         </TabList>
 
         <TabPanels>
-          <TabPanel>
+          <TabPanel p={0}>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <OrganizationSummary
                 summaries={data?.organization?.summaries}
@@ -127,13 +127,13 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel>
+          <TabPanel p={0}>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
           {isAdmin && (
-            <TabPanel>
+            <TabPanel p={0}>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
               </ErrorBoundary>
