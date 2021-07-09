@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import EditableUserDisplayName from '../EditableUserDisplayName'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -30,9 +30,9 @@ describe('<EditableUserDisplayName>', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <EditableUserDisplayName />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>
@@ -53,9 +53,9 @@ describe('<EditableUserDisplayName>', () => {
           >
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <EditableUserDisplayName />
-                </ThemeProvider>
+                </ChakraProvider>
               </I18nProvider>
             </MemoryRouter>
           </UserVarProvider>
@@ -84,9 +84,9 @@ describe('<EditableUserDisplayName>', () => {
               >
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
-                    <ThemeProvider theme={theme}>
+                    <ChakraProvider theme={theme}>
                       <EditableUserDisplayName />
-                    </ThemeProvider>
+                    </ChakraProvider>
                   </I18nProvider>
                 </MemoryRouter>
               </UserVarProvider>
@@ -149,9 +149,9 @@ describe('<EditableUserDisplayName>', () => {
               >
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
-                    <ThemeProvider theme={theme}>
+                    <ChakraProvider theme={theme}>
                       <EditableUserDisplayName />
-                    </ThemeProvider>
+                    </ChakraProvider>
                   </I18nProvider>
                 </MemoryRouter>
               </UserVarProvider>
@@ -210,9 +210,9 @@ describe('<EditableUserDisplayName>', () => {
               >
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={i18n}>
-                    <ThemeProvider theme={theme}>
+                    <ChakraProvider theme={theme}>
                       <EditableUserDisplayName />
-                    </ThemeProvider>
+                    </ChakraProvider>
                   </I18nProvider>
                 </MemoryRouter>
               </UserVarProvider>

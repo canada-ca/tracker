@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/react'
+import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -185,13 +185,13 @@ describe('<DomainsPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                   <DomainsPage />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -211,13 +211,13 @@ describe('<DomainsPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                   <DomainsPage />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -242,7 +242,7 @@ describe('<DomainsPage />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                     <Router history={history}>
@@ -252,7 +252,7 @@ describe('<DomainsPage />', () => {
                     </Router>
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -276,7 +276,7 @@ describe('<DomainsPage />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                     <Router history={history}>
@@ -286,7 +286,7 @@ describe('<DomainsPage />', () => {
                     </Router>
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -311,7 +311,7 @@ describe('<DomainsPage />', () => {
                   userName: null,
                 })}
               >
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={['/domains']}
@@ -320,7 +320,7 @@ describe('<DomainsPage />', () => {
                       <DomainsPage />
                     </MemoryRouter>
                   </I18nProvider>
-                </ThemeProvider>
+                </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
           )
@@ -353,7 +353,7 @@ describe('<DomainsPage />', () => {
                   userName: null,
                 })}
               >
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={['/domains']}
@@ -362,7 +362,7 @@ describe('<DomainsPage />', () => {
                       <DomainsPage />
                     </MemoryRouter>
                   </I18nProvider>
-                </ThemeProvider>
+                </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
           )

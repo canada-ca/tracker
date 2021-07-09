@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history'
 import SignInPage from '../SignInPage'
 import { SIGN_IN } from '../graphql/mutations'
 import { MemoryRouter, Router } from 'react-router-dom'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -33,13 +33,13 @@ describe('<SignInPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <SignInPage />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -67,13 +67,13 @@ describe('<SignInPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <SignInPage />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -140,13 +140,13 @@ describe('<SignInPage />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <SignInPage />
                   </Router>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -226,13 +226,13 @@ describe('<SignInPage />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <SignInPage />
                   </Router>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )

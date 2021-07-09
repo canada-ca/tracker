@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import EditableUserPhoneNumber from '../EditableUserPhoneNumber'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -35,9 +35,9 @@ describe('<EditableUserPhoneNumber />', () => {
           >
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <EditableUserPhoneNumber />
-                </ThemeProvider>
+                </ChakraProvider>
               </I18nProvider>
             </MemoryRouter>
           </UserVarProvider>
@@ -60,9 +60,9 @@ describe('<EditableUserPhoneNumber />', () => {
             >
               <MemoryRouter initialEntries={['/']}>
                 <I18nProvider i18n={i18n}>
-                  <ThemeProvider theme={theme}>
+                  <ChakraProvider theme={theme}>
                     <EditableUserPhoneNumber />
-                  </ThemeProvider>
+                  </ChakraProvider>
                 </I18nProvider>
               </MemoryRouter>
             </UserVarProvider>
@@ -93,9 +93,9 @@ describe('<EditableUserPhoneNumber />', () => {
                 >
                   <MemoryRouter initialEntries={['/']}>
                     <I18nProvider i18n={i18n}>
-                      <ThemeProvider theme={theme}>
+                      <ChakraProvider theme={theme}>
                         <EditableUserPhoneNumber />
-                      </ThemeProvider>
+                      </ChakraProvider>
                     </I18nProvider>
                   </MemoryRouter>
                 </UserVarProvider>
@@ -181,9 +181,9 @@ describe('<EditableUserPhoneNumber />', () => {
                 >
                   <MemoryRouter initialEntries={['/']}>
                     <I18nProvider i18n={i18n}>
-                      <ThemeProvider theme={theme}>
+                      <ChakraProvider theme={theme}>
                         <EditableUserPhoneNumber />
-                      </ThemeProvider>
+                      </ChakraProvider>
                     </I18nProvider>
                   </MemoryRouter>
                 </UserVarProvider>

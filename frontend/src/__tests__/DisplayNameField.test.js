@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, string } from 'yup'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import DisplayNameField from '../DisplayNameField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
@@ -26,7 +26,7 @@ describe('<DisplayNameField />', () => {
 
       const { getByTestId, getByText } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <Formik
               // return a sadness error for the display name field
               validationSchema={validationSchema}
@@ -41,7 +41,7 @@ describe('<DisplayNameField />', () => {
                 />
               )}
             </Formik>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
 

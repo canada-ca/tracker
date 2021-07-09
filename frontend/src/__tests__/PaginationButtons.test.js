@@ -1,35 +1,35 @@
 import React from 'react'
 import { PaginationButtons } from '../PaginationButtons'
 import { cleanup, render } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 
 describe('<PaginationButtons />', () => {
   afterEach(cleanup)
 
   it('the component renders', async () => {
     const { container } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <PaginationButtons
           perPage={2}
           total={8}
           paginate={() => {}}
           currentPage={1}
         />
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
     expect(container).toBeDefined()
   })
 
   it('left arrow buttons are disabled when on first page', async () => {
     const { container, getByLabelText } = render(
-      <ThemeProvider>
+      <ChakraProvider>
         <PaginationButtons
           perPage={2}
           total={8}
           paginate={() => {}}
           currentPage={1}
         />
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
     expect(container).toBeTruthy()
 
@@ -48,14 +48,14 @@ describe('<PaginationButtons />', () => {
 
   it('right arrow buttons are disabled when on last page', async () => {
     const { container, getByLabelText } = render(
-      <ThemeProvider>
+      <ChakraProvider>
         <PaginationButtons
           perPage={2}
           total={8}
           paginate={() => {}}
           currentPage={4}
         />
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
     expect(container).toBeTruthy()
 

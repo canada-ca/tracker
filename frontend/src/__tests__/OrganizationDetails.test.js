@@ -2,7 +2,7 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { UserVarProvider } from '../UserState'
 import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
@@ -124,7 +124,7 @@ describe('<OrganizationDetails />', () => {
       ]
 
       const { getByText } = render(
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <UserVarProvider
@@ -145,7 +145,7 @@ describe('<OrganizationDetails />', () => {
               </UserVarProvider>
             </MockedProvider>
           </I18nProvider>
-        </ThemeProvider>,
+        </ChakraProvider>,
       )
 
       await waitFor(() => {

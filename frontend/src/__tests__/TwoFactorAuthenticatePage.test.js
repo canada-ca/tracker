@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -28,7 +28,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={['/authenticate/phone/authenticate-token-test']}
@@ -39,7 +39,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                 </Route>
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -62,7 +62,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                   userName: null,
                 })}
               >
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={[
@@ -75,7 +75,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                       </Route>
                     </MemoryRouter>
                   </I18nProvider>
-                </ThemeProvider>
+                </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
           )
@@ -141,7 +141,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <Router history={history}>
                   <Route path="/authenticate/:sendMethod/:authenticateToken">
@@ -149,7 +149,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                   </Route>
                 </Router>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )

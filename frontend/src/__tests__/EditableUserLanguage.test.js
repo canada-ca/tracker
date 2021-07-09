@@ -1,6 +1,6 @@
 import React from 'react'
 import { waitFor, render, fireEvent } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/react'
+import { ChakraProvider, theme } from '@chakra-ui/react'
 import EditableUserLanguage from '../EditableUserLanguage'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -29,9 +29,9 @@ describe('<EditableUserLanguage />', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <EditableUserLanguage />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>
@@ -72,9 +72,9 @@ describe('<EditableUserLanguage />', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <EditableUserLanguage />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>
@@ -121,9 +121,9 @@ describe('<EditableUserLanguage />', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <EditableUserLanguage />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>
