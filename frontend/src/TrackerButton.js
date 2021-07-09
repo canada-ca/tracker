@@ -1,5 +1,5 @@
 import React from 'react'
-import { PseudoBox, Spinner, Stack } from '@chakra-ui/core'
+import { Box, Spinner, Stack } from '@chakra-ui/core'
 import { any, bool, string } from 'prop-types'
 
 export const TrackerButton = React.forwardRef(
@@ -60,7 +60,7 @@ export const TrackerButton = React.forwardRef(
     }
 
     return (
-      <PseudoBox
+      <Box
         as="button"
         display="inline-flex"
         alignItems="center"
@@ -107,7 +107,7 @@ export const TrackerButton = React.forwardRef(
         >
           {children}
         </Stack>
-      </PseudoBox>
+      </Box>
     )
   },
 )

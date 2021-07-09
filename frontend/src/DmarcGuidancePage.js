@@ -5,7 +5,7 @@ import {
   Heading,
   Icon,
   Link,
-  PseudoBox,
+  Box,
   Stack,
   Tab,
   TabList,
@@ -50,7 +50,7 @@ export default function DmarcGuidancePage() {
 
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
-      <PseudoBox d={{ md: 'flex' }}>
+      <Box d={{ md: 'flex' }}>
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>
@@ -69,7 +69,7 @@ export default function DmarcGuidancePage() {
             <Icon name="link" ml="4px" />
           </Link>
         )}
-      </PseudoBox>
+      </Box>
       <Tabs isFitted>
         <TabList mb="4">
           <Tab>
