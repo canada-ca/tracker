@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import {
   Box,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Grid,
   Icon,
@@ -22,7 +23,6 @@ import {
 import { array, bool, func, object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 import { Field, FieldArray, Formik } from 'formik'
-import FormErrorMessage from '@chakra-ui/react/dist/FormErrorMessage'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 
