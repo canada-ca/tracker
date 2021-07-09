@@ -76,18 +76,20 @@ export default function AdminPage() {
           </Text>
 
           <Stack flexDirection={['column', 'row']} align="center">
-            {/* <Text fontWeight="bold" fontSize="2xl">
-              <Trans>Organization: </Trans>
-            </Text> */}
+            <label htmlFor="organization select">
+              <Text fontWeight="bold" fontSize="2xl" mr="4" mb={['0', '2']}>
+                <Trans>Organization: </Trans>
+              </Text>
+            </label>
             <Box w={['100%', '50%']}>
               <Dropdown
+                id="organization select"
                 options={options}
-                prompt={t`Select an organization`}
+                placeholder={t`Select an organization`}
                 onChange={(opt) => {
                   setOrgDetails(opt.value)
                   setSelectedOrg(opt.label)
                 }}
-                value={selectedOrg}
               />
             </Box>
             <TrackerButton

@@ -89,11 +89,10 @@ const Select = styled.div`
   }
 `
 
-export function Dropdown({ options, prompt, onChange, value }) {
+export function Dropdown({ options, placeholder, onChange, ...props }) {
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const inputRef = useRef(null)
-  const optRef = useRef(null)
   const optionRefs = []
 
   let inputElement
@@ -137,17 +136,23 @@ export function Dropdown({ options, prompt, onChange, value }) {
         e.preventDefault()
         optionRefs.length > 0 && optionRefs[0].focus()
         break
+      case 'ArrowUp':
+        e.preventDefault()
+        optionRefs.length > 0 && optionRefs[optionRefs.length - 1].focus()
+        break
       default:
     }
   }
 
   function handleOptionOnKeyDown(e, option, index) {
-    const activeElement = findFocus()
-    console.log(activeElement)
     switch (e.key) {
       case 'Enter':
         onChange(option)
         setSearchTerm('')
+        setOpen(false)
+        inputElement.focus()
+        break
+      case 'Escape':
         setOpen(false)
         inputElement.focus()
         break
@@ -166,14 +171,14 @@ export function Dropdown({ options, prompt, onChange, value }) {
   }
 
   return (
-    <Select>
+    <Select {...props}>
       <div className="dropdown">
         <div className="control">
           <div className="selected-value">
             <input
               ref={inputRef}
               type="text"
-              placeholder={value !== 'none' ? value : prompt}
+              placeholder={placeholder}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value)
@@ -184,7 +189,7 @@ export function Dropdown({ options, prompt, onChange, value }) {
           </div>
           <div className={`arrow ${open ? 'open' : null}`} />
         </div>
-        <div className={`options ${open ? 'open' : null}`} ref={optRef}>
+        <div className={`options ${open ? 'open' : null}`}>
           {filter(options).map((option, idx) => (
             <div
               tabIndex={-1}
@@ -209,7 +214,7 @@ export function Dropdown({ options, prompt, onChange, value }) {
 
 Dropdown.propTypes = {
   options: array,
-  prompt: string,
+  placeholder: string,
   onChange: func,
   value: string,
 }
