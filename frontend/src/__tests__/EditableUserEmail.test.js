@@ -109,7 +109,7 @@ describe('<EditableUserEmail />', () => {
       })
     })
 
-    describe('the New Display Name field has input', () => {
+    describe('the New Email field has input', () => {
       describe('and the form is submitted', () => {
         it('displays success message', async () => {
           const mocks = [
@@ -162,8 +162,8 @@ describe('<EditableUserEmail />', () => {
             expect(queryByText(/Edit Email/)).toBeInTheDocument()
           })
 
-          const displayName = getByLabelText(/New Email Address:/)
-          fireEvent.change(displayName, {
+          const emailAddress = getByLabelText(/New Email Address:/)
+          fireEvent.change(emailAddress, {
             target: { value: 'testUser@canada.gc.ca' },
           })
 
@@ -225,8 +225,8 @@ describe('<EditableUserEmail />', () => {
             expect(queryByText(/Edit Email/)).toBeInTheDocument()
           })
 
-          const displayName = getByLabelText(/New Email Address:/)
-          fireEvent.change(displayName, {
+          const emailAddress = getByLabelText(/New Email Address:/)
+          fireEvent.change(emailAddress, {
             target: { value: 'testUser@canada.gc.ca' },
           })
 

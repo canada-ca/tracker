@@ -19,7 +19,7 @@ export function LandingPage() {
         >
           <Trans>Track Digital Security</Trans>
         </Text>
-        <Divider borderColor="accent" borderWidth="2" w="20%" />
+        <Divider borderColor="accent" my={2} borderTopWidth="2" w="20%" />
         <Text color="white" fontSize={['sm', 'sm', 'sm', 'lg', 'xl']}>
           <Trans>
             Canadians rely on the Government of Canada to provide secure digital
@@ -33,6 +33,7 @@ export function LandingPage() {
         display={{ xs: 'none', sm: 'none', md: 'flex' }}
         bg="primary"
         justifyContent="center"
+        display="flex"
       >
         <Image
           bg="white"

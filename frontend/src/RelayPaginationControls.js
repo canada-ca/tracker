@@ -27,8 +27,8 @@ export function RelayPaginationControls({
     })
 
     displayLimitControls = (
-      <>
-        <Text ml="auto" mr={'1%'}>
+      <Stack direction="row">
+        <Text mr={'1%'}>
           <Trans>Items per page:</Trans>
         </Text>
 
@@ -45,32 +45,33 @@ export function RelayPaginationControls({
         >
           {options}
         </Select>
-      </>
+      </Stack>
     )
   }
 
   return (
-    <Stack isInline align="center" mb="4" {...props}>
-      <Button
-        id="previousPageBtn"
-        onClick={previous}
-        isDisabled={!hasPreviousPage}
-        isLoading={isLoadingMore}
-        aria-label="Previous page"
-      >
-        <Trans>Previous</Trans>
-      </Button>
+    <Stack isInline align="center" mb="4" {...props} justify="space-between">
+      <Stack direction="row">
+        <Button
+          id="previousPageBtn"
+          onClick={previous}
+          isDisabled={!hasPreviousPage}
+          isLoading={isLoadingMore}
+          aria-label="Previous page"
+        >
+          <Trans>Previous</Trans>
+        </Button>
 
-      <Button
-        id="nextPageBtn"
-        onClick={next}
-        isDisabled={!hasNextPage}
-        isLoading={isLoadingMore}
-        aria-label="Next page"
-      >
-        <Trans>Next</Trans>
-      </Button>
-
+        <Button
+          id="nextPageBtn"
+          onClick={next}
+          isDisabled={!hasNextPage}
+          isLoading={isLoadingMore}
+          aria-label="Next page"
+        >
+          <Trans>Next</Trans>
+        </Button>
+      </Stack>
       {displayLimitControls}
     </Stack>
   )
