@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
 import { activate, locales } from './i18n.config'
-import { Box, PseudoBox, VisuallyHidden } from '@chakra-ui/core'
+import { Box, VisuallyHidden } from '@chakra-ui/core'
 import { useApolloClient } from '@apollo/client'
 
 const Toggler = (props) => {
@@ -10,7 +10,7 @@ const Toggler = (props) => {
   const client = useApolloClient()
 
   return (
-    <PseudoBox
+    <Box
       as="button"
       key={locale}
       padding={0}
@@ -24,7 +24,7 @@ const Toggler = (props) => {
       color="#fff"
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
-      <PseudoBox
+      <Box
         aria-hidden
         d="flex"
         bg="gray.100"
@@ -38,8 +38,8 @@ const Toggler = (props) => {
         borderRadius="0.25rem"
       >
         {locale}
-      </PseudoBox>
-    </PseudoBox>
+      </Box>
+    </Box>
   )
 }
 
@@ -47,8 +47,8 @@ export function LocaleSwitcher() {
   const { i18n } = useLingui()
   return (
     <Box>
-      {i18n.locale === 'en' && <Toggler locale='fr' />}
-      {i18n.locale === 'fr' && <Toggler locale='en' />}
+      {i18n.locale === 'en' && <Toggler locale="fr" />}
+      {i18n.locale === 'fr' && <Toggler locale="en" />}
     </Box>
   )
 }
