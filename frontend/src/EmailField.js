@@ -12,9 +12,9 @@ import {
   InputLeftElement,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
-const EmailField = WithPseudoBox(function EmailField({
+const EmailField = WithWrapperBox(function EmailField({
   name,
   label,
   forwardedRef,

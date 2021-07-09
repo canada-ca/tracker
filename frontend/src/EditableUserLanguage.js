@@ -1,7 +1,7 @@
 import React from 'react'
 import { string } from 'prop-types'
 import { Heading, Select, Stack, useToast } from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { Field, Formik } from 'formik'
@@ -120,4 +120,4 @@ EditableUserLanguage.propTypes = {
   currentLang: string,
 }
 
-export default WithPseudoBox(EditableUserLanguage)
+export default WithWrapperBox(EditableUserLanguage)

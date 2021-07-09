@@ -15,7 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -202,4 +202,4 @@ function EditableUserPassword() {
   )
 }
 
-export default WithPseudoBox(EditableUserPassword)
+export default WithWrapperBox(EditableUserPassword)

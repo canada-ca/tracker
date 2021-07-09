@@ -7,34 +7,36 @@ import {
   Input,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
-const OrganizationCreateField = WithPseudoBox(function OrganizationCreateField({
-  name,
-  label,
-  language,
-  forwardedRef,
-  ...props
-}) {
-  const [field, meta] = useField(name)
+const OrganizationCreateField = WithWrapperBox(
+  function OrganizationCreateField({
+    name,
+    label,
+    language,
+    forwardedRef,
+    ...props
+  }) {
+    const [field, meta] = useField(name)
 
-  return (
-    <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor={name} fontWeight="bold">
-        {label} ({language})
-      </FormLabel>
-      <Input
-        {...field}
-        {...props}
-        id={name}
-        name={name}
-        ref={forwardedRef}
-        placeholder={`${label} (${language})`}
-      />
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    </FormControl>
-  )
-})
+    return (
+      <FormControl isInvalid={meta.error && meta.touched}>
+        <FormLabel htmlFor={name} fontWeight="bold">
+          {label} ({language})
+        </FormLabel>
+        <Input
+          {...field}
+          {...props}
+          id={name}
+          name={name}
+          ref={forwardedRef}
+          placeholder={`${label} (${language})`}
+        />
+        <FormErrorMessage>{meta.error}</FormErrorMessage>
+      </FormControl>
+    )
+  },
+)
 
 OrganizationCreateField.propTypes = {
   name: string.isRequired,

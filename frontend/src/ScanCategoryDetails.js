@@ -3,7 +3,7 @@ import { object, string } from 'prop-types'
 import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
 import { GuidanceTagList } from './GuidanceTagList'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 
 function ScanCategoryDetails({ categoryName, categoryData }) {
@@ -244,4 +244,4 @@ ScanCategoryDetails.propTypes = {
   categoryData: object,
 }
 
-export default WithPseudoBox(ScanCategoryDetails)
+export default WithWrapperBox(ScanCategoryDetails)

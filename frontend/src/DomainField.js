@@ -9,9 +9,9 @@ import {
   InputGroup,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
-const DomainField = WithPseudoBox(function DomainField({
+const DomainField = WithWrapperBox(function DomainField({
   name,
   label,
   forwardedRef,

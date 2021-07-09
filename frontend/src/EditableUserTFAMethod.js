@@ -9,7 +9,7 @@ import {
   Stack,
   useToast,
 } from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
@@ -148,4 +148,4 @@ EditableUserTFAMethod.propTypes = {
   phoneValidated: bool,
 }
 
-export default WithPseudoBox(EditableUserTFAMethod)
+export default WithWrapperBox(EditableUserTFAMethod)

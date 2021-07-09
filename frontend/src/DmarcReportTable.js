@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 import { TrackerButton } from './TrackerButton'
 import { InfoButton } from './InfoPanel'
@@ -355,7 +355,11 @@ function DmarcReportTable({ ...props }) {
           <Box ml="auto" />
 
           {infoState && (
-            <InfoButton label="Glossary" state={infoState} changeState={changeInfoState} />
+            <InfoButton
+              label="Glossary"
+              state={infoState}
+              changeState={changeInfoState}
+            />
           )}
         </Stack>
 
@@ -454,4 +458,4 @@ DmarcReportTable.defaultProps = {
   frontendPagination: true,
 }
 
-export default WithPseudoBox(DmarcReportTable)
+export default WithWrapperBox(DmarcReportTable)

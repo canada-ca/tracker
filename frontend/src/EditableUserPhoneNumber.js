@@ -16,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -306,4 +306,4 @@ EditableUserPhoneNumber.propTypes = {
   detailValue: string,
 }
 
-export default WithPseudoBox(EditableUserPhoneNumber)
+export default WithWrapperBox(EditableUserPhoneNumber)
