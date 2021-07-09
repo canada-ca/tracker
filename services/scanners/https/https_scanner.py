@@ -25,14 +25,18 @@ RES_QUEUE = Queue()
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
 )
+OTS_QUEUE_URL = os.getenv(
+    "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
+)
+DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
 
 
 class ScanTimeoutException(BaseException):
     pass
 
 
-def dispatch_results(payload, client):
-    client.post(QUEUE_URL + "/https", json=payload)
+def dispatch_results(payload, client, ots):
+    client.post(DEST_URL(ots) + "/https", json=json.dumps(payload))
     logging.info("Scan results dispatched to result queue")
 
 
@@ -216,20 +220,18 @@ def Server(server_client=requests):
 
         processed_results = process_results(scan_results)
 
-        outbound_payload = json.dumps(
-            {
-                "results": processed_results,
-                "scan_type": "https",
-                "user_key": user_key,
-                "domain_key": domain_key,
-                "shared_id": shared_id
-            }
-        )
+        outbound_payload = {
+            "results": processed_results,
+            "scan_type": "https",
+            "user_key": user_key,
+            "domain_key": domain_key,
+            "shared_id": shared_id
+        }
         logging.info(f"Scan results: {str(processed_results)}")
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
-        dispatch_results(outbound_payload, server_client)
+        dispatch_results(outbound_payload, server_client, (user_key is not None))
 
         logging.info(f"HTTPS scan completed in {elapsed_time.total_seconds()} seconds.")
         return Response("Scan completed")
