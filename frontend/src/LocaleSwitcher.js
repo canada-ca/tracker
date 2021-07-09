@@ -32,7 +32,7 @@ const Toggler = (props) => {
         textTransform="uppercase"
         fontWeight="bold"
         fontSize="lg"
-        size={10}
+        boxSize={10}
         alignItems="center"
         justifyContent="center"
         borderRadius="0.25rem"

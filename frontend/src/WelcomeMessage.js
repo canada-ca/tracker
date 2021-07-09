@@ -28,7 +28,7 @@ export function WelcomeMessage() {
         <Image
           src={trackerLogo}
           alt={'Tracker Logo'}
-          size={['0%', '0%', '80%', '80%', '87%']}
+          boxSize={['0%', '0%', '80%', '80%', '87%']}
           alignSelf="center"
           mx="10"
         />
