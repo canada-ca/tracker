@@ -360,6 +360,10 @@ msgstr "Successfully email verified account, and set TFA send method to email."
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
+#: src/affiliation/mutations/leave-organization.js:355
+msgid "Successfully left organization: {0}"
+msgstr "Successfully left organization: {0}"
+
 #: src/domain/mutations/remove-domain.js:335
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "Successfully removed domain: {0} from {1}."
@@ -407,13 +411,13 @@ msgstr "Two factor code length is incorrect. Please try again."
 #: src/affiliation/mutations/leave-organization.js:80
 #: src/affiliation/mutations/leave-organization.js:90
 #: src/affiliation/mutations/leave-organization.js:110
-#: src/affiliation/mutations/leave-organization.js:153
-#: src/affiliation/mutations/leave-organization.js:172
-#: src/affiliation/mutations/leave-organization.js:269
-#: src/affiliation/mutations/leave-organization.js:289
-#: src/affiliation/mutations/leave-organization.js:317
-#: src/affiliation/mutations/leave-organization.js:336
-#: src/affiliation/mutations/leave-organization.js:346
+#: src/affiliation/mutations/leave-organization.js:154
+#: src/affiliation/mutations/leave-organization.js:174
+#: src/affiliation/mutations/leave-organization.js:271
+#: src/affiliation/mutations/leave-organization.js:291
+#: src/affiliation/mutations/leave-organization.js:319
+#: src/affiliation/mutations/leave-organization.js:338
+#: src/affiliation/mutations/leave-organization.js:348
 msgid "Unable leave organization. Please try again."
 msgstr "Unable leave organization. Please try again."
 
@@ -554,6 +558,10 @@ msgstr "Unable to invite user. Please try again."
 #: src/affiliation/mutations/invite-user-to-org.js:73
 msgid "Unable to invite yourself to an org."
 msgstr "Unable to invite yourself to an org."
+
+#: src/affiliation/mutations/leave-organization.js:51
+msgid "Unable to leave undefined organization."
+msgstr "Unable to leave undefined organization."
 
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
 #: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256

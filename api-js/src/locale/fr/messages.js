@@ -256,7 +256,7 @@
     'Successfully invited user to organization, and sent notification email.':
       "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
     'Successfully left organization: {0}': [
-      "L'organisation a été quittée avec succès : ",
+      "L'organisation a été quittée avec succès: ",
       ['0'],
     ],
     'Successfully removed domain: {0} from {1}.': [
