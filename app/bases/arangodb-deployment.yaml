@@ -4,7 +4,7 @@ metadata:
   name: arangodb
   namespace: db
 spec:
-  image: arangodb/arangodb:3.7.10
+  image: arangodb/arangodb:3.7.11
   environment: Production
   # environment: Development
   mode: Cluster
