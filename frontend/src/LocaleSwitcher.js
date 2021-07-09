@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
 import { activate, locales } from './i18n.config'
-import { Box, VisuallyHidden } from '@chakra-ui/core'
+import { Box, VisuallyHidden } from '@chakra-ui/react'
 import { useApolloClient } from '@apollo/client'
 
 const Toggler = (props) => {

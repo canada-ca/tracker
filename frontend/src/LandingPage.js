@@ -1,6 +1,6 @@
 import React from 'react'
 import trackerLogo from './images/trackerlogo.svg'
-import { Box, Divider, Grid, Image, Text } from '@chakra-ui/core'
+import { Box, Divider, Grid, Image, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
 export function LandingPage() {

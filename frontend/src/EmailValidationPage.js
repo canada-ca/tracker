@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Trans } from '@lingui/macro'
-import { Button, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/core'
+import { Button, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { VERIFY_ACCOUNT } from './graphql/mutations'

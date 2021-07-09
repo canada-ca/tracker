@@ -1,6 +1,6 @@
 import React from 'react'
 import { string } from 'prop-types'
-import { Heading, Select, Stack, useToast } from '@chakra-ui/core'
+import { Heading, Select, Stack, useToast } from '@chakra-ui/react'
 import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'

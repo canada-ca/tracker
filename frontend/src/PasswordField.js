@@ -11,7 +11,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { useField } from 'formik'
 import WithWrapperBox from './WithWrapperBox.js'
 

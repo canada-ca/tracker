@@ -8,7 +8,7 @@ import {
   ListItem,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'

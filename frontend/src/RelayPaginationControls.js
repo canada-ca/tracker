@@ -1,4 +1,4 @@
-import { Button, Select, Stack, Text } from '@chakra-ui/core'
+import { Button, Select, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { array, bool, func, number } from 'prop-types'

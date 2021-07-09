@@ -1,6 +1,6 @@
 import React from 'react'
 import { waitFor, render, fireEvent } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { ThemeProvider, theme } from '@chakra-ui/react'
 import EditableUserLanguage from '../EditableUserLanguage'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'

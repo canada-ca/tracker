@@ -1,6 +1,6 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Icon, Link, Stack, Text } from '@chakra-ui/core'
+import { Box, Icon, Link, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
 export function GuidanceTagDetails({ guidanceTag, tagType }) {

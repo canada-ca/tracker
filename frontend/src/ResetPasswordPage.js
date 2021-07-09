@@ -1,6 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Heading, useToast } from '@chakra-ui/core'
+import { Box, Heading, useToast } from '@chakra-ui/react'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, ref, string } from 'yup'
 import { Formik } from 'formik'

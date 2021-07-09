@@ -12,7 +12,7 @@ import {
 import { number, object } from 'prop-types'
 import WithWrapperBox from './WithWrapperBox'
 import theme from './theme/canada'
-import { Box } from '@chakra-ui/core'
+import { Box } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import CustomTooltipContent from './CustomTooltipContent'

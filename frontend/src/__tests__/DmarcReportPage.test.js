@@ -1,13 +1,10 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import DmarcReportPage from '../DmarcReportPage'
-import {
-  DMARC_REPORT_GRAPH,
-  PAGINATED_DMARC_REPORT,
-} from '../graphql/queries'
+import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserVarProvider } from '../UserState'

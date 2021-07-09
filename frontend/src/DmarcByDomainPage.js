@@ -14,7 +14,7 @@ import {
   Spinner,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -282,42 +282,41 @@ export default function DmarcByDomainPage() {
 
         <Box ml="auto" />
 
-        <InfoButton label="Glossary" state={infoState} changeState={changeInfoState} />
+        <InfoButton
+          label="Glossary"
+          state={infoState}
+          changeState={changeInfoState}
+        />
       </Stack>
 
-      <InfoPanel
-        state={infoState}
-      >
+      <InfoPanel state={infoState}>
+        <InfoBox title="Domain" info="The domain address." />
         <InfoBox
-          title='Domain'
-          info='The domain address.'
+          title="Total Messages"
+          info="Shows the total number of emails that have been sent by this domain during the selected time range."
         />
         <InfoBox
-          title='Total Messages'
-          info='Shows the total number of emails that have been sent by this domain during the selected time range.'
+          title="Full Pass %"
+          info="Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
         />
         <InfoBox
-          title='Full Pass %'
-          info='Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.'
+          title="Fail SPF %"
+          info="Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
         />
         <InfoBox
-          title='Fail SPF %'
-          info='Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments.'
+          title="Fail DKIM %"
+          info="Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
         />
         <InfoBox
-          title='Fail DKIM %'
-          info='Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments.'
-        />
-        <InfoBox
-          title='Full Fail %'
-          info='Shows the percentage of emails from the domain that fail both SPF and DKIM requirments.'
+          title="Full Fail %"
+          info="Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
         />
         <Divider borderColor="gray.500" />
         <Trans>
-          A more detaild breakdown of each domain can be found by clicking on its address in the first column.
+          A more detaild breakdown of each domain can be found by clicking on
+          its address in the first column.
         </Trans>
       </InfoPanel>
-
 
       <Stack isInline align="center" mb="4px">
         <Text fontWeight="bold" textAlign="center">

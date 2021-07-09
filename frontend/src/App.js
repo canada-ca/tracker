@@ -9,7 +9,7 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { CSSReset, Flex, Link } from '@chakra-ui/core'
+import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { SkipLink } from './SkipLink'
 // import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -38,7 +38,9 @@ const TwoFactorAuthenticatePage = lazyWithRetry(() =>
   import('./TwoFactorAuthenticatePage'),
 )
 const EmailValidationPage = lazyWithRetry(() => import('./EmailValidationPage'))
-const CreateOrganizationPage = lazyWithRetry(() => import('./CreateOrganizationPage'))
+const CreateOrganizationPage = lazyWithRetry(() =>
+  import('./CreateOrganizationPage'),
+)
 
 export default function App() {
   // Hooks to be used with this functional component

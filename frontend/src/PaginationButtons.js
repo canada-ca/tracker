@@ -1,6 +1,6 @@
 import React from 'react'
 import { func, number } from 'prop-types'
-import { IconButton, Select, Stack, Text } from '@chakra-ui/core'
+import { IconButton, Select, Stack, Text } from '@chakra-ui/react'
 
 export function PaginationButtons({
   perPage,

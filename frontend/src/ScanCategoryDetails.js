@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { object, string } from 'prop-types'
-import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/core'
+import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/react'
 import { TrackerButton } from './TrackerButton'
 import { GuidanceTagList } from './GuidanceTagList'
 import WithWrapperBox from './WithWrapperBox'

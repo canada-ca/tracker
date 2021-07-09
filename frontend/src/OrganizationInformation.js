@@ -18,7 +18,7 @@ import {
   useDisclosure,
   useToast,
   VisuallyHidden,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { ORGANIZATION_INFORMATION } from './graphql/queries'

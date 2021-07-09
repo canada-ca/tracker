@@ -12,7 +12,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'

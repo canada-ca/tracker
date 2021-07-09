@@ -20,7 +20,7 @@ import {
   TabPanels,
   Tabs,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { PAGINATED_DOMAINS as FORWARD } from './graphql/queries'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
@@ -117,39 +117,38 @@ export default function DomainsPage() {
 
         <Box ml="auto" />
 
-        <InfoButton label='Glossary' state={infoState} changeState={changeInfoState} />
+        <InfoButton
+          label="Glossary"
+          state={infoState}
+          changeState={changeInfoState}
+        />
       </Stack>
 
-      <InfoPanel
-        state={infoState}
-      >
+      <InfoPanel state={infoState}>
+        <InfoBox title="Domain" info="The domain address." />
         <InfoBox
-          title='Domain'
-          info='The domain address.'
+          title="Last scanned"
+          info="The time the domain was last scanned by the system."
         />
         <InfoBox
-          title='Last scanned'
-          info='The time the domain was last scanned by the system.'
+          title="HTTPS"
+          info="Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments."
         />
         <InfoBox
-          title='HTTPS'
-          info='Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.'
+          title="SSL"
+          info="Shows if the domain meets the Secure Sockets Layer (SSL) requirements."
         />
         <InfoBox
-          title='SSL'
-          info='Shows if the domain meets the Secure Sockets Layer (SSL) requirements.'
+          title="SPF"
+          info="Shows if the domain meets the Sender Policy Framework (SPF) requiremtns."
         />
         <InfoBox
-          title='SPF'
-          info='Shows if the domain meets the Sender Policy Framework (SPF) requiremtns.'
+          title="DKIM"
+          info="Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
         />
         <InfoBox
-          title='DKIM'
-          info='Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.'
-        />
-        <InfoBox
-          title='DMARC'
-          info='Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.'
+          title="DMARC"
+          info="Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
         />
       </InfoPanel>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { I18nProvider } from '@lingui/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 import { Footer } from '../Footer'
 import { render } from '@testing-library/react'
 import { setupI18n } from '@lingui/core'
