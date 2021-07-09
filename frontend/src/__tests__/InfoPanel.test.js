@@ -1,7 +1,7 @@
 import React from 'react'
 import { InfoButton, InfoBox, InfoPanel } from '../InfoPanel'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
@@ -21,7 +21,7 @@ describe('<InfoPanel>', () => {
       isHidden: false,
     }
     const { getByText } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <InfoPanel state={state}>
             <InfoBox title="Domain" info="The domain address." />
@@ -31,7 +31,7 @@ describe('<InfoPanel>', () => {
             />
           </InfoPanel>
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
 
     await waitFor(() => getByText(/The domain address./i))
@@ -40,11 +40,11 @@ describe('<InfoPanel>', () => {
   describe('<InfoButton>', () => {
     it('successfully renders with mocked data', async () => {
       const { getByText } = render(
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <InfoButton label="Glossary" />
           </I18nProvider>
-        </ThemeProvider>,
+        </ChakraProvider>,
       )
 
       await waitFor(() => getByText(/Glossary/i))

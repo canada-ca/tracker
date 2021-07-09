@@ -1,6 +1,6 @@
 import React from 'react'
 import { waitFor, render, fireEvent } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/react'
+import { ChakraProvider, theme } from '@chakra-ui/react'
 import EditableUserTFAMethod from '../EditableUserTFAMethod'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -29,9 +29,9 @@ describe('<EditableUserTFAMethod />', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <EditableUserTFAMethod />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>
@@ -72,13 +72,13 @@ describe('<EditableUserTFAMethod />', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <EditableUserTFAMethod
                   currentTFAMethod="NONE"
                   emailValidated={true}
                   phoneValidated={true}
                 />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>
@@ -125,13 +125,13 @@ describe('<EditableUserTFAMethod />', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <EditableUserTFAMethod
                   currentTFAMethod="NONE"
                   emailValidated={true}
                   phoneValidated={true}
                 />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>

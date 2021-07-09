@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
@@ -81,7 +81,7 @@ describe('<ResetPasswordPage />', () => {
                   userName: null,
                 })}
               >
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={[
@@ -94,7 +94,7 @@ describe('<ResetPasswordPage />', () => {
                       </Route>
                     </MemoryRouter>
                   </I18nProvider>
-                </ThemeProvider>
+                </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
           )
@@ -122,7 +122,7 @@ describe('<ResetPasswordPage />', () => {
                   userName: null,
                 })}
               >
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={[
@@ -135,7 +135,7 @@ describe('<ResetPasswordPage />', () => {
                       </Route>
                     </MemoryRouter>
                   </I18nProvider>
-                </ThemeProvider>
+                </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
           )
@@ -163,7 +163,7 @@ describe('<ResetPasswordPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
@@ -176,7 +176,7 @@ describe('<ResetPasswordPage />', () => {
                   </Route>
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -203,7 +203,7 @@ describe('<ResetPasswordPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
@@ -216,7 +216,7 @@ describe('<ResetPasswordPage />', () => {
                   </Route>
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )

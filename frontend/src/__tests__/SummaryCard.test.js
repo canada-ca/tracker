@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import SummaryCard from '../SummaryCard'
@@ -44,7 +44,7 @@ describe('<SummaryCard />', () => {
   it('renders three bars with the numbers from the test data', async () => {
     const { getAllByText } = render(
       <I18nProvider i18n={i18n}>
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <SummaryCard
             title="title"
             categoryDisplay={{
@@ -55,7 +55,7 @@ describe('<SummaryCard />', () => {
             description="description"
             data={data.webSummary}
           />
-        </ThemeProvider>
+        </ChakraProvider>
       </I18nProvider>,
     )
     const bars = await waitFor(() => getAllByText(/33 - 33%/i))

@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
@@ -52,7 +52,7 @@ describe('<ForgotPasswordPage />', () => {
                   userName: null,
                 })}
               >
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter
                       initialEntries={['/forgot-password']}
@@ -61,7 +61,7 @@ describe('<ForgotPasswordPage />', () => {
                       <ForgotPasswordPage />
                     </MemoryRouter>
                   </I18nProvider>
-                </ThemeProvider>
+                </ChakraProvider>
               </UserVarProvider>
             </MockedProvider>,
           )
@@ -96,7 +96,7 @@ describe('<ForgotPasswordPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={['/forgot-password']}
@@ -112,7 +112,7 @@ describe('<ForgotPasswordPage />', () => {
                   </Router>
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )

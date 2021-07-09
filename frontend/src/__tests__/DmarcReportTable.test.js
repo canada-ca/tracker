@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -30,7 +30,7 @@ Object.defineProperty(window, 'matchMedia', {
 describe('<DmarcReportTable />', () => {
   it('renders correctly', async () => {
     const { getAllByText } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <div>
             <DmarcReportTable
@@ -41,7 +41,7 @@ describe('<DmarcReportTable />', () => {
             />
           </div>
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
     await waitFor(() => getAllByText(/Fully Aligned by IP Address/i))
   })

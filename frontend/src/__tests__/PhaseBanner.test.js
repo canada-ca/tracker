@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { render } from '@testing-library/react'
 import { PhaseBanner } from '../PhaseBanner'
 import { I18nProvider } from '@lingui/react'
@@ -18,11 +18,11 @@ const i18n = setupI18n({
 describe('<PhaseBanner />', () => {
   it('properly renders alpha banner', async () => {
     const { queryByText } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <PhaseBanner phase="ALPHA" />
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
 
     expect(queryByText(/ALPHA/)).toBeInTheDocument()

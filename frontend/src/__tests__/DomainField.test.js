@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, string } from 'yup'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import DomainField from '../DomainField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
@@ -26,7 +26,7 @@ describe('<DomainField />', () => {
 
       const { getByTestId, getByText } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <Formik
               // return a sadness error for the password field
               validationSchema={validationSchema}
@@ -36,7 +36,7 @@ describe('<DomainField />', () => {
             >
               {() => <DomainField data-testid="domainField" name="domain" />}
             </Formik>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
 

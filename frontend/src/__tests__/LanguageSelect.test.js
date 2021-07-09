@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -21,7 +21,7 @@ describe('<LanguageSelect />', () => {
     it('renders language selection', async () => {
       const { getByTestId } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <Formik
               initialValues={{
                 lang: '',
@@ -31,7 +31,7 @@ describe('<LanguageSelect />', () => {
                 <LanguageSelect data-testid="languageselect" name="lang" />
               )}
             </Formik>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
 
