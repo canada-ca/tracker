@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { array, func, string } from 'prop-types'
 
@@ -75,11 +75,37 @@ const Select = styled.div`
     background-color: #f2f9fc;
     color: #333;
   }
+
+  .dropdown .option.selected,
+  .dropdown .option:focus {
+    background-color: #f2f9fc;
+    border: 2px solid blue;
+    color: #222;
+  }
+
+  .dropdown input:focus {
+    border: 2px solid blue;
+    color: #222;
+  }
 `
 
 export function Dropdown({ options, prompt, onChange, value }) {
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const inputRef = useRef(null)
+  const optRef = useRef(null)
+  const optionRefs = []
+
+  let inputElement
+
+  useEffect(() => {
+    document.addEventListener('click', close)
+    return () => document.removeEventListener('click', close)
+  }, [])
+
+  function close(e) {
+    setOpen(e && e.target === inputRef.current)
+  }
 
   function filter(options) {
     return options.filter(
@@ -88,27 +114,80 @@ export function Dropdown({ options, prompt, onChange, value }) {
     )
   }
 
+  function findFocus() {
+    return document.activeElement
+  }
+
+  const setOptRef = (element) => {
+    if (element !== null) {
+      optionRefs.push(element)
+    }
+  }
+
+  function handleInputOnKeyDown(e) {
+    inputElement = findFocus()
+    switch (e.key) {
+      case 'Enter':
+        setOpen(!open)
+        break
+      case 'Escape':
+        setOpen(false)
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        optionRefs.length > 0 && optionRefs[0].focus()
+        break
+      default:
+    }
+  }
+
+  function handleOptionOnKeyDown(e, option, index) {
+    const activeElement = findFocus()
+    console.log(activeElement)
+    switch (e.key) {
+      case 'Enter':
+        onChange(option)
+        setSearchTerm('')
+        setOpen(false)
+        inputElement.focus()
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        if (index === 0) inputElement.focus()
+        else optionRefs[index - 1].focus()
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        if (index + 1 >= optionRefs.length) inputElement.focus()
+        else optionRefs[index + 1].focus()
+        break
+      default:
+    }
+  }
+
   return (
     <Select>
       <div className="dropdown">
         <div className="control">
           <div className="selected-value">
             <input
+              ref={inputRef}
               type="text"
               placeholder={value !== 'none' ? value : prompt}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value)
               }}
-              onClick={() => setOpen((prev) => !prev)}
-              onBlur={() => console.log('blur')}
+              onClick={close}
+              onKeyDown={handleInputOnKeyDown}
             />
           </div>
           <div className={`arrow ${open ? 'open' : null}`} />
         </div>
-        <div className={`options ${open ? 'open' : null}`}>
-          {filter(options).map((option) => (
+        <div className={`options ${open ? 'open' : null}`} ref={optRef}>
+          {filter(options).map((option, idx) => (
             <div
+              tabIndex={-1}
               key={option.value.id}
               className="option"
               onClick={() => {
@@ -116,6 +195,8 @@ export function Dropdown({ options, prompt, onChange, value }) {
                 setSearchTerm('')
                 setOpen(false)
               }}
+              onKeyDown={(e) => handleOptionOnKeyDown(e, option, idx)}
+              ref={setOptRef}
             >
               {option.label}
             </div>
