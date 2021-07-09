@@ -224,7 +224,11 @@ export const loadDkimConnectionsByDomainId =
     try {
       requestedDkimInfo = await query`
       WITH dkim, domains, domainsDKIM
-      LET dkimKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDKIM RETURN v._key)
+      LET dkimKeys = (
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsDKIM
+          OPTIONS {bfs: true}
+          RETURN v._key
+      )
 
       ${afterVar}
       ${beforeVar}

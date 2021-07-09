@@ -278,7 +278,11 @@ export const loadHttpsConnectionsByDomainId =
     try {
       requestedHttpsInfo = await query`
       WITH domains, domainsHTTPS, https
-      LET httpsKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsHTTPS RETURN v._key)
+      LET httpsKeys = (
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsHTTPS
+          OPTIONS {bfs: true}
+          RETURN v._key
+      )
 
       ${afterVar}
       ${beforeVar}

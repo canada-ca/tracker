@@ -264,7 +264,11 @@ export const loadDmarcConnectionsByDomainId =
     try {
       dmarcScanInfoCursor = await query`
       WITH dmarc, domains, domainsDMARC
-      LET dmarcKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDMARC RETURN v._key)
+      LET dmarcKeys = (
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsDMARC
+          OPTIONS {bfs: true}
+          RETURN v._key
+      )
 
       ${afterVar}
       ${beforeVar}

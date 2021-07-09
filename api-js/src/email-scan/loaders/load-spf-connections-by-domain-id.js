@@ -252,7 +252,11 @@ export const loadSpfConnectionsByDomainId =
     try {
       spfScanInfoCursor = await query`
       WITH domains, domainsSPF, spf
-      LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
+      LET spfKeys = (
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF 
+          OPTIONS {bfs: true}
+          RETURN v._key
+      )
 
       ${afterVar}
       ${beforeVar}
