@@ -41,7 +41,8 @@ describe('given the dkimScanData subscription', () => {
     redis,
     pub,
     domain,
-    sharedId
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -105,6 +106,7 @@ describe('given the dkimScanData subscription', () => {
       slug: 'test-domain-gc-ca',
     })
     sharedId = 'some-shared-id'
+    status = 'pass'
   })
 
   afterEach(async () => {
@@ -140,6 +142,7 @@ describe('given the dkimScanData subscription', () => {
                     JSON.stringify({
                       sharedId: sharedId,
                       domainKey: domain._key,
+                      status: status,
                       results: dkimScan,
                     }),
                   )
@@ -182,6 +185,7 @@ describe('given the dkimScanData subscription', () => {
           domain {
             domain
           }
+          status
           results {
             selector
             record
@@ -260,6 +264,7 @@ describe('given the dkimScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
+          status: status.toUpperCase(),
           results: [
             {
               selector: 'selector',

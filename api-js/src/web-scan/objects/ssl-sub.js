@@ -9,6 +9,7 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { guidanceTagType } from '../../guidance-tag/objects'
+import { StatusEnum } from '../../enums'
 
 export const sslSubType = new GraphQLObjectType({
   name: 'SslSub',
@@ -27,6 +28,11 @@ export const sslSubType = new GraphQLObjectType({
         const domain = await loadDomainByKey.load(domainKey)
         return domain
       },
+    },
+    status: {
+      type: StatusEnum,
+      description: 'The success status of the scan.',
+      resolve: ({ status }) => status,
     },
     acceptableCiphers: {
       type: GraphQLList(GraphQLString),

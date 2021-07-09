@@ -41,7 +41,8 @@ describe('given the dmarcScanData subscription', () => {
     redis,
     pub,
     domain,
-    sharedId
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -50,6 +51,7 @@ describe('given the dmarcScanData subscription', () => {
     }
 
     dmarcScan = {
+      phase: 'deploy',
       record: 'record',
       pPolicy: 'pPolicy',
       spPolicy: 'spPolicy',
@@ -103,6 +105,7 @@ describe('given the dmarcScanData subscription', () => {
       slug: 'test-domain-gc-ca',
     })
     sharedId = 'some-shared-id'
+    status = 'pass'
   })
 
   afterEach(async () => {
@@ -138,6 +141,7 @@ describe('given the dmarcScanData subscription', () => {
                     JSON.stringify({
                       sharedId: sharedId,
                       domainKey: domain._key,
+                      status: status,
                       results: dmarcScan,
                     }),
                   )
@@ -180,6 +184,7 @@ describe('given the dmarcScanData subscription', () => {
           domain {
             domain
           }
+          status
           dmarcPhase
           record
           pPolicy
@@ -258,6 +263,8 @@ describe('given the dmarcScanData subscription', () => {
           domain: {
             domain: 'test.domain.gc.ca',
           },
+          status: status.toUpperCase(),
+          dmarcPhase: 'deploy',
           record: 'record',
           pPolicy: 'pPolicy',
           spPolicy: 'spPolicy',

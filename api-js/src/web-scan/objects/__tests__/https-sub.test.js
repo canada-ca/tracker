@@ -7,6 +7,7 @@ import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { httpsSubType } from '../index'
 import { domainType } from '../../../domain/objects'
+import { StatusEnum } from '../../../enums'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -23,6 +24,12 @@ describe('given the httpsSubType object', () => {
 
       expect(demoType).toHaveProperty('domain')
       expect(demoType.domain.type).toMatchObject(domainType)
+    })
+    it('has a status field', () => {
+      const demoType = httpsSubType.getFields()
+
+      expect(demoType).toHaveProperty('status')
+      expect(demoType.status.type).toMatchObject(StatusEnum)
     })
     it('has implementation field', () => {
       const demoType = httpsSubType.getFields()
@@ -122,6 +129,13 @@ describe('given the httpsSubType object', () => {
             },
           ),
         ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the status resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = httpsSubType.getFields()
+
+        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
       })
     })
     describe('testing the implementation resolver', () => {

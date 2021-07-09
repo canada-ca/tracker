@@ -6,9 +6,10 @@ export const dkimScanData = {
   type: dkimSubType,
   description:
     'This subscription allows the user to receive dkim data directly from the scanners in real time.',
-  resolve: ({ sharedId, domainKey, results }) => ({
+  resolve: ({ sharedId, domainKey, results, status }) => ({
     sharedId,
     domainKey,
+    status,
     ...results,
   }),
   subscribe: async (_context, _args, { pubsubs: { dkimPubSub }, userKey }) =>

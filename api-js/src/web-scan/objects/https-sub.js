@@ -8,6 +8,7 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { guidanceTagType } from '../../guidance-tag/objects'
+import { StatusEnum } from '../../enums'
 
 export const httpsSubType = new GraphQLObjectType({
   name: 'HttpsSub',
@@ -26,6 +27,11 @@ export const httpsSubType = new GraphQLObjectType({
         const domain = await loadDomainByKey.load(domainKey)
         return domain
       },
+    },
+    status: {
+      type: StatusEnum,
+      description: 'The success status of the scan.',
+      resolve: ({ status }) => status,
     },
     implementation: {
       type: GraphQLString,
