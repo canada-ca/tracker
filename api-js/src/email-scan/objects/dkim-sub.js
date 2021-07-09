@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLList, GraphQLID } from 'graphql'
 
 import { domainType } from '../../domain/objects'
-import { StatusEnum } from '../../enums/status'
+import { StatusEnum } from '../../enums'
 import { dkimResultSubType } from './dkim-result-sub'
 
 export const dkimSubType = new GraphQLObjectType({
