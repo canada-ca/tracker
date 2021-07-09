@@ -4,6 +4,12 @@ import { usePagination, useTable } from 'react-table'
 import { array } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { Box, IconButton, Input, Select, Stack, Text } from '@chakra-ui/react'
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@chakra-ui/icons'
 import WithWrapperBox from './WithWrapperBox'
 
 const Table = styled.table`
@@ -149,22 +155,22 @@ function SummaryTable({ ...props }) {
         <Stack isInline align="center" flexWrap="wrap" justify="space-between">
           <Stack spacing="1em" isInline align="center" flexWrap="wrap">
             <IconButton
-              icon="arrow-left"
+              icon={<ArrowLeftIcon />}
               onClick={() => gotoPage(0)}
               disabled={!canPreviousPage}
             />
             <IconButton
-              icon="chevron-left"
+              icon={<ChevronLeftIcon />}
               onClick={() => previousPage()}
               disabled={!canPreviousPage}
             />
             <IconButton
-              icon="chevron-right"
+              icon={<ChevronRightIcon />}
               onClick={() => nextPage()}
               disabled={!canNextPage}
             />
             <IconButton
-              icon="arrow-right"
+              icon={<ArrowRightIcon />}
               onClick={() => gotoPage(pageCount - 1)}
               disabled={!canNextPage}
             />

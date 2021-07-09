@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { CheckCircleIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { any, object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
 import WithWrapperBox from './WithWrapperBox'
@@ -50,14 +51,14 @@ function ScanCard({ scanType, scanData, status }) {
         <Box pb="1">
           {status.https === 'PASS' && status.ssl === 'PASS' ? (
             <Stack isInline align="center" px="2">
-              <Icon name="check-circle" color="strong" size="icons.md" />
+              <CheckCircleIcon color="strong" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
                 <Trans>ITPIN Compliant</Trans>
               </Text>
             </Stack>
           ) : (
             <Stack isInline align="center" px="2">
-              <Icon name="warning-2" color="moderate" size="icons.md" />
+              <WarningTwoIcon color="moderate" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
                 <Trans>Changes Required for ITPIN Compliance</Trans>
               </Text>

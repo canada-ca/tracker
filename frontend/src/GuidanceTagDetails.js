@@ -1,6 +1,12 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Icon, Link, Stack, Text } from '@chakra-ui/react'
+import { Box, Link, Stack, Text } from '@chakra-ui/react'
+import {
+  CheckCircleIcon,
+  ExternalLinkIcon,
+  InfoIcon,
+  WarningIcon,
+} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
 
 export function GuidanceTagDetails({ guidanceTag, tagType }) {
@@ -20,7 +26,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <Icon name="external-link" />
+              <ExternalLinkIcon />
             </Stack>
           </Link>
         ))}
@@ -45,7 +51,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <Icon name="external-link" />
+              <ExternalLinkIcon />
             </Stack>
           </Link>
         ))}
@@ -56,9 +62,9 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
 
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
-  const negativeIcon = <Icon name="warning" color="weak" />
-  const neutralIcon = <Icon name="info" color="info" />
-  const positiveIcon = <Icon name="check-circle" color="strong" />
+  const negativeIcon = <WarningIcon color="weak" />
+  const neutralIcon = <InfoIcon color="info" />
+  const positiveIcon = <CheckCircleIcon color="strong" />
 
   const tagIcon = () => {
     if (tagType === 'negative') return negativeIcon

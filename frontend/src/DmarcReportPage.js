@@ -6,12 +6,12 @@ import {
   Box,
   Divider,
   Heading,
-  Icon,
   Link,
   Select,
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { LinkIcon } from '@chakra-ui/icons'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -757,7 +757,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>Guidance</Trans>
-          <Icon name="link" ml="4px" />
+          <LinkIcon ml="4px" />
         </Link>
       </Box>
 

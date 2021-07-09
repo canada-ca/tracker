@@ -6,7 +6,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Grid,
-  Icon,
   Input,
   Modal,
   ModalBody,
@@ -20,6 +19,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
+import { MinusIcon, SmallAddIcon, WarningIcon } from '@chakra-ui/icons'
 import { array, bool, func, object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 import { Field, FieldArray, Formik } from 'formik'
@@ -236,7 +236,7 @@ export function AdminDomainModal({
                                     p="3"
                                     onClick={() => arrayHelpers.remove(index)}
                                   >
-                                    <Icon name="minus" size="icons.xs" />
+                                    <MinusIcon size="icons.xs" />
                                   </TrackerButton>
                                   <Field
                                     id={`selectors.${index}`}
@@ -271,7 +271,7 @@ export function AdminDomainModal({
                                     {errors.selectors &&
                                       errors.selectors[index] && (
                                         <>
-                                          <Icon name="warning" mr="0.5em" />
+                                          <WarningIcon mr="0.5em" />
                                           <Text>{errors.selectors[index]}</Text>
                                         </>
                                       )}
@@ -286,7 +286,7 @@ export function AdminDomainModal({
                               px="2"
                               onClick={() => arrayHelpers.push('')}
                             >
-                              <Icon name="small-add" size="icons.md" />
+                              <SmallAddIcon size="icons.md" />
                             </TrackerButton>
                           </Box>
                         )}

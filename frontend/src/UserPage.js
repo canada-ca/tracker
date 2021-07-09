@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { string } from 'prop-types'
-import { Divider, Icon, SimpleGrid, Stack, useToast } from '@chakra-ui/react'
+import { Divider, SimpleGrid, Stack, useToast } from '@chakra-ui/react'
+import { EmailIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from './graphql/queries'
 import { t, Trans } from '@lingui/macro'
@@ -110,7 +111,7 @@ export default function UserPage() {
             }}
             disabled={emailSent}
           >
-            <Icon name="email" />
+            <EmailIcon />
             <Trans>Verify Email</Trans>
           </TrackerButton>
         )}

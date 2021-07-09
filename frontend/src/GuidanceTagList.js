@@ -1,14 +1,7 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import {
-  Box,
-  Collapse,
-  Divider,
-  Heading,
-  Icon,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/react'
+import { WarningTwoIcon } from '@chakra-ui/icons'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { Trans } from '@lingui/macro'
 import { TrackerButton } from './TrackerButton'
@@ -69,10 +62,10 @@ export function GuidanceTagList({
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
   const noTags = (
     <Stack isInline align="center" bg="moderateMuted" px="2">
-      {!smallDevice && <Icon name="warning-2" color="moderate" />}
+      {!smallDevice && <WarningTwoIcon color="moderate" />}
       <Box>
         <Stack isInline align="center">
-          {smallDevice && <Icon name="warning-2" color="moderate" />}
+          {smallDevice && <WarningTwoIcon color="moderate" />}
           <Text fontWeight="bold">
             <Trans>Result:</Trans>
           </Text>

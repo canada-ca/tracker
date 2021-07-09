@@ -4,7 +4,8 @@
 */
 
 import React from 'react'
-import { Icon } from '@chakra-ui/react'
+import { WarningIcon, WarningTwoIcon } from '@chakra-ui/react'
+import { CheckIcon } from '@chakra-ui/icons'
 
 const range = (len) => {
   const arr = []
@@ -18,9 +19,9 @@ const generateWebStatusIcon = () => {
   const randNum = Math.floor(Math.random() * 100 + 1)
   let statusIcon
   if (randNum < 70) {
-    statusIcon = <Icon name="check" color="strong" />
+    statusIcon = <CheckIcon color="strong" />
   } else {
-    statusIcon = <Icon name="warning" color="weak" />
+    statusIcon = <WarningIcon color="weak" />
   }
   return statusIcon
 }
@@ -29,11 +30,11 @@ const generateEmailStatusIcon = () => {
   const randNum = Math.floor(Math.random() * 100 + 1)
   let statusIcon
   if (randNum < 33) {
-    statusIcon = <Icon name="check" color="strong" />
+    statusIcon = <CheckIcon color="strong" />
   } else if (randNum >= 33 && randNum < 66) {
-    statusIcon = <Icon name="warning-2" color="moderate" />
+    statusIcon = <WarningTwoIcon color="moderate" />
   } else {
-    statusIcon = <Icon name="warning" color="weak" />
+    statusIcon = <WarningIcon color="weak" />
   }
   return statusIcon
 }

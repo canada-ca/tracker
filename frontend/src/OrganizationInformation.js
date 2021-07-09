@@ -4,7 +4,6 @@ import {
   Collapse,
   Grid,
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,6 +18,7 @@ import {
   useToast,
   VisuallyHidden,
 } from '@chakra-ui/react'
+import { CheckCircleIcon, MinusIcon, EditIcon } from '@chakra-ui/icons'
 import { func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { ORGANIZATION_INFORMATION } from './graphql/queries'
@@ -225,7 +225,7 @@ export default function OrganizationInformation({
             <Heading as="h1">
               {org.name}{' '}
               {org.verified && (
-                <Icon name="check-circle" color="blue.500" size="icons.md" />
+                <CheckCircleIcon color="blue.500" size="icons.md" />
               )}
             </Heading>
           </Stack>
@@ -244,7 +244,7 @@ export default function OrganizationInformation({
               w={{ base: '45%', md: 'auto' }}
             >
               <Stack spacing={0}>
-                <Icon name="minus" />
+                <MinusIcon />
                 <VisuallyHidden>
                   <Trans>Remove Organization</Trans>
                 </VisuallyHidden>
@@ -257,7 +257,7 @@ export default function OrganizationInformation({
               w={{ base: '45%', md: 'auto' }}
             >
               <Stack spacing={0}>
-                <Icon name="edit" />
+                <EditIcon />
                 <VisuallyHidden>
                   <Trans>Edit Organization</Trans>
                 </VisuallyHidden>

@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import {
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -15,6 +14,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { LockIcon } from '@chakra-ui/icons'
 import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
@@ -110,7 +110,7 @@ function EditableUserPassword() {
       </Heading>
 
       <Stack isInline align="center">
-        <Icon name="lock" color="gray.300" />
+        <LockIcon color="gray.300" />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
         <TrackerButton
           ml="auto"

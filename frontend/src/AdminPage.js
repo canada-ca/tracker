@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Divider, Icon, Select, Stack, Text, useToast } from '@chakra-ui/react'
+import { Divider, Select, Stack, Text, useToast } from '@chakra-ui/react'
+import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
@@ -118,7 +119,7 @@ export default function AdminPage() {
               as={RouteLink}
               to="/create-organization"
             >
-              <Icon name="add" />
+              <AddIcon />
               <Trans>Create Organization</Trans>
             </TrackerButton>
           </Stack>
@@ -160,7 +161,7 @@ export default function AdminPage() {
             as={RouteLink}
             to="/create-organization"
           >
-            <Icon name="add" />
+            <AddIcon />
             <Trans>Create Organization</Trans>
           </TrackerButton>
         </Stack>

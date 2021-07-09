@@ -5,7 +5,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -15,6 +14,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { LinkIcon, SearchIcon } from '@chakra-ui/icons'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -130,7 +130,7 @@ export default function DmarcByDomainPage() {
             to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             isExternal={false}
           >
-            {`${value} `} <Icon name="link" />
+            {`${value} `} <LinkIcon />
           </Link>
         )
       },
@@ -340,7 +340,7 @@ export default function DmarcByDomainPage() {
           mb={{ base: '8px', md: '0' }}
         >
           <InputLeftElement>
-            <Icon name="search" color="gray.300" />
+            <SearchIcon color="gray.300" />
           </InputLeftElement>
           <Input
             type="text"

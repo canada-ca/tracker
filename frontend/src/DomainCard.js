@@ -1,14 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import {
-  Box,
-  Divider,
-  Flex,
-  Icon,
-  ListItem,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Divider, Flex, ListItem, Stack, Text } from '@chakra-ui/react'
+import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
 import { Link as RouteLink } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
@@ -17,11 +10,11 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
   const generateStatusIcon = (status) => {
     let statusIcon
     if (status === 'PASS') {
-      statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
+      statusIcon = <CheckCircleIcon color="strong" size="icons.sm" />
     } else if (status === 'FAIL') {
-      statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
+      statusIcon = <WarningIcon color="weak" size="icons.sm" />
     } else {
-      statusIcon = <Icon name="info" color="info" size="icons.sm" />
+      statusIcon = <InfoIcon color="info" size="icons.sm" />
     }
     return statusIcon
   }
