@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider } from '@chakra-ui/core'
+import { ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import ReactDOM from 'react-dom'
@@ -14,13 +14,13 @@ import { UserVarProvider } from './UserState'
 ReactDOM.render(
   <ApolloProvider client={client}>
     <UserVarProvider userVar={currentUserVar}>
-      <ThemeProvider theme={canada}>
+      <ChakraProvider theme={canada}>
         <I18nProvider i18n={i18n}>
           <Router>
             <App />
           </Router>
         </I18nProvider>
-      </ThemeProvider>
+      </ChakraProvider>
     </UserVarProvider>
   </ApolloProvider>,
   document.getElementById('root'),
