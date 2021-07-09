@@ -326,7 +326,11 @@ export const loadSslConnectionByDomainId =
     try {
       requestedSslInfo = await query`
       WITH domains, domainsSSL, ssl
-      LET sslKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL RETURN v._key)
+      LET sslKeys = (
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL 
+          OPTIONS {bfs: true}
+          RETURN v._key
+      )
 
       ${afterVar}
       ${beforeVar}
