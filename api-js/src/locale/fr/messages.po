@@ -195,7 +195,7 @@ msgstr "Permission refusée : Veuillez contacter le propriétaire de l'org pour 
 msgid "Permission Denied: Please contact organization admin for help with removing domain."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine."
 
-#: src/organization/mutations/remove-organization.js:85
+#: src/organization/mutations/remove-organization.js:71
 msgid "Permission Denied: Please contact organization admin for help with removing organization."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer l'organisation."
 
@@ -241,7 +241,7 @@ msgstr "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisati
 msgid "Permission Denied: Please contact super admin for help with removing domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
-#: src/organization/mutations/remove-organization.js:72
+#: src/organization/mutations/remove-organization.js:85
 msgid "Permission Denied: Please contact super admin for help with removing organization."
 msgstr "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à supprimer l'organisation."
 
@@ -372,7 +372,7 @@ msgstr "L'organisation a été quittée avec succès: {0}"
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "A réussi à supprimer le domaine : {0} de {1}."
 
-#: src/organization/mutations/remove-organization.js:219
+#: src/organization/mutations/remove-organization.js:370
 msgid "Successfully removed organization: {0}."
 msgstr "A réussi à supprimer l'organisation : {0}."
 
@@ -779,9 +779,15 @@ msgstr "Impossible de supprimer le domaine d'une organisation inconnue."
 msgid "Unable to remove domain. Please try again."
 msgstr "Impossible de supprimer le domaine. Veuillez réessayer."
 
-#: src/organization/mutations/remove-organization.js:162
-#: src/organization/mutations/remove-organization.js:197
-#: src/organization/mutations/remove-organization.js:208
+#: src/organization/mutations/remove-organization.js:113
+#: src/organization/mutations/remove-organization.js:125
+#: src/organization/mutations/remove-organization.js:147
+#: src/organization/mutations/remove-organization.js:191
+#: src/organization/mutations/remove-organization.js:211
+#: src/organization/mutations/remove-organization.js:299
+#: src/organization/mutations/remove-organization.js:319
+#: src/organization/mutations/remove-organization.js:348
+#: src/organization/mutations/remove-organization.js:359
 msgid "Unable to remove organization. Please try again."
 msgstr "Impossible de supprimer l'organisation. Veuillez réessayer."
 
