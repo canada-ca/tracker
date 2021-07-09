@@ -5,7 +5,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -14,6 +13,7 @@ import {
   Spinner,
   Stack,
 } from '@chakra-ui/react'
+import { SpinnerIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import WithWrapperBox from './WithWrapperBox'
 import { useField } from 'formik'
 import { string } from 'prop-types'
@@ -83,8 +83,7 @@ function PasswordConfirmation({
               {icon === 'spinner' ? (
                 <Spinner size="sm" color="gray.300" />
               ) : (
-                <Icon
-                  name={icon}
+                <SpinnerIcon
                   color={
                     icon === 'lock'
                       ? 'gray.300'
@@ -107,7 +106,7 @@ function PasswordConfirmation({
                 aria-label={passwordShow ? 'hide password' : 'show password'}
                 h="buttons.lg"
                 onClick={handlePasswordShow}
-                icon={passwordShow ? 'view-off' : 'view'}
+                icon={passwordShow ? <ViewOffIcon /> : <ViewIcon />}
                 tabIndex="-1"
               />
             </InputRightElement>
@@ -128,9 +127,8 @@ function PasswordConfirmation({
               {confirmIcon === 'spinner' ? (
                 <Spinner size="sm" color="gray.300" />
               ) : (
-                <Icon
+                <SpinnerIcon
                   role="img"
-                  name={confirmIcon}
                   color={
                     confirmIcon === 'lock'
                       ? 'gray.300'
@@ -153,7 +151,7 @@ function PasswordConfirmation({
                 aria-label={confirmShow ? 'hide password' : 'show password'}
                 h="buttons.lg"
                 onClick={handleConfirmShow}
-                icon={confirmShow ? 'view-off' : 'view'}
+                icon={confirmShow ? <ViewOffIcon /> : <ViewIcon />}
                 tabIndex="-1"
               />
             </InputRightElement>

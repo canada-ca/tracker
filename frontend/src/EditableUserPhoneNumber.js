@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react'
 import { string } from 'prop-types'
 import {
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,6 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { PhoneIcon } from '@chakra-ui/icons'
 import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
@@ -281,7 +281,7 @@ function EditableUserPhoneNumber({ detailValue }) {
       </Heading>
 
       <Stack isInline align="center">
-        <Icon name="phone" color="gray.300" />
+        <PhoneIcon color="gray.300" />
         {detailValue ? (
           <Text>{detailValue}</Text>
         ) : (

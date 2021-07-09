@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
 import {
   Heading,
-  Icon,
   Link,
   Box,
   Stack,
@@ -13,6 +12,7 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react'
+import { LinkIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
@@ -66,7 +66,7 @@ export default function DmarcGuidancePage() {
             textAlign={{ base: 'center', md: 'right' }}
           >
             <Trans>DMARC Report</Trans>
-            <Icon name="link" ml="4px" />
+            <LinkIcon ml="4px" />
           </Link>
         )}
       </Box>

@@ -1,13 +1,6 @@
 import React from 'react'
-import {
-  Box,
-  Divider,
-  Heading,
-  Icon,
-  Link,
-  List,
-  ListItem,
-} from '@chakra-ui/react'
+import { Box, Divider, Heading, Link, List, ListItem } from '@chakra-ui/react'
+import { LinkIcon } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -62,7 +55,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>our Terms and Conditions on the TBS website</Trans>
-              <Icon name="link" ml="4px" />
+              <LinkIcon ml="4px" />
             </Link>
             <Trans>
               . Personal information will not be disclosed by Treasury Board
@@ -79,7 +72,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Privacy Act.</Trans>
-              <Icon name="link" ml="4px" />
+              <LinkIcon ml="4px" />
             </Link>
           </ListItem>
         </List>
@@ -107,7 +100,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Access to Information Act.</Trans>
-              <Icon name="link" ml="4px" />
+              <LinkIcon ml="4px" />
             </Link>
           </ListItem>
         </List>
@@ -169,7 +162,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Copyright Act</Trans>
-              <Icon name="link" ml="4px" />
+              <LinkIcon ml="4px" />
             </Link>
             <Trans>, and</Trans>
             <span> </span>
@@ -183,7 +176,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Trademarks Act</Trans>
-              <Icon name="link" ml="4px" />
+              <LinkIcon ml="4px" />
             </Link>
             <span> </span>
             <Trans>
@@ -242,7 +235,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Privacy Notice Statement</Trans>
-              <Icon name="link" ml="4px" />
+              <LinkIcon ml="4px" />
             </Link>
           </ListItem>
         </List>
@@ -408,7 +401,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>https://https-everywhere.canada.ca/en/help/</Trans>
-              <Icon name="link" ml="4px" />
+              <LinkIcon ml="4px" />
             </Link>
           </ListItem>
         </List>

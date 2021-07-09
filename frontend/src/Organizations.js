@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -16,6 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { SearchIcon, ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from './graphql/queries'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -39,7 +39,8 @@ export default function Organisations() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
+  const orderIconName =
+    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
   const [infoState, changeInfoState] = React.useState({
     isHidden: true,
@@ -161,7 +162,7 @@ export default function Organisations() {
         >
           <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
             <InputLeftElement>
-              <Icon name="search" color="gray.300" />
+              <SearchIcon color="gray.300" />
             </InputLeftElement>
             <Input
               type="text"

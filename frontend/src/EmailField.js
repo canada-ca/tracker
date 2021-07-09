@@ -6,11 +6,11 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
 } from '@chakra-ui/react'
+import { EmailIcon } from '@chakra-ui/icons'
 import { useField } from 'formik'
 import WithWrapperBox from './WithWrapperBox'
 
@@ -32,7 +32,7 @@ const EmailField = WithWrapperBox(function EmailField({
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
-          <Icon name="email" color="gray.300" />
+          <EmailIcon color="gray.300" />
         </InputLeftElement>
         <Input
           {...field}

@@ -4,7 +4,6 @@ import { i18n } from '@lingui/core'
 import {
   Box,
   Divider,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -21,6 +20,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { Domain } from './Domain'
 import { number, string } from 'prop-types'
 import { ListOf } from './ListOf'
@@ -183,7 +183,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                     updateOnOpen()
                   }}
                 >
-                  <Icon name="edit" />
+                  <EditIcon />
                 </TrackerButton>
                 <TrackerButton
                   data-testid={`remove-${index}`}
@@ -195,7 +195,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   variant="danger"
                   px="2"
                 >
-                  <Icon name="minus" />
+                  <MinusIcon />
                 </TrackerButton>
               </Stack>
               <Domain url={domain} lastRan={lastRan} flexGrow={1} />
@@ -222,7 +222,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         <Stack flexDirection={['column', 'row']} align="center" isInline>
           <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
             <InputLeftElement>
-              <Icon name="plus-square" color="gray.300" />
+              <PlusSquareIcon color="gray.300" />
             </InputLeftElement>
             <Input
               type="text"
@@ -236,7 +236,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             variant="primary"
             type="submit"
           >
-            <Icon name="add" />
+            <AddIcon />
             <Trans>Add Domain</Trans>
           </TrackerButton>
         </Stack>

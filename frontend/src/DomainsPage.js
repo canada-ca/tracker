@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -21,6 +20,7 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react'
+import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { PAGINATED_DOMAINS as FORWARD } from './graphql/queries'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
@@ -45,7 +45,8 @@ export default function DomainsPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
+  const orderIconName =
+    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
   const {
     loading,
@@ -179,7 +180,7 @@ export default function DomainsPage() {
               >
                 <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
                   <InputLeftElement>
-                    <Icon name="search" color="gray.300" />
+                    <SearchIcon color="gray.300" />
                   </InputLeftElement>
                   <Input
                     type="text"

@@ -1,14 +1,7 @@
 import React from 'react'
 import { bool, string } from 'prop-types'
-import {
-  Badge,
-  Box,
-  Heading,
-  Icon,
-  Select,
-  Stack,
-  useToast,
-} from '@chakra-ui/react'
+import { Badge, Box, Heading, Select, Stack, useToast } from '@chakra-ui/react'
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
@@ -79,23 +72,37 @@ function EditableUserTFAMethod({
       </Heading>
       <Stack isInline>
         <Box p="1">
-          <Icon
-            size="icons.lg"
-            name={emailValidated ? 'check' : 'close'}
-            color={emailValidated ? 'green.500' : 'red.500'}
-            pr={2}
-          />
+          {emailValidated ? (
+            <CheckIcon
+              size="icons.lg"
+              color={emailValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          ) : (
+            <CloseIcon
+              size="icons.lg"
+              color={emailValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          )}
           <Badge variant="outline" color="gray.900">
             <Trans>Email Validated</Trans>
           </Badge>
         </Box>
         <Box p="1">
-          <Icon
-            size="icons.lg"
-            name={phoneValidated ? 'check' : 'close'}
-            color={phoneValidated ? 'green.500' : 'red.500'}
-            pr={2}
-          />
+          {phoneValidated ? (
+            <CheckIcon
+              size="icons.lg"
+              color={phoneValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          ) : (
+            <CloseIcon
+              size="icons.lg"
+              color={phoneValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          )}
           <Badge variant="outline" color="gray.900">
             <Trans>Phone Validated</Trans>
           </Badge>

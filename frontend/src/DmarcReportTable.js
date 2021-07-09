@@ -11,7 +11,6 @@ import { any, array, bool, func, number, shape, string } from 'prop-types'
 import {
   Box,
   Collapse,
-  Icon,
   IconButton,
   Input,
   Link,
@@ -19,6 +18,14 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronUpIcon,
+  ChevronRightIcon,
+} from '@chakra-ui/icons'
 import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import WithWrapperBox from './WithWrapperBox'
@@ -264,7 +271,7 @@ function DmarcReportTable({ ...props }) {
               gotoPage(0)
             }}
             disabled={!canPreviousPage}
-            icon="arrow-left"
+            icon={<ArrowLeftIcon />}
             aria-label="Go to first page"
           />
           <IconButton
@@ -273,7 +280,7 @@ function DmarcReportTable({ ...props }) {
               previousPage()
             }}
             disabled={!canPreviousPage}
-            icon="chevron-left"
+            icon=<ChevronLeftIcon />
             aria-label="Go to previous page"
           />
           <IconButton
@@ -282,7 +289,7 @@ function DmarcReportTable({ ...props }) {
               nextPage()
             }}
             disabled={!canNextPage}
-            icon="chevron-right"
+            icon={<ChevronRightIcon />}
             aria-label="Go to next page"
           />
           <IconButton
@@ -291,7 +298,7 @@ function DmarcReportTable({ ...props }) {
               gotoPage(pageCount - 1)
             }}
             disabled={!canNextPage}
-            icon="arrow-right"
+            icon={<ArrowRightIcon />}
             aria-label="Go to last page"
           />
           <Stack isInline align="center" spacing="4px">
@@ -390,9 +397,9 @@ function DmarcReportTable({ ...props }) {
                           <span>
                             {column.isSorted ? (
                               column.isSortedDesc ? (
-                                <Icon name="chevron-down" />
+                                <ChevronDownIcon />
                               ) : (
-                                <Icon name="chevron-up" />
+                                <ChevronUpIcon />
                               )
                             ) : (
                               ''

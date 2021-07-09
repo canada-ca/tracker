@@ -3,13 +3,13 @@ import { useAsyncDebounce } from 'react-table'
 import WithWrapperBox from './WithWrapperBox'
 import { any } from 'prop-types'
 import {
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 
 const ReactTableGlobalFilter = ({
@@ -31,7 +31,7 @@ const ReactTableGlobalFilter = ({
 
       <InputGroup w={{ sm: '100%', md: '20rem' }}>
         <InputLeftElement>
-          <Icon name="search" />
+          <SearchIcon />
         </InputLeftElement>
         <Input
           value={value || ''}

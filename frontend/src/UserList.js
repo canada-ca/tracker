@@ -3,7 +3,6 @@ import {
   Box,
   Divider,
   FormLabel,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -21,6 +20,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { AddIcon, EditIcon, EmailIcon, MinusIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { UserCard } from './UserCard'
@@ -282,7 +282,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                   updateOnOpen()
                 }}
               >
-                <Icon name="edit" />
+                <EditIcon />
               </TrackerButton>
               <TrackerButton
                 aria-label="userRemoveButton"
@@ -293,7 +293,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 }}
                 px="2"
               >
-                <Icon name="minus" />
+                <MinusIcon />
               </TrackerButton>
             </Stack>
             <UserCard
@@ -343,7 +343,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           >
             <InputGroup flexGrow={1} w="50%">
               <InputLeftElement>
-                <Icon name="email" color="gray.300" />
+                <EmailIcon color="gray.300" />
               </InputLeftElement>
               <Input
                 aria-label="new-user-input"
@@ -377,7 +377,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             type="submit"
             isLoading={userForm.isSubmitting}
           >
-            <Icon name="add" />
+            <AddIcon />
             <Trans>Invite User</Trans>
           </TrackerButton>
         </Stack>
