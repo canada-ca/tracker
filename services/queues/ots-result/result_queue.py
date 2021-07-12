@@ -76,7 +76,7 @@ def Server(process_name, queues=default_queues):
             msg = "An unexpected error occurred while attempting to enqueue HTTPS result processing request"
             logging.error(msg + f"\nFull traceback: {traceback.format_exc()}")
 
-        publish_update("https", payload["user_key"], msg)
+        publish_update("https", json.loads(payload)["user_key"], msg)
         return msg
 
     @flask_app.route("/ssl", methods=["POST"])
@@ -103,7 +103,7 @@ def Server(process_name, queues=default_queues):
             msg = "An unexpected error occurred while attempting to enqueue SSL result processing request"
             logging.error(msg + f"\nFull traceback: {traceback.format_exc()}")
 
-        publish_update("ssl", payload["user_key"], msg)
+        publish_update("ssl", json.loads(payload)["user_key"], msg)
         return msg
 
     @flask_app.route("/dns", methods=["POST"])
@@ -130,7 +130,7 @@ def Server(process_name, queues=default_queues):
             msg = "An unexpected error occurred while attempting to enqueue DNS result processing request"
             logging.error(msg + f"\nFull traceback: {traceback.format_exc()}")
 
-        publish_update("dns", payload["user_key"], msg)
+        publish_update("dns", json.loads(payload)["user_key"], msg)
         return msg
 
     return flask_app
