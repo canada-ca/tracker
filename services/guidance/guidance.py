@@ -207,10 +207,8 @@ def update_guidance(
             for tag_key, tag_data in entry["guidance"].items():
                 new_tag = {
                     "_key": tag_key,
-                    "tagName": tag_data["tagName"],
-                    "guidance": tag_data["guidance"],
-                    "refLinksGuide": tag_data.get("refLinksGuide", None),
-                    "refLinksTechnical": tag_data.get("refLinksTechnical", None),
+                    "en": tag_data["en"],
+                    "fr": tag_data["fr"],
                 }
 
                 logging.info(f"Checking if tag {tag_key} exists...")
@@ -230,12 +228,8 @@ def update_guidance(
                     db.collection(f"{tag_type}GuidanceTags").update_match(
                         {"_key": tag_key},
                         {
-                            "tagName": tag_data["tagName"],
-                            "guidance": tag_data["guidance"],
-                            "refLinksGuide": tag_data.get("refLinksGuide", None),
-                            "refLinksTechnical": tag_data.get(
-                                "refLinksTechnical", None
-                            ),
+                            "en": tag_data["en"],
+                            "fr": tag_data["fr"],
                         },
                     )
                     logging.info(f"Tag {tag_key} updated.")
