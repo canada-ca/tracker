@@ -1,365 +1,777 @@
 {
     "dmarc1": {
-    "tagName": "DMARC-GC",
-    "guidance": "Government of Canada domains subject to TBS guidelines",
-    "refLinksGuide": [
-        {
-            "description": "IT PIN",
-            "ref_link": ""
+        "en": {
+            "tagName": "DMARC-GC",
+            "guidance": "Government of Canada domains subject to TBS guidelines",
+            "refLinksGuide": [
+                {
+                    "description": "IT PIN",
+                    "ref_link": ""
+                }
+            ],
+            "refLinksTechnical": [
+                ""
+            ]
+        },
+        "fr": {
+            "tagName": "DMARC-GC",
+            "guidance": "Les domaines du gouvernement du Canada sont soumis aux directives du SCT",
+            "refLinksGuide": [
+                {
+                    "description": "AMPTI"
+                }
+            ],
+            "refLinksTechnical": [
+                ""
+            ]
         }
-    ],
-    "refLinksTechnical": [""]
     },
     "dmarc2": {
-        "tagName": "DMARC-missing",
-        "guidance": "No DMARC record for header-from domain",
-        "refLinksGuide": [
-            {
-                "description": "A.2.3 Deploy Initial DMARC record",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7489 (DMARC), 6 Policy",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
-            }
-        ]
+        "en": {
+            "tagName": "DMARC-missing",
+            "guidance": "No DMARC record for header-from domain",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6 Policy",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "DMARC-missing",
+            "guidance": "Pas d'enregistrement DMARC pour le domaine \"header-from\".",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6 Policy (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+                }
+            ]
+        }
     },
     "dmarc3": {
-        "tagName": "P-missing",
-        "guidance": "DMARC record missing mandatory \"p\" tag",
-        "refLinksGuide": [
-            {
-                "description": "A.2.3 Deploy Initial DMARC record",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "P-missing",
+            "guidance": "DMARC record missing mandatory \"p\" tag",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "P-missing",
+            "guidance": "L'enregistrement DMARC ne contient pas la balise obligatoire \"\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6 Policy (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+                }
+            ]
+        }
     },
     "dmarc4": {
-        "tagName": "P-none",
-        "guidance": "DMARC enforcement policy of \"none\"",
-        "refLinksGuide": [
-            {
-                "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "P-none",
+            "guidance": "DMARC enforcement policy of \"none\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "P-none",
+            "guidance": "Politique d'application de DMARC de \"none\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.3.5 Surveiller les rapports DMARC et corriger les erreurs de configuration",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc5": {
-        "tagName": "P-quarantine",
-        "guidance": "DMARC enforcement policy of \"quarantine\"",
-        "refLinksGuide": [
-            {
-                "description": "A.4 Enforce",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "P-quarantine",
+            "guidance": "DMARC enforcement policy of \"quarantine\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.4 Enforce",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "P-quarantine",
+            "guidance": "Politique d'application de DMARC de \"quarantaine\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.4 Appliquer",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc6": {
-        "tagName": "P-reject",
-        "guidance": "DMARC enforcement policy of \"reject\"",
-        "refLinksGuide": [
-            {
-                "description": "A.5 Maintain",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "P-reject",
+            "guidance": "DMARC enforcement policy of \"reject\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.5 Maintain",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "P-reject",
+            "guidance": "Politique d'application de DMARC de \"reject\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.5 Tenir les éléments à jour",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc7": {
-        "tagName": "PCT-100",
-        "guidance": "Policy applied to all DMARC failures",
-        "refLinksGuide": [
-            {
-                "description": "B.3.1 DMARC Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "PCT-100",
+            "guidance": "Policy applied to all DMARC failures",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 DMARC Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "PCT-100",
+            "guidance": "Politique appliquée à tous les échecs DMARC",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 Enregistrements DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc8": {
-        "tagName": "PCT-xx",
-        "guidance": "Policy applied to percentage of DMARC failures",
-        "refLinksGuide": [
-            {
-                "description": "B.3.1 DMARC Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "PCT-xx",
+            "guidance": "Policy applied to percentage of DMARC failures",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 DMARC Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "PCT-xx",
+            "guidance": "Politique appliquée au pourcentage d'échecs DMARC",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 Enregistrements DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc9": {
-        "tagName": "PCT-invalid",
-        "guidance": "Invalid percentage",
-        "refLinksGuide": [
-            {
-                "description": "B.3.1 DMARC Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "PCT-invalid",
+            "guidance": "Invalid percentage",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 DMARC Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "PCT-invalid",
+            "guidance": "Pourcentage invalide",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 Enregistrements DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc10": {
-        "tagName": "RUA-CCCS",
-        "guidance": "CCCS as aggregate report destination",
-        "refLinksGuide": [
-            {
-                "description": "B.3.1 DMARC Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "RUA-CCCS",
+            "guidance": "CCCS as aggregate report destination",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 DMARC Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "RUA-CCCS",
+            "guidance": "CCCS comme destination des rapports agrégés",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 Enregistrements DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc11": {
-        "tagName": "RUF-CCCS",
-        "guidance": "CCCS as forensic report destination",
-        "refLinksGuide": [
-            {
-                "description": "2.4.2 DMARC Reporting",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "RUF-CCCS",
+            "guidance": "CCCS as forensic report destination",
+            "refLinksGuide": [
+                {
+                    "description": "2.4.2 DMARC Reporting",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "RUF-CCCS",
+            "guidance": "CCCS comme destination des rapports médico-légaux",
+            "refLinksGuide": [
+                {
+                    "description": "2.4.2 Rapports DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a242"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc12": {
-        "tagName": "RUA-none",
-        "guidance": "No aggregate report destinations",
-        "refLinksGuide": [
-            {
-                "description": "A.2.3 Deploy Initial DMARC record",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "RUA-none",
+            "guidance": "No aggregate report destinations",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "RUA-none",
+            "guidance": "Pas de destinations de rapports agrégés",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc13": {
-        "tagName": "RUF-none",
-        "guidance": "No forensic report destinations",
-        "refLinksGuide": [
-            {
-                "description": "2.4.2 DMARC Reporting",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "RUF-none",
+            "guidance": "No forensic report destinations",
+            "refLinksGuide": [
+                {
+                    "description": "2.4.2 DMARC Reporting",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "RUF-none",
+            "guidance": "Pas de destination de rapport médico-légal",
+            "refLinksGuide": [
+                {
+                    "description": "2.4.2 Rapports DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a242"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc14": {
-        "tagName": "TXT-DMARC-enabled",
-        "guidance": "Third-party report destinations valid",
-        "refLinksGuide": [
-            {
-                "description": "3.2.3 Third Parties and DMARC",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
-            }
-        ]
+        "en": {
+            "tagName": "TXT-DMARC-enabled",
+            "guidance": "Third-party report destinations valid",
+            "refLinksGuide": [
+                {
+                    "description": "3.2.3 Third Parties and DMARC",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "TXT-DMARC-enabled",
+            "guidance": "Destinations des rapports de tiers valides",
+            "refLinksGuide": [
+                {
+                    "description": "3.2.3 Expéditeurs tiers et DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                }
+            ]
+        }
     },
     "dmarc15": {
-        "tagName": "TXT-DMARC-missing",
-        "guidance": "Third-party report destinations invalid",
-        "refLinksGuide": [
-            {
-                "description": "3.2.3 Third Parties and DMARC",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
-            }
-        ]
+        "en": {
+            "tagName": "TXT-DMARC-missing",
+            "guidance": "Third-party report destinations invalid",
+            "refLinksGuide": [
+                {
+                    "description": "3.2.3 Third Parties and DMARC",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "TXT-DMARC-missing",
+            "guidance": "Les destinations des rapports de tiers ne sont pas valides",
+            "refLinksGuide": [
+                {
+                    "description": "3.2.3 Expéditeurs tiers et DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                }
+            ]
+        }
     },
     "dmarc16": {
-        "tagName": "SP-missing",
-        "guidance": "Subdomain policy not specified with \"sp\" tag",
-        "refLinksGuide": [
-            {
-                "description": "A.2.3 Deploy Initial DMARC record",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "SP-missing",
+            "guidance": "Subdomain policy not specified with \"sp\" tag",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "SP-missing",
+            "guidance": "La politique de sous-domaine n'est pas spécifiée avec la balise \"sp\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.2.3 Deploy Initial DMARC record",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc17": {
-        "tagName": "SP-none",
-        "guidance": "Subdomain policy of \"none\"",
-        "refLinksGuide": [
-            {
-                "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "SP-none",
+            "guidance": "Subdomain policy of \"none\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "SP-none",
+            "guidance": "Politique de sous-domaine de \"none\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.3.5 Surveiller les rapports DMARC et corriger les erreurs de configuration",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc18": {
-        "tagName": "SP-quarantine",
-        "guidance": "Subdomain policy of \"quarantine\"",
-        "refLinksGuide": [
-            {
-                "description": "A.4 Enforce",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "SP-quarantine",
+            "guidance": "Subdomain policy of \"quarantine\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.4 Enforce",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "SP-quarantine",
+            "guidance": "Politique de sous-domaine de \"quarantaine\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.4 Appliquer",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc19": {
-        "tagName": "SP-reject",
-        "guidance": "Subdomain policy of \"reject\"",
-        "refLinksGuide": [
-            {
-                "description": "A.5 Maintain",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "SP-reject",
+            "guidance": "Subdomain policy of \"reject\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.5 Maintain",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "SP-reject",
+            "guidance": "Politique des sous-domaines de \"reject\"",
+            "refLinksGuide": [
+                {
+                    "description": "A.5 Tenir les éléments à jour",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc20": {
-        "tagName": "PCT-none-exists",
-        "guidance": "\"pct\" should be 100, or not included with \"p=none\"",
-        "refLinksGuide": [
-            {
-                "description": "B.3.1 DMARC Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "PCT-none-exists",
+            "guidance": "\"pct\" should be 100, or not included with \"p=none\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 DMARC Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "PCT-none-exists",
+            "guidance": "\"pct\" devrait être 100, ou ne pas être inclus avec \"p=none\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 Enregistrements DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc21": {
-        "tagName": "PCT-0",
-        "guidance": "Policy applies to no failures - irregular config",
-        "refLinksGuide": [
-            {
-                "description": "B.3.1 DMARC Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "PCT-0",
+            "guidance": "Policy applies to no failures - irregular config",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 DMARC Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "PCT-0",
+            "guidance": "La politique s'applique à toutes les défaillances - configuration irrégulière",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 Enregistrements DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     },
     "dmarc22": {
-        "tagName": "CNAME-DMARC",
-        "guidance": "Domain uses potentially outsourced DMARC service",
-        "refLinksGuide": [
-            {
-                "description": "3.2.3 Third Parties and DMARC",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
-            }
-        ]
+        "en": {
+            "tagName": "CNAME-DMARC",
+            "guidance": "Domain uses potentially outsourced DMARC service",
+            "refLinksGuide": [
+                {
+                    "description": "3.2.3 Third Parties and DMARC",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "CNAME-DMARC",
+            "guidance": "Le domaine utilise un service DMARC potentiellement externalisé.",
+            "refLinksGuide": [
+                {
+                    "description": "3.2.3 Expéditeurs tiers et DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                }
+            ]
+        }
     },
     "dmarc23": {
-        "tagName": "DMARC-valid",
-        "guidance": "DMARC record is properly formed",
-        "refLinksGuide": [
-            {
-                "description": "B.3.1 DMARC Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-            }
-        ],
-        "refLinksTechnical":[
-            {
-                "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
-            }
-        ]
+        "en": {
+            "tagName": "DMARC-valid",
+            "guidance": "DMARC record is properly formed",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 DMARC Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "DMARC-valid",
+            "guidance": "L'enregistrement DMARC est correctement formé",
+            "refLinksGuide": [
+                {
+                    "description": "B.3.1 Enregistrements DMARC",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                }
+            ]
+        }
     }
 }
