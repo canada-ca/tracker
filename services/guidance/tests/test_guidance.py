@@ -62,10 +62,8 @@ def test_update_guidance():
         current_tag = db.collection("dkimGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
-            "tagName": current_tag["tagName"],
-            "guidance": current_tag["guidance"],
-            "refLinksGuide": current_tag["refLinksGuide"],
-            "refLinksTechnical": current_tag["refLinksTechnical"],
+            "en": current_tag["en"],
+            "fr": current_tag["fr"],
         }
 
     for key, data in dmarc_tag_data.items():
@@ -75,10 +73,8 @@ def test_update_guidance():
         current_tag = db.collection("dmarcGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
-            "tagName": current_tag["tagName"],
-            "guidance": current_tag["guidance"],
-            "refLinksGuide": current_tag["refLinksGuide"],
-            "refLinksTechnical": current_tag["refLinksTechnical"],
+            "en": current_tag["en"],
+            "fr": current_tag["fr"],
         }
 
     for key, data in spf_tag_data.items():
@@ -88,10 +84,8 @@ def test_update_guidance():
         current_tag = db.collection("spfGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
-            "tagName": current_tag["tagName"],
-            "guidance": current_tag["guidance"],
-            "refLinksGuide": current_tag["refLinksGuide"],
-            "refLinksTechnical": current_tag["refLinksTechnical"],
+            "en": current_tag["en"],
+            "fr": current_tag["fr"],
         }
 
     for key, data in https_tag_data.items():
@@ -101,10 +95,8 @@ def test_update_guidance():
         current_tag = db.collection("httpsGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
-            "tagName": current_tag["tagName"],
-            "guidance": current_tag["guidance"],
-            "refLinksGuide": current_tag["refLinksGuide"],
-            "refLinksTechnical": current_tag["refLinksTechnical"],
+            "en": current_tag["en"],
+            "fr": current_tag["fr"],
         }
 
     for key, data in ssl_tag_data.items():
@@ -114,10 +106,8 @@ def test_update_guidance():
         current_tag = db.collection("sslGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
-            "tagName": current_tag["tagName"],
-            "guidance": current_tag["guidance"],
-            "refLinksGuide": current_tag["refLinksGuide"],
-            "refLinksTechnical": current_tag["refLinksTechnical"],
+            "en": current_tag["en"],
+            "fr": current_tag["fr"],
         }
 
     for key, data in aggregate_tag_data.items():
@@ -127,8 +117,6 @@ def test_update_guidance():
         current_tag = db.collection("aggregateGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
-            "tagName": current_tag["tagName"],
-            "guidance": current_tag["guidance"],
-            "refLinksGuide": current_tag["refLinksGuide"],
-            "refLinksTechnical": current_tag["refLinksTechnical"],
+            "en": current_tag["en"],
+            "fr": current_tag["fr"],
         }
