@@ -274,8 +274,8 @@
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
     'Successfully signed out.': 'Successfully signed out.',
-    'Successfully transfer org: {0} ownership to user: {1}': [
-      'Successfully transfer org: ',
+    'Successfully transferred org: {0} ownership to user: {1}': [
+      'Successfully transferred org: ',
       ['0'],
       ' ownership to user: ',
       ['1'],

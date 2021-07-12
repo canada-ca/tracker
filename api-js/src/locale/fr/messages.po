@@ -389,8 +389,8 @@ msgid "Successfully signed out."
 msgstr "J'ai réussi à me déconnecter."
 
 #: src/affiliation/mutations/transfer-org-ownership.js:224
-msgid "Successfully transfer org: {0} ownership to user: {1}"
-msgstr "Transfert réussi de org : {0} à l'utilisateur : {1}"
+msgid "Successfully transferred org: {0} ownership to user: {1}"
+msgstr "A réussi à transférer la propriété de org: {0} à l'utilisateur: {1}"
 
 #: src/organization/mutations/verify-organization.js:157
 msgid "Successfully verified organization: {0}."

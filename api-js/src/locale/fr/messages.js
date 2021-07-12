@@ -278,10 +278,10 @@
     'Successfully sent invitation to service, and organization email.':
       "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
     'Successfully signed out.': "J'ai réussi à me déconnecter.",
-    'Successfully transfer org: {0} ownership to user: {1}': [
-      'Transfert réussi de org : ',
+    'Successfully transferred org: {0} ownership to user: {1}': [
+      'A réussi à transférer la propriété de org: ',
       ['0'],
-      " à l'utilisateur : ",
+      " à l'utilisateur: ",
       ['1'],
     ],
     'Successfully verified organization: {0}.':
