@@ -90,32 +90,32 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.3 Deploy SPF for All Domains",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-spf-no-record",
-            "guidance": "Pas d'enregistrement SPF pour le domaine \"envelope-from\"",
+            "guidance": 'Pas d\'enregistrement SPF pour le domaine "envelope-from"',
             "refLinksGuide": [
                 {
                     "description": "A.3.3 Déployer le protocole SPF pour tous les domaines",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg2": {
         "en": {
@@ -124,15 +124,15 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1 SPF",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb1"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb1",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-spf-invalid",
@@ -140,16 +140,16 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1 Protocole SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb1"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb1",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg3": {
         "en": {
@@ -158,32 +158,32 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1 SPF",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb1"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb1",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 2.6 Reults of Evaluation",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-spf-failed",
-            "guidance": "Adresse IP non autorisée pour le domaine \"envelope-from\" ou \"header-from\"",
+            "guidance": 'Adresse IP non autorisée pour le domaine "envelope-from" ou "header-from"',
             "refLinksGuide": [
                 {
                     "description": "B.1 Protocole SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb1"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb1",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 2.6 Reults of Evaluation (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg4": {
         "en": {
@@ -192,32 +192,32 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.1 DMARC Validation",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-spf-mismatch",
-            "guidance": "\"Header-from\" et \"envelope-from\" sont des domaines publics différents",
+            "guidance": '"Header-from" et "envelope-from" sont des domaines publics différents',
             "refLinksGuide": [
                 {
                     "description": "2.4.1 Authentification par le protocole DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg5": {
         "en": {
@@ -226,32 +226,32 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.1 DMARC Validation",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-spf-strict",
-            "guidance": "Les domaines \"Header-from\" et \"envelope-from\" ne sont pas strictement alignés",
+            "guidance": 'Les domaines "Header-from" et "envelope-from" ne sont pas strictement alignés',
             "refLinksGuide": [
                 {
                     "description": "2.4.1 Authentification par le protocole DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg6": {
         "en": {
@@ -260,15 +260,15 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.4 Deploy DKIM for All Domains and Senders",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-dkim-unsigned",
@@ -276,16 +276,16 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.4 Déployer le protocole DKIM pour tous les domaines et expéditeurs",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM) (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg7": {
         "en": {
@@ -294,15 +294,15 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2 DKIM",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb2"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb2",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 7.5 _domainkey DNS TXT Resource Record Tag Specifications",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-dkim-invalid",
@@ -310,16 +310,16 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2 DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb2"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb2",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 7.5 _domainkey DNS TXT Resource Record Tag Specifications (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg8": {
         "en": {
@@ -328,15 +328,15 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2 DKIM",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb2"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb2",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 6 Verifier Actions",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-6"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-6",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-dkim-failed",
@@ -344,16 +344,16 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2 DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb2"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb2",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 6 Verifier Actions (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-6"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-6",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg9": {
         "en": {
@@ -362,32 +362,32 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.1 DMARC Validation",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-dkim-mismatch",
-            "guidance": "DKIM \"header-from\" et \"envelope-from\" sont des domaines publics différents",
+            "guidance": 'DKIM "header-from" et "envelope-from" sont des domaines publics différents',
             "refLinksGuide": [
                 {
                     "description": "2.4.1 Authentification par le protocole DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
-        }
+            ],
+        },
     },
     "agg10": {
         "en": {
@@ -396,33 +396,33 @@ aggregate_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.1 DMARC Validation",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "agg-dkim-strict",
-            "guidance": "DKIM \"header-from\" et \"envelope-from\" ne sont pas strictement alignés",
+            "guidance": 'DKIM "header-from" et "envelope-from" ne sont pas strictement alignés',
             "refLinksGuide": [
                 {
                     "description": "2.4.1 Authentification par le protocole DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a241",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1",
                 }
-            ]
-        }
-    }
+            ],
+        },
+    },
 }
 
 dkim_tag_data = {
@@ -430,27 +430,15 @@ dkim_tag_data = {
         "en": {
             "tagName": "DKIM-GC",
             "guidance": "Government of Canada domains subject to TBS guidelines",
-            "refLinksGuide": [
-                {
-                    "description": "IT PIN"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksGuide": [{"description": "IT PIN"}],
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "DKIM-GC",
             "guidance": "Les domaines du gouvernement du Canada sont soumis aux directives du SCT",
-            "refLinksGuide": [
-                {
-                    "description": "AMPTI"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksGuide": [{"description": "AMPTI"}],
+            "refLinksTechnical": [""],
+        },
     },
     "dkim2": {
         "en": {
@@ -459,15 +447,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.4 Deploy DKIM for All Domains and Senders",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "DKIM-missing",
@@ -475,16 +463,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.4 Déployer le protocole DKIM pour tous les domaines et expéditeurs",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM) (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim3": {
         "en": {
@@ -493,15 +481,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.2 Third Parties and DKIM",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Microsoft DKIM Guidance",
-                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "DKIM-missing-mx-O365",
@@ -509,16 +497,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.2 Expéditeurs tiers et DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Microsoft DKIM Guidance (EN)",
-                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim4": {
         "en": {
@@ -527,15 +515,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.2 Third Parties and DKIM",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Microsoft DKIM Guidance",
-                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "DKIM-missing-O365-misconfigured",
@@ -543,16 +531,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.2 Expéditeurs tiers et DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Microsoft DKIM Guidance (EN)",
-                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+                    "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim5": {
         "en": {
@@ -561,15 +549,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Cryptographic Considerations",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-sub1024",
@@ -577,16 +565,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Considérations cryptographiques",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim6": {
         "en": {
@@ -595,15 +583,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Cryptographic Considerations",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-1024",
@@ -611,16 +599,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Considérations cryptographiques",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim7": {
         "en": {
@@ -629,15 +617,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Cryptographic Considerations",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-2048",
@@ -645,16 +633,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Considérations cryptographiques",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim8": {
         "en": {
@@ -663,15 +651,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Cryptographic Considerations",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-4096",
@@ -679,16 +667,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Considérations cryptographiques",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim9": {
         "en": {
@@ -697,15 +685,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.1 DKIM Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-invalid",
@@ -713,16 +701,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.1 Enregistrements DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim10": {
         "en": {
@@ -731,12 +719,10 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.5.3 Rotate DKIM Keys",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "P-update-recommended",
@@ -744,13 +730,11 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.5.3 Assurer la rotation des clés DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna53"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna53",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "dkim11": {
         "en": {
@@ -759,15 +743,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Cryptographic Considerations",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "DKIM-invalid-crypto",
@@ -775,16 +759,16 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.2 Considérations cryptographiques",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim12": {
         "en": {
@@ -793,15 +777,15 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.1 DKIM Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "DKIM-value-invalid",
@@ -809,50 +793,50 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.2.1 Enregistrements DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim13": {
         "en": {
             "tagName": "T-enabled",
-            "guidance": "DKIM flag \"t=y\" disables DKIM verification",
+            "guidance": 'DKIM flag "t=y" disables DKIM verification',
             "refLinksGuide": [
                 {
                     "description": "B.2.1 DKIM Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "T-enabled",
-            "guidance": "L'indicateur DKIM \"t=y\" désactive la vérification DKIM",
+            "guidance": 'L\'indicateur DKIM "t=y" désactive la vérification DKIM',
             "refLinksGuide": [
                 {
                     "description": "B.2.1 Enregistrements DKIM",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+                    "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dkim14": {
         "en": {
@@ -861,12 +845,10 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.4 Deploy DKIM for ALl Domains and Senders",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "P-duplicate",
@@ -874,14 +856,12 @@ dkim_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.4 Déployer le protocole DKIM pour tous les domaines et expéditeurs",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
-    }
+            "refLinksTechnical": [""],
+        },
+    },
 }
 
 dmarc_tag_data = {
@@ -889,28 +869,15 @@ dmarc_tag_data = {
         "en": {
             "tagName": "DMARC-GC",
             "guidance": "Government of Canada domains subject to TBS guidelines",
-            "refLinksGuide": [
-                {
-                    "description": "IT PIN",
-                    "ref_link": ""
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksGuide": [{"description": "IT PIN", "ref_link": ""}],
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "DMARC-GC",
             "guidance": "Les domaines du gouvernement du Canada sont soumis aux directives du SCT",
-            "refLinksGuide": [
-                {
-                    "description": "AMPTI"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksGuide": [{"description": "AMPTI"}],
+            "refLinksTechnical": [""],
+        },
     },
     "dmarc2": {
         "en": {
@@ -919,168 +886,168 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6 Policy",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "DMARC-missing",
-            "guidance": "Pas d'enregistrement DMARC pour le domaine \"header-from\".",
+            "guidance": 'Pas d\'enregistrement DMARC pour le domaine "header-from".',
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6 Policy (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc3": {
         "en": {
             "tagName": "P-missing",
-            "guidance": "DMARC record missing mandatory \"p\" tag",
+            "guidance": 'DMARC record missing mandatory "p" tag',
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-missing",
-            "guidance": "L'enregistrement DMARC ne contient pas la balise obligatoire \"\"",
+            "guidance": 'L\'enregistrement DMARC ne contient pas la balise obligatoire ""',
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6 Policy (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc4": {
         "en": {
             "tagName": "P-none",
-            "guidance": "DMARC enforcement policy of \"none\"",
+            "guidance": 'DMARC enforcement policy of "none"',
             "refLinksGuide": [
                 {
                     "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-none",
-            "guidance": "Politique d'application de DMARC de \"none\"",
+            "guidance": 'Politique d\'application de DMARC de "none"',
             "refLinksGuide": [
                 {
                     "description": "A.3.5 Surveiller les rapports DMARC et corriger les erreurs de configuration",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc5": {
         "en": {
             "tagName": "P-quarantine",
-            "guidance": "DMARC enforcement policy of \"quarantine\"",
+            "guidance": 'DMARC enforcement policy of "quarantine"',
             "refLinksGuide": [
                 {
                     "description": "A.4 Enforce",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-quarantine",
-            "guidance": "Politique d'application de DMARC de \"quarantaine\"",
+            "guidance": 'Politique d\'application de DMARC de "quarantaine"',
             "refLinksGuide": [
                 {
                     "description": "A.4 Appliquer",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc6": {
         "en": {
             "tagName": "P-reject",
-            "guidance": "DMARC enforcement policy of \"reject\"",
+            "guidance": 'DMARC enforcement policy of "reject"',
             "refLinksGuide": [
                 {
                     "description": "A.5 Maintain",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "P-reject",
-            "guidance": "Politique d'application de DMARC de \"reject\"",
+            "guidance": 'Politique d\'application de DMARC de "reject"',
             "refLinksGuide": [
                 {
                     "description": "A.5 Tenir les éléments à jour",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc7": {
         "en": {
@@ -1089,15 +1056,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 DMARC Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "PCT-100",
@@ -1105,16 +1072,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 Enregistrements DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc8": {
         "en": {
@@ -1123,15 +1090,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 DMARC Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "PCT-xx",
@@ -1139,16 +1106,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 Enregistrements DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc9": {
         "en": {
@@ -1157,15 +1124,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 DMARC Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "PCT-invalid",
@@ -1173,16 +1140,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 Enregistrements DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc10": {
         "en": {
@@ -1191,15 +1158,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 DMARC Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "RUA-CCCS",
@@ -1207,16 +1174,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 Enregistrements DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc11": {
         "en": {
@@ -1225,15 +1192,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.2 DMARC Reporting",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "RUF-CCCS",
@@ -1241,16 +1208,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.2 Rapports DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a242"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a242",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc12": {
         "en": {
@@ -1259,15 +1226,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "RUA-none",
@@ -1275,16 +1242,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc13": {
         "en": {
@@ -1293,15 +1260,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.2 DMARC Reporting",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "RUF-none",
@@ -1309,16 +1276,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "2.4.2 Rapports DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a242"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a242",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc14": {
         "en": {
@@ -1327,15 +1294,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.3 Third Parties and DMARC",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "TXT-DMARC-enabled",
@@ -1343,16 +1310,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.3 Expéditeurs tiers et DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc15": {
         "en": {
@@ -1361,15 +1328,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.3 Third Parties and DMARC",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "TXT-DMARC-missing",
@@ -1377,186 +1344,186 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.3 Expéditeurs tiers et DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc16": {
         "en": {
             "tagName": "SP-missing",
-            "guidance": "Subdomain policy not specified with \"sp\" tag",
+            "guidance": 'Subdomain policy not specified with "sp" tag',
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SP-missing",
-            "guidance": "La politique de sous-domaine n'est pas spécifiée avec la balise \"sp\"",
+            "guidance": 'La politique de sous-domaine n\'est pas spécifiée avec la balise "sp"',
             "refLinksGuide": [
                 {
                     "description": "A.2.3 Deploy Initial DMARC record",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc17": {
         "en": {
             "tagName": "SP-none",
-            "guidance": "Subdomain policy of \"none\"",
+            "guidance": 'Subdomain policy of "none"',
             "refLinksGuide": [
                 {
                     "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SP-none",
-            "guidance": "Politique de sous-domaine de \"none\"",
+            "guidance": 'Politique de sous-domaine de "none"',
             "refLinksGuide": [
                 {
                     "description": "A.3.5 Surveiller les rapports DMARC et corriger les erreurs de configuration",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc18": {
         "en": {
             "tagName": "SP-quarantine",
-            "guidance": "Subdomain policy of \"quarantine\"",
+            "guidance": 'Subdomain policy of "quarantine"',
             "refLinksGuide": [
                 {
                     "description": "A.4 Enforce",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SP-quarantine",
-            "guidance": "Politique de sous-domaine de \"quarantaine\"",
+            "guidance": 'Politique de sous-domaine de "quarantaine"',
             "refLinksGuide": [
                 {
                     "description": "A.4 Appliquer",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc19": {
         "en": {
             "tagName": "SP-reject",
-            "guidance": "Subdomain policy of \"reject\"",
+            "guidance": 'Subdomain policy of "reject"',
             "refLinksGuide": [
                 {
                     "description": "A.5 Maintain",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SP-reject",
-            "guidance": "Politique des sous-domaines de \"reject\"",
+            "guidance": 'Politique des sous-domaines de "reject"',
             "refLinksGuide": [
                 {
                     "description": "A.5 Tenir les éléments à jour",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc20": {
         "en": {
             "tagName": "PCT-none-exists",
-            "guidance": "\"pct\" should be 100, or not included with \"p=none\"",
+            "guidance": '"pct" should be 100, or not included with "p=none"',
             "refLinksGuide": [
                 {
                     "description": "B.3.1 DMARC Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "PCT-none-exists",
-            "guidance": "\"pct\" devrait être 100, ou ne pas être inclus avec \"p=none\"",
+            "guidance": '"pct" devrait être 100, ou ne pas être inclus avec "p=none"',
             "refLinksGuide": [
                 {
                     "description": "B.3.1 Enregistrements DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc21": {
         "en": {
@@ -1565,15 +1532,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 DMARC Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "PCT-0",
@@ -1581,16 +1548,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 Enregistrements DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc22": {
         "en": {
@@ -1599,15 +1566,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.3 Third Parties and DMARC",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "CNAME-DMARC",
@@ -1615,16 +1582,16 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "3.2.3 Expéditeurs tiers et DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a323",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1",
                 }
-            ]
-        }
+            ],
+        },
     },
     "dmarc23": {
         "en": {
@@ -1633,15 +1600,15 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 DMARC Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "DMARC-valid",
@@ -1649,17 +1616,17 @@ dmarc_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.3.1 Enregistrements DMARC",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3",
                 }
-            ]
-        }
-    }
+            ],
+        },
+    },
 }
 
 https_tag_data = {
@@ -1670,12 +1637,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "ITPIN 2018-01",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-GC",
@@ -1683,13 +1648,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "AMPTI 2018-01",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https2": {
         "en": {
@@ -1698,12 +1661,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-missing",
@@ -1711,13 +1672,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https3": {
         "en": {
@@ -1726,12 +1685,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-downgraded",
@@ -1739,13 +1696,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https4": {
         "en": {
@@ -1754,12 +1709,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-bad-chain",
@@ -1767,13 +1720,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https5": {
         "en": {
@@ -1782,12 +1733,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-bad-hostname",
@@ -1795,13 +1744,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https6": {
         "en": {
@@ -1810,12 +1757,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1/6.2 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-not-enforced",
@@ -1823,13 +1768,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1/6.2 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https7": {
         "en": {
@@ -1838,12 +1781,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1/6.2 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-weakly-enforced",
@@ -1851,13 +1792,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1/6.2 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https8": {
         "en": {
@@ -1866,12 +1805,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-moderately-enforced",
@@ -1879,13 +1816,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.1 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https9": {
         "en": {
@@ -1894,12 +1829,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HSTS-missing",
@@ -1907,13 +1840,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https10": {
         "en": {
@@ -1922,12 +1853,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HSTS-short-age",
@@ -1935,13 +1864,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https11": {
         "en": {
@@ -1950,12 +1877,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HSTS-preload-ready",
@@ -1963,13 +1888,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https12": {
         "en": {
@@ -1978,12 +1901,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HSTS-not-preloaded",
@@ -1991,13 +1912,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.2 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https13": {
         "en": {
@@ -2006,12 +1925,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-certificate-expired",
@@ -2019,13 +1936,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https14": {
         "en": {
@@ -2034,12 +1949,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-certificate-self-signed",
@@ -2047,13 +1960,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https15": {
         "en": {
@@ -2062,10 +1973,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [""]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-certificate-revoked",
@@ -2073,11 +1984,11 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [""]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "https16": {
         "en": {
@@ -2086,10 +1997,10 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [""]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "HTTPS-certificate-revocation-unknown",
@@ -2097,12 +2008,12 @@ https_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [""]
-        }
-    }
+            "refLinksTechnical": [""],
+        },
+    },
 }
 
 
@@ -2111,28 +2022,15 @@ spf_tag_data = {
         "en": {
             "tagName": "SPF-GC",
             "guidance": "Government of Canada domains subject to TBS guidelines",
-            "refLinksGuide": [
-                {
-                    "description": "IT PIN",
-                    "ref_link": ""
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksGuide": [{"description": "IT PIN", "ref_link": ""}],
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "SPF-GC",
             "guidance": "Les domaines du gouvernement du Canada sont soumis aux directives du SCT",
-            "refLinksGuide": [
-                {
-                    "description": "AMPTI"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksGuide": [{"description": "AMPTI"}],
+            "refLinksTechnical": [""],
+        },
     },
     "spf2": {
         "en": {
@@ -2141,15 +2039,15 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.3 Deploy SPF for All Domains",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SPF-missing",
@@ -2157,16 +2055,16 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "A.3.3 Déployer le protocole SPF pour tous les domaines",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna33"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna33",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf3": {
         "en": {
@@ -2175,15 +2073,15 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SPF-bad-path",
@@ -2191,169 +2089,169 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf4": {
         "en": {
             "tagName": "ALL-missing",
-            "guidance": "Record not terminated with \"-all\"",
+            "guidance": 'Record not terminated with "-all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.7 Default Results",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "ALL-missing",
-            "guidance": "Enregistrement non terminé par \"-all\"",
+            "guidance": 'Enregistrement non terminé par "-all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.7 Default Results (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf5": {
         "en": {
             "tagName": "ALL-allow",
-            "guidance": "Record terminated with insecure \"+all\"",
+            "guidance": 'Record terminated with insecure "+all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "ALL-allow",
-            "guidance": "Enregistrement terminé avec insecure \"+all\"",
+            "guidance": 'Enregistrement terminé avec insecure "+all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf6": {
         "en": {
             "tagName": "ALL-neutral",
-            "guidance": "Record terminated with insecure \"?all\"",
+            "guidance": 'Record terminated with insecure "?all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "ALL-neutral",
-            "guidance": "Enregistrement terminé avec insecure \"?all\"",
+            "guidance": 'Enregistrement terminé avec insecure "?all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf7": {
         "en": {
             "tagName": "ALL-softfail",
-            "guidance": "Record terminated with insecure \"~all\"",
+            "guidance": 'Record terminated with insecure "~all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "ALL-softfail",
-            "guidance": "Enregistrement terminé avec insecure \"~all\"",
+            "guidance": 'Enregistrement terminé avec insecure "~all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf8": {
         "en": {
             "tagName": "ALL-hardfail",
-            "guidance": "Record terminated with \"-all\"",
+            "guidance": 'Record terminated with "-all"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "ALL-hardfail",
@@ -2361,84 +2259,84 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf9": {
         "en": {
             "tagName": "ALL-redirect",
-            "guidance": "Record includes \"redirect\"",
+            "guidance": 'Record includes "redirect"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "ALL-redirect",
-            "guidance": "L'enregistrement comprend la \"redirect\"",
+            "guidance": 'L\'enregistrement comprend la "redirect"',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf10": {
         "en": {
             "tagName": "A-all",
-            "guidance": "\"a\" entry without hostname",
+            "guidance": '"a" entry without hostname',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 SPF Records",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 5.3 a",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "A-all",
-            "guidance": "Entrée \"a\" sans nom d'hôte",
+            "guidance": 'Entrée "a" sans nom d\'hôte',
             "refLinksGuide": [
                 {
                     "description": "B.1.1 Enregistrements SPF",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 5.3 a (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf11": {
         "en": {
@@ -2447,15 +2345,15 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1.3 DNS Lookup Limit",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "INCLUDE-limit",
@@ -2463,16 +2361,16 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "B.1.3 Limite de recherches DNS",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb13"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb13",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4",
                 }
-            ]
-        }
+            ],
+        },
     },
     "spf12": {
         "en": {
@@ -2481,15 +2379,15 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "Implementation Guidance: Email Domain Protection",
-                    "ref_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
+                    "ref_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SPF-valid",
@@ -2497,17 +2395,17 @@ spf_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "Directives de mise en œuvre - protection du domaine de courrier",
-                    "ref_link": "https://www.cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier"
+                    "ref_link": "https://www.cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3",
                 }
-            ]
-        }
-    }
+            ],
+        },
+    },
 }
 
 
@@ -2519,12 +2417,10 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "ITPIN 2018-01",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "SSL-GC",
@@ -2532,13 +2428,11 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "AMPTI 2018-01",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
+            "refLinksTechnical": [""],
+        },
     },
     "ssl2": {
         "en": {
@@ -2547,15 +2441,15 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "See ITSP.40.062 for approved cipher list",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SSL-missing",
@@ -2563,16 +2457,16 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Voir ITSP.40.062 pour la liste de chiffrement approuvée",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062",
                 }
-            ]
-        }
+            ],
+        },
     },
     "ssl3": {
         "en": {
@@ -2581,15 +2475,15 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.5 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "See ITSP.40.062 for approved cipher list",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SSL-rc4",
@@ -2597,16 +2491,16 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.5 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Voir ITSP.40.062 pour la liste de chiffrement approuvée",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062",
                 }
-            ]
-        }
+            ],
+        },
     },
     "ssl4": {
         "en": {
@@ -2615,15 +2509,15 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.5 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "See ITSP.40.062 for approved cipher list",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SSL-3des",
@@ -2631,16 +2525,16 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.5 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Voir ITSP.40.062 pour la liste de chiffrement approuvée",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062",
                 }
-            ]
-        }
+            ],
+        },
     },
     "ssl5": {
         "en": {
@@ -2649,15 +2543,15 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "See ITSP.40.062 for approved cipher list",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SSL-acceptable-certificate",
@@ -2665,16 +2559,16 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Voir ITSP.40.062 pour la liste de chiffrement approuvée",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062",
                 }
-            ]
-        }
+            ],
+        },
     },
     "ssl6": {
         "en": {
@@ -2683,15 +2577,15 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3/6.1.4/6.1.5 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "See ITSP.40.062 for approved cipher list",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "SSL-invalid-cipher",
@@ -2699,16 +2593,16 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3/6.1.4/6.1.5 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Voir ITSP.40.062 pour la liste de chiffrement approuvée",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062",
                 }
-            ]
-        }
+            ],
+        },
     },
     "ssl7": {
         "en": {
@@ -2717,15 +2611,15 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3/6.1.4 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "See ITSP.40.062 for approved cipher list",
-                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
                 }
-            ]
+            ],
         },
         "fr": {
             "tagName": "Vulnerability-heartbleed",
@@ -2733,16 +2627,16 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3/6.1.4 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
             "refLinksTechnical": [
                 {
                     "description": "Voir ITSP.40.062 pour la liste de chiffrement approuvée",
-                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062"
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062",
                 }
-            ]
-        }
+            ],
+        },
     },
     "ssl8": {
         "en": {
@@ -2751,12 +2645,10 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3/6.1.4 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
+            "refLinksTechnical": [""],
         },
         "fr": {
             "tagName": "Vulnerability-ccs-injection",
@@ -2764,12 +2656,10 @@ ssl_tag_data = {
             "refLinksGuide": [
                 {
                     "description": "6.1.3/6.1.4 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6",
                 }
             ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
-    }
+            "refLinksTechnical": [""],
+        },
+    },
 }

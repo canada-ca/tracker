@@ -96,7 +96,12 @@ def retrieve_guidance(
 
 
 def update_guidance(
-    guidance_data, host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS, port=DB_PORT
+    guidance_data,
+    host=DB_HOST,
+    name=DB_NAME,
+    user=DB_USER,
+    password=DB_PASS,
+    port=DB_PORT,
 ):
     logging.info(f"Updating guidance...")
 
@@ -188,7 +193,10 @@ def update_guidance(
                 elif criteria_updated:
                     db.collection("chartSummaryCriteria").update_match(
                         {"_key": criteria_type},
-                        {"pass": criteria.get("pass", []), "fail": criteria.get("fail", [])},
+                        {
+                            "pass": criteria.get("pass", []),
+                            "fail": criteria.get("fail", []),
+                        },
                     )
                     logging.info(f"Chart summary criteria {criteria_type} updated.")
                 else:

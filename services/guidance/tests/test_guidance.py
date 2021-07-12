@@ -27,7 +27,9 @@ def test_update_guidance():
     test_guidance.append({"file": "tags_spf.json", "guidance": spf_tag_data})
     test_guidance.append({"file": "tags_https.json", "guidance": https_tag_data})
     test_guidance.append({"file": "tags_ssl.json", "guidance": ssl_tag_data})
-    test_guidance.append({"file": "tags_aggregate.json", "guidance": aggregate_tag_data})
+    test_guidance.append(
+        {"file": "tags_aggregate.json", "guidance": aggregate_tag_data}
+    )
     update_guidance(
         test_guidance, host="testdb", name="test", user="", password="", port=8529
     )
