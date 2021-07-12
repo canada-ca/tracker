@@ -179,7 +179,7 @@ export function Dropdown({
 
   return (
     <Select {...props}>
-      <div className="dropdown">
+      <div className="dropdown" aria-pressed={open} aria-expanded={open}>
         <div className="selected-value">
           <label>
             <Stack flexDirection={['column', labelDirection]} align="center">
