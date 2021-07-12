@@ -1,0 +1,41 @@
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageRepository
+metadata:
+  name: scan-queue
+  namespace: flux-system
+spec:
+  image: gcr.io/track-compliance/services/scan-queue
+  interval: 1m0s
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageRepository
+metadata:
+  name: result-queue
+  namespace: flux-system
+spec:
+  image: gcr.io/track-compliance/services/result-queue
+  interval: 1m0s
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageRepository
+metadata:
+  name: ots-scan-queue
+  namespace: flux-system
+spec:
+  image: gcr.io/track-compliance/services/ots-scan-queue
+  interval: 1m0s
+  
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageRepository
+metadata:
+  name: ots-result-queue
+  namespace: flux-system
+spec:
+  image: gcr.io/track-compliance/services/ots-result-queue
+  interval: 1m0s
