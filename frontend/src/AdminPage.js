@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Stack, Text, useToast, Icon, Divider, Box } from '@chakra-ui/core'
+import { Stack, Text, useToast, Icon, Divider } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
@@ -74,24 +74,18 @@ export default function AdminPage() {
           <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
             <Trans>Welcome, Admin</Trans>
           </Text>
-
           <Stack flexDirection={['column', 'row']} align="center">
-            <label htmlFor="organization select">
-              <Text fontWeight="bold" fontSize="2xl" mr="4" mb={['0', '2']}>
-                <Trans>Organization: </Trans>
-              </Text>
-            </label>
-            <Box w={['100%', '50%']}>
-              <Dropdown
-                id="organization select"
-                options={options}
-                placeholder={t`Select an organization`}
-                onChange={(opt) => {
-                  setOrgDetails(opt.value)
-                  setSelectedOrg(opt.label)
-                }}
-              />
-            </Box>
+            <Dropdown
+              label={t`Organization: `}
+              labelDirection="row"
+              options={options}
+              placeholder={t`Select an organization`}
+              onChange={(opt) => {
+                setOrgDetails(opt.value)
+                setSelectedOrg(opt.label)
+              }}
+            />
+
             <TrackerButton
               ml={['0', 'auto']}
               w={['100%', 'auto']}

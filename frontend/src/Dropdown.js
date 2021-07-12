@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { array, func, string } from 'prop-types'
+import {
+  Stack,
+  Text,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from '@chakra-ui/core'
 
 const Select = styled.div`
   .dropdown {
@@ -83,19 +90,24 @@ const Select = styled.div`
     color: #222;
   }
 
-  .dropdown input:focus {
+  .dropdown .selected-value input:focus {
     border: 2px solid blue;
     color: #222;
   }
 `
 
-export function Dropdown({ options, placeholder, onChange, ...props }) {
+export function Dropdown({
+  label,
+  labelDirection,
+  options,
+  placeholder,
+  onChange,
+  ...props
+}) {
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const inputRef = useRef(null)
   const optionRefs = []
-
-  let inputElement
 
   useEffect(() => {
     document.addEventListener('click', close)
@@ -113,10 +125,6 @@ export function Dropdown({ options, placeholder, onChange, ...props }) {
     )
   }
 
-  function findFocus() {
-    return document.activeElement
-  }
-
   const setOptRef = (element) => {
     if (element !== null) {
       optionRefs.push(element)
@@ -124,7 +132,6 @@ export function Dropdown({ options, placeholder, onChange, ...props }) {
   }
 
   function handleInputOnKeyDown(e) {
-    inputElement = findFocus()
     switch (e.key) {
       case 'Enter':
         setOpen(!open)
@@ -150,20 +157,20 @@ export function Dropdown({ options, placeholder, onChange, ...props }) {
         onChange(option)
         setSearchTerm('')
         setOpen(false)
-        inputElement.focus()
+        inputRef.current.focus()
         break
       case 'Escape':
         setOpen(false)
-        inputElement.focus()
+        inputRef.current.focus()
         break
       case 'ArrowUp':
         e.preventDefault()
-        if (index === 0) inputElement.focus()
+        if (index === 0) inputRef.current.focus()
         else optionRefs[index - 1].focus()
         break
       case 'ArrowDown':
         e.preventDefault()
-        if (index + 1 >= optionRefs.length) inputElement.focus()
+        if (index + 1 >= optionRefs.length) inputRef.current.focus()
         else optionRefs[index + 1].focus()
         break
       default:
@@ -173,26 +180,37 @@ export function Dropdown({ options, placeholder, onChange, ...props }) {
   return (
     <Select {...props}>
       <div className="dropdown">
-        <div className="control">
-          <div className="selected-value">
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder={placeholder}
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value)
-              }}
-              onClick={close}
-              onKeyDown={handleInputOnKeyDown}
-            />
-          </div>
-          <div className={`arrow ${open ? 'open' : null}`} />
+        <div className="selected-value">
+          <label>
+            <Stack flexDirection={['column', labelDirection]} align="center">
+              <Text fontWeight="bold" fontSize="2xl" mr="4" mb="2">
+                {label}
+              </Text>
+              <InputGroup>
+                <Input
+                  w="100%"
+                  mb="2"
+                  ref={inputRef}
+                  type="text"
+                  placeholder={placeholder}
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value)
+                  }}
+                  onClick={close}
+                  onKeyDown={handleInputOnKeyDown}
+                />
+                <InputRightElement>
+                  <div className={`arrow ${open ? 'open' : null}`} />
+                </InputRightElement>
+              </InputGroup>
+            </Stack>
+          </label>
         </div>
         <div className={`options ${open ? 'open' : null}`}>
           {filter(options).map((option, idx) => (
             <div
-              tabIndex={-1}
+              tabIndex={0}
               key={option.value.id}
               className="option"
               onClick={() => {
@@ -213,6 +231,8 @@ export function Dropdown({ options, placeholder, onChange, ...props }) {
 }
 
 Dropdown.propTypes = {
+  label: string,
+  labelDirection: string,
   options: array,
   placeholder: string,
   onChange: func,
