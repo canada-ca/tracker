@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useSubscription, gql, useQuery } from '@apollo/client'
+import React from 'react'
+import { useSubscription } from '@apollo/client'
 import {
   DKIM_SCAN_DATA,
   DMARC_SCAN_DATA,
@@ -7,7 +7,7 @@ import {
   SPF_SCAN_DATA,
   SSL_SCAN_DATA,
 } from './graphql/subscriptions'
-import { Box, Heading, Text, useToast } from '@chakra-ui/core'
+import { Box, Heading, useToast } from '@chakra-ui/core'
 import { useUserVar } from './UserState'
 import { t } from '@lingui/macro'
 import {
@@ -24,7 +24,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
 
   const toast = useToast()
 
-  const { data: dkimData } = useSubscription(DKIM_SCAN_DATA, {
+  const { data: _dkimData } = useSubscription(DKIM_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
       client.cache.writeQuery({
@@ -37,7 +37,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
       })
     },
   })
-  const { data: dmarcData } = useSubscription(DMARC_SCAN_DATA, {
+  const { data: _dmarcData } = useSubscription(DMARC_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
       client.cache.writeQuery({
@@ -58,7 +58,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
       })
     },
   })
-  const { data: spfData } = useSubscription(SPF_SCAN_DATA, {
+  const { data: _spfData } = useSubscription(SPF_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
       client.cache.writeQuery({
@@ -71,7 +71,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
       })
     },
   })
-  const { data: sslData } = useSubscription(SSL_SCAN_DATA, {
+  const { data: _sslData } = useSubscription(SSL_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
       client.cache.writeQuery({
@@ -92,7 +92,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
       })
     },
   })
-  const { data: httpsData } = useSubscription(HTTPS_SCAN_DATA, {
+  const { data: _httpsData } = useSubscription(HTTPS_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
       client.cache.writeQuery({

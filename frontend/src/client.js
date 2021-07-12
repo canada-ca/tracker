@@ -5,7 +5,6 @@ import {
   InMemoryCache,
   makeVar,
   split,
-  gql,
 } from '@apollo/client'
 import {
   getMainDefinition,
@@ -14,7 +13,6 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { i18n } from '@lingui/core'
 import { WebSocketLink } from '@apollo/client/link/ws'
-import { READ_ONE_TIME_SCAN_GUIDANCE } from './graphql/queries'
 
 export function createCache() {
   return new InMemoryCache({

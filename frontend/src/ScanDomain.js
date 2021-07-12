@@ -22,28 +22,12 @@ import {
   useToast,
 } from '@chakra-ui/core'
 import { REQUEST_SCAN } from './graphql/mutations'
-import {
-  useApolloClient,
-  useMutation,
-  useQuery,
-  useSubscription,
-} from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string } from 'yup'
 import DomainField from './DomainField'
-import { DKIM_SCAN_DATA, DMARC_SCAN_DATA } from './graphql/subscriptions'
-import {
-  GET_ONE_TIME_DKIM_SCANS,
-  GET_ONE_TIME_DMARC_SCANS,
-  GET_ONE_TIME_HTTPS_SCANS,
-  GET_ONE_TIME_SCANS,
-  GET_ONE_TIME_SPF_SCANS,
-  GET_ONE_TIME_SSL_SCANS,
-} from './graphql/queries'
-import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackMessage } from './ErrorFallbackMessage'
-import ScanCard from './ScanCard'
+import { GET_ONE_TIME_SCANS } from './graphql/queries'
 import ScanCategoryDetails from './ScanCategoryDetails'
 
 export function ScanDomain() {
@@ -53,7 +37,6 @@ export function ScanDomain() {
       i18n._(fieldRequirements.domainUrl.required.message),
     ),
   })
-  const [requestSent, setRequestSent] = useState(false)
   const [openScanIndex, setOpenScanIndex] = useState(-1)
 
   const [requestScan, { loading }] = useMutation(REQUEST_SCAN, {
