@@ -16,3 +16,4 @@ resources:
 - summaries-registry.yaml
 - guidance-registry.yaml
 - super-admin-registry.yaml
+- queue-registries.yaml
