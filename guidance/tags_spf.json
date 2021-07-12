@@ -1,189 +1,403 @@
 {
     "spf1": {
-        "tagName": "SPF-GC",
-        "guidance": "Government of Canada domains subject to TBS guidelines",
-        "refLinksGuide": [
-            {
-                "description": "IT PIN",
-                "ref_link": ""
-            }
-        ],
-        "refLinksTechnical": [""]
+        "en": {
+            "tagName": "SPF-GC",
+            "guidance": "Government of Canada domains subject to TBS guidelines",
+            "refLinksGuide": [
+                {
+                    "description": "IT PIN",
+                    "ref_link": ""
+                }
+            ],
+            "refLinksTechnical": [
+                ""
+            ]
+        },
+        "fr": {
+            "tagName": "SPF-GC",
+            "guidance": "Les domaines du gouvernement du Canada sont soumis aux directives du SCT",
+            "refLinksGuide": [
+                {
+                    "description": "AMPTI"
+                }
+            ],
+            "refLinksTechnical": [
+                ""
+            ]
+        }
     },
     "spf2": {
-        "tagName": "SPF-missing",
-        "guidance": "Follow implementation guide",
-        "refLinksGuide": [
-            {
-                "description": "A.3.3 Deploy SPF for All Domains",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 3 SPF Records",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
-            }
-        ]
+        "en": {
+            "tagName": "SPF-missing",
+            "guidance": "Follow implementation guide",
+            "refLinksGuide": [
+                {
+                    "description": "A.3.3 Deploy SPF for All Domains",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 3 SPF Records",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "SPF-missing",
+            "guidance": "Suivre le guide de mise en œuvre",
+            "refLinksGuide": [
+                {
+                    "description": "A.3.3 Déployer le protocole SPF pour tous les domaines",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna33"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                }
+            ]
+        }
     },
     "spf3": {
-        "tagName": "SPF-bad-path",
-        "guidance": "SPF implemented in incorrect subdomain",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 3 SPF Records",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
-            }
-        ]
+        "en": {
+            "tagName": "SPF-bad-path",
+            "guidance": "SPF implemented in incorrect subdomain",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 3 SPF Records",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "SPF-bad-path",
+            "guidance": "SPF implémenté dans un sous-domaine incorrect",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                }
+            ]
+        }
     },
     "spf4": {
-        "tagName": "ALL-missing",
-        "guidance": "Record not terminated with \"-all\"",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 4.7 Default Results",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
-            }
-        ]
+        "en": {
+            "tagName": "ALL-missing",
+            "guidance": "Record not terminated with \"-all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.7 Default Results",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "ALL-missing",
+            "guidance": "Enregistrement non terminé par \"-all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.7 Default Results (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+                }
+            ]
+        }
     },
     "spf5": {
-        "tagName": "ALL-allow",
-        "guidance": "Record terminated with insecure \"+all\"",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
-            }
-        ]
+        "en": {
+            "tagName": "ALL-allow",
+            "guidance": "Record terminated with insecure \"+all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "ALL-allow",
+            "guidance": "Enregistrement terminé avec insecure \"+all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        }
     },
     "spf6": {
-        "tagName": "ALL-neutral",
-        "guidance": "Record terminated with insecure \"?all\"",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
-            }
-        ]
+        "en": {
+            "tagName": "ALL-neutral",
+            "guidance": "Record terminated with insecure \"?all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "ALL-neutral",
+            "guidance": "Enregistrement terminé avec insecure \"?all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        }
     },
     "spf7": {
-        "tagName": "ALL-softfail",
-        "guidance": "Record terminated with insecure \"~all\"",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
-            }
-        ]
+        "en": {
+            "tagName": "ALL-softfail",
+            "guidance": "Record terminated with insecure \"~all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "ALL-softfail",
+            "guidance": "Enregistrement terminé avec insecure \"~all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        }
     },
     "spf8": {
-        "tagName": "ALL-hardfail",
-        "guidance": "Record terminated with \"-all\"",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
-            }
-        ]
+        "en": {
+            "tagName": "ALL-hardfail",
+            "guidance": "Record terminated with \"-all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "ALL-hardfail",
+            "guidance": "L'enregistrement s'est terminé par \"-all\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+                }
+            ]
+        }
     },
     "spf9": {
-        "tagName": "ALL-redirect",
-        "guidance": "Record includes \"redirect\"",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
-            }
-        ]
+        "en": {
+            "tagName": "ALL-redirect",
+            "guidance": "Record includes \"redirect\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "ALL-redirect",
+            "guidance": "L'enregistrement comprend la \"redirect\"",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+                }
+            ]
+        }
     },
     "spf10": {
-        "tagName": "A-all",
-        "guidance": "\"a\" entry without hostname",
-        "refLinksGuide": [
-            {
-                "description": "B.1.1 SPF Records",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 5.3 a",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
-            }
-        ]
+        "en": {
+            "tagName": "A-all",
+            "guidance": "\"a\" entry without hostname",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 SPF Records",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 5.3 a",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "A-all",
+            "guidance": "Entrée \"a\" sans nom d'hôte",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.1 Enregistrements SPF",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 5.3 a (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+                }
+            ]
+        }
     },
     "spf11": {
-        "tagName": "INCLUDE-limit",
-        "guidance": "More than 10 lookups -- Follow implementation guide",
-        "refLinksGuide": [
-            {
-                "description": "B.1.3 DNS Lookup Limit",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
-            }
-        ]
+        "en": {
+            "tagName": "INCLUDE-limit",
+            "guidance": "More than 10 lookups -- Follow implementation guide",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.3 DNS Lookup Limit",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "INCLUDE-limit",
+            "guidance": "Plus de 10 lookups -- Suivre le guide d'implémentation",
+            "refLinksGuide": [
+                {
+                    "description": "B.1.3 Limite de recherches DNS",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb13"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+                }
+            ]
+        }
     },
     "spf12": {
-        "tagName": "SPF-valid",
-        "guidance": "SPF record is properly formed",
-        "refLinksGuide": [
-            {
-                "description": "Implementation Guidance: Email Domain Protection",
-                "ref_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
-            }
-        ],
-        "refLinksTechnical": [
-            {
-                "description": "RFC 7208 (SPF), 3 SPF Records",
-                "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
-            }
-        ]
+        "en": {
+            "tagName": "SPF-valid",
+            "guidance": "SPF record is properly formed",
+            "refLinksGuide": [
+                {
+                    "description": "Implementation Guidance: Email Domain Protection",
+                    "ref_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 3 SPF Records",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "SPF-valid",
+            "guidance": "L'enregistrement SPF est correctement formé",
+            "refLinksGuide": [
+                {
+                    "description": "Directives de mise en œuvre - protection du domaine de courrier",
+                    "ref_link": "https://www.cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
+                    "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+                }
+            ]
+        }
     }
 }
