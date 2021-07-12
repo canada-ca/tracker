@@ -47,10 +47,15 @@ export function GuidanceTagList({
             }
             pb="1"
           >
-            <GuidanceTagDetails
-              guidanceTag={guidanceTag.node}
-              tagType={tagType}
-            />
+            {guidanceTag.node ? (
+              <GuidanceTagDetails
+                guidanceTag={guidanceTag.node}
+                tagType={tagType}
+              />
+            ) : (
+              <GuidanceTagDetails guidanceTag={guidanceTag} tagType={tagType} />
+            )}
+
             {
               // Add divider if next entry exists
               tagList[index + 1] && <Divider borderColor="gray.700" />

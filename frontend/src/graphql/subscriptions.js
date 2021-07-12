@@ -7,6 +7,7 @@ export const DKIM_SCAN_DATA = gql`
       domain {
         domain
       }
+      status
       results {
         selector
         record
@@ -63,6 +64,8 @@ export const DMARC_SCAN_DATA = gql`
       domain {
         domain
       }
+      status
+      dmarcPhase
       record
       pPolicy
       spPolicy
@@ -117,6 +120,7 @@ export const SPF_SCAN_DATA = gql`
       domain {
         domain
       }
+      status
       lookups
       record
       spfDefault
@@ -171,6 +175,7 @@ export const HTTPS_SCAN_DATA = gql`
       domain {
         domain
       }
+      status
       implementation
       enforced
       hsts
@@ -226,6 +231,7 @@ export const SSL_SCAN_DATA = gql`
       domain {
         domain
       }
+      status
       acceptableCiphers
       acceptableCurves
       ccsInjectionVulnerable

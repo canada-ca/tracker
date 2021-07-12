@@ -148,6 +148,15 @@ const mocks = {
       totalCount: numberOfEdges,
     }
   },
+  DmarcSub: () => {
+    return {
+      dmarcPhase: faker.helpers.randomize([
+        'maintain',
+        'deploy',
+        'not implemented',
+      ]),
+    }
+  },
   DmarcSummaryConnection: () => {
     const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
     return {

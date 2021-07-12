@@ -5,6 +5,10 @@ import { TrackerButton } from './TrackerButton'
 import { Formik } from 'formik'
 import {
   Box,
+  Heading,
+  Icon,
+  Spinner,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -36,6 +40,7 @@ import {
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import ScanCard from './ScanCard'
+import ScanCategoryDetails from './ScanCategoryDetails'
 
 export function ScanDomain() {
   const toast = useToast()
@@ -119,6 +124,33 @@ export function ScanDomain() {
 
   // TODO: Create list of collapsable scan detail cards
 
+  console.log({ mergedScans })
+
+  const dmarcSteps = {
+    assess: [
+      t`Identify all domains and subdomains used to send mail;`,
+      t`Assess current state;`,
+      t`Deploy initial DMARC records with policy of none; and`,
+      t`Collect and analyze DMARC reports.`,
+    ],
+    deploy: [
+      t`Identify all authorized senders;`,
+      t`Deploy SPF records for all domains;`,
+      t`Deploy DKIM records and keys for all domains and senders; and`,
+      t`Monitor DMARC reports and correct misconfigurations.`,
+    ],
+    enforce: [
+      t`Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);`,
+      t`Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and`,
+      t`Reject all messages from non-mail domains.`,
+    ],
+    maintain: [
+      t`Monitor DMARC reports;`,
+      t`Correct misconfigurations and update records as required; and`,
+      t`Rotate DKIM keys annually.`,
+    ],
+  }
+
   return (
     <Box px="2" mx="auto" overflow="hidden">
       <Formik
@@ -161,32 +193,195 @@ export function ScanDomain() {
           )
         }}
       </Formik>
-      <Tabs isFitted>
-        <TabList mb="4">
-          <Tab>
-            <Trans>Web Guidance</Trans>
-          </Tab>
-          <Tab>
-            <Trans>Email Guidance</Trans>
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <ScanCard scanType="web" scanData={webScan} status={webStatus} />
-            </ErrorBoundary>
-          </TabPanel>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <ScanCard
-                scanType="email"
-                scanData={emailScan}
-                status={dmarcPhase}
-              />
-            </ErrorBoundary>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      <Stack>
+        {mergedScans.map((mergedScan, index) => {
+          return (
+            <Tabs key={`one-time-scan-index:${index}`} isFitted>
+              <TabList mb="4">
+                <Tab>
+                  <Trans>Web Guidance</Trans>
+                </Tab>
+                <Tab>
+                  <Trans>Email Guidance</Trans>
+                </Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <Box
+                    bg="white"
+                    rounded="lg"
+                    overflow="hidden"
+                    boxShadow="medium"
+                    pb="1"
+                  >
+                    <Box bg="primary" color="gray.50">
+                      <Stack px="3" py="1">
+                        <Heading as="h1" size="lg">
+                          <Trans>Web Scan Results</Trans>
+                        </Heading>
+                        <Text fontSize={['md', 'lg']}>
+                          <Trans>
+                            Results for scans of web technologies (SSL, HTTPS).
+                          </Trans>
+                        </Text>
+                      </Stack>
+                    </Box>
+                    <Box>
+                      <Stack spacing="30px" px="1" mt="1">
+                        <Box pb="1">
+                          {mergedScan.scan.https && mergedScan.scan.ssl ? (
+                            mergedScan.scan.https.status === 'PASS' &&
+                            mergedScan.scan.ssl.status === 'PASS' ? (
+                              <Stack isInline align="center" px="2">
+                                <Icon
+                                  name="check-circle"
+                                  color="strong"
+                                  size="icons.md"
+                                />
+                                <Text fontWeight="bold" fontSize="2xl">
+                                  <Trans>ITPIN Compliant</Trans>
+                                </Text>
+                              </Stack>
+                            ) : (
+                              <Stack isInline align="center" px="2">
+                                <Icon
+                                  name="warning-2"
+                                  color="moderate"
+                                  size="icons.md"
+                                />
+                                <Text fontWeight="bold" fontSize="2xl">
+                                  <Trans>
+                                    Changes Required for ITPIN Compliance
+                                  </Trans>
+                                </Text>
+                              </Stack>
+                            )
+                          ) : (
+                            <Stack isInline align="center" px="2">
+                              <Spinner color="accent" size="icons.md" />
+                              <Text fontWeight="bold" fontSize="2xl">
+                                <Trans>Loading Compliance Status</Trans>
+                              </Text>
+                            </Stack>
+                          )}
+                        </Box>
+                        {mergedScan?.scan.https && (
+                          <ScanCategoryDetails
+                            categoryName="https"
+                            categoryData={mergedScan.scan.https}
+                          />
+                        )}
+                        {mergedScan?.scan.ssl && (
+                          <ScanCategoryDetails
+                            categoryName="ssl"
+                            categoryData={mergedScan.scan.ssl}
+                          />
+                        )}
+                      </Stack>
+                    </Box>
+                  </Box>
+                </TabPanel>
+
+                <TabPanel>
+                  <Box
+                    bg="white"
+                    rounded="lg"
+                    overflow="hidden"
+                    boxShadow="medium"
+                    pb="1"
+                  >
+                    <Box bg="primary" color="gray.50">
+                      <Stack px="3" py="1">
+                        <Heading as="h1" size="lg">
+                          <Trans>Email Scan Results</Trans>
+                        </Heading>
+                        <Text fontSize={['md', 'lg']}>
+                          <Trans>
+                            Results for scans of email technologies (DMARC, SPF,
+                            DKIM).
+                          </Trans>
+                        </Text>
+                      </Stack>
+                    </Box>
+                    <Box>
+                      <Stack spacing="30px" px="1" mt="1">
+                        <Box pb="1">
+                          {mergedScan.scan.dmarc ? (
+                            <Box pb="1">
+                              <Stack isInline align="center" px="2">
+                                <Text fontWeight="bold" fontSize="2xl">
+                                  <Trans>
+                                    DMARC Implementation Phase:{' '}
+                                    {mergedScan.scan.dmarc.dmarcPhase
+                                      ? mergedScan.scan.dmarc.dmarcPhase.toUpperCase()
+                                      : 'UNKNOWN'}
+                                  </Trans>
+                                </Text>
+                              </Stack>
+                              {mergedScan.scan.dmarc.dmarcPhase &&
+                                mergedScan.scan.dmarc.dmarcPhase !==
+                                  'not implemented' && (
+                                  <Box bg="gray.100" px="2" py="1">
+                                    {dmarcSteps[
+                                      mergedScan.scan.dmarc.dmarcPhase
+                                    ].map((step, index) => (
+                                      <Text key={index}>
+                                        {index + 1}. {step}
+                                      </Text>
+                                    ))}
+                                  </Box>
+                                )}
+                            </Box>
+                          ) : (
+                            <Stack isInline align="center" px="2">
+                              <Spinner color="accent" size="icons.md" />
+                              <Text fontWeight="bold" fontSize="2xl">
+                                <Trans>Loading DMARC Phase</Trans>
+                              </Text>
+                            </Stack>
+                          )}
+                        </Box>
+                        {mergedScan?.scan.dkim && (
+                          <ScanCategoryDetails
+                            categoryName="dkim"
+                            categoryData={mergedScan.scan.dkim}
+                          />
+                        )}
+                        {mergedScan?.scan.dmarc && (
+                          <ScanCategoryDetails
+                            categoryName="dmarc"
+                            categoryData={mergedScan.scan.dmarc}
+                          />
+                        )}
+                        {mergedScan?.scan.spf && (
+                          <ScanCategoryDetails
+                            categoryName="spf"
+                            categoryData={mergedScan.scan.spf}
+                          />
+                        )}
+                      </Stack>
+                    </Box>
+                  </Box>
+                </TabPanel>
+                {/*<TabPanel>*/}
+                {/*  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>*/}
+                {/*    <ScanCard scanType="web" scanData={webScan} status={webStatus} />*/}
+                {/*  </ErrorBoundary>*/}
+                {/*</TabPanel>*/}
+                {/*<TabPanel>*/}
+                {/*  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>*/}
+                {/*    <ScanCard*/}
+                {/*      scanType="email"*/}
+                {/*      scanData={emailScan}*/}
+                {/*      status={dmarcPhase}*/}
+                {/*    />*/}
+                {/*  </ErrorBoundary>*/}
+                {/*</TabPanel>*/}
+              </TabPanels>
+            </Tabs>
+          )
+        })}
+      </Stack>
     </Box>
   )
 }

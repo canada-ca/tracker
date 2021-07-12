@@ -121,8 +121,8 @@ export const getTypeNames = () => gql`
 
     # Query used to check if the user has an admin role.
     isUserAdmin(
-      # The organization that you want to check for admin permissions on.
-      orgId: ID!
+      # Optional org id to see if user is an admin for the requested org.
+      orgId: ID
     ): Boolean
 
     # Query used to check if the user has a super admin role.
@@ -2515,6 +2515,9 @@ export const getTypeNames = () => gql`
     # able to sign-up and be assigned to that organization in one mutation.
     inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
 
+    # This mutation allows users to leave a given organization.
+    leaveOrganization(input: LeaveOrganizationInput!): LeaveOrganizationPayload
+
     # This mutation allows admins or higher to remove users from any organizations they belong to.
     removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
 
@@ -2640,6 +2643,27 @@ export const getTypeNames = () => gql`
 
     # The language in which the email will be sent in.
     preferredLang: LanguageEnums!
+    clientMutationId: String
+  }
+
+  type LeaveOrganizationPayload {
+    # \`LeaveOrganizationUnion\` resolving to either a \`LeaveOrganizationResult\` or \`AffiliationError\`.
+    result: LeaveOrganizationUnion
+    clientMutationId: String
+  }
+
+  # This union is used with the \`leaveOrganization\` mutation, allowing for users to leave a given organization, and support any errors that may occur.
+  union LeaveOrganizationUnion = AffiliationError | LeaveOrganizationResult
+
+  # This object is used to inform the user that they successful left a given organization.
+  type LeaveOrganizationResult {
+    # Status message confirming the user left the org.
+    status: String
+  }
+
+  input LeaveOrganizationInput {
+    # Id of the organization the user is looking to leave.
+    orgId: ID!
     clientMutationId: String
   }
 
@@ -3396,6 +3420,9 @@ export const getTypeNames = () => gql`
     # The domain the scan was ran on.
     domain: Domain
 
+    # The success status of the scan.
+    status: StatusEnum
+
     # Individual scans results for each dkim selector.
     results: [DkimResultSub]
   }
@@ -3432,6 +3459,12 @@ export const getTypeNames = () => gql`
     # The domain the scan was ran on.
     domain: Domain
 
+    # The current dmarc phase the domain is compliant to.
+    dmarcPhase: String
+
+    # The success status of the scan.
+    status: StatusEnum
+
     # DMARC record retrieved during scan.
     record: String
 
@@ -3467,6 +3500,9 @@ export const getTypeNames = () => gql`
     # The domain the scan was ran on.
     domain: Domain
 
+    # The success status of the scan.
+    status: StatusEnum
+
     # The amount of DNS lookups.
     lookups: Int
 
@@ -3496,6 +3532,9 @@ export const getTypeNames = () => gql`
 
     # The domain the scan was ran on.
     domain: Domain
+
+    # The success status of the scan.
+    status: StatusEnum
 
     # State of the HTTPS implementation on the server and any issues therein.
     implementation: String
@@ -3532,6 +3571,9 @@ export const getTypeNames = () => gql`
 
     # The domain the scan was ran on.
     domain: Domain
+
+    # The success status of the scan.
+    status: StatusEnum
 
     # List of ciphers in use by the server deemed to be "acceptable".
     acceptableCiphers: [String]

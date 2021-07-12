@@ -23,22 +23,49 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
       </Text>
     )
 
+  console.log({ categoryData })
+
   const tagDetails =
     categoryName === 'dkim' ? (
-      categoryData.results.edges.map(({ node }, idx) => (
-        <GuidanceTagList
-          negativeTags={node.negativeGuidanceTags.edges}
-          positiveTags={node.positiveGuidanceTags.edges}
-          neutralTags={node.neutralGuidanceTags.edges}
-          selector={node.selector}
-          key={categoryName + idx}
-        />
-      ))
-    ) : (
+      categoryData.results.edges ? (
+        categoryData.results.edges.map(({ node }, idx) => {
+          console.log({ node })
+          return (
+            <GuidanceTagList
+              negativeTags={node.negativeGuidanceTags.edges}
+              positiveTags={node.positiveGuidanceTags.edges}
+              neutralTags={node.neutralGuidanceTags.edges}
+              selector={node.selector}
+              key={categoryName + idx}
+            />
+          )
+        })
+      ) : (
+        categoryData.results.map((result, idx) => {
+          return (
+            <GuidanceTagList
+              negativeTags={result.negativeGuidanceTags}
+              positiveTags={result.positiveGuidanceTags}
+              neutralTags={result.neutralGuidanceTags}
+              selector={result.selector}
+              key={categoryName + idx}
+            />
+          )
+        })
+      )
+    ) : categoryData.negativeGuidanceTags.__typename ===
+      'GuidanceTagConnection' ? (
       <GuidanceTagList
         negativeTags={categoryData.negativeGuidanceTags.edges}
         positiveTags={categoryData.positiveGuidanceTags.edges}
         neutralTags={categoryData.neutralGuidanceTags.edges}
+        key={categoryName}
+      />
+    ) : (
+      <GuidanceTagList
+        negativeTags={categoryData.negativeGuidanceTags}
+        positiveTags={categoryData.positiveGuidanceTags}
+        neutralTags={categoryData.neutralGuidanceTags}
         key={categoryName}
       />
     )
