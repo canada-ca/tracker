@@ -187,6 +187,10 @@ msgstr "Les mots de passe ne correspondent pas."
 msgid "Permission Denied: Could not retrieve specified organization."
 msgstr "Permission refusée : Impossible de récupérer l'organisation spécifiée."
 
+#: src/affiliation/mutations/transfer-org-ownership.js:95
+msgid "Permission Denied: Please contact org owner to transfer ownership."
+msgstr "Permission refusée : Veuillez contacter le propriétaire de l'org pour transférer la propriété."
+
 #: src/domain/mutations/remove-domain.js:109
 msgid "Permission Denied: Please contact organization admin for help with removing domain."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine."
@@ -383,6 +387,10 @@ msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisatio
 #: src/user/mutations/sign-out.js:25
 msgid "Successfully signed out."
 msgstr "J'ai réussi à me déconnecter."
+
+#: src/affiliation/mutations/transfer-org-ownership.js:224
+msgid "Successfully transfer org: {0} ownership to user: {1}"
+msgstr "Transfert réussi de org : {0} à l'utilisateur : {1}"
 
 #: src/organization/mutations/verify-organization.js:157
 msgid "Successfully verified organization: {0}."
@@ -885,6 +893,29 @@ msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organ
 #: src/user/mutations/sign-up.js:242
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
+
+#: src/affiliation/mutations/transfer-org-ownership.js:131
+#: src/affiliation/mutations/transfer-org-ownership.js:178
+#: src/affiliation/mutations/transfer-org-ownership.js:202
+#: src/affiliation/mutations/transfer-org-ownership.js:214
+msgid "Unable to transfer organization ownership. Please try again."
+msgstr "Impossible de transférer la propriété de l'organisation. Veuillez réessayer."
+
+#: src/affiliation/mutations/transfer-org-ownership.js:78
+msgid "Unable to transfer ownership of a verified organization."
+msgstr "Impossible de transférer la propriété d'une organisation vérifiée."
+
+#: src/affiliation/mutations/transfer-org-ownership.js:112
+msgid "Unable to transfer ownership of an org to an undefined user."
+msgstr "Impossible de transférer la propriété d'un org à un utilisateur non défini."
+
+#: src/affiliation/mutations/transfer-org-ownership.js:65
+msgid "Unable to transfer ownership of undefined organization."
+msgstr "Impossible de transférer la propriété d'une organisation non définie."
+
+#: src/affiliation/mutations/transfer-org-ownership.js:144
+msgid "Unable to transfer ownership to a user outside the org. Please invite the user and try again."
+msgstr "Impossible de transférer la propriété à un utilisateur extérieur à l'org. Veuillez inviter l'utilisateur et réessayer."
 
 #: src/user/mutations/verify-phone-number.js:92
 #: src/user/mutations/verify-phone-number.js:103
