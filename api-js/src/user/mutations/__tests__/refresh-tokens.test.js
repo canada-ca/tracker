@@ -145,7 +145,7 @@ describe('refresh users tokens', () => {
           httpOnly: true,
           expires: 0,
           sameSite: true,
-          secure: false,
+          secure: true,
         })
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully refreshed their tokens.`,
@@ -248,7 +248,7 @@ describe('refresh users tokens', () => {
           httpOnly: true,
           maxAge: 86400000,
           sameSite: true,
-          secure: false,
+          secure: true,
         })
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully refreshed their tokens.`,

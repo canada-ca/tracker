@@ -377,7 +377,7 @@ describe('authenticate user account', () => {
                 httpOnly: true,
                 expires: 0,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([
@@ -474,7 +474,7 @@ describe('authenticate user account', () => {
                 httpOnly: true,
                 maxAge: 86400000,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([
@@ -1672,7 +1672,7 @@ describe('authenticate user account', () => {
                 httpOnly: true,
                 expires: 0,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([
@@ -1769,7 +1769,7 @@ describe('authenticate user account', () => {
                 httpOnly: true,
                 maxAge: 86400000,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([
