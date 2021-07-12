@@ -6,6 +6,7 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ dmarcGuidanceTags, after, before, first, last, orderBy }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -18,17 +19,19 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(dmarcGuidanceTags, ${afterId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(dmarcGuidanceTags, ${afterId})._key`
+          documentField = aql`afterVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(dmarcGuidanceTags, ${afterId}).tagName`
+          documentField = aql`afterVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(dmarcGuidanceTags, ${afterId}).guidance`
+          documentField = aql`afterVar.guidance`
         }
 
         afterTemplate = aql`
@@ -40,6 +43,7 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -52,17 +56,19 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(dmarcGuidanceTags, ${beforeId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(dmarcGuidanceTags, ${beforeId})._key`
+          documentField = aql`beforeVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(dmarcGuidanceTags, ${beforeId}).tagName`
+          documentField = aql`beforeVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(dmarcGuidanceTags, ${beforeId}).guidance`
+          documentField = aql`beforeVar.guidance`
         }
 
         beforeTemplate = aql`
@@ -196,6 +202,10 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
     try {
       dmarcGuidanceTagInfoCursor = await query`
       WITH dmarcGuidanceTags
+
+      ${afterVar}
+      ${beforeVar}
+      
       LET retrievedDmarcGuidanceTags = (
         FOR tag IN dmarcGuidanceTags
           FILTER tag._key IN ${dmarcGuidanceTags}

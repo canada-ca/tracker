@@ -132,7 +132,7 @@ describe('removing a user from an organization', () => {
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
 
-  beforeEach(async () => {
+  beforeEach(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -153,7 +153,7 @@ describe('removing a user from an organization', () => {
             user,
             affiliation
 
-          beforeEach(async () => {
+          beforeAll(async () => {
             ;({ query, drop, truncate, collections, transaction } =
               await ensure({
                 type: 'database',
@@ -162,6 +162,8 @@ describe('removing a user from an organization', () => {
                 rootPassword: rootPass,
                 options: databaseOptions({ rootPass }),
               }))
+          })
+          beforeEach(async () => {
             orgOne = await collections.organizations.save(orgOneData)
             orgTwo = await collections.organizations.save(orgTwoData)
             admin = await collections.users.save(adminData)
@@ -371,7 +373,7 @@ describe('removing a user from an organization', () => {
             user,
             affiliation
 
-          beforeEach(async () => {
+          beforeAll(async () => {
             ;({ query, drop, truncate, collections, transaction } =
               await ensure({
                 type: 'database',
@@ -380,6 +382,8 @@ describe('removing a user from an organization', () => {
                 rootPassword: rootPass,
                 options: databaseOptions({ rootPass }),
               }))
+          })
+          beforeEach(async () => {
             orgOne = await collections.organizations.save(orgOneData)
             orgTwo = await collections.organizations.save(orgTwoData)
             admin = await collections.users.save(adminData)
@@ -590,7 +594,7 @@ describe('removing a user from an organization', () => {
             user,
             affiliation
 
-          beforeEach(async () => {
+          beforeAll(async () => {
             ;({ query, drop, truncate, collections, transaction } =
               await ensure({
                 type: 'database',
@@ -599,6 +603,8 @@ describe('removing a user from an organization', () => {
                 rootPassword: rootPass,
                 options: databaseOptions({ rootPass }),
               }))
+          })
+          beforeEach(async () => {
             orgOne = await collections.organizations.save(orgOneData)
             admin = await collections.users.save(adminData)
             user = await collections.users.save(userData)
@@ -800,7 +806,7 @@ describe('removing a user from an organization', () => {
       describe('org is not found', () => {
         let query, drop, truncate, collections, transaction, admin, user
 
-        beforeEach(async () => {
+        beforeAll(async () => {
           ;({ query, drop, truncate, collections, transaction } = await ensure({
             type: 'database',
             name: 'org_not_found_' + dbNameFromFile(__filename),
@@ -808,7 +814,8 @@ describe('removing a user from an organization', () => {
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
           }))
-
+        })
+        beforeEach(async () => {
           admin = await collections.users.save(adminData)
           user = await collections.users.save(userData)
         })
@@ -1553,7 +1560,7 @@ describe('removing a user from an organization', () => {
           user,
           mockedQuery
 
-        beforeEach(async () => {
+        beforeAll(async () => {
           ;({ query, drop, truncate, collections, transaction } = await ensure({
             type: 'database',
             name: 'ck_user_perms_' + dbNameFromFile(__filename),
@@ -1561,7 +1568,8 @@ describe('removing a user from an organization', () => {
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
           }))
-
+        })
+        beforeEach(async () => {
           orgOne = await collections.organizations.save(orgOneData)
           orgTwo = await collections.organizations.save(orgTwoData)
           admin = await collections.users.save(adminData)
@@ -1687,7 +1695,7 @@ describe('removing a user from an organization', () => {
           user,
           mockedTransaction
 
-        beforeEach(async () => {
+        beforeAll(async () => {
           ;({ query, drop, truncate, collections } = await ensure({
             type: 'database',
             name: 'running_txn_' + dbNameFromFile(__filename),
@@ -1695,7 +1703,8 @@ describe('removing a user from an organization', () => {
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
           }))
-
+        })
+        beforeEach(async () => {
           orgOne = await collections.organizations.save(orgOneData)
           orgTwo = await collections.organizations.save(orgTwoData)
           admin = await collections.users.save(adminData)
@@ -1819,7 +1828,7 @@ describe('removing a user from an organization', () => {
           user,
           mockedTransaction
 
-        beforeEach(async () => {
+        beforeAll(async () => {
           ;({ query, drop, truncate, collections } = await ensure({
             type: 'database',
             name: 'commit_txn_' + dbNameFromFile(__filename),
@@ -1827,7 +1836,8 @@ describe('removing a user from an organization', () => {
             rootPassword: rootPass,
             options: databaseOptions({ rootPass }),
           }))
-
+        })
+        beforeEach(async () => {
           orgOne = await collections.organizations.save(orgOneData)
           orgTwo = await collections.organizations.save(orgTwoData)
           admin = await collections.users.save(adminData)

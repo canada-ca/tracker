@@ -16,6 +16,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadDmarcGuidanceTagByTagId } from '../../../guidance-tag/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,10 @@ describe('given the dmarcScanData subscription', () => {
     dmarcScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain,
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -47,6 +51,7 @@ describe('given the dmarcScanData subscription', () => {
     }
 
     dmarcScan = {
+      phase: 'deploy',
       record: 'record',
       pPolicy: 'pPolicy',
       spPolicy: 'spPolicy',
@@ -95,6 +100,12 @@ describe('given the dmarcScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
+    sharedId = 'some-shared-id'
+    status = 'pass'
   })
 
   afterEach(async () => {
@@ -127,7 +138,12 @@ describe('given the dmarcScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${DMARC_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(dmarcScan),
+                    JSON.stringify({
+                      sharedId: sharedId,
+                      domainKey: domain._key,
+                      status: status,
+                      results: dmarcScan,
+                    }),
                   )
                 },
               )
@@ -164,6 +180,11 @@ describe('given the dmarcScanData subscription', () => {
       parse(`
       subscription {
         dmarcScanData {
+          sharedId
+          domain {
+            domain
+          }
+          status
           dmarcPhase
           record
           pPolicy
@@ -222,6 +243,7 @@ describe('given the dmarcScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
             query,
             userKey: '1',
@@ -237,6 +259,12 @@ describe('given the dmarcScanData subscription', () => {
     const expectedResult = {
       data: {
         dmarcScanData: {
+          sharedId: sharedId,
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
+          status: status.toUpperCase(),
+          dmarcPhase: 'deploy',
           record: 'record',
           pPolicy: 'pPolicy',
           spPolicy: 'spPolicy',

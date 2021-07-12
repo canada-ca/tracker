@@ -4,10 +4,14 @@ metadata:
   name: scan-job
 spec:
   template:
+    metadata:
+      labels:
+        app: scanners
+        role: scan-job
     spec:
       containers:
       - name: scan
-        image: gcr.io/track-compliance/services/autoscan:master-05b22b2-1615242767
+        image: gcr.io/track-compliance/services/autoscan:master-b0e6547-1625576840 # {"$imagepolicy": "flux-system:autoscan"}
         env:
         - name: DB_USER
           valueFrom:

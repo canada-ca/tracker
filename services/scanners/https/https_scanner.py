@@ -7,63 +7,70 @@ import json
 import emoji
 import traceback
 import asyncio
-import signal
 import datetime as dt
+from ctypes import c_char_p
+from multiprocessing import Process, Queue
 from scan import https
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
-from starlette.responses import PlainTextResponse, JSONResponse
+from starlette.responses import Response
+from starlette.middleware.errors import ServerErrorMiddleware
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 MIN_HSTS_AGE = 31536000  # one year
+TIMEOUT = 80  # 80 second scan timeout
+RES_QUEUE = Queue()
 
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
 )
+OTS_QUEUE_URL = os.getenv(
+    "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
+)
+DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
 
 
-def dispatch_results(payload, client):
-    client.post(QUEUE_URL + "/https", json=payload)
+class ScanTimeoutException(BaseException):
+    pass
+
+
+def dispatch_results(payload, client, ots):
+    client.post(DEST_URL(ots) + "/https", json=json.dumps(payload))
     logging.info("Scan results dispatched to result queue")
 
 
 def scan_https(domain):
     try:
         # Run https-scanner
-        res_dict = https.run([domain])
-
-        # Return scan results for the designated domain
-        return res_dict[domain]
+        RES_QUEUE.put(https.run([domain]).get(domain))
     except Exception as e:
         logging.error(f"An error occurred while scanning domain: {e}")
-        return None
+        RES_QUEUE.put({})
 
 
 def process_results(results):
     logging.info("Processing HTTPS scan results...")
     report = {}
 
-    if results is None or results == {}:
-        report = {"missing": True}
+    if results == {} or not results["Live"]:
+        report = {"error": "missing"}
 
     else:
-        # Assumes that HTTPS would be technically present, with or without issues
-        if results["Downgrades HTTPS"]:
+        if results["Valid HTTPS"]:
+            https = "Valid HTTPS"  # Yes
+        elif results["HTTPS Bad Chain"]:
+            https = "Bad Chain"  # Yes
+        elif results["Downgrades HTTPS"]:
             https = "Downgrades HTTPS"  # No
         else:
-            if results["Valid HTTPS"]:
-                https = "Valid HTTPS"  # Yes
-            elif results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]:
-                https = "Bad Chain"  # Yes
-            else:
-                https = "Bad Hostname"  # No
+            https = "No HTTPS"
 
         report["implementation"] = https
 
         # Is HTTPS enforced?
 
-        if https in ["Downgrades HTTPS", "Bad Hostname"]:
+        if https == "Downgrades HTTPS":
             behavior = "Not Enforced"  # N/A
 
         else:
@@ -93,14 +100,13 @@ def process_results(results):
 
         ###
         # Characterize the presence and completeness of HSTS.
+        hsts_age = results.get("HSTS Max Age", None)
 
-        if results["HSTS Max Age"]:
-            hsts_age = int(results["HSTS Max Age"])
-        else:
-            hsts_age = None
+        if hsts_age is not None:
+            hsts_age = int(hsts_age)
 
         # Otherwise, without HTTPS there can be no HSTS for the domain directly.
-        if https == "Downgrades HTTPS" or https == "Bad Hostname":
+        if https == "Downgrades HTTPS":
             hsts = "No HSTS"  # N/A (considered 'No')
 
         else:
@@ -151,81 +157,89 @@ def process_results(results):
         report["expired_cert"] = expired
         report["self_signed_cert"] = self_signed
         report["cert_revocation_status"] = revoked
+        report["cert_bad_hostname"] = results["HTTPS Bad Hostname"]
 
-    logging.info(f"Processed HTTPS scan results: {str(report)}")
     return report
 
 
 def Server(server_client=requests):
+
+
+    def wait_timeout(proc, seconds):
+        proc.start()
+        start = time.time()
+        end = start + seconds
+        interval = min(seconds / 1000.0, .25)
+
+        while True:
+            result = proc.is_alive()
+            if not result:
+                proc.join()
+                return
+            if time.time() >= end:
+                proc.terminate()
+                proc.join()
+                logging.error("Timeout while scanning")
+                raise ScanTimeoutException("Scan timed out")
+            time.sleep(interval)
+
+
     async def scan(scan_request):
 
         logging.info("Scan request received")
         inbound_payload = await scan_request.json()
-
-        def timeout_handler(signum, frame):
-            msg = "Timeout while performing scan"
-            logging.error(msg)
-            return PlainTextResponse(msg)
+        start_time = dt.datetime.now()
 
         try:
-            start_time = dt.datetime.now()
-            signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(80)
-            try:
-                domain = inbound_payload["domain"]
-                uuid = inbound_payload["uuid"]
-                domain_key = inbound_payload["domain_key"]
-            except KeyError:
-                msg = f"Invalid scan request format received: {str(inbound_payload)}"
-                logging.error(msg)
-                return PlainTextResponse(msg)
+            domain = inbound_payload["domain"]
+            user_key = inbound_payload["user_key"]
+            domain_key = inbound_payload["domain_key"]
+            shared_id = inbound_payload["shared_id"]
+        except KeyError:
+            logging.error(f"Invalid scan request format received: {str(inbound_payload)}")
+            return Response("Invalid Format", status_code=400)
 
-            logging.info("Performing scan...")
-            scan_results = scan_https(domain)
+        logging.info("Performing scan...")
 
-            if scan_results is not None:
-
-                processed_results = process_results(scan_results)
-
-                outbound_payload = json.dumps(
-                    {
-                        "results": processed_results,
-                        "scan_type": "https",
-                        "uuid": uuid,
-                        "domain_key": domain_key,
-                    }
-                )
-                logging.info(f"Scan results: {str(scan_results)}")
-            else:
-                raise Exception("HTTPS scan not completed")
-
-        except Exception as e:
-            signal.alarm(0)
-            msg = f"An unexpected error occurred while attempting to process HTTPS scan request: ({type(e).__name__}: {str(e)})"
-            logging.error(msg)
-            logging.error(f"Full traceback: {traceback.format_exc()}")
-            dispatch_results(
+        try:
+            p = Process(target=scan_https, args=(domain,))
+            wait_timeout(p, TIMEOUT)
+        except ScanTimeoutException:
+            outbound_payload = json.dumps(
                 {
+                    "results": {"error": "unreachable"},
                     "scan_type": "https",
-                    "uuid": uuid,
+                    "user_key": user_key,
                     "domain_key": domain_key,
-                    "results": {"missing": True},
-                },
-                server_client,
+                    "shared_id": shared_id
+                }
             )
-            return PlainTextResponse(msg)
+            dispatch_results(outbound_payload, server_client)
+            return Response("Timeout occurred while scanning", status_code=500)
+        scan_results = RES_QUEUE.get()
 
-        signal.alarm(0)
+        processed_results = process_results(scan_results)
+
+        outbound_payload = {
+            "results": processed_results,
+            "scan_type": "https",
+            "user_key": user_key,
+            "domain_key": domain_key,
+            "shared_id": shared_id
+        }
+        logging.info(f"Scan results: {str(processed_results)}")
+
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
-        dispatch_results(outbound_payload, server_client)
-        msg = f"HTTPS scan completed in {elapsed_time.total_seconds()} seconds."
-        logging.info(msg)
+        dispatch_results(outbound_payload, server_client, (user_key is not None))
 
-        return PlainTextResponse(msg)
+        logging.info(f"HTTPS scan completed in {elapsed_time.total_seconds()} seconds.")
+        return Response("Scan completed")
+
 
     async def startup():
         logging.info(emoji.emojize("ASGI server started :rocket:"))
+
 
     async def shutdown():
         logging.info(emoji.emojize("ASGI server shutting down..."))

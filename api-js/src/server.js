@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import http from 'http'
@@ -56,6 +57,8 @@ export const Server = ({
   const app = express()
 
   app.use('*', cors())
+
+  app.use(cookieParser())
 
   app.use(
     requestLanguage({

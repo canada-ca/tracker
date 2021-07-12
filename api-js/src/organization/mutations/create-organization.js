@@ -216,7 +216,8 @@ export const createOrganization = new mutationWithClientMutationId({
             INSERT {
               _from: ${organization._id},
               _to: ${user._id},
-              permission: "admin"
+              permission: "admin",
+              owner: true
             } INTO affiliations
           `,
       )

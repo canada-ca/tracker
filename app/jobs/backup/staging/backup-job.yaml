@@ -15,13 +15,15 @@ spec:
           args: ["rclone copy /tmp/dump :azureblob:dbdump/tracker-backup-$(date -I)"]
           env:
           - name: RCLONE_AZUREBLOB_ACCOUNT
-            secretKeyRef:
-              name: az-dbdump-account
-              key: AZUREBLOB_ACCOUNT
+            valueFrom:
+              secretKeyRef:
+                name: az-dbdump-account
+                key: az-dbdump-account
           - name: RCLONE_AZUREBLOB_KEY
-            secretKeyRef:
-              name: az-dbdump-sak
-              key: AZUREBLOB_KEY
+            valueFrom:
+              secretKeyRef:
+                name: az-dbdump-sak
+                key: az-dbdump-sak
           volumeMounts:
             - name: dump
               mountPath: /tmp/dump

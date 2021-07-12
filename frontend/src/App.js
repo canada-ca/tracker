@@ -1,4 +1,5 @@
-import React, { lazy, Suspense } from 'react'
+import React, { Suspense } from 'react'
+import { lazyWithRetry } from './LazyWithRetry'
 import { Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
@@ -20,25 +21,25 @@ import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
 import RequestScanNotificationHandler from './RequestScanNotificationHandler'
 
-const PageNotFound = lazy(() => import('./PageNotFound'))
-const CreateUserPage = lazy(() => import('./CreateUserPage'))
-const DomainsPage = lazy(() => import('./DomainsPage'))
-const UserPage = lazy(() => import('./UserPage'))
-const SignInPage = lazy(() => import('./SignInPage'))
-const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
-const Organizations = lazy(() => import('./Organizations'))
-const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
-const AdminPage = lazy(() => import('./AdminPage'))
-const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
-const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
-const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
-const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
-const TermsConditionsPage = lazy(() => import('./TermsConditionsPage'))
-const TwoFactorAuthenticatePage = lazy(() =>
+const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
+const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
+const DomainsPage = lazyWithRetry(() => import('./DomainsPage'))
+const UserPage = lazyWithRetry(() => import('./UserPage'))
+const SignInPage = lazyWithRetry(() => import('./SignInPage'))
+const DmarcReportPage = lazyWithRetry(() => import('./DmarcReportPage'))
+const Organizations = lazyWithRetry(() => import('./Organizations'))
+const OrganizationDetails = lazyWithRetry(() => import('./OrganizationDetails'))
+const AdminPage = lazyWithRetry(() => import('./AdminPage'))
+const ForgotPasswordPage = lazyWithRetry(() => import('./ForgotPasswordPage'))
+const ResetPasswordPage = lazyWithRetry(() => import('./ResetPasswordPage'))
+const DmarcByDomainPage = lazyWithRetry(() => import('./DmarcByDomainPage'))
+const DmarcGuidancePage = lazyWithRetry(() => import('./DmarcGuidancePage'))
+const TermsConditionsPage = lazyWithRetry(() => import('./TermsConditionsPage'))
+const TwoFactorAuthenticatePage = lazyWithRetry(() =>
   import('./TwoFactorAuthenticatePage'),
 )
-const EmailValidationPage = lazy(() => import('./EmailValidationPage'))
-const CreateOrganizationPage = lazy(() => import('./CreateOrganizationPage'))
+const EmailValidationPage = lazyWithRetry(() => import('./EmailValidationPage'))
+const CreateOrganizationPage = lazyWithRetry(() => import('./CreateOrganizationPage'))
 
 export default function App() {
   // Hooks to be used with this functional component

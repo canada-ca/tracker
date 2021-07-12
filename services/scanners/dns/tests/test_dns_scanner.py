@@ -12,12 +12,13 @@ def test_scan():
     test_client = TestClient(test_app)
 
     test_payload = {
-        "uuid": 1,
+        "user_key": 1,
         "domain": "cyber.gc.ca",
         "domain_key": "domains/1",
         "selectors": ["selector1", "selector2"],
+        "shared_id": 1234
     }
 
     res = test_client.post("/", json=test_payload)
 
-    assert "DNS scan completed" in res.text
+    assert "Scan completed" == res.text

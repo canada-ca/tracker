@@ -6,6 +6,7 @@ export const loadHttpsGuidanceTagConnectionsByTagId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ httpsGuidanceTags, after, before, first, last, orderBy }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -18,17 +19,19 @@ export const loadHttpsGuidanceTagConnectionsByTagId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(httpsGuidanceTags, ${afterId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(httpsGuidanceTags, ${afterId})._key`
+          documentField = aql`afterVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(httpsGuidanceTags, ${afterId}).tagName`
+          documentField = aql`afterVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(httpsGuidanceTags, ${afterId}).guidance`
+          documentField = aql`afterVar.guidance`
         }
 
         afterTemplate = aql`
@@ -40,6 +43,7 @@ export const loadHttpsGuidanceTagConnectionsByTagId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -52,17 +56,19 @@ export const loadHttpsGuidanceTagConnectionsByTagId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(httpsGuidanceTags, ${beforeId})`
+
         let tagField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'tag-id') {
           tagField = aql`tag._key`
-          documentField = aql`DOCUMENT(httpsGuidanceTags, ${beforeId})._key`
+          documentField = aql`beforeVar._key`
         } else if (orderBy.field === 'tag-name') {
           tagField = aql`tag.tagName`
-          documentField = aql`DOCUMENT(httpsGuidanceTags, ${beforeId}).tagName`
+          documentField = aql`beforeVar.tagName`
         } else if (orderBy.field === 'guidance') {
           tagField = aql`tag.guidance`
-          documentField = aql`DOCUMENT(httpsGuidanceTags, ${beforeId}).guidance`
+          documentField = aql`beforeVar.guidance`
         }
 
         beforeTemplate = aql`
@@ -196,6 +202,10 @@ export const loadHttpsGuidanceTagConnectionsByTagId =
     try {
       httpsGuidanceTagInfoCursor = await query`
       WITH httpsGuidanceTags
+
+      ${afterVar}
+      ${beforeVar}
+      
       LET retrievedHttpsGuidanceTags = (
         FOR tag IN httpsGuidanceTags
           FILTER tag._key IN ${httpsGuidanceTags}

@@ -1,0 +1,33 @@
+steps:
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-ots-result-queue
+    dir: services/queues/ots-result
+    entrypoint: /bin/sh
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-ots-result-queue-if-master
+    entrypoint: 'bash'
+    dir: services/queues/ots-result
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/services/ots-result-queue:$BRANCH_NAME-$SHORT_SHA .
+      else
+        exit 0
+      fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-ots-result-queue-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/services/ots-result-queue:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi

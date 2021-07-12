@@ -52,110 +52,253 @@ describe('authenticate user account', () => {
     await drop()
   })
   describe('given successful authentication', () => {
-    beforeEach(async () => {
-      await collections.users.save({
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        phoneValidated: false,
-        emailValidated: false,
-        tfaCode: 123456,
+    describe('user does not enable rememberMe', () => {
+      beforeEach(async () => {
+        await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          phoneValidated: false,
+          emailValidated: false,
+          tfaCode: 123456,
+          refreshInfo: {
+            refreshId: '123',
+            rememberMe: false,
+            expiresAt: '',
+          },
+        })
       })
-    })
-    it('returns users information and JWTs', async () => {
-      let cursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      let user = await cursor.next()
-
-      const token = tokenize({
-        parameters: { userKey: user._key },
-        secret: String(SIGN_IN_KEY),
-      })
-      const response = await graphql(
-        schema,
+      it('returns users information and JWT', async () => {
+        let cursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
         `
-          mutation {
-            authenticate(
-              input: {
-                authenticationCode: 123456
-                authenticateToken: "${token}"
-              }
-            ) {
-              result {
-                ... on AuthResult {
-                  authToken
-                  refreshToken
-                  user {
-                    id
-                    userName
-                    displayName
-                    preferredLang
-                    phoneValidated
-                    emailValidated
-                  }
+        let user = await cursor.next()
+
+        const token = tokenize({
+          parameters: { userKey: user._key },
+          secret: String(SIGN_IN_KEY),
+        })
+
+        const mockedCookie = jest.fn()
+        const mockedResponse = { cookie: mockedCookie }
+
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              authenticate(
+                input: {
+                  authenticationCode: 123456
+                  authenticateToken: "${token}"
                 }
-                ... on AuthenticateError {
-                  code
-                  description
+              ) {
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLang
+                      phoneValidated
+                      emailValidated
+                    }
+                  }
+                  ... on AuthenticateError {
+                    code
+                    description
+                  }
                 }
               }
             }
-          }
-        `,
-        null,
-        {
-          query,
-          collections,
-          transaction,
-          uuidv4,
-          auth: {
-            bcrypt,
-            tokenize: mockTokenize,
-            verifyToken: verifyToken({}),
+          `,
+          null,
+          {
+            query,
+            collections,
+            transaction,
+            uuidv4,
+            response: mockedResponse,
+            auth: {
+              bcrypt,
+              tokenize: mockTokenize,
+              verifyToken: verifyToken({}),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
           },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            loadUserByKey: loadUserByKey({ query }),
-          },
-        },
-      )
+        )
 
-      const expectedResult = {
-        data: {
-          authenticate: {
-            result: {
-              authToken: 'token',
-              refreshToken: 'token',
-              user: {
-                id: `${toGlobalId('users', user._key)}`,
-                userName: 'test.account@istio.actually.exists',
-                displayName: 'Test Account',
-                preferredLang: 'FRENCH',
-                phoneValidated: false,
-                emailValidated: false,
+        const expectedResult = {
+          data: {
+            authenticate: {
+              result: {
+                authToken: 'token',
+                user: {
+                  id: `${toGlobalId('users', user._key)}`,
+                  userName: 'test.account@istio.actually.exists',
+                  displayName: 'Test Account',
+                  preferredLang: 'FRENCH',
+                  phoneValidated: false,
+                  emailValidated: false,
+                },
               },
             },
           },
-        },
-      }
+        }
 
-      cursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await cursor.next()
+        cursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await cursor.next()
 
-      expect(response).toEqual(expectedResult)
-      expect(user.tfaCode).toEqual(null)
-      expect(consoleOutput).toEqual([
-        `User: ${user._key} successfully authenticated their account.`,
-      ])
+        expect(response).toEqual(expectedResult)
+
+        expect(user.tfaCode).toEqual(null)
+
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+          httpOnly: true,
+          expires: 0,
+          sameSite: true,
+          secure: false,
+        })
+
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully authenticated their account.`,
+        ])
+      })
+    })
+    describe('user has rememberMe enabled', () => {
+      beforeEach(async () => {
+        await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          phoneValidated: false,
+          emailValidated: false,
+          tfaCode: 123456,
+          refreshInfo: {
+            refreshId: '123',
+            rememberMe: true,
+            expiresAt: '',
+          },
+        })
+      })
+      it('returns users information and JWT', async () => {
+        let cursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        let user = await cursor.next()
+
+        const token = tokenize({
+          parameters: { userKey: user._key },
+          secret: String(SIGN_IN_KEY),
+        })
+
+        const mockedCookie = jest.fn()
+        const mockedResponse = { cookie: mockedCookie }
+
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              authenticate(
+                input: {
+                  authenticationCode: 123456
+                  authenticateToken: "${token}"
+                }
+              ) {
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLang
+                      phoneValidated
+                      emailValidated
+                    }
+                  }
+                  ... on AuthenticateError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            query,
+            collections,
+            transaction,
+            uuidv4,
+            response: mockedResponse,
+            auth: {
+              bcrypt,
+              tokenize: mockTokenize,
+              verifyToken: verifyToken({}),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              loadUserByKey: loadUserByKey({ query }),
+            },
+          },
+        )
+
+        const expectedResult = {
+          data: {
+            authenticate: {
+              result: {
+                authToken: 'token',
+                user: {
+                  id: `${toGlobalId('users', user._key)}`,
+                  userName: 'test.account@istio.actually.exists',
+                  displayName: 'Test Account',
+                  preferredLang: 'FRENCH',
+                  phoneValidated: false,
+                  emailValidated: false,
+                },
+              },
+            },
+          },
+        }
+
+        cursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await cursor.next()
+
+        expect(response).toEqual(expectedResult)
+
+        expect(user.tfaCode).toEqual(null)
+
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+          httpOnly: true,
+          maxAge: 86400000,
+          sameSite: true,
+          secure: false,
+        })
+
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully authenticated their account.`,
+        ])
+      })
     })
   })
   describe('given unsuccessful authentication', () => {
@@ -491,6 +634,11 @@ describe('authenticate user account', () => {
               phoneValidated: false,
               emailValidated: false,
               tfaCode: 123456,
+              refreshInfo: {
+                refreshId: '123',
+                rememberMe: false,
+                expiresAt: '',
+              },
             })
           })
           it('throws an error', async () => {
@@ -584,6 +732,11 @@ describe('authenticate user account', () => {
               phoneValidated: false,
               emailValidated: false,
               tfaCode: 123456,
+              refreshInfo: {
+                refreshId: '123',
+                rememberMe: false,
+                expiresAt: '',
+              },
             })
           })
           it('throws an error', async () => {
@@ -1003,6 +1156,11 @@ describe('authenticate user account', () => {
               phoneValidated: false,
               emailValidated: false,
               tfaCode: 123456,
+              refreshInfo: {
+                refreshId: '123',
+                rememberMe: false,
+                expiresAt: '',
+              },
             })
           })
           it('throws an error', async () => {
@@ -1098,6 +1256,11 @@ describe('authenticate user account', () => {
               phoneValidated: false,
               emailValidated: false,
               tfaCode: 123456,
+              refreshInfo: {
+                refreshId: '123',
+                rememberMe: false,
+                expiresAt: '',
+              },
             })
           })
           it('throws an error', async () => {

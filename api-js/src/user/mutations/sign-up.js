@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { GraphQLEmailAddress } from 'graphql-scalars'
@@ -6,7 +6,7 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 
-const { REFRESH_KEY } = process.env
+const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -39,6 +39,12 @@ export const signUp = new mutationWithClientMutationId({
       description:
         'A token sent by email, that will assign a user to an organization with a pre-determined role.',
     },
+    rememberMe: {
+      type: GraphQLBoolean,
+      defaultValue: false,
+      description:
+        'Whether or not the user wants to stay signed in after leaving the site.',
+    },
   }),
   outputFields: () => ({
     result: {
@@ -56,6 +62,7 @@ export const signUp = new mutationWithClientMutationId({
       query,
       transaction,
       request,
+      response,
       uuidv4,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
@@ -70,6 +77,7 @@ export const signUp = new mutationWithClientMutationId({
     const confirmPassword = cleanseInput(args.confirmPassword)
     const preferredLang = cleanseInput(args.preferredLang)
     const signUpToken = cleanseInput(args.signUpToken)
+    const rememberMe = args.rememberMe
 
     // Check to make sure password meets length requirement
     if (password.length < 12) {
@@ -124,7 +132,13 @@ export const signUp = new mutationWithClientMutationId({
       emailValidated: false,
       failedLoginAttempts: 0,
       tfaSendMethod: 'none',
-      refreshId,
+      refreshInfo: {
+        refreshId,
+        rememberMe,
+        expiresAt: new Date(
+          new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        ),
+      },
     }
 
     // Generate list of collections names
@@ -206,7 +220,8 @@ export const signUp = new mutationWithClientMutationId({
             INSERT {
               _from: ${checkOrg._id},
               _to: ${insertedUser._id},
-              permission: ${tokenRequestedRole}
+              permission: ${tokenRequestedRole},
+              owner: false
             } INTO affiliations
           `,
         )
@@ -231,24 +246,42 @@ export const signUp = new mutationWithClientMutationId({
 
     // Generate JWTs
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
+
+    const verifyUrl = `https://${request.get('host')}/validate/${token}`
+
+    await sendVerificationEmail({ user: returnUser, verifyUrl })
+
     const refreshToken = tokenize({
       parameters: { userKey: user._key, uuid: refreshId },
       expPeriod: 168,
       secret: String(REFRESH_KEY),
     })
 
-    const verifyUrl = `${request.protocol}://${request.get(
-      'host',
-    )}/validate/${token}`
+    // if the user does not want to stay logged in, create http session cookie
+    let cookieData = {
+      httpOnly: true,
+      secure: false,
+      sameSite: true,
+      expires: 0,
+    }
 
-    await sendVerificationEmail({ user: returnUser, verifyUrl })
+    // if user wants to stay logged in create normal http cookie
+    if (rememberMe) {
+      cookieData = {
+        maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        httpOnly: true,
+        secure: false,
+        sameSite: true,
+      }
+    }
+
+    response.cookie('refresh_token', refreshToken, cookieData)
 
     console.info(`User: ${userName} successfully created a new account.`)
 
     return {
       _type: 'authResult',
       token,
-      refreshToken,
       user: returnUser,
     }
   },

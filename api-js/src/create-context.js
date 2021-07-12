@@ -9,8 +9,10 @@ import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import {
   checkDomainOwnership,
   checkDomainPermission,
+  checkOrgOwner,
   checkPermission,
   checkSuperAdmin,
+  checkUserBelongsToOrg,
   checkUserIsAdminForUser,
   tokenize,
   userRequired,
@@ -145,8 +147,10 @@ const createContextObject = ({ context, req: request, res: response }) => {
       bcrypt,
       checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
       checkDomainPermission: checkDomainPermission({ i18n, userKey, query }),
+      checkOrgOwner: checkOrgOwner({ i18n, userKey, query }),
       checkPermission: checkPermission({ i18n, userKey, query }),
       checkSuperAdmin: checkSuperAdmin({ i18n, userKey, query }),
+      checkUserBelongsToOrg: checkUserBelongsToOrg({ i18n, query, userKey }),
       checkUserIsAdminForUser: checkUserIsAdminForUser({
         i18n,
         userKey,

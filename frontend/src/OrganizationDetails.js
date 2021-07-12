@@ -14,7 +14,7 @@ import {
   Tabs,
   useToast,
 } from '@chakra-ui/core'
-import { ORG_DETAILS_PAGE } from './graphql/queries'
+import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from './graphql/queries'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -45,6 +45,29 @@ export default function OrganizationDetails() {
       })
     },
   })
+
+  const orgId = data?.organization?.id
+  const { data: isAdminData } = useQuery(IS_USER_ADMIN, {
+    skip: !orgId,
+    variables: { orgId: orgId },
+
+    onError: (error) => {
+      const [_, message] = error.message.split(': ')
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
+  let isAdmin = false
+  if (isAdminData?.isUserAdmin) {
+    isAdmin = isAdminData.isUserAdmin
+  }
 
   let orgName = ''
   if (data?.organization) {
@@ -85,9 +108,11 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          <Tab>
-            <Trans>Users</Trans>
-          </Tab>
+          {isAdmin && (
+            <Tab>
+              <Trans>Users</Trans>
+            </Tab>
+          )}
         </TabList>
 
         <TabPanels>
@@ -107,11 +132,13 @@ export default function OrganizationDetails() {
               <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
-            </ErrorBoundary>
-          </TabPanel>
+          {isAdmin && (
+            <TabPanel>
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
+              </ErrorBoundary>
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </Layout>

@@ -45,9 +45,7 @@ export const sendEmailVerification = new mutationWithClientMutationId({
         parameters: { userKey: user._key },
       })
 
-      const verifyUrl = `${request.protocol}://${request.get(
-        'host',
-      )}/validate/${token}`
+      const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
       await sendVerificationEmail({ user, verifyUrl })
 

@@ -251,6 +251,10 @@
       'Successfully email verified account, and set TFA send method to email.',
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
+    'Successfully left organization: {0}': [
+      'Successfully left organization: ',
+      ['0'],
+    ],
     'Successfully removed domain: {0} from {1}.': [
       'Successfully removed domain: ',
       ['0'],
@@ -267,6 +271,7 @@
       'Successfully removed user from organization.',
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
+    'Successfully signed out.': 'Successfully signed out.',
     'Successfully verified organization: {0}.': [
       'Successfully verified organization: ',
       ['0'],
@@ -282,6 +287,8 @@
       'Two factor code is incorrect. Please try again.',
     'Two factor code length is incorrect. Please try again.':
       'Two factor code length is incorrect. Please try again.',
+    'Unable leave organization. Please try again.':
+      'Unable leave organization. Please try again.',
     'Unable to add user to organization. Please try again.':
       'Unable to add user to organization. Please try again.',
     'Unable to authenticate. Please try again.':
@@ -336,6 +343,8 @@
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org.':
       'Unable to invite yourself to an org.',
+    'Unable to leave undefined organization.':
+      'Unable to leave undefined organization.',
     'Unable to load Aggregate guidance tag(s). Please try again.':
       'Unable to load Aggregate guidance tag(s). Please try again.',
     'Unable to load DKIM failure data. Please try again.':
@@ -368,6 +377,8 @@
       'Unable to load SSL guidance tag(s). Please try again.',
     'Unable to load SSL scan(s). Please try again.':
       'Unable to load SSL scan(s). Please try again.',
+    'Unable to load affiliation information. Please try again.':
+      'Unable to load affiliation information. Please try again.',
     'Unable to load affiliation(s). Please try again.':
       'Unable to load affiliation(s). Please try again.',
     'Unable to load domain(s). Please try again.':
@@ -380,6 +391,8 @@
       'Unable to load mail summary. Please try again.',
     'Unable to load organization(s). Please try again.':
       'Unable to load organization(s). Please try again.',
+    'Unable to load owner information. Please try again.':
+      'Unable to load owner information. Please try again.',
     'Unable to load summary. Please try again.':
       'Unable to load summary. Please try again.',
     'Unable to load user(s). Please try again.':

@@ -3,16 +3,37 @@ import {
   GraphQLList,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLID,
 } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
+import { domainType } from '../../domain/objects'
 import { guidanceTagType } from '../../guidance-tag/objects'
+import { StatusEnum } from '../../enums'
 
 export const sslSubType = new GraphQLObjectType({
   name: 'SslSub',
   description:
     'SSL gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
+    sharedId: {
+      type: GraphQLID,
+      description: `The shared id to match scans together.`,
+      resolve: ({ sharedId }) => sharedId,
+    },
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ domainKey }, _, { loaders: { loadDomainByKey } }) => {
+        const domain = await loadDomainByKey.load(domainKey)
+        return domain
+      },
+    },
+    status: {
+      type: StatusEnum,
+      description: 'The success status of the scan.',
+      resolve: ({ status }) => status,
+    },
     acceptableCiphers: {
       type: GraphQLList(GraphQLString),
       description:

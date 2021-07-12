@@ -13,5 +13,6 @@ resources:
 - tracker-repo.yaml
 - app-kustomization.yaml
 - platform-kustomization.yaml
-- core-registry.yaml
+- summaries-registry.yaml
+- guidance-registry.yaml
 - super-admin-registry.yaml

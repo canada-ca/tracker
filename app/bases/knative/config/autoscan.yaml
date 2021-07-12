@@ -4,7 +4,7 @@ metadata:
   name: autoscan
   namespace: scanners
 spec:
-  schedule: "0 1 * * */2"
+  schedule: "0 */8 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0
@@ -12,10 +12,14 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: scanners
+            role: autoscan
         spec:
           containers:
           - name: autoscan
-            image: gcr.io/track-compliance/services/autoscan:master-1644020-1620328161 # {"$imagepolicy": "flux-system:autoscan"}
+            image: gcr.io/track-compliance/services/autoscan:master-b0e6547-1625576840 # {"$imagepolicy": "flux-system:autoscan"}
             env:
             - name: DB_USER
               valueFrom:

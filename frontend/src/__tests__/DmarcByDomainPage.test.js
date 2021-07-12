@@ -109,7 +109,7 @@ describe('<DmarcByDomainPage />', () => {
           </UserVarProvider>
         </MockedProvider>,
       )
-      await waitFor(() => getByText(/Total Messages/i))
+      await waitFor(() => getByText(/leonie.biz/i))
     })
 
     it('displays domains', async () => {
