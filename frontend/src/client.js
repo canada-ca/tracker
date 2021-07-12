@@ -105,7 +105,7 @@ const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? 'https://tracker.alpha.canada.ca/graphql'
-      : 'https://tracker.alpha.canada.ca/graphql',
+      : '/graphql',
 })
 
 const headersLink = setContext((_, { headers }) => {
@@ -126,7 +126,7 @@ const wsLink = new WebSocketLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? 'wss://tracker.alpha.canada.ca/graphql'
-      : 'wss://tracker.alpha.canada.ca/graphql',
+      : 'ws:localhost:3000/graphql',
 
   options: {
     lazy: true,

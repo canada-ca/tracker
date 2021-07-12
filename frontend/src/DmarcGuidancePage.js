@@ -48,11 +48,6 @@ export default function DmarcGuidancePage() {
   const webStatus = data.findDomainByDomain.status
   const dmarcPhase = data.findDomainByDomain.dmarcPhase
 
-  console.log({ webScan })
-  console.log({ emailScan })
-  console.log({ webStatus })
-  console.log({ dmarcPhase })
-
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
       <PseudoBox d={{ md: 'flex' }}>
