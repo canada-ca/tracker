@@ -23,13 +23,10 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
       </Text>
     )
 
-  console.log({ categoryData })
-
   const tagDetails =
     categoryName === 'dkim' ? (
       categoryData.results.edges ? (
         categoryData.results.edges.map(({ node }, idx) => {
-          console.log({ node })
           return (
             <GuidanceTagList
               negativeTags={node.negativeGuidanceTags.edges}
