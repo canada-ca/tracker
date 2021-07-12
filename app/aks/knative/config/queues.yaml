@@ -20,7 +20,7 @@ spec:
       timeoutSeconds: 500
       containers:
         - name: scan-queue
-          image: gcr.io/track-compliance/services/scan-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:scan-queue"}
+          image: gcr.io/track-compliance/services/queues/scan-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:scan-queue"}
 
 ---
 
@@ -46,7 +46,7 @@ spec:
       timeoutSeconds: 500
       containers:
         - name: result-queue
-          image: gcr.io/track-compliance/services/result-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:result-queue"}
+          image: gcr.io/track-compliance/services/queues/result-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:result-queue"}
 
 ---
 
@@ -72,7 +72,7 @@ spec:
       timeoutSeconds: 500
       containers:
         - name: ots-scan-queue
-          image: gcr.io/track-compliance/services/ots-scan-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-scan-queue"}
+          image: gcr.io/track-compliance/services/queues/ots-scan-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-scan-queue"}
           env:
           - name: REDIS_HOST
             valueFrom:
@@ -109,7 +109,7 @@ spec:
       timeoutSeconds: 500
       containers:
         - name: ots-result-queue
-          image: gcr.io/track-compliance/services/ots-result-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-result-queue"}
+          image: gcr.io/track-compliance/services/queues/ots-result-queue:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-result-queue"}
           env:
           - name: REDIS_HOST
             valueFrom:
