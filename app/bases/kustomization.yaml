@@ -35,4 +35,3 @@ resources:
 - arangodb-deployment.yaml
 - issuers.yaml
 - backup-service-account.yaml
-- netpol-arangodb.yaml
