@@ -76,6 +76,8 @@
     'Passwords do not match.': 'Les mots de passe ne correspondent pas.',
     'Permission Denied: Could not retrieve specified organization.':
       "Permission refusée : Impossible de récupérer l'organisation spécifiée.",
+    'Permission Denied: Please contact org owner to transfer ownership.':
+      "Permission refusée : Veuillez contacter le propriétaire de l'org pour transférer la propriété.",
     'Permission Denied: Please contact organization admin for help with removing domain.':
       "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
     'Permission Denied: Please contact organization admin for help with removing organization.':
@@ -276,6 +278,12 @@
     'Successfully sent invitation to service, and organization email.':
       "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
     'Successfully signed out.': "J'ai réussi à me déconnecter.",
+    'Successfully transferred org: {0} ownership to user: {1}': [
+      'A réussi à transférer la propriété de org: ',
+      ['0'],
+      " à l'utilisateur: ",
+      ['1'],
+    ],
     'Successfully verified organization: {0}.':
       "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
     'Successfully verified phone number, and set TFA send method to text.':
@@ -465,6 +473,16 @@
       "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation.",
     'Unable to sign up. Please try again.':
       "Impossible de s'inscrire. Veuillez réessayer.",
+    'Unable to transfer organization ownership. Please try again.':
+      "Impossible de transférer la propriété de l'organisation. Veuillez réessayer.",
+    'Unable to transfer ownership of a verified organization.':
+      "Impossible de transférer la propriété d'une organisation vérifiée.",
+    'Unable to transfer ownership of an org to an undefined user.':
+      "Impossible de transférer la propriété d'un org à un utilisateur non défini.",
+    'Unable to transfer ownership of undefined organization.':
+      "Impossible de transférer la propriété d'une organisation non définie.",
+    'Unable to transfer ownership to a user outside the org. Please invite the user and try again.':
+      "Impossible de transférer la propriété à un utilisateur extérieur à l'org. Veuillez inviter l'utilisateur et réessayer.",
     'Unable to two factor authenticate. Please try again.':
       "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
     'Unable to update domain in an unknown org.':

@@ -72,6 +72,8 @@
     'Passwords do not match.': 'Passwords do not match.',
     'Permission Denied: Could not retrieve specified organization.':
       'Permission Denied: Could not retrieve specified organization.',
+    'Permission Denied: Please contact org owner to transfer ownership.':
+      'Permission Denied: Please contact org owner to transfer ownership.',
     'Permission Denied: Please contact organization admin for help with removing domain.':
       'Permission Denied: Please contact organization admin for help with removing domain.',
     'Permission Denied: Please contact organization admin for help with removing organization.':
@@ -272,6 +274,12 @@
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
     'Successfully signed out.': 'Successfully signed out.',
+    'Successfully transferred org: {0} ownership to user: {1}': [
+      'Successfully transferred org: ',
+      ['0'],
+      ' ownership to user: ',
+      ['1'],
+    ],
     'Successfully verified organization: {0}.': [
       'Successfully verified organization: ',
       ['0'],
@@ -464,6 +472,16 @@
       'Unable to sign up, please contact org admin for a new invite.',
     'Unable to sign up. Please try again.':
       'Unable to sign up. Please try again.',
+    'Unable to transfer organization ownership. Please try again.':
+      'Unable to transfer organization ownership. Please try again.',
+    'Unable to transfer ownership of a verified organization.':
+      'Unable to transfer ownership of a verified organization.',
+    'Unable to transfer ownership of an org to an undefined user.':
+      'Unable to transfer ownership of an org to an undefined user.',
+    'Unable to transfer ownership of undefined organization.':
+      'Unable to transfer ownership of undefined organization.',
+    'Unable to transfer ownership to a user outside the org. Please invite the user and try again.':
+      'Unable to transfer ownership to a user outside the org. Please invite the user and try again.',
     'Unable to two factor authenticate. Please try again.':
       'Unable to two factor authenticate. Please try again.',
     'Unable to update domain in an unknown org.':
