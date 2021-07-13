@@ -411,6 +411,7 @@ describe('removing a domain', () => {
 
             const domainCursor = await query`
               FOR domain IN domains
+                OPTIONS { waitForSync: true }
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
@@ -470,69 +471,33 @@ describe('removing a domain', () => {
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimResult
-            `
-
-            await query`
-              FOR dkimScan IN dkim 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimScan
-            `
-
-            await query`
-              FOR dmarcScan IN dmarc 
-                OPTIONS { waitForSync: true }  
-                RETURN dmarcScan
-            `
-
-            await query`
-              FOR spfScan IN spf 
-                OPTIONS { waitForSync: true }  
-                RETURN spfScan
-            `
-
-            await query`
-              FOR httpsScan IN https 
-                OPTIONS { waitForSync: true }  
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl 
-                OPTIONS { waitForSync: true }  
-                RETURN sslScan
-            `
-
             const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult.dkimResult`
             const testDkimResult = await testDkimResultCursor.next()
             expect(testDkimResult).toEqual(true)
 
             const testDkimCursor =
-              await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan.dkim`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(true)
 
             const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan.dmarc`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(true)
 
             const testSpfCursor =
-              await query`FOR spfScan IN spf RETURN spfScan.spf`
+              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan.spf`
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(true)
 
             const testHttpsCursor =
-              await query`FOR httpsScan IN https RETURN httpsScan.https`
+              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan.https`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(true)
 
             const testSslCursor =
-              await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan.ssl`
             const testSsl = await testSslCursor.next()
             expect(testSsl).toEqual(true)
           })
@@ -597,17 +562,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toEqual(undefined)
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toEqual(undefined)
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toEqual(undefined)
@@ -674,17 +639,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toBeDefined()
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toBeDefined()
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toBeDefined()
@@ -953,6 +918,7 @@ describe('removing a domain', () => {
 
             const domainCursor = await query`
               FOR domain IN domains
+                OPTIONS { waitForSync: true }
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
@@ -1012,69 +978,33 @@ describe('removing a domain', () => {
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimResult
-            `
-
-            await query`
-              FOR dkimScan IN dkim 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimScan
-            `
-
-            await query`
-              FOR dmarcScan IN dmarc 
-                OPTIONS { waitForSync: true }  
-                RETURN dmarcScan
-            `
-
-            await query`
-              FOR spfScan IN spf 
-                OPTIONS { waitForSync: true }  
-                RETURN spfScan
-            `
-
-            await query`
-              FOR httpsScan IN https 
-                OPTIONS { waitForSync: true }  
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl 
-                OPTIONS { waitForSync: true }  
-                RETURN sslScan
-            `
-
             const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult.dkimResult`
             const testDkimResult = await testDkimResultCursor.next()
             expect(testDkimResult).toEqual(true)
 
             const testDkimCursor =
-              await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan.dkim`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(true)
 
             const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan.dmarc`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(true)
 
             const testSpfCursor =
-              await query`FOR spfScan IN spf RETURN spfScan.spf`
+              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan.spf`
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(true)
 
             const testHttpsCursor =
-              await query`FOR httpsScan IN https RETURN httpsScan.https`
+              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan.https`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(true)
 
             const testSslCursor =
-              await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan.ssl`
             const testSsl = await testSslCursor.next()
             expect(testSsl).toEqual(true)
           })
@@ -1139,17 +1069,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toEqual(undefined)
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toEqual(undefined)
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toEqual(undefined)
@@ -1216,17 +1146,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toBeDefined()
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toBeDefined()
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toBeDefined()
@@ -1472,6 +1402,7 @@ describe('removing a domain', () => {
 
             const domainCursor = await query`
               FOR domain IN domains
+                OPTIONS { waitForSync: true }
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
@@ -1531,67 +1462,33 @@ describe('removing a domain', () => {
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimResult
-            `
-
-            await query`
-              FOR dkimScan IN dkim 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimScan
-            `
-
-            await query`
-              FOR dmarcScan IN dmarc 
-                OPTIONS { waitForSync: true }  
-                RETURN dmarcScan
-            `
-
-            await query`
-              FOR spfScan IN spf 
-                OPTIONS { waitForSync: true }  
-                RETURN spfScan
-            `
-
-            await query`
-              FOR httpsScan IN https 
-                OPTIONS { waitForSync: true }  
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl 
-                OPTIONS { waitForSync: true }  
-                RETURN sslScan
-            `
-
             const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
             const testDkimResult = await testDkimResultCursor.next()
             expect(testDkimResult).toEqual(undefined)
 
             const testDkimCursor =
-              await query`FOR dkimScan IN dkim RETURN dkimScan`
+              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(undefined)
 
             const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(undefined)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+            const testSpfCursor =
+              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(undefined)
 
             const testHttpsCursor =
-              await query`FOR httpsScan IN https RETURN httpsScan`
+              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(undefined)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+            const testSslCursor =
+              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
             const testSsl = await testSslCursor.next()
             expect(testSsl).toEqual(undefined)
           })
@@ -1656,17 +1553,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toEqual(undefined)
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toEqual(undefined)
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toEqual(undefined)
@@ -1733,17 +1630,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toBeDefined()
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toBeDefined()
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toBeDefined()
@@ -1981,6 +1878,7 @@ describe('removing a domain', () => {
 
             const domainCursor = await query`
               FOR domain IN domains
+                OPTIONS { waitForSync: true }
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
@@ -2040,67 +1938,33 @@ describe('removing a domain', () => {
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimResult
-            `
-
-            await query`
-              FOR dkimScan IN dkim 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimScan
-            `
-
-            await query`
-              FOR dmarcScan IN dmarc 
-                OPTIONS { waitForSync: true }  
-                RETURN dmarcScan
-            `
-
-            await query`
-              FOR spfScan IN spf 
-                OPTIONS { waitForSync: true }  
-                RETURN spfScan
-            `
-
-            await query`
-              FOR httpsScan IN https 
-                OPTIONS { waitForSync: true }  
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl 
-                OPTIONS { waitForSync: true }  
-                RETURN sslScan
-            `
-
             const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
             const testDkimResult = await testDkimResultCursor.next()
             expect(testDkimResult).toEqual(undefined)
 
             const testDkimCursor =
-              await query`FOR dkimScan IN dkim RETURN dkimScan`
+              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(undefined)
 
             const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(undefined)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+            const testSpfCursor =
+              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(undefined)
 
             const testHttpsCursor =
-              await query`FOR httpsScan IN https RETURN httpsScan`
+              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(undefined)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+            const testSslCursor =
+              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
             const testSsl = await testSslCursor.next()
             expect(testSsl).toEqual(undefined)
           })
@@ -2165,17 +2029,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toEqual(undefined)
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toEqual(undefined)
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toEqual(undefined)
@@ -2242,17 +2106,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toBeDefined()
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toBeDefined()
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toBeDefined()
@@ -2606,6 +2470,7 @@ describe('removing a domain', () => {
 
             const domainCursor = await query`
               FOR domain IN domains
+                OPTIONS { waitForSync: true }
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
@@ -2665,69 +2530,33 @@ describe('removing a domain', () => {
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimResult
-            `
-
-            await query`
-              FOR dkimScan IN dkim 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimScan
-            `
-
-            await query`
-              FOR dmarcScan IN dmarc 
-                OPTIONS { waitForSync: true }  
-                RETURN dmarcScan
-            `
-
-            await query`
-              FOR spfScan IN spf 
-                OPTIONS { waitForSync: true }  
-                RETURN spfScan
-            `
-
-            await query`
-              FOR httpsScan IN https 
-                OPTIONS { waitForSync: true }  
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl 
-                OPTIONS { waitForSync: true }  
-                RETURN sslScan
-            `
-
             const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults RETURN dkimResult.dkimResult`
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult.dkimResult`
             const testDkimResult = await testDkimResultCursor.next()
             expect(testDkimResult).toEqual(true)
 
             const testDkimCursor =
-              await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan.dkim`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(true)
 
             const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan.dmarc`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(true)
 
             const testSpfCursor =
-              await query`FOR spfScan IN spf RETURN spfScan.spf`
+              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan.spf`
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(true)
 
             const testHttpsCursor =
-              await query`FOR httpsScan IN https RETURN httpsScan.https`
+              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan.https`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(true)
 
             const testSslCursor =
-              await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan.ssl`
             const testSsl = await testSslCursor.next()
             expect(testSsl).toEqual(true)
           })
@@ -2792,17 +2621,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toEqual(undefined)
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toEqual(undefined)
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toEqual(undefined)
@@ -2869,17 +2698,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toBeDefined()
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toBeDefined()
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toBeDefined()
@@ -3119,6 +2948,7 @@ describe('removing a domain', () => {
 
             const domainCursor = await query`
               FOR domain IN domains
+                OPTIONS { waitForSync: true }
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
@@ -3178,67 +3008,33 @@ describe('removing a domain', () => {
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimResult
-            `
-
-            await query`
-              FOR dkimScan IN dkim 
-                OPTIONS { waitForSync: true }  
-                RETURN dkimScan
-            `
-
-            await query`
-              FOR dmarcScan IN dmarc 
-                OPTIONS { waitForSync: true }  
-                RETURN dmarcScan
-            `
-
-            await query`
-              FOR spfScan IN spf 
-                OPTIONS { waitForSync: true }  
-                RETURN spfScan
-            `
-
-            await query`
-              FOR httpsScan IN https 
-                OPTIONS { waitForSync: true }  
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl 
-                OPTIONS { waitForSync: true }  
-                RETURN sslScan
-            `
-
             const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
             const testDkimResult = await testDkimResultCursor.next()
             expect(testDkimResult).toEqual(undefined)
 
             const testDkimCursor =
-              await query`FOR dkimScan IN dkim RETURN dkimScan`
+              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
             const testDkim = await testDkimCursor.next()
             expect(testDkim).toEqual(undefined)
 
             const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
             const testDmarc = await testDmarcCursor.next()
             expect(testDmarc).toEqual(undefined)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+            const testSpfCursor =
+              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
             const testSpf = await testSpfCursor.next()
             expect(testSpf).toEqual(undefined)
 
             const testHttpsCursor =
-              await query`FOR httpsScan IN https RETURN httpsScan`
+              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
             const testHttps = await testHttpsCursor.next()
             expect(testHttps).toEqual(undefined)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+            const testSslCursor =
+              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
             const testSsl = await testSslCursor.next()
             expect(testSsl).toEqual(undefined)
           })
@@ -3303,17 +3099,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toEqual(undefined)
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toEqual(undefined)
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toEqual(undefined)
@@ -3380,17 +3176,17 @@ describe('removing a domain', () => {
               )
 
               const testOwnershipCursor =
-                await query`FOR owner IN ownership RETURN owner`
+                await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
               expect(testOwnership).toBeDefined()
 
               const testDmarcSummaryCursor =
-                await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+                await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
               const testDmarcSummary = await testDmarcSummaryCursor.next()
               expect(testDmarcSummary).toBeDefined()
 
               const testDomainsToDmarcSumCursor =
-                await query`FOR item IN domainsToDmarcSummaries RETURN item`
+                await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
               const testDomainsToDmarcSum =
                 await testDomainsToDmarcSumCursor.next()
               expect(testDomainsToDmarcSum).toBeDefined()
@@ -3416,7 +3212,6 @@ describe('removing a domain', () => {
           },
         })
       })
-
       describe('domain does not exist', () => {
         it('returns an error', async () => {
           const response = await graphql(
