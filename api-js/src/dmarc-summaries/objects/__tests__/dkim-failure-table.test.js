@@ -167,19 +167,22 @@ describe('given the dkimFailureTable gql object', () => {
           _key: 'agg1',
           _rev: 'rev',
           _type: 'guidanceTag',
-          guidance: 'cool guidance for issue',
-          id: 'agg1',
-          refLinksGuide: [
-            { description: 'Link Description', ref_link: 'www.link.ca' },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'Tech link description',
-              tech_link: 'www.tech.link.ca',
-            },
-          ],
-          tagId: 'agg1',
-          tagName: 'cool-tag-name',
+          en: {
+            guidance: 'cool guidance for issue',
+            id: 'agg1',
+            refLinksGuide: [
+              { description: 'Link Description', ref_link: 'www.link.ca' },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'Tech link description',
+                tech_link: 'www.tech.link.ca',
+              },
+            ],
+            tagId: 'agg1',
+            tagName: 'cool-tag-name',
+          },
+          fr: {},
         }
 
         expect(
