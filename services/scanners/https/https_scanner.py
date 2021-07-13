@@ -214,7 +214,7 @@ def Server(server_client=requests):
                     "shared_id": shared_id
                 }
             )
-            dispatch_results(outbound_payload, server_client)
+            dispatch_results(outbound_payload, server_client, (user_key is not None))
             return Response("Timeout occurred while scanning", status_code=500)
         scan_results = RES_QUEUE.get()
 
