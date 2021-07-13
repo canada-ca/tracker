@@ -380,7 +380,8 @@ describe('given a successful leave', () => {
         const testDkimResult = await testDkimResultCursor.next()
         expect(testDkimResult).toEqual(undefined)
 
-        const testDkimCursor = await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+        const testDkimCursor =
+          await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
         const testDkim = await testDkimCursor.next()
         expect(testDkim).toEqual(undefined)
 
@@ -389,7 +390,8 @@ describe('given a successful leave', () => {
         const testDmarc = await testDmarcCursor.next()
         expect(testDmarc).toEqual(undefined)
 
-        const testSpfCursor = await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+        const testSpfCursor =
+          await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
         const testSpf = await testSpfCursor.next()
         expect(testSpf).toEqual(undefined)
 
@@ -398,7 +400,8 @@ describe('given a successful leave', () => {
         const testHttps = await testHttpsCursor.next()
         expect(testHttps).toEqual(undefined)
 
-        const testSslCursor = await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+        const testSslCursor =
+          await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
         const testSsl = await testSslCursor.next()
         expect(testSsl).toEqual(undefined)
       })
@@ -456,7 +459,8 @@ describe('given a successful leave', () => {
           },
         )
 
-        const testOrgCursor = await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+        const testOrgCursor =
+          await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
         const testOrg = await testOrgCursor.next()
         expect(testOrg).toEqual(undefined)
 
@@ -904,7 +908,8 @@ describe('given a successful leave', () => {
         const testDkimResult = await testDkimResultCursor.next()
         expect(testDkimResult).toBeDefined()
 
-        const testDkimCursor = await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+        const testDkimCursor =
+          await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
         const testDkim = await testDkimCursor.next()
         expect(testDkim).toBeDefined()
 
@@ -913,7 +918,8 @@ describe('given a successful leave', () => {
         const testDmarc = await testDmarcCursor.next()
         expect(testDmarc).toBeDefined()
 
-        const testSpfCursor = await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+        const testSpfCursor =
+          await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
         const testSpf = await testSpfCursor.next()
         expect(testSpf).toBeDefined()
 
@@ -922,7 +928,8 @@ describe('given a successful leave', () => {
         const testHttps = await testHttpsCursor.next()
         expect(testHttps).toBeDefined()
 
-        const testSslCursor = await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+        const testSslCursor =
+          await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
         const testSsl = await testSslCursor.next()
         expect(testSsl).toBeDefined()
       })
@@ -1380,7 +1387,8 @@ describe('given a successful leave', () => {
       const testDkimResult = await testDkimResultCursor.next()
       expect(testDkimResult).toBeDefined()
 
-      const testDkimCursor = await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+      const testDkimCursor =
+        await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
       const testDkim = await testDkimCursor.next()
       expect(testDkim).toBeDefined()
 
@@ -1389,7 +1397,8 @@ describe('given a successful leave', () => {
       const testDmarc = await testDmarcCursor.next()
       expect(testDmarc).toBeDefined()
 
-      const testSpfCursor = await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+      const testSpfCursor =
+        await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
       const testSpf = await testSpfCursor.next()
       expect(testSpf).toBeDefined()
 
@@ -1398,7 +1407,8 @@ describe('given a successful leave', () => {
       const testHttps = await testHttpsCursor.next()
       expect(testHttps).toBeDefined()
 
-      const testSslCursor = await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+      const testSslCursor =
+        await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
       const testSsl = await testSslCursor.next()
       expect(testSsl).toBeDefined()
     })
@@ -1456,11 +1466,13 @@ describe('given a successful leave', () => {
         },
       )
 
-      const testOrgCursor = await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+      const testOrgCursor =
+        await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
       const testOrg = await testOrgCursor.next()
       expect(testOrg).toBeDefined()
 
-      const testDomainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+      const testDomainCursor =
+        await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
       const testDomain = await testDomainCursor.next()
       expect(testDomain).toBeDefined()
     })
