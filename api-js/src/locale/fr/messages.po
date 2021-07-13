@@ -587,13 +587,13 @@ msgstr "Impossible de charger les données d'échec DKIM. Veuillez réessayer."
 msgid "Unable to load DKIM guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation DKIM. Veuillez réessayer."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:254
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:266
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:258
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:270
 msgid "Unable to load DKIM result(s). Please try again."
 msgstr "Impossible de charger le(s) résultat(s) DKIM. Veuillez réessayer."
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:275
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:285
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:279
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:289
 msgid "Unable to load DKIM scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) DKIM. Veuillez réessayer."
 
@@ -608,8 +608,8 @@ msgstr "Impossible de charger les données d'échec DMARC. Veuillez réessayer."
 msgid "Unable to load DMARC guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer."
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:315
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:327
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:319
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:331
 msgid "Unable to load DMARC scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer."
 
@@ -628,8 +628,8 @@ msgid "Unable to load HTTPS guidance tag(s). Please try again."
 msgstr "Impossible de charger la ou les balises d'orientation HTTPS. Veuillez réessayer."
 
 #: src/web-scan/loaders/load-https-by-key.js:33
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:329
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:341
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:333
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:345
 msgid "Unable to load HTTPS scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer."
 
@@ -644,8 +644,8 @@ msgstr "Impossible de charger les données d'échec SPF. Veuillez réessayer."
 msgid "Unable to load SPF guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation SPF. Veuillez réessayer."
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:302
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:312
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:306
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:316
 msgid "Unable to load SPF scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) SPF. Veuillez réessayer."
 
@@ -654,8 +654,8 @@ msgstr "Impossible de charger le(s) scan(s) SPF. Veuillez réessayer."
 msgid "Unable to load SSL guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation SSL. Veuillez réessayer."
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:376
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:386
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:380
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:390
 msgid "Unable to load SSL scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) SSL. Veuillez réessayer."
 
