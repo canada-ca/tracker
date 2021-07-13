@@ -39,7 +39,9 @@ const TwoFactorAuthenticatePage = lazyWithRetry(() =>
   import('./TwoFactorAuthenticatePage'),
 )
 const EmailValidationPage = lazyWithRetry(() => import('./EmailValidationPage'))
-const CreateOrganizationPage = lazyWithRetry(() => import('./CreateOrganizationPage'))
+const CreateOrganizationPage = lazyWithRetry(() =>
+  import('./CreateOrganizationPage'),
+)
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -49,7 +51,7 @@ export default function App() {
 
   return (
     <>
-      <RequestScanNotificationHandler minHeight="200px" />
+      <RequestScanNotificationHandler />
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />

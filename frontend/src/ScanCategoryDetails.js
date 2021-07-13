@@ -17,9 +17,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
   if (!categoryData)
     return (
       <Text fontWeight="bold" fontSize="2xl">
-        <Trans>
-          {t`No scan data available for ${categoryName.toUpperCase()}.`}
-        </Trans>
+        <Trans>No scan data available for ${categoryName.toUpperCase()}.</Trans>
       </Text>
     )
 

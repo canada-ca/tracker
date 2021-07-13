@@ -18,8 +18,9 @@ import {
   GET_ONE_TIME_SPF_SCANS,
   GET_ONE_TIME_SSL_SCANS,
 } from './graphql/queries'
+import { node } from 'prop-types'
 
-export default function RequestScanNotificationHandler({ ...props }) {
+export default function RequestScanNotificationHandler({ children, ...props }) {
   const { isLoggedIn } = useUserVar()
 
   const toast = useToast()
@@ -50,7 +51,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
       })
       toast({
         title: t`DNS Scan Complete`,
-        description: t`DNS scan for domain "${subscriptionData.data.dmarcScanData.domain.domain}" has completed. Information for SPF, SSL, and DKIM is available on the one time scan page.`,
+        description: t`DNS scan for domain "${subscriptionData.data.dmarcScanData.domain.domain}" has completed.`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -84,7 +85,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
       })
       toast({
         title: t`SSL Scan Complete`,
-        description: t`SSL scan for domain "${subscriptionData.data.sslScanData.domain.domain}" has completed. Information for the scan is available on the one time scan page.`,
+        description: t`SSL scan for domain "${subscriptionData.data.sslScanData.domain.domain}" has completed.`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -105,7 +106,7 @@ export default function RequestScanNotificationHandler({ ...props }) {
       })
       toast({
         title: t`HTTPS Scan Complete`,
-        description: t`HTTPS scan for domain "${subscriptionData.data.httpsScanData.domain.domain}" has completed. Information for the scan is available on the one time scan page.`,
+        description: t`HTTPS scan for domain "${subscriptionData.data.httpsScanData.domain.domain}" has completed.`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -114,9 +115,9 @@ export default function RequestScanNotificationHandler({ ...props }) {
     },
   })
 
-  return (
-    <Box {...props}>
-      <Heading>Request Scan Notification Handler</Heading>
-    </Box>
-  )
+  return <Box {...props}>{children}</Box>
+}
+
+RequestScanNotificationHandler.propTypes = {
+  children: node,
 }
