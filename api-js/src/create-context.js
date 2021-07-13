@@ -309,11 +309,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadDmarcGuidanceTagConnectionsByTagId:
         loadDmarcGuidanceTagConnectionsByTagId({
@@ -321,11 +323,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadHttpsGuidanceTagConnectionsByTagId:
         loadHttpsGuidanceTagConnectionsByTagId({
@@ -333,11 +337,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadSpfGuidanceTagConnectionsByTagId:
         loadSpfGuidanceTagConnectionsByTagId({
@@ -345,11 +351,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadSslGuidanceTagConnectionsByTagId:
         loadSslGuidanceTagConnectionsByTagId({
@@ -357,6 +365,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadOrgByKey: loadOrgByKey({
         query,
