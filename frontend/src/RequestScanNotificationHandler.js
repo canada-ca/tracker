@@ -7,7 +7,7 @@ import {
   SPF_SCAN_DATA,
   SSL_SCAN_DATA,
 } from './graphql/subscriptions'
-import { Box, Heading, useToast } from '@chakra-ui/core'
+import { Box, useToast } from '@chakra-ui/core'
 import { useUserVar } from './UserState'
 import { t } from '@lingui/macro'
 import {
