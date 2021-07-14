@@ -4,6 +4,7 @@ import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import {
   Box,
+  Button,
   Checkbox,
   Heading,
   Link,
@@ -17,7 +18,6 @@ import { Formik } from 'formik'
 import { SIGN_IN } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
 import { useLingui } from '@lingui/react'
@@ -165,7 +165,7 @@ export default function SignInPage() {
               </Link>
             </Stack>
 
-            <TrackerButton
+            <Button
               variant="primary"
               isLoading={isSubmitting}
               type="submit"
@@ -173,7 +173,7 @@ export default function SignInPage() {
               mb={5}
             >
               <Trans>Sign In</Trans>
-            </TrackerButton>
+            </Button>
           </form>
         )}
       </Formik>

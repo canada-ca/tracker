@@ -18,7 +18,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { TrackerButton } from './TrackerButton'
 import { t, Trans } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
 import { useLingui } from '@lingui/react'
@@ -66,40 +65,40 @@ export const FloatingMenu = () => {
         fontSize={{ base: '60%', sm: '100%' }}
       >
         <Link as={RouteLink} to="/organizations" flex="1 1 0">
-          <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
+          <Button variant="primary" rounded={0} w="100%" h="100%">
             <Trans>Organizations</Trans>
-          </TrackerButton>
+          </Button>
         </Link>
 
         {StyledDivider}
 
         <Link as={RouteLink} to="/domains" flex="1 1 0">
-          <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
+          <Button variant="primary" rounded={0} w="100%" h="100%">
             <Trans>Domains</Trans>
-          </TrackerButton>
+          </Button>
         </Link>
 
         {StyledDivider}
 
         <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
-          <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
+          <Button variant="primary" rounded={0} w="100%" h="100%">
             <Trans>DMARC Summaries</Trans>
-          </TrackerButton>
+          </Button>
         </Link>
 
         {StyledDivider}
 
         <Box flex="1 1 0">
-          <TrackerButton
-            ref={drawerBtnRef}
+          <Button
             variant="primary"
+            ref={drawerBtnRef}
             onClick={drawerOnOpen}
             rounded={0}
             w="100%"
             h="100%"
           >
             <Trans>Menu</Trans>
-          </TrackerButton>
+          </Button>
         </Box>
 
         <Drawer

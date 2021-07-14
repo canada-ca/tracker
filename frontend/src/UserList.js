@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react'
 import {
   Box,
+  Button,
   Divider,
   FormLabel,
   Flex,
@@ -31,7 +32,6 @@ import {
   REMOVE_USER_FROM_ORG,
   UPDATE_USER_ROLE,
 } from './graphql/mutations'
-import { TrackerButton } from './TrackerButton'
 import { Formik, useFormik } from 'formik'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
@@ -275,7 +275,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         <Box key={`${node.user.userName}:${node.id}`}>
           <Flex align="center" w="100%">
             <Stack flexGrow="0">
-              <TrackerButton
+              <Button
                 aria-label="userEditButton"
                 variant="primary"
                 px="2"
@@ -286,8 +286,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 }}
               >
                 <EditIcon />
-              </TrackerButton>
-              <TrackerButton
+              </Button>
+              <Button
                 aria-label="userRemoveButton"
                 variant="danger"
                 onClick={() => {
@@ -297,7 +297,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 px="2"
               >
                 <MinusIcon />
-              </TrackerButton>
+              </Button>
             </Stack>
             <UserCard
               flexGrow="1"
@@ -375,7 +375,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             </Select>
           </Stack>
 
-          <TrackerButton
+          <Button
             w={{ base: '100%', md: '25%' }}
             variant="primary"
             type="submit"
@@ -383,7 +383,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           >
             <AddIcon />
             <Trans>Invite User</Trans>
-          </TrackerButton>
+          </Button>
         </Stack>
       </form>
 
@@ -419,7 +419,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           </ModalBody>
 
           <ModalFooter>
-            <TrackerButton
+            <Button
               variant="primary"
               isLoading={removeUserLoading}
               mr={4}
@@ -433,7 +433,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               }
             >
               <Trans>Confirm</Trans>
-            </TrackerButton>
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -511,14 +511,14 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 </ModalBody>
 
                 <ModalFooter>
-                  <TrackerButton
+                  <Button
                     variant="primary"
                     isLoading={isSubmitting}
                     type="submit"
                     mr="4"
                   >
                     <Trans>Confirm</Trans>
-                  </TrackerButton>
+                  </Button>
                 </ModalFooter>
               </form>
             )}

@@ -1,10 +1,17 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Collapse,
+  Divider,
+  Heading,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { Trans } from '@lingui/macro'
-import { TrackerButton } from './TrackerButton'
 
 export function GuidanceTagList({
   negativeTags,
@@ -99,14 +106,9 @@ export function GuidanceTagList({
       {selectorHeading}
       {positiveTagList?.length && (
         <Box>
-          <TrackerButton
-            mb="2"
-            onClick={handleShowPosi}
-            variant="strong"
-            w="100%"
-          >
+          <Button variant="strong" mb="2" onClick={handleShowPosi} w="100%">
             <Trans>Positive Tags</Trans>
-          </TrackerButton>
+          </Button>
           <Collapse isOpen={showPosi}>{positiveTagList}</Collapse>
           <Divider borderColor="gray.50" />
         </Box>
@@ -114,14 +116,9 @@ export function GuidanceTagList({
 
       {neutralTagList?.length && (
         <Box>
-          <TrackerButton
-            mb="2"
-            onClick={handleShowNeut}
-            variant="info"
-            w="100%"
-          >
+          <Button mb="2" onClick={handleShowNeut} variant="info" w="100%">
             <Trans>Neutral Tags</Trans>
-          </TrackerButton>
+          </Button>
           <Collapse isOpen={showNeut}>{neutralTagList}</Collapse>
           <Divider borderColor="gray.50" />
         </Box>
@@ -129,14 +126,9 @@ export function GuidanceTagList({
 
       {negativeTagList?.length && (
         <Box>
-          <TrackerButton
-            mb="2"
-            onClick={handleShowNega}
-            variant="weak"
-            w="100%"
-          >
+          <Button variant="weak" mb="2" onClick={handleShowNega} w="100%">
             <Trans>Negative Tags</Trans>
-          </TrackerButton>
+          </Button>
           <Collapse isOpen={showNega}>{negativeTagList}</Collapse>
         </Box>
       )}

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import {
+  Button,
   Flex,
   Heading,
   Modal,
@@ -25,7 +26,6 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
 import PasswordConfirmation from './PasswordConfirmation'
-import { TrackerButton } from './TrackerButton'
 
 function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -112,15 +112,15 @@ function EditableUserPassword() {
       <Flex align="center">
         <LockIcon color="gray.300" mr={2} />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
-        <TrackerButton
+        <Button
+          variant="primary"
           ml="auto"
           onClick={onOpen}
-          variant="primary"
           fontSize="sm"
           px="3"
         >
           <Trans>Edit</Trans>
-        </TrackerButton>
+        </Button>
       </Flex>
 
       <Modal
@@ -179,14 +179,14 @@ function EditableUserPassword() {
                 </ModalBody>
 
                 <ModalFooter>
-                  <TrackerButton
+                  <Button
+                    variant="primary"
                     isLoading={isSubmitting}
                     type="submit"
                     mr="4"
-                    variant="primary"
                   >
                     <Trans>Confirm</Trans>
-                  </TrackerButton>
+                  </Button>
                 </ModalFooter>
               </form>
             )}

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { string } from 'prop-types'
 import {
+  Button,
   Flex,
   Heading,
   Modal,
@@ -24,7 +25,6 @@ import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { number, object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
 import AuthenticateField from './AuthenticateField'
 
@@ -195,14 +195,14 @@ function EditableUserPhoneNumber({ detailValue }) {
               </ModalBody>
 
               <ModalFooter>
-                <TrackerButton
+                <Button
+                  variant="primary"
                   isLoading={isSubmitting}
                   type="submit"
                   mr="4"
-                  variant="primary"
                 >
                   <Trans>Confirm</Trans>
-                </TrackerButton>
+                </Button>
               </ModalFooter>
             </form>
           )}
@@ -254,14 +254,14 @@ function EditableUserPhoneNumber({ detailValue }) {
               </ModalBody>
 
               <ModalFooter>
-                <TrackerButton
+                <Button
+                  variant="primary"
                   isLoading={isSubmitting}
                   type="submit"
                   mr="4"
-                  variant="primary"
                 >
                   <Trans>Confirm</Trans>
-                </TrackerButton>
+                </Button>
               </ModalFooter>
             </form>
           )}
@@ -285,15 +285,15 @@ function EditableUserPhoneNumber({ detailValue }) {
         ) : (
           <Trans>No current phone number</Trans>
         )}
-        <TrackerButton
+        <Button
+          variant="primary"
           ml="auto"
           onClick={onOpen}
-          variant="primary"
           fontSize="sm"
           px="3"
         >
           <Trans>Edit</Trans>
-        </TrackerButton>
+        </Button>
       </Flex>
       {modalContent}
     </Stack>

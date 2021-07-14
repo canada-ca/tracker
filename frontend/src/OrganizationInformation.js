@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import {
   Box,
+  Button,
   Collapse,
   Grid,
   Heading,
@@ -24,7 +25,6 @@ import { ORGANIZATION_INFORMATION } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
 import { t, Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
-import { TrackerButton } from './TrackerButton'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import FormField from './FormField'
@@ -234,10 +234,10 @@ export default function OrganizationInformation({
             isInline
             justifyContent="space-evenly"
           >
-            <TrackerButton
+            <Button
+              variant="danger"
               ref={removeOrgBtnRef}
               onClick={onRemovalOpen}
-              variant="danger"
               px="2"
               mr={{ md: '0.5em' }}
               w={{ base: '45%', md: 'auto' }}
@@ -248,8 +248,8 @@ export default function OrganizationInformation({
                   <Trans>Remove Organization</Trans>
                 </VisuallyHidden>
               </Stack>
-            </TrackerButton>
-            <TrackerButton
+            </Button>
+            <Button
               variant="primary"
               px="2"
               onClick={() => setIsEditingOrg(!isEditingOrg)}
@@ -261,7 +261,7 @@ export default function OrganizationInformation({
                   <Trans>Edit Organization</Trans>
                 </VisuallyHidden>
               </Stack>
-            </TrackerButton>
+            </Button>
           </Stack>
         </Stack>
 
@@ -393,32 +393,32 @@ export default function OrganizationInformation({
                   >
                     <FormField name="cityFR" label={t`City (FR)`} />
                   </Box>
-                  <TrackerButton
-                    type="reset"
+                  <Button
                     variant="danger"
+                    type="reset"
                     onClick={handleReset}
                     gridColumn={{ base: '1 / 3', md: '1 / 2' }}
                     isLoading={updateOrgLoading}
                   >
                     <Trans>Clear</Trans>
-                  </TrackerButton>
-                  <TrackerButton
+                  </Button>
+                  <Button
+                    variant="primaryOutline"
                     type="button"
-                    variant="primary outline"
                     onClick={() => setIsEditingOrg(false)}
                     gridColumn={{ base: '3 / 5', md: '3 / 4' }}
                     isLoading={updateOrgLoading}
                   >
                     <Trans>Close</Trans>
-                  </TrackerButton>
-                  <TrackerButton
-                    type="submit"
+                  </Button>
+                  <Button
                     variant="primary"
+                    type="submit"
                     gridColumn={{ base: '1 / 5', md: '4 / 5' }}
                     isLoading={updateOrgLoading}
                   >
                     <Trans>Confirm</Trans>
-                  </TrackerButton>
+                  </Button>
                 </Grid>
               </form>
             )}
@@ -534,14 +534,14 @@ export default function OrganizationInformation({
                   />
                 </ModalBody>
                 <ModalFooter>
-                  <TrackerButton
+                  <Button
+                    variant="primary"
                     isLoading={removeOrgLoading}
                     type="submit"
                     mr="4"
-                    variant="primary"
                   >
                     <Trans>Confirm</Trans>
-                  </TrackerButton>
+                  </Button>
                 </ModalFooter>
               </ModalContent>
             </form>

@@ -1,7 +1,14 @@
 import React, { useState } from 'react'
 import { object, string } from 'prop-types'
-import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/react'
-import { TrackerButton } from './TrackerButton'
+import {
+  Box,
+  Button,
+  Collapse,
+  Divider,
+  Heading,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { GuidanceTagList } from './GuidanceTagList'
 import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
@@ -192,7 +199,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
 
   return (
     <Box pb="2">
-      <TrackerButton
+      <Button
         variant="primary"
         onClick={handleShowCategory}
         w={['100%', '25%']}
@@ -201,7 +208,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         <Heading as="h2" size="md">
           {categoryName.toUpperCase()}
         </Heading>
-      </TrackerButton>
+      </Button>
       <Collapse isOpen={showCategory}>
         {webSummary}
         <Divider />
@@ -209,28 +216,28 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         {ciphers && (
           <Box>
             <Divider />
-            <TrackerButton
+            <Button
               variant="primary"
               onClick={handleShowCiphers}
               w="100%"
               mb="2"
             >
               <Trans>Ciphers</Trans>
-            </TrackerButton>
+            </Button>
             <Collapse isOpen={showCiphers}>{ciphers}</Collapse>
           </Box>
         )}
         {curves && (
           <Box>
             <Divider />
-            <TrackerButton
+            <Button
               variant="primary"
               onClick={handleShowCurves}
               w="100%"
               mb="2"
             >
               <Trans>Curves</Trans>
-            </TrackerButton>
+            </Button>
             <Collapse isOpen={showCurves}>{curves}</Collapse>
           </Box>
         )}

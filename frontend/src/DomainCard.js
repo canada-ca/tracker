@@ -1,10 +1,17 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Divider, Flex, ListItem, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  ListItem,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
 import { Link as RouteLink } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
-import { TrackerButton } from './TrackerButton'
 
 export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
   const generateStatusIcon = (status) => {
@@ -167,7 +174,7 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           alignSelf="stretch"
           justifyContent="center"
         >
-          <TrackerButton
+          <Button
             variant="primary"
             as={RouteLink}
             to={`/domains/${url}`}
@@ -176,10 +183,10 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
             <Text whiteSpace="noWrap">
               <Trans>Guidance</Trans>
             </Text>
-          </TrackerButton>
+          </Button>
 
           {hasDMARCReport && (
-            <TrackerButton
+            <Button
               variant="primary"
               as={RouteLink}
               to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
@@ -187,7 +194,7 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
               <Text whiteSpace="noWrap">
                 <Trans>DMARC Report</Trans>
               </Text>
-            </TrackerButton>
+            </Button>
           )}
         </Stack>
       </Flex>
