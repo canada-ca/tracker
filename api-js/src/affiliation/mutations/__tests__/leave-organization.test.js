@@ -22,7 +22,7 @@ describe('given a successful leave', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -31,6 +31,8 @@ describe('given a successful leave', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+  })
+  beforeEach(async () => {
     ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -38,8 +40,6 @@ describe('given a successful leave', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-  })
-  beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       emailValidated: true,
@@ -47,12 +47,10 @@ describe('given a successful leave', () => {
   })
   afterEach(async () => {
     await truncate()
+    await drop()
     consoleOutput.length = 0
   })
-  afterAll(async () => {
-    await drop()
-  })
-
+  
   let org, domain, domain2
   beforeAll(() => {
     i18n = setupI18n({
