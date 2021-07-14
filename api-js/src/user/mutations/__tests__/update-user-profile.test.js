@@ -221,6 +221,142 @@ describe('authenticate user account', () => {
             `User: ${user._key} successfully updated their profile.`,
           ])
         })
+        describe('user is email validated', () => {
+          it('sets emailValidated to false', async () => {
+            const cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH {
+                  emailValidated: true,
+                } IN users
+                RETURN NEW
+            `
+            const user = await cursor.next()
+
+            await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: { userName: "john.doe@istio.actually.works" }
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          userName
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+            const checkCursor = await query`
+              FOR user IN users
+                RETURN user
+            `
+            const checkUser = await checkCursor.next()
+
+            expect(checkUser.emailValidated).toBeFalsy()
+          })
+        })
+        describe('user is not email validated', () => {
+          it('does not change emailValidated value', async () => {
+            const cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                UPDATE user._key WITH {
+                  emailValidated: false,
+                } IN users
+                RETURN NEW
+            `
+            const user = await cursor.next()
+
+            await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: { userName: "john.doe@istio.actually.works" }
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          userName
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+            const checkCursor = await query`
+              FOR user IN users
+                RETURN user
+            `
+            const checkUser = await checkCursor.next()
+
+            expect(checkUser.emailValidated).toBeFalsy()
+          })
+        })
       })
       describe('user updates their preferred language', () => {
         it('returns a successful status message, and the updated user info', async () => {
@@ -1077,78 +1213,216 @@ describe('authenticate user account', () => {
         })
       })
       describe('user updates their user name', () => {
-        it('returns a successful status message, and the updated user info', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
-          const response = await graphql(
-            schema,
+        describe('user updates their user name', () => {
+          it('returns a successful status message, and the updated user info', async () => {
+            const cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
             `
-              mutation {
-                updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        userName
+            const user = await cursor.next()
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: { userName: "john.doe@istio.actually.works" }
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          userName
+                        }
                       }
-                    }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                result: {
-                  user: {
-                    userName: 'john.doe@istio.actually.works',
-                  },
-                  status: 'Le profil a été mis à jour avec succès.',
                 },
               },
-            },
-          }
+            )
 
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+            const expectedResponse = {
+              data: {
+                updateUserProfile: {
+                  result: {
+                    user: {
+                      userName: 'john.doe@istio.actually.works',
+                    },
+                    status: 'Le profil a été mis à jour avec succès.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully updated their profile.`,
+            ])
+          })
+          describe('user is email validated', () => {
+            it('sets emailValidated to false', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  UPDATE user._key WITH {
+                    emailValidated: true,
+                  } IN users
+                  RETURN NEW
+              `
+              const user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(
+                      input: { userName: "john.doe@istio.actually.works" }
+                    ) {
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            userName
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      loadUserByKey: loadUserByKey({ query }),
+                    }),
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                  },
+                },
+              )
+
+              const checkCursor = await query`
+                FOR user IN users
+                  RETURN user
+              `
+              const checkUser = await checkCursor.next()
+
+              expect(checkUser.emailValidated).toBeFalsy()
+            })
+          })
+          describe('user is not email validated', () => {
+            it('does not change emailValidated value', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  UPDATE user._key WITH {
+                    emailValidated: false,
+                  } IN users
+                  RETURN NEW
+              `
+              const user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(
+                      input: { userName: "john.doe@istio.actually.works" }
+                    ) {
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            userName
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      loadUserByKey: loadUserByKey({ query }),
+                    }),
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                  },
+                },
+              )
+
+              const checkCursor = await query`
+                FOR user IN users
+                  RETURN user
+              `
+              const checkUser = await checkCursor.next()
+
+              expect(checkUser.emailValidated).toBeFalsy()
+            })
+          })
         })
       })
       describe('user updates their preferred language', () => {
