@@ -74,13 +74,13 @@ function EditableUserTFAMethod({
         <Box p="1">
           {emailValidated ? (
             <CheckIcon
-              size="icons.lg"
+              boxSize="icons.lg"
               color={emailValidated ? 'green.500' : 'red.500'}
               pr={2}
             />
           ) : (
             <CloseIcon
-              size="icons.lg"
+              boxSize="icons.lg"
               color={emailValidated ? 'green.500' : 'red.500'}
               pr={2}
             />
@@ -92,13 +92,13 @@ function EditableUserTFAMethod({
         <Box p="1">
           {phoneValidated ? (
             <CheckIcon
-              size="icons.lg"
+              boxSize="icons.lg"
               color={phoneValidated ? 'green.500' : 'red.500'}
               pr={2}
             />
           ) : (
             <CloseIcon
-              size="icons.lg"
+              boxSize="icons.lg"
               color={phoneValidated ? 'green.500' : 'red.500'}
               pr={2}
             />
