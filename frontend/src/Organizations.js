@@ -145,7 +145,7 @@ export default function Organisations() {
           title="Email Configuration"
           info="Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
         />
-        <Divider borderColor="gray.500" />
+        <Divider borderColor="gray.500" mb={4} />
         <Trans>
           Further details for each organization can be found by clicking on its
           row.
@@ -168,7 +168,6 @@ export default function Organisations() {
             </InputLeftElement>
             <Input
               type="text"
-              bg=""
               placeholder={t`Search for an organization`}
               onChange={(e) => {
                 setSearchTerm(e.target.value)

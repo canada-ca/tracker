@@ -111,12 +111,10 @@ export default function DomainsPage() {
 
   return (
     <Layout>
-      <Stack direction="row" mb="4">
+      <Stack direction="row" justify="space-between" mb="4">
         <Heading as="h1" textAlign="left">
           <Trans>Domains</Trans>
         </Heading>
-
-        <Box ml="auto" />
 
         <InfoButton
           label="Glossary"
@@ -178,7 +176,11 @@ export default function DomainsPage() {
                 alignItems={{ base: 'stretch', md: 'center' }}
                 mb={{ base: '4', md: '8' }}
               >
-                <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
+                <InputGroup
+                  mb={{ base: '8px', md: '0' }}
+                  flexGrow={1}
+                  w={{ base: '100%', md: '50%' }}
+                >
                   <InputLeftElement>
                     <SearchIcon color="gray.300" />
                   </InputLeftElement>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Divider, Select, Stack, Text, useToast } from '@chakra-ui/react'
+import { Divider, Flex, Select, Stack, Text, useToast } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -93,17 +93,21 @@ export default function AdminPage() {
     return (
       <Layout>
         <Stack spacing={10}>
-          <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
+          <Text
+            fontSize="4xl"
+            fontWeight="bold"
+            textAlign={{ base: 'center', md: 'left' }}
+          >
             <Trans>Welcome, Admin</Trans>
           </Text>
-          <Stack flexDirection={['column', 'row']} align="center">
+          <Flex direction={{ base: 'column', md: 'row' }} align="center">
             <Text fontWeight="bold" fontSize="2xl">
               <Trans>Organization: </Trans>
             </Text>
             <Select
-              w={['100%', '25%']}
+              w={{ base: '100%', md: '15rem' }}
+              ml={{ base: 0, md: 2 }}
               size="lg"
-              variant="filled"
               onChange={(e) => {
                 setOrgDetails(adminAffiliations[e.target.value])
                 setSelectedOrg(e.target.value)
@@ -113,16 +117,16 @@ export default function AdminPage() {
               {options}
             </Select>
             <TrackerButton
-              ml={['0', 'auto']}
-              w={['100%', 'auto']}
+              ml={{ base: '0', md: 'auto' }}
+              w={{ base: '100%', md: 'auto' }}
               variant="primary"
               as={RouteLink}
               to="/create-organization"
             >
-              <AddIcon />
+              <AddIcon mr={2} />
               <Trans>Create Organization</Trans>
             </TrackerButton>
-          </Stack>
+          </Flex>
           {options.length > 1 && selectedOrg !== 'none' ? (
             <>
               <OrganizationInformation
@@ -156,7 +160,7 @@ export default function AdminPage() {
           </Text>
           <Divider />
           <TrackerButton
-            w={['100%', 'auto']}
+            w={{ base: '100%', md: 'auto' }}
             variant="primary"
             as={RouteLink}
             to="/create-organization"

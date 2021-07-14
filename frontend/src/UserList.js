@@ -3,6 +3,7 @@ import {
   Box,
   Divider,
   FormLabel,
+  Flex,
   Input,
   InputGroup,
   InputLeftElement,
@@ -44,7 +45,10 @@ import { useDebouncedFunction } from './useDebouncedFunction'
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
   const [addedUserName, setAddedUserName] = useState()
-  const [selectedRemoveUser, setSelectedRemoveUser] = useState()
+  const [selectedRemoveUser, setSelectedRemoveUser] = useState({
+    id: null,
+    userName: null,
+  })
 
   const {
     isOpen: removeIsOpen,
@@ -269,8 +273,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       const userRole = node.permission
       return (
         <Box key={`${node.user.userName}:${node.id}`}>
-          <Stack isInline align="center">
-            <Stack>
+          <Flex align="center" w="100%">
+            <Stack flexGrow="0">
               <TrackerButton
                 aria-label="userEditButton"
                 variant="primary"
@@ -296,11 +300,12 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               </TrackerButton>
             </Stack>
             <UserCard
+              flexGrow="1"
               userName={node.user.userName}
               displayName={node.user.displayName}
               role={userRole}
             />
-          </Stack>
+          </Flex>
           <Divider borderColor="gray.900" />
         </Box>
       )
@@ -329,7 +334,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         <Stack
           align="center"
           w="100%"
-          flexDirection={['column', 'row']}
+          flexDirection={{ base: 'column', md: 'row' }}
           isInline
           mb="2"
         >
@@ -337,8 +342,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             isInline
             w="100%"
             align="center"
-            mb={['2', '0']}
-            mr={['0', '2']}
+            mb={{ base: '2', md: '0' }}
+            mr={{ base: '0', md: '2' }}
           >
             <InputGroup flexGrow={1} w="50%">
               <InputLeftElement>
@@ -371,7 +376,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           </Stack>
 
           <TrackerButton
-            w={['100%', '25%']}
+            w={{ base: '100%', md: '25%' }}
             variant="primary"
             type="submit"
             isLoading={userForm.isSubmitting}

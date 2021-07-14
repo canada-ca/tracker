@@ -30,10 +30,9 @@ export function LandingPage() {
         </Text>
       </Box>
       <Box
-        display={{ xs: 'none', sm: 'none', md: 'flex' }}
+        display={{ base: 'none', md: 'flex' }}
         bg="primary"
         justifyContent="center"
-        display="flex"
       >
         <Image
           bg="white"
