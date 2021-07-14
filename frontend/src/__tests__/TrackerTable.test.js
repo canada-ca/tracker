@@ -3,7 +3,7 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import DmarcReportTable from '../DmarcReportTable'
+import TrackerTable from '../TrackerTable'
 import {
   singleDmarcReportDetailTableColumns,
   singleDmarcReportDetailTableData,
@@ -27,13 +27,13 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
-describe('<DmarcReportTable />', () => {
+describe('<TrackerTable />', () => {
   it('renders correctly', async () => {
     const { getAllByText } = render(
       <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <div>
-            <DmarcReportTable
+            <TrackerTable
               data={singleDmarcReportDetailTableData}
               columns={singleDmarcReportDetailTableColumns}
               title="Fully Aligned by IP Address"
