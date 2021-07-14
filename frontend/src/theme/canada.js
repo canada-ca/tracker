@@ -1,4 +1,11 @@
 import { extendTheme } from '@chakra-ui/react'
+import Accordion from './components/Accordion'
+import Button from './components/Button'
+import Divider from './components/Divider'
+import Input from './components/Input'
+import Select from './components/Select'
+import Tabs from './components/Tabs'
+import Table from './components/Table'
 
 export default extendTheme({
   borders: {
@@ -120,5 +127,14 @@ export default extendTheme({
       4: '4rem',
       60: '60rem',
     },
+  },
+  components: {
+    Accordion,
+    Button,
+    Divider,
+    Input,
+    Select,
+    Tabs,
+    Table,
   },
 })
