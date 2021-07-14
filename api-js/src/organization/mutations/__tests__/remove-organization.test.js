@@ -37,14 +37,7 @@ describe('removing an organization', () => {
   })
   describe('given a successful removal', () => {
     let org, domain
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+    beforeAll(() => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
@@ -59,6 +52,13 @@ describe('removing an organization', () => {
       })
     })
     beforeEach(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         emailValidated: true,
@@ -109,8 +109,6 @@ describe('removing an organization', () => {
     })
     afterEach(async () => {
       await truncate()
-    })
-    afterAll(async () => {
       await drop()
     })
     describe('users permission is super admin', () => {
