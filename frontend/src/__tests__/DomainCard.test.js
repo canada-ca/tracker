@@ -57,12 +57,14 @@ describe('<OrganizationsCard />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DomainCard
-                url="tbs-sct.gc.ca"
-                lastRan={null}
-                status={status}
-                hasDMARCReport={true}
-              />
+              <List>
+                <DomainCard
+                  url="tbs-sct.gc.ca"
+                  lastRan={null}
+                  status={status}
+                  hasDMARCReport={true}
+                />
+              </List>
             </I18nProvider>
           </ChakraProvider>
         </MemoryRouter>

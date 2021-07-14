@@ -207,7 +207,7 @@ describe('<DmarcByDomainPage />', () => {
         })
         // click next page button
         await waitFor(() => {
-          const nextPage = getByText(/Next/)
+          const nextPage = getByText(/^Next$/)
           fireEvent.click(nextPage)
         })
         // expect last domain
