@@ -1750,7 +1750,7 @@ describe('removing a domain', () => {
                 },
               })
             })
-            it.skip('returns a status message', async () => {
+            it('returns a status message', async () => {
               const response = await graphql(
                 schema,
                 `
