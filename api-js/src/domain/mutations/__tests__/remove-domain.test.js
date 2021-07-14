@@ -23,7 +23,7 @@ describe('removing a domain', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -32,6 +32,8 @@ describe('removing a domain', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+  })
+  beforeEach(async () => {
     ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -39,8 +41,6 @@ describe('removing a domain', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-  })
-  beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       emailValidated: true,
@@ -49,8 +49,6 @@ describe('removing a domain', () => {
   })
   afterEach(async () => {
     await truncate()
-  })
-  afterAll(async () => {
     await drop()
   })
   describe('given a successful domain removal', () => {
