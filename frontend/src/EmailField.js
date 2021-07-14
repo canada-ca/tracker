@@ -41,6 +41,7 @@ const EmailField = WithWrapperBox(function EmailField({
           type="email"
           ref={forwardedRef}
           placeholder={i18n._(t`Email`)}
+          variant="outline"
         />
       </InputGroup>
 

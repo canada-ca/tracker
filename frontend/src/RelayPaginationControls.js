@@ -1,4 +1,4 @@
-import { Button, Select, Stack, Text } from '@chakra-ui/react'
+import { Button, Select, Flex, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { array, bool, func, number } from 'prop-types'
@@ -27,8 +27,8 @@ export function RelayPaginationControls({
     })
 
     displayLimitControls = (
-      <Stack direction="row">
-        <Text mr={'1%'}>
+      <>
+        <Text mr={'1%'} ml="auto">
           <Trans>Items per page:</Trans>
         </Text>
 
@@ -45,35 +45,33 @@ export function RelayPaginationControls({
         >
           {options}
         </Select>
-      </Stack>
+      </>
     )
   }
 
   return (
-    <Stack isInline align="center" mb="4" {...props} justify="space-between">
-      <Stack direction="row">
-        <Button
-          id="previousPageBtn"
-          onClick={previous}
-          isDisabled={!hasPreviousPage}
-          isLoading={isLoadingMore}
-          aria-label="Previous page"
-        >
-          <Trans>Previous</Trans>
-        </Button>
+    <Flex align="center" mb="4" {...props}>
+      <Button
+        id="previousPageBtn"
+        onClick={previous}
+        isDisabled={!hasPreviousPage}
+        isLoading={isLoadingMore}
+        aria-label="Previous page"
+      >
+        <Trans>Previous</Trans>
+      </Button>
 
-        <Button
-          id="nextPageBtn"
-          onClick={next}
-          isDisabled={!hasNextPage}
-          isLoading={isLoadingMore}
-          aria-label="Next page"
-        >
-          <Trans>Next</Trans>
-        </Button>
-      </Stack>
+      <Button
+        id="nextPageBtn"
+        onClick={next}
+        isDisabled={!hasNextPage}
+        isLoading={isLoadingMore}
+        aria-label="Next page"
+      >
+        <Trans>Next</Trans>
+      </Button>
       {displayLimitControls}
-    </Stack>
+    </Flex>
   )
 }
 
