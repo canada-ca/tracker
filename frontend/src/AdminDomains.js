@@ -14,7 +14,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
@@ -265,45 +264,45 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         mutation={mutation}
       />
 
-      <SlideIn in={removeIsOpen}>
-        {(styles) => (
-          <Modal isOpen={true} onClose={removeOnClose}>
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
-              <ModalHeader>
-                <Trans>Remove Domain</Trans>
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Stack spacing={4} p={25}>
-                  <Text>
-                    <Trans>Confirm removal of domain:</Trans>
-                  </Text>
-                  <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
-                </Stack>
-              </ModalBody>
+      <Modal
+        isOpen={removeIsOpen}
+        onClose={removeOnClose}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb={4}>
+          <ModalHeader>
+            <Trans>Remove Domain</Trans>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack spacing={4} p={25}>
+              <Text>
+                <Trans>Confirm removal of domain:</Trans>
+              </Text>
+              <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
+            </Stack>
+          </ModalBody>
 
-              <ModalFooter>
-                <TrackerButton
-                  variant="primary"
-                  isLoading={removeDomainLoading}
-                  mr={4}
-                  onClick={() =>
-                    removeDomain({
-                      variables: {
-                        domainId: selectedRemoveDomainId,
-                        orgId: orgId,
-                      },
-                    })
-                  }
-                >
-                  <Trans>Confirm</Trans>
-                </TrackerButton>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+          <ModalFooter>
+            <TrackerButton
+              variant="primary"
+              isLoading={removeDomainLoading}
+              mr={4}
+              onClick={() =>
+                removeDomain({
+                  variables: {
+                    domainId: selectedRemoveDomainId,
+                    orgId: orgId,
+                  },
+                })
+              }
+            >
+              <Trans>Confirm</Trans>
+            </TrackerButton>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Stack>
   )
 }

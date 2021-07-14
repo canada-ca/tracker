@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { string } from 'prop-types'
 import {
+  Flex,
   Heading,
   Modal,
   ModalBody,
@@ -9,7 +10,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
@@ -94,8 +94,8 @@ function EditableUserDisplayName({ detailValue }) {
         <Trans>Display Name:</Trans>
       </Heading>
 
-      <Stack isInline align="center">
-        <PersonIcon size="icons.lg" color="gray.300" />
+      <Flex align="center">
+        <PersonIcon color="gray.300" mr={2} />
         <Text>{detailValue}</Text>
         <TrackerButton
           ml="auto"
@@ -106,74 +106,71 @@ function EditableUserDisplayName({ detailValue }) {
         >
           <Trans>Edit</Trans>
         </TrackerButton>
-      </Stack>
+      </Flex>
 
-      <SlideIn in={isOpen}>
-        {(styles) => (
-          <Modal
-            isOpen={true}
-            onClose={onClose}
-            initialFocusRef={initialFocusRef}
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        initialFocusRef={initialFocusRef}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb="4">
+          <Formik
+            validateOnBlur={false}
+            initialValues={{
+              displayName: '',
+            }}
+            initialTouched={{
+              displayName: true,
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values) => {
+              // Submit update detail mutation
+              await updateUserProfile({
+                variables: {
+                  displayName: values.displayName,
+                },
+              })
+            }}
           >
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb="4" {...styles}>
-              <Formik
-                validateOnBlur={false}
-                initialValues={{
-                  displayName: '',
-                }}
-                initialTouched={{
-                  displayName: true,
-                }}
-                validationSchema={validationSchema}
-                onSubmit={async (values) => {
-                  // Submit update detail mutation
-                  await updateUserProfile({
-                    variables: {
-                      displayName: values.displayName,
-                    },
-                  })
-                }}
-              >
-                {({ handleSubmit, isSubmitting }) => (
-                  <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>
-                      <Trans>Edit Display Name</Trans>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Stack spacing="4" p="6">
-                        <Heading as="h3" size="sm">
-                          <Trans>Current Display Name:</Trans>
-                        </Heading>
+            {({ handleSubmit, isSubmitting }) => (
+              <form id="form" onSubmit={handleSubmit}>
+                <ModalHeader>
+                  <Trans>Edit Display Name</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Stack spacing="4" p="6">
+                    <Heading as="h3" size="sm">
+                      <Trans>Current Display Name:</Trans>
+                    </Heading>
 
-                        <Text>{detailValue}</Text>
+                    <Text>{detailValue}</Text>
 
-                        <DisplayNameField
-                          name="displayName"
-                          label={t`New Display Name:`}
-                          ref={initialFocusRef}
-                        />
-                      </Stack>
-                    </ModalBody>
+                    <DisplayNameField
+                      name="displayName"
+                      label={t`New Display Name:`}
+                      ref={initialFocusRef}
+                    />
+                  </Stack>
+                </ModalBody>
 
-                    <ModalFooter>
-                      <TrackerButton
-                        isLoading={isSubmitting}
-                        type="submit"
-                        mr="4"
-                        variant="primary"
-                      >
-                        <Trans>Confirm</Trans>
-                      </TrackerButton>
-                    </ModalFooter>
-                  </form>
-                )}
-              </Formik>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+                <ModalFooter>
+                  <TrackerButton
+                    isLoading={isSubmitting}
+                    type="submit"
+                    mr="4"
+                    variant="primary"
+                  >
+                    <Trans>Confirm</Trans>
+                  </TrackerButton>
+                </ModalFooter>
+              </form>
+            )}
+          </Formik>
+        </ModalContent>
+      </Modal>
     </Stack>
   )
 }
