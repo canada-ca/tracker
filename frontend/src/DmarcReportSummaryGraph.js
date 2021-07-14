@@ -9,12 +9,12 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import {number, object} from 'prop-types'
+import { number, object } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 import theme from './theme/canada'
-import {Box} from '@chakra-ui/core'
-import {t} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Box } from '@chakra-ui/core'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import CustomTooltipContent from './CustomTooltipContent'
 
 /*
