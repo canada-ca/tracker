@@ -11,7 +11,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
@@ -266,7 +265,7 @@ export default function OrganizationInformation({
           </Stack>
         </Stack>
 
-        <Collapse isOpen={isEditingOrg}>
+        <Collapse in={isEditingOrg}>
           <Formik
             validateOnBlur={false}
             initialValues={{
@@ -479,79 +478,76 @@ export default function OrganizationInformation({
         </Grid>
       </Box>
 
-      <SlideIn in={isRemovalOpen}>
-        {(styles) => (
-          <Modal
-            finalFocusRef={removeOrgBtnRef}
-            isOpen={true}
-            onClose={onRemovalClose}
-          >
-            <ModalOverlay opacity={styles.opacity} />
-            <Formik
-              validateOnBlur={false}
-              initialValues={{
-                orgName: '',
-              }}
-              initialTouched={{
-                orgName: true,
-              }}
-              validationSchema={removeOrgValidationSchema}
-              onSubmit={async () => {
-                // Submit the remove organization mutation
-                await removeOrganization({
-                  variables: {
-                    orgId: org.id,
-                  },
-                })
-              }}
-            >
-              {({ handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                  <ModalContent {...styles}>
-                    <ModalHeader>
-                      <Trans>Remove Organization</Trans>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Text>
-                        <Trans>
-                          Are you sure you want to permanently remove the
-                          organization "{org.name}"?
-                        </Trans>
-                      </Text>
+      <Modal
+        finalFocusRef={removeOrgBtnRef}
+        isOpen={isRemovalOpen}
+        onClose={onRemovalClose}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <Formik
+          validateOnBlur={false}
+          initialValues={{
+            orgName: '',
+          }}
+          initialTouched={{
+            orgName: true,
+          }}
+          validationSchema={removeOrgValidationSchema}
+          onSubmit={async () => {
+            // Submit the remove organization mutation
+            await removeOrganization({
+              variables: {
+                orgId: org.id,
+              },
+            })
+          }}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <ModalContent>
+                <ModalHeader>
+                  <Trans>Remove Organization</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Text>
+                    <Trans>
+                      Are you sure you want to permanently remove the
+                      organization "{org.name}"?
+                    </Trans>
+                  </Text>
 
-                      <br />
+                  <br />
 
-                      <Text mb="1rem">
-                        <Trans>
-                          Enter "{org.name}" below to confirm removal. This
-                          field is case-sensitive.
-                        </Trans>
-                      </Text>
+                  <Text mb="1rem">
+                    <Trans>
+                      Enter "{org.name}" below to confirm removal. This field is
+                      case-sensitive.
+                    </Trans>
+                  </Text>
 
-                      <FormField
-                        name="orgName"
-                        label={t`Organization Name`}
-                        placeholder={org.name}
-                      />
-                    </ModalBody>
-                    <ModalFooter>
-                      <TrackerButton
-                        isLoading={removeOrgLoading}
-                        type="submit"
-                        mr="4"
-                        variant="primary"
-                      >
-                        <Trans>Confirm</Trans>
-                      </TrackerButton>
-                    </ModalFooter>
-                  </ModalContent>
-                </form>
-              )}
-            </Formik>
-          </Modal>
-        )}
-      </SlideIn>
+                  <FormField
+                    name="orgName"
+                    label={t`Organization Name`}
+                    placeholder={org.name}
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <TrackerButton
+                    isLoading={removeOrgLoading}
+                    type="submit"
+                    mr="4"
+                    variant="primary"
+                  >
+                    <Trans>Confirm</Trans>
+                  </TrackerButton>
+                </ModalFooter>
+              </ModalContent>
+            </form>
+          )}
+        </Formik>
+      </Modal>
     </>
   )
 }

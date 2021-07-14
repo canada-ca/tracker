@@ -14,7 +14,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
@@ -394,136 +393,133 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         isLoadingMore={isLoadingMore}
       />
 
-      <SlideIn in={removeIsOpen}>
-        {(styles) => (
-          <Modal isOpen={true} onClose={removeOnClose}>
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
-              <ModalHeader>
-                <Trans>Remove User</Trans>
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Stack spacing={4} p={25}>
-                  <Text>
-                    <Trans>Confirm removal of user:</Trans>
-                  </Text>
-                  <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
-                </Stack>
-              </ModalBody>
+      <Modal
+        isOpen={removeIsOpen}
+        onClose={removeOnClose}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb={4}>
+          <ModalHeader>
+            <Trans>Remove User</Trans>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack spacing={4} p={25}>
+              <Text>
+                <Trans>Confirm removal of user:</Trans>
+              </Text>
+              <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
+            </Stack>
+          </ModalBody>
 
-              <ModalFooter>
-                <TrackerButton
-                  variant="primary"
-                  isLoading={removeUserLoading}
-                  mr={4}
-                  onClick={() =>
-                    removeUser({
-                      variables: {
-                        userId: selectedRemoveUser.id,
-                        orgId: orgId,
-                      },
-                    })
-                  }
-                >
-                  <Trans>Confirm</Trans>
-                </TrackerButton>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+          <ModalFooter>
+            <TrackerButton
+              variant="primary"
+              isLoading={removeUserLoading}
+              mr={4}
+              onClick={() =>
+                removeUser({
+                  variables: {
+                    userId: selectedRemoveUser.id,
+                    orgId: orgId,
+                  },
+                })
+              }
+            >
+              <Trans>Confirm</Trans>
+            </TrackerButton>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
-      <SlideIn in={updateIsOpen}>
-        {(styles) => (
-          <Modal
-            isOpen={true}
-            onClose={updateOnClose}
-            initialFocusRef={initialFocusRef}
+      <Modal
+        isOpen={updateIsOpen}
+        onClose={updateOnClose}
+        initialFocusRef={initialFocusRef}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb={4}>
+          <Formik
+            validateOnBlur={false}
+            initialValues={{
+              role: editingUserRole,
+              userName: editingUserName,
+            }}
+            onSubmit={async (values) => {
+              // Submit update role mutation
+              await updateUserRole({
+                variables: {
+                  orgId: orgId,
+                  role: values.role,
+                  userName: values.userName,
+                },
+              })
+            }}
           >
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
-              <Formik
-                validateOnBlur={false}
-                initialValues={{
-                  role: editingUserRole,
-                  userName: editingUserName,
-                }}
-                onSubmit={async (values) => {
-                  // Submit update role mutation
-                  await updateUserRole({
-                    variables: {
-                      orgId: orgId,
-                      role: values.role,
-                      userName: values.userName,
-                    },
-                  })
-                }}
-              >
-                {({ handleSubmit, isSubmitting }) => (
-                  <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>
-                      <Stack isInline align="center">
-                        <Trans>Edit Role</Trans>
-                      </Stack>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Stack isInline align="center">
-                        <Text fontWeight="bold">
-                          <Trans>User:</Trans>
-                        </Text>
-                        <Text>{editingUserName}</Text>
-                      </Stack>
+            {({ handleSubmit, isSubmitting }) => (
+              <form id="form" onSubmit={handleSubmit}>
+                <ModalHeader>
+                  <Stack isInline align="center">
+                    <Trans>Edit Role</Trans>
+                  </Stack>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Stack isInline align="center">
+                    <Text fontWeight="bold">
+                      <Trans>User:</Trans>
+                    </Text>
+                    <Text>{editingUserName}</Text>
+                  </Stack>
 
-                      <Divider />
-                      <Stack isInline align="center">
-                        <FormLabel htmlFor="role_select" fontWeight="bold">
-                          <Trans>Role:</Trans>
-                        </FormLabel>
-                        <Select
-                          w="35%"
-                          id="role_select"
-                          size="sm"
-                          name="role"
-                          defaultValue={editingUserRole}
-                          onChange={(e) => setEditingUserRole(e.target.value)}
-                        >
-                          {(editingUserRole === 'USER' ||
-                            (permission === 'SUPER_ADMIN' &&
-                              editingUserRole === 'ADMIN')) && (
-                            <option value="USER">{t`USER`}</option>
-                          )}
-                          {(editingUserRole === 'USER' ||
-                            editingUserRole === 'ADMIN') && (
-                            <option value="ADMIN">{t`ADMIN`}</option>
-                          )}
-                          {(editingUserRole === 'SUPER_ADMIN' ||
-                            (permission === 'SUPER_ADMIN' &&
-                              orgSlug === 'super-admin')) && (
-                            <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
-                          )}
-                        </Select>
-                      </Stack>
-                    </ModalBody>
+                  <Divider />
+                  <Stack isInline align="center">
+                    <FormLabel htmlFor="role_select" fontWeight="bold">
+                      <Trans>Role:</Trans>
+                    </FormLabel>
+                    <Select
+                      w="35%"
+                      id="role_select"
+                      size="sm"
+                      name="role"
+                      defaultValue={editingUserRole}
+                      onChange={(e) => setEditingUserRole(e.target.value)}
+                    >
+                      {(editingUserRole === 'USER' ||
+                        (permission === 'SUPER_ADMIN' &&
+                          editingUserRole === 'ADMIN')) && (
+                        <option value="USER">{t`USER`}</option>
+                      )}
+                      {(editingUserRole === 'USER' ||
+                        editingUserRole === 'ADMIN') && (
+                        <option value="ADMIN">{t`ADMIN`}</option>
+                      )}
+                      {(editingUserRole === 'SUPER_ADMIN' ||
+                        (permission === 'SUPER_ADMIN' &&
+                          orgSlug === 'super-admin')) && (
+                        <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+                      )}
+                    </Select>
+                  </Stack>
+                </ModalBody>
 
-                    <ModalFooter>
-                      <TrackerButton
-                        variant="primary"
-                        isLoading={isSubmitting}
-                        type="submit"
-                        mr="4"
-                      >
-                        <Trans>Confirm</Trans>
-                      </TrackerButton>
-                    </ModalFooter>
-                  </form>
-                )}
-              </Formik>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+                <ModalFooter>
+                  <TrackerButton
+                    variant="primary"
+                    isLoading={isSubmitting}
+                    type="submit"
+                    mr="4"
+                  >
+                    <Trans>Confirm</Trans>
+                  </TrackerButton>
+                </ModalFooter>
+              </form>
+            )}
+          </Formik>
+        </ModalContent>
+      </Modal>
     </Stack>
   )
 }
