@@ -224,18 +224,22 @@ describe('given a successful leave', () => {
             },
           )
 
+          await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+          await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
           const testOwnershipCursor =
-            await query`FOR owner IN ownership RETURN owner`
+            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toEqual(undefined)
 
           const testDmarcSummaryCursor =
-            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
           const testDmarcSummary = await testDmarcSummaryCursor.next()
           expect(testDmarcSummary).toEqual(undefined)
 
           const testDomainsToDmarcSumCursor =
-            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
           const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
           expect(testDomainsToDmarcSum).toEqual(undefined)
         })
@@ -305,18 +309,22 @@ describe('given a successful leave', () => {
             },
           )
 
+          await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+          await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
           const testOwnershipCursor =
-            await query`FOR owner IN ownership RETURN owner`
+            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toBeDefined()
 
           const testDmarcSummaryCursor =
-            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
           const testDmarcSummary = await testDmarcSummaryCursor.next()
           expect(testDmarcSummary).toBeDefined()
 
           const testDomainsToDmarcSumCursor =
-            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
           const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
           expect(testDomainsToDmarcSum).toBeDefined()
         })
@@ -375,30 +383,40 @@ describe('given a successful leave', () => {
           },
         )
 
+        await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+        await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+        await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
+        await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+        await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
+        await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+
         const testDkimResultCursor =
-          await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+          await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
         const testDkimResult = await testDkimResultCursor.next()
         expect(testDkimResult).toEqual(undefined)
 
-        const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+        const testDkimCursor =
+          await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
         const testDkim = await testDkimCursor.next()
         expect(testDkim).toEqual(undefined)
 
         const testDmarcCursor =
-          await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+          await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
         const testDmarc = await testDmarcCursor.next()
         expect(testDmarc).toEqual(undefined)
 
-        const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+        const testSpfCursor =
+          await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
         const testSpf = await testSpfCursor.next()
         expect(testSpf).toEqual(undefined)
 
         const testHttpsCursor =
-          await query`FOR httpsScan IN https RETURN httpsScan`
+          await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
         const testHttps = await testHttpsCursor.next()
         expect(testHttps).toEqual(undefined)
 
-        const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+        const testSslCursor =
+          await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
         const testSsl = await testSslCursor.next()
         expect(testSsl).toEqual(undefined)
       })
@@ -456,17 +474,22 @@ describe('given a successful leave', () => {
           },
         )
 
-        const testOrgCursor = await query`FOR org IN organizations RETURN org`
+        await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+        await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+        await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+
+        const testOrgCursor =
+          await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
         const testOrg = await testOrgCursor.next()
         expect(testOrg).toEqual(undefined)
 
         const testDomainCursor =
-          await query`FOR domain IN domains RETURN domain`
+          await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
         const testDomain = await testDomainCursor.next()
         expect(testDomain).toEqual(undefined)
 
         const testAffiliationCursor =
-          await query`FOR aff IN affiliations RETURN aff`
+          await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
         const testAffiliation = await testAffiliationCursor.next()
         expect(testAffiliation).toEqual(undefined)
       })
@@ -748,18 +771,22 @@ describe('given a successful leave', () => {
             },
           )
 
+          await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+          await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
           const testOwnershipCursor =
-            await query`FOR owner IN ownership RETURN owner`
+            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toEqual(undefined)
 
           const testDmarcSummaryCursor =
-            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
           const testDmarcSummary = await testDmarcSummaryCursor.next()
           expect(testDmarcSummary).toEqual(undefined)
 
           const testDomainsToDmarcSumCursor =
-            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
           const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
           expect(testDomainsToDmarcSum).toEqual(undefined)
         })
@@ -830,17 +857,17 @@ describe('given a successful leave', () => {
           )
 
           const testOwnershipCursor =
-            await query`FOR owner IN ownership RETURN owner`
+            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toBeDefined()
 
           const testDmarcSummaryCursor =
-            await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
           const testDmarcSummary = await testDmarcSummaryCursor.next()
           expect(testDmarcSummary).toBeDefined()
 
           const testDomainsToDmarcSumCursor =
-            await query`FOR item IN domainsToDmarcSummaries RETURN item`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
           const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
           expect(testDomainsToDmarcSum).toBeDefined()
         })
@@ -900,29 +927,32 @@ describe('given a successful leave', () => {
         )
 
         const testDkimResultCursor =
-          await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+          await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
         const testDkimResult = await testDkimResultCursor.next()
         expect(testDkimResult).toBeDefined()
 
-        const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+        const testDkimCursor =
+          await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
         const testDkim = await testDkimCursor.next()
         expect(testDkim).toBeDefined()
 
         const testDmarcCursor =
-          await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+          await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
         const testDmarc = await testDmarcCursor.next()
         expect(testDmarc).toBeDefined()
 
-        const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+        const testSpfCursor =
+          await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
         const testSpf = await testSpfCursor.next()
         expect(testSpf).toBeDefined()
 
         const testHttpsCursor =
-          await query`FOR httpsScan IN https RETURN httpsScan`
+          await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
         const testHttps = await testHttpsCursor.next()
         expect(testHttps).toBeDefined()
 
-        const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+        const testSslCursor =
+          await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
         const testSsl = await testSslCursor.next()
         expect(testSsl).toBeDefined()
       })
@@ -981,7 +1011,7 @@ describe('given a successful leave', () => {
         )
 
         const testDomainCursor =
-          await query`FOR domain IN domains RETURN domain`
+          await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
         const testDomain = await testDomainCursor.next()
         expect(testDomain).toBeDefined()
       })
@@ -1039,16 +1069,20 @@ describe('given a successful leave', () => {
           },
         )
 
+        await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+        await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+
         const testOrgCursor = await query`
-          FOR org IN organizations 
-          FILTER org.orgDetails.en.slug != "treasury-board-secretariat-2" 
-          RETURN org
+          FOR org IN organizations
+            OPTIONS { waitForSync: true }
+            FILTER org.orgDetails.en.slug != "treasury-board-secretariat-2" 
+            RETURN org
         `
         const testOrg = await testOrgCursor.next()
         expect(testOrg).toEqual(undefined)
 
         const testAffiliationCursor =
-          await query`FOR aff IN affiliations RETURN aff`
+          await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
         const testAffiliation = await testAffiliationCursor.next()
         expect(testAffiliation).toEqual(undefined)
       })
@@ -1306,17 +1340,17 @@ describe('given a successful leave', () => {
       )
 
       const testOwnershipCursor =
-        await query`FOR owner IN ownership RETURN owner`
+        await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
       const testOwnership = await testOwnershipCursor.next()
       expect(testOwnership).toBeDefined()
 
       const testDmarcSummaryCursor =
-        await query`FOR dmarcSum IN dmarcSummaries RETURN dmarcSum`
+        await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
       const testDmarcSummary = await testDmarcSummaryCursor.next()
       expect(testDmarcSummary).toBeDefined()
 
       const testDomainsToDmarcSumCursor =
-        await query`FOR item IN domainsToDmarcSummaries RETURN item`
+        await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
       const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
       expect(testDomainsToDmarcSum).toBeDefined()
     })
@@ -1375,29 +1409,32 @@ describe('given a successful leave', () => {
       )
 
       const testDkimResultCursor =
-        await query`FOR dkimResult IN dkimResults RETURN dkimResult`
+        await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
       const testDkimResult = await testDkimResultCursor.next()
       expect(testDkimResult).toBeDefined()
 
-      const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+      const testDkimCursor =
+        await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
       const testDkim = await testDkimCursor.next()
       expect(testDkim).toBeDefined()
 
       const testDmarcCursor =
-        await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+        await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
       const testDmarc = await testDmarcCursor.next()
       expect(testDmarc).toBeDefined()
 
-      const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+      const testSpfCursor =
+        await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
       const testSpf = await testSpfCursor.next()
       expect(testSpf).toBeDefined()
 
       const testHttpsCursor =
-        await query`FOR httpsScan IN https RETURN httpsScan`
+        await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
       const testHttps = await testHttpsCursor.next()
       expect(testHttps).toBeDefined()
 
-      const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+      const testSslCursor =
+        await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
       const testSsl = await testSslCursor.next()
       expect(testSsl).toBeDefined()
     })
@@ -1455,11 +1492,13 @@ describe('given a successful leave', () => {
         },
       )
 
-      const testOrgCursor = await query`FOR org IN organizations RETURN org`
+      const testOrgCursor =
+        await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
       const testOrg = await testOrgCursor.next()
       expect(testOrg).toBeDefined()
 
-      const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+      const testDomainCursor =
+        await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
       const testDomain = await testDomainCursor.next()
       expect(testDomain).toBeDefined()
     })
@@ -1516,8 +1555,11 @@ describe('given a successful leave', () => {
           validators: { cleanseInput },
         },
       )
+
+      await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+      
       const testAffiliationCursor =
-        await query`FOR aff IN affiliations RETURN aff`
+        await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
       const testAffiliation = await testAffiliationCursor.next()
       expect(testAffiliation).toEqual(undefined)
     })
