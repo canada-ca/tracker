@@ -224,6 +224,10 @@ describe('given a successful leave', () => {
             },
           )
 
+          await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+          await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
           const testOwnershipCursor =
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
@@ -304,6 +308,10 @@ describe('given a successful leave', () => {
               validators: { cleanseInput },
             },
           )
+
+          await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+          await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
 
           const testOwnershipCursor =
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
@@ -465,6 +473,10 @@ describe('given a successful leave', () => {
             validators: { cleanseInput },
           },
         )
+
+        await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+        await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+        await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
 
         const testOrgCursor =
           await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
@@ -759,6 +771,10 @@ describe('given a successful leave', () => {
             },
           )
 
+          await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+          await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
           const testOwnershipCursor =
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
@@ -1052,6 +1068,9 @@ describe('given a successful leave', () => {
             validators: { cleanseInput },
           },
         )
+
+        await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+        await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
 
         const testOrgCursor = await query`
           FOR org IN organizations
@@ -1536,6 +1555,9 @@ describe('given a successful leave', () => {
           validators: { cleanseInput },
         },
       )
+
+      await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+      
       const testAffiliationCursor =
         await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
       const testAffiliation = await testAffiliationCursor.next()
