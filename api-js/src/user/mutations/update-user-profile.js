@@ -89,12 +89,18 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = user.tfaSendMethod
     }
 
+    let emailValidated = user.emailValidated
+    if (userName) {
+      emailValidated = false
+    }
+
     // Create object containing updated data
     const updatedUser = {
       displayName: displayName || user.displayName,
       userName: userName || user.userName,
       preferredLang: preferredLang || user.preferredLang,
       tfaSendMethod: tfaSendMethod,
+      emailValidated,
     }
 
     // Generate list of collections names
