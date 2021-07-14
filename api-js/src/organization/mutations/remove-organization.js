@@ -407,6 +407,7 @@ export const removeOrganization = new mutationWithClientMutationId({
             query`
               WITH organizations
               REMOVE ${organization._key} IN organizations
+              OPTIONS { waitForSync: true }
             `,
         ),
       ])
