@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
   Box,
+  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -20,7 +21,6 @@ import {
 } from '@chakra-ui/react'
 import { MinusIcon, SmallAddIcon, WarningIcon } from '@chakra-ui/icons'
 import { array, bool, func, object, string } from 'prop-types'
-import { TrackerButton } from './TrackerButton'
 import { Field, FieldArray, Formik } from 'formik'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
@@ -227,15 +227,15 @@ export function AdminDomainModal({
                         >
                           {values.selectors.map((_selector, index) => (
                             <React.Fragment key={index}>
-                              <TrackerButton
+                              <Button
+                                variant="danger"
                                 data-testid="remove-dkim-selector"
                                 type="button"
-                                variant="danger"
                                 p="3"
                                 onClick={() => arrayHelpers.remove(index)}
                               >
                                 <MinusIcon size="icons.xs" />
-                              </TrackerButton>
+                              </Button>
                               <Field
                                 id={`selectors.${index}`}
                                 name={`selectors.${index}`}
@@ -276,15 +276,15 @@ export function AdminDomainModal({
                             </React.Fragment>
                           ))}
                         </Grid>
-                        <TrackerButton
+                        <Button
+                          variant="primary"
                           data-testid="add-dkim-selector"
                           type="button"
-                          variant="primary"
                           px="2"
                           onClick={() => arrayHelpers.push('')}
                         >
                           <SmallAddIcon size="icons.md" />
-                        </TrackerButton>
+                        </Button>
                       </Box>
                     )}
                   />
@@ -292,14 +292,14 @@ export function AdminDomainModal({
               </ModalBody>
 
               <ModalFooter>
-                <TrackerButton
+                <Button
                   variant="primary"
                   isLoading={isSubmitting}
                   type="submit"
                   mr="4"
                 >
                   <Trans>Confirm</Trans>
-                </TrackerButton>
+                </Button>
               </ModalFooter>
             </form>
           )}

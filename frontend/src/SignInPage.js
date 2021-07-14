@@ -2,14 +2,13 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
-import { Box, Heading, Link, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Link, Text, useToast } from '@chakra-ui/react'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { SIGN_IN } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
 import { useLingui } from '@lingui/react'
@@ -137,7 +136,7 @@ export default function SignInPage() {
               </Link>
             </Box>
 
-            <TrackerButton
+            <Button
               variant="primary"
               isLoading={isSubmitting}
               type="submit"
@@ -145,7 +144,7 @@ export default function SignInPage() {
               mb={5}
             >
               <Trans>Sign In</Trans>
-            </TrackerButton>
+            </Button>
           </form>
         )}
       </Formik>

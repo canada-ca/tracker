@@ -1,13 +1,12 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Heading, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, useToast } from '@chakra-ui/react'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, ref, string } from 'yup'
 import { Formik } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { RESET_PASSWORD } from './graphql/mutations'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 
 export default function ResetPasswordPage() {
@@ -102,7 +101,7 @@ export default function ResetPasswordPage() {
 
             <PasswordConfirmation mb="4" spacing="4" />
 
-            <TrackerButton
+            <Button
               type="submit"
               isLoading={isSubmitting}
               id="submitBtn"
@@ -110,7 +109,7 @@ export default function ResetPasswordPage() {
               mb="4"
             >
               <Trans>Change Password</Trans>
-            </TrackerButton>
+            </Button>
           </form>
         )}
       </Formik>

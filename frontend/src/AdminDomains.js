@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import {
   Box,
+  Button,
   Divider,
   Input,
   InputGroup,
@@ -23,7 +24,6 @@ import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { Domain } from './Domain'
 import { number, string } from 'prop-types'
 import { ListOf } from './ListOf'
-import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'
 import { REMOVE_DOMAIN } from './graphql/mutations'
 import {
@@ -170,7 +170,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           <Box key={'admindomain' + index}>
             <Stack isInline align="center">
               <Stack>
-                <TrackerButton
+                <Button
                   data-testid={`edit-${index}`}
                   variant="primary"
                   px="2"
@@ -183,8 +183,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   }}
                 >
                   <EditIcon />
-                </TrackerButton>
-                <TrackerButton
+                </Button>
+                <Button
                   data-testid={`remove-${index}`}
                   onClick={() => {
                     setSelectedRemoveDomainUrl(domain)
@@ -195,7 +195,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   px="2"
                 >
                   <MinusIcon />
-                </TrackerButton>
+                </Button>
               </Stack>
               <Domain url={domain} lastRan={lastRan} flexGrow={1} />
             </Stack>
@@ -229,7 +229,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               onChange={(e) => setNewDomainUrl(e.target.value)}
             />
           </InputGroup>
-          <TrackerButton
+          <Button
             id="addDomainBtn"
             width={['100%', '25%']}
             variant="primary"
@@ -237,7 +237,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           >
             <AddIcon />
             <Trans>Add Domain</Trans>
-          </TrackerButton>
+          </Button>
         </Stack>
       </form>
 
@@ -285,7 +285,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           </ModalBody>
 
           <ModalFooter>
-            <TrackerButton
+            <Button
               variant="primary"
               isLoading={removeDomainLoading}
               mr={4}
@@ -299,7 +299,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               }
             >
               <Trans>Confirm</Trans>
-            </TrackerButton>
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

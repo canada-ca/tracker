@@ -1,6 +1,6 @@
 import React from 'react'
 import { string } from 'prop-types'
-import { Heading, Select, Stack, useToast } from '@chakra-ui/react'
+import { Button, Heading, Select, Stack, useToast } from '@chakra-ui/react'
 import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -9,7 +9,6 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 
 function EditableUserLanguage({ currentLang }) {
   const toast = useToast()
@@ -101,13 +100,13 @@ function EditableUserLanguage({ currentLang }) {
                 <option value="ENGLISH">English</option>
                 <option value="FRENCH">Français</option>
               </Field>
-              <TrackerButton
+              <Button
+                variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Save Language</Trans>
-              </TrackerButton>
+              </Button>
             </Stack>
           </form>
         )}

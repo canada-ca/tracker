@@ -1,13 +1,20 @@
 import React from 'react'
 import { bool, string } from 'prop-types'
-import { Badge, Box, Heading, Select, Stack, useToast } from '@chakra-ui/react'
+import {
+  Badge,
+  Box,
+  Button,
+  Heading,
+  Select,
+  Stack,
+  useToast,
+} from '@chakra-ui/react'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
-import { TrackerButton } from './TrackerButton'
 
 function EditableUserTFAMethod({
   currentTFAMethod,
@@ -134,13 +141,13 @@ function EditableUserTFAMethod({
                 {emailValidated && <option value="EMAIL">{t`Email`}</option>}
                 {phoneValidated && <option value="PHONE">{t`Phone`}</option>}
               </Field>
-              <TrackerButton
+              <Button
+                variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Save</Trans>
-              </TrackerButton>
+              </Button>
             </Stack>
           </form>
         )}

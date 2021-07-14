@@ -1,9 +1,8 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
-import { TrackerButton } from './TrackerButton'
 import { Formik } from 'formik'
-import { Box, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Text, useToast } from '@chakra-ui/react'
 import { REQUEST_SCAN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
@@ -70,7 +69,7 @@ export function ScanDomain() {
                 </Text>
                 <DomainField name="domain" mb="4" isDisabled={true} />
 
-                <TrackerButton
+                <Button
                   w={['100%', '25%']}
                   variant="primary"
                   isLoading={isSubmitting}
@@ -79,7 +78,7 @@ export function ScanDomain() {
                   fontSize="lg"
                 >
                   <Trans>Scan Domain</Trans>
-                </TrackerButton>
+                </Button>
               </Box>
             </form>
           )

@@ -7,7 +7,6 @@ import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { SEND_PASSWORD_RESET_LINK } from './graphql/mutations'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 
 export default function ForgotPasswordPage() {
@@ -76,15 +75,15 @@ export default function ForgotPasswordPage() {
             <EmailField name="email" mb="4" />
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <TrackerButton
+              <Button
+                variant="primary"
                 aria-label="forgot-password-submit"
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Submit</Trans>
-              </TrackerButton>
+              </Button>
 
               <Button
                 as={RouteLink}

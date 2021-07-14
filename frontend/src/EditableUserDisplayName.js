@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { string } from 'prop-types'
 import {
+  Button,
   Flex,
   Heading,
   Modal,
@@ -25,7 +26,6 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
-import { TrackerButton } from './TrackerButton'
 
 function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -97,15 +97,15 @@ function EditableUserDisplayName({ detailValue }) {
       <Flex align="center">
         <PersonIcon color="gray.300" mr={2} />
         <Text>{detailValue}</Text>
-        <TrackerButton
+        <Button
+          variant="primary"
           ml="auto"
           onClick={onOpen}
-          variant="primary"
           fontSize="sm"
           px="3"
         >
           <Trans>Edit</Trans>
-        </TrackerButton>
+        </Button>
       </Flex>
 
       <Modal
@@ -157,14 +157,14 @@ function EditableUserDisplayName({ detailValue }) {
                 </ModalBody>
 
                 <ModalFooter>
-                  <TrackerButton
+                  <Button
+                    variant="primary"
                     isLoading={isSubmitting}
                     type="submit"
                     mr="4"
-                    variant="primary"
                   >
                     <Trans>Confirm</Trans>
-                  </TrackerButton>
+                  </Button>
                 </ModalFooter>
               </form>
             )}

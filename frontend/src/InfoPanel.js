@@ -1,8 +1,7 @@
 import React from 'react'
 import { any, bool, func, shape, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, Stack } from '@chakra-ui/react'
-import { TrackerButton } from './TrackerButton'
+import { Box, Button, Stack } from '@chakra-ui/react'
 
 export function InfoPanel({ state, children }) {
   return (
@@ -33,7 +32,7 @@ export function InfoBox({ title, info }) {
 
 export function InfoButton({ state, changeState, label, ...props }) {
   return (
-    <TrackerButton
+    <Button
       variant="info"
       display="inline-block"
       type="button"
@@ -46,7 +45,7 @@ export function InfoButton({ state, changeState, label, ...props }) {
       {...props}
     >
       <Trans> {label} </Trans>
-    </TrackerButton>
+    </Button>
   )
 }
 
