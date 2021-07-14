@@ -3,16 +3,24 @@ import { useQuery } from '@apollo/client'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
   Box,
+  Flex,
+  Button,
   Divider,
   Heading,
   Link,
   Select,
+  Spacer,
   Stack,
   Text,
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
-import DmarcReportTable from './DmarcReportTable'
+import TrackerTable from './TrackerTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
@@ -380,7 +388,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
+        <TrackerTable
           mt="30px"
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
@@ -390,6 +398,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           infoPanel={failDkimInfoPanel}
           infoState={failDkimState}
           changeInfoState={changeFailDkimState}
+          searchPlaceholder={t`Search DKIM Failing Items`}
         />
       </ErrorBoundary>
     )
@@ -483,7 +492,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     fullPassTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
+        <TrackerTable
           data={fullPassNodes}
           columns={fullPassColumns}
           title={t`Fully Aligned by IP Address`}
@@ -492,6 +501,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           infoPanel={fullPassInfoPanel}
           infoState={fullPassState}
           changeInfoState={changeFullPassState}
+          searchPlaceholder={t`Search Fully Aligned Items`}
         />
       </ErrorBoundary>
     )
@@ -598,7 +608,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     spfFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
+        <TrackerTable
           mt="30px"
           data={spfFailureNodes}
           columns={spfFailureColumns}
@@ -608,6 +618,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           infoPanel={failSpfInfoPanel}
           infoState={failSpfState}
           changeInfoState={changeFailSpfState}
+          searchPlaceholder={t`Search SPF Failing Items`}
         />
       </ErrorBoundary>
     )
@@ -703,7 +714,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
+        <TrackerTable
           mt="30px"
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
@@ -713,6 +724,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           infoPanel={fullFailInfoPanel}
           infoState={fullFailState}
           changeInfoState={changeFullFailState}
+          searchPlaceholder={t`Search DMARC Failing Items`}
         />
       </ErrorBoundary>
     )
@@ -732,10 +744,63 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-      {fullPassTable}
-      {dkimFailureTable}
-      {spfFailureTable}
-      {dmarcFailureTable}
+      <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
+        <AccordionItem>
+          <h2>
+            <Button as={AccordionButton} variant="primary" p={0} w="100%">
+              <Flex w="100%">
+                <Spacer />
+                <Trans>Fully Aligned by IP Address</Trans>
+                <Spacer />
+                <AccordionIcon />
+              </Flex>
+            </Button>
+          </h2>
+          <AccordionPanel>{fullPassTable}</AccordionPanel>
+        </AccordionItem>
+
+        <AccordionItem>
+          <h2>
+            <Button as={AccordionButton} variant="primary" p={0} w="100%">
+              <Flex w="100%">
+                <Spacer />
+                <Trans>DKIM Failures by IP Address</Trans>
+                <Spacer />
+                <AccordionIcon />
+              </Flex>
+            </Button>
+          </h2>
+          <AccordionPanel>{dkimFailureTable}</AccordionPanel>
+        </AccordionItem>
+
+        <AccordionItem>
+          <h2>
+            <Button as={AccordionButton} variant="primary" p={0} w="100%">
+              <Flex w="100%">
+                <Spacer />
+                <Trans>SPF Failures by IP Address</Trans>
+                <Spacer />
+                <AccordionIcon />
+              </Flex>
+            </Button>
+          </h2>
+          <AccordionPanel>{spfFailureTable}</AccordionPanel>
+        </AccordionItem>
+
+        <AccordionItem>
+          <h2>
+            <Button as={AccordionButton} variant="primary" p={0} w="100%">
+              <Flex w="100%">
+                <Spacer />
+                <Trans>DMARC Failures by IP Address</Trans>
+                <Spacer />
+                <AccordionIcon />
+              </Flex>
+            </Button>
+          </h2>
+          <AccordionPanel>{dmarcFailureTable}</AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     </ErrorBoundary>
   )
 

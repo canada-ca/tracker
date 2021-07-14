@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 import WithWrapperBox from './WithWrapperBox'
-import { any } from 'prop-types'
+import { any, string } from 'prop-types'
 import {
   Input,
   InputGroup,
@@ -16,6 +16,7 @@ const ReactTableGlobalFilter = ({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
+  placeholder,
 }) => {
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
@@ -39,7 +40,7 @@ const ReactTableGlobalFilter = ({
             setValue(e.target.value)
             onChange(e.target.value)
           }}
-          placeholder={t`${count} records...`}
+          placeholder={placeholder || t`${count} records...`}
         />
       </InputGroup>
     </Stack>
@@ -51,6 +52,7 @@ ReactTableGlobalFilter.propTypes = {
   preGlobalFilteredRows: any,
   globalFilter: any,
   setGlobalFilter: any,
+  placeholder: string,
 }
 
 export default WithWrapperBox(ReactTableGlobalFilter)
