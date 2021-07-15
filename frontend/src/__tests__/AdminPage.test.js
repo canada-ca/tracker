@@ -205,7 +205,7 @@ describe('<AdminPage />', () => {
     )
 
     await waitFor(() => {
-      const welcome = getByText(/Welcome, Admin/i)
+      const welcome = getByText(/Select an organization to view admin options/i)
       expect(welcome).toBeInTheDocument()
     })
   })
