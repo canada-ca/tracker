@@ -1,5 +1,7 @@
 export * from './auth-result'
 export * from './authenticate-error'
+export * from './close-account-error'
+export * from './close-account-result'
 export * from './remove-phone-number-error'
 export * from './remove-phone-number-result'
 export * from './reset-password-error'
