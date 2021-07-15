@@ -41,6 +41,7 @@ const ReactTableGlobalFilter = ({
             onChange(e.target.value)
           }}
           placeholder={placeholder || t`${count} records...`}
+          aria-label="Filter the table"
         />
       </InputGroup>
     </Stack>

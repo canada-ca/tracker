@@ -88,7 +88,6 @@ function TrackerTable({ ...props }) {
           globalFilter={state.globalFilter}
           setGlobalFilter={setGlobalFilter}
           placeholder={searchPlaceholder}
-          my={1}
         />
 
         {infoState && (
@@ -204,7 +203,7 @@ function TrackerTable({ ...props }) {
                   gotoPage(parseInt(event) - 1)
                 }}
               >
-                <NumberInputField />
+                <NumberInputField aria-label="Go to input page" />
               </NumberInput>
             </Stack>
             <Text>
@@ -221,6 +220,7 @@ function TrackerTable({ ...props }) {
                 // wrapperRef.current.scrollIntoView(true)
               }}
               width="fit-content"
+              aria-label="Items per page"
             >
               {[5, 10, 20].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
