@@ -107,6 +107,7 @@ describe('<SignInPage />', () => {
               variables: {
                 userName: values.email,
                 password: values.password,
+                rememberMe: false,
               },
             },
             result: {
@@ -189,6 +190,7 @@ describe('<SignInPage />', () => {
               variables: {
                 userName: values.email,
                 password: values.password,
+                rememberMe: false,
               },
             },
             result: {

@@ -9,11 +9,37 @@ import { Box, Flex, Image, useToast } from '@chakra-ui/core'
 import { Layout } from './Layout'
 import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
+import { useMutation } from '@apollo/client'
+import { SIGN_OUT } from './graphql/mutations'
 
 export const TopBanner = (props) => {
   const { i18n } = useLingui()
   const { isLoggedIn, logout } = useUserVar()
   const toast = useToast()
+
+  const [signOut] = useMutation(SIGN_OUT, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`An error occured when you attempted to sign out`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted() {
+      logout()
+      toast({
+        title: t`Sign Out.`,
+        description: t`You have successfully been signed out.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   return (
     <Flex bg="primary" borderBottom="3px solid" borderBottomColor="accent">
@@ -46,17 +72,7 @@ export const TopBanner = (props) => {
               mx={1}
               px={3}
               display={{ base: 'none', md: 'inline' }}
-              onClick={() => {
-                logout()
-                toast({
-                  title: t`Sign Out.`,
-                  description: t`You have successfully been signed out.`,
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                  position: 'top-left',
-                })
-              }}
+              onClick={signOut}
             >
               <Trans>Sign Out</Trans>
             </TrackerButton>
