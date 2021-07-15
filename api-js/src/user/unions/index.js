@@ -1,4 +1,5 @@
 export * from './authenticate-union'
+export * from './close-account-union'
 export * from './refresh-tokens-union'
 export * from './remove-phone-number-union'
 export * from './reset-password-union'
