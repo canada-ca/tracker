@@ -37,7 +37,7 @@ const PhoneNumberField = WithWrapperBox(function PhoneNumberField({
           inputProps={{
             id: name,
             name: name,
-            autoFocus: true,
+            autoFocus: false,
           }}
           value={values[name]}
           onChange={(e) => setFieldValue(name, e)}
