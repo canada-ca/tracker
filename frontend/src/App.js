@@ -58,7 +58,6 @@ export default function App() {
       console.error(error.message)
     },
     onCompleted({ refreshTokens }) {
-      // User successfully completes tfa validation
       if (refreshTokens.result.__typename === 'AuthResult') {
         login({
           jwt: refreshTokens.result.authToken,

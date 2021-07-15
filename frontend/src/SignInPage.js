@@ -148,7 +148,9 @@ export default function SignInPage() {
                 size="lg"
                 onChange={handleChange}
               >
-                <Trans>Remember me</Trans>
+                <Text fontSize="md">
+                  <Trans>Remember me</Trans>
+                </Text>
               </Checkbox>
 
               <Link
