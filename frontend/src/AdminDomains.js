@@ -235,7 +235,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             variant="primary"
             type="submit"
           >
-            <AddIcon />
+            <AddIcon mr={2} />
             <Trans>Add Domain</Trans>
           </Button>
         </Stack>

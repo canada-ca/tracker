@@ -100,13 +100,6 @@ export default function AdminPage() {
     return (
       <Layout>
         <Stack spacing={10}>
-          <Text
-            fontSize="4xl"
-            fontWeight="bold"
-            textAlign={{ base: 'center', md: 'left' }}
-          >
-            <Trans>Welcome, Admin</Trans>
-          </Text>
           <Flex direction={{ base: 'column', md: 'row' }} align="center">
             <Text fontWeight="bold" fontSize="2xl">
               <Trans>Organization: </Trans>

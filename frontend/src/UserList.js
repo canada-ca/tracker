@@ -274,19 +274,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       return (
         <Box key={`${node.user.userName}:${node.id}`}>
           <Flex align="center" w="100%">
-            <Stack flexGrow="0">
-              <Button
-                aria-label="userEditButton"
-                variant="primary"
-                px="2"
-                onClick={() => {
-                  setEditingUserRole(userRole)
-                  setEditingUserName(node.user.userName)
-                  updateOnOpen()
-                }}
-              >
-                <EditIcon />
-              </Button>
+            <Stack direction="row" flexGrow="0">
               <Button
                 aria-label="userRemoveButton"
                 variant="danger"
@@ -294,9 +282,23 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                   setSelectedRemoveUser(node.user)
                   removeOnOpen()
                 }}
-                px="2"
+                p={2}
+                m={0}
               >
                 <MinusIcon />
+              </Button>
+              <Button
+                aria-label="userEditButton"
+                variant="primary"
+                onClick={() => {
+                  setEditingUserRole(userRole)
+                  setEditingUserName(node.user.userName)
+                  updateOnOpen()
+                }}
+                p={2}
+                m={0}
+              >
+                <EditIcon />
               </Button>
             </Stack>
             <UserCard
@@ -381,7 +383,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             type="submit"
             isLoading={userForm.isSubmitting}
           >
-            <AddIcon />
+            <AddIcon mr={2} />
             <Trans>Invite User</Trans>
           </Button>
         </Stack>
