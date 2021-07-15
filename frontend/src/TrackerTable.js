@@ -1,24 +1,36 @@
 import React from 'react'
 import {
   useGlobalFilter,
-  useFilters,
   usePagination,
   useSortBy,
   useTable,
 } from 'react-table'
-import { any, array, bool, func, number, shape, string } from 'prop-types'
+import { any, array, bool, func, shape, string } from 'prop-types'
 import {
   Box,
   Flex,
+  IconButton,
+  Input,
+  Stack,
+  Select,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
+  Text,
   chakra,
 } from '@chakra-ui/react'
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronUpIcon,
+  ChevronRightIcon,
+} from '@chakra-ui/icons'
+import { t, Trans } from '@lingui/macro'
 import WithWrapperBox from './WithWrapperBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 import { InfoButton } from './InfoPanel'
@@ -27,12 +39,8 @@ function TrackerTable({ ...props }) {
   const {
     data,
     columns,
+    title,
     initialSort,
-    selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)')
-      .matches
-      ? 5
-      : 10,
-    manualFilters,
     infoPanel,
     infoState,
     changeInfoState,
@@ -43,22 +51,32 @@ function TrackerTable({ ...props }) {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
     prepareRow,
-    state,
     preGlobalFilteredRows,
     setGlobalFilter,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state,
   } = useTable(
     {
       columns,
       data,
       initialState: {
         sortBy: initialSort,
-        pageSize: selectedDisplayLimit,
+        pageSize: 10,
+        pageIndex: 0,
       },
     },
     useGlobalFilter,
     useSortBy,
+    usePagination,
   )
 
   return (
@@ -113,12 +131,13 @@ function TrackerTable({ ...props }) {
           ))}
         </Thead>
         <Tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {page.map((row) => {
             prepareRow(row)
             return (
-              <Tr {...row.getRowProps()}>
+              <Tr key={row.getRowProps().key} {...row.getRowProps()}>
                 {row.cells.map((cell) => (
                   <Td
+                    key={cell.getCellProps().key}
                     {...cell.getCellProps()}
                     isNumeric={cell.column.isNumeric}
                   >
@@ -130,6 +149,83 @@ function TrackerTable({ ...props }) {
           })}
         </Tbody>
       </Table>
+
+      <Box className="pagination" mt="0.25em">
+        <Stack isInline align="center" flexWrap="wrap" justify="space-between">
+          <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+            <IconButton
+              onClick={() => {
+                // wrapperRef.current.scrollIntoView()
+                gotoPage(0)
+              }}
+              disabled={!canPreviousPage}
+              icon={<ArrowLeftIcon />}
+              aria-label="Go to first page"
+            />
+            <IconButton
+              onClick={() => {
+                // wrapperRef.current.scrollIntoView(true)
+                previousPage()
+              }}
+              disabled={!canPreviousPage}
+              icon={<ChevronLeftIcon />}
+              aria-label="Go to previous page"
+            />
+            <IconButton
+              onClick={() => {
+                // wrapperRef.current.scrollIntoView(true)
+                nextPage()
+              }}
+              disabled={!canNextPage}
+              icon={<ChevronRightIcon />}
+              aria-label="Go to next page"
+            />
+            <IconButton
+              onClick={() => {
+                // wrapperRef.current.scrollIntoView(true)
+                gotoPage(pageCount - 1)
+              }}
+              disabled={!canNextPage}
+              icon={<ArrowRightIcon />}
+              aria-label="Go to last page"
+            />
+            <Stack isInline align="center" spacing="4px">
+              <Box as="label" htmlFor={`${title}-goTo`}>
+                <Trans>Go to page:</Trans>
+              </Box>
+              <Input
+                id={`${title}-goTo`}
+                width="6rem"
+                value="1"
+                onChange={(event) => {
+                  gotoPage(event)
+                }}
+              />
+            </Stack>
+            <Text>
+              <Trans>
+                Page {state.pageIndex + 1} of {pageOptions.length}
+              </Trans>
+            </Text>
+          </Stack>
+          <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+            <Select
+              value={state.pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value))
+                // wrapperRef.current.scrollIntoView(true)
+              }}
+              width="fit-content"
+            >
+              {[5, 10, 20].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {t`Show ${pageSize}`}
+                </option>
+              ))}
+            </Select>
+          </Stack>
+        </Stack>
+      </Box>
     </Box>
   )
 }
@@ -137,12 +233,8 @@ function TrackerTable({ ...props }) {
 TrackerTable.propTypes = {
   data: array.isRequired,
   columns: array.isRequired,
+  title: string,
   initialSort: array.isRequired,
-  linkColumns: array,
-  prependLink: string,
-  appendLink: string,
-  selectedDisplayLimit: number,
-  manualFilters: bool,
   infoPanel: any,
   infoState: shape({
     isHidden: bool,
