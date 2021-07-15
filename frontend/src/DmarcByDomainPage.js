@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
 import {
   Box,
@@ -19,8 +19,6 @@ import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
-import { RelayPaginationControls } from './RelayPaginationControls'
-import { toConstantCase } from './helpers/toConstantCase'
 import { Link as RouteLink } from 'react-router-dom'
 import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
@@ -34,30 +32,18 @@ export default function DmarcByDomainPage() {
   const [selectedDate, setSelectedDate] = useState(
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
-  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
-  const displayLimitOptions = [5, 10, 20, 50, 100]
-  const [orderBy, setOrderBy] = useState({
+  const orderBy = {
     field: 'TOTAL_MESSAGES',
     direction: 'DESC',
-  })
+  }
 
   const [infoState, changeInfoState] = React.useState({
     isHidden: true,
   })
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
+  const { loading, error, nodes, resetToFirstPage } = usePaginatedCollection({
     fetchForward: FORWARD,
-    recordsPerPage: selectedTableDisplayLimit,
+    recordsPerPage: 10,
     variables: {
       month: selectedPeriod,
       year: selectedYear,
@@ -67,23 +53,6 @@ export default function DmarcByDomainPage() {
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   })
-
-  const updateOrderBy = useCallback(
-    (sortBy) => {
-      let newOrderBy = {
-        field: 'TOTAL_MESSAGES',
-        direction: 'DESC',
-      }
-      if (sortBy.length) {
-        newOrderBy = {}
-        newOrderBy.field = toConstantCase(sortBy[0].id)
-        newOrderBy.direction = sortBy[0].desc === true ? 'DESC' : 'ASC'
-      }
-      resetToFirstPage()
-      setOrderBy(newOrderBy)
-    },
-    [resetToFirstPage],
-  )
 
   const formattedData = useMemo(() => {
     const curData = []
@@ -121,6 +90,7 @@ export default function DmarcByDomainPage() {
           </Link>
         )
       },
+      style: { textAlign: 'left' },
       sortDescFirst: true,
     },
     {
@@ -199,11 +169,9 @@ export default function DmarcByDomainPage() {
       <TrackerTable
         data={formattedData}
         columns={percentageColumns}
+        title="dmarcSummaries"
         initialSort={initialSort}
         mb="10px"
-        hideTitleButton={true}
-        selectedDisplayLimit={selectedTableDisplayLimit}
-        onSort={updateOrderBy}
         searchPlaceholder={t`Search for a domain`}
       />
     )
@@ -335,18 +303,6 @@ export default function DmarcByDomainPage() {
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
       </ErrorBoundary>
-      <RelayPaginationControls
-        onlyPagination={false}
-        selectedDisplayLimit={selectedTableDisplayLimit}
-        setSelectedDisplayLimit={setSelectedTableDisplayLimit}
-        displayLimitOptions={displayLimitOptions}
-        resetToFirstPage={resetToFirstPage}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-        isLoadingMore={isLoadingMore}
-      />
     </Box>
   )
 }

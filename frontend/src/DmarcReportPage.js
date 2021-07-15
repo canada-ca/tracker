@@ -389,7 +389,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
-          mt="30px"
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
           title={t`DKIM Failures by IP Address`}
@@ -609,7 +608,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     spfFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
-          mt="30px"
           data={spfFailureNodes}
           columns={spfFailureColumns}
           title={t`SPF Failures by IP Address`}
@@ -715,7 +713,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
-          mt="30px"
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
           title={t`DMARC Failures by IP Address`}
