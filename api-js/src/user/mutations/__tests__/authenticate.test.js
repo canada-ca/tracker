@@ -14,7 +14,7 @@ import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
 
-const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
+const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY } = process.env
 
 describe('authenticate user account', () => {
   let query, drop, truncate, schema, collections, transaction, mockTokenize
@@ -290,7 +290,7 @@ describe('authenticate user account', () => {
 
         expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
           httpOnly: true,
-          maxAge: 86400000,
+          maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
           sameSite: true,
           secure: true,
         })

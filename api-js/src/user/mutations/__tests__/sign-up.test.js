@@ -15,7 +15,7 @@ import { cleanseInput } from '../../../validators'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 
 describe('testing user sign up', () => {
   let query,
@@ -352,7 +352,7 @@ describe('testing user sign up', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: 86400000,
+                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
                 sameSite: true,
                 secure: true,
               },
@@ -831,7 +831,7 @@ describe('testing user sign up', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: 86400000,
+                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
                 sameSite: true,
                 secure: true,
               },
@@ -2007,7 +2007,7 @@ describe('testing user sign up', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: 86400000,
+                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
                 sameSite: true,
                 secure: true,
               },
@@ -2486,7 +2486,7 @@ describe('testing user sign up', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: 86400000,
+                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
                 sameSite: true,
                 secure: true,
               },
