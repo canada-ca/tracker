@@ -10,7 +10,8 @@ import {
   Box,
   Flex,
   IconButton,
-  Input,
+  NumberInput,
+  NumberInputField,
   Stack,
   Select,
   Table,
@@ -193,14 +194,18 @@ function TrackerTable({ ...props }) {
               <Box as="label" htmlFor={`${title}-goTo`}>
                 <Trans>Go to page:</Trans>
               </Box>
-              <Input
+              <NumberInput
+                defaultValue={1}
+                min={1}
+                max={pageOptions.length}
                 id={`${title}-goTo`}
                 width="6rem"
-                value="1"
                 onChange={(event) => {
-                  gotoPage(event)
+                  gotoPage(parseInt(event) - 1)
                 }}
-              />
+              >
+                <NumberInputField />
+              </NumberInput>
             </Stack>
             <Text>
               <Trans>
