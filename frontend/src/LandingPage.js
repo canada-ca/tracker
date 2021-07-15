@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import trackerLogo from './images/trackerlogo.svg'
-import { Box, Button, Divider, Grid, Image, Text } from '@chakra-ui/core'
+import { Box, Divider, Grid, Image, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import { NewDmarcGraph } from './NewDmarcGraph'
+import { formattedBarData } from './fixtures/summaryListData'
 
 export function LandingPage() {
-  const [orientation, setOrientation] = useState(false) // true = vertical, false = horizontal
   return (
     <div>
       <Grid
@@ -50,10 +50,7 @@ export function LandingPage() {
         </Box>
       </Grid>
       <Divider borderBottomColor="gray.900" />
-      <Button onClick={() => setOrientation(!orientation)} mb="4">
-        Change Orientation
-      </Button>
-      <NewDmarcGraph orientation={orientation} />
+      <NewDmarcGraph data={formattedBarData} />
       <Divider borderBottomColor="gray.900" />
     </div>
   )

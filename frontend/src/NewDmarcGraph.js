@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BarStack, BarStackHorizontal } from '@visx/shape'
 import { Group } from '@visx/group'
 import { Grid } from '@visx/grid'
 import { AxisBottom, AxisLeft } from '@visx/axis'
-import cityTemperature from '@visx/mock-data/lib/mocks/cityTemperature'
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale'
-import { timeParse, timeFormat } from 'd3-time-format'
 import {
   // Tooltip,
   useTooltip,
@@ -14,6 +12,9 @@ import {
 } from '@visx/tooltip'
 import { LegendOrdinal } from '@visx/legend'
 import theme from './theme/canada'
+import { TrackerButton } from './TrackerButton'
+import { Trans, t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 const { strong, moderate, moderateAlt, weak, gray } = theme.colors
 const textColour = gray['900']
@@ -27,48 +28,76 @@ const tooltipStyles = {
   color: 'white',
 }
 
-const data = cityTemperature.slice(0, 13)
-const keys = Object.keys(data[0]).filter((d) => d !== 'date')
-
-const temperatureTotals = data.reduce((allTotals, currentDate) => {
-  const totalTemperature = keys.reduce((dailyTotal, k) => {
-    dailyTotal += Number(currentDate[k])
-    return dailyTotal
-  }, 0)
-  if (Array.isArray(allTotals)) {
-    allTotals.push(totalTemperature)
-    return allTotals
-  }
-  return []
-})
-
-const parseDate = timeParse('%Y-%m-%d')
-const format = timeFormat('%b %d')
-const formatDate = (date) => format(parseDate(date))
+const keys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
 
 const getDate = (d) => d.date
 
-const dateScale = scaleBand({
-  domain: data.map(getDate),
-  padding: 0.2,
-})
-const temperatureScale = scaleLinear({
-  domain: [0, Math.max(...temperatureTotals)],
-  nice: true,
-})
-const colorScale = scaleOrdinal({
-  domain: keys,
-  range: [strong, moderate, weak],
-})
+// const dateScale = scaleBand({
+//   domain: data.map(getDate),
+//   padding: 0.2,
+// })
+// const temperatureScale = scaleLinear({
+//   domain: [0, Math.max(...temperatureTotals)],
+//   nice: true,
+// })
+// const colorScale = scaleOrdinal({
+//   domain: keys,
+//   range: [strong, moderate, moderateAlt, weak],
+// })
 
 let tooltipTimeout
 
+export function NewDmarcGraph({ ...props }) {
+  const { i18n } = useLingui()
+  const { data, responsiveWidth } = props
+  const [orientation, setOrientation] = useState(true) // true = vertical, false = horizontal
+
+  data.periods.sort((a, b) => {
+    if (a.month === 'LAST30DAYS') return 1
+    if (b.month === 'LAST30DAYS') return -1
+    const aDate = new Date(`${a.month} 1, ${a.year}`)
+    const bDate = new Date(`${b.month} 1, ${b.year}`)
+    return aDate - bDate
+  })
+
+  // Format dates
+  data.periods.forEach((period) => {
+    let date
+    period.month === 'LAST30DAYS'
+      ? (date = t`L-30-D`)
+      : (date = new Date(`${period.month} 1, ${period.year}`)
+          .toLocaleDateString(i18n.locale, { month: 'short', year: '2-digit' })
+          .replace(/ /, '-'))
+    period.date = date
+  })
+
+  return (
+    <div>
+      <TrackerButton
+        variant="primary"
+        onClick={() => setOrientation(!orientation)}
+        mb="4"
+      >
+        <Trans>Change Chart Orientation</Trans>
+      </TrackerButton>
+      {orientation ? (
+        <VerticalGraph data={data} responsiveWidth={responsiveWidth} />
+      ) : (
+        <HorizontalGraph data={data} responsiveWidth={responsiveWidth} />
+      )}
+    </div>
+  )
+}
+
 function VerticalGraph({
   width = 1200,
-  height = 600,
+  height = 500,
   events = false,
   margin = defaultVerticalMargin,
+  ...props
 }) {
+  const { data, responsiveWidth } = props
+  const { periods, strengths } = data
   const {
     tooltipOpen,
     tooltipLeft,
@@ -77,6 +106,28 @@ function VerticalGraph({
     hideTooltip,
     showTooltip,
   } = useTooltip()
+
+  const monthlyTotals = []
+  periods.forEach((period) => {
+    let total = 0
+    keys.forEach((key) => {
+      total += Number(period[key])
+    })
+    monthlyTotals.push(total)
+  })
+
+  const dateScale = scaleBand({
+    domain: periods.map(getDate),
+    padding: 0.2,
+  })
+  const temperatureScale = scaleLinear({
+    domain: [0, Math.max(...monthlyTotals)],
+    nice: true,
+  })
+  const colorScale = scaleOrdinal({
+    domain: keys,
+    range: [strong, moderate, moderateAlt, weak],
+  })
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal()
 
@@ -111,7 +162,7 @@ function VerticalGraph({
         />
         <Group top={margin.top}>
           <BarStack
-            data={data}
+            data={periods}
             keys={keys}
             x={getDate}
             xScale={dateScale}
@@ -156,7 +207,6 @@ function VerticalGraph({
         <AxisBottom
           top={yMax + margin.top}
           scale={dateScale}
-          tickFormat={formatDate}
           stroke={textColour}
           tickStroke={textColour}
           tickLabelProps={() => ({
@@ -193,9 +243,9 @@ function VerticalGraph({
           <div style={{ color: colorScale(tooltipData.key) }}>
             <strong>{tooltipData.key}</strong>
           </div>
-          <div>{tooltipData.bar.data[tooltipData.key]}℉</div>
+          <div>{tooltipData.bar.data[tooltipData.key]}</div>
           <div>
-            <small>{formatDate(getDate(tooltipData.bar.data))}</small>
+            <small>{getDate(tooltipData.bar.data)}</small>
           </div>
         </TooltipInPortal>
       )}
@@ -205,10 +255,13 @@ function VerticalGraph({
 
 function HorizontalGraph({
   width = 1200,
-  height = 600,
+  height = 500,
   events = false,
   margin = defaultHorizontalMargin,
+  ...props
 }) {
+  const { data, responsiveWidth } = props
+  const { periods, strengths } = data
   const {
     tooltipOpen,
     tooltipLeft,
@@ -221,6 +274,28 @@ function HorizontalGraph({
   const yMax = height - margin.top - margin.bottom
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal()
+
+  const monthlyTotals = []
+  periods.forEach((period) => {
+    let total = 0
+    keys.forEach((key) => {
+      total += Number(period[key])
+    })
+    monthlyTotals.push(total)
+  })
+
+  const dateScale = scaleBand({
+    domain: periods.map(getDate),
+    padding: 0.2,
+  })
+  const temperatureScale = scaleLinear({
+    domain: [0, Math.max(...monthlyTotals)],
+    nice: true,
+  })
+  const colorScale = scaleOrdinal({
+    domain: keys,
+    range: [strong, moderate, moderateAlt, weak],
+  })
 
   temperatureScale.rangeRound([0, xMax])
   dateScale.rangeRound([yMax, 0])
@@ -252,7 +327,7 @@ function HorizontalGraph({
         <rect width={width} height={height} fill={background} rx={14} />
         <Group top={margin.top} left={margin.left}>
           <BarStackHorizontal
-            data={data}
+            data={periods}
             keys={keys}
             height={yMax}
             y={getDate}
@@ -298,7 +373,7 @@ function HorizontalGraph({
             hideAxisLine
             hideTicks
             scale={dateScale}
-            tickFormat={formatDate}
+            // tickFormat={formatDate}
             stroke={textColour}
             tickStroke={textColour}
             tickLabelProps={() => ({
@@ -358,17 +433,12 @@ function HorizontalGraph({
           <div style={{ color: colorScale(tooltipData.key) }}>
             <strong>{tooltipData.key}</strong>
           </div>
-          <div>{tooltipData.bar.data[tooltipData.key]}℉</div>
+          <div>{tooltipData.bar.data[tooltipData.key]}</div>
           <div>
-            <small>{formatDate(getDate(tooltipData.bar.data))}</small>
+            <small>{getDate(tooltipData.bar.data)}</small>
           </div>
         </TooltipInPortal>
       )}
     </div>
   )
-}
-
-export function NewDmarcGraph({ orientation }) {
-  if (orientation) return <VerticalGraph />
-  else return <HorizontalGraph />
 }

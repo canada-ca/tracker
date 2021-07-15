@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
-import {
-  DMARC_REPORT_GRAPH,
-  PAGINATED_DMARC_REPORT,
-} from './graphql/queries'
+import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import {
   Box,
@@ -76,17 +73,15 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     loading: tableLoading,
     error: tableError,
     data: tableData,
-  } = useQuery(PAGINATED_DMARC_REPORT,
-    {
-      variables: {
-        month: selectedPeriod,
-        year: selectedYear,
-        domain: domainSlug,
-        first: 50,
-        after: '',
-      },
+  } = useQuery(PAGINATED_DMARC_REPORT, {
+    variables: {
+      month: selectedPeriod,
+      year: selectedYear,
+      domain: domainSlug,
+      first: 50,
+      after: '',
     },
-  )
+  })
 
   const options = [
     <option
@@ -333,51 +328,52 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
 
     const failDkimInfoPanel = (
-      <InfoPanel
-        state={failDkimState}
-      >
+      <InfoPanel state={failDkimState}>
         <InfoBox
-          title='Source IP Address'
-          info='The IP address of sending server.'
+          title="Source IP Address"
+          info="The IP address of sending server."
         />
         <InfoBox
-          title='DNS Host'
-          info='Host from reverse DNS of source IP address.'
+          title="DNS Host"
+          info="Host from reverse DNS of source IP address."
         />
         <InfoBox
-          title='Envelope From'
-          info='Domain from Simple Mail Transfer Protocol (SMTP) banner message.'
+          title="Envelope From"
+          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
         />
         <InfoBox
-          title='Header From'
+          title="Header From"
           info='The address/domain used in the "From" field.'
         />
         <InfoBox
-          title='DKIM Domains'
-          info='The domains used for DKIM validation.'
+          title="DKIM Domains"
+          info="The domains used for DKIM validation."
         />
         <InfoBox
-          title='DKIM Selectors'
-          info='Pointer to a DKIM public key record in DNS.'
+          title="DKIM Selectors"
+          info="Pointer to a DKIM public key record in DNS."
         />
         <InfoBox
-          title='DKIM Results'
-          info='The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.'
+          title="DKIM Results"
+          info="The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
         />
         <InfoBox
-          title='DKIM Aligned'
-          info='Is DKIM aligned. Can be true or false.'
+          title="DKIM Aligned"
+          info="Is DKIM aligned. Can be true or false."
         />
         <InfoBox
-          title='Total Messages'
-          info='The Total Messages from this sender.'
+          title="Total Messages"
+          info="The Total Messages from this sender."
         />
         <InfoBox
-          title='Guidance'
-          info='Details for a given guidance tag can be found on the wiki, see below.'
+          title="Guidance"
+          info="Details for a given guidance tag can be found on the wiki, see below."
         />
         <Divider borderColor="gray.500" />
-        <Link isExternal href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags">
+        <Link
+          isExternal
+          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+        >
           https://github.com/canada-ca/tracker/wiki/Guidance-Tags
         </Link>
       </InfoPanel>
@@ -425,8 +421,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
   // Full pass query no longer loading, check if data exists
   else if (
-    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
-      ?.fullPass?.edges.length > 0
+    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables?.fullPass
+      ?.edges.length > 0
   ) {
     const fullPassColumns = [
       {
@@ -453,40 +449,35 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
 
     const fullPassInfoPanel = (
-      <InfoPanel
-        state={fullPassState}
-      >
+      <InfoPanel state={fullPassState}>
         <InfoBox
-          title='Source IP Address'
-          info='The IP address of sending server.'
+          title="Source IP Address"
+          info="The IP address of sending server."
         />
         <InfoBox
-          title='DNS Host'
-          info='Host from reverse DNS of source IP address.'
+          title="DNS Host"
+          info="Host from reverse DNS of source IP address."
         />
         <InfoBox
-          title='Envelope From'
-          info='Domain from Simple Mail Transfer Protocol (SMTP) banner message.'
+          title="Envelope From"
+          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
         />
         <InfoBox
-          title='Header From'
+          title="Header From"
           info='The address/domain used in the "From" field.'
         />
+        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
         <InfoBox
-          title='SPF Domains'
-          info='Domains used for SPF validation.'
+          title="DKIM Domains"
+          info="Domains used for DKIM validation."
         />
         <InfoBox
-          title='DKIM Domains'
-          info='Domains used for DKIM validation.'
+          title="DKIM Selectors"
+          info="Pointer to a DKIM public key record in DNS."
         />
         <InfoBox
-          title='DKIM Selectors'
-          info='Pointer to a DKIM public key record in DNS.'
-        />
-        <InfoBox
-          title='Total Messages'
-          info='The Total Messages from this sender.'
+          title="Total Messages"
+          info="The Total Messages from this sender."
         />
       </InfoPanel>
     )
@@ -562,47 +553,45 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
 
     const failSpfInfoPanel = (
-      <InfoPanel
-        state={failSpfState}
-      >
+      <InfoPanel state={failSpfState}>
         <InfoBox
-          title='Source IP Address'
-          info='The IP address of sending server.'
+          title="Source IP Address"
+          info="The IP address of sending server."
         />
         <InfoBox
-          title='DNS Host'
-          info='Host from reverse DNS of source IP address.'
+          title="DNS Host"
+          info="Host from reverse DNS of source IP address."
         />
         <InfoBox
-          title='Envelope From'
-          info='Domain from Simple Mail Transfer Protocol (SMTP) banner message.'
+          title="Envelope From"
+          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
         />
         <InfoBox
-          title='Header From'
+          title="Header From"
           info='The address/domain used in the "From" field.'
         />
+        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
         <InfoBox
-          title='SPF Domains'
-          info='Domains used for SPF validation.'
+          title="SPF Results"
+          info="The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
         />
         <InfoBox
-          title='SPF Results'
-          info='The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.'
+          title="SPF Aligned"
+          info="Is SPF aligned. Can be true or false."
         />
         <InfoBox
-          title='SPF Aligned'
-          info='Is SPF aligned. Can be true or false.'
+          title="Total Messages"
+          info="The Total Messages from this sender."
         />
         <InfoBox
-          title='Total Messages'
-          info='The Total Messages from this sender.'
-        />
-        <InfoBox
-          title='Guidance'
-          info='Details for a given guidance tag can be found on the wiki, see below.'
+          title="Guidance"
+          info="Details for a given guidance tag can be found on the wiki, see below."
         />
         <Divider borderColor="gray.500" />
-        <Link isExternal href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags">
+        <Link
+          isExternal
+          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+        >
           https://github.com/canada-ca/tracker/wiki/Guidance-Tags
         </Link>
       </InfoPanel>
@@ -679,44 +668,36 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
 
     const fullFailInfoPanel = (
-      <InfoPanel
-        state={fullFailState}
-      >
+      <InfoPanel state={fullFailState}>
+        <InfoBox title="Source IP Address" info="The domain address." />
         <InfoBox
-          title='Source IP Address'
-          info='The domain address.'
+          title="DNS Host"
+          info="Shows the total number of emails that have been sent by this domain during the selected time range."
         />
         <InfoBox
-          title='DNS Host'
-          info='Shows the total number of emails that have been sent by this domain during the selected time range.'
+          title="Envelope From"
+          info="Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
         />
         <InfoBox
-          title='Envelope From'
-          info='Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.'
-        />
-        <InfoBox
-          title='Header From'
+          title="Header From"
           info='The address/domain used in the "From" field.'
         />
+        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
         <InfoBox
-          title='SPF Domains'
-          info='Domains used for SPF validation.'
+          title="DKIM Domains"
+          info="The domains used for DKIM validation."
         />
         <InfoBox
-          title='DKIM Domains'
-          info='The domains used for DKIM validation.'
+          title="DKIM Selectors"
+          info="Pointer to a DKIM public key record in DNS."
         />
         <InfoBox
-          title='DKIM Selectors'
-          info='Pointer to a DKIM public key record in DNS.'
+          title="Disposition"
+          info="The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
         />
         <InfoBox
-          title='Disposition'
-          info='The DMARC enforcement action that the receiver took, either none, quarantine, or reject.'
-        />
-        <InfoBox
-          title='Total Messages'
-          info='The Total Messages from this sender.'
+          title="Total Messages"
+          info="The Total Messages from this sender."
         />
       </InfoPanel>
     )
