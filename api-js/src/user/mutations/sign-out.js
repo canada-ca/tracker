@@ -17,7 +17,7 @@ export const signOut = new mutationWithClientMutationId({
     response.cookie('refresh_token', '', {
       httpOnly: true,
       expires: new Date(0),
-      secure: false,
+      secure: true,
       sameSite: true,
     })
 

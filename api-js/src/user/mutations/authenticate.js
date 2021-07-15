@@ -144,7 +144,7 @@ export const authenticate = new mutationWithClientMutationId({
       // if the user does not want to stay logged in, create http session cookie
       let cookieData = {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: true,
         expires: 0,
       }
@@ -154,7 +154,7 @@ export const authenticate = new mutationWithClientMutationId({
         cookieData = {
           maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: true,
         }
       }

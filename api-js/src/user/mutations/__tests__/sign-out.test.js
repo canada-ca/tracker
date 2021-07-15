@@ -62,7 +62,7 @@ describe('signing the user out', () => {
         expires: new Date(0),
         httpOnly: true,
         sameSite: true,
-        secure: false,
+        secure: true,
       })
     })
   })
@@ -114,7 +114,7 @@ describe('signing the user out', () => {
         expires: new Date(0),
         httpOnly: true,
         sameSite: true,
-        secure: false,
+        secure: true,
       })
     })
   })
