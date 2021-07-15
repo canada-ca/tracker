@@ -229,38 +229,31 @@ export default function OrganizationInformation({
             </Heading>
           </Stack>
 
-          <Stack
-            flexGrow={{ base: '1', md: '0' }}
-            isInline
-            justifyContent="space-evenly"
-          >
+          <Stack flexGrow={{ base: '1', md: '0' }} isInline>
             <Button
               variant="danger"
               ref={removeOrgBtnRef}
               onClick={onRemovalOpen}
-              px="2"
-              mr={{ md: '0.5em' }}
+              p={2}
+              m={0}
               w={{ base: '45%', md: 'auto' }}
             >
-              <Stack spacing={0}>
-                <MinusIcon />
-                <VisuallyHidden>
-                  <Trans>Remove Organization</Trans>
-                </VisuallyHidden>
-              </Stack>
+              <MinusIcon />
+              <VisuallyHidden>
+                <Trans>Remove Organization</Trans>
+              </VisuallyHidden>
             </Button>
             <Button
               variant="primary"
-              px="2"
+              p={2}
+              m={0}
               onClick={() => setIsEditingOrg(!isEditingOrg)}
               w={{ base: '45%', md: 'auto' }}
             >
-              <Stack spacing={0}>
-                <EditIcon />
-                <VisuallyHidden>
-                  <Trans>Edit Organization</Trans>
-                </VisuallyHidden>
-              </Stack>
+              <EditIcon />
+              <VisuallyHidden>
+                <Trans>Edit Organization</Trans>
+              </VisuallyHidden>
             </Button>
           </Stack>
         </Stack>
