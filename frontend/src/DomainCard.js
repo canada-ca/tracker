@@ -72,98 +72,112 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           <>
             <Flex
               flexDirection={{ base: 'column', md: 'row' }}
-              flexGrow={{ base: 0, md: '1' }}
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              px={{ base: 2, md: 0 }}
+              py={{ base: 1, md: 2 }}
+              mx={{ base: 0, md: 1 }}
+              my={{ base: 2, md: 0 }}
+              bg="gray.100"
             >
-              <Box mx={{ md: 2 }}>
-                <Stack
-                  align="center"
-                  flexDirection={{ base: 'row', md: 'column' }}
-                  justifyContent="space-between"
-                  spacing={0}
+              <Stack
+                align="center"
+                flexDirection={{ base: 'row', md: 'column' }}
+                justifyContent="space-between"
+                spacing={0}
+                mx={{ md: 2 }}
+              >
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  mb={{ base: 0, md: '2' }}
+                  mr={{ base: '2', md: 0 }}
                 >
-                  <Text
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb={{ base: 0, md: '2' }}
-                    mr={{ base: '2', md: 0 }}
-                  >
-                    HTTPS:
-                  </Text>
-                  {generateStatusIcon(status.https)}
-                </Stack>
-              </Box>
-              <Box mx={{ md: 2 }}>
-                <Stack
-                  align="center"
-                  flexDirection={{ base: 'row', md: 'column' }}
-                  justifyContent="space-between"
-                  spacing={0}
+                  HTTPS:
+                </Text>
+                {generateStatusIcon(status.https)}
+              </Stack>
+              <Stack
+                align="center"
+                flexDirection={{ base: 'row', md: 'column' }}
+                justifyContent="space-between"
+                spacing={0}
+                mx={{ md: 2 }}
+              >
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  mb={{ base: 0, md: '2' }}
+                  mr={{ base: '2', md: 0 }}
                 >
-                  <Text
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb={{ base: 0, md: '2' }}
-                    mr={{ base: '2', md: 0 }}
-                  >
-                    SSL:
-                  </Text>
-                  {generateStatusIcon(status.ssl)}
-                </Stack>
-              </Box>
-              <Box mx={{ md: 2 }}>
-                <Stack
-                  align="center"
-                  flexDirection={{ base: 'row', md: 'column' }}
-                  justifyContent="space-between"
-                  spacing={0}
+                  SSL:
+                </Text>
+                {generateStatusIcon(status.ssl)}
+              </Stack>
+            </Flex>
+            <Flex
+              flexDirection={{ base: 'column', md: 'row' }}
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              px={{ base: 2, md: 0 }}
+              py={{ base: 1, md: 2 }}
+              mx={{ base: 0, md: 1 }}
+              my={{ base: 2, md: 0 }}
+              bg="gray.100"
+            >
+              <Stack
+                align="center"
+                flexDirection={{ base: 'row', md: 'column' }}
+                justifyContent="space-between"
+                spacing={0}
+                mx={{ md: 2 }}
+              >
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  mb={{ base: 0, md: '2' }}
+                  mr={{ base: '2', md: 0 }}
                 >
-                  <Text
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb={{ base: 0, md: '2' }}
-                    mr={{ base: '2', md: 0 }}
-                  >
-                    SPF:
-                  </Text>
-                  {generateStatusIcon(status.spf)}
-                </Stack>
-              </Box>
-              <Box mx={{ md: 2 }}>
-                <Stack
-                  align="center"
-                  flexDirection={{ base: 'row', md: 'column' }}
-                  justifyContent="space-between"
-                  spacing={0}
+                  SPF:
+                </Text>
+                {generateStatusIcon(status.spf)}
+              </Stack>
+              <Stack
+                align="center"
+                flexDirection={{ base: 'row', md: 'column' }}
+                justifyContent="space-between"
+                spacing={0}
+                mx={{ md: 2 }}
+              >
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  mb={{ base: 0, md: '2' }}
+                  mr={{ base: '2', md: 0 }}
                 >
-                  <Text
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb={{ base: 0, md: '2' }}
-                    mr={{ base: '2', md: 0 }}
-                  >
-                    DKIM:
-                  </Text>
-                  {generateStatusIcon(status.dkim)}
-                </Stack>
-              </Box>
-              <Box mx={{ md: 2 }}>
-                <Stack
-                  align="center"
-                  flexDirection={{ base: 'row', md: 'column' }}
-                  justifyContent="space-between"
-                  spacing={0}
+                  DKIM:
+                </Text>
+                {generateStatusIcon(status.dkim)}
+              </Stack>
+              <Stack
+                align="center"
+                flexDirection={{ base: 'row', md: 'column' }}
+                justifyContent="space-between"
+                spacing={0}
+                mx={{ md: 2 }}
+              >
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  mb={{ base: 0, md: '2' }}
+                  mr={{ base: '2', md: '0' }}
                 >
-                  <Text
-                    fontWeight="bold"
-                    fontSize="sm"
-                    mb={{ base: 0, md: '2' }}
-                    mr={{ base: '2', md: '0' }}
-                  >
-                    DMARC:
-                  </Text>
-                  {generateStatusIcon(status.dmarc)}
-                </Stack>
-              </Box>
+                  DMARC:
+                </Text>
+                {generateStatusIcon(status.dmarc)}
+              </Stack>
             </Flex>
             <Divider variant="card" display={{ md: 'none' }} />
           </>
@@ -173,6 +187,7 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           justifySelf="flex-end"
           alignSelf="stretch"
           justifyContent="center"
+          ml={2}
         >
           <Button
             variant="primary"
