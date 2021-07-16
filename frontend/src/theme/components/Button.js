@@ -19,9 +19,7 @@ const commonProps = {
 
 const Button = {
   // Styles for the base style
-  baseStyle: {
-    my: 2,
-  },
+  baseStyle: {},
   // Styles for the size variations
   sizes: {},
   // Styles for the visual style variations

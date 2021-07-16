@@ -110,7 +110,7 @@ export default function UserPage() {
             }}
             disabled={emailSent}
           >
-            <EmailIcon />
+            <EmailIcon mr={2} />
             <Trans>Verify Email</Trans>
           </Button>
         )}

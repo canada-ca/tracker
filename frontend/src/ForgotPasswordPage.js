@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
 
             <EmailField name="email" mb="4" />
 
-            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+            <Stack spacing={4} isInline justifyContent="space-between">
               <Button
                 variant="primary"
                 aria-label="forgot-password-submit"
@@ -85,14 +85,7 @@ export default function ForgotPasswordPage() {
                 <Trans>Submit</Trans>
               </Button>
 
-              <Button
-                as={RouteLink}
-                to="/sign-in"
-                color="primary"
-                bg="transparent"
-                borderColor="primary"
-                borderWidth="1px"
-              >
+              <Button as={RouteLink} to="/sign-in" variant="primaryOutline">
                 <Trans>Back</Trans>
               </Button>
             </Stack>

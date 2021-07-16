@@ -165,7 +165,7 @@ export default function CreateUserPage() {
               <TermsConditionsPage />
             </Box>
 
-            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+            <Stack spacing={4} isInline justifyContent="space-between">
               <Button variant="primaryOutline" as={RouteLink} to="/sign-in">
                 <Trans>Back</Trans>
               </Button>
