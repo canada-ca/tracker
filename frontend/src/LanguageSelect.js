@@ -6,9 +6,9 @@ import {
   FormErrorMessage,
   FormLabel,
   Select,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
 function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
@@ -33,4 +33,4 @@ function LanguageSelect({ name, ...props }) {
 LanguageSelect.propTypes = {
   name: string.isRequired,
 }
-export default WithPseudoBox(LanguageSelect)
+export default WithWrapperBox(LanguageSelect)

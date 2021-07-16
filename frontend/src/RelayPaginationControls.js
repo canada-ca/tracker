@@ -1,4 +1,4 @@
-import { Button, Select, Stack, Text } from '@chakra-ui/core'
+import { Button, Select, Flex, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { array, bool, func, number } from 'prop-types'
@@ -28,7 +28,7 @@ export function RelayPaginationControls({
 
     displayLimitControls = (
       <>
-        <Text ml="auto" mr={'1%'}>
+        <Text mr={'1%'} ml="auto">
           <Trans>Items per page:</Trans>
         </Text>
 
@@ -50,7 +50,7 @@ export function RelayPaginationControls({
   }
 
   return (
-    <Stack isInline align="center" mb="4" {...props}>
+    <Flex align="center" mb="4" {...props}>
       <Button
         id="previousPageBtn"
         onClick={previous}
@@ -70,9 +70,8 @@ export function RelayPaginationControls({
       >
         <Trans>Next</Trans>
       </Button>
-
       {displayLimitControls}
-    </Stack>
+    </Flex>
   )
 }
 

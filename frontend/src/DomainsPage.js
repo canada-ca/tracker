@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -20,7 +19,8 @@ import {
   TabPanels,
   Tabs,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { PAGINATED_DOMAINS as FORWARD } from './graphql/queries'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
@@ -45,7 +45,8 @@ export default function DomainsPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
+  const orderIconName =
+    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
   const {
     loading,
@@ -69,8 +70,8 @@ export default function DomainsPage() {
     nextFetchPolicy: 'cache-first',
   })
 
-  const [infoState, changeInfoState] = React.useState({
-    isHidden: true,
+  const [infoState, changeInfoState] = useState({
+    isVisible: false,
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -110,46 +111,43 @@ export default function DomainsPage() {
 
   return (
     <Layout>
-      <Stack direction="row" mb="4">
+      <Stack direction="row" justify="space-between" mb="4">
         <Heading as="h1" textAlign="left">
           <Trans>Domains</Trans>
         </Heading>
 
-        <Box ml="auto" />
-
-        <InfoButton label='Glossary' state={infoState} changeState={changeInfoState} />
+        <InfoButton
+          label="Glossary"
+          state={infoState}
+          changeState={changeInfoState}
+        />
       </Stack>
 
-      <InfoPanel
-        state={infoState}
-      >
+      <InfoPanel state={infoState}>
+        <InfoBox title="Domain" info="The domain address." />
         <InfoBox
-          title='Domain'
-          info='The domain address.'
+          title="Last scanned"
+          info="The time the domain was last scanned by the system."
         />
         <InfoBox
-          title='Last scanned'
-          info='The time the domain was last scanned by the system.'
+          title="HTTPS"
+          info="Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments."
         />
         <InfoBox
-          title='HTTPS'
-          info='Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.'
+          title="SSL"
+          info="Shows if the domain meets the Secure Sockets Layer (SSL) requirements."
         />
         <InfoBox
-          title='SSL'
-          info='Shows if the domain meets the Secure Sockets Layer (SSL) requirements.'
+          title="SPF"
+          info="Shows if the domain meets the Sender Policy Framework (SPF) requiremtns."
         />
         <InfoBox
-          title='SPF'
-          info='Shows if the domain meets the Sender Policy Framework (SPF) requiremtns.'
+          title="DKIM"
+          info="Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
         />
         <InfoBox
-          title='DKIM'
-          info='Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.'
-        />
-        <InfoBox
-          title='DMARC'
-          info='Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.'
+          title="DMARC"
+          info="Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
         />
       </InfoPanel>
 
@@ -178,9 +176,13 @@ export default function DomainsPage() {
                 alignItems={{ base: 'stretch', md: 'center' }}
                 mb={{ base: '4', md: '8' }}
               >
-                <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
+                <InputGroup
+                  mb={{ base: '8px', md: '0' }}
+                  flexGrow={1}
+                  w={{ base: '100%', md: '50%' }}
+                >
                   <InputLeftElement>
-                    <Icon name="search" color="gray.300" />
+                    <SearchIcon color="gray.300" />
                   </InputLeftElement>
                   <Input
                     type="text"

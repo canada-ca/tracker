@@ -1,7 +1,8 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
-import { Box, Icon, Link, ListItem, Stack, Text } from '@chakra-ui/core'
+import { Box, Link, ListItem, Stack, Text } from '@chakra-ui/react'
+import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
 import { sanitizeUrl } from './sanitizeUrl'
 import { Link as RouteLink } from 'react-router-dom'
 
@@ -23,7 +24,7 @@ export function Domain({ url, lastRan, ...rest }) {
             rel="noopener noreferrer"
           >
             {url}
-            <Icon name="external-link" mx="2px" />
+            <ExternalLinkIcon mx="2px" />
           </Link>
         </Stack>
         {lastRan && (
@@ -33,7 +34,7 @@ export function Domain({ url, lastRan, ...rest }) {
             </Text>
             <Link as={RouteLink} to={`domains/${url}`}>
               {lastRan}
-              <Icon name="link" mx="2px" />
+              <LinkIcon mx="2px" />
             </Link>
           </Stack>
         )}

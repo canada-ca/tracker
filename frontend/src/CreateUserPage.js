@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Heading, Stack, Text, useToast } from '@chakra-ui/core'
+import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { object, string } from 'yup'
 import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
@@ -13,7 +13,6 @@ import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { activate } from './i18n.config'
 import { TermsConditionsPage } from './TermsConditionsPage'
@@ -166,23 +165,19 @@ export default function CreateUserPage() {
               <TermsConditionsPage />
             </Box>
 
-            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <TrackerButton
-                as={RouteLink}
-                variant="primary outline"
-                to="/sign-in"
-              >
+            <Stack spacing={4} isInline justifyContent="space-between">
+              <Button variant="primaryOutline" as={RouteLink} to="/sign-in">
                 <Trans>Back</Trans>
-              </TrackerButton>
+              </Button>
 
-              <TrackerButton
+              <Button
+                variant="primary"
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Create Account</Trans>
-              </TrackerButton>
+              </Button>
             </Stack>
           </form>
         )}

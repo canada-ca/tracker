@@ -3,8 +3,8 @@ import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import {
   Box,
+  Button,
   Divider,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -15,16 +15,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { Domain } from './Domain'
 import { number, string } from 'prop-types'
 import { ListOf } from './ListOf'
-import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'
 import { REMOVE_DOMAIN } from './graphql/mutations'
 import {
@@ -171,7 +170,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           <Box key={'admindomain' + index}>
             <Stack isInline align="center">
               <Stack>
-                <TrackerButton
+                <Button
                   data-testid={`edit-${index}`}
                   variant="primary"
                   px="2"
@@ -183,9 +182,9 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                     updateOnOpen()
                   }}
                 >
-                  <Icon name="edit" />
-                </TrackerButton>
-                <TrackerButton
+                  <EditIcon />
+                </Button>
+                <Button
                   data-testid={`remove-${index}`}
                   onClick={() => {
                     setSelectedRemoveDomainUrl(domain)
@@ -195,8 +194,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   variant="danger"
                   px="2"
                 >
-                  <Icon name="minus" />
-                </TrackerButton>
+                  <MinusIcon />
+                </Button>
               </Stack>
               <Domain url={domain} lastRan={lastRan} flexGrow={1} />
             </Stack>
@@ -222,7 +221,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         <Stack flexDirection={['column', 'row']} align="center" isInline>
           <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
             <InputLeftElement>
-              <Icon name="plus-square" color="gray.300" />
+              <PlusSquareIcon color="gray.300" />
             </InputLeftElement>
             <Input
               type="text"
@@ -230,15 +229,15 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               onChange={(e) => setNewDomainUrl(e.target.value)}
             />
           </InputGroup>
-          <TrackerButton
+          <Button
             id="addDomainBtn"
             width={['100%', '25%']}
             variant="primary"
             type="submit"
           >
-            <Icon name="add" />
+            <AddIcon mr={2} />
             <Trans>Add Domain</Trans>
-          </TrackerButton>
+          </Button>
         </Stack>
       </form>
 
@@ -265,45 +264,45 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         mutation={mutation}
       />
 
-      <SlideIn in={removeIsOpen}>
-        {(styles) => (
-          <Modal isOpen={true} onClose={removeOnClose}>
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
-              <ModalHeader>
-                <Trans>Remove Domain</Trans>
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Stack spacing={4} p={25}>
-                  <Text>
-                    <Trans>Confirm removal of domain:</Trans>
-                  </Text>
-                  <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
-                </Stack>
-              </ModalBody>
+      <Modal
+        isOpen={removeIsOpen}
+        onClose={removeOnClose}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb={4}>
+          <ModalHeader>
+            <Trans>Remove Domain</Trans>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack spacing={4} p={25}>
+              <Text>
+                <Trans>Confirm removal of domain:</Trans>
+              </Text>
+              <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
+            </Stack>
+          </ModalBody>
 
-              <ModalFooter>
-                <TrackerButton
-                  variant="primary"
-                  isLoading={removeDomainLoading}
-                  mr={4}
-                  onClick={() =>
-                    removeDomain({
-                      variables: {
-                        domainId: selectedRemoveDomainId,
-                        orgId: orgId,
-                      },
-                    })
-                  }
-                >
-                  <Trans>Confirm</Trans>
-                </TrackerButton>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+          <ModalFooter>
+            <Button
+              variant="primary"
+              isLoading={removeDomainLoading}
+              mr={4}
+              onClick={() =>
+                removeDomain({
+                  variables: {
+                    domainId: selectedRemoveDomainId,
+                    orgId: orgId,
+                  },
+                })
+              }
+            >
+              <Trans>Confirm</Trans>
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Stack>
   )
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useLingui } from '@lingui/react'
 import wordmark from './images/canada-wordmark.svg'
-import { Box, Flex, Image, List, ListItem } from '@chakra-ui/core'
+import { Box, Flex, Image, List, ListItem } from '@chakra-ui/react'
 
 export const Footer = (props) => {
   const { i18n } = useLingui()

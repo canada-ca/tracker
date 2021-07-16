@@ -1,9 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react'
 import {
   Box,
+  Button,
   Divider,
   FormLabel,
-  Icon,
+  Flex,
   Input,
   InputGroup,
   InputLeftElement,
@@ -15,12 +16,12 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { AddIcon, EditIcon, EmailIcon, MinusIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { UserCard } from './UserCard'
@@ -31,7 +32,6 @@ import {
   REMOVE_USER_FROM_ORG,
   UPDATE_USER_ROLE,
 } from './graphql/mutations'
-import { TrackerButton } from './TrackerButton'
 import { Formik, useFormik } from 'formik'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
@@ -45,7 +45,10 @@ import { useDebouncedFunction } from './useDebouncedFunction'
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
   const [addedUserName, setAddedUserName] = useState()
-  const [selectedRemoveUser, setSelectedRemoveUser] = useState()
+  const [selectedRemoveUser, setSelectedRemoveUser] = useState({
+    id: null,
+    userName: null,
+  })
 
   const {
     isOpen: removeIsOpen,
@@ -270,38 +273,41 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       const userRole = node.permission
       return (
         <Box key={`${node.user.userName}:${node.id}`}>
-          <Stack isInline align="center">
-            <Stack>
-              <TrackerButton
-                aria-label="userEditButton"
-                variant="primary"
-                px="2"
-                onClick={() => {
-                  setEditingUserRole(userRole)
-                  setEditingUserName(node.user.userName)
-                  updateOnOpen()
-                }}
-              >
-                <Icon name="edit" />
-              </TrackerButton>
-              <TrackerButton
+          <Flex align="center" w="100%">
+            <Stack direction="row" flexGrow="0">
+              <Button
                 aria-label="userRemoveButton"
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
                   removeOnOpen()
                 }}
-                px="2"
+                p={2}
+                m={0}
               >
-                <Icon name="minus" />
-              </TrackerButton>
+                <MinusIcon />
+              </Button>
+              <Button
+                aria-label="userEditButton"
+                variant="primary"
+                onClick={() => {
+                  setEditingUserRole(userRole)
+                  setEditingUserName(node.user.userName)
+                  updateOnOpen()
+                }}
+                p={2}
+                m={0}
+              >
+                <EditIcon />
+              </Button>
             </Stack>
             <UserCard
+              flexGrow="1"
               userName={node.user.userName}
               displayName={node.user.displayName}
               role={userRole}
             />
-          </Stack>
+          </Flex>
           <Divider borderColor="gray.900" />
         </Box>
       )
@@ -330,7 +336,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         <Stack
           align="center"
           w="100%"
-          flexDirection={['column', 'row']}
+          flexDirection={{ base: 'column', md: 'row' }}
           isInline
           mb="2"
         >
@@ -338,12 +344,12 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             isInline
             w="100%"
             align="center"
-            mb={['2', '0']}
-            mr={['0', '2']}
+            mb={{ base: '2', md: '0' }}
+            mr={{ base: '0', md: '2' }}
           >
             <InputGroup flexGrow={1} w="50%">
               <InputLeftElement>
-                <Icon name="email" color="gray.300" />
+                <EmailIcon color="gray.300" />
               </InputLeftElement>
               <Input
                 aria-label="new-user-input"
@@ -371,15 +377,15 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             </Select>
           </Stack>
 
-          <TrackerButton
-            w={['100%', '25%']}
+          <Button
+            w={{ base: '100%', md: '25%' }}
             variant="primary"
             type="submit"
             isLoading={userForm.isSubmitting}
           >
-            <Icon name="add" />
+            <AddIcon mr={2} />
             <Trans>Invite User</Trans>
-          </TrackerButton>
+          </Button>
         </Stack>
       </form>
 
@@ -394,136 +400,133 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         isLoadingMore={isLoadingMore}
       />
 
-      <SlideIn in={removeIsOpen}>
-        {(styles) => (
-          <Modal isOpen={true} onClose={removeOnClose}>
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
-              <ModalHeader>
-                <Trans>Remove User</Trans>
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Stack spacing={4} p={25}>
-                  <Text>
-                    <Trans>Confirm removal of user:</Trans>
-                  </Text>
-                  <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
-                </Stack>
-              </ModalBody>
+      <Modal
+        isOpen={removeIsOpen}
+        onClose={removeOnClose}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb={4}>
+          <ModalHeader>
+            <Trans>Remove User</Trans>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack spacing={4} p={25}>
+              <Text>
+                <Trans>Confirm removal of user:</Trans>
+              </Text>
+              <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
+            </Stack>
+          </ModalBody>
 
-              <ModalFooter>
-                <TrackerButton
-                  variant="primary"
-                  isLoading={removeUserLoading}
-                  mr={4}
-                  onClick={() =>
-                    removeUser({
-                      variables: {
-                        userId: selectedRemoveUser.id,
-                        orgId: orgId,
-                      },
-                    })
-                  }
-                >
-                  <Trans>Confirm</Trans>
-                </TrackerButton>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+          <ModalFooter>
+            <Button
+              variant="primary"
+              isLoading={removeUserLoading}
+              mr={4}
+              onClick={() =>
+                removeUser({
+                  variables: {
+                    userId: selectedRemoveUser.id,
+                    orgId: orgId,
+                  },
+                })
+              }
+            >
+              <Trans>Confirm</Trans>
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
-      <SlideIn in={updateIsOpen}>
-        {(styles) => (
-          <Modal
-            isOpen={true}
-            onClose={updateOnClose}
-            initialFocusRef={initialFocusRef}
+      <Modal
+        isOpen={updateIsOpen}
+        onClose={updateOnClose}
+        initialFocusRef={initialFocusRef}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb={4}>
+          <Formik
+            validateOnBlur={false}
+            initialValues={{
+              role: editingUserRole,
+              userName: editingUserName,
+            }}
+            onSubmit={async (values) => {
+              // Submit update role mutation
+              await updateUserRole({
+                variables: {
+                  orgId: orgId,
+                  role: values.role,
+                  userName: values.userName,
+                },
+              })
+            }}
           >
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
-              <Formik
-                validateOnBlur={false}
-                initialValues={{
-                  role: editingUserRole,
-                  userName: editingUserName,
-                }}
-                onSubmit={async (values) => {
-                  // Submit update role mutation
-                  await updateUserRole({
-                    variables: {
-                      orgId: orgId,
-                      role: values.role,
-                      userName: values.userName,
-                    },
-                  })
-                }}
-              >
-                {({ handleSubmit, isSubmitting }) => (
-                  <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>
-                      <Stack isInline align="center">
-                        <Trans>Edit Role</Trans>
-                      </Stack>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Stack isInline align="center">
-                        <Text fontWeight="bold">
-                          <Trans>User:</Trans>
-                        </Text>
-                        <Text>{editingUserName}</Text>
-                      </Stack>
+            {({ handleSubmit, isSubmitting }) => (
+              <form id="form" onSubmit={handleSubmit}>
+                <ModalHeader>
+                  <Stack isInline align="center">
+                    <Trans>Edit Role</Trans>
+                  </Stack>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Stack isInline align="center">
+                    <Text fontWeight="bold">
+                      <Trans>User:</Trans>
+                    </Text>
+                    <Text>{editingUserName}</Text>
+                  </Stack>
 
-                      <Divider />
-                      <Stack isInline align="center">
-                        <FormLabel htmlFor="role_select" fontWeight="bold">
-                          <Trans>Role:</Trans>
-                        </FormLabel>
-                        <Select
-                          w="35%"
-                          id="role_select"
-                          size="sm"
-                          name="role"
-                          defaultValue={editingUserRole}
-                          onChange={(e) => setEditingUserRole(e.target.value)}
-                        >
-                          {(editingUserRole === 'USER' ||
-                            (permission === 'SUPER_ADMIN' &&
-                              editingUserRole === 'ADMIN')) && (
-                            <option value="USER">{t`USER`}</option>
-                          )}
-                          {(editingUserRole === 'USER' ||
-                            editingUserRole === 'ADMIN') && (
-                            <option value="ADMIN">{t`ADMIN`}</option>
-                          )}
-                          {(editingUserRole === 'SUPER_ADMIN' ||
-                            (permission === 'SUPER_ADMIN' &&
-                              orgSlug === 'super-admin')) && (
-                            <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
-                          )}
-                        </Select>
-                      </Stack>
-                    </ModalBody>
+                  <Divider />
+                  <Stack isInline align="center">
+                    <FormLabel htmlFor="role_select" fontWeight="bold">
+                      <Trans>Role:</Trans>
+                    </FormLabel>
+                    <Select
+                      w="35%"
+                      id="role_select"
+                      size="sm"
+                      name="role"
+                      defaultValue={editingUserRole}
+                      onChange={(e) => setEditingUserRole(e.target.value)}
+                    >
+                      {(editingUserRole === 'USER' ||
+                        (permission === 'SUPER_ADMIN' &&
+                          editingUserRole === 'ADMIN')) && (
+                        <option value="USER">{t`USER`}</option>
+                      )}
+                      {(editingUserRole === 'USER' ||
+                        editingUserRole === 'ADMIN') && (
+                        <option value="ADMIN">{t`ADMIN`}</option>
+                      )}
+                      {(editingUserRole === 'SUPER_ADMIN' ||
+                        (permission === 'SUPER_ADMIN' &&
+                          orgSlug === 'super-admin')) && (
+                        <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+                      )}
+                    </Select>
+                  </Stack>
+                </ModalBody>
 
-                    <ModalFooter>
-                      <TrackerButton
-                        variant="primary"
-                        isLoading={isSubmitting}
-                        type="submit"
-                        mr="4"
-                      >
-                        <Trans>Confirm</Trans>
-                      </TrackerButton>
-                    </ModalFooter>
-                  </form>
-                )}
-              </Formik>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+                <ModalFooter>
+                  <Button
+                    variant="primary"
+                    isLoading={isSubmitting}
+                    type="submit"
+                    mr="4"
+                  >
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </ModalFooter>
+              </form>
+            )}
+          </Formik>
+        </ModalContent>
+      </Modal>
     </Stack>
   )
 }

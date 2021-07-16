@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
@@ -72,7 +72,7 @@ describe('<EmailValidationPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
@@ -85,7 +85,7 @@ describe('<EmailValidationPage />', () => {
                   </Route>
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -107,7 +107,7 @@ describe('<EmailValidationPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
@@ -120,7 +120,7 @@ describe('<EmailValidationPage />', () => {
                   </Route>
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -144,7 +144,7 @@ describe('<EmailValidationPage />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={[
@@ -157,7 +157,7 @@ describe('<EmailValidationPage />', () => {
                   </Route>
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )

@@ -5,9 +5,8 @@ import { useUserVar } from './UserState'
 import { t, Trans } from '@lingui/macro'
 import sigEn from './images/goc-header-logo-en.svg'
 import sigFr from './images/goc-header-logo-fr.svg'
-import { Box, Flex, Image, useToast } from '@chakra-ui/core'
+import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react'
 import { Layout } from './Layout'
-import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { SIGN_OUT } from './graphql/mutations'
@@ -65,41 +64,41 @@ export const TopBanner = (props) => {
           <Box ml="auto" />
 
           {isLoggedIn() ? (
-            <TrackerButton
+            <Button
+              variant="primaryHover"
               as={RouteLink}
               to="/"
-              variant="primary hover"
               mx={1}
               px={3}
               display={{ base: 'none', md: 'inline' }}
               onClick={signOut}
             >
               <Trans>Sign Out</Trans>
-            </TrackerButton>
+            </Button>
           ) : (
-            <TrackerButton
+            <Button
+              variant="primaryWhite"
               as={RouteLink}
-              variant="primary white"
               to="/sign-in"
               mx={1}
               px={3}
               display={{ base: 'none', md: 'inline' }}
             >
               <Trans>Sign In</Trans>
-            </TrackerButton>
+            </Button>
           )}
 
           {!isLoggedIn() && (
-            <TrackerButton
+            <Button
+              variant="primaryHover"
               as={RouteLink}
-              variant="primary hover"
               to="/create-user"
               mx={1}
               px={3}
               display={{ base: 'none', md: 'inline' }}
             >
               <Trans>Create Account</Trans>
-            </TrackerButton>
+            </Button>
           )}
 
           <Box py={4}>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { DomainList } from '../DomainList'
@@ -26,7 +26,7 @@ describe('<DomainList />', () => {
       },
     ]
     const { getByTestId } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <DomainList domains={domains}>
             {({ node }) => (
@@ -36,7 +36,7 @@ describe('<DomainList />', () => {
             )}
           </DomainList>
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
 
     await waitFor(() => {
@@ -47,13 +47,13 @@ describe('<DomainList />', () => {
 
   it(`gracefully handles a "no results" empty list`, async () => {
     const { getByText } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <DomainList domains={[]} data-testid="list">
             {({ node }) => <p key={node.url}>{node.url}</p>}
           </DomainList>
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
 
     await waitFor(() => {
@@ -64,13 +64,13 @@ describe('<DomainList />', () => {
 
   it('gracefully handles null', async () => {
     const { getByText } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <DomainList domains={null} data-testid="list">
             {({ node }) => <p key={node.url}>{node.url}</p>}
           </DomainList>
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
 
     await waitFor(() => {

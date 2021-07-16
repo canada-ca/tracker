@@ -1,6 +1,6 @@
 import React from 'react'
 import { UserVarProvider } from '../UserState'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
@@ -169,11 +169,11 @@ describe('<AdminPage />', () => {
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                 <AdminPage />
               </MemoryRouter>
-            </ThemeProvider>
+            </ChakraProvider>
           </I18nProvider>
         </UserVarProvider>
       </MockedProvider>,
@@ -194,18 +194,18 @@ describe('<AdminPage />', () => {
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                 <AdminPage />
               </MemoryRouter>
-            </ThemeProvider>
+            </ChakraProvider>
           </I18nProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
 
     await waitFor(() => {
-      const welcome = getByText(/Welcome, Admin/i)
+      const welcome = getByText(/Select an organization to view admin options/i)
       expect(welcome).toBeInTheDocument()
     })
   })
@@ -222,11 +222,11 @@ describe('<AdminPage />', () => {
             })}
           >
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                   <AdminPage />
                 </MemoryRouter>
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </UserVarProvider>
         </MockedProvider>,

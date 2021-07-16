@@ -1,6 +1,6 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -126,7 +126,7 @@ describe('<Organisations />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
                   initialEntries={['/organizations']}
@@ -135,7 +135,7 @@ describe('<Organisations />', () => {
                   <Organizations />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -290,7 +290,7 @@ describe('<Organisations />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <Router history={history}>
                   <Switch>
@@ -301,7 +301,7 @@ describe('<Organisations />', () => {
                   </Switch>
                 </Router>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -425,7 +425,7 @@ describe('<Organisations />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <Switch>
@@ -436,7 +436,7 @@ describe('<Organisations />', () => {
                     </Switch>
                   </Router>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -650,7 +650,7 @@ describe('<Organisations />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <Switch>
@@ -661,7 +661,7 @@ describe('<Organisations />', () => {
                     </Switch>
                   </Router>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )

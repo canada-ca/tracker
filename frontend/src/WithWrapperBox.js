@@ -1,10 +1,10 @@
 import React from 'react'
-import { PseudoBox } from '@chakra-ui/core'
+import { Box } from '@chakra-ui/react'
 import { number, oneOfType, string } from 'prop-types'
 
-const WithPseudoBox = (WrappedComponent) => {
-  return function WrappedWithPseudoBox(props) {
-    WrappedWithPseudoBox.propTypes = {
+const WithWrapperBox = (WrappedComponent) => {
+  return function WrappedWithBox(props) {
+    WrappedWithBox.propTypes = {
       mb: oneOfType([string, number]),
       ml: oneOfType([string, number]),
       mt: oneOfType([string, number]),
@@ -29,7 +29,7 @@ const WithPseudoBox = (WrappedComponent) => {
       ...passThroughProps
     } = props
     return (
-      <PseudoBox
+      <Box
         mb={mb}
         ml={ml}
         mt={mt}
@@ -41,9 +41,9 @@ const WithPseudoBox = (WrappedComponent) => {
         mx={mx}
       >
         <WrappedComponent {...passThroughProps} />
-      </PseudoBox>
+      </Box>
     )
   }
 }
 
-export default WithPseudoBox
+export default WithWrapperBox

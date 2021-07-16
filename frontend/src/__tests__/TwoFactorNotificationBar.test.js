@@ -1,6 +1,6 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { render } from '@testing-library/react'
 import { TwoFactorNotificationBar } from '../TwoFactorNotificationBar'
@@ -20,13 +20,13 @@ describe('<TwoFactorNotificationBar />', () => {
   // XXX: rework this test
   it('successfully renders the component on its own.', () => {
     render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <TwoFactorNotificationBar />
           </MemoryRouter>
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
     expect(render).toBeTruthy()
   })

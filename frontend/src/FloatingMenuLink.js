@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Text } from '@chakra-ui/core'
+import { Link, Text } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { bool, string } from 'prop-types'
 

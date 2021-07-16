@@ -4,20 +4,20 @@ import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import {
   Box,
+  Button,
   Checkbox,
+  Flex,
   Heading,
   Link,
-  Stack,
   Text,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { SIGN_IN } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
 import { useLingui } from '@lingui/react'
@@ -141,10 +141,10 @@ export default function SignInPage() {
 
             <PasswordField name="password" mb="2" />
 
-            <Stack isInline align="center" mb="4">
+            <Flex align="center" mb="4">
               <Checkbox
                 name="rememberMe"
-                variantColor="orange"
+                colorScheme="orange"
                 size="lg"
                 onChange={handleChange}
               >
@@ -163,9 +163,9 @@ export default function SignInPage() {
                   <Trans>Forgot your password?</Trans>
                 </Text>
               </Link>
-            </Stack>
+            </Flex>
 
-            <TrackerButton
+            <Button
               variant="primary"
               isLoading={isSubmitting}
               type="submit"
@@ -173,7 +173,7 @@ export default function SignInPage() {
               mb={5}
             >
               <Trans>Sign In</Trans>
-            </TrackerButton>
+            </Button>
           </form>
         )}
       </Formik>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
 import { UserVarProvider } from '../UserState'
@@ -47,7 +47,7 @@ describe('<AdminDomains />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
                 <AdminDomains
@@ -57,7 +57,7 @@ describe('<AdminDomains />', () => {
                 />
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -84,7 +84,7 @@ describe('<AdminDomains />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
                 <AdminDomains
@@ -94,7 +94,7 @@ describe('<AdminDomains />', () => {
                 />
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -150,7 +150,7 @@ describe('<AdminDomains />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
@@ -160,7 +160,7 @@ describe('<AdminDomains />', () => {
                   />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -235,7 +235,7 @@ describe('<AdminDomains />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
@@ -245,7 +245,7 @@ describe('<AdminDomains />', () => {
                   />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -329,7 +329,7 @@ describe('<AdminDomains />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
@@ -339,7 +339,7 @@ describe('<AdminDomains />', () => {
                   />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -417,7 +417,7 @@ describe('<AdminDomains />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
@@ -427,7 +427,7 @@ describe('<AdminDomains />', () => {
                   />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -515,7 +515,7 @@ describe('<AdminDomains />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
@@ -525,7 +525,7 @@ describe('<AdminDomains />', () => {
                   />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )
@@ -594,7 +594,7 @@ describe('<AdminDomains />', () => {
               userName: null,
             })}
           >
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <AdminDomains
@@ -604,7 +604,7 @@ describe('<AdminDomains />', () => {
                   />
                 </MemoryRouter>
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
       )

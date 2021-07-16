@@ -9,7 +9,7 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { CSSReset, Flex, Link } from '@chakra-ui/core'
+import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { SkipLink } from './SkipLink'
 // import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -135,7 +135,7 @@ export default function App() {
         </Navigation>
 
         {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
-        <Main>
+        <Main marginBottom={{ base: '40px', md: 'none' }}>
           <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>

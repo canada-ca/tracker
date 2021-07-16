@@ -1,8 +1,9 @@
 import React, { useRef } from 'react'
 import { string } from 'prop-types'
 import {
+  Button,
+  Flex,
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,13 +11,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+} from '@chakra-ui/react'
+import { PersonIcon } from './theme/Icons'
+import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -25,7 +26,6 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
-import { TrackerButton } from './TrackerButton'
 
 function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -94,86 +94,83 @@ function EditableUserDisplayName({ detailValue }) {
         <Trans>Display Name:</Trans>
       </Heading>
 
-      <Stack isInline align="center">
-        <Icon name="person" size="icons.lg" color="gray.300" />
+      <Flex align="center">
+        <PersonIcon color="gray.300" mr={2} boxSize="icons.lg" />
         <Text>{detailValue}</Text>
-        <TrackerButton
+        <Button
+          variant="primary"
           ml="auto"
           onClick={onOpen}
-          variant="primary"
           fontSize="sm"
           px="3"
         >
           <Trans>Edit</Trans>
-        </TrackerButton>
-      </Stack>
+        </Button>
+      </Flex>
 
-      <SlideIn in={isOpen}>
-        {(styles) => (
-          <Modal
-            isOpen={true}
-            onClose={onClose}
-            initialFocusRef={initialFocusRef}
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        initialFocusRef={initialFocusRef}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb="4">
+          <Formik
+            validateOnBlur={false}
+            initialValues={{
+              displayName: '',
+            }}
+            initialTouched={{
+              displayName: true,
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values) => {
+              // Submit update detail mutation
+              await updateUserProfile({
+                variables: {
+                  displayName: values.displayName,
+                },
+              })
+            }}
           >
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb="4" {...styles}>
-              <Formik
-                validateOnBlur={false}
-                initialValues={{
-                  displayName: '',
-                }}
-                initialTouched={{
-                  displayName: true,
-                }}
-                validationSchema={validationSchema}
-                onSubmit={async (values) => {
-                  // Submit update detail mutation
-                  await updateUserProfile({
-                    variables: {
-                      displayName: values.displayName,
-                    },
-                  })
-                }}
-              >
-                {({ handleSubmit, isSubmitting }) => (
-                  <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>
-                      <Trans>Edit Display Name</Trans>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Stack spacing="4" p="6">
-                        <Heading as="h3" size="sm">
-                          <Trans>Current Display Name:</Trans>
-                        </Heading>
+            {({ handleSubmit, isSubmitting }) => (
+              <form id="form" onSubmit={handleSubmit}>
+                <ModalHeader>
+                  <Trans>Edit Display Name</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Stack spacing="4" p="6">
+                    <Heading as="h3" size="sm">
+                      <Trans>Current Display Name:</Trans>
+                    </Heading>
 
-                        <Text>{detailValue}</Text>
+                    <Text>{detailValue}</Text>
 
-                        <DisplayNameField
-                          name="displayName"
-                          label={t`New Display Name:`}
-                          ref={initialFocusRef}
-                        />
-                      </Stack>
-                    </ModalBody>
+                    <DisplayNameField
+                      name="displayName"
+                      label={t`New Display Name:`}
+                      ref={initialFocusRef}
+                    />
+                  </Stack>
+                </ModalBody>
 
-                    <ModalFooter>
-                      <TrackerButton
-                        isLoading={isSubmitting}
-                        type="submit"
-                        mr="4"
-                        variant="primary"
-                      >
-                        <Trans>Confirm</Trans>
-                      </TrackerButton>
-                    </ModalFooter>
-                  </form>
-                )}
-              </Formik>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+                <ModalFooter>
+                  <Button
+                    variant="primary"
+                    isLoading={isSubmitting}
+                    type="submit"
+                    mr="4"
+                  >
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </ModalFooter>
+              </form>
+            )}
+          </Formik>
+        </ModalContent>
+      </Modal>
     </Stack>
   )
 }
@@ -182,4 +179,4 @@ EditableUserDisplayName.propTypes = {
   detailValue: string,
 }
 
-export default WithPseudoBox(EditableUserDisplayName)
+export default WithWrapperBox(EditableUserDisplayName)

@@ -1,13 +1,6 @@
 import React from 'react'
-import {
-  Box,
-  Flex,
-  Icon,
-  ListItem,
-  Progress,
-  Stack,
-  Text,
-} from '@chakra-ui/core'
+import { Box, Flex, ListItem, Progress, Stack, Text } from '@chakra-ui/react'
+import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
@@ -52,7 +45,7 @@ export function OrganizationCard({
     <ListItem {...rest}>
       <Flex
         width="100%"
-        direction={{ base:'column', md: 'row'}}
+        direction={{ base: 'column', md: 'row' }}
         alignItems={{ base: 'flex-start', md: 'center' }}
         _hover={{ bg: ['', 'gray.100'] }}
         p="4"
@@ -78,9 +71,7 @@ export function OrganizationCard({
             <Text fontSize={['lg', 'md']} fontWeight="semibold">
               ({acronym})
             </Text>
-            {verified && (
-              <Icon name="check-circle" color="blue.500" size="icons.sm" />
-            )}
+            {verified && <CheckCircleIcon color="blue.500" size="icons.sm" />}
           </Stack>
         </Box>
         <Box
