@@ -42,8 +42,8 @@ export default function Organisations() {
   const orderIconName =
     orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
-  const [infoState, changeInfoState] = React.useState({
-    isHidden: true,
+  const [infoState, changeInfoState] = useState({
+    isVisable: false,
   })
 
   const {

@@ -47,17 +47,17 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     `${selectedPeriod}, ${selectedYear}`,
   )
 
-  const [fullPassState, changeFullPassState] = React.useState({
-    isHidden: true,
+  const [fullPassState, changeFullPassState] = useState({
+    isVisable: false,
   })
-  const [failDkimState, changeFailDkimState] = React.useState({
-    isHidden: true,
+  const [failDkimState, changeFailDkimState] = useState({
+    isVisable: false,
   })
-  const [failSpfState, changeFailSpfState] = React.useState({
-    isHidden: true,
+  const [failSpfState, changeFailSpfState] = useState({
+    isVisable: false,
   })
-  const [fullFailState, changeFullFailState] = React.useState({
-    isHidden: true,
+  const [fullFailState, changeFullFailState] = useState({
+    isVisable: false,
   })
 
   // Allows the use of forward/backward navigation

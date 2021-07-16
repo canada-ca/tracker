@@ -70,8 +70,8 @@ export default function DomainsPage() {
     nextFetchPolicy: 'cache-first',
   })
 
-  const [infoState, changeInfoState] = React.useState({
-    isHidden: true,
+  const [infoState, changeInfoState] = useState({
+    isVisable: false,
   })
 
   if (error) return <ErrorFallbackMessage error={error} />

@@ -242,7 +242,7 @@ TrackerTable.propTypes = {
   initialSort: array.isRequired,
   infoPanel: any,
   infoState: shape({
-    isHidden: bool,
+    isVisable: bool,
   }),
   changeInfoState: func,
   searchPlaceholder: string,
