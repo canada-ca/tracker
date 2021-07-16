@@ -62,31 +62,48 @@ export const FloatingMenu = () => {
         width="100%"
         rounded="md"
         spacing={0}
-        fontSize={{ base: '60%', sm: '100%' }}
+        divider={StyledDivider}
       >
         <Link as={RouteLink} to="/organizations" flex="1 1 0">
-          <Button variant="primary" rounded={0} w="100%" h="100%">
+          <Button
+            variant="primary"
+            rounded={0}
+            m={0}
+            w="100%"
+            h="100%"
+            fontSize={{ base: '60%', sm: '100%' }}
+          >
             <Trans>Organizations</Trans>
           </Button>
         </Link>
 
-        {StyledDivider}
-
         <Link as={RouteLink} to="/domains" flex="1 1 0">
-          <Button variant="primary" rounded={0} w="100%" h="100%">
+          <Button
+            variant="primary"
+            rounded={0}
+            m={0}
+            w="100%"
+            h="100%"
+            fontSize={{ base: '60%', sm: '100%' }}
+          >
             <Trans>Domains</Trans>
           </Button>
         </Link>
 
-        {StyledDivider}
-
         <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
-          <Button variant="primary" rounded={0} w="100%" h="100%">
+          <Button
+            variant="primary"
+            rounded={0}
+            m={0}
+            w="100%"
+            h="100%"
+            fontSize={{ base: '60%', sm: '100%' }}
+            whiteSpace="normal"
+            overflowWrap="break-word"
+          >
             <Trans>DMARC Summaries</Trans>
           </Button>
         </Link>
-
-        {StyledDivider}
 
         <Box flex="1 1 0">
           <Button
@@ -94,8 +111,10 @@ export const FloatingMenu = () => {
             ref={drawerBtnRef}
             onClick={drawerOnOpen}
             rounded={0}
+            m={0}
             w="100%"
             h="100%"
+            fontSize={{ base: '60%', sm: '100%' }}
           >
             <Trans>Menu</Trans>
           </Button>
