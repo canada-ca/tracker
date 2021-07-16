@@ -159,7 +159,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <Layout>
         <Stack align="center">
           <Text textAlign="center" fontSize="3xl" fontWeight="bold">
-            <Trans>This domain does not support aggregate data</Trans>
+            <span>{domainSlug} </span>
+            <Trans>does not support aggregate data</Trans>
           </Text>
         </Stack>
       </Layout>
