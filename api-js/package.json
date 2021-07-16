@@ -77,7 +77,7 @@
     "jest": "^27.0.6",
     "jest-fetch-mock": "^3.0.3",
     "jest-matcher-utils": "^27.0.6",
-    "nodemon": "^2.0.10",
+    "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
     "supertest": "^6.1.3"
   }
