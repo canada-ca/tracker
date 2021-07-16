@@ -6,9 +6,9 @@ import {
   Box,
   Button,
   Checkbox,
+  Flex,
   Heading,
   Link,
-  Stack,
   Text,
   useToast,
 } from '@chakra-ui/react'
@@ -141,7 +141,7 @@ export default function SignInPage() {
 
             <PasswordField name="password" mb="2" />
 
-            <Stack isInline align="center" mb="4">
+            <Flex align="center" mb="4">
               <Checkbox
                 name="rememberMe"
                 colorScheme="orange"
@@ -163,7 +163,7 @@ export default function SignInPage() {
                   <Trans>Forgot your password?</Trans>
                 </Text>
               </Link>
-            </Stack>
+            </Flex>
 
             <Button
               variant="primary"
