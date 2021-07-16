@@ -13,7 +13,13 @@ import {
   Spinner,
   Stack,
 } from '@chakra-ui/react'
-import { SpinnerIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import {
+  CheckIcon,
+  CloseIcon,
+  LockIcon,
+  ViewIcon,
+  ViewOffIcon,
+} from '@chakra-ui/icons'
 import WithWrapperBox from './WithWrapperBox'
 import { useField } from 'formik'
 import { string } from 'prop-types'
@@ -80,19 +86,10 @@ function PasswordConfirmation({
           </FormLabel>
           <InputGroup>
             <InputLeftElement>
-              {icon === 'spinner' ? (
-                <Spinner size="sm" color="gray.300" />
-              ) : (
-                <SpinnerIcon
-                  color={
-                    icon === 'lock'
-                      ? 'gray.300'
-                      : icon === 'check'
-                      ? 'green.500'
-                      : 'red.500'
-                  }
-                />
-              )}
+              {icon === 'spinner' && <Spinner size="sm" color="gray.300" />}
+              {icon === 'lock' && <LockIcon color="gray.300" />}
+              {icon === 'check' && <CheckIcon color="green.500" />}
+              {icon === 'close' && <CloseIcon color="red.500" />}
             </InputLeftElement>
             <Input
               {...passwordField}
@@ -124,20 +121,12 @@ function PasswordConfirmation({
           </FormLabel>
           <InputGroup>
             <InputLeftElement>
-              {confirmIcon === 'spinner' ? (
+              {confirmIcon === 'spinner' && (
                 <Spinner size="sm" color="gray.300" />
-              ) : (
-                <SpinnerIcon
-                  role="img"
-                  color={
-                    confirmIcon === 'lock'
-                      ? 'gray.300'
-                      : confirmIcon === 'check'
-                      ? 'green.500'
-                      : 'red.500'
-                  }
-                />
               )}
+              {confirmIcon === 'lock' && <LockIcon color="gray.300" />}
+              {confirmIcon === 'check' && <CheckIcon color="green.500" />}
+              {confirmIcon === 'close' && <CloseIcon color="red.500" />}
             </InputLeftElement>
             <Input
               {...confirmPasswordField}
