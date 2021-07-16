@@ -209,7 +209,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
           {categoryName.toUpperCase()}
         </Heading>
       </Button>
-      <Collapse isOpen={showCategory}>
+      <Collapse in={showCategory}>
         {webSummary}
         <Divider />
         {tagDetails}
@@ -224,7 +224,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
             >
               <Trans>Ciphers</Trans>
             </Button>
-            <Collapse isOpen={showCiphers}>{ciphers}</Collapse>
+            <Collapse in={showCiphers}>{ciphers}</Collapse>
           </Box>
         )}
         {curves && (
@@ -238,7 +238,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
             >
               <Trans>Curves</Trans>
             </Button>
-            <Collapse isOpen={showCurves}>{curves}</Collapse>
+            <Collapse in={showCurves}>{curves}</Collapse>
           </Box>
         )}
       </Collapse>

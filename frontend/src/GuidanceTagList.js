@@ -109,7 +109,7 @@ export function GuidanceTagList({
           <Button variant="strong" mb="2" onClick={handleShowPosi} w="100%">
             <Trans>Positive Tags</Trans>
           </Button>
-          <Collapse isOpen={showPosi}>{positiveTagList}</Collapse>
+          <Collapse in={showPosi}>{positiveTagList}</Collapse>
           <Divider borderColor="gray.50" />
         </Box>
       )}
@@ -119,7 +119,7 @@ export function GuidanceTagList({
           <Button mb="2" onClick={handleShowNeut} variant="info" w="100%">
             <Trans>Neutral Tags</Trans>
           </Button>
-          <Collapse isOpen={showNeut}>{neutralTagList}</Collapse>
+          <Collapse in={showNeut}>{neutralTagList}</Collapse>
           <Divider borderColor="gray.50" />
         </Box>
       )}
@@ -129,7 +129,7 @@ export function GuidanceTagList({
           <Button variant="weak" mb="2" onClick={handleShowNega} w="100%">
             <Trans>Negative Tags</Trans>
           </Button>
-          <Collapse isOpen={showNega}>{negativeTagList}</Collapse>
+          <Collapse in={showNega}>{negativeTagList}</Collapse>
         </Box>
       )}
       {!positiveTagList?.length &&
