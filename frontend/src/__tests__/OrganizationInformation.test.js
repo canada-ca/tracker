@@ -266,9 +266,11 @@ describe('<OrganizationInformation />', () => {
 
         userEvent.click(confirmOrganizationRemovalButton)
 
-        const toast = await findByText(/You have successfully removed Org Name/)
+        const successfullyRemoveToastText = await findByText(
+          /You have successfully removed Org Name/,
+        )
 
-        expect(toast).toBeVisible()
+        await waitFor(() => expect(successfullyRemoveToastText).toBeVisible())
       })
 
       it('blocks the user from removing until entering the org name', async () => {
@@ -386,7 +388,7 @@ describe('<OrganizationInformation />', () => {
               /You have successfully updated Org Name/,
             )
 
-            expect(successfulUpdateToastText).toBeVisible()
+            await waitFor(() => expect(successfulUpdateToastText).toBeVisible())
 
             // Check that the new country is shown in the info area
             const countryEl = await findByText(/Country:/)
@@ -443,7 +445,7 @@ describe('<OrganizationInformation />', () => {
               /No values were supplied/,
             )
 
-            expect(noValuesSuppliedToastText).toBeVisible()
+            await waitFor(() => expect(noValuesSuppliedToastText).toBeVisible())
           })
         })
       })
