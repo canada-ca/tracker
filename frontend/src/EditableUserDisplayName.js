@@ -95,7 +95,7 @@ function EditableUserDisplayName({ detailValue }) {
       </Heading>
 
       <Flex align="center">
-        <PersonIcon color="gray.300" mr={2} />
+        <PersonIcon color="gray.300" mr={2} boxSize="icons.lg" />
         <Text>{detailValue}</Text>
         <Button
           variant="primary"
