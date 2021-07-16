@@ -8,7 +8,7 @@ const UseDebouncedFunctionExample = () => {
 
   const memoizedSetDebouncedCountCallback = useCallback(() => {
     act(() => setDebouncedCount(debouncedCount + 1))
-  }, [count])
+  }, [debouncedCount])
 
   useDebouncedFunction(memoizedSetDebouncedCountCallback, 500)
 
