@@ -144,7 +144,7 @@ export default function SignInPage() {
             <Stack isInline align="center" mb="4">
               <Checkbox
                 name="rememberMe"
-                variantColor="orange"
+                colorScheme="orange"
                 size="lg"
                 onChange={handleChange}
               >
