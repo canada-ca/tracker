@@ -1,7 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Layout } from './Layout'
-import { Stack, Text } from '@chakra-ui/react'
+import { Box, Stack, Text } from '@chakra-ui/react'
 import { SummaryGroup } from './SummaryGroup'
 import { number, object, string } from 'prop-types'
 
@@ -13,7 +12,7 @@ export function OrganizationSummary({
   province,
 }) {
   return (
-    <Layout>
+    <Box variant="pageLayout">
       <Stack fontSize="xl" align={['center', 'flex-start']}>
         <Stack isInline align="center">
           <Text>
@@ -39,7 +38,7 @@ export function OrganizationSummary({
         </Stack>
       </Stack>
       <SummaryGroup web={summaries?.web} mail={summaries?.mail} />
-    </Layout>
+    </Box>
   )
 }
 

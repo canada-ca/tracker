@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Layout } from './Layout'
 import { ListOf } from './ListOf'
 import {
   Box,
@@ -115,7 +114,7 @@ export default function Organisations() {
   }
 
   return (
-    <Layout>
+    <Box variant="pageLayout">
       <Stack direction="row" justify="space-between" mb="4">
         <Heading as="h1" textAlign="left">
           <Trans>Organizations</Trans>
@@ -229,6 +228,6 @@ export default function Organisations() {
           isLoadingMore={isLoadingMore}
         />
       </ErrorBoundary>
-    </Layout>
+    </Box>
   )
 }

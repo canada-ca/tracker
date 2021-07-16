@@ -1,8 +1,8 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import { Layout } from './Layout'
 import {
+  Box,
   Heading,
   IconButton,
   Stack,
@@ -83,7 +83,7 @@ export default function OrganizationDetails() {
   }
 
   return (
-    <Layout>
+    <Box variant="pageLayout">
       <Stack isInline align="center" mb="4">
         <IconButton
           icon={<ArrowLeftIcon />}
@@ -141,6 +141,6 @@ export default function OrganizationDetails() {
           )}
         </TabPanels>
       </Tabs>
-    </Layout>
+    </Box>
   )
 }

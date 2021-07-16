@@ -1,6 +1,7 @@
 import { extendTheme } from '@chakra-ui/react'
 import Accordion from './components/Accordion'
 import Button from './components/Button'
+import Box from './components/Box'
 import Divider from './components/Divider'
 import Input from './components/Input'
 import Select from './components/Select'
@@ -131,6 +132,7 @@ export default extendTheme({
   components: {
     Accordion,
     Button,
+    Box,
     Divider,
     Input,
     Select,

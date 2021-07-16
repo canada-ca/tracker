@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Box,
   Button,
   Divider,
   Flex,
@@ -10,7 +11,6 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
-import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from './graphql/queries'
 import { useQuery } from '@apollo/client'
@@ -98,7 +98,7 @@ export default function AdminPage() {
 
   if (options.length > 1) {
     return (
-      <Layout>
+      <Box variant="pageLayout">
         <Stack spacing={10}>
           <Flex direction={{ base: 'column', md: 'row' }} align="center">
             <Text fontWeight="bold" fontSize="2xl">
@@ -149,11 +149,11 @@ export default function AdminPage() {
             </Text>
           )}
         </Stack>
-      </Layout>
+      </Box>
     )
   } else {
     return (
-      <Layout>
+      <Box variant="pageLayout">
         <Stack align="center">
           <Text fontSize="3xl" fontWeight="bold" textAlign="center">
             <Trans>You do not have admin permissions in any organization</Trans>
@@ -169,7 +169,7 @@ export default function AdminPage() {
             <Trans>Create Organization</Trans>
           </Button>
         </Stack>
-      </Layout>
+      </Box>
     )
   }
 }
