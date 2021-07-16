@@ -354,18 +354,6 @@ export default function OrganizationInformation({
                     <FormField name="nameFR" label={t`Name (FR)`} />
                   </Box>
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="zoneEN" label={t`Zone (EN)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="zoneFR" label={t`Zone (FR)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="sectorEN" label={t`Sector (EN)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="sectorFR" label={t`Sector (FR)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
                     <FormField name="countryEN" label={t`Country (EN)`} />
                   </Box>
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
