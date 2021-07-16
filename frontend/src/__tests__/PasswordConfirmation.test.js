@@ -45,13 +45,13 @@ describe('<PasswordConfirmation />', () => {
   })
 
   describe('given no input', () => {
-    it('displays an error icon', async () => {
+    it('displays the lock icon', async () => {
       const validationSchema = object().shape({
         password: string().required('sadness'),
         confirmPassword: string().required('sadness'),
       })
 
-      const { getByRole } = render(
+      const { getByLabelText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -67,7 +67,7 @@ describe('<PasswordConfirmation />', () => {
           </ChakraProvider>
         </I18nProvider>,
       )
-      await waitFor(() => expect(getByRole('img')).toBeInTheDocument())
+      await waitFor(() => expect(getByLabelText(/initial icon/)).toBeVisible())
     })
   })
 })

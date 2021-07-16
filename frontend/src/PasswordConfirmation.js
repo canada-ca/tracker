@@ -87,9 +87,13 @@ function PasswordConfirmation({
           <InputGroup>
             <InputLeftElement>
               {icon === 'spinner' && <Spinner size="sm" color="gray.300" />}
-              {icon === 'lock' && <LockIcon color="gray.300" />}
+              {icon === 'lock' && (
+                <LockIcon color="gray.300" aria-label="initial icon" />
+              )}
               {icon === 'check' && <CheckIcon color="green.500" />}
-              {icon === 'close' && <CloseIcon color="red.500" />}
+              {icon === 'close' && (
+                <CloseIcon color="red.500" aria-label="invalid password" />
+              )}
             </InputLeftElement>
             <Input
               {...passwordField}
