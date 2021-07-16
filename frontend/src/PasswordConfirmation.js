@@ -104,7 +104,6 @@ function PasswordConfirmation({
                 h="buttons.lg"
                 onClick={handlePasswordShow}
                 icon={passwordShow ? <ViewOffIcon /> : <ViewIcon />}
-                tabIndex="-1"
               />
             </InputRightElement>
           </InputGroup>
@@ -141,7 +140,6 @@ function PasswordConfirmation({
                 h="buttons.lg"
                 onClick={handleConfirmShow}
                 icon={confirmShow ? <ViewOffIcon /> : <ViewIcon />}
-                tabIndex="-1"
               />
             </InputRightElement>
           </InputGroup>
