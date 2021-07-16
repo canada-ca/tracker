@@ -1,29 +1,22 @@
 import React from 'react'
 import { any, bool, func, shape, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, Button, Stack } from '@chakra-ui/react'
+import { Box, Button, Collapse, Stack } from '@chakra-ui/react'
 
 export function InfoPanel({ state, children }) {
   return (
-    <Box
-      hidden={state.isHidden}
-      border="2px"
-      borderColor="gray.400"
-      rounded="md"
-      p="1em"
-      my="1em"
-    >
-      <Stack direction="column">{children}</Stack>
-    </Box>
+    <Collapse in={state.isVisable}>
+      <Box border="2px" borderColor="gray.400" rounded="md" p="1em" my="1em">
+        <Stack direction="column">{children}</Stack>
+      </Box>
+    </Collapse>
   )
 }
 
 export function InfoBox({ title, info }) {
   return (
     <Box my="0.25em">
-      <strong>
-        <Trans>{title}</Trans>
-      </strong>
+      <Trans fontWeight="bold">{title}</Trans>
       <span>: </span>
       <Trans>{info}</Trans>
     </Box>
@@ -39,7 +32,7 @@ export function InfoButton({ state, changeState, label, ...props }) {
       onClick={() => {
         changeState({
           ...state,
-          isHidden: !state.isHidden,
+          isVisable: !state.isVisable,
         })
       }}
       {...props}
@@ -51,7 +44,7 @@ export function InfoButton({ state, changeState, label, ...props }) {
 
 InfoPanel.propTypes = {
   state: shape({
-    isHidden: bool,
+    isVisable: bool,
   }),
   children: any,
 }
@@ -63,7 +56,7 @@ InfoBox.propTypes = {
 
 InfoButton.propTypes = {
   state: shape({
-    isHidden: bool,
+    isVisable: bool,
   }),
   changeState: func,
   label: string,

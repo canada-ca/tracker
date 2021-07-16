@@ -37,8 +37,8 @@ export default function DmarcByDomainPage() {
     direction: 'DESC',
   }
 
-  const [infoState, changeInfoState] = React.useState({
-    isHidden: true,
+  const [infoState, changeInfoState] = useState({
+    isVisable: false,
   })
 
   const { loading, error, nodes, resetToFirstPage } = usePaginatedCollection({

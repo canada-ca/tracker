@@ -18,7 +18,7 @@ const i18n = setupI18n({
 describe('<InfoPanel>', () => {
   it('successfully renders with mocked data', async () => {
     const state = {
-      isHidden: false,
+      isVisable: true,
     }
     const { getByText } = render(
       <ChakraProvider theme={theme}>
