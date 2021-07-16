@@ -24,14 +24,14 @@ describe('parse server', () => {
 
   describe('/alive', () => {
     it('returns 200', async () => {
-      const response = await request(Server({ query: jest.fn() })).get('/alive')
+      const response = await request(await Server({ query: jest.fn() })).get('/alive')
       expect(response.status).toEqual(200)
     })
   })
 
   describe('/ready', () => {
     it('returns 200', async () => {
-      const response = await request(Server({ query: jest.fn() })).get('/ready')
+      const response = await request(await Server({ query: jest.fn() })).get('/ready')
       expect(response.status).toEqual(200)
     })
   })
@@ -40,7 +40,7 @@ describe('parse server', () => {
     describe('endpoint is alive', () => {
       it('returns 200', async () => {
         const response = await request(
-          Server({
+          await Server({
             maxDepth,
             complexityCost,
             scalarCost,
@@ -65,7 +65,7 @@ describe('parse server', () => {
       describe('query cost is too high', () => {
         it('returns an error message', async () => {
           const response = await request(
-            Server({
+            await Server({
               maxDepth,
               complexityCost: 1,
               scalarCost: 100,
@@ -91,7 +91,7 @@ describe('parse server', () => {
       describe('query depth is too high', () => {
         it('returns an error message', async () => {
           const response = await request(
-            Server({
+            await Server({
               maxDepth: 1,
               complexityCost: 1000,
               scalarCost: 1,

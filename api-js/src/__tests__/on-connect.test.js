@@ -1,5 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 
+import { createContext } from '../create-context'
 import { customOnConnect } from '../on-connect'
 import { verifyToken, tokenize, userRequired } from '../auth'
 import { createI18n } from '../create-i18n'
@@ -41,15 +42,16 @@ describe('given the customOnConnect function', () => {
         }
 
         const onConnect = await customOnConnect({
-          context: {},
+          createContext,
+          serverContext: {},
           createI18n,
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
           verifiedRequired: jest.fn(),
-        })(connectionParams, webSocket)
+        })(connectionParams, webSocket, { request: {} })
 
-        expect(onConnect.language).toEqual('en')
+        expect(onConnect.request.language).toEqual('en')
         expect(consoleOutput).toEqual([
           'User: 1234, connected to subscription.',
         ])
@@ -72,15 +74,16 @@ describe('given the customOnConnect function', () => {
         }
 
         const onConnect = await customOnConnect({
-          context: {},
+          createContext,
+          serverContext: {},
           createI18n,
           verifyToken,
           userRequired: mockedUserRequired,
           loadUserByKey: jest.fn(),
           verifiedRequired: jest.fn(),
-        })(connectionParams, webSocket)
+        })(connectionParams, webSocket, { request: {} })
 
-        expect(onConnect.language).toEqual('fr')
+        expect(onConnect.request.language).toEqual('fr')
         expect(consoleOutput).toEqual([
           'User: 1234, connected to subscription.',
         ])
@@ -104,15 +107,16 @@ describe('given the customOnConnect function', () => {
       }
 
       const onConnect = await customOnConnect({
-        context: {},
+        createContext,
+        serverContext: {},
         createI18n,
         verifyToken,
         userRequired: mockedUserRequired,
         loadUserByKey: jest.fn(),
         verifiedRequired: jest.fn(),
-      })(connectionParams, webSocket)
+      })(connectionParams, webSocket, { request: {} })
 
-      expect(onConnect.authorization).toEqual(token)
+      expect(onConnect.request.headers.authorization).toEqual(token)
       expect(consoleOutput).toEqual(['User: 1234, connected to subscription.'])
     })
   })
@@ -152,12 +156,13 @@ describe('given the customOnConnect function', () => {
 
         try {
           await customOnConnect({
-            context: { query },
+            createContext,
+            serverContext: { query },
             createI18n,
             verifyToken,
             userRequired,
             loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn() }),
-          })(connectionParams, webSocket)
+          })(connectionParams, webSocket, { request: {} })
         } catch (err) {
           expect(err).toEqual(
             new Error('Authentication error. Please sign in.'),
@@ -183,12 +188,13 @@ describe('given the customOnConnect function', () => {
 
         try {
           await customOnConnect({
-            context: { query },
+            createContext,
+            serverContext: { query },
             createI18n,
             verifyToken,
             userRequired,
             loadUserByKey: jest.fn().mockReturnValue({ load: jest.fn() }),
-          })(connectionParams, webSocket)
+          })(connectionParams, webSocket, { request: {} })
         } catch (err) {
           expect(err).toEqual(
             new Error("Erreur d'authentification. Veuillez vous connecter."),
