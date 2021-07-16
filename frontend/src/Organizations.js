@@ -43,7 +43,7 @@ export default function Organisations() {
     orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
   const [infoState, changeInfoState] = useState({
-    isVisable: false,
+    isVisible: false,
   })
 
   const {

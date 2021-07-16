@@ -5,7 +5,7 @@ import { Box, Button, Collapse, Stack } from '@chakra-ui/react'
 
 export function InfoPanel({ state, children }) {
   return (
-    <Collapse in={state.isVisable}>
+    <Collapse in={state.isVisible}>
       <Box border="2px" borderColor="gray.400" rounded="md" p="1em" my="1em">
         <Stack direction="column">{children}</Stack>
       </Box>
@@ -32,7 +32,7 @@ export function InfoButton({ state, changeState, label, ...props }) {
       onClick={() => {
         changeState({
           ...state,
-          isVisable: !state.isVisable,
+          isVisible: !state.isVisible,
         })
       }}
       {...props}
@@ -44,7 +44,7 @@ export function InfoButton({ state, changeState, label, ...props }) {
 
 InfoPanel.propTypes = {
   state: shape({
-    isVisable: bool,
+    isVisible: bool,
   }),
   children: any,
 }
@@ -56,7 +56,7 @@ InfoBox.propTypes = {
 
 InfoButton.propTypes = {
   state: shape({
-    isVisable: bool,
+    isVisible: bool,
   }),
   changeState: func,
   label: string,

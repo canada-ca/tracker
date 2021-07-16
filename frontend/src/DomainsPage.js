@@ -71,7 +71,7 @@ export default function DomainsPage() {
   })
 
   const [infoState, changeInfoState] = useState({
-    isVisable: false,
+    isVisible: false,
   })
 
   if (error) return <ErrorFallbackMessage error={error} />

@@ -38,7 +38,7 @@ export default function DmarcByDomainPage() {
   }
 
   const [infoState, changeInfoState] = useState({
-    isVisable: false,
+    isVisible: false,
   })
 
   const { loading, error, nodes, resetToFirstPage } = usePaginatedCollection({

@@ -17,7 +17,7 @@ export default function CreateOrganizationPage() {
   const history = useHistory()
 
   const [infoState, changeInfoState] = useState({
-    isVisable: false,
+    isVisible: false,
   })
 
   const validationSchema = object().shape({

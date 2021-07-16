@@ -11,7 +11,7 @@ import {
   Stack,
   Text,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
