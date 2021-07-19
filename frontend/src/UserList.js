@@ -315,7 +315,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   )
 
   return (
-    <Stack mb="6" w="100%">
+    <Flex mb="6" w="100%">
       <form
         onSubmit={(e) => {
           // Manually handle submit
@@ -527,7 +527,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           </Formik>
         </ModalContent>
       </Modal>
-    </Stack>
+    </Flex>
   )
 }
 
