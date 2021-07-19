@@ -2,8 +2,6 @@ import React from 'react'
 import trackerLogo from './images/trackerlogo.svg'
 import { Box, Divider, Grid, Image, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
-import { NewDmarcGraph } from './NewDmarcGraph'
-import { formattedBarData } from './fixtures/summaryListData'
 
 export function LandingPage() {
   return (
@@ -49,9 +47,6 @@ export function LandingPage() {
           />
         </Box>
       </Grid>
-      <Divider borderBottomColor="gray.900" />
-      <NewDmarcGraph data={formattedBarData} />
-      <Divider borderBottomColor="gray.900" />
     </div>
   )
 }

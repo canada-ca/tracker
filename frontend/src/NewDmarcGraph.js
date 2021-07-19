@@ -15,6 +15,7 @@ import theme from './theme/canada'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { Box, Stack } from '@chakra-ui/core'
 
 const { strong, moderate, moderateAlt, weak, gray } = theme.colors
 const textColour = gray['900']
@@ -28,29 +29,23 @@ const tooltipStyles = {
   color: 'white',
 }
 
-const keys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
-
+const totalKeys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
+const percentageKeys = [
+  'fullPassPercentage',
+  'passSpfOnlyPercentage',
+  'passDkimOnlyPercentage',
+  'failPercentage',
+]
 const getDate = (d) => d.date
-
-// const dateScale = scaleBand({
-//   domain: data.map(getDate),
-//   padding: 0.2,
-// })
-// const temperatureScale = scaleLinear({
-//   domain: [0, Math.max(...temperatureTotals)],
-//   nice: true,
-// })
-// const colorScale = scaleOrdinal({
-//   domain: keys,
-//   range: [strong, moderate, moderateAlt, weak],
-// })
-
 let tooltipTimeout
 
 export function NewDmarcGraph({ ...props }) {
   const { i18n } = useLingui()
   const { data, responsiveWidth } = props
-  const [orientation, setOrientation] = useState(true) // true = vertical, false = horizontal
+  const [isHorizontal, setIsHorizontal] = useState(false)
+  const [isNormalised, setIsNormailsed] = useState(false)
+
+  let keys = totalKeys
 
   data.periods.sort((a, b) => {
     if (a.month === 'LAST30DAYS') return 1
@@ -71,21 +66,52 @@ export function NewDmarcGraph({ ...props }) {
     period.date = date
   })
 
+  if (isNormalised) {
+    keys = percentageKeys
+  } else {
+    keys = totalKeys
+  }
+
   return (
-    <div>
-      <TrackerButton
-        variant="primary"
-        onClick={() => setOrientation(!orientation)}
-        mb="4"
-      >
-        <Trans>Change Chart Orientation</Trans>
-      </TrackerButton>
-      {orientation ? (
-        <VerticalGraph data={data} responsiveWidth={responsiveWidth} />
+    <Box>
+      <Stack isInline align="center" spacing="4">
+        <TrackerButton
+          variant="primary"
+          onClick={() => setIsHorizontal(!isHorizontal)}
+          mb="4"
+        >
+          {isHorizontal ? (
+            <Trans>Vertical View</Trans>
+          ) : (
+            <Trans>Horizontal View</Trans>
+          )}
+        </TrackerButton>
+        <TrackerButton
+          variant="primary"
+          onClick={() => setIsNormailsed(!isNormalised)}
+          mb="4"
+        >
+          {isNormalised ? (
+            <Trans>Total Messages</Trans>
+          ) : (
+            <Trans>Percentages</Trans>
+          )}
+        </TrackerButton>
+      </Stack>
+      {isHorizontal ? (
+        <HorizontalGraph
+          data={data}
+          keys={keys}
+          responsiveWidth={responsiveWidth}
+        />
       ) : (
-        <HorizontalGraph data={data} responsiveWidth={responsiveWidth} />
+        <VerticalGraph
+          data={data}
+          keys={keys}
+          responsiveWidth={responsiveWidth}
+        />
       )}
-    </div>
+    </Box>
   )
 }
 
@@ -96,7 +122,7 @@ function VerticalGraph({
   margin = defaultVerticalMargin,
   ...props
 }) {
-  const { data, responsiveWidth } = props
+  const { data, keys, responsiveWidth } = props
   const { periods, strengths } = data
   const {
     tooltipOpen,
@@ -120,10 +146,11 @@ function VerticalGraph({
     domain: periods.map(getDate),
     padding: 0.2,
   })
-  const temperatureScale = scaleLinear({
+  const messageScale = scaleLinear({
     domain: [0, Math.max(...monthlyTotals)],
     nice: true,
   })
+
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [strong, moderate, moderateAlt, weak],
@@ -136,7 +163,7 @@ function VerticalGraph({
   const yMax = height - margin.top - 100
 
   dateScale.rangeRound([0, xMax])
-  temperatureScale.range([yMax, 0])
+  messageScale.range([yMax, 0])
 
   return width < 10 ? null : (
     <div style={{ position: 'relative' }}>
@@ -153,7 +180,7 @@ function VerticalGraph({
           top={margin.top}
           left={margin.left}
           xScale={dateScale}
-          yScale={temperatureScale}
+          yScale={messageScale}
           width={xMax}
           height={yMax}
           stroke="black"
@@ -166,7 +193,7 @@ function VerticalGraph({
             keys={keys}
             x={getDate}
             xScale={dateScale}
-            yScale={temperatureScale}
+            yScale={messageScale}
             color={colorScale}
           >
             {(barStacks) =>
@@ -260,7 +287,7 @@ function HorizontalGraph({
   margin = defaultHorizontalMargin,
   ...props
 }) {
-  const { data, responsiveWidth } = props
+  const { data, keys, responsiveWidth } = props
   const { periods, strengths } = data
   const {
     tooltipOpen,
@@ -288,16 +315,17 @@ function HorizontalGraph({
     domain: periods.map(getDate),
     padding: 0.2,
   })
-  const temperatureScale = scaleLinear({
+  const messageScale = scaleLinear({
     domain: [0, Math.max(...monthlyTotals)],
     nice: true,
   })
+
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [strong, moderate, moderateAlt, weak],
   })
 
-  temperatureScale.rangeRound([0, xMax])
+  messageScale.rangeRound([0, xMax])
   dateScale.rangeRound([yMax, 0])
 
   return width < 10 ? null : (
@@ -312,26 +340,34 @@ function HorizontalGraph({
           fontSize: '14px',
         }}
       >
-        <LegendOrdinal
-          scale={colorScale}
-          direction="row"
-          labelMargin="0 15px 0 0"
-        />
+        <Box justify="center">
+          <LegendOrdinal
+            scale={colorScale}
+            direction="row"
+            labelMargin="0 15px 0 0"
+          />
+        </Box>
       </div>
       <svg ref={containerRef} width={width} height={height}>
-        <LegendOrdinal
-          scale={colorScale}
-          direction="row"
-          labelMargin="0 15px 0 0"
-        />
         <rect width={width} height={height} fill={background} rx={14} />
+        <Grid
+          top={margin.top}
+          left={margin.left}
+          yScale={dateScale}
+          xScale={messageScale}
+          width={xMax}
+          height={yMax}
+          stroke="black"
+          strokeOpacity={0.1}
+          yOffset={dateScale.bandwidth() / 2}
+        />
         <Group top={margin.top} left={margin.left}>
           <BarStackHorizontal
             data={periods}
             keys={keys}
             height={yMax}
             y={getDate}
-            xScale={temperatureScale}
+            xScale={messageScale}
             yScale={dateScale}
             color={colorScale}
           >
@@ -373,7 +409,6 @@ function HorizontalGraph({
             hideAxisLine
             hideTicks
             scale={dateScale}
-            // tickFormat={formatDate}
             stroke={textColour}
             tickStroke={textColour}
             tickLabelProps={() => ({
@@ -385,7 +420,7 @@ function HorizontalGraph({
           />
           <AxisBottom
             top={yMax}
-            scale={temperatureScale}
+            scale={messageScale}
             stroke={textColour}
             tickStroke={textColour}
             tickLabelProps={() => ({

@@ -25,6 +25,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
 import { Layout } from './Layout'
 import { InfoBox, InfoPanel } from './InfoPanel'
+import { NewDmarcGraph } from './NewDmarcGraph'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { domainSlug, period, year } = useParams()
@@ -199,6 +200,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
             month: entry.month,
             year: entry.year,
             ...entry.categoryTotals,
+            ...entry.categoryPercentages,
           }
         },
       ),
@@ -206,10 +208,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     formattedGraphData.strengths = strengths
     graphDisplay = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcTimeGraph
+        {/* <DmarcTimeGraph
           data={formattedGraphData}
           width="100%"
           mr="400px"
+          responsiveWidth={summaryListResponsiveWidth}
+        /> */}
+        <NewDmarcGraph
+          data={formattedGraphData}
           responsiveWidth={summaryListResponsiveWidth}
         />
       </ErrorBoundary>
