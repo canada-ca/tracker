@@ -262,6 +262,10 @@ msgstr "Permission check error. Unable to request domain information."
 msgid "Permission error, not an admin for this user."
 msgstr "Permission error, not an admin for this user."
 
+#: src/user/mutations/close-account.js:49
+msgid "Permission error: Unable to close other users account."
+msgstr "Permission error: Unable to close other users account."
+
 #: src/user/mutations/remove-phone-number.js:81
 msgid "Phone number has been successfully removed."
 msgstr "Phone number has been successfully removed."
@@ -352,6 +356,10 @@ msgstr "Requesting {amount} records on the `SPF` connection exceeds the `{argSet
 msgid "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 
+#: src/user/mutations/close-account.js:470
+msgid "Successfully closed account."
+msgstr "Successfully closed account."
+
 #: src/domain/mutations/request-scan.js:131
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
@@ -364,15 +372,15 @@ msgstr "Successfully email verified account, and set TFA send method to email."
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
-#: src/affiliation/mutations/leave-organization.js:355
+#: src/affiliation/mutations/leave-organization.js:427
 msgid "Successfully left organization: {0}"
 msgstr "Successfully left organization: {0}"
 
-#: src/domain/mutations/remove-domain.js:335
+#: src/domain/mutations/remove-domain.js:402
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "Successfully removed domain: {0} from {1}."
 
-#: src/organization/mutations/remove-organization.js:370
+#: src/organization/mutations/remove-organization.js:441
 msgid "Successfully removed organization: {0}."
 msgstr "Successfully removed organization: {0}."
 
@@ -419,13 +427,13 @@ msgstr "Two factor code length is incorrect. Please try again."
 #: src/affiliation/mutations/leave-organization.js:80
 #: src/affiliation/mutations/leave-organization.js:90
 #: src/affiliation/mutations/leave-organization.js:110
-#: src/affiliation/mutations/leave-organization.js:154
-#: src/affiliation/mutations/leave-organization.js:174
-#: src/affiliation/mutations/leave-organization.js:271
-#: src/affiliation/mutations/leave-organization.js:291
-#: src/affiliation/mutations/leave-organization.js:319
-#: src/affiliation/mutations/leave-organization.js:338
-#: src/affiliation/mutations/leave-organization.js:348
+#: src/affiliation/mutations/leave-organization.js:156
+#: src/affiliation/mutations/leave-organization.js:177
+#: src/affiliation/mutations/leave-organization.js:328
+#: src/affiliation/mutations/leave-organization.js:357
+#: src/affiliation/mutations/leave-organization.js:390
+#: src/affiliation/mutations/leave-organization.js:410
+#: src/affiliation/mutations/leave-organization.js:420
 msgid "Unable leave organization. Please try again."
 msgstr "Unable leave organization. Please try again."
 
@@ -445,6 +453,24 @@ msgstr "Unable to authenticate. Please try again."
 #: src/auth/check-super-admin.js:30
 msgid "Unable to check permission. Please try again."
 msgstr "Unable to check permission. Please try again."
+
+#: src/user/mutations/close-account.js:69
+#: src/user/mutations/close-account.js:79
+#: src/user/mutations/close-account.js:104
+#: src/user/mutations/close-account.js:114
+#: src/user/mutations/close-account.js:145
+#: src/user/mutations/close-account.js:160
+#: src/user/mutations/close-account.js:189
+#: src/user/mutations/close-account.js:199
+#: src/user/mutations/close-account.js:235
+#: src/user/mutations/close-account.js:346
+#: src/user/mutations/close-account.js:375
+#: src/user/mutations/close-account.js:399
+#: src/user/mutations/close-account.js:435
+#: src/user/mutations/close-account.js:452
+#: src/user/mutations/close-account.js:461
+msgid "Unable to close account. Please try again."
+msgstr "Unable to close account. Please try again."
 
 #: src/domain/mutations/create-domain.js:75
 msgid "Unable to create domain in unknown organization."
@@ -770,24 +796,24 @@ msgstr "Unable to remove domain from unknown organization."
 
 #: src/domain/mutations/remove-domain.js:125
 #: src/domain/mutations/remove-domain.js:139
-#: src/domain/mutations/remove-domain.js:176
-#: src/domain/mutations/remove-domain.js:194
-#: src/domain/mutations/remove-domain.js:275
-#: src/domain/mutations/remove-domain.js:293
-#: src/domain/mutations/remove-domain.js:315
-#: src/domain/mutations/remove-domain.js:326
+#: src/domain/mutations/remove-domain.js:178
+#: src/domain/mutations/remove-domain.js:197
+#: src/domain/mutations/remove-domain.js:332
+#: src/domain/mutations/remove-domain.js:359
+#: src/domain/mutations/remove-domain.js:382
+#: src/domain/mutations/remove-domain.js:393
 msgid "Unable to remove domain. Please try again."
 msgstr "Unable to remove domain. Please try again."
 
 #: src/organization/mutations/remove-organization.js:113
 #: src/organization/mutations/remove-organization.js:125
 #: src/organization/mutations/remove-organization.js:147
-#: src/organization/mutations/remove-organization.js:191
-#: src/organization/mutations/remove-organization.js:211
-#: src/organization/mutations/remove-organization.js:299
-#: src/organization/mutations/remove-organization.js:319
-#: src/organization/mutations/remove-organization.js:348
-#: src/organization/mutations/remove-organization.js:359
+#: src/organization/mutations/remove-organization.js:193
+#: src/organization/mutations/remove-organization.js:214
+#: src/organization/mutations/remove-organization.js:356
+#: src/organization/mutations/remove-organization.js:385
+#: src/organization/mutations/remove-organization.js:419
+#: src/organization/mutations/remove-organization.js:430
 msgid "Unable to remove organization. Please try again."
 msgstr "Unable to remove organization. Please try again."
 

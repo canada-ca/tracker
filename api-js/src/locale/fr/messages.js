@@ -110,6 +110,8 @@
       'Erreur de vérification des permissions. Impossible de demander des informations sur le domaine.',
     'Permission error, not an admin for this user.':
       "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+    'Permission error: Unable to close other users account.':
+      "Erreur de permission: Impossible de fermer le compte d'un autre utilisateur.",
     'Phone number has been successfully removed.':
       'Le numéro de téléphone a été supprimé avec succès.',
     'Phone number has been successfully set, you will receive a verification text message shortly.':
@@ -251,6 +253,7 @@
         ['argSet'],
         '` de 100 enregistrements.',
       ],
+    'Successfully closed account.': 'Le compte a été fermé avec succès.',
     'Successfully dispatched one time scan.':
       'Un seul balayage a été effectué avec succès.',
     'Successfully email verified account, and set TFA send method to email.':
@@ -304,6 +307,8 @@
       "Impossible de s'authentifier. Veuillez réessayer.",
     'Unable to check permission. Please try again.':
       "Impossible de vérifier l'autorisation. Veuillez réessayer.",
+    'Unable to close account. Please try again.':
+      'Impossible de fermer le compte. Veuillez réessayer.',
     'Unable to create domain in unknown organization.':
       'Impossible de créer un domaine dans une organisation inconnue.',
     'Unable to create domain, organization has already claimed it.':

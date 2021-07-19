@@ -106,6 +106,8 @@
       'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
       'Permission error, not an admin for this user.',
+    'Permission error: Unable to close other users account.':
+      'Permission error: Unable to close other users account.',
     'Phone number has been successfully removed.':
       'Phone number has been successfully removed.',
     'Phone number has been successfully set, you will receive a verification text message shortly.':
@@ -247,6 +249,7 @@
         ['argSet'],
         '` limit of 100 records.',
       ],
+    'Successfully closed account.': 'Successfully closed account.',
     'Successfully dispatched one time scan.':
       'Successfully dispatched one time scan.',
     'Successfully email verified account, and set TFA send method to email.':
@@ -303,6 +306,8 @@
       'Unable to authenticate. Please try again.',
     'Unable to check permission. Please try again.':
       'Unable to check permission. Please try again.',
+    'Unable to close account. Please try again.':
+      'Unable to close account. Please try again.',
     'Unable to create domain in unknown organization.':
       'Unable to create domain in unknown organization.',
     'Unable to create domain, organization has already claimed it.':
