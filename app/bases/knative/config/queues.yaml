@@ -74,12 +74,12 @@ spec:
         - name: ots-scan-queue
           image: gcr.io/track-compliance/services/queues/ots-scan:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-scan-queue"}
           env:
-          - name: REDIS_HOST
+          - name: PUBSUB_HOST
             valueFrom:
               secretKeyRef:
                 name: scanners
                 key: REDIS_HOST
-          - name: REDIS_PORT
+          - name: PUBSUB_PORT
             valueFrom:
               secretKeyRef:
                 name: scanners
@@ -111,12 +111,12 @@ spec:
         - name: ots-result-queue
           image: gcr.io/track-compliance/services/queues/ots-result:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-result-queue"}
           env:
-          - name: REDIS_HOST
+          - name: PUBSUB_HOST
             valueFrom:
               secretKeyRef:
                 name: scanners
                 key: REDIS_HOST
-          - name: REDIS_PORT
+          - name: PUBSUB_PORT
             valueFrom:
               secretKeyRef:
                 name: scanners
