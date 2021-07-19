@@ -58,6 +58,7 @@ export function OrganizationCard({
           mr={{ md: '1em' }}
           flexShrink={{ md: '0.5' }}
           minWidth={{ md: '6em' }}
+          maxWidth="100%"
         >
           <Stack isInline align="center">
             <Text
