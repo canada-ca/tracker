@@ -119,6 +119,8 @@ credentials:
 		AUTHENTICATED_KEY=alonghash
 		REFRESH_KEY=alonghash
 		SIGN_IN_KEY=alonghash
+		AUTH_TOKEN_EXPIRY=60
+		REFRESH_TOKEN_EXPIRY=7
 		CIPHER_KEY=1234averyveryveryveryverylongkey
 		NOTIFICATION_API_KEY=test_key-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca
@@ -131,9 +133,9 @@ credentials:
 		SCALAR_COST=1
 		OBJECT_COST=1
 		LIST_FACTOR=1
-		DNS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/dns
-		HTTPS_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/https
-		SSL_SCANNER_ENDPOINT=http://scan-queue.scanners.svc.cluster.local/ssl
+		DNS_SCANNER_ENDPOINT=http://ots-scan-queue.scanners.svc.cluster.local/dns
+		HTTPS_SCANNER_ENDPOINT=http://ots-scan-queue.scanners.svc.cluster.local/https
+		SSL_SCANNER_ENDPOINT=http://ots-scan-queue.scanners.svc.cluster.local/ssl
 		NOTIFICATION_AUTHENTICATE_EMAIL_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_AUTHENTICATE_TEXT_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 		NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -153,7 +155,7 @@ credentials:
 		HTTPS_SCAN_CHANNEL=scan/https
 		SPF_SCAN_CHANNEL=scan/spf
 		SSL_SCAN_CHANNEL=scan/ssl
-		TRACING_ENABLED=true
+		TRACING_ENABLED=false
 		EOF
 		cat <<-'EOF' > app/creds/$(mode)/superadmin.env
 		DB_PASS=test

@@ -1,6 +1,6 @@
 import React from 'react'
 import { I18nProvider } from '@lingui/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { Footer } from '../Footer'
 import { render } from '@testing-library/react'
 import { setupI18n } from '@lingui/core'
@@ -20,13 +20,13 @@ describe('<Footer />', () => {
 
   it('renders children correctly', () => {
     const { getAllByText } = render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <Footer>
             <div>foo</div>
           </Footer>
         </I18nProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     )
 
     const test = getAllByText(/foo/)

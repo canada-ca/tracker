@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -15,7 +14,8 @@ import {
   Select,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { SearchIcon, ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from './graphql/queries'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -24,6 +24,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { useDebouncedFunction } from './useDebouncedFunction'
+import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
 export default function Organisations() {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -38,7 +39,12 @@ export default function Organisations() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
+  const orderIconName =
+    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
+
+  const [infoState, changeInfoState] = useState({
+    isVisible: false,
+  })
 
   const {
     loading,
@@ -110,18 +116,55 @@ export default function Organisations() {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4" textAlign={['center', 'left']}>
-        <Trans>Organizations</Trans>
-      </Heading>
+      <Stack direction="row" justify="space-between" mb="4">
+        <Heading as="h1" textAlign="left">
+          <Trans>Organizations</Trans>
+        </Heading>
+
+        <InfoButton
+          label="Glossary"
+          state={infoState}
+          changeState={changeInfoState}
+        />
+      </Stack>
+
+      <InfoPanel state={infoState}>
+        <InfoBox
+          title="Organization Name"
+          info="Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
+        />
+        <InfoBox
+          title="Services"
+          info="Shows the number of domains that the organization is in control of."
+        />
+        <InfoBox
+          title="Web Configuration"
+          info="Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts."
+        />
+        <InfoBox
+          title="Email Configuration"
+          info="Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
+        />
+        <Divider borderColor="gray.500" mb={4} />
+        <Trans>
+          Further details for each organization can be found by clicking on its
+          row.
+        </Trans>
+      </InfoPanel>
+
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <Flex
           direction={{ base: 'column', md: 'row' }}
           alignItems={{ base: 'stretch', md: 'center' }}
           mb={{ base: '4', md: '8' }}
         >
-          <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
+          <InputGroup
+            mb={{ base: '8px', md: '0' }}
+            flexGrow={1}
+            w={{ base: '100%', md: '50%' }}
+          >
             <InputLeftElement>
-              <Icon name="search" color="gray.300" />
+              <SearchIcon color="gray.300" />
             </InputLeftElement>
             <Input
               type="text"

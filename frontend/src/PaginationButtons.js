@@ -1,6 +1,12 @@
 import React from 'react'
 import { func, number } from 'prop-types'
-import { IconButton, Select, Stack, Text } from '@chakra-ui/core'
+import { IconButton, Select, Stack, Text } from '@chakra-ui/react'
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@chakra-ui/icons'
 
 export function PaginationButtons({
   perPage,
@@ -12,25 +18,25 @@ export function PaginationButtons({
   return (
     <Stack isInline align="center">
       <IconButton
-        icon="arrow-left"
+        icon={<ArrowLeftIcon />}
         onClick={() => paginate(1)}
         disabled={currentPage <= 1}
         aria-label="Skip to first page"
       />
       <IconButton
-        icon="chevron-left"
+        icon={<ChevronLeftIcon />}
         onClick={() => paginate(currentPage - 1)}
         disabled={currentPage <= 1}
         aria-label="Previous page"
       />
       <IconButton
-        icon="chevron-right"
+        icon={<ChevronRightIcon />}
         onClick={() => paginate(currentPage + 1)}
         disabled={currentPage >= Math.ceil(total / perPage)}
         aria-label="Next page"
       />
       <IconButton
-        icon="arrow-right"
+        icon={<ArrowRightIcon />}
         onClick={() => paginate(Math.ceil(total / perPage))}
         disabled={currentPage >= Math.ceil(total / perPage)}
         aria-label="Skip to last page"

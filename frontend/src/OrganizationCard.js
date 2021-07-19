@@ -1,14 +1,6 @@
 import React from 'react'
-import {
-  Box,
-  Divider,
-  Icon,
-  ListItem,
-  Progress,
-  PseudoBox,
-  Stack,
-  Text,
-} from '@chakra-ui/core'
+import { Box, Flex, ListItem, Progress, Stack, Text } from '@chakra-ui/react'
+import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
@@ -51,17 +43,22 @@ export function OrganizationCard({
 
   return (
     <ListItem {...rest}>
-      <PseudoBox
+      <Flex
         width="100%"
-        display={{ md: 'flex' }}
-        alignItems="center"
+        direction={{ base: 'column', md: 'row' }}
+        alignItems={{ base: 'flex-start', md: 'center' }}
         _hover={{ bg: ['', 'gray.100'] }}
         p="4"
-        mx="auto"
         as={!smallDevice ? RouteLink : ''}
         to={`${path}/${slug}`}
       >
-        <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
+        <Box
+          flexGrow={{ md: '2' }}
+          flexBasis={{ md: '5em' }}
+          mr={{ md: '1em' }}
+          flexShrink={{ md: '0.5' }}
+          minWidth={{ md: '6em' }}
+        >
           <Stack isInline align="center">
             <Text
               fontSize={['lg', 'md']}
@@ -74,32 +71,26 @@ export function OrganizationCard({
             <Text fontSize={['lg', 'md']} fontWeight="semibold">
               ({acronym})
             </Text>
-            {verified && (
-              <Icon name="check-circle" color="blue.500" size="icons.sm" />
-            )}
+            {verified && <CheckCircleIcon color="blue.500" size="icons.sm" />}
           </Stack>
         </Box>
-        <Divider orientation="vertical" />
         <Box
-          flexShrink="0"
-          minW="10%"
-          ml={{ md: 2 }}
-          mr={{ md: 2 }}
-          mb={['2', '0']}
+          flexGrow={{ md: '0' }}
+          flexBasis={{ md: '7em' }}
+          mr={{ md: '1em' }}
+          flexShrink={{ md: '0.5' }}
+          minWidth={{ md: '2em' }}
+          align="center"
         >
-          <Stack isInline align="center">
-            <Text fontWeight="semibold">
-              <Trans>Services: {domainCount}</Trans>
-            </Text>
-          </Stack>
+          <Text fontWeight="semibold">
+            <Trans>Services: {domainCount}</Trans>
+          </Text>
         </Box>
-        <Divider orientation="vertical" />
+
         <Box
-          flexShrink="0"
-          minW="15%"
-          ml={{ md: 2 }}
-          mr={{ md: 2 }}
-          mb={['2', '0']}
+          mr={{ md: '1em' }}
+          flexShrink={{ md: '0.5' }}
+          minWidth={{ base: '100%', md: '3em' }}
           textAlign="left"
         >
           <Text fontWeight="bold">
@@ -108,15 +99,19 @@ export function OrganizationCard({
           <Text>{webValue}%</Text>
           <Progress value={webValue} bg="gray.300" />
         </Box>
-        <Divider orientation="vertical" />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} textAlign="left">
+
+        <Box
+          flexShrink={{ md: '0.5' }}
+          minWidth={{ base: '100%', md: '3em' }}
+          textAlign="left"
+        >
           <Text fontWeight="bold">
             <Trans>Email Configuration</Trans>
           </Text>
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
-      </PseudoBox>
+      </Flex>
     </ListItem>
   )
 }

@@ -1,0 +1,43 @@
+steps:
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-scan-queue
+    dir: services/queues/scan
+    entrypoint: /bin/sh
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: services/queues/scan
+    args:
+      - '-c'
+      - |
+        echo "gcr.io/$PROJECT_ID/services/queues/scan:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-scan-if-master
+    entrypoint: 'bash'
+    dir: services/queues/scan
+    args:
+      -  '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+            image=$(cat /workspace/imagename)
+            docker build -t $image .
+        else
+          exit 0
+        fi
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-scan-if-master
+    entrypoint: 'bash'
+    dir: services/queues/scan
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi

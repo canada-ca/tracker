@@ -5,5 +5,5 @@ metadata:
   name: result-processor
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/services/scanners/results
+  image: gcr.io/track-compliance/services/results
   interval: 1m0s

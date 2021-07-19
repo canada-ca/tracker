@@ -16,6 +16,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,10 @@ describe('given the httpsScanData subscription', () => {
     httpsScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain,
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -95,6 +99,12 @@ describe('given the httpsScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
+    sharedId = 'some-shared-id'
+    status = 'pass'
   })
 
   afterEach(async () => {
@@ -127,7 +137,12 @@ describe('given the httpsScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${HTTPS_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(httpsScan),
+                    JSON.stringify({
+                      sharedId: sharedId,
+                      domainKey: domain._key,
+                      status: status,
+                      results: httpsScan,
+                    }),
                   )
                 },
               )
@@ -165,6 +180,11 @@ describe('given the httpsScanData subscription', () => {
       parse(`
       subscription {
         httpsScanData {
+          sharedId
+          domain {
+            domain
+          }
+          status
           implementation
           enforced
           hsts
@@ -223,6 +243,7 @@ describe('given the httpsScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
             query,
             userKey: '1',
@@ -238,6 +259,11 @@ describe('given the httpsScanData subscription', () => {
     const expectedResult = {
       data: {
         httpsScanData: {
+          sharedId: sharedId,
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
+          status: status.toUpperCase(),
           implementation: 'Valid HTTPS',
           enforced: 'Strict',
           hsts: 'No HSTS',

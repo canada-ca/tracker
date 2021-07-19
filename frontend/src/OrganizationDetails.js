@@ -4,7 +4,6 @@ import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import {
   Heading,
-  Icon,
   IconButton,
   Stack,
   Tab,
@@ -13,8 +12,9 @@ import {
   TabPanels,
   Tabs,
   useToast,
-} from '@chakra-ui/core'
-import { ORG_DETAILS_PAGE } from './graphql/queries'
+} from '@chakra-ui/react'
+import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
+import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from './graphql/queries'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -46,6 +46,29 @@ export default function OrganizationDetails() {
     },
   })
 
+  const orgId = data?.organization?.id
+  const { data: isAdminData } = useQuery(IS_USER_ADMIN, {
+    skip: !orgId,
+    variables: { orgId: orgId },
+
+    onError: (error) => {
+      const [_, message] = error.message.split(': ')
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
+  let isAdmin = false
+  if (isAdminData?.isUserAdmin) {
+    isAdmin = isAdminData.isUserAdmin
+  }
+
   let orgName = ''
   if (data?.organization) {
     orgName = data.organization.name
@@ -63,7 +86,7 @@ export default function OrganizationDetails() {
     <Layout>
       <Stack isInline align="center" mb="4">
         <IconButton
-          icon="arrow-left"
+          icon={<ArrowLeftIcon />}
           as={RouteLink}
           to={'/organizations'}
           color="gray.900"
@@ -74,7 +97,7 @@ export default function OrganizationDetails() {
           {orgName}
         </Heading>
         {data?.organization?.verified && (
-          <Icon name="check-circle" color="blue.500" size="icons.lg" />
+          <CheckCircleIcon color="blue.500" size="icons.lg" />
         )}
       </Stack>
       <Tabs isFitted>
@@ -85,9 +108,11 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          <Tab>
-            <Trans>Users</Trans>
-          </Tab>
+          {isAdmin && (
+            <Tab>
+              <Trans>Users</Trans>
+            </Tab>
+          )}
         </TabList>
 
         <TabPanels>
@@ -107,11 +132,13 @@ export default function OrganizationDetails() {
               <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
-            </ErrorBoundary>
-          </TabPanel>
+          {isAdmin && (
+            <TabPanel>
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
+              </ErrorBoundary>
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </Layout>

@@ -1,0 +1,44 @@
+steps:
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-ots-result-queue
+    dir: services/queues/ots-result
+    entrypoint: /bin/sh
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: services/queues/ots-result
+    args:
+      - '-c'
+      - |
+        echo "gcr.io/$PROJECT_ID/services/queues/ots-result:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-ots-result-if-master
+    entrypoint: 'bash'
+    dir: services/queues/ots-result
+    args:
+      -  '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+            image=$(cat /workspace/imagename)
+            docker build -t $image .
+        else
+          exit 0
+        fi
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-ots-result-if-master
+    entrypoint: 'bash'
+    dir: services/queues/ots-result
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi

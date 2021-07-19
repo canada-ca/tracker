@@ -11,7 +11,9 @@ resources:
 - result-processor-image-policy.yaml
 - ssl-scanner-image-policy.yaml
 - update-automation.yaml
-- core-image-policy.yaml
+- summaries-image-policy.yaml
+- guidance-image-policy.yaml
 - super-admin-image-policy.yaml
+- queue-image-policies.yaml
 patchesStrategicMerge:
 - tracker-repo.yaml

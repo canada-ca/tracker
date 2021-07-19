@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Divider, SimpleGrid, Stack, Text } from '@chakra-ui/core'
+import { Box, Divider, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import { object } from 'prop-types'
 import { Trans } from '@lingui/macro'
 

@@ -1,5 +1,6 @@
-import React, { lazy, Suspense } from 'react'
-import { Switch } from 'react-router-dom'
+import React, { Suspense, useEffect } from 'react'
+import { lazyWithRetry } from './LazyWithRetry'
+import { Switch, useHistory, useLocation } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -8,7 +9,7 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { CSSReset, Flex, Link } from '@chakra-ui/core'
+import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { SkipLink } from './SkipLink'
 // import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -18,32 +19,70 @@ import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
+import { useMutation } from '@apollo/client'
+import { REFRESH_TOKENS } from './graphql/mutations'
+import { activate } from './i18n.config'
 
-const PageNotFound = lazy(() => import('./PageNotFound'))
-const CreateUserPage = lazy(() => import('./CreateUserPage'))
-const DomainsPage = lazy(() => import('./DomainsPage'))
-const UserPage = lazy(() => import('./UserPage'))
-const SignInPage = lazy(() => import('./SignInPage'))
-const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
-const Organizations = lazy(() => import('./Organizations'))
-const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
-const AdminPage = lazy(() => import('./AdminPage'))
-const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
-const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
-const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
-const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
-const TermsConditionsPage = lazy(() => import('./TermsConditionsPage'))
-const TwoFactorAuthenticatePage = lazy(() =>
+const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
+const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
+const DomainsPage = lazyWithRetry(() => import('./DomainsPage'))
+const UserPage = lazyWithRetry(() => import('./UserPage'))
+const SignInPage = lazyWithRetry(() => import('./SignInPage'))
+const DmarcReportPage = lazyWithRetry(() => import('./DmarcReportPage'))
+const Organizations = lazyWithRetry(() => import('./Organizations'))
+const OrganizationDetails = lazyWithRetry(() => import('./OrganizationDetails'))
+const AdminPage = lazyWithRetry(() => import('./AdminPage'))
+const ForgotPasswordPage = lazyWithRetry(() => import('./ForgotPasswordPage'))
+const ResetPasswordPage = lazyWithRetry(() => import('./ResetPasswordPage'))
+const DmarcByDomainPage = lazyWithRetry(() => import('./DmarcByDomainPage'))
+const DmarcGuidancePage = lazyWithRetry(() => import('./DmarcGuidancePage'))
+const TermsConditionsPage = lazyWithRetry(() => import('./TermsConditionsPage'))
+const TwoFactorAuthenticatePage = lazyWithRetry(() =>
   import('./TwoFactorAuthenticatePage'),
 )
-const EmailValidationPage = lazy(() => import('./EmailValidationPage'))
-const CreateOrganizationPage = lazy(() => import('./CreateOrganizationPage'))
+const EmailValidationPage = lazyWithRetry(() => import('./EmailValidationPage'))
+const CreateOrganizationPage = lazyWithRetry(() =>
+  import('./CreateOrganizationPage'),
+)
 
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
+  const history = useHistory()
+  const location = useLocation()
+  const { currentUser, isLoggedIn, login } = useUserVar()
+  const { from } = location.state || { from: { pathname: '/' } }
 
-  const { currentUser, isLoggedIn } = useUserVar()
+  const [refreshTokens, { _loading }] = useMutation(REFRESH_TOKENS, {
+    onError(error) {
+      console.error(error.message)
+    },
+    onCompleted({ refreshTokens }) {
+      if (refreshTokens.result.__typename === 'AuthResult') {
+        login({
+          jwt: refreshTokens.result.authToken,
+          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
+          userName: refreshTokens.result.user.userName,
+        })
+        if (refreshTokens.result.user.preferredLang === 'ENGLISH')
+          activate('en')
+        else if (refreshTokens.result.user.preferredLang === 'FRENCH')
+          activate('fr')
+        history.replace(from)
+        console.log('successfully refreshed tokens')
+      }
+      // Non server error occurs
+      else if (refreshTokens.result.__typename === 'AuthenticateError') {
+        console.warn('Unable to refresh tokens. Please sign in.')
+      } else {
+        console.warn('Incorrect authenticate.result typename.')
+      }
+    },
+  })
+
+  useEffect(() => {
+    refreshTokens()
+  }, [refreshTokens])
 
   return (
     <>
@@ -96,7 +135,7 @@ export default function App() {
         </Navigation>
 
         {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
-        <Main>
+        <Main marginBottom={{ base: '40px', md: 'none' }}>
           <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>

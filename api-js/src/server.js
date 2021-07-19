@@ -1,11 +1,14 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import http from 'http'
+import { ApolloServerPluginLandingPageGraphQLPlayground as enablePlayground } from 'apollo-server-core'
 import { ApolloServer } from 'apollo-server-express'
 import requestLanguage from 'express-request-language'
-import { GraphQLSchema } from 'graphql'
+import { execute, subscribe, GraphQLSchema } from 'graphql'
 import depthLimit from 'graphql-depth-limit'
 import { createComplexityLimitRule } from 'graphql-validation-complexity'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { createContext } from './create-context'
 import { createQuerySchema } from './query'
@@ -44,7 +47,7 @@ const createValidationRules = (
   ]
 }
 
-export const Server = ({
+export const Server = async ({
   maxDepth,
   complexityCost,
   scalarCost,
@@ -56,6 +59,8 @@ export const Server = ({
   const app = express()
 
   app.use('*', cors())
+
+  app.use(cookieParser())
 
   app.use(
     requestLanguage({
@@ -71,19 +76,13 @@ export const Server = ({
     res.json({ ok: 'yes' })
   })
 
+  const httpServer = http.createServer(app)
+
+  const schema = createSchema()
+
   const server = new ApolloServer({
-    schema: createSchema(),
+    schema,
     context: createContext(context),
-    subscriptions: {
-      onConnect: customOnConnect({
-        context,
-        createI18n,
-        verifyToken,
-        userRequired,
-        loadUserByKey,
-        verifiedRequired,
-      }),
-    },
     validationRules: createValidationRules(
       maxDepth,
       complexityCost,
@@ -92,15 +91,33 @@ export const Server = ({
       listFactor,
     ),
     introspection: true,
-    playground: true,
     tracing,
+    plugins: [enablePlayground()],
   })
 
+  await server.start()
   server.applyMiddleware({ app })
 
-  const httpServer = http.createServer(app)
-
-  server.installSubscriptionHandlers(httpServer)
+  SubscriptionServer.create(
+    {
+      schema,
+      execute,
+      subscribe,
+      onConnect: customOnConnect({
+        createContext,
+        serverContext: context,
+        createI18n,
+        verifyToken,
+        userRequired,
+        loadUserByKey,
+        verifiedRequired,
+      }),
+    },
+    {
+      server: httpServer,
+      path: server.graphqlPath,
+    },
+  )
 
   return httpServer
 }

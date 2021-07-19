@@ -7,11 +7,11 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
-const FormField = WithPseudoBox(function FormField({
+const FormField = WithWrapperBox(function FormField({
   name,
   id,
   label,

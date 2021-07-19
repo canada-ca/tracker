@@ -21,15 +21,13 @@ spec:
       containerConcurrency: 8
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/services/scanners/https:master-0ecedc5-1624639317 # {"$imagepolicy": "flux-system:https-scanner"}
+        image: gcr.io/track-compliance/services/scanners/https:master-ad3b350-1626212978 # {"$imagepolicy": "flux-system:https-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
   name: result-processor
   namespace: scanners
-  labels:
-    app: scanners
 spec:
   template:
     metadata:
@@ -41,12 +39,15 @@ spec:
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "4"
+      labels:
+        app: scanners
+        role: result-processor
     spec:
       timeoutSeconds: 600
       containerConcurrency: 1
       containers:
       - name: result-processor
-        image: gcr.io/track-compliance/services/scanners/results:master-37125e4-1624885275 # {"$imagepolicy": "flux-system:result-processor"}
+        image: gcr.io/track-compliance/services/results:master-e76be9d-1625836859 # {"$imagepolicy": "flux-system:result-processor"}
         env:
         - name: DB_USER
           valueFrom:
@@ -115,7 +116,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: ssl-scanner
-        image: gcr.io/track-compliance/services/scanners/ssl:master-0ecedc5-1624639308 # {"$imagepolicy": "flux-system:ssl-scanner"}
+        image: gcr.io/track-compliance/services/scanners/ssl:master-7039d40-1625850339 # {"$imagepolicy": "flux-system:ssl-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
@@ -140,7 +141,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/services/scanners/dns:master-0ecedc5-1624639303 # {"$imagepolicy": "flux-system:dns-scanner"}
+        image: gcr.io/track-compliance/services/scanners/dns:master-7039d40-1625850329 # {"$imagepolicy": "flux-system:dns-scanner"}
 ---
 # K8s Service Account that runs `src`'s container.
 

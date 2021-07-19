@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, string } from 'yup'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import PasswordConfirmation from '../PasswordConfirmation'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
@@ -26,7 +26,7 @@ describe('<PasswordConfirmation />', () => {
 
     const { container } = render(
       <I18nProvider i18n={i18n}>
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <Formik
             // return a sadness error for the password field
             validationSchema={validationSchema}
@@ -37,7 +37,7 @@ describe('<PasswordConfirmation />', () => {
           >
             {() => <PasswordConfirmation />}
           </Formik>
-        </ThemeProvider>
+        </ChakraProvider>
       </I18nProvider>,
     )
 
@@ -45,15 +45,15 @@ describe('<PasswordConfirmation />', () => {
   })
 
   describe('given no input', () => {
-    it('displays an error icon', async () => {
+    it('displays the lock icon', async () => {
       const validationSchema = object().shape({
         password: string().required('sadness'),
         confirmPassword: string().required('sadness'),
       })
 
-      const { getByRole } = render(
+      const { getByLabelText } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <Formik
               // return a sadness error for the password field
               validationSchema={validationSchema}
@@ -64,10 +64,10 @@ describe('<PasswordConfirmation />', () => {
             >
               {() => <PasswordConfirmation />}
             </Formik>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
-      await waitFor(() => expect(getByRole('img')).toBeInTheDocument())
+      await waitFor(() => expect(getByLabelText(/initial icon/)).toBeVisible())
     })
   })
 })

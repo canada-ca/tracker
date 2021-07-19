@@ -16,6 +16,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadDkimGuidanceTagById } from '../../../guidance-tag/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -38,7 +39,10 @@ describe('given the dkimScanData subscription', () => {
     dkimScan,
     createSubscriptionMutation,
     redis,
-    pub
+    pub,
+    domain,
+    sharedId,
+    status
 
   beforeAll(async () => {
     options = {
@@ -97,6 +101,12 @@ describe('given the dkimScanData subscription', () => {
         },
       ],
     })
+    domain = await collections.domains.save({
+      domain: 'test.domain.gc.ca',
+      slug: 'test-domain-gc-ca',
+    })
+    sharedId = 'some-shared-id'
+    status = 'pass'
   })
 
   afterEach(async () => {
@@ -129,7 +139,12 @@ describe('given the dkimScanData subscription', () => {
                 (_err, _count) => {
                   pub.publish(
                     `${DKIM_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(dkimScan),
+                    JSON.stringify({
+                      sharedId: sharedId,
+                      domainKey: domain._key,
+                      status: status,
+                      results: dkimScan,
+                    }),
                   )
                 },
               )
@@ -166,6 +181,11 @@ describe('given the dkimScanData subscription', () => {
       parse(`
       subscription {
         dkimScanData {
+          sharedId
+          domain {
+            domain
+          }
+          status
           results {
             selector
             record
@@ -224,6 +244,7 @@ describe('given the dkimScanData subscription', () => {
         },
         userKey: 'uuid-1234',
         loaders: {
+          loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
           loadDkimGuidanceTagById: loadDkimGuidanceTagById({
             query,
             userKey: '1',
@@ -239,6 +260,11 @@ describe('given the dkimScanData subscription', () => {
     const expectedResult = {
       data: {
         dkimScanData: {
+          sharedId: sharedId,
+          domain: {
+            domain: 'test.domain.gc.ca',
+          },
+          status: status.toUpperCase(),
           results: [
             {
               selector: 'selector',

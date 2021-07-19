@@ -1,0 +1,60 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: scan-queue
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: scan-queue
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: result-queue
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: result-queue
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: ots-scan-queue
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: ots-scan-queue
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: ots-result-queue
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: ots-result-queue
+  policy:
+    numerical:
+      order: asc

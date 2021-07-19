@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import ScanCategoryDetails from '../ScanCategoryDetails'
@@ -38,7 +38,7 @@ describe('<ScanCategoryDetails />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <ScanCategoryDetails
@@ -47,7 +47,7 @@ describe('<ScanCategoryDetails />', () => {
                 />
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )

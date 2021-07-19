@@ -116,7 +116,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       const token = tokenize({
         parameters: { userName, orgKey: org._key, requestedRole },
       })
-      const createAccountLink = `${request.protocol}://${request.get(
+      const createAccountLink = `https://${request.get(
         'host',
       )}/create-user/${token}`
 

@@ -1,20 +1,24 @@
-import React from 'react'
-import { Box, Heading, Stack, useToast } from '@chakra-ui/core'
+import React, { useState } from 'react'
+import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
 import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { TrackerButton } from './TrackerButton'
 import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import CreateOrganizationField from './CreateOrganizationField'
 import { i18n } from '@lingui/core'
+import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
 export default function CreateOrganizationPage() {
   const toast = useToast()
   const history = useHistory()
+
+  const [infoState, changeInfoState] = useState({
+    isVisible: false,
+  })
 
   const validationSchema = object().shape({
     nameEN: string().required(i18n._(fieldRequirements.field.required.message)),
@@ -137,10 +141,10 @@ export default function CreateOrganizationPage() {
               nameFR: values.nameFR,
               acronymEN: values.acronymEN,
               acronymFR: values.acronymFR,
-              zoneEN: values.zoneEN,
-              zoneFR: values.zoneFR,
-              sectorEN: values.sectorEN,
-              sectorFR: values.sectorFR,
+              zoneEN: '',
+              zoneFR: '',
+              sectorEN: '',
+              sectorFR: '',
               countryEN: values.countryEN,
               countryFR: values.countryFR,
               provinceEN: values.provinceEN,
@@ -153,14 +157,42 @@ export default function CreateOrganizationPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
+            <Heading as="h1" fontSize="2xl" textAlign="center">
               <Trans>
                 Create an organization by filling out the following info in both
                 English and French
               </Trans>
             </Heading>
+            <InfoButton
+              label="Glossary"
+              state={infoState}
+              changeState={changeInfoState}
+              mr="0"
+              ml="auto"
+              display="block"
+            />
 
-            <Stack mb="4">
+            <InfoPanel state={infoState}>
+              <InfoBox title="Name" info="The name of the Organization." />
+              <InfoBox
+                title="Acronym"
+                info="The acronym of the Organization."
+              />
+              <InfoBox
+                title="City"
+                info="The city the Organization is based in."
+              />
+              <InfoBox
+                title="Province"
+                info="The province the Organization is based in."
+              />
+              <InfoBox
+                title="Country"
+                info="The country the Organization is based in."
+              />
+            </InfoPanel>
+
+            <Stack mb="4" mt="4">
               <CreateOrganizationField
                 name="nameEN"
                 language={t`English`}
@@ -183,32 +215,6 @@ export default function CreateOrganizationPage() {
                 name="acronymFR"
                 language={t`French`}
                 label={t`Acronym`}
-              />
-            </Stack>
-
-            <Stack mb="4">
-              <CreateOrganizationField
-                name="zoneEN"
-                language={t`English`}
-                label={t`Zone`}
-              />
-              <CreateOrganizationField
-                name="zoneFR"
-                language={t`French`}
-                label={t`Zone`}
-              />
-            </Stack>
-
-            <Stack mb="4">
-              <CreateOrganizationField
-                name="sectorEN"
-                language={t`English`}
-                label={t`Sector`}
-              />
-              <CreateOrganizationField
-                name="sectorFR"
-                language={t`French`}
-                label={t`Sector`}
               />
             </Stack>
 
@@ -252,22 +258,18 @@ export default function CreateOrganizationPage() {
             </Stack>
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <TrackerButton
-                as={RouteLink}
-                variant="primary outline"
-                to="/admin"
-              >
+              <Button variant="primaryOutline" as={RouteLink} to="/admin">
                 <Trans>Back</Trans>
-              </TrackerButton>
+              </Button>
 
-              <TrackerButton
+              <Button
+                variant="primary"
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Create Organization</Trans>
-              </TrackerButton>
+              </Button>
             </Stack>
           </form>
         )}

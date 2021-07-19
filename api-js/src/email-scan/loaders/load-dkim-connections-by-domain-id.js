@@ -15,6 +15,7 @@ export const loadDkimConnectionsByDomainId =
     orderBy,
   }) => {
     let afterTemplate = aql``
+    let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
       if (typeof orderBy === 'undefined') {
@@ -27,10 +28,12 @@ export const loadDkimConnectionsByDomainId =
           afterTemplateDirection = aql`<`
         }
 
+        afterVar = aql`LET afterVar = DOCUMENT(dkim, ${afterId})`
+
         let dkimField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
-          documentField = aql`DOCUMENT(dkim, ${afterId}).timestamp`
+          documentField = aql`afterVar.timestamp`
           dkimField = aql`dkimScan.timestamp`
         }
 
@@ -43,6 +46,7 @@ export const loadDkimConnectionsByDomainId =
     }
 
     let beforeTemplate = aql``
+    let beforeVar = aql``
     if (typeof before !== 'undefined') {
       const { id: beforeId } = fromGlobalId(cleanseInput(before))
       if (typeof orderBy === 'undefined') {
@@ -55,10 +59,12 @@ export const loadDkimConnectionsByDomainId =
           beforeTemplateDirection = aql`>`
         }
 
+        beforeVar = aql`LET beforeVar = DOCUMENT(dkim, ${beforeId})`
+
         let dkimField, documentField
         /* istanbul ignore else */
         if (orderBy.field === 'timestamp') {
-          documentField = aql`DOCUMENT(dkim, ${beforeId}).timestamp`
+          documentField = aql`beforeVar.timestamp`
           dkimField = aql`dkimScan.timestamp`
         }
 
@@ -182,8 +188,8 @@ export const loadDkimConnectionsByDomainId =
       /* istanbul ignore else */
       if (orderBy.field === 'timestamp') {
         dkimField = aql`dkimScan.timestamp`
-        hasNextPageDocumentField = aql`DOCUMENT(dkim, LAST(retrievedDkim)._key).timestamp`
-        hasPreviousPageDocumentField = aql`DOCUMENT(dkim, FIRST(retrievedDkim)._key).timestamp`
+        hasNextPageDocumentField = aql`LAST(retrievedDkim).timestamp`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDkim).timestamp`
       }
 
       hasNextPageFilter = aql`
@@ -218,7 +224,14 @@ export const loadDkimConnectionsByDomainId =
     try {
       requestedDkimInfo = await query`
       WITH dkim, domains, domainsDKIM
-      LET dkimKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDKIM RETURN v._key)
+      LET dkimKeys = (
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsDKIM
+          OPTIONS {bfs: true}
+          RETURN v._key
+      )
+
+      ${afterVar}
+      ${beforeVar}
       
       LET retrievedDkim = (
         FOR dkimScan IN dkim

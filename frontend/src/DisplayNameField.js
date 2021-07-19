@@ -5,15 +5,15 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { PersonIcon } from './theme/Icons'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 
-const DisplayNameField = WithPseudoBox(function DisplayNameField({
+const DisplayNameField = WithWrapperBox(function DisplayNameField({
   name,
   label,
   forwardedRef,
@@ -30,7 +30,7 @@ const DisplayNameField = WithPseudoBox(function DisplayNameField({
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
-          <Icon name="person" color="gray.300" size="icons.lg" />
+          <PersonIcon color="gray.300" size="icons.lg" />
         </InputLeftElement>
         <Input
           aria-label="input-display-name"

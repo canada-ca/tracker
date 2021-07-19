@@ -1,13 +1,21 @@
 import React, { useState } from 'react'
-import { Stack, Text, useToast, Icon, Divider } from '@chakra-ui/core'
-import { Trans, t } from '@lingui/macro'
+import {
+  Button,
+  Divider,
+  Flex,
+  Select,
+  Stack,
+  Text,
+  useToast,
+} from '@chakra-ui/react'
+import { AddIcon } from '@chakra-ui/icons'
+import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
-import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
 import { Dropdown } from './Dropdown'
@@ -85,18 +93,19 @@ export default function AdminPage() {
                 setSelectedOrg(opt.label)
               }}
             />
-
-            <TrackerButton
+            <Button
               ml={['0', 'auto']}
               w={['100%', 'auto']}
               variant="primary"
+              ml={{ base: '0', md: 'auto' }}
+              w={{ base: '100%', md: 'auto' }}
               as={RouteLink}
               to="/create-organization"
             >
-              <Icon name="add" />
+              <AddIcon mr={2} />
               <Trans>Create Organization</Trans>
-            </TrackerButton>
-          </Stack>
+            </Button>
+          </Flex>
           {options.length > 1 && selectedOrg !== 'none' ? (
             <>
               <OrganizationInformation
@@ -129,15 +138,15 @@ export default function AdminPage() {
             <Trans>You do not have admin permissions in any organization</Trans>
           </Text>
           <Divider />
-          <TrackerButton
-            w={['100%', 'auto']}
+          <Button
             variant="primary"
+            w={{ base: '100%', md: 'auto' }}
             as={RouteLink}
             to="/create-organization"
           >
-            <Icon name="add" />
+            <AddIcon />
             <Trans>Create Organization</Trans>
-          </TrackerButton>
+          </Button>
         </Stack>
       </Layout>
     )

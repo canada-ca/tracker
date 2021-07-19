@@ -14,7 +14,7 @@ spec:
       listener:
         filterChain:
           filter:
-            name: "envoy.http_connection_manager"
+            name: "envoy.filters.network.http_connection_manager"
             subFilter:
               name: "envoy.filters.http.router"
     patch: # Patch outgoing requests for ITPIN 6.1.2: has HSTS enabled
@@ -28,7 +28,9 @@ spec:
               if not response_handle:headers():get("X-Frame-Options") then
                 response_handle:headers():add("X-Frame-Options", "deny");
               end
-              if not response_handle:headers():get("Strict-Transport-Security") then
-                response_handle:headers():add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+              if response_handle:headers():get(":status") ~= "301" then
+                if not response_handle:headers():get("Strict-Transport-Security") then
+                  response_handle:headers():add("Strict-Transport-Security", "max-age=31536000; includeSubDomains;");
+                end
               end
             end

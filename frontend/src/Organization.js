@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Link, ListItem, Stack, Text } from '@chakra-ui/core'
+import { Link, ListItem, Stack, Text } from '@chakra-ui/react'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { number, string } from 'prop-types'
 

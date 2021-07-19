@@ -15,12 +15,12 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/minScale: "1"
-        autoscaling.knative.dev/maxScale: "2"
+        autoscaling.knative.dev/maxScale: "1"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 500
       containers:
         - name: scan-queue
-          image: gcr.io/track-compliance/services/scan-queue
+          image: gcr.io/track-compliance/services/queues/scan:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:scan-queue"}
 
 ---
 
@@ -41,9 +41,83 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/minScale: "1"
-        autoscaling.knative.dev/maxScale: "2"
+        autoscaling.knative.dev/maxScale: "1"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 500
       containers:
         - name: result-queue
-          image: gcr.io/track-compliance/services/result-queue
+          image: gcr.io/track-compliance/services/queues/result:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:result-queue"}
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: ots-scan-queue
+  namespace: scanners
+  labels:
+    app: scanners
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "1"
+    spec:
+      timeoutSeconds: 500
+      containers:
+        - name: ots-scan-queue
+          image: gcr.io/track-compliance/services/queues/ots-scan:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-scan-queue"}
+          env:
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_PORT
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: ots-result-queue
+  namespace: scanners
+  labels:
+    app: scanners
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "1"
+    spec:
+      timeoutSeconds: 500
+      containers:
+        - name: ots-result-queue
+          image: gcr.io/track-compliance/services/queues/ots-result:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-result-queue"}
+          env:
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: scanners
+                key: REDIS_PORT

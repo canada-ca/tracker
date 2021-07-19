@@ -1,6 +1,6 @@
 import React from 'react'
 import trackerLogo from './images/trackerlogo.svg'
-import { Box, Divider, Grid, Image, Text } from '@chakra-ui/core'
+import { Box, Divider, Grid, Image, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
 export function LandingPage() {
@@ -19,7 +19,7 @@ export function LandingPage() {
         >
           <Trans>Track Digital Security</Trans>
         </Text>
-        <Divider borderColor="accent" borderWidth="2" w="20%" />
+        <Divider borderColor="accent" my={2} borderTopWidth="2" w="20%" />
         <Text color="white" fontSize={['sm', 'sm', 'sm', 'lg', 'xl']}>
           <Trans>
             Canadians rely on the Government of Canada to provide secure digital
@@ -30,7 +30,7 @@ export function LandingPage() {
         </Text>
       </Box>
       <Box
-        display={{ xs: 'none', sm: 'none', md: 'flex' }}
+        display={{ base: 'none', md: 'flex' }}
         bg="primary"
         justifyContent="center"
       >

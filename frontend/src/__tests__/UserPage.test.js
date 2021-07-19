@@ -3,7 +3,7 @@ import UserPage from '../UserPage'
 import { setupI18n } from '@lingui/core'
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserVarProvider } from '../UserState'
@@ -58,11 +58,11 @@ describe('<UserPage />', () => {
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <MemoryRouter initialEntries={['/']}>
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <UserPage />
               </I18nProvider>
-            </ThemeProvider>
+            </ChakraProvider>
           </MemoryRouter>
         </UserVarProvider>
       </MockedProvider>,

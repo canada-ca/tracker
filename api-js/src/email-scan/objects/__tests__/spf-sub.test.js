@@ -1,16 +1,36 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { GraphQLString, GraphQLList, GraphQLInt } from 'graphql'
+import { GraphQLString, GraphQLList, GraphQLInt, GraphQLID } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { spfSubType } from '../index'
+import { domainType } from '../../../domain/objects'
+import { StatusEnum } from '../../../enums'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the spfSubType object', () => {
   describe('testing its field definitions', () => {
+    it('has sharedId field', () => {
+      const demoType = spfSubType.getFields()
+
+      expect(demoType).toHaveProperty('sharedId')
+      expect(demoType.sharedId.type).toMatchObject(GraphQLID)
+    })
+    it('has a domain field', () => {
+      const demoType = spfSubType.getFields()
+
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(domainType)
+    })
+    it('has a status field', () => {
+      const demoType = spfSubType.getFields()
+
+      expect(demoType).toHaveProperty('status')
+      expect(demoType.status.type).toMatchObject(StatusEnum)
+    })
     it('has lookups field', () => {
       const demoType = spfSubType.getFields()
 
@@ -61,6 +81,51 @@ describe('given the spfSubType object', () => {
     })
   })
   describe('testing its field resolvers', () => {
+    describe('testing the sharedId resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = spfSubType.getFields()
+
+        expect(demoType.sharedId.resolve({ sharedId: 'sharedId' })).toEqual(
+          'sharedId',
+        )
+      })
+    })
+    describe('testing the domain resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = spfSubType.getFields()
+
+        const expectedResult = {
+          _id: 'domains/1',
+          _key: '1',
+          _rev: 'rev',
+          _type: 'domain',
+          id: '1',
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
+
+        await expect(
+          demoType.domain.resolve(
+            { domainKey: '1' },
+            {},
+            {
+              loaders: {
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(expectedResult),
+                },
+              },
+            },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the status resolver', () => {
+      it('returns the parsed value', () => {
+        const demoType = spfSubType.getFields()
+
+        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+      })
+    })
     describe('testing the lookups resolver', () => {
       it('returns the parsed value', () => {
         const demoType = spfSubType.getFields()

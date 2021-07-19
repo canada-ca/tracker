@@ -76,6 +76,8 @@
     'Passwords do not match.': 'Les mots de passe ne correspondent pas.',
     'Permission Denied: Could not retrieve specified organization.':
       "Permission refusée : Impossible de récupérer l'organisation spécifiée.",
+    'Permission Denied: Please contact org owner to transfer ownership.':
+      "Permission refusée : Veuillez contacter le propriétaire de l'org pour transférer la propriété.",
     'Permission Denied: Please contact organization admin for help with removing domain.':
       "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
     'Permission Denied: Please contact organization admin for help with removing organization.':
@@ -255,6 +257,10 @@
       "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email.",
     'Successfully invited user to organization, and sent notification email.':
       "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé.",
+    'Successfully left organization: {0}': [
+      "L'organisation a été quittée avec succès: ",
+      ['0'],
+    ],
     'Successfully removed domain: {0} from {1}.': [
       'A réussi à supprimer le domaine : ',
       ['0'],
@@ -271,6 +277,13 @@
       "L'utilisateur a été retiré de l'organisation avec succès.",
     'Successfully sent invitation to service, and organization email.':
       "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+    'Successfully signed out.': "J'ai réussi à me déconnecter.",
+    'Successfully transferred org: {0} ownership to user: {1}': [
+      'A réussi à transférer la propriété de org: ',
+      ['0'],
+      " à l'utilisateur: ",
+      ['1'],
+    ],
     'Successfully verified organization: {0}.':
       "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
     'Successfully verified phone number, and set TFA send method to text.':
@@ -283,6 +296,8 @@
       'Le code à deux facteurs est incorrect. Veuillez réessayer.',
     'Two factor code length is incorrect. Please try again.':
       'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
+    'Unable leave organization. Please try again.':
+      "Impossible de quitter l'organisation. Veuillez réessayer.",
     'Unable to add user to organization. Please try again.':
       "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer.",
     'Unable to authenticate. Please try again.':
@@ -336,6 +351,8 @@
     'Unable to invite user. Please try again.':
       "Impossible d'inviter un utilisateur. Veuillez réessayer.",
     'Unable to invite yourself to an org.': "Impossible de s'inviter à un org.",
+    'Unable to leave undefined organization.':
+      'Impossible de quitter une organisation non définie.',
     'Unable to load Aggregate guidance tag(s). Please try again.':
       "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez réessayer.",
     'Unable to load DKIM failure data. Please try again.':
@@ -368,6 +385,8 @@
       "Impossible de charger le(s) tag(s) d'orientation SSL. Veuillez réessayer.",
     'Unable to load SSL scan(s). Please try again.':
       'Impossible de charger le(s) scan(s) SSL. Veuillez réessayer.',
+    'Unable to load affiliation information. Please try again.':
+      "Impossible de charger les informations d'affiliation. Veuillez réessayer.",
     'Unable to load affiliation(s). Please try again.':
       "Impossible de charger l'affiliation (s). Veuillez réessayer.",
     'Unable to load domain(s). Please try again.':
@@ -380,6 +399,8 @@
       'Impossible de charger le résumé du courrier. Veuillez réessayer.',
     'Unable to load organization(s). Please try again.':
       "Impossible de charger l'organisation (s). Veuillez réessayer.",
+    'Unable to load owner information. Please try again.':
+      'Impossible de charger les informations sur le propriétaire. Veuillez réessayer.',
     'Unable to load summary. Please try again.':
       'Impossible de charger le résumé. Veuillez réessayer.',
     'Unable to load user(s). Please try again.':
@@ -452,6 +473,16 @@
       "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation.",
     'Unable to sign up. Please try again.':
       "Impossible de s'inscrire. Veuillez réessayer.",
+    'Unable to transfer organization ownership. Please try again.':
+      "Impossible de transférer la propriété de l'organisation. Veuillez réessayer.",
+    'Unable to transfer ownership of a verified organization.':
+      "Impossible de transférer la propriété d'une organisation vérifiée.",
+    'Unable to transfer ownership of an org to an undefined user.':
+      "Impossible de transférer la propriété d'un org à un utilisateur non défini.",
+    'Unable to transfer ownership of undefined organization.':
+      "Impossible de transférer la propriété d'une organisation non définie.",
+    'Unable to transfer ownership to a user outside the org. Please invite the user and try again.':
+      "Impossible de transférer la propriété à un utilisateur extérieur à l'org. Veuillez inviter l'utilisateur et réessayer.",
     'Unable to two factor authenticate. Please try again.':
       "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
     'Unable to update domain in an unknown org.':

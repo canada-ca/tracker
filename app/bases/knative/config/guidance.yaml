@@ -15,39 +15,39 @@ spec:
         spec:
           containers:
           - name: guidance
-            image: gcr.io/track-compliance/services/guidance:master-73c3c88-1622826669 # {"$imagepolicy": "flux-system:guidance"}
+            image: gcr.io/track-compliance/services/guidance:master-dd3df82-1624979921 # {"$imagepolicy": "flux-system:guidance"}
             env:
-              - name: DB_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_USER
-              - name: DB_PASS
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_PASS
-              - name: DB_HOST
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_HOST
-              - name: DB_PORT
-                value: "8529"
-              - name: DB_NAME
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_NAME
-              - name: REPO_NAME
-                value: "tracker"
-              - name: REPO_OWNER
-                value: "canada-ca"
-              - name: GUIDANCE_DIR
-                value: "guidance"
-              - name: GITHUB_TOKEN
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: GITHUB_TOKEN
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "8529"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
+            - name: REPO_NAME
+              value: "tracker"
+            - name: REPO_OWNER
+              value: "canada-ca"
+            - name: GUIDANCE_DIR
+              value: "guidance"
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: GITHUB_TOKEN
           restartPolicy: OnFailure

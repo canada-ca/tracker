@@ -72,6 +72,8 @@
     'Passwords do not match.': 'Passwords do not match.',
     'Permission Denied: Could not retrieve specified organization.':
       'Permission Denied: Could not retrieve specified organization.',
+    'Permission Denied: Please contact org owner to transfer ownership.':
+      'Permission Denied: Please contact org owner to transfer ownership.',
     'Permission Denied: Please contact organization admin for help with removing domain.':
       'Permission Denied: Please contact organization admin for help with removing domain.',
     'Permission Denied: Please contact organization admin for help with removing organization.':
@@ -251,6 +253,10 @@
       'Successfully email verified account, and set TFA send method to email.',
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
+    'Successfully left organization: {0}': [
+      'Successfully left organization: ',
+      ['0'],
+    ],
     'Successfully removed domain: {0} from {1}.': [
       'Successfully removed domain: ',
       ['0'],
@@ -267,6 +273,13 @@
       'Successfully removed user from organization.',
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
+    'Successfully signed out.': 'Successfully signed out.',
+    'Successfully transferred org: {0} ownership to user: {1}': [
+      'Successfully transferred org: ',
+      ['0'],
+      ' ownership to user: ',
+      ['1'],
+    ],
     'Successfully verified organization: {0}.': [
       'Successfully verified organization: ',
       ['0'],
@@ -282,6 +295,8 @@
       'Two factor code is incorrect. Please try again.',
     'Two factor code length is incorrect. Please try again.':
       'Two factor code length is incorrect. Please try again.',
+    'Unable leave organization. Please try again.':
+      'Unable leave organization. Please try again.',
     'Unable to add user to organization. Please try again.':
       'Unable to add user to organization. Please try again.',
     'Unable to authenticate. Please try again.':
@@ -336,6 +351,8 @@
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org.':
       'Unable to invite yourself to an org.',
+    'Unable to leave undefined organization.':
+      'Unable to leave undefined organization.',
     'Unable to load Aggregate guidance tag(s). Please try again.':
       'Unable to load Aggregate guidance tag(s). Please try again.',
     'Unable to load DKIM failure data. Please try again.':
@@ -368,6 +385,8 @@
       'Unable to load SSL guidance tag(s). Please try again.',
     'Unable to load SSL scan(s). Please try again.':
       'Unable to load SSL scan(s). Please try again.',
+    'Unable to load affiliation information. Please try again.':
+      'Unable to load affiliation information. Please try again.',
     'Unable to load affiliation(s). Please try again.':
       'Unable to load affiliation(s). Please try again.',
     'Unable to load domain(s). Please try again.':
@@ -380,6 +399,8 @@
       'Unable to load mail summary. Please try again.',
     'Unable to load organization(s). Please try again.':
       'Unable to load organization(s). Please try again.',
+    'Unable to load owner information. Please try again.':
+      'Unable to load owner information. Please try again.',
     'Unable to load summary. Please try again.':
       'Unable to load summary. Please try again.',
     'Unable to load user(s). Please try again.':
@@ -451,6 +472,16 @@
       'Unable to sign up, please contact org admin for a new invite.',
     'Unable to sign up. Please try again.':
       'Unable to sign up. Please try again.',
+    'Unable to transfer organization ownership. Please try again.':
+      'Unable to transfer organization ownership. Please try again.',
+    'Unable to transfer ownership of a verified organization.':
+      'Unable to transfer ownership of a verified organization.',
+    'Unable to transfer ownership of an org to an undefined user.':
+      'Unable to transfer ownership of an org to an undefined user.',
+    'Unable to transfer ownership of undefined organization.':
+      'Unable to transfer ownership of undefined organization.',
+    'Unable to transfer ownership to a user outside the org. Please invite the user and try again.':
+      'Unable to transfer ownership to a user outside the org. Please invite the user and try again.',
     'Unable to two factor authenticate. Please try again.':
       'Unable to two factor authenticate. Please try again.',
     'Unable to update domain in an unknown org.':

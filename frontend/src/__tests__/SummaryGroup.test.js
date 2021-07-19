@@ -1,7 +1,7 @@
 import React from 'react'
 import { MockedProvider } from '@apollo/client/testing'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { SummaryGroup } from '../SummaryGroup'
@@ -54,11 +54,11 @@ describe('<SummaryGroup />', () => {
     it('displays two summary cards', async () => {
       const { getAllByText } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <MockedProvider>
               <SummaryGroup web={data.webSummary} mail={data.mailSummary} />
             </MockedProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
       const summaries = await waitFor(() => getAllByText(/settings summary/i))

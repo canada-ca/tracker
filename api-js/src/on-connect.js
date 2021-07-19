@@ -1,13 +1,18 @@
 export const customOnConnect =
   ({
-    context,
+    createContext,
+    serverContext,
     createI18n,
     verifyToken,
     userRequired,
     loadUserByKey,
     verifiedRequired,
   }) =>
-  async (connectionParams, webSocket) => {
+  async (connectionParams, webSocket, context) => {
+    const expandedContext = { ...serverContext, ...context }
+
+    const factoryFunc = createContext(expandedContext)
+
     const enLangPos = String(
       webSocket.upgradeReq.headers['accept-language'],
     ).indexOf('en')
@@ -20,10 +25,7 @@ export const customOnConnect =
       language = 'fr'
     }
 
-    let authorization
-    if (connectionParams.authorization) {
-      authorization = connectionParams.authorization
-    }
+    const authorization = connectionParams?.authorization
 
     const i18n = createI18n(language)
     const verify = verifyToken({ i18n })
@@ -34,7 +36,7 @@ export const customOnConnect =
       userKey = verify({ token }).userKey
     }
 
-    const { query } = context
+    const { query } = serverContext
 
     const user = await userRequired({
       i18n,
@@ -46,8 +48,7 @@ export const customOnConnect =
 
     console.info(`User: ${userKey}, connected to subscription.`)
 
-    return {
-      language,
-      authorization,
-    }
+    const finalContext = await factoryFunc({ req: context.request, connection: { language, authorization } })
+
+    return finalContext
   }

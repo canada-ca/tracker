@@ -25,14 +25,18 @@ RES_QUEUE = Queue()
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
 )
+OTS_QUEUE_URL = os.getenv(
+    "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
+)
+DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
 
 
 class ScanTimeoutException(BaseException):
     pass
 
 
-def dispatch_results(payload, client):
-    client.post(QUEUE_URL + "/https", json=payload)
+def dispatch_results(payload, client, ots):
+    client.post(DEST_URL(ots) + "/https", json=json.dumps(payload))
     logging.info("Scan results dispatched to result queue")
 
 
@@ -53,14 +57,14 @@ def process_results(results):
         report = {"error": "missing"}
 
     else:
-        # Assumes that HTTPS would be technically present, with or without issues
-        if results["Downgrades HTTPS"]:
+        if results["Valid HTTPS"]:
+            https = "Valid HTTPS"  # Yes
+        elif results["HTTPS Bad Chain"]:
+            https = "Bad Chain"  # Yes
+        elif results["Downgrades HTTPS"]:
             https = "Downgrades HTTPS"  # No
         else:
-            if results["Valid HTTPS"]:
-                https = "Valid HTTPS"  # Yes
-            elif results["HTTPS Bad Chain"]:
-                https = "Bad Chain"  # Yes
+            https = "No HTTPS"
 
         report["implementation"] = https
 
@@ -96,11 +100,10 @@ def process_results(results):
 
         ###
         # Characterize the presence and completeness of HSTS.
+        hsts_age = results.get("HSTS Max Age", None)
 
-        if results["HSTS Max Age"]:
-            hsts_age = int(results["HSTS Max Age"])
-        else:
-            hsts_age = None
+        if hsts_age is not None:
+            hsts_age = int(hsts_age)
 
         # Otherwise, without HTTPS there can be no HSTS for the domain directly.
         if https == "Downgrades HTTPS":
@@ -189,8 +192,9 @@ def Server(server_client=requests):
 
         try:
             domain = inbound_payload["domain"]
-            uuid = inbound_payload["uuid"]
+            user_key = inbound_payload["user_key"]
             domain_key = inbound_payload["domain_key"]
+            shared_id = inbound_payload["shared_id"]
         except KeyError:
             logging.error(f"Invalid scan request format received: {str(inbound_payload)}")
             return Response("Invalid Format", status_code=400)
@@ -205,29 +209,29 @@ def Server(server_client=requests):
                 {
                     "results": {"error": "unreachable"},
                     "scan_type": "https",
-                    "uuid": uuid,
+                    "user_key": user_key,
                     "domain_key": domain_key,
+                    "shared_id": shared_id
                 }
             )
-            dispatch_results(outbound_payload, server_client)
+            dispatch_results(outbound_payload, server_client, (user_key is not None))
             return Response("Timeout occurred while scanning", status_code=500)
         scan_results = RES_QUEUE.get()
 
         processed_results = process_results(scan_results)
 
-        outbound_payload = json.dumps(
-            {
-                "results": processed_results,
-                "scan_type": "https",
-                "uuid": uuid,
-                "domain_key": domain_key,
-            }
-        )
+        outbound_payload = {
+            "results": processed_results,
+            "scan_type": "https",
+            "user_key": user_key,
+            "domain_key": domain_key,
+            "shared_id": shared_id
+        }
         logging.info(f"Scan results: {str(processed_results)}")
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
-        dispatch_results(outbound_payload, server_client)
+        dispatch_results(outbound_payload, server_client, (user_key is not None))
 
         logging.info(f"HTTPS scan completed in {elapsed_time.total_seconds()} seconds.")
         return Response("Scan completed")

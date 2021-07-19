@@ -9,12 +9,12 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import {number, object} from 'prop-types'
-import WithPseudoBox from './withPseudoBox'
+import { number, object } from 'prop-types'
+import WithWrapperBox from './WithWrapperBox'
 import theme from './theme/canada'
-import {Box} from '@chakra-ui/core'
-import {t} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Box } from '@chakra-ui/react'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import CustomTooltipContent from './CustomTooltipContent'
 
 /*
@@ -128,4 +128,4 @@ DmarcReportSummaryGraph.propTypes = {
   responsiveWidth: number,
 }
 
-export default WithPseudoBox(DmarcReportSummaryGraph)
+export default WithWrapperBox(DmarcReportSummaryGraph)

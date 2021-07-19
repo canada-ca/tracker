@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Trans } from '@lingui/macro'
-import { Button, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/core'
+import { Button, Divider, Heading, Stack, Text } from '@chakra-ui/react'
+import {
+  ArrowForwardIcon,
+  CheckCircleIcon,
+  WarningIcon,
+} from '@chakra-ui/icons'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { VERIFY_ACCOUNT } from './graphql/mutations'
@@ -32,7 +37,7 @@ export default function EmailValidationPage() {
     if (success) {
       return (
         <Stack isInline align="center">
-          <Icon name="check-circle" color="strong" />
+          <CheckCircleIcon color="strong" />
           <Text fontSize="xl" textAlign="center">
             <Trans>Your account email was successfully verified</Trans>
           </Text>
@@ -42,7 +47,7 @@ export default function EmailValidationPage() {
       return (
         <Stack>
           <Stack isInline align="center">
-            <Icon name="warning" color="weak" />
+            <WarningIcon color="weak" />
             <Text fontSize="xl" textAlign="center">
               <Trans>
                 Your account email could not be verified at this time. Please
@@ -74,7 +79,7 @@ export default function EmailValidationPage() {
           bg="transparent"
           borderColor="primary"
           borderWidth="1px"
-          rightIcon="arrow-forward"
+          rightIcon={<ArrowForwardIcon />}
         >
           <Trans>Continue</Trans>
         </Button>
