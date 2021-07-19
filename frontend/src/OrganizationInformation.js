@@ -212,7 +212,7 @@ export default function OrganizationInformation({
   return (
     <>
       <Box {...props}>
-        <Stack isInline align="center" mb="1em" flexWrap="wrap">
+        <Flex align="center" mb="1em" flexWrap="wrap">
           <Stack
             isInline
             align="center"
@@ -252,7 +252,7 @@ export default function OrganizationInformation({
               icon={<EditIcon />}
             />
           </Flex>
-        </Stack>
+        </Flex>
 
         <Collapse in={isEditingOrg}>
           <Formik
