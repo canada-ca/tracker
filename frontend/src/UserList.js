@@ -5,6 +5,7 @@ import {
   Divider,
   FormLabel,
   Flex,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -275,7 +276,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         <Box key={`${node.user.userName}:${node.id}`}>
           <Flex align="center" w="100%">
             <Stack direction="row" flexGrow="0">
-              <Button
+              <IconButton
                 aria-label="userRemoveButton"
                 variant="danger"
                 onClick={() => {
@@ -284,10 +285,9 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 }}
                 p={2}
                 m={0}
-              >
-                <MinusIcon />
-              </Button>
-              <Button
+                icon={<MinusIcon />}
+              />
+              <IconButton
                 aria-label="userEditButton"
                 variant="primary"
                 onClick={() => {
@@ -297,15 +297,15 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 }}
                 p={2}
                 m={0}
-              >
-                <EditIcon />
-              </Button>
+                icon={<EditIcon />}
+              />
             </Stack>
             <UserCard
               flexGrow="1"
               userName={node.user.userName}
               displayName={node.user.displayName}
               role={userRole}
+              ml={{ base: 4, md: 0 }}
             />
           </Flex>
           <Divider borderColor="gray.900" />
