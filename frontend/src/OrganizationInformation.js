@@ -238,7 +238,7 @@ export default function OrganizationInformation({
               p={2}
               m={0}
               w={{ base: '45%', md: 'auto' }}
-              aria-label={<Trans>Remove Organization</Trans>}
+              aria-label={t`Remove Organization`}
               icon={<MinusIcon />}
             />
             <IconButton
@@ -248,7 +248,7 @@ export default function OrganizationInformation({
               ml={{ base: 'auto', md: 2 }}
               onClick={() => setIsEditingOrg(!isEditingOrg)}
               w={{ base: '45%', md: 'auto' }}
-              aria-label={<Trans>Edit Organization</Trans>}
+              aria-label={t`Edit Organization`}
               icon={<EditIcon />}
             />
           </Flex>
