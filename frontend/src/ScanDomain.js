@@ -64,13 +64,17 @@ export function ScanDomain() {
               name="form"
             >
               <Box>
-                <Text fontSize="2xl" mb="2" textAlign={['center', 'left']}>
+                <Text
+                  fontSize="2xl"
+                  mb="2"
+                  textAlign={{ base: 'center', md: 'left' }}
+                >
                   <Trans>Request a domain to be scanned:</Trans>
                 </Text>
                 <DomainField name="domain" mb="4" isDisabled={true} />
 
                 <Button
-                  w={['100%', '25%']}
+                  w={{ base: '100%', md: '25%' }}
                   variant="primary"
                   isLoading={isSubmitting}
                   type="submit"

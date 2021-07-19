@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 export function ErrorFallbackMessage({ error }) {
   return (
     <Box bg="gray.50" my="10" display="flex" alignItems="center">
-      <SimpleGrid columns={[1, 2]} bg="primary" color="gray.50">
+      <SimpleGrid columns={{ base: 1, md: 2 }} bg="primary" color="gray.50">
         <Stack role="alert" my="5" mx="10">
           <Text fontSize="2xl" fontWeight="bold">
             <Trans>An error has occurred.</Trans>

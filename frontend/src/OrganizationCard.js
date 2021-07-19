@@ -61,14 +61,14 @@ export function OrganizationCard({
         >
           <Stack isInline align="center">
             <Text
-              fontSize={['lg', 'md']}
+              fontSize="lg"
               fontWeight="semibold"
               textDecoration="underline"
               isTruncated
             >
               {name}
             </Text>
-            <Text fontSize={['lg', 'md']} fontWeight="semibold">
+            <Text fontSize="lg" fontWeight="semibold">
               ({acronym})
             </Text>
             {verified && <CheckCircleIcon color="blue.500" size="icons.sm" />}
