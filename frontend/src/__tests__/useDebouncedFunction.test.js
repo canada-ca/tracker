@@ -6,9 +6,13 @@ const UseDebouncedFunctionExample = () => {
   const [count, setCount] = useState(0)
   const [debouncedCount, setDebouncedCount] = useState(0)
 
-  const memoizedSetDebouncedCountCallback = useCallback(() => {
-    act(() => setDebouncedCount(debouncedCount + 1))
-  }, [count])
+  const memoizedSetDebouncedCountCallback = useCallback(
+    () =>
+      act(() => {
+        if (count > 0) setDebouncedCount((c) => c + 1)
+      }),
+    [count],
+  )
 
   useDebouncedFunction(memoizedSetDebouncedCountCallback, 500)
 
@@ -40,6 +44,10 @@ describe('userDebouncedFunction', () => {
 
       // default values
       expect(count).toHaveValue('0')
+      expect(debouncedCount).toHaveValue('0')
+
+      // ensure no increments on first render
+      jest.advanceTimersByTime(1000)
       expect(debouncedCount).toHaveValue('0')
 
       fireEvent.click(incrementButton)
@@ -81,6 +89,10 @@ describe('userDebouncedFunction', () => {
 
       // full timeout
       expect(count).toHaveValue('6')
+      expect(debouncedCount).toHaveValue('2')
+
+      // ensure no more increments
+      jest.advanceTimersByTime(1000)
       expect(debouncedCount).toHaveValue('2')
     })
   })
