@@ -262,7 +262,7 @@ msgstr "Erreur de vérification des permissions. Impossible de demander des info
 msgid "Permission error, not an admin for this user."
 msgstr "Erreur de permission, pas d'administrateur pour cet utilisateur."
 
-#: src/user/mutations/close-account.js:49
+#: src/user/mutations/close-account.js:50
 msgid "Permission error: Unable to close other users account."
 msgstr "Erreur de permission: Impossible de fermer le compte d'un autre utilisateur."
 
@@ -356,7 +356,7 @@ msgstr "La demande de {amount} enregistrements sur la connexion `SPF` dépasse l
 msgid "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `SSL` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/user/mutations/close-account.js:470
+#: src/user/mutations/close-account.js:482
 msgid "Successfully closed account."
 msgstr "Le compte a été fermé avec succès."
 
@@ -454,21 +454,25 @@ msgstr "Impossible de s'authentifier. Veuillez réessayer."
 msgid "Unable to check permission. Please try again."
 msgstr "Impossible de vérifier l'autorisation. Veuillez réessayer."
 
-#: src/user/mutations/close-account.js:69
-#: src/user/mutations/close-account.js:79
-#: src/user/mutations/close-account.js:104
-#: src/user/mutations/close-account.js:114
-#: src/user/mutations/close-account.js:145
-#: src/user/mutations/close-account.js:160
-#: src/user/mutations/close-account.js:189
-#: src/user/mutations/close-account.js:199
-#: src/user/mutations/close-account.js:235
-#: src/user/mutations/close-account.js:346
-#: src/user/mutations/close-account.js:375
-#: src/user/mutations/close-account.js:399
-#: src/user/mutations/close-account.js:435
-#: src/user/mutations/close-account.js:452
-#: src/user/mutations/close-account.js:461
+#: src/user/mutations/close-account.js:62
+msgid "Unable to close account of an undefined user."
+msgstr "Impossible de fermer le compte d'un utilisateur non défini."
+
+#: src/user/mutations/close-account.js:81
+#: src/user/mutations/close-account.js:91
+#: src/user/mutations/close-account.js:116
+#: src/user/mutations/close-account.js:126
+#: src/user/mutations/close-account.js:157
+#: src/user/mutations/close-account.js:172
+#: src/user/mutations/close-account.js:201
+#: src/user/mutations/close-account.js:211
+#: src/user/mutations/close-account.js:247
+#: src/user/mutations/close-account.js:358
+#: src/user/mutations/close-account.js:387
+#: src/user/mutations/close-account.js:411
+#: src/user/mutations/close-account.js:447
+#: src/user/mutations/close-account.js:464
+#: src/user/mutations/close-account.js:473
 msgid "Unable to close account. Please try again."
 msgstr "Impossible de fermer le compte. Veuillez réessayer."
 

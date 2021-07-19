@@ -306,6 +306,8 @@
       'Unable to authenticate. Please try again.',
     'Unable to check permission. Please try again.':
       'Unable to check permission. Please try again.',
+    'Unable to close account of an undefined user.':
+      'Unable to close account of an undefined user.',
     'Unable to close account. Please try again.':
       'Unable to close account. Please try again.',
     'Unable to create domain in unknown organization.':

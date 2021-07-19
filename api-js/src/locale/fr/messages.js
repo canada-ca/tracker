@@ -307,6 +307,8 @@
       "Impossible de s'authentifier. Veuillez réessayer.",
     'Unable to check permission. Please try again.':
       "Impossible de vérifier l'autorisation. Veuillez réessayer.",
+    'Unable to close account of an undefined user.':
+      "Impossible de fermer le compte d'un utilisateur non défini.",
     'Unable to close account. Please try again.':
       'Impossible de fermer le compte. Veuillez réessayer.',
     'Unable to create domain in unknown organization.':
