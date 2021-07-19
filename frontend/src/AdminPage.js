@@ -1,13 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Divider,
-  Flex,
-  Select,
-  Stack,
-  Text,
-  useToast,
-} from '@chakra-ui/react'
+import { Button, Divider, Stack, Text, useToast } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -18,6 +10,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
+import { Dropdown } from './Dropdown'
 
 export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -26,9 +19,10 @@ export default function AdminPage() {
 
   const { loading, error, data } = useQuery(ADMIN_AFFILIATIONS, {
     fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
     variables: {
       first: 100,
-      orderBy: { field: 'ACRONYM', direction: 'ASC' },
+      orderBy: { field: 'NAME', direction: 'ASC' },
       isAdmin: true,
       includeSuperAdminOrg: true,
     },
@@ -60,62 +54,37 @@ export default function AdminPage() {
   })
 
   if (loading) {
-    return (
-      <LoadingMessage>
-        <Trans>Admin Affiliations</Trans>
-      </LoadingMessage>
-    )
+    return <LoadingMessage />
   }
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
   }
 
-  const adminAffiliations = {}
+  const options = []
   data.findMyOrganizations?.edges.forEach((edge) => {
-    const { slug, acronym, id } = edge.node
-    adminAffiliations[acronym] = {
-      slug: slug,
-      id: id,
-    }
-  })
-
-  const adminOrgsAcronyms = Object.keys(adminAffiliations)
-
-  const options = [
-    <option hidden key="default" value="none">
-      {t`Select an organization`}
-    </option>,
-  ]
-
-  adminOrgsAcronyms.forEach((acronym) => {
-    options.push(
-      <option key={acronym} value={acronym}>
-        {acronym}
-      </option>,
-    )
+    const { slug, name, id } = edge.node
+    options.push({ label: name, value: { slug: slug, id: id } })
   })
 
   if (options.length > 1) {
     return (
       <Layout>
         <Stack spacing={10}>
-          <Flex direction={{ base: 'column', md: 'row' }} align="center">
-            <Text fontWeight="bold" fontSize="2xl">
-              <Trans>Organization: </Trans>
-            </Text>
-            <Select
-              w={{ base: '100%', md: '15rem' }}
-              ml={{ base: 0, md: 2 }}
-              size="lg"
-              onChange={(e) => {
-                setOrgDetails(adminAffiliations[e.target.value])
-                setSelectedOrg(e.target.value)
+          <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
+            <Trans>Welcome, Admin</Trans>
+          </Text>
+          <Stack flexDirection={['column', 'row']} align="center">
+            <Dropdown
+              label={t`Organization: `}
+              labelDirection="row"
+              options={options}
+              placeholder={t`Select an organization`}
+              onChange={(opt) => {
+                setOrgDetails(opt.value)
+                setSelectedOrg(opt.label)
               }}
-              value={selectedOrg}
-            >
-              {options}
-            </Select>
+            />
             <Button
               variant="primary"
               ml={{ base: '0', md: 'auto' }}
@@ -126,7 +95,7 @@ export default function AdminPage() {
               <AddIcon mr={2} />
               <Trans>Create Organization</Trans>
             </Button>
-          </Flex>
+          </Stack>
           {options.length > 1 && selectedOrg !== 'none' ? (
             <>
               <OrganizationInformation

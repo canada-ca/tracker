@@ -1357,6 +1357,7 @@ export const ADMIN_AFFILIATIONS = gql`
           id
           acronym
           slug
+          name
         }
       }
     }
