@@ -11,6 +11,7 @@ import {
   defaultStyles,
 } from '@visx/tooltip'
 import { LegendOrdinal } from '@visx/legend'
+import { withScreenSize } from '@visx/responsive'
 import theme from './theme/canada'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
@@ -41,7 +42,7 @@ let tooltipTimeout
 
 export function NewDmarcGraph({ ...props }) {
   const { i18n } = useLingui()
-  const { data, responsiveWidth } = props
+  const { data } = props
   const [isHorizontal, setIsHorizontal] = useState(false)
   const [isNormalised, setIsNormailsed] = useState(false)
 
@@ -72,8 +73,11 @@ export function NewDmarcGraph({ ...props }) {
     keys = totalKeys
   }
 
+  const ResponsiveHorizontalGraph = withScreenSize(HorizontalGraph)
+  const ResponsiveVerticalGraph = withScreenSize(VerticalGraph)
+
   return (
-    <Box>
+    <Stack w="100%" align={['center', 'flex-start']}>
       <Stack isInline align="center" spacing="4">
         <TrackerButton
           variant="primary"
@@ -99,19 +103,11 @@ export function NewDmarcGraph({ ...props }) {
         </TrackerButton>
       </Stack>
       {isHorizontal ? (
-        <HorizontalGraph
-          data={data}
-          keys={keys}
-          responsiveWidth={responsiveWidth}
-        />
+        <ResponsiveHorizontalGraph data={data} keys={keys} />
       ) : (
-        <VerticalGraph
-          data={data}
-          keys={keys}
-          responsiveWidth={responsiveWidth}
-        />
+        <ResponsiveVerticalGraph data={data} keys={keys} />
       )}
-    </Box>
+    </Stack>
   )
 }
 
@@ -122,7 +118,8 @@ function VerticalGraph({
   margin = defaultVerticalMargin,
   ...props
 }) {
-  const { data, keys, responsiveWidth } = props
+  const { data, keys, screenWidth } = props
+
   const { periods, strengths } = data
   const {
     tooltipOpen,
@@ -132,6 +129,10 @@ function VerticalGraph({
     hideTooltip,
     showTooltip,
   } = useTooltip()
+
+  if (screenWidth < 1200) {
+    width = screenWidth
+  }
 
   const monthlyTotals = []
   periods.forEach((period) => {
@@ -270,7 +271,10 @@ function VerticalGraph({
           <div style={{ color: colorScale(tooltipData.key) }}>
             <strong>{tooltipData.key}</strong>
           </div>
-          <div>{tooltipData.bar.data[tooltipData.key]}</div>
+          <div>
+            {tooltipData.bar.data[tooltipData.key]}
+            {}
+          </div>
           <div>
             <small>{getDate(tooltipData.bar.data)}</small>
           </div>
@@ -287,7 +291,7 @@ function HorizontalGraph({
   margin = defaultHorizontalMargin,
   ...props
 }) {
-  const { data, keys, responsiveWidth } = props
+  const { data, keys, screenWidth } = props
   const { periods, strengths } = data
   const {
     tooltipOpen,
@@ -297,6 +301,11 @@ function HorizontalGraph({
     hideTooltip,
     showTooltip,
   } = useTooltip()
+
+  if (screenWidth < 1200) {
+    width = screenWidth
+  }
+
   const xMax = width - margin.left - margin.right
   const yMax = height - margin.top - margin.bottom
 

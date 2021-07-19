@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from './graphql/queries'
-import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import {
   Box,
   Divider,
@@ -27,7 +26,7 @@ import { Layout } from './Layout'
 import { InfoBox, InfoPanel } from './InfoPanel'
 import { NewDmarcGraph } from './NewDmarcGraph'
 
-export default function DmarcReportPage({ summaryListResponsiveWidth }) {
+export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
   const { i18n } = useLingui()
@@ -169,25 +168,29 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     const strengths = {
       strong: [
         {
-          name: 'fullPass',
+          totalName: 'fullPass',
+          percentageName: 'fullPassPercentage',
           displayName: t`Pass`,
         },
       ],
       moderate: [
         {
-          name: 'passSpfOnly',
+          totalName: 'passSpfOnly',
+          percentageName: 'passSpfOnlyPercentage',
           displayName: t`Fail DKIM`,
         },
       ],
       moderateAlt: [
         {
-          name: 'passDkimOnly',
+          totalName: 'passDkimOnly',
+          percentageName: 'passDkimOnlyPercentage',
           displayName: t`Fail SPF`,
         },
       ],
       weak: [
         {
-          name: 'fail',
+          totalName: 'fail',
+          percentageName: 'failPercentage',
           displayName: t`Fail`,
         },
       ],
@@ -208,16 +211,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     formattedGraphData.strengths = strengths
     graphDisplay = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        {/* <DmarcTimeGraph
-          data={formattedGraphData}
-          width="100%"
-          mr="400px"
-          responsiveWidth={summaryListResponsiveWidth}
-        /> */}
-        <NewDmarcGraph
-          data={formattedGraphData}
-          responsiveWidth={summaryListResponsiveWidth}
-        />
+        <NewDmarcGraph data={formattedGraphData} />
       </ErrorBoundary>
     )
   }
