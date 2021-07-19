@@ -1,13 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Divider,
-  Flex,
-  Select,
-  Stack,
-  Text,
-  useToast,
-} from '@chakra-ui/react'
+import { Button, Divider, Stack, Text, useToast } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -94,8 +86,6 @@ export default function AdminPage() {
               }}
             />
             <Button
-              ml={['0', 'auto']}
-              w={['100%', 'auto']}
               variant="primary"
               ml={{ base: '0', md: 'auto' }}
               w={{ base: '100%', md: 'auto' }}
@@ -105,7 +95,7 @@ export default function AdminPage() {
               <AddIcon mr={2} />
               <Trans>Create Organization</Trans>
             </Button>
-          </Flex>
+          </Stack>
           {options.length > 1 && selectedOrg !== 'none' ? (
             <>
               <OrganizationInformation
