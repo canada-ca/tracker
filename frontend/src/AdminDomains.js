@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Divider,
+  Flex,
   IconButton,
   Input,
   InputGroup,
@@ -220,11 +221,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           updateOnOpen()
         }}
       >
-        <Stack
-          flexDirection={{ base: 'column', md: 'row' }}
-          align="center"
-          isInline
-        >
+        <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
           <InputGroup
             width={{ base: '100%', md: '75%' }}
             mb={{ base: '8px', md: '0' }}
@@ -248,7 +245,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <AddIcon mr={2} />
             <Trans>Add Domain</Trans>
           </Button>
-        </Stack>
+        </Flex>
       </form>
 
       {adminDomainList}
