@@ -315,7 +315,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   )
 
   return (
-    <Flex mb="6" w="100%">
+    <Flex mb="6" w="100%" flexDirection="column">
       <form
         onSubmit={(e) => {
           // Manually handle submit
