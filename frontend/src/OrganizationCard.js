@@ -15,7 +15,6 @@ export function OrganizationCard({
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
-  const smallDevice = window.matchMedia('(max-width: 500px)').matches
   let webValue = 0
   let mailValue = 0
   const webSummary =
@@ -49,7 +48,7 @@ export function OrganizationCard({
         alignItems={{ base: 'flex-start', md: 'center' }}
         _hover={{ bg: ['', 'gray.100'] }}
         p="4"
-        as={!smallDevice ? RouteLink : ''}
+        as={RouteLink}
         to={`${path}/${slug}`}
       >
         <Box
