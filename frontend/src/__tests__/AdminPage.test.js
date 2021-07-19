@@ -7,7 +7,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../graphql/queries'
 import AdminPage from '../AdminPage'
 import { waitFor, render, fireEvent } from '@testing-library/react'
-import { MemoryRouter } from 'react-router'
+import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
