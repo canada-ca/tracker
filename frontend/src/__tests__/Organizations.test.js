@@ -12,6 +12,7 @@ import { UserVarProvider } from '../UserState'
 import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
+import matchMediaSize from '../helpers/matchMedia'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -55,6 +56,8 @@ const summaries = {
     ],
   },
 }
+
+matchMediaSize('md')
 
 describe('<Organisations />', () => {
   describe('given a list of organizations', () => {
