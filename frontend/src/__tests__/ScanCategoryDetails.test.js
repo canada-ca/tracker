@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ChakraProvider } from '@chakra-ui/react'
+import { theme, Accordion, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import ScanCategoryDetails from '../ScanCategoryDetails'
@@ -41,10 +41,12 @@ describe('<ScanCategoryDetails />', () => {
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <ScanCategoryDetails
-                  categoryName={categoryName}
-                  categoryData={categoryData}
-                />
+                <Accordion>
+                  <ScanCategoryDetails
+                    categoryName={categoryName}
+                    categoryData={categoryData}
+                  />
+                </Accordion>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>

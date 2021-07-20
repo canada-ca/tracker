@@ -4,18 +4,11 @@ import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import {
   Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
   Box,
-  Flex,
-  Button,
   Divider,
   Heading,
   Link,
   Select,
-  Spacer,
   Stack,
   Text,
 } from '@chakra-ui/react'
@@ -32,6 +25,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
 import { Layout } from './Layout'
 import { InfoBox, InfoPanel } from './InfoPanel'
+import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { domainSlug, period, year } = useParams()
@@ -743,60 +737,17 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
       <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
-        <AccordionItem>
-          <h2>
-            <Button as={AccordionButton} variant="primary" p={0} w="100%">
-              <Flex w="100%">
-                <Spacer />
-                <Trans>Fully Aligned by IP Address</Trans>
-                <Spacer />
-                <AccordionIcon />
-              </Flex>
-            </Button>
-          </h2>
-          <AccordionPanel>{fullPassTable}</AccordionPanel>
+        <AccordionItem buttonLabel="Fully Aligned by IP Address">
+          {fullPassTable}
         </AccordionItem>
-
-        <AccordionItem>
-          <h2>
-            <Button as={AccordionButton} variant="primary" p={0} w="100%">
-              <Flex w="100%">
-                <Spacer />
-                <Trans>DKIM Failures by IP Address</Trans>
-                <Spacer />
-                <AccordionIcon />
-              </Flex>
-            </Button>
-          </h2>
-          <AccordionPanel>{dkimFailureTable}</AccordionPanel>
+        <AccordionItem buttonLabel="DKIM Failures by IP Address">
+          {dkimFailureTable}
         </AccordionItem>
-
-        <AccordionItem>
-          <h2>
-            <Button as={AccordionButton} variant="primary" p={0} w="100%">
-              <Flex w="100%">
-                <Spacer />
-                <Trans>SPF Failures by IP Address</Trans>
-                <Spacer />
-                <AccordionIcon />
-              </Flex>
-            </Button>
-          </h2>
-          <AccordionPanel>{spfFailureTable}</AccordionPanel>
+        <AccordionItem buttonLabel="SPF Failures by IP Address">
+          {spfFailureTable}
         </AccordionItem>
-
-        <AccordionItem>
-          <h2>
-            <Button as={AccordionButton} variant="primary" p={0} w="100%">
-              <Flex w="100%">
-                <Spacer />
-                <Trans>DMARC Failures by IP Address</Trans>
-                <Spacer />
-                <AccordionIcon />
-              </Flex>
-            </Button>
-          </h2>
-          <AccordionPanel>{dmarcFailureTable}</AccordionPanel>
+        <AccordionItem buttonLabel="DMARC Failures by IP Address">
+          {dmarcFailureTable}
         </AccordionItem>
       </Accordion>
     </ErrorBoundary>
