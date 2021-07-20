@@ -2,7 +2,13 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import {
+  fireEvent,
+  render,
+  waitFor,
+  screen,
+  getByRole as specificGetByRole,
+} from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import Organizations from '../Organizations'
 import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
@@ -11,6 +17,7 @@ import { setupI18n } from '@lingui/core'
 import { UserVarProvider } from '../UserState'
 import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
+import userEvent from '@testing-library/user-event'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -281,7 +288,25 @@ describe('<Organisations />', () => {
         initialIndex: 0,
       })
 
-      const { getAllByText } = render(
+      // from ../helpers/matchMedia, more information there
+      // define matchMedia object, required for tests which have components that use matchMedia (or if they're children use matchMedia)
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: jest.fn().mockImplementation((query) => {
+          return {
+            matches: query === '(min-width: 48em) and (max-width: 61.99em)',
+            media: query,
+            onchange: null,
+            addListener: jest.fn(), // Deprecated
+            removeListener: jest.fn(), // Deprecated
+            addEventListener: jest.fn(),
+            removeEventListener: jest.fn(),
+            dispatchEvent: jest.fn(),
+          }
+        }),
+      })
+
+      const { findByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -306,9 +331,8 @@ describe('<Organisations />', () => {
         </MockedProvider>,
       )
 
-      const orgCards = await waitFor(() => getAllByText(/organization one/i))
-      const leftClick = { button: 0 }
-      fireEvent.click(orgCards[0], leftClick)
+      const cardLink = await findByRole('link', /organization one/i)
+      userEvent.click(cardLink)
 
       await waitFor(() =>
         expect(history.location.pathname).toEqual(

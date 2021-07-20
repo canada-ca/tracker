@@ -6,6 +6,7 @@ import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { OrganizationCard } from '../OrganizationCard'
+import '../helpers/matchMedia'
 
 const i18n = setupI18n({
   locale: 'en',
