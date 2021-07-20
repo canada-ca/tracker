@@ -128,6 +128,13 @@ export default extendTheme({
       60: '60rem',
     },
   },
+  layerStyles: {
+    pageLayout: {
+      maxW: { sm: 540, md: 768, lg: 960, xl: 1200 },
+      mx: 'auto',
+      w: '100%',
+    },
+  },
   components: {
     Accordion,
     Button,
