@@ -24,7 +24,6 @@ export function OrganizationCard({
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
-  const smallDevice = window.matchMedia('(max-width: 500px)').matches
   let webValue = 0
   let mailValue = 0
   const webSummary =
