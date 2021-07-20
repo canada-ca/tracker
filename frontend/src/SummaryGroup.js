@@ -61,12 +61,11 @@ export function SummaryGroup({ web, mail }) {
   )
   return (
     <SimpleGrid
-      columns={[1, 1, 1, 2]}
+      columns={{ base: 1, md: 2 }}
       spacing="30px"
       justifyItems="center"
       maxWidth="width.60"
       mx="auto"
-      p={['2', '8']}
     >
       {webCard}
       {mailCard}

@@ -47,12 +47,7 @@ const AuthenticateField = WithWrapperBox(function AuthenticateField({
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <Stack align="center">
-        <FormLabel
-          htmlFor="twoFactorCode"
-          fontWeight="bold"
-          mb="2"
-          textAlign={['center', 'left']}
-        >
+        <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
           {codeSendMessage}
           <Trans>Please enter your two factor code below.</Trans>
         </FormLabel>

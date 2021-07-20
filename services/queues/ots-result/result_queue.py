@@ -14,25 +14,25 @@ from redis import Redis, ConnectionPool
 from rq import Queue, Retry, Worker
 
 PROCESSOR_URL = os.getenv("PROCESSOR_URL", "http://result-processor.scanners.svc.cluster.local")
-REDIS_HOST = os.getenv("REDIS_HOST")
-REDIS_PORT = os.getenv("REDIS_PORT")
+PUBSUB_HOST = os.getenv("PUBSUB_HOST")
+PUBSUB_PORT = os.getenv("PUBSUB_PORT")
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 pool = ConnectionPool(host="127.0.0.1", port=6379, db=0)
-redis = Redis(connection_pool=pool)
-ots_redis = Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+queue_redis = Redis(connection_pool=pool)
+pubsub_redis = Redis(host=PUBSUB_HOST, port=PUBSUB_PORT, db=0)
 
-https_queue = Queue("https", connection=redis)
-ssl_queue = Queue("ssl", connection=redis)
-dns_queue = Queue("dns", connection=redis)
+https_queue = Queue("https", connection=queue_redis)
+ssl_queue = Queue("ssl", connection=queue_redis)
+dns_queue = Queue("dns", connection=queue_redis)
 
 default_queues = {"https": https_queue, "ssl": ssl_queue, "dns": dns_queue}
 
 
 def publish_update(scan_type, user_key, message):
     try:
-        ots_redis.publish(f"scan/{scan_type}/{user_key}", message)
+        pubsub_redis.publish(f"scan/{scan_type}/{user_key}", message)
     except Exception as e:
         logging.error(f"Unexpected error occurred while attempting to publish update to redis queue: {traceback.format_exc()}")
 

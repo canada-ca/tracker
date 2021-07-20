@@ -74,7 +74,11 @@ export default function AdminPage() {
           <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
             <Trans>Welcome, Admin</Trans>
           </Text>
-          <Stack flexDirection={['column', 'row']} align="center">
+          <Stack
+            flexDirection={['column', 'row']}
+            align="center"
+            justifyContent="space-between"
+          >
             <Dropdown
               label={t`Organization: `}
               labelDirection="row"
@@ -87,8 +91,8 @@ export default function AdminPage() {
             />
             <Button
               variant="primary"
-              ml={{ base: '0', md: 'auto' }}
               w={{ base: '100%', md: 'auto' }}
+              mt={{ base: 2, md: 0 }}
               as={RouteLink}
               to="/create-organization"
             >
