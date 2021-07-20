@@ -57,6 +57,7 @@ export function RelayPaginationControls({
         isDisabled={!hasPreviousPage}
         isLoading={isLoadingMore}
         aria-label="Previous page"
+        variant="primaryOutline"
       >
         <Trans>Previous</Trans>
       </Button>
@@ -67,6 +68,8 @@ export function RelayPaginationControls({
         isDisabled={!hasNextPage}
         isLoading={isLoadingMore}
         aria-label="Next page"
+        ml="2"
+        variant="primaryOutline"
       >
         <Trans>Next</Trans>
       </Button>
