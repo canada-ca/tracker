@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { Accordion, Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { any, object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
@@ -122,7 +122,9 @@ function ScanCard({ scanType, scanData, status }) {
       <Box>
         <Stack spacing="30px" px="1" mt="1">
           {topInfo()}
-          {categoryList}
+          <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
+            {categoryList}
+          </Accordion>
         </Stack>
       </Box>
     </Box>

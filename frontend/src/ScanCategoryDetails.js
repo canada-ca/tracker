@@ -1,26 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { object, string } from 'prop-types'
-import {
-  Box,
-  Button,
-  Collapse,
-  Divider,
-  Heading,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Accordion, Box, Divider, Stack, Text } from '@chakra-ui/react'
 import { GuidanceTagList } from './GuidanceTagList'
 import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
+import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
 function ScanCategoryDetails({ categoryName, categoryData }) {
-  const [showCategory, setShowCategory] = useState(true)
-  const handleShowCategory = () => setShowCategory(!showCategory)
-  const [showCiphers, setShowCiphers] = useState(true)
-  const handleShowCiphers = () => setShowCiphers(!showCiphers)
-  const [showCurves, setShowCurves] = useState(true)
-  const handleShowCurves = () => setShowCurves(!showCurves)
-
   const data = categoryData.edges[0]?.node
 
   if (!data)
@@ -198,51 +184,17 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
   )
 
   return (
-    <Box pb="2">
-      <Button
-        variant="primary"
-        onClick={handleShowCategory}
-        w={{ base: '100%', md: '25%' }}
-        mb="4"
-      >
-        <Heading as="h2" size="md">
-          {categoryName.toUpperCase()}
-        </Heading>
-      </Button>
-      <Collapse in={showCategory}>
-        {webSummary}
-        <Divider />
-        {tagDetails}
+    <AccordionItem buttonLabel={categoryName.toUpperCase()}>
+      {webSummary}
+      <Divider />
+      {tagDetails}
+      <Accordion allowMultiple defaultIndex={[0, 1]}>
         {ciphers && (
-          <Box>
-            <Divider />
-            <Button
-              variant="primary"
-              onClick={handleShowCiphers}
-              w="100%"
-              mb="2"
-            >
-              <Trans>Ciphers</Trans>
-            </Button>
-            <Collapse in={showCiphers}>{ciphers}</Collapse>
-          </Box>
+          <AccordionItem buttonLabel="Ciphers">{ciphers}</AccordionItem>
         )}
-        {curves && (
-          <Box>
-            <Divider />
-            <Button
-              variant="primary"
-              onClick={handleShowCurves}
-              w="100%"
-              mb="2"
-            >
-              <Trans>Curves</Trans>
-            </Button>
-            <Collapse in={showCurves}>{curves}</Collapse>
-          </Box>
-        )}
-      </Collapse>
-    </Box>
+        {curves && <AccordionItem buttonLabel="Curves">{curves}</AccordionItem>}
+      </Accordion>
+    </AccordionItem>
   )
 }
 

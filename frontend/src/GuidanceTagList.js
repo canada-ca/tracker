@@ -1,17 +1,10 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import {
-  Box,
-  Button,
-  Collapse,
-  Divider,
-  Heading,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Accordion, Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { Trans } from '@lingui/macro'
+import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
 export function GuidanceTagList({
   negativeTags,
@@ -19,13 +12,6 @@ export function GuidanceTagList({
   neutralTags,
   selector,
 }) {
-  const [showPosi, setShowPosi] = React.useState(true)
-  const [showNega, setShowNega] = React.useState(true)
-  const [showNeut, setShowNeut] = React.useState(true)
-  const handleShowPosi = () => setShowPosi(!showPosi)
-  const handleShowNega = () => setShowNega(!showNega)
-  const handleShowNeut = () => setShowNeut(!showNeut)
-
   const selectorHeading = (
     <Heading as="h3" size="sm">
       {selector}
@@ -104,34 +90,23 @@ export function GuidanceTagList({
   return (
     <Box my="2">
       {selectorHeading}
-      {positiveTagList?.length && (
-        <Box>
-          <Button variant="strong" mb="2" onClick={handleShowPosi} w="100%">
-            <Trans>Positive Tags</Trans>
-          </Button>
-          <Collapse in={showPosi}>{positiveTagList}</Collapse>
-          <Divider borderColor="gray.50" />
-        </Box>
-      )}
-
-      {neutralTagList?.length && (
-        <Box>
-          <Button mb="2" onClick={handleShowNeut} variant="info" w="100%">
-            <Trans>Neutral Tags</Trans>
-          </Button>
-          <Collapse in={showNeut}>{neutralTagList}</Collapse>
-          <Divider borderColor="gray.50" />
-        </Box>
-      )}
-
-      {negativeTagList?.length && (
-        <Box>
-          <Button variant="weak" mb="2" onClick={handleShowNega} w="100%">
-            <Trans>Negative Tags</Trans>
-          </Button>
-          <Collapse in={showNega}>{negativeTagList}</Collapse>
-        </Box>
-      )}
+      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        {positiveTagList?.length && (
+          <AccordionItem buttonLabel="Positive Tags" buttonVariant="strong">
+            {positiveTagList}
+          </AccordionItem>
+        )}
+        {neutralTagList?.length && (
+          <AccordionItem buttonLabel="Neutral Tags" buttonVariant="info">
+            {neutralTagList}
+          </AccordionItem>
+        )}
+        {negativeTagList?.length && (
+          <AccordionItem buttonLabel="Negative Tags" buttonVariant="weak">
+            {negativeTagList}
+          </AccordionItem>
+        )}
+      </Accordion>
       {!positiveTagList?.length &&
         !neutralTagList?.length &&
         !negativeTagList?.length &&
