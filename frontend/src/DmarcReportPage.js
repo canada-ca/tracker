@@ -30,7 +30,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
-import { Layout } from './Layout'
 import { InfoBox, InfoPanel } from './InfoPanel'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
@@ -156,14 +155,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   if (!graphData?.findDomainByDomain?.hasDMARCReport) {
     return (
-      <Layout>
-        <Stack align="center">
-          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
-            <span>{domainSlug} </span>
-            <Trans>does not support aggregate data</Trans>
-          </Text>
-        </Stack>
-      </Layout>
+      <Stack align="center" w="100%" px={4}>
+        <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+          <span>{domainSlug} </span>
+          <Trans>does not support aggregate data</Trans>
+        </Text>
+      </Stack>
     )
   }
 

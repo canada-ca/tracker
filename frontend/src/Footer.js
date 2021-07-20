@@ -2,33 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useLingui } from '@lingui/react'
 import wordmark from './images/canada-wordmark.svg'
-import { Box, Flex, Image, List, ListItem } from '@chakra-ui/react'
+import { Box, Flex, Image } from '@chakra-ui/react'
+import { Layout } from './Layout'
 
-export const Footer = (props) => {
+export const Footer = ({ children, ...props }) => {
   const { i18n } = useLingui()
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
   return (
-    <Flex
-      {...props}
-      py="4"
-      fontFamily="body"
+    <Layout
       borderTop="2px solid"
       borderTopColor="gray.300"
+      bg="gray.200"
+      {...props}
     >
-      <Flex
-        maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
-        mx="auto"
-        px={4}
-        w="100%"
-        align="center"
-        direction="row"
-      >
-        <List px={0} d="flex" align="center" direction="row">
-          {React.Children.map(props.children, (child) => (
-            <ListItem>{child}</ListItem>
-          ))}
-        </List>
+      <Flex py={4} align="center" direction="row" fontFamily="body">
+        {children}
         {!smallDevice && (
           <Box py={4} width={{ base: 147.2 }} ml="auto">
             <Image
@@ -43,13 +32,10 @@ export const Footer = (props) => {
           </Box>
         )}
       </Flex>
-    </Flex>
+    </Layout>
   )
 }
 
 Footer.propTypes = {
   children: PropTypes.any,
-  bg: PropTypes.string,
 }
-
-Footer.defaultProps = { bg: 'gray.200' }

@@ -239,30 +239,28 @@ export default function App() {
         <FloatingMenu />
 
         <Footer display={{ base: 'none', md: 'inline' }}>
-          <div>
-            <Link
-              isExternal={true}
-              href={
-                i18n.locale === 'en'
-                  ? 'https://www.canada.ca/en/transparency/privacy.html'
-                  : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-              }
-            >
-              <Trans>Privacy</Trans>
-            </Link>
+          <Link
+            isExternal={true}
+            href={
+              i18n.locale === 'en'
+                ? 'https://www.canada.ca/en/transparency/privacy.html'
+                : 'https://www.canada.ca/fr/transparence/confidentialite.html'
+            }
+          >
+            <Trans>Privacy</Trans>
+          </Link>
 
-            <Link href="/terms-and-conditions" ml={4}>
-              <Trans>Terms & conditions</Trans>
-            </Link>
+          <Link href="/terms-and-conditions" ml={4}>
+            <Trans>Terms & conditions</Trans>
+          </Link>
 
-            <Link
-              ml={4}
-              href={'https://github.com/canada-ca/tracker/issues'}
-              isExternal={true}
-            >
-              <Trans>Report an Issue</Trans>
-            </Link>
-          </div>
+          <Link
+            ml={4}
+            href={'https://github.com/canada-ca/tracker/issues'}
+            isExternal={true}
+          >
+            <Trans>Report an Issue</Trans>
+          </Link>
         </Footer>
       </Flex>
     </>
