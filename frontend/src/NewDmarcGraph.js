@@ -16,7 +16,7 @@ import theme from './theme/canada'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Box, Stack } from '@chakra-ui/core'
+import { Stack } from '@chakra-ui/core'
 
 const { strong, moderate, moderateAlt, weak, gray } = theme.colors
 const textColour = gray['900']
@@ -39,6 +39,11 @@ const percentageKeys = [
 ]
 const getDate = (d) => d.date
 let tooltipTimeout
+
+const ordinalColorScale = scaleOrdinal({
+  domain: ['Pass', 'Fail DKIM', 'Fail SPF', 'Fail'],
+  range: [strong, moderate, moderateAlt, weak],
+})
 
 export function NewDmarcGraph({ ...props }) {
   const { i18n } = useLingui()
@@ -247,7 +252,7 @@ function VerticalGraph({
       <div
         style={{
           position: 'absolute',
-          top: margin.top / 2 - 10,
+          bottom: margin.bottom / 2 + 40,
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
@@ -255,7 +260,7 @@ function VerticalGraph({
         }}
       >
         <LegendOrdinal
-          scale={colorScale}
+          scale={ordinalColorScale}
           direction="row"
           labelMargin="0 15px 0 0"
         />
@@ -268,16 +273,16 @@ function VerticalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          <div style={{ color: colorScale(tooltipData.key) }}>
-            <strong>{tooltipData.key}</strong>
-          </div>
-          <div>
-            {tooltipData.bar.data[tooltipData.key]}
-            {}
-          </div>
+          {console.log(tooltipData)}
           <div>
             <small>{getDate(tooltipData.bar.data)}</small>
           </div>
+          <Stack isInline>
+            <div style={{ color: colorScale(tooltipData.key) }}>
+              <strong>{tooltipData.key}: </strong>
+            </div>
+            <div>{tooltipData.bar.data[tooltipData.key]}</div>
+          </Stack>
         </TooltipInPortal>
       )}
     </div>
@@ -339,24 +344,6 @@ function HorizontalGraph({
 
   return width < 10 ? null : (
     <div>
-      <div
-        style={{
-          position: 'absolute',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignContent: 'center',
-          fontSize: '14px',
-        }}
-      >
-        <Box justify="center">
-          <LegendOrdinal
-            scale={colorScale}
-            direction="row"
-            labelMargin="0 15px 0 0"
-          />
-        </Box>
-      </div>
       <svg ref={containerRef} width={width} height={height}>
         <rect width={width} height={height} fill={background} rx={14} />
         <Grid
@@ -440,33 +427,23 @@ function HorizontalGraph({
           />
         </Group>
       </svg>
-      {/* <div
+      <div
         style={{
           position: 'absolute',
-          top: margin.top / 2 - 10,
+          bottom: margin.bottom / 2 + 51,
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
+          left: margin.left / 2 - 17,
           fontSize: '14px',
         }}
       >
         <LegendOrdinal
-          scale={colorScale}
+          scale={ordinalColorScale}
           direction="row"
           labelMargin="0 15px 0 0"
         />
-      </div> */}
-      {/* {tooltipOpen && tooltipData && (
-        <Tooltip top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
-          <div style={{ color: colorScale(tooltipData.key) }}>
-            <strong>{tooltipData.key}</strong>
-          </div>
-          <div>{tooltipData.bar.data[tooltipData.key]}℉</div>
-          <div>
-            <small>{formatDate(getDate(tooltipData.bar.data))}</small>
-          </div>
-        </Tooltip>
-      )} */}
+      </div>
       {tooltipOpen && tooltipData && (
         <TooltipInPortal
           key={Math.random()} // update tooltip bounds each render
@@ -474,13 +451,16 @@ function HorizontalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          <div style={{ color: colorScale(tooltipData.key) }}>
-            <strong>{tooltipData.key}</strong>
-          </div>
-          <div>{tooltipData.bar.data[tooltipData.key]}</div>
+          {console.log(tooltipData)}
           <div>
             <small>{getDate(tooltipData.bar.data)}</small>
           </div>
+          <Stack isInline>
+            <div style={{ color: colorScale(tooltipData.key) }}>
+              <strong>{tooltipData.key}: </strong>
+            </div>{' '}
+            <div>{tooltipData.bar.data[tooltipData.key]}</div>
+          </Stack>
         </TooltipInPortal>
       )}
     </div>
