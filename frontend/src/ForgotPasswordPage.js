@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="4" mx="auto" overflow="hidden" w={['100%', '60%']}>
+    <Box px="4" mx="auto" overflow="hidden" w={{ base: '100%', md: '60%' }}>
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}

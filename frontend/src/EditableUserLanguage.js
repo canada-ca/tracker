@@ -95,7 +95,7 @@ function EditableUserLanguage({ currentLang }) {
                 id="lang"
                 component={Select}
                 {...getFieldProps('lang')}
-                w={['40%', '57%']}
+                w="57%"
               >
                 <option value="ENGLISH">English</option>
                 <option value="FRENCH">Français</option>

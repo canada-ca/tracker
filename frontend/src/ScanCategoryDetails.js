@@ -117,7 +117,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         {cipherList.length > 0 ? (
           cipherList.map((cipher, id) => {
             return (
-              <Text key={id} isTruncated fontSize={['sm', 'md']}>
+              <Text key={id} isTruncated fontSize={{ base: 'sm', md: 'md' }}>
                 {cipher}
               </Text>
             )
@@ -202,7 +202,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
       <Button
         variant="primary"
         onClick={handleShowCategory}
-        w={['100%', '25%']}
+        w={{ base: '100%', md: '25%' }}
         mb="4"
       >
         <Heading as="h2" size="md">

@@ -135,7 +135,7 @@ function EditableUserTFAMethod({
                 id="tfaMethod"
                 component={Select}
                 {...getFieldProps('tfaMethod')}
-                w={['40%', '57%']}
+                w="57%"
               >
                 <option value="NONE">{t`None`}</option>
                 {emailValidated && <option value="EMAIL">{t`Email`}</option>}

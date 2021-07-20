@@ -93,7 +93,7 @@ export default function OrganizationDetails() {
           fontSize="2xl"
           aria-label="back to organizations"
         />
-        <Heading as="h1" textAlign={['center', 'left']}>
+        <Heading as="h1" textAlign={{ base: 'center', md: 'left' }}>
           {orgName}
         </Heading>
         {data?.organization?.verified && (

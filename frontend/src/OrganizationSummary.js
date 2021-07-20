@@ -14,7 +14,7 @@ export function OrganizationSummary({
 }) {
   return (
     <Layout>
-      <Stack fontSize="xl" align={['center', 'flex-start']}>
+      <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }}>
         <Stack isInline align="center">
           <Text>
             <Trans>Based in:</Trans>
