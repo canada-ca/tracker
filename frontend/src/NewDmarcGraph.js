@@ -236,6 +236,16 @@ function VerticalGraph({
               )
             }
           </BarStack>
+          <AxisLeft
+            scale={messageScale}
+            stroke={textColour}
+            tickStroke={textColour}
+            tickLabelProps={() => ({
+              fill: textColour,
+              fontSize: 11,
+              textAnchor: 'end',
+            })}
+          />
         </Group>
         <AxisBottom
           top={yMax + margin.top}
@@ -252,7 +262,7 @@ function VerticalGraph({
       <div
         style={{
           position: 'absolute',
-          bottom: margin.bottom / 2 + 40,
+          top: margin.top / 2 - 10,
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
@@ -273,7 +283,7 @@ function VerticalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          {console.log(tooltipData)}
+          {/* {console.log(tooltipData)} */}
           <div>
             <small>{getDate(tooltipData.bar.data)}</small>
           </div>
@@ -344,6 +354,23 @@ function HorizontalGraph({
 
   return width < 10 ? null : (
     <div>
+      <div
+        style={{
+          position: 'absolute',
+          // bottom: margin.bottom / 2 + 51,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          left: margin.left / 2 - 17,
+          fontSize: '14px',
+        }}
+      >
+        <LegendOrdinal
+          scale={ordinalColorScale}
+          direction="row"
+          labelMargin="0 15px 0 0"
+        />
+      </div>
       <svg ref={containerRef} width={width} height={height}>
         <rect width={width} height={height} fill={background} rx={14} />
         <Grid
@@ -427,23 +454,7 @@ function HorizontalGraph({
           />
         </Group>
       </svg>
-      <div
-        style={{
-          position: 'absolute',
-          bottom: margin.bottom / 2 + 51,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          left: margin.left / 2 - 17,
-          fontSize: '14px',
-        }}
-      >
-        <LegendOrdinal
-          scale={ordinalColorScale}
-          direction="row"
-          labelMargin="0 15px 0 0"
-        />
-      </div>
+
       {tooltipOpen && tooltipData && (
         <TooltipInPortal
           key={Math.random()} // update tooltip bounds each render
@@ -451,14 +462,14 @@ function HorizontalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          {console.log(tooltipData)}
+          {/* {console.log(tooltipData)} */}
           <div>
             <small>{getDate(tooltipData.bar.data)}</small>
           </div>
           <Stack isInline>
             <div style={{ color: colorScale(tooltipData.key) }}>
               <strong>{tooltipData.key}: </strong>
-            </div>{' '}
+            </div>
             <div>{tooltipData.bar.data[tooltipData.key]}</div>
           </Stack>
         </TooltipInPortal>
