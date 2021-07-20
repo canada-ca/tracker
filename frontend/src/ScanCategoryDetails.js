@@ -23,7 +23,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
 
   const tagDetails =
     categoryName === 'dkim' ? (
-      categoryData.results.edges ? (
+      categoryData?.results?.edges ? (
         categoryData.results.edges.map(({ node }, idx) => {
           return (
             <GuidanceTagList
@@ -36,7 +36,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
           )
         })
       ) : (
-        categoryData.results.map((result, idx) => {
+        categoryData?.results?.map((result, idx) => {
           return (
             <GuidanceTagList
               negativeTags={result.negativeGuidanceTags}
