@@ -152,6 +152,7 @@ export default function DmarcByDomainPage() {
       passSpfOnlyPercentage,
       passDkimOnlyPercentage,
       failPercentage,
+      i18n,
     ],
   )
 
