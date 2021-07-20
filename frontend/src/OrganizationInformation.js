@@ -3,8 +3,10 @@ import {
   Box,
   Button,
   Collapse,
+  Flex,
   Grid,
   Heading,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,7 +18,6 @@ import {
   Text,
   useDisclosure,
   useToast,
-  VisuallyHidden,
 } from '@chakra-ui/react'
 import { CheckCircleIcon, MinusIcon, EditIcon } from '@chakra-ui/icons'
 import { func, string } from 'prop-types'
@@ -211,7 +212,7 @@ export default function OrganizationInformation({
   return (
     <>
       <Box {...props}>
-        <Stack isInline align="center" mb="1em" flexWrap="wrap">
+        <Flex align="center" mb="1em" flexWrap="wrap">
           <Stack
             isInline
             align="center"
@@ -224,39 +225,34 @@ export default function OrganizationInformation({
             <Heading as="h1">
               {org.name}{' '}
               {org.verified && (
-                <CheckCircleIcon color="blue.500" size="icons.md" />
+                <CheckCircleIcon color="blue.500" boxSize="icons.md" />
               )}
             </Heading>
           </Stack>
 
-          <Stack flexGrow={{ base: '1', md: '0' }} isInline>
-            <Button
+          <Flex w={{ base: '100%', md: 'auto' }}>
+            <IconButton
               variant="danger"
               ref={removeOrgBtnRef}
               onClick={onRemovalOpen}
               p={2}
               m={0}
               w={{ base: '45%', md: 'auto' }}
-            >
-              <MinusIcon />
-              <VisuallyHidden>
-                <Trans>Remove Organization</Trans>
-              </VisuallyHidden>
-            </Button>
-            <Button
+              aria-label={t`Remove Organization`}
+              icon={<MinusIcon />}
+            />
+            <IconButton
               variant="primary"
               p={2}
               m={0}
+              ml={{ base: 'auto', md: 2 }}
               onClick={() => setIsEditingOrg(!isEditingOrg)}
               w={{ base: '45%', md: 'auto' }}
-            >
-              <EditIcon />
-              <VisuallyHidden>
-                <Trans>Edit Organization</Trans>
-              </VisuallyHidden>
-            </Button>
-          </Stack>
-        </Stack>
+              aria-label={t`Edit Organization`}
+              icon={<EditIcon />}
+            />
+          </Flex>
+        </Flex>
 
         <Collapse in={isEditingOrg}>
           <Formik

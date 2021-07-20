@@ -5,6 +5,8 @@ import {
   Box,
   Button,
   Divider,
+  Flex,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -157,53 +159,54 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       <Trans>Domain List</Trans>
     </LoadingMessage>
   ) : (
-    <Stack spacing={10} shouldWrapChildren width="100%" direction="row">
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text fontSize="lg" fontWeight="bold">
-            <Trans>No Domains</Trans>
-          </Text>
-        )}
-      >
-        {({ id: domainId, domain, lastRan, selectors }, index) => (
-          <Box key={'admindomain' + index}>
-            <Stack isInline align="center">
-              <Stack>
-                <Button
-                  data-testid={`edit-${index}`}
-                  variant="primary"
-                  px="2"
-                  onClick={() => {
-                    setEditingDomainUrl(domain)
-                    setEditingDomainId(domainId)
-                    setSelectorInputList(selectors)
-                    setMutation('update')
-                    updateOnOpen()
-                  }}
-                >
-                  <EditIcon />
-                </Button>
-                <Button
-                  data-testid={`remove-${index}`}
-                  onClick={() => {
-                    setSelectedRemoveDomainUrl(domain)
-                    setSelectedRemoveDomainId(domainId)
-                    removeOnOpen()
-                  }}
-                  variant="danger"
-                  px="2"
-                >
-                  <MinusIcon />
-                </Button>
-              </Stack>
-              <Domain url={domain} lastRan={lastRan} flexGrow={1} />
+    <ListOf
+      elements={nodes}
+      ifEmpty={() => (
+        <Text fontSize="lg" fontWeight="bold">
+          <Trans>No Domains</Trans>
+        </Text>
+      )}
+    >
+      {({ id: domainId, domain, lastRan, selectors }, index) => (
+        <Box key={'admindomain' + index}>
+          <Stack isInline align="center">
+            <Stack direction="row" flexGrow="0">
+              <IconButton
+                data-testid={`remove-${index}`}
+                onClick={() => {
+                  setSelectedRemoveDomainUrl(domain)
+                  setSelectedRemoveDomainId(domainId)
+                  removeOnOpen()
+                }}
+                variant="danger"
+                px="2"
+                icon={<MinusIcon />}
+              />
+              <IconButton
+                data-testid={`edit-${index}`}
+                variant="primary"
+                px="2"
+                onClick={() => {
+                  setEditingDomainUrl(domain)
+                  setEditingDomainId(domainId)
+                  setSelectorInputList(selectors)
+                  setMutation('update')
+                  updateOnOpen()
+                }}
+                icon={<EditIcon />}
+              />
             </Stack>
-            <Divider borderColor="gray.900" />
-          </Box>
-        )}
-      </ListOf>
-    </Stack>
+            <Domain
+              url={domain}
+              lastRan={lastRan}
+              flexGrow={1}
+              fontSize={{ base: '75%', sm: '100%' }}
+            />
+          </Stack>
+          <Divider borderColor="gray.900" />
+        </Box>
+      )}
+    </ListOf>
   )
 
   return (
@@ -218,8 +221,12 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           updateOnOpen()
         }}
       >
-        <Stack flexDirection={['column', 'row']} align="center" isInline>
-          <InputGroup width={['100%', '75%']} mb={['8px', '0']} mr={['0', '4']}>
+        <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
+          <InputGroup
+            width={{ base: '100%', md: '75%' }}
+            mb={{ base: '8px', md: '0' }}
+            mr={{ base: '0', md: '4' }}
+          >
             <InputLeftElement>
               <PlusSquareIcon color="gray.300" />
             </InputLeftElement>
@@ -231,14 +238,14 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           </InputGroup>
           <Button
             id="addDomainBtn"
-            width={['100%', '25%']}
+            width={{ base: '100%', md: '25%' }}
             variant="primary"
             type="submit"
           >
             <AddIcon mr={2} />
             <Trans>Add Domain</Trans>
           </Button>
-        </Stack>
+        </Flex>
       </form>
 
       {adminDomainList}
