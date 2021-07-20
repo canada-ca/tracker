@@ -2,13 +2,7 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
-import {
-  fireEvent,
-  render,
-  waitFor,
-  screen,
-  getByRole as specificGetByRole,
-} from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import Organizations from '../Organizations'
 import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
