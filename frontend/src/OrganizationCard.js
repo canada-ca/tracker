@@ -123,7 +123,7 @@ export function OrganizationCard({
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
-        {cardType?.displayName !== 'Link' && (
+        {cardType?.displayName === 'Flex' && (
           <Button
             variant="primary"
             as={RouteLink}
