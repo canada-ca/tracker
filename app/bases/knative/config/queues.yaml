@@ -10,7 +10,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -19,11 +19,9 @@ spec:
     spec:
       timeoutSeconds: 500
       containers:
-        - name: scan-queue
-          image: gcr.io/track-compliance/services/queues/scan:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:scan-queue"}
-
+      - name: scan-queue
+        image: gcr.io/track-compliance/services/queues/scan:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:scan-queue"}
 ---
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -36,7 +34,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -45,11 +43,9 @@ spec:
     spec:
       timeoutSeconds: 500
       containers:
-        - name: result-queue
-          image: gcr.io/track-compliance/services/queues/result:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:result-queue"}
-
+      - name: result-queue
+        image: gcr.io/track-compliance/services/queues/result:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:result-queue"}
 ---
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -62,7 +58,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -71,22 +67,20 @@ spec:
     spec:
       timeoutSeconds: 500
       containers:
-        - name: ots-scan-queue
-          image: gcr.io/track-compliance/services/queues/ots-scan:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-scan-queue"}
-          env:
-          - name: PUBSUB_HOST
-            valueFrom:
-              secretKeyRef:
-                name: scanners
-                key: REDIS_HOST
-          - name: PUBSUB_PORT
-            valueFrom:
-              secretKeyRef:
-                name: scanners
-                key: REDIS_PORT
-
+      - name: ots-scan-queue
+        image: gcr.io/track-compliance/services/queues/ots-scan:master-3f364fa-1626718261 # {"$imagepolicy": "flux-system:ots-scan-queue"}
+        env:
+        - name: PUBSUB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_HOST
+        - name: PUBSUB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_PORT
 ---
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -99,7 +93,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
+        prometheus.io/port: '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -108,16 +102,16 @@ spec:
     spec:
       timeoutSeconds: 500
       containers:
-        - name: ots-result-queue
-          image: gcr.io/track-compliance/services/queues/ots-result:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:ots-result-queue"}
-          env:
-          - name: PUBSUB_HOST
-            valueFrom:
-              secretKeyRef:
-                name: scanners
-                key: REDIS_HOST
-          - name: PUBSUB_PORT
-            valueFrom:
-              secretKeyRef:
-                name: scanners
-                key: REDIS_PORT
+      - name: ots-result-queue
+        image: gcr.io/track-compliance/services/queues/ots-result:master-3f364fa-1626718264 # {"$imagepolicy": "flux-system:ots-result-queue"}
+        env:
+        - name: PUBSUB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_HOST
+        - name: PUBSUB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: scanners
+              key: REDIS_PORT
