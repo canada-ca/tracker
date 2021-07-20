@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Layout } from './Layout'
 import { ListOf } from './ListOf'
 import {
   Box,
@@ -110,7 +109,7 @@ export default function DomainsPage() {
   )
 
   return (
-    <Layout>
+    <Box w="100%" px={4}>
       <Stack direction="row" justify="space-between" mb="4">
         <Heading as="h1" textAlign="left">
           <Trans>Domains</Trans>
@@ -252,6 +251,6 @@ export default function DomainsPage() {
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Layout>
+    </Box>
   )
 }
