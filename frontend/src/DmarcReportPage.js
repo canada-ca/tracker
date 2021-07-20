@@ -166,34 +166,17 @@ export default function DmarcReportPage() {
   // Set graph display using data if data exists
   else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
-      strong: [
-        {
-          totalName: 'fullPass',
-          percentageName: 'fullPassPercentage',
-          displayName: t`Pass`,
-        },
-      ],
-      moderate: [
-        {
-          totalName: 'passSpfOnly',
-          percentageName: 'passSpfOnlyPercentage',
-          displayName: t`Fail DKIM`,
-        },
-      ],
-      moderateAlt: [
-        {
-          totalName: 'passDkimOnly',
-          percentageName: 'passDkimOnlyPercentage',
-          displayName: t`Fail SPF`,
-        },
-      ],
-      weak: [
-        {
-          totalName: 'fail',
-          percentageName: 'failPercentage',
-          displayName: t`Fail`,
-        },
-      ],
+      fullPass: t`Pass`,
+      fullPassPercentage: t`Pass`,
+
+      passSpfOnly: t`Fail DKIM`,
+      passSpfOnlyPercentage: t`Fail DKIM`,
+
+      passDkimOnly: t`Fail SPF`,
+      passDkimOnlyPercentage: t`Fail SPF`,
+
+      fail: t`Fail`,
+      failPercentage: t`Fail`,
     }
 
     const formattedGraphData = {

@@ -4,19 +4,14 @@ import { Group } from '@visx/group'
 import { Grid } from '@visx/grid'
 import { AxisBottom, AxisLeft } from '@visx/axis'
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale'
-import {
-  // Tooltip,
-  useTooltip,
-  useTooltipInPortal,
-  defaultStyles,
-} from '@visx/tooltip'
+import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip'
 import { LegendOrdinal } from '@visx/legend'
 import { withScreenSize } from '@visx/responsive'
 import theme from './theme/canada'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Stack } from '@chakra-ui/core'
+import { Box, Stack, Text } from '@chakra-ui/core'
 
 const { strong, moderate, moderateAlt, weak, gray } = theme.colors
 const textColour = gray['900']
@@ -26,8 +21,10 @@ const defaultHorizontalMargin = { top: 40, left: 50, right: 40, bottom: 100 }
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
+  backgroundColor: 'white',
+  color: 'black',
+  borderColor: 'black',
+  borderWidth: '1px',
 }
 
 const totalKeys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
@@ -44,6 +41,10 @@ const ordinalColorScale = scaleOrdinal({
   domain: ['Pass', 'Fail DKIM', 'Fail SPF', 'Fail'],
   range: [strong, moderate, moderateAlt, weak],
 })
+
+function formatLargeInt(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
 
 export function NewDmarcGraph({ ...props }) {
   const { i18n } = useLingui()
@@ -283,16 +284,30 @@ function VerticalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          {/* {console.log(tooltipData)} */}
-          <div>
-            <small>{getDate(tooltipData.bar.data)}</small>
-          </div>
-          <Stack isInline>
-            <div style={{ color: colorScale(tooltipData.key) }}>
-              <strong>{tooltipData.key}: </strong>
-            </div>
-            <div>{tooltipData.bar.data[tooltipData.key]}</div>
-          </Stack>
+          <Box mb="1">
+            <Text fontWeight="bold">{getDate(tooltipData.bar.data)}</Text>
+          </Box>
+          {keys.map((label, idx) => {
+            return (
+              <Stack
+                mb="1"
+                key={idx}
+                isInline
+                align="center"
+                justifyContent="space-between"
+              >
+                <Box color={colorScale(label)}>
+                  <Text fontWeight="bold">{strengths[label]}:</Text>
+                </Box>
+                <Box>
+                  <Text>
+                    {formatLargeInt(tooltipData.bar.data[label])}
+                    {keys[0] === percentageKeys[0] && <>%</>}
+                  </Text>
+                </Box>
+              </Stack>
+            )
+          })}
         </TooltipInPortal>
       )}
     </div>
@@ -462,16 +477,30 @@ function HorizontalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          {/* {console.log(tooltipData)} */}
-          <div>
-            <small>{getDate(tooltipData.bar.data)}</small>
-          </div>
-          <Stack isInline>
-            <div style={{ color: colorScale(tooltipData.key) }}>
-              <strong>{tooltipData.key}: </strong>
-            </div>
-            <div>{tooltipData.bar.data[tooltipData.key]}</div>
-          </Stack>
+          <Box mb="1">
+            <Text fontWeight="bold">{getDate(tooltipData.bar.data)}</Text>
+          </Box>
+          {keys.map((label, idx) => {
+            return (
+              <Stack
+                mb="1"
+                key={idx}
+                isInline
+                align="center"
+                justifyContent="space-between"
+              >
+                <Box color={colorScale(label)}>
+                  <Text fontWeight="bold">{strengths[label]}:</Text>
+                </Box>
+                <Box>
+                  <Text>
+                    {formatLargeInt(tooltipData.bar.data[label])}
+                    {keys[0] === percentageKeys[0] && <>%</>}
+                  </Text>
+                </Box>
+              </Stack>
+            )
+          })}
         </TooltipInPortal>
       )}
     </div>
