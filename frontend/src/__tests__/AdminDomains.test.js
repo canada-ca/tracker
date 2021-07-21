@@ -19,6 +19,7 @@ import {
   rawOrgDomainListDataEmpty,
 } from '../fixtures/orgDomainListData'
 import { makeVar } from '@apollo/client'
+import userEvent from '@testing-library/user-event'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -141,7 +142,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText } = render(
+      const { getByText, findByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -165,16 +166,15 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => {
-        const addDomain = getByText(/Add Domain/i)
-        fireEvent.click(addDomain)
-      })
+      const addDomain = await findByText(/Add Domain/i)
+      fireEvent.click(addDomain)
 
-      await waitFor(() => {
-        expect(getByText(/Add Domain Details/)).toBeInTheDocument()
-        const confirmBtn = getByText(/Confirm/)
-        fireEvent.click(confirmBtn)
-      })
+      await waitFor(() =>
+        expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
+      )
+
+      const confirmBtn = getByText(/Confirm/)
+      fireEvent.click(confirmBtn)
 
       await waitFor(() => {
         const error = getByText(/Domain url field must not be empty/i)
@@ -197,7 +197,7 @@ describe('<AdminDomains />', () => {
             variables: {
               first: 4,
               orgSlug: 'test-org.slug',
-              search: 'random text dot com',
+              search: 'test-domain.gc.ca',
             },
           },
           result: { data: rawOrgDomainListData },
@@ -206,7 +206,7 @@ describe('<AdminDomains />', () => {
           request: {
             query: CREATE_DOMAIN,
             variables: {
-              orgId: 'gwdsfgvwsdgfvswefgdv',
+              orgId: 'testid=',
               domain: 'test-domain.gc.ca',
               selectors: [],
             },
@@ -226,7 +226,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByPlaceholderText } = render(
+      const { getByText, getByRole, findByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -250,26 +250,25 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => {
-        const domainInput = getByPlaceholderText('Domain URL')
-        fireEvent.change(domainInput, {
-          target: {
-            value: 'random text dot com',
-          },
-        })
-        const addDomain = getByText(/Add Domain/i)
-        fireEvent.click(addDomain)
+      const domainUrlInput = await findByRole('textbox', {
+        name: 'Domain URL',
       })
 
-      await waitFor(() => {
-        expect(getByText(/Add Domain Details/)).toBeInTheDocument()
-        const confirmBtn = getByText(/Confirm/)
-        fireEvent.click(confirmBtn)
-      })
+      userEvent.type(domainUrlInput, 'test-domain.gc.ca')
 
-      // await waitFor(() => {
-      //   expect(getByText(/Unable to create new domain./i)).toBeInTheDocument()
-      // })
+      const addDomainButton = getByRole('button', { name: 'Add Domain' })
+      userEvent.click(addDomainButton)
+
+      await waitFor(() =>
+        expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
+      )
+
+      const confirmButton = getByRole('button', { name: /Confirm/ })
+      userEvent.click(confirmButton)
+
+      await waitFor(() =>
+        expect(getByText(/Unable to create new domain./i)).toBeVisible(),
+      )
     })
 
     it('returns a success when valid URL is given', async () => {
@@ -318,8 +317,8 @@ describe('<AdminDomains />', () => {
       const {
         getByText,
         getByPlaceholderText,
+        findByText,
         queryByText,
-        queryAllByText,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -344,9 +343,7 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => {
-        expect(queryByText(/Add Domain/)).toBeInTheDocument()
-      })
+      const addDomainButton = await findByText(/Add Domain/)
 
       const domainInput = getByPlaceholderText('Domain URL')
       fireEvent.change(domainInput, {
@@ -355,18 +352,16 @@ describe('<AdminDomains />', () => {
         },
       })
 
-      await waitFor(() => {
-        const addDomain = getByText(/Add Domain/)
-        fireEvent.click(addDomain)
-      })
+      userEvent.click(addDomainButton)
 
       const confirmBtn = getByText(/Confirm/)
       fireEvent.click(confirmBtn)
 
-      await waitFor(() => {
-        const successMessages = queryAllByText(/Domain added/i)
-        expect(successMessages[0]).toBeInTheDocument()
-      })
+      await waitFor(() => expect(getByText(/Domain added/i)).toBeVisible())
+
+      await waitFor(() =>
+        expect(queryByText('Add Domain Details')).not.toBeInTheDocument(),
+      )
     })
 
     it('succeeds when DKIM selectors are added', async () => {
@@ -404,10 +399,11 @@ describe('<AdminDomains />', () => {
       const {
         getByText,
         getByLabelText,
-        queryByText,
         getByTestId,
         getByPlaceholderText,
         queryAllByText,
+        findByText,
+        queryByText,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -432,16 +428,12 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => {
-        expect(queryByText(/Add Domain/)).toBeInTheDocument()
-      })
+      const addDomainBtn = await findByText(/Add Domain/)
+      userEvent.click(addDomainBtn)
 
-      const addDomainBtn = getByText(/Add Domain/)
-      fireEvent.click(addDomainBtn)
-
-      await waitFor(() => {
-        expect(queryByText(/Add Domain Details/)).toBeInTheDocument()
-      })
+      await waitFor(() =>
+        expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
+      )
 
       const domainInput = getByLabelText(/Domain URL:/)
       fireEvent.change(domainInput, { target: { value: 'test.domain.gc.ca' } })
@@ -449,18 +441,18 @@ describe('<AdminDomains />', () => {
       const addSelectorBtn = getByTestId(/add-dkim-selector/)
       fireEvent.click(addSelectorBtn)
 
-      await waitFor(() => {
-        expect(queryByText(/Selector cannot be empty/)).toBeInTheDocument()
-      })
+      await waitFor(() =>
+        expect(getByText(/Selector cannot be empty/)).toBeInTheDocument(),
+      )
 
       const selectorInput = getByPlaceholderText(/DKIM Selector/)
       fireEvent.change(selectorInput, { target: { value: 'selector1' } })
 
-      await waitFor(() => {
+      await waitFor(() =>
         expect(
-          queryByText(/Selector must be string ending in '._domainkey'/),
-        ).toBeInTheDocument()
-      })
+          getByText(/Selector must be string ending in '._domainkey'/),
+        ).toBeInTheDocument(),
+      )
 
       fireEvent.change(selectorInput, {
         target: { value: 'selector1._domainkey' },
@@ -471,8 +463,12 @@ describe('<AdminDomains />', () => {
 
       await waitFor(() => {
         const successMessages = queryAllByText(/Domain added/i)
-        expect(successMessages[0]).toBeInTheDocument()
+        expect(successMessages[0]).toBeVisible()
       })
+
+      await waitFor(() =>
+        expect(queryByText('Add Domain Details')).not.toBeInTheDocument(),
+      )
     })
   })
 
@@ -506,7 +502,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByTestId, queryByText, queryAllByText } = render(
+      const { getByText, findByTestId, queryAllByText, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -530,11 +526,9 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => {
-        expect(queryByText(/Add Domain/)).toBeInTheDocument()
-      })
+      await waitFor(() => expect(getByText(/Add Domain/)).toBeInTheDocument())
 
-      const removeDomain = getByTestId('remove-1')
+      const removeDomain = await findByTestId('remove-1')
       fireEvent.click(removeDomain)
 
       await waitFor(() => {
@@ -544,10 +538,15 @@ describe('<AdminDomains />', () => {
 
       const confirm = getByText('Confirm')
       fireEvent.click(confirm)
+
       await waitFor(() => {
         const removed = queryAllByText(/Domain removed/i)
-        expect(removed[0]).toBeInTheDocument()
+        expect(removed[0]).toBeVisible()
       })
+
+      await waitFor(() =>
+        expect(queryByText('Remove Domain')).not.toBeInTheDocument(),
+      )
     })
   })
 
@@ -569,6 +568,7 @@ describe('<AdminDomains />', () => {
               domainId: 'testid2=',
               orgId: 'testid=',
               domain: 'test.domain.ca',
+              selectors: [],
             },
           },
           result: {
@@ -585,7 +585,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByLabelText, getByTestId } = render(
+      const { getByText, findByTestId, getByLabelText, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -609,12 +609,12 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => {
-        const editDomain = getByTestId('edit-1')
-        fireEvent.click(editDomain)
-        const editText = getByText(/Edit Domain Details/i)
-        expect(editText).toBeInTheDocument()
-      })
+      const editDomainButton = await findByTestId('edit-1')
+      userEvent.click(editDomainButton)
+
+      await waitFor(() =>
+        expect(getByText(/Edit Domain Details/i)).toBeInTheDocument(),
+      )
 
       const editDomainInput = getByLabelText(/Domain URL:/)
       fireEvent.change(editDomainInput, {
@@ -626,9 +626,11 @@ describe('<AdminDomains />', () => {
       const confirm = getByText('Confirm')
       fireEvent.click(confirm)
 
-      // await waitFor(() => {
-      //   expect(queryByText(/An error occured./)).toBeInTheDocument()
-      // })
+      await waitFor(() => expect(getByText(/Domain updated/)).toBeVisible())
+
+      await waitFor(() =>
+        expect(queryByText('Edit Domain Details')).not.toBeInTheDocument(),
+      )
     })
   })
 })

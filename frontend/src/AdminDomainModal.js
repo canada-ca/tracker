@@ -194,15 +194,14 @@ export function AdminDomainModal({
                         }
                       >
                         <FormLabel htmlFor="domainUrl" fontWeight="bold">
-                          <Trans>Domain URL:</Trans>
+                          <Trans>New Domain URL:</Trans>
                         </FormLabel>
 
                         <Input
                           mb="2"
                           {...field}
-                          aria-label="new-domain-url"
                           id="domainUrl"
-                          placeholder={t`Domain URL`}
+                          placeholder={t`New Domain URL`}
                           ref={initialFocusRef}
                         />
                         <FormErrorMessage>
