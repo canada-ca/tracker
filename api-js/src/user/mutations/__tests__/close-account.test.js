@@ -2996,7 +2996,7 @@ describe('given the closeAccount mutation', () => {
                   result: {
                     code: 400,
                     description:
-                      'Permission error: Unable to close other users account.',
+                      "Permission error: Unable to close other user's account.",
                   },
                 },
               },
