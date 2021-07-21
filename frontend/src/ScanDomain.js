@@ -4,12 +4,12 @@ import { i18n } from '@lingui/core'
 import { Formik } from 'formik'
 import {
   Box,
+  Button,
   Collapse,
   Divider,
   Flex,
   Heading,
   Icon,
-  PseudoBox,
   Spinner,
   Stack,
   Tab,
@@ -19,8 +19,7 @@ import {
   Tabs,
   Text,
   useToast,
-} from '@chakra-ui/core'
-import { Box, Button, Text, useToast } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 import { REQUEST_SCAN } from './graphql/mutations'
 import { useMutation, useQuery } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
