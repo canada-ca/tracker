@@ -6,8 +6,7 @@ import { closeAccountUnion } from '../unions'
 
 export const closeAccount = new mutationWithClientMutationId({
   name: 'CloseAccount',
-  description:
-    'This mutation allows a user to close their account, or a super admin to close another users account.',
+  description: `This mutation allows a user to close their account, or a super admin to close another user's account.`,
   inputFields: () => ({
     userId: {
       type: GraphQLID,
@@ -52,7 +51,7 @@ export const closeAccount = new mutationWithClientMutationId({
           _type: 'error',
           code: 400,
           description: i18n._(
-            t`Permission error: Unable to close other users account.`,
+            t`Permission error: Unable to close other user's account.`,
           ),
         }
       }
