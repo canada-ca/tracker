@@ -8,10 +8,9 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip'
 import { LegendOrdinal } from '@visx/legend'
 import { withScreenSize } from '@visx/responsive'
 import theme from './theme/canada'
-import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Box, Stack, Text } from '@chakra-ui/core'
+import { Box, Flex, Select, Stack, Text } from '@chakra-ui/core'
 
 const { strong, moderate, moderateAlt, weak, gray } = theme.colors
 const textColour = gray['900']
@@ -21,10 +20,11 @@ const defaultHorizontalMargin = { top: 40, left: 50, right: 40, bottom: 100 }
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'white',
+  backgroundColor: gray['100'],
   color: 'black',
   borderColor: 'black',
   borderWidth: '1px',
+  fontSize: '1.1rem',
 }
 
 const totalKeys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
@@ -38,7 +38,7 @@ const getDate = (d) => d.date
 let tooltipTimeout
 
 const ordinalColorScale = scaleOrdinal({
-  domain: ['Pass', 'Fail DKIM', 'Fail SPF', 'Fail'],
+  domain: [t`Pass`, t`Fail DKIM`, t`Fail SPF`, t`Fail`],
   range: [strong, moderate, moderateAlt, weak],
 })
 
@@ -83,31 +83,33 @@ export function NewDmarcGraph({ ...props }) {
   const ResponsiveVerticalGraph = withScreenSize(VerticalGraph)
 
   return (
-    <Stack w="100%" align={['center', 'flex-start']}>
-      <Stack isInline align="center" spacing="4">
-        <TrackerButton
-          variant="primary"
-          onClick={() => setIsHorizontal(!isHorizontal)}
-          mb="4"
-        >
-          {isHorizontal ? (
-            <Trans>Vertical View</Trans>
-          ) : (
-            <Trans>Horizontal View</Trans>
-          )}
-        </TrackerButton>
-        <TrackerButton
-          variant="primary"
-          onClick={() => setIsNormailsed(!isNormalised)}
-          mb="4"
-        >
-          {isNormalised ? (
-            <Trans>Total Messages</Trans>
-          ) : (
-            <Trans>Percentages</Trans>
-          )}
-        </TrackerButton>
-      </Stack>
+    <Stack w="100%" align={{ base: 'center', md: 'flex-start' }}>
+      <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
+        <Stack isInline align="center" mr={{ base: '0', md: '4' }}>
+          <Text fontSize="lg" fontWeight="bold" textAlign="center">
+            <Trans>Graph:</Trans>
+          </Text>
+          <Select
+            variant="filled"
+            onChange={() => setIsHorizontal(!isHorizontal)}
+          >
+            <option>{t`Vertical View`}</option>
+            <option>{t`Horizontal View`}</option>
+          </Select>
+        </Stack>
+        <Stack isInline align="center">
+          <Text fontSize="lg" fontWeight="bold" textAlign="center">
+            <Trans>Data:</Trans>
+          </Text>
+          <Select
+            variant="filled"
+            onChange={() => setIsNormailsed(!isNormalised)}
+          >
+            <option>{t`Total Messages`}</option>
+            <option>{t`Percentages`}</option>
+          </Select>
+        </Stack>
+      </Flex>
       {isHorizontal ? (
         <ResponsiveHorizontalGraph data={data} keys={keys} />
       ) : (
@@ -284,13 +286,13 @@ function VerticalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          <Box mb="1">
+          <Box mb="2">
             <Text fontWeight="bold">{getDate(tooltipData.bar.data)}</Text>
           </Box>
           {keys.map((label, idx) => {
             return (
               <Stack
-                mb="1"
+                mb="2"
                 key={idx}
                 isInline
                 align="center"
@@ -299,7 +301,7 @@ function VerticalGraph({
                 <Box color={colorScale(label)}>
                   <Text fontWeight="bold">{strengths[label]}:</Text>
                 </Box>
-                <Box>
+                <Box color={colorScale(label)}>
                   <Text>
                     {formatLargeInt(tooltipData.bar.data[label])}
                     {keys[0] === percentageKeys[0] && <>%</>}
@@ -477,13 +479,13 @@ function HorizontalGraph({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          <Box mb="1">
+          <Box mb="2">
             <Text fontWeight="bold">{getDate(tooltipData.bar.data)}</Text>
           </Box>
           {keys.map((label, idx) => {
             return (
               <Stack
-                mb="1"
+                mb="2"
                 key={idx}
                 isInline
                 align="center"
@@ -492,7 +494,7 @@ function HorizontalGraph({
                 <Box color={colorScale(label)}>
                   <Text fontWeight="bold">{strengths[label]}:</Text>
                 </Box>
-                <Box>
+                <Box color={colorScale(label)}>
                   <Text>
                     {formatLargeInt(tooltipData.bar.data[label])}
                     {keys[0] === percentageKeys[0] && <>%</>}

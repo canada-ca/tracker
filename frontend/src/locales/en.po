@@ -922,11 +922,13 @@ msgstr "Envelope From"
 
 #: src/DmarcReportPage.js:241
 #: src/fixtures/summaryListData.js:171
+#: src/NewDmarcGraph.js:41
 msgid "Fail"
 msgstr "Fail"
 
 #: src/DmarcReportPage.js:229
 #: src/fixtures/summaryListData.js:161
+#: src/NewDmarcGraph.js:41
 msgid "Fail DKIM"
 msgstr "Fail DKIM"
 
@@ -936,6 +938,7 @@ msgstr "Fail DKIM %"
 
 #: src/DmarcReportPage.js:235
 #: src/fixtures/summaryListData.js:165
+#: src/NewDmarcGraph.js:41
 msgid "Fail SPF"
 msgstr "Fail SPF"
 
@@ -1779,6 +1782,7 @@ msgstr "Page {0} of {1}"
 
 #: src/DmarcReportPage.js:223
 #: src/fixtures/summaryListData.js:155
+#: src/NewDmarcGraph.js:41
 msgid "Pass"
 msgstr "Pass"
 
@@ -3069,3 +3073,26 @@ msgstr "Correct misconfigurations and update records as required; and"
 msgid "Rotate DKIM keys annually."
 msgstr "Rotate DKIM keys annually."
 
+#: src/NewDmarcGraph.js:90
+msgid "Graph:"
+msgstr "Graph:"
+
+#: src/NewDmarcGraph.js:96
+msgid "Vertical View"
+msgstr "Vertical View"
+
+#: src/NewDmarcGraph.js:97
+msgid "Horizontal View"
+msgstr "Horizontal View"
+
+#: src/NewDmarcGraph.js:102
+msgid "Data:"
+msgstr "Data:"
+
+#: src/NewDmarcGraph.js:109
+msgid "Percentages"
+msgstr "Percentages"
+
+#: src/NewDmarcGraph.js:
+msgid ""
+msgstr ""
