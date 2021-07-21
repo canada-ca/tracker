@@ -1,6 +1,6 @@
 import React from 'react'
 import { node } from 'prop-types'
-import { Flex } from '@chakra-ui/core'
+import { Flex } from '@chakra-ui/react'
 
 export const Main = ({ children }) => (
   <Flex
@@ -10,6 +10,7 @@ export const Main = ({ children }) => (
     fontFamily="body"
     flex="1 0 auto"
     mx="auto"
+    marginBottom={{ base: '64px', md: 'none' }}
     pt={10}
     width="100%"
     bg="gray.50"

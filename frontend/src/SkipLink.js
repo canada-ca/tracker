@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import PropTypes from 'prop-types'
-import { css, jsx } from '@emotion/core'
-import { Link } from '@chakra-ui/core'
+import { css, jsx } from '@emotion/react'
+import { Link } from '@chakra-ui/react'
 
 const makeInvisible = css`
   left: -999px;

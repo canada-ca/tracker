@@ -1,13 +1,15 @@
 import React from 'react'
 import {
   Box,
+  Button,
   Flex,
-  Icon,
   ListItem,
   Progress,
   Stack,
   Text,
-} from '@chakra-ui/core'
+  useBreakpointValue,
+} from '@chakra-ui/react'
+import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
@@ -22,7 +24,6 @@ export function OrganizationCard({
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
-  const smallDevice = window.matchMedia('(max-width: 500px)').matches
   let webValue = 0
   let mailValue = 0
   const webSummary =
@@ -48,15 +49,18 @@ export function OrganizationCard({
     mailValue = Math.floor(mailValue)
   }
 
+  // 'as' property does not accept responsive values, this works as a replacement
+  const cardType = useBreakpointValue({ base: Flex, md: RouteLink })
+
   return (
     <ListItem {...rest}>
       <Flex
         width="100%"
-        direction={{ base:'column', md: 'row'}}
+        direction={{ base: 'column', md: 'row' }}
         alignItems={{ base: 'flex-start', md: 'center' }}
-        _hover={{ bg: ['', 'gray.100'] }}
+        _hover={{ md: { bg: ['', 'gray.100'] } }}
         p="4"
-        as={!smallDevice ? RouteLink : ''}
+        as={cardType}
         to={`${path}/${slug}`}
       >
         <Box
@@ -65,22 +69,21 @@ export function OrganizationCard({
           mr={{ md: '1em' }}
           flexShrink={{ md: '0.5' }}
           minWidth={{ md: '6em' }}
+          maxWidth="100%"
         >
           <Stack isInline align="center">
             <Text
-              fontSize={['lg', 'md']}
+              fontSize="lg"
               fontWeight="semibold"
               textDecoration="underline"
               isTruncated
             >
               {name}
             </Text>
-            <Text fontSize={['lg', 'md']} fontWeight="semibold">
+            <Text fontSize="lg" fontWeight="semibold">
               ({acronym})
             </Text>
-            {verified && (
-              <Icon name="check-circle" color="blue.500" size="icons.sm" />
-            )}
+            {verified && <CheckCircleIcon color="blue.500" size="icons.sm" />}
           </Stack>
         </Box>
         <Box
@@ -120,6 +123,19 @@ export function OrganizationCard({
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
+        {cardType?.displayName === 'Flex' && (
+          <Button
+            variant="primary"
+            as={RouteLink}
+            to={`${path}/${slug}`}
+            w="100%"
+            mt={2}
+          >
+            <Text whiteSpace="noWrap">
+              <Trans>View Details</Trans>
+            </Text>
+          </Button>
+        )}
       </Flex>
     </ListItem>
   )

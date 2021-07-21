@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -15,7 +14,8 @@ import {
   Select,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { SearchIcon, ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from './graphql/queries'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -39,10 +39,11 @@ export default function Organisations() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
+  const orderIconName =
+    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
-  const [infoState, changeInfoState] = React.useState({
-    isHidden: true,
+  const [infoState, changeInfoState] = useState({
+    isVisible: false,
   })
 
   const {
@@ -115,38 +116,39 @@ export default function Organisations() {
 
   return (
     <Layout>
-    <Stack direction="row" mb="4">
+      <Stack direction="row" justify="space-between" mb="4">
         <Heading as="h1" textAlign="left">
           <Trans>Organizations</Trans>
         </Heading>
 
-        <Box ml="auto" />
-
-        <InfoButton label="Glossary" state={infoState} changeState={changeInfoState} />
+        <InfoButton
+          label="Glossary"
+          state={infoState}
+          changeState={changeInfoState}
+        />
       </Stack>
 
-      <InfoPanel
-        state={infoState}
-      >
+      <InfoPanel state={infoState}>
         <InfoBox
-          title='Organization Name'
-          info='Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.'
+          title="Organization Name"
+          info="Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
         />
         <InfoBox
-          title='Services'
-          info='Shows the number of domains that the organization is in control of.'
+          title="Services"
+          info="Shows the number of domains that the organization is in control of."
         />
         <InfoBox
-          title='Web Configuration'
-          info='Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts.'
+          title="Web Configuration"
+          info="Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts."
         />
         <InfoBox
-          title='Email Configuration'
-          info='Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC.'
+          title="Email Configuration"
+          info="Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
         />
-        <Divider borderColor="gray.500" />
+        <Divider borderColor="gray.500" mb={4} />
         <Trans>
-          Further details for each organization can be found by clicking on its row.
+          Further details for each organization can be found by clicking on its
+          row.
         </Trans>
       </InfoPanel>
 
@@ -156,9 +158,13 @@ export default function Organisations() {
           alignItems={{ base: 'stretch', md: 'center' }}
           mb={{ base: '4', md: '8' }}
         >
-          <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
+          <InputGroup
+            mb={{ base: '8px', md: '0' }}
+            flexGrow={1}
+            w={{ base: '100%', md: '50%' }}
+          >
             <InputLeftElement>
-              <Icon name="search" color="gray.300" />
+              <SearchIcon color="gray.300" />
             </InputLeftElement>
             <Input
               type="text"

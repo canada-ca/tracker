@@ -1,6 +1,6 @@
 import React from 'react'
 import trackerLogo from './images/trackerlogo.svg'
-import { Box, Divider, Grid, Image, Text } from '@chakra-ui/core'
+import { Box, Divider, Grid, Image, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
 export function LandingPage() {
@@ -13,14 +13,14 @@ export function LandingPage() {
     >
       <Box mx="10" my="10">
         <Text
-          fontSize={['2xl', '2xl', '2xl', '3xl', '4xl']}
+          fontSize={{ base: '2xl', lg: '3xl', xl: '4xl' }}
           fontWeight="semibold"
           color="white"
         >
           <Trans>Track Digital Security</Trans>
         </Text>
-        <Divider borderColor="accent" borderWidth="2" w="20%" />
-        <Text color="white" fontSize={['sm', 'sm', 'sm', 'lg', 'xl']}>
+        <Divider borderColor="accent" my={2} borderTopWidth="2" w="20%" />
+        <Text color="white" fontSize={{ base: 'sm', lg: 'lg', xl: 'xl' }}>
           <Trans>
             Canadians rely on the Government of Canada to provide secure digital
             services. The Policy on Service and Digital guides government online
@@ -30,7 +30,7 @@ export function LandingPage() {
         </Text>
       </Box>
       <Box
-        display={{ xs: 'none', sm: 'none', md: 'flex' }}
+        display={{ base: 'none', md: 'flex' }}
         bg="primary"
         justifyContent="center"
       >
@@ -40,7 +40,7 @@ export function LandingPage() {
           src={trackerLogo}
           alt={'Tracker Logo'}
           width="auto"
-          height={['0%', '80%', '80%', '87%']}
+          height={{ md: '80%', lg: '87%' }}
           alignSelf="center"
         />
       </Box>

@@ -23,7 +23,7 @@ describe('removing a domain', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -32,6 +32,8 @@ describe('removing a domain', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+  })
+  beforeEach(async () => {
     ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -39,8 +41,6 @@ describe('removing a domain', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-  })
-  beforeEach(async () => {
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       emailValidated: true,
@@ -49,8 +49,6 @@ describe('removing a domain', () => {
   })
   afterEach(async () => {
     await truncate()
-  })
-  afterAll(async () => {
     await drop()
   })
   describe('given a successful domain removal', () => {
@@ -1462,6 +1460,42 @@ describe('removing a domain', () => {
               },
             )
 
+            await query`
+              FOR dkimResult IN dkimResults 
+                OPTIONS { waitForSync: true } 
+                RETURN dkimResult
+            `
+
+            await query`
+              FOR dkimScan IN dkim 
+                OPTIONS { waitForSync: true } 
+                RETURN dkimScan
+            `
+
+            await query`
+              FOR dmarcScan IN dmarc 
+                OPTIONS { waitForSync: true } 
+                RETURN dmarcScan
+            `
+
+            await query`
+              FOR spfScan IN spf 
+                OPTIONS { waitForSync: true } 
+                RETURN spfScan
+            `
+
+            await query`
+              FOR httpsScan IN https 
+                OPTIONS { waitForSync: true } 
+                RETURN httpsScan
+            `
+
+            await query`
+              FOR sslScan IN ssl 
+                OPTIONS { waitForSync: true } 
+                RETURN sslScan
+            `
+
             const testDkimResultCursor =
               await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
             const testDkimResult = await testDkimResultCursor.next()
@@ -1937,6 +1971,42 @@ describe('removing a domain', () => {
                 },
               },
             )
+
+            await query`
+              FOR dkimResult IN dkimResults 
+                OPTIONS { waitForSync: true } 
+                RETURN dkimResult
+            `
+
+            await query`
+              FOR dkimScan IN dkim 
+                OPTIONS { waitForSync: true } 
+                RETURN dkimScan
+            `
+
+            await query`
+              FOR dmarcScan IN dmarc 
+                OPTIONS { waitForSync: true } 
+                RETURN dmarcScan
+            `
+
+            await query`
+              FOR spfScan IN spf 
+                OPTIONS { waitForSync: true } 
+                RETURN spfScan
+            `
+
+            await query`
+              FOR httpsScan IN https 
+                OPTIONS { waitForSync: true } 
+                RETURN httpsScan
+            `
+
+            await query`
+              FOR sslScan IN ssl 
+                OPTIONS { waitForSync: true } 
+                RETURN sslScan
+            `
 
             const testDkimResultCursor =
               await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
@@ -3007,6 +3077,42 @@ describe('removing a domain', () => {
                 },
               },
             )
+
+            await query`
+              FOR dkimResult IN dkimResults 
+                OPTIONS { waitForSync: true } 
+                RETURN dkimResult
+            `
+
+            await query`
+              FOR dkimScan IN dkim 
+                OPTIONS { waitForSync: true } 
+                RETURN dkimScan
+            `
+
+            await query`
+              FOR dmarcScan IN dmarc 
+                OPTIONS { waitForSync: true } 
+                RETURN dmarcScan
+            `
+
+            await query`
+              FOR spfScan IN spf 
+                OPTIONS { waitForSync: true } 
+                RETURN spfScan
+            `
+
+            await query`
+              FOR httpsScan IN https 
+                OPTIONS { waitForSync: true } 
+                RETURN httpsScan
+            `
+
+            await query`
+              FOR sslScan IN ssl 
+                OPTIONS { waitForSync: true } 
+                RETURN sslScan
+            `
 
             const testDkimResultCursor =
               await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`

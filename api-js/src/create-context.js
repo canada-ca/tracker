@@ -109,11 +109,11 @@ export const createContext =
     if (connection) {
       req = {
         headers: {
-          authorization: connection.context.authorization,
+          authorization: connection.authorization,
         },
-        language: connection.context.language,
+        language: connection.language,
       }
-      return createContextObject({ context, req, res })
+      return createContextObject({ context, req })
     } else {
       return createContextObject({ context, req, res })
     }

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Flex, Tag, Text } from '@chakra-ui/core'
+import { Flex, Tag, Text } from '@chakra-ui/react'
 import { Layout } from './Layout'
 
 export function PhaseBanner({ phase, children }) {
@@ -13,17 +13,18 @@ export function PhaseBanner({ phase, children }) {
             letterSpacing={2}
             rounded="none"
             color="black"
-            variantColor="gray"
+            colorScheme="gray"
             borderWidth="2px"
             borderColor="gray.900"
             minW="inherit"
             minH="inherit"
             mr={4}
-            py={0}
+            py={1}
+            size="lg"
           >
             {phase}
           </Tag>
-          <Text fontSize={['xs', 'sm', 'md']}>{children}</Text>
+          <Text fontSize={{ base: 'xs', sm: 'sm', md: 'md' }}>{children}</Text>
         </Flex>
       </Layout>
     </Flex>

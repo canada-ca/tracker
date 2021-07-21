@@ -1,30 +1,24 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
 import {
   Box,
   Divider,
   Flex,
   Heading,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Link,
   Select,
   Spinner,
   Stack,
   Text,
-} from '@chakra-ui/core'
-import DmarcReportTable from './DmarcReportTable'
+} from '@chakra-ui/react'
+import { LinkIcon } from '@chakra-ui/icons'
+import TrackerTable from './TrackerTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
-import { RelayPaginationControls } from './RelayPaginationControls'
-import { toConstantCase } from './helpers/toConstantCase'
-import { useDebouncedFunction } from './useDebouncedFunction'
 import { Link as RouteLink } from 'react-router-dom'
 import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
@@ -38,65 +32,27 @@ export default function DmarcByDomainPage() {
   const [selectedDate, setSelectedDate] = useState(
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
-  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
-  const displayLimitOptions = [5, 10, 20, 50, 100]
-  const [orderBy, setOrderBy] = useState({
+  const orderBy = {
     field: 'TOTAL_MESSAGES',
     direction: 'DESC',
-  })
-  const [searchTerm, setSearchTerm] = useState('')
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  }
 
-  const [infoState, changeInfoState] = React.useState({
-    isHidden: true,
+  const [infoState, changeInfoState] = useState({
+    isVisible: false,
   })
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
+  const { loading, error, nodes, resetToFirstPage } = usePaginatedCollection({
     fetchForward: FORWARD,
-    recordsPerPage: selectedTableDisplayLimit,
+    recordsPerPage: 10,
     variables: {
       month: selectedPeriod,
       year: selectedYear,
-      search: debouncedSearchTerm,
       orderBy: orderBy,
     },
     relayRoot: 'findMyDmarcSummaries',
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   })
-
-  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
-    setDebouncedSearchTerm(searchTerm)
-  }, [searchTerm])
-
-  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
-
-  const updateOrderBy = useCallback(
-    (sortBy) => {
-      let newOrderBy = {
-        field: 'TOTAL_MESSAGES',
-        direction: 'DESC',
-      }
-      if (sortBy.length) {
-        newOrderBy = {}
-        newOrderBy.field = toConstantCase(sortBy[0].id)
-        newOrderBy.direction = sortBy[0].desc === true ? 'DESC' : 'ASC'
-      }
-      resetToFirstPage()
-      setOrderBy(newOrderBy)
-    },
-    [resetToFirstPage],
-  )
 
   const formattedData = useMemo(() => {
     const curData = []
@@ -130,10 +86,11 @@ export default function DmarcByDomainPage() {
             to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             isExternal={false}
           >
-            {`${value} `} <Icon name="link" />
+            {`${value} `} <LinkIcon />
           </Link>
         )
       },
+      style: { textAlign: 'left' },
       sortDescFirst: true,
     },
     {
@@ -195,6 +152,7 @@ export default function DmarcByDomainPage() {
       passSpfOnlyPercentage,
       passDkimOnlyPercentage,
       failPercentage,
+      i18n,
     ],
   )
 
@@ -209,18 +167,13 @@ export default function DmarcByDomainPage() {
     tableDisplay = <ErrorFallbackMessage error={error} />
   } else
     tableDisplay = (
-      <DmarcReportTable
+      <TrackerTable
         data={formattedData}
         columns={percentageColumns}
-        title={i18n._(t`Pass/Fail Ratios by Domain`)}
+        title="dmarcSummaries"
         initialSort={initialSort}
         mb="10px"
-        hideTitleButton={true}
-        frontendPagination={false}
-        selectedDisplayLimit={selectedTableDisplayLimit}
-        manualSort={true}
-        manualFilters={true}
-        onSort={updateOrderBy}
+        searchPlaceholder={t`Search for a domain`}
       />
     )
 
@@ -275,19 +228,18 @@ export default function DmarcByDomainPage() {
 
   return (
     <Box width="100%" px="2">
-      <Stack direction="row" mb="4">
+      <Flex mb="4">
         <Heading as="h1" textAlign="left">
           <Trans>DMARC Summaries</Trans>
         </Heading>
 
-        <Box ml="auto" />
-
         <InfoButton
+          ml="auto"
           label="Glossary"
           state={infoState}
           changeState={changeInfoState}
         />
-      </Stack>
+      </Flex>
 
       <InfoPanel state={infoState}>
         <InfoBox title="Domain" info="The domain address." />
@@ -318,7 +270,7 @@ export default function DmarcByDomainPage() {
         </Trans>
       </InfoPanel>
 
-      <Stack isInline align="center" mb="4px">
+      <Flex align="center" mb="4px">
         <Text fontWeight="bold" textAlign="center">
           <Trans>Showing data for period: </Trans>
         </Text>
@@ -329,28 +281,6 @@ export default function DmarcByDomainPage() {
         >
           {options}
         </Select>
-      </Stack>
-      <Flex
-        direction={{ base: 'column', md: 'row' }}
-        alignItems={{ base: 'stretch', md: 'center' }}
-        mb={{ base: '8px', md: '8px' }}
-      >
-        <InputGroup
-          w={{ base: '100%', md: '50%' }}
-          mb={{ base: '8px', md: '0' }}
-        >
-          <InputLeftElement>
-            <Icon name="search" color="gray.300" />
-          </InputLeftElement>
-          <Input
-            type="text"
-            placeholder={t`Search for a domain`}
-            onChange={(e) => {
-              setSearchTerm(e.target.value)
-              resetToFirstPage()
-            }}
-          />
-        </InputGroup>
         {loading && (
           <Stack
             isInline
@@ -370,21 +300,10 @@ export default function DmarcByDomainPage() {
           </Stack>
         )}
       </Flex>
+
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
       </ErrorBoundary>
-      <RelayPaginationControls
-        onlyPagination={false}
-        selectedDisplayLimit={selectedTableDisplayLimit}
-        setSelectedDisplayLimit={setSelectedTableDisplayLimit}
-        displayLimitOptions={displayLimitOptions}
-        resetToFirstPage={resetToFirstPage}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-        isLoadingMore={isLoadingMore}
-      />
     </Box>
   )
 }

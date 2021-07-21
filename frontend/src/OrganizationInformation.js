@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react'
 import {
   Box,
+  Button,
   Collapse,
+  Flex,
   Grid,
   Heading,
-  Icon,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,20 +14,18 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
   useToast,
-  VisuallyHidden,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { CheckCircleIcon, MinusIcon, EditIcon } from '@chakra-ui/icons'
 import { func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { ORGANIZATION_INFORMATION } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
 import { t, Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
-import { TrackerButton } from './TrackerButton'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import FormField from './FormField'
@@ -212,7 +212,7 @@ export default function OrganizationInformation({
   return (
     <>
       <Box {...props}>
-        <Stack isInline align="center" mb="1em" flexWrap="wrap">
+        <Flex align="center" mb="1em" flexWrap="wrap">
           <Stack
             isInline
             align="center"
@@ -225,48 +225,36 @@ export default function OrganizationInformation({
             <Heading as="h1">
               {org.name}{' '}
               {org.verified && (
-                <Icon name="check-circle" color="blue.500" size="icons.md" />
+                <CheckCircleIcon color="blue.500" boxSize="icons.md" />
               )}
             </Heading>
           </Stack>
 
-          <Stack
-            flexGrow={{ base: '1', md: '0' }}
-            isInline
-            justifyContent="space-evenly"
-          >
-            <TrackerButton
+          <Flex w={{ base: '100%', md: 'auto' }}>
+            <IconButton
+              variant="danger"
               ref={removeOrgBtnRef}
               onClick={onRemovalOpen}
-              variant="danger"
-              px="2"
-              mr={{ md: '0.5em' }}
+              p={2}
+              m={0}
               w={{ base: '45%', md: 'auto' }}
-            >
-              <Stack spacing={0}>
-                <Icon name="minus" />
-                <VisuallyHidden>
-                  <Trans>Remove Organization</Trans>
-                </VisuallyHidden>
-              </Stack>
-            </TrackerButton>
-            <TrackerButton
+              aria-label={t`Remove Organization`}
+              icon={<MinusIcon />}
+            />
+            <IconButton
               variant="primary"
-              px="2"
+              p={2}
+              m={0}
+              ml={{ base: 'auto', md: 2 }}
               onClick={() => setIsEditingOrg(!isEditingOrg)}
               w={{ base: '45%', md: 'auto' }}
-            >
-              <Stack spacing={0}>
-                <Icon name="edit" />
-                <VisuallyHidden>
-                  <Trans>Edit Organization</Trans>
-                </VisuallyHidden>
-              </Stack>
-            </TrackerButton>
-          </Stack>
-        </Stack>
+              aria-label={t`Edit Organization`}
+              icon={<EditIcon />}
+            />
+          </Flex>
+        </Flex>
 
-        <Collapse isOpen={isEditingOrg}>
+        <Collapse in={isEditingOrg}>
           <Formik
             validateOnBlur={false}
             initialValues={{
@@ -362,18 +350,6 @@ export default function OrganizationInformation({
                     <FormField name="nameFR" label={t`Name (FR)`} />
                   </Box>
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="zoneEN" label={t`Zone (EN)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="zoneFR" label={t`Zone (FR)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="sectorEN" label={t`Sector (EN)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="sectorFR" label={t`Sector (FR)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
                     <FormField name="countryEN" label={t`Country (EN)`} />
                   </Box>
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
@@ -394,32 +370,32 @@ export default function OrganizationInformation({
                   >
                     <FormField name="cityFR" label={t`City (FR)`} />
                   </Box>
-                  <TrackerButton
-                    type="reset"
+                  <Button
                     variant="danger"
+                    type="reset"
                     onClick={handleReset}
                     gridColumn={{ base: '1 / 3', md: '1 / 2' }}
                     isLoading={updateOrgLoading}
                   >
                     <Trans>Clear</Trans>
-                  </TrackerButton>
-                  <TrackerButton
+                  </Button>
+                  <Button
+                    variant="primaryOutline"
                     type="button"
-                    variant="primary outline"
                     onClick={() => setIsEditingOrg(false)}
                     gridColumn={{ base: '3 / 5', md: '3 / 4' }}
                     isLoading={updateOrgLoading}
                   >
                     <Trans>Close</Trans>
-                  </TrackerButton>
-                  <TrackerButton
-                    type="submit"
+                  </Button>
+                  <Button
                     variant="primary"
+                    type="submit"
                     gridColumn={{ base: '1 / 5', md: '4 / 5' }}
                     isLoading={updateOrgLoading}
                   >
                     <Trans>Confirm</Trans>
-                  </TrackerButton>
+                  </Button>
                 </Grid>
               </form>
             )}
@@ -479,79 +455,76 @@ export default function OrganizationInformation({
         </Grid>
       </Box>
 
-      <SlideIn in={isRemovalOpen}>
-        {(styles) => (
-          <Modal
-            finalFocusRef={removeOrgBtnRef}
-            isOpen={true}
-            onClose={onRemovalClose}
-          >
-            <ModalOverlay opacity={styles.opacity} />
-            <Formik
-              validateOnBlur={false}
-              initialValues={{
-                orgName: '',
-              }}
-              initialTouched={{
-                orgName: true,
-              }}
-              validationSchema={removeOrgValidationSchema}
-              onSubmit={async () => {
-                // Submit the remove organization mutation
-                await removeOrganization({
-                  variables: {
-                    orgId: org.id,
-                  },
-                })
-              }}
-            >
-              {({ handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                  <ModalContent {...styles}>
-                    <ModalHeader>
-                      <Trans>Remove Organization</Trans>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Text>
-                        <Trans>
-                          Are you sure you want to permanently remove the
-                          organization "{org.name}"?
-                        </Trans>
-                      </Text>
+      <Modal
+        finalFocusRef={removeOrgBtnRef}
+        isOpen={isRemovalOpen}
+        onClose={onRemovalClose}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <Formik
+          validateOnBlur={false}
+          initialValues={{
+            orgName: '',
+          }}
+          initialTouched={{
+            orgName: true,
+          }}
+          validationSchema={removeOrgValidationSchema}
+          onSubmit={async () => {
+            // Submit the remove organization mutation
+            await removeOrganization({
+              variables: {
+                orgId: org.id,
+              },
+            })
+          }}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <ModalContent>
+                <ModalHeader>
+                  <Trans>Remove Organization</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Text>
+                    <Trans>
+                      Are you sure you want to permanently remove the
+                      organization "{org.name}"?
+                    </Trans>
+                  </Text>
 
-                      <br />
+                  <br />
 
-                      <Text mb="1rem">
-                        <Trans>
-                          Enter "{org.name}" below to confirm removal. This
-                          field is case-sensitive.
-                        </Trans>
-                      </Text>
+                  <Text mb="1rem">
+                    <Trans>
+                      Enter "{org.name}" below to confirm removal. This field is
+                      case-sensitive.
+                    </Trans>
+                  </Text>
 
-                      <FormField
-                        name="orgName"
-                        label={t`Organization Name`}
-                        placeholder={org.name}
-                      />
-                    </ModalBody>
-                    <ModalFooter>
-                      <TrackerButton
-                        isLoading={removeOrgLoading}
-                        type="submit"
-                        mr="4"
-                        variant="primary"
-                      >
-                        <Trans>Confirm</Trans>
-                      </TrackerButton>
-                    </ModalFooter>
-                  </ModalContent>
-                </form>
-              )}
-            </Formik>
-          </Modal>
-        )}
-      </SlideIn>
+                  <FormField
+                    name="orgName"
+                    label={t`Organization Name`}
+                    placeholder={org.name}
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    variant="primary"
+                    isLoading={removeOrgLoading}
+                    type="submit"
+                    mr="4"
+                  >
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </form>
+          )}
+        </Formik>
+      </Modal>
     </>
   )
 }

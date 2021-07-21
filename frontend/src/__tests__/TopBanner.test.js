@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { TopBanner } from '../TopBanner'
 import { cleanup, render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
@@ -28,13 +28,13 @@ describe('<TopBanner />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
                 <TopBanner lang="en" />
               </I18nProvider>
             </MemoryRouter>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )

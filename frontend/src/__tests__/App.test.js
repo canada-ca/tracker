@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { cleanup, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -34,13 +34,13 @@ describe('<App/>', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <App />
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -59,13 +59,13 @@ describe('<App/>', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
                     <App />
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )

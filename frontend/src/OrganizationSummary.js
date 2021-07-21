@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Stack, Text } from '@chakra-ui/core'
+import { Stack, Text } from '@chakra-ui/react'
 import { SummaryGroup } from './SummaryGroup'
 import { number, object, string } from 'prop-types'
 
@@ -14,7 +14,7 @@ export function OrganizationSummary({
 }) {
   return (
     <Layout>
-      <Stack fontSize="xl" align={['center', 'flex-start']}>
+      <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }}>
         <Stack isInline align="center">
           <Text>
             <Trans>Based in:</Trans>

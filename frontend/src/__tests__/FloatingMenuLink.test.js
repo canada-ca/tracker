@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { FloatingMenuLink } from '../FloatingMenuLink'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -29,9 +29,9 @@ describe('<FloatingMenuLink>', () => {
         >
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <FloatingMenuLink to="/sign-in" text="Sign In" />
-              </ThemeProvider>
+              </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
         </UserVarProvider>
@@ -55,7 +55,7 @@ describe('<FloatingMenuLink>', () => {
           >
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
-                <ThemeProvider theme={theme}>
+                <ChakraProvider theme={theme}>
                   <FloatingMenuLink to="/sign-in" text="Sign In" />
                   <Route
                     path="*"
@@ -64,7 +64,7 @@ describe('<FloatingMenuLink>', () => {
                       return null
                     }}
                   />
-                </ThemeProvider>
+                </ChakraProvider>
               </I18nProvider>
             </MemoryRouter>
           </UserVarProvider>

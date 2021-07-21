@@ -1,18 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Collapse, Divider, Heading, Stack, Text } from '@chakra-ui/core'
-import { TrackerButton } from './TrackerButton'
+import { Accordion, Box, Divider, Stack, Text } from '@chakra-ui/react'
 import { GuidanceTagList } from './GuidanceTagList'
-import WithPseudoBox from './withPseudoBox'
+import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
+import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
 function ScanCategoryDetails({ categoryName, categoryData }) {
-  const [showCategory, setShowCategory] = useState(true)
-  const handleShowCategory = () => setShowCategory(!showCategory)
-  const [showCiphers, setShowCiphers] = useState(true)
-  const handleShowCiphers = () => setShowCiphers(!showCiphers)
-  const [showCurves, setShowCurves] = useState(true)
-  const handleShowCurves = () => setShowCurves(!showCurves)
 
   if (!categoryData)
     return (
@@ -130,7 +124,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         {cipherList.length > 0 ? (
           cipherList.map((cipher, id) => {
             return (
-              <Text key={id} isTruncated fontSize={['sm', 'md']}>
+              <Text key={id} isTruncated fontSize={{ base: 'sm', md: 'md' }}>
                 {cipher}
               </Text>
             )
@@ -211,51 +205,17 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
   )
 
   return (
-    <Box pb="2">
-      <TrackerButton
-        variant="primary"
-        onClick={handleShowCategory}
-        w={['100%', '25%']}
-        mb="4"
-      >
-        <Heading as="h2" size="md">
-          {categoryName.toUpperCase()}
-        </Heading>
-      </TrackerButton>
-      <Collapse isOpen={showCategory}>
-        {webSummary}
-        <Divider />
-        {tagDetails}
+    <AccordionItem buttonLabel={categoryName.toUpperCase()}>
+      {webSummary}
+      <Divider />
+      {tagDetails}
+      <Accordion allowMultiple defaultIndex={[0, 1]}>
         {ciphers && (
-          <Box>
-            <Divider />
-            <TrackerButton
-              variant="primary"
-              onClick={handleShowCiphers}
-              w="100%"
-              mb="2"
-            >
-              <Trans>Ciphers</Trans>
-            </TrackerButton>
-            <Collapse isOpen={showCiphers}>{ciphers}</Collapse>
-          </Box>
+          <AccordionItem buttonLabel="Ciphers">{ciphers}</AccordionItem>
         )}
-        {curves && (
-          <Box>
-            <Divider />
-            <TrackerButton
-              variant="primary"
-              onClick={handleShowCurves}
-              w="100%"
-              mb="2"
-            >
-              <Trans>Curves</Trans>
-            </TrackerButton>
-            <Collapse isOpen={showCurves}>{curves}</Collapse>
-          </Box>
-        )}
-      </Collapse>
-    </Box>
+        {curves && <AccordionItem buttonLabel="Curves">{curves}</AccordionItem>}
+      </Accordion>
+    </AccordionItem>
   )
 }
 
@@ -264,4 +224,4 @@ ScanCategoryDetails.propTypes = {
   categoryData: object,
 }
 
-export default WithPseudoBox(ScanCategoryDetails)
+export default WithWrapperBox(ScanCategoryDetails)

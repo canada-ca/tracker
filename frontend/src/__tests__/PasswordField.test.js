@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, string } from 'yup'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import PasswordField from '../PasswordField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
@@ -25,7 +25,7 @@ describe('<PasswordField />', () => {
       })
       const { getByTestId, getByText } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <Formik
               // return a sadness error for the password field
               validationSchema={validationSchema}
@@ -35,7 +35,7 @@ describe('<PasswordField />', () => {
             >
               {() => <PasswordField data-testid="pwfield" name="password" />}
             </Formik>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
       const input = getByTestId('pwfield')
@@ -51,7 +51,7 @@ describe('<PasswordField />', () => {
     it('renders a password field', async () => {
       const { getByTestId } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <Formik
               initialValues={{
                 password: '',
@@ -59,7 +59,7 @@ describe('<PasswordField />', () => {
             >
               {() => <PasswordField data-testid="pwfield" name="password" />}
             </Formik>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
 
@@ -75,7 +75,7 @@ describe('<PasswordField />', () => {
     it('renders a password field', async () => {
       const { getByRole } = render(
         <I18nProvider i18n={i18n}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <Formik
               initialValues={{
                 password: '',
@@ -83,7 +83,7 @@ describe('<PasswordField />', () => {
             >
               {() => <PasswordField name="password" />}
             </Formik>
-          </ThemeProvider>
+          </ChakraProvider>
         </I18nProvider>,
       )
 

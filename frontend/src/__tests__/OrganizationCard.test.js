@@ -1,11 +1,14 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { List, theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { OrganizationCard } from '../OrganizationCard'
+import matchMediaSize from '../helpers/matchMedia'
+
+matchMediaSize()
 
 const i18n = setupI18n({
   locale: 'en',
@@ -55,18 +58,20 @@ describe('<OrganizationsCard />', () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <OrganizationCard
-                slug="tbs-sct-gc-ca"
-                name="Treasury Board Secretariat"
-                acronym="TBS"
-                domainCount={7}
-                verified={false}
-                summaries={summaries}
-              />
+              <List>
+                <OrganizationCard
+                  slug="tbs-sct-gc-ca"
+                  name="Treasury Board Secretariat"
+                  acronym="TBS"
+                  domainCount={7}
+                  verified={false}
+                  summaries={summaries}
+                />
+              </List>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </MemoryRouter>
       </MockedProvider>,
     )

@@ -1,21 +1,22 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
-import WithPseudoBox from './withPseudoBox'
-import { any } from 'prop-types'
+import WithWrapperBox from './WithWrapperBox'
+import { any, string } from 'prop-types'
 import {
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 
 const ReactTableGlobalFilter = ({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
+  placeholder,
 }) => {
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
@@ -31,7 +32,7 @@ const ReactTableGlobalFilter = ({
 
       <InputGroup w={{ sm: '100%', md: '20rem' }}>
         <InputLeftElement>
-          <Icon name="search" />
+          <SearchIcon />
         </InputLeftElement>
         <Input
           value={value || ''}
@@ -39,7 +40,8 @@ const ReactTableGlobalFilter = ({
             setValue(e.target.value)
             onChange(e.target.value)
           }}
-          placeholder={t`${count} records...`}
+          placeholder={placeholder || t`${count} records...`}
+          aria-label="Filter the table"
         />
       </InputGroup>
     </Stack>
@@ -51,6 +53,7 @@ ReactTableGlobalFilter.propTypes = {
   preGlobalFilteredRows: any,
   globalFilter: any,
   setGlobalFilter: any,
+  placeholder: string,
 }
 
-export default WithPseudoBox(ReactTableGlobalFilter)
+export default WithWrapperBox(ReactTableGlobalFilter)

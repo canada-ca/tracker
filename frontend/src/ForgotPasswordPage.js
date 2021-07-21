@@ -1,13 +1,12 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/core'
+import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
 import EmailField from './EmailField'
 import { object, string } from 'yup'
 import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { SEND_PASSWORD_RESET_LINK } from './graphql/mutations'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 
 export default function ForgotPasswordPage() {
@@ -49,7 +48,7 @@ export default function ForgotPasswordPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="4" mx="auto" overflow="hidden" w={['100%', '60%']}>
+    <Box px="4" mx="auto" overflow="hidden" w={{ base: '100%', md: '60%' }}>
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
@@ -75,25 +74,18 @@ export default function ForgotPasswordPage() {
 
             <EmailField name="email" mb="4" />
 
-            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <TrackerButton
+            <Stack spacing={4} isInline justifyContent="space-between">
+              <Button
+                variant="primary"
                 aria-label="forgot-password-submit"
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Submit</Trans>
-              </TrackerButton>
+              </Button>
 
-              <Button
-                as={RouteLink}
-                to="/sign-in"
-                color="primary"
-                bg="transparent"
-                borderColor="primary"
-                borderWidth="1px"
-              >
+              <Button as={RouteLink} to="/sign-in" variant="primaryOutline">
                 <Trans>Back</Trans>
               </Button>
             </Stack>

@@ -21,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/services/scanners/https:master-7039d40-1625850351 # {"$imagepolicy": "flux-system:https-scanner"}
+        image: gcr.io/track-compliance/services/scanners/https:master-ad3b350-1626212978 # {"$imagepolicy": "flux-system:https-scanner"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service

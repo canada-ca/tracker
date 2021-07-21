@@ -33,7 +33,7 @@ describe('given the create context function', () => {
       const context = await createContext({})({
         req: {},
         res: {},
-        connection: { context: { authorization: token } },
+        connection: { authorization: token },
       })
 
       expect(context.userKey).toEqual('1234')
@@ -42,7 +42,7 @@ describe('given the create context function', () => {
       const context = await createContext({})({
         req: {},
         res: {},
-        connection: { context: { language: 'en' } },
+        connection: { language: 'en' },
       })
 
       expect(context.request.language).toEqual('en')

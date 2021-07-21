@@ -1,7 +1,8 @@
 import React, { useRef } from 'react'
 import {
+  Button,
+  Flex,
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,13 +10,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+} from '@chakra-ui/react'
+import { LockIcon } from '@chakra-ui/icons'
+import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -25,7 +26,6 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
 import PasswordConfirmation from './PasswordConfirmation'
-import { TrackerButton } from './TrackerButton'
 
 function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -109,97 +109,92 @@ function EditableUserPassword() {
         <Trans>Password:</Trans>
       </Heading>
 
-      <Stack isInline align="center">
-        <Icon name="lock" color="gray.300" />
+      <Flex align="center">
+        <LockIcon color="gray.300" mr={2} />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
-        <TrackerButton
+        <Button
+          variant="primary"
           ml="auto"
           onClick={onOpen}
-          variant="primary"
           fontSize="sm"
           px="3"
         >
           <Trans>Edit</Trans>
-        </TrackerButton>
-      </Stack>
+        </Button>
+      </Flex>
 
-      <SlideIn in={isOpen}>
-        {(styles) => (
-          <Modal
-            isOpen={true}
-            onClose={onClose}
-            initialFocusRef={initialFocusRef}
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        initialFocusRef={initialFocusRef}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent pb={4}>
+          <Formik
+            validateOnBlur={false}
+            initialValues={{
+              password: '',
+              confirmPassword: '',
+              currentPassword: '',
+            }}
+            initialTouched={{
+              currentPassword: true,
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values) => {
+              // Submit update detail mutation
+              await updateUserPassword({
+                variables: {
+                  updatedPassword: values.password,
+                  updatedPasswordConfirm: values.confirmPassword,
+                  currentPassword: values.currentPassword,
+                },
+              })
+            }}
           >
-            <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
-              <Formik
-                validateOnBlur={false}
-                initialValues={{
-                  password: '',
-                  confirmPassword: '',
-                  currentPassword: '',
-                }}
-                initialTouched={{
-                  currentPassword: true,
-                }}
-                validationSchema={validationSchema}
-                onSubmit={async (values) => {
-                  // Submit update detail mutation
-                  await updateUserPassword({
-                    variables: {
-                      updatedPassword: values.password,
-                      updatedPasswordConfirm: values.confirmPassword,
-                      currentPassword: values.currentPassword,
-                    },
-                  })
-                }}
-              >
-                {({ handleSubmit, isSubmitting }) => (
-                  <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>
-                      <Trans>Change Password</Trans>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Stack spacing={4} p="6" align="center">
-                        <PasswordField
-                          name="currentPassword"
-                          label={t`Current Password:`}
-                          width="100%"
-                          ref={initialFocusRef}
-                        />
-                        <Text textAlign="center">
-                          <Trans>
-                            Enter and confirm your new password below:
-                          </Trans>
-                        </Text>
-                        <PasswordConfirmation
-                          width="100%"
-                          passwordLabel={t`New Password:`}
-                          confirmPasswordLabel={t`Confirm New Password:`}
-                        />
-                      </Stack>
-                    </ModalBody>
+            {({ handleSubmit, isSubmitting }) => (
+              <form id="form" onSubmit={handleSubmit}>
+                <ModalHeader>
+                  <Trans>Change Password</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Stack spacing={4} p="6" align="center">
+                    <PasswordField
+                      name="currentPassword"
+                      label={t`Current Password:`}
+                      width="100%"
+                      ref={initialFocusRef}
+                    />
+                    <Text textAlign="center">
+                      <Trans>Enter and confirm your new password below:</Trans>
+                    </Text>
+                    <PasswordConfirmation
+                      width="100%"
+                      passwordLabel={t`New Password:`}
+                      confirmPasswordLabel={t`Confirm New Password:`}
+                    />
+                  </Stack>
+                </ModalBody>
 
-                    <ModalFooter>
-                      <TrackerButton
-                        isLoading={isSubmitting}
-                        type="submit"
-                        mr="4"
-                        variant="primary"
-                      >
-                        <Trans>Confirm</Trans>
-                      </TrackerButton>
-                    </ModalFooter>
-                  </form>
-                )}
-              </Formik>
-            </ModalContent>
-          </Modal>
-        )}
-      </SlideIn>
+                <ModalFooter>
+                  <Button
+                    variant="primary"
+                    isLoading={isSubmitting}
+                    type="submit"
+                    mr="4"
+                  >
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </ModalFooter>
+              </form>
+            )}
+          </Formik>
+        </ModalContent>
+      </Modal>
     </Stack>
   )
 }
 
-export default WithPseudoBox(EditableUserPassword)
+export default WithWrapperBox(EditableUserPassword)

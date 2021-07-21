@@ -2,7 +2,7 @@ import React from 'react'
 import QRcodePage from '../QRcodePage'
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserVarProvider } from '../UserState'
@@ -49,11 +49,11 @@ describe('<QRcodePage />', () => {
             })}
           >
             <MemoryRouter initialEntries={['/']}>
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <QRcodePage />
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </MemoryRouter>
           </UserVarProvider>
         </MockedProvider>,
