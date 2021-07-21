@@ -1,7 +1,7 @@
 import React from 'react'
 import { any, bool, func, shape, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, Button, Collapse, Stack } from '@chakra-ui/react'
+import { Box, Button, Collapse, Stack, Text } from '@chakra-ui/react'
 
 export function InfoPanel({ state, children }) {
   return (
@@ -15,8 +15,10 @@ export function InfoPanel({ state, children }) {
 
 export function InfoBox({ title, info }) {
   return (
-    <Box my="0.25em">
-      <Trans fontWeight="bold">{title}</Trans>
+    <Box my={1}>
+      <Text as="span" fontWeight="bold">
+        <Trans>{title}</Trans>
+      </Text>
       <span>: </span>
       <Trans>{info}</Trans>
     </Box>
