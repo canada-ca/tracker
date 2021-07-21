@@ -24,7 +24,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 # ConnectionPool for Redis server running in the same container as this app; see Dockerfile
 pool = ConnectionPool(host="127.0.0.1", port=6379, db=0)
 queue_redis = Redis(connection_pool=pool)
-pubsub_redis = Redis(host=PUBSUB_HOST, port=PUBSUB_PORT, db=0)
+# pubsub_redis = Redis(host=PUBSUB_HOST, port=PUBSUB_PORT, db=0)
 
 # RQ queues for scan dispatches, RQ workers must be running for jobs to be executed
 https_queue = Queue("https", connection=queue_redis)
@@ -34,11 +34,11 @@ dns_queue = Queue("dns", connection=queue_redis)
 default_queues = {"https": https_queue, "ssl": ssl_queue, "dns": dns_queue}
 
 
-def publish_update(scan_type, user_key, message):
-    try:
-        pubsub_redis.publish(f"scan/{scan_type}/{user_key}", message)
-    except Exception as e:
-        logging.error(f"Unexpected error occurred while attempting to publish update to redis queue: {traceback.format_exc()}")
+# def publish_update(scan_type, user_key, message):
+#     try:
+#         pubsub_redis.publish(f"scan/{scan_type}/{user_key}", message)
+#     except Exception as e:
+#         logging.error(f"Unexpected error occurred while attempting to publish update to redis queue: {traceback.format_exc()}")
 
 
 def Server(process_name, queues=default_queues):
@@ -80,7 +80,7 @@ def Server(process_name, queues=default_queues):
             msg = "An unexpected error occurred while attempting to enqueue HTTPS scan request"
             logging.error(msg + f"\nFull traceback: {traceback.format_exc()}")
 
-        publish_update("https", json.loads(payload)["user_key"], msg)
+        # publish_update("https", json.loads(payload)["user_key"], msg)
         return msg
 
     @flask_app.route("/ssl", methods=["POST"])
@@ -107,7 +107,7 @@ def Server(process_name, queues=default_queues):
             msg = "An unexpected error occurred while attempting to enqueue SSL scan request"
             logging.error(msg + f"\nFull traceback: {traceback.format_exc()}")
 
-        publish_update("ssl", json.loads(payload)["user_key"], msg)
+        # publish_update("ssl", json.loads(payload)["user_key"], msg)
         return msg
 
     @flask_app.route("/dns", methods=["POST"])
@@ -134,7 +134,7 @@ def Server(process_name, queues=default_queues):
             msg = "An unexpected error occurred while attempting to enqueue DNS scan request"
             logging.error(msg + f"\nFull traceback: {traceback.format_exc()}")
 
-        publish_update("dns", json.loads(payload)["user_key"], msg)
+        # publish_update("dns", json.loads(payload)["user_key"], msg)
         return msg
 
     return flask_app
