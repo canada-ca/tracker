@@ -115,7 +115,7 @@ export default function CreateOrganizationPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="4" mx="auto" overflow="hidden">
+    <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -157,17 +157,18 @@ export default function CreateOrganizationPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Heading as="h1" fontSize="2xl" textAlign="center">
-              <Trans>Create an organization</Trans>
-            </Heading>
-            <InfoButton
-              label="Glossary"
-              state={infoState}
-              changeState={changeInfoState}
-              mr="0"
-              ml="auto"
-              display="block"
-            />
+            <Flex>
+              <Heading as="h1" fontSize="2xl" textAlign="center">
+                <Trans>Create an organization</Trans>
+              </Heading>
+              <InfoButton
+                label="Glossary"
+                state={infoState}
+                changeState={changeInfoState}
+                ml="auto"
+                display="block"
+              />
+            </Flex>
 
             <InfoPanel state={infoState}>
               <InfoBox title="Name" info="The name of the Organization." />
