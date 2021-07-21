@@ -11,6 +11,7 @@ import theme from './theme/canada'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Box, Flex, Select, Stack, Text } from '@chakra-ui/core'
+import { localPoint } from '@visx/event'
 
 const { strong, moderate, moderateAlt, weak, gray } = theme.colors
 const textColour = gray['900']
@@ -122,12 +123,10 @@ export function NewDmarcGraph({ ...props }) {
 function VerticalGraph({
   width = 1200,
   height = 500,
-  events = false,
   margin = defaultVerticalMargin,
   ...props
 }) {
   const { data, keys, screenWidth } = props
-
   const { periods, strengths } = data
   const {
     tooltipOpen,
@@ -141,6 +140,11 @@ function VerticalGraph({
   if (screenWidth < 1200) {
     width = screenWidth
   }
+
+  const xMax = width
+  const yMax = height - margin.top - 100
+
+  const { containerRef, TooltipInPortal } = useTooltipInPortal()
 
   const monthlyTotals = []
   periods.forEach((period) => {
@@ -159,17 +163,10 @@ function VerticalGraph({
     domain: [0, Math.max(...monthlyTotals)],
     nice: true,
   })
-
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [strong, moderate, moderateAlt, weak],
   })
-
-  const { containerRef, TooltipInPortal } = useTooltipInPortal()
-
-  if (width < 10) return null
-  const xMax = width
-  const yMax = height - margin.top - 100
 
   dateScale.rangeRound([0, xMax])
   messageScale.range([yMax, 0])
@@ -177,14 +174,7 @@ function VerticalGraph({
   return width < 10 ? null : (
     <div style={{ position: 'relative' }}>
       <svg ref={containerRef} width={width} height={height}>
-        <rect
-          x={0}
-          y={0}
-          width={width}
-          height={height}
-          fill={background}
-          rx={14}
-        />
+        <rect width={width} height={height} fill={background} rx={14} />
         <Grid
           top={margin.top}
           left={margin.left}
@@ -196,7 +186,7 @@ function VerticalGraph({
           strokeOpacity={0.1}
           xOffset={dateScale.bandwidth() / 2}
         />
-        <Group top={margin.top}>
+        <Group top={margin.top} left={margin.left}>
           <BarStack
             data={periods}
             keys={keys}
@@ -215,10 +205,6 @@ function VerticalGraph({
                     height={bar.height}
                     width={bar.width}
                     fill={bar.color}
-                    onClick={() => {
-                      if (events)
-                        window.alert(`clicked: ${JSON.stringify(bar)}`)
-                    }}
                     onMouseLeave={() => {
                       tooltipTimeout = window.setTimeout(() => {
                         hideTooltip()
@@ -226,11 +212,11 @@ function VerticalGraph({
                     }}
                     onMouseMove={(event) => {
                       if (tooltipTimeout) clearTimeout(tooltipTimeout)
-                      const top = event.clientY - margin.top - bar.height
+                      const top = localPoint(event)
                       const left = bar.x + bar.width / 2
                       showTooltip({
                         tooltipData: bar,
-                        tooltipTop: top,
+                        tooltipTop: top?.y,
                         tooltipLeft: left,
                       })
                     }}
@@ -247,21 +233,24 @@ function VerticalGraph({
               fill: textColour,
               fontSize: 11,
               textAnchor: 'end',
+              dy: '0.33em',
+            })}
+          />
+          <AxisBottom
+            hideTicks
+            top={yMax}
+            scale={dateScale}
+            stroke={textColour}
+            tickStroke={textColour}
+            tickLabelProps={() => ({
+              fill: textColour,
+              fontSize: 11,
+              textAnchor: 'middle',
             })}
           />
         </Group>
-        <AxisBottom
-          top={yMax + margin.top}
-          scale={dateScale}
-          stroke={textColour}
-          tickStroke={textColour}
-          tickLabelProps={() => ({
-            fill: textColour,
-            fontSize: 11,
-            textAnchor: 'middle',
-          })}
-        />
       </svg>
+
       <div
         style={{
           position: 'absolute',
@@ -319,7 +308,6 @@ function VerticalGraph({
 function HorizontalGraph({
   width = 1200,
   height = 500,
-  events = false,
   margin = defaultHorizontalMargin,
   ...props
 }) {
@@ -360,7 +348,6 @@ function HorizontalGraph({
     domain: [0, Math.max(...monthlyTotals)],
     nice: true,
   })
-
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [strong, moderate, moderateAlt, weak],
@@ -374,7 +361,6 @@ function HorizontalGraph({
       <div
         style={{
           position: 'absolute',
-          // bottom: margin.bottom / 2 + 51,
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
@@ -421,23 +407,19 @@ function HorizontalGraph({
                     width={bar.width}
                     height={bar.height}
                     fill={bar.color}
-                    onClick={() => {
-                      if (events)
-                        window.alert(`clicked: ${JSON.stringify(bar)}`)
-                    }}
                     onMouseLeave={() => {
                       tooltipTimeout = window.setTimeout(() => {
                         hideTooltip()
                       }, 300)
                     }}
-                    onMouseMove={() => {
+                    onMouseMove={(event) => {
                       if (tooltipTimeout) clearTimeout(tooltipTimeout)
                       const top = bar.y + margin.top
-                      const left = bar.x + bar.width + margin.left
+                      const left = localPoint(event)
                       showTooltip({
                         tooltipData: bar,
                         tooltipTop: top,
-                        tooltipLeft: left,
+                        tooltipLeft: left?.x,
                       })
                     }}
                   />
