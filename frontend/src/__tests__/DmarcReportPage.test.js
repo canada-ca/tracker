@@ -4,10 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import DmarcReportPage from '../DmarcReportPage'
-import {
-  DMARC_REPORT_GRAPH,
-  PAGINATED_DMARC_REPORT,
-} from '../graphql/queries'
+import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserVarProvider } from '../UserState'
@@ -15,6 +12,24 @@ import { rawDmarcReportGraphData } from '../fixtures/dmarcReportGraphData'
 import { rawDmarcReportData } from '../fixtures/dmarcReportData.js'
 import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
+
+// ** need to mock the ResizeObserver and polute the window object to avoid errors
+class ResizeObserver {
+  observe() {
+    // do nothing
+  }
+
+  unobserve() {
+    // do nothing
+  }
+
+  disconnect() {
+    // do nothing
+  }
+}
+
+window.ResizeObserver = ResizeObserver
+// **
 
 const i18n = setupI18n({
   locale: 'en',
@@ -75,7 +90,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -101,7 +116,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -127,7 +142,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -153,7 +168,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
