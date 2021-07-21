@@ -158,10 +158,7 @@ export default function CreateOrganizationPage() {
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
             <Heading as="h1" fontSize="2xl" textAlign="center">
-              <Trans>
-                Create an organization by filling out the following info in both
-                English and French
-              </Trans>
+              <Trans>Create an organization</Trans>
             </Heading>
             <InfoButton
               label="Glossary"
