@@ -52,13 +52,18 @@ export function GuidanceTagList({
   const positiveTagList = setTagList(positiveTags, 'positive')
   const neutralTagList = setTagList(neutralTags, 'neutral')
 
-  const smallDevice = window.matchMedia('(max-width: 500px)').matches
   const noTags = (
     <Stack isInline align="center" bg="moderateMuted" px="2">
-      {!smallDevice && <WarningTwoIcon color="moderate" />}
+      <WarningTwoIcon
+        color="moderate"
+        display={{ base: 'none', md: 'initial' }}
+      />
       <Box>
         <Stack isInline align="center">
-          {smallDevice && <WarningTwoIcon color="moderate" />}
+          <WarningTwoIcon
+            color="moderate"
+            display={{ base: 'initial', md: 'none' }}
+          />
           <Text fontWeight="bold">
             <Trans>Result:</Trans>
           </Text>
