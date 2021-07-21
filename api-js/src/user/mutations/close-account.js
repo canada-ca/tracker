@@ -6,17 +6,19 @@ import { closeAccountUnion } from '../unions'
 
 export const closeAccount = new mutationWithClientMutationId({
   name: 'CloseAccount',
-  description: '',
+  description:
+    'This mutation allows a user to close their account, or a super admin to close another users account.',
   inputFields: () => ({
     userId: {
       type: GraphQLID,
-      description: '',
+      description: 'The user id of a user you want to close the account of.',
     },
   }),
   outputFields: () => ({
     result: {
       type: closeAccountUnion,
-      description: '',
+      description:
+        '`CloseAccountUnion` returning either a `CloseAccountResult`, or `CloseAccountError` object.',
       resolve: (payload) => payload,
     },
   }),
