@@ -85,7 +85,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
         dmarcSummaryCheckList = await dmarcSummaryCheckCursor.all()
       } catch (err) {
         console.error(
-          `Cursor error occurred when getting ownership info for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
+          `Cursor error occurred when getting dmarc summary info for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
         )
         throw new Error(i18n._(t`Unable leave organization. Please try again.`))
       }
@@ -366,7 +366,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
             )
           } catch (err) {
             console.error(
-              `Trx step error occurred while attempting to remove domains for org: ${org._key}, when user: ${user._key} attempted to leave. error: ${err}`,
+              `Trx step error occurred while attempting to remove domains for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
             )
             throw new Error(
               i18n._(t`Unable leave organization. Please try again.`),
@@ -381,7 +381,10 @@ export const leaveOrganization = new mutationWithClientMutationId({
             () =>
               query`
                 WITH affiliations, organizations, users
-                LET userEdges = (FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
+                LET userEdges = (
+                  FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
+                    RETURN { edgeKey: e._key, userKey: e._to }
+                )
                 LET removeUserEdges = (
                   FOR userEdge IN userEdges 
                     REMOVE userEdge.edgeKey IN affiliations
@@ -405,9 +408,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
         )
         throw new Error(i18n._(t`Unable leave organization. Please try again.`))
       }
-    }
-
-    if (!owner) {
+    } else {
       try {
         await trx.step(
           () =>
