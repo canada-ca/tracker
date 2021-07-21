@@ -68,7 +68,7 @@ spec:
       timeoutSeconds: 500
       containers:
       - name: ots-scan-queue
-        image: gcr.io/track-compliance/services/queues/ots-scan:master-3f364fa-1626718261 # {"$imagepolicy": "flux-system:ots-scan-queue"}
+        image: gcr.io/track-compliance/services/queues/ots-scan:master-808eb92-1626877820 # {"$imagepolicy": "flux-system:ots-scan-queue"}
         env:
         - name: PUBSUB_HOST
           valueFrom:
