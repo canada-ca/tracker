@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { Formik } from 'formik'
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
-  Collapse,
   Divider,
   Flex,
   Heading,
-  Icon,
   Spinner,
   Stack,
   Tab,
@@ -20,6 +23,13 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
+import {
+  CheckCircleIcon,
+  WarningIcon,
+  WarningTwoIcon,
+  InfoIcon,
+} from '@chakra-ui/icons'
+
 import { REQUEST_SCAN } from './graphql/mutations'
 import { useMutation, useQuery } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
@@ -36,7 +46,6 @@ export function ScanDomain() {
       i18n._(fieldRequirements.domainUrl.required.message),
     ),
   })
-  const [openScanIndex, setOpenScanIndex] = useState(-1)
 
   const [requestScan, { loading }] = useMutation(REQUEST_SCAN, {
     onError(error) {
@@ -140,11 +149,11 @@ export function ScanDomain() {
   const generateStatusIcon = (status) => {
     let statusIcon
     if (status === 'PASS') {
-      statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
+      statusIcon = <CheckCircleIcon color="strong" size="icons.sm" />
     } else if (status === 'FAIL') {
-      statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
+      statusIcon = <WarningIcon color="weak" size="icons.sm" />
     } else {
-      statusIcon = <Icon name="info" color="info" size="icons.sm" />
+      statusIcon = <InfoIcon color="info" size="icons.sm" />
     }
     return statusIcon
   }
@@ -195,43 +204,21 @@ export function ScanDomain() {
           )
         }}
       </Formik>
-      <Stack>
+      <Accordion allowMultiple defaultIndex={[]} mt={4}>
         {mergedScans.reverse().map((mergedScan, index) => {
           return (
-            <React.Fragment key={`one-time-scan-index:${index}`}>
-              <PseudoBox
-                width="100%"
-                p="4"
-                pl={{ md: '8' }}
-                alignItems={{ base: 'flex-start', md: 'center' }}
-                flexDirection={{ base: 'column', md: 'row' }}
-                onClick={() => {
-                  if (openScanIndex === index) {
-                    setOpenScanIndex(-1)
-                    return
-                  }
-
-                  setOpenScanIndex(index)
-                }}
-                _hover={{ bg: ['', 'gray.100'] }}
-                role="button"
-              >
-                <Flex
+            <AccordionItem key={index} mb={8} borderRadius="sm">
+              <h2>
+                <AccordionButton
                   width="100%"
                   p="4"
                   pl={{ md: '8' }}
                   alignItems={{ base: 'flex-start', md: 'center' }}
                   flexDirection={{ base: 'column', md: 'row' }}
-                  onClick={() => {
-                    if (openScanIndex === index) {
-                      setOpenScanIndex(-1)
-                      return
-                    }
-
-                    setOpenScanIndex(index)
-                  }}
-                  _hover={{ bg: ['', 'gray.100'] }}
-                  role="button"
+                  textAlign="left"
+                  fontWeight="inherit"
+                  bg="gray.100"
+                  _hover={{ bg: ['', 'gray.300'] }}
                 >
                   <Box
                     flexGrow={{ md: '2' }}
@@ -245,11 +232,11 @@ export function ScanDomain() {
                     </Text>
                     <Text isTruncated>{mergedScan.domain}</Text>
                   </Box>
-                  <Stack
+                  <Flex
                     flexDirection={{ base: 'column', md: 'row' }}
                     flexGrow={{ base: 0, md: '1' }}
                   >
-                    <Box ml={{ md: 2 }} mr={{ md: 2 }}>
+                    <Box mx={{ md: 2 }}>
                       <Stack
                         align="center"
                         flexDirection={{ base: 'row', md: 'column' }}
@@ -267,11 +254,11 @@ export function ScanDomain() {
                         {mergedScan.scan.https ? (
                           generateStatusIcon(mergedScan.scan.https.status)
                         ) : (
-                          <Spinner color="accent" size="icons.sm" />
+                          <Spinner color="accent" size="sm" />
                         )}
                       </Stack>
                     </Box>
-                    <Box ml={{ md: 2 }} mr={{ md: 2 }}>
+                    <Box mx={{ md: 2 }}>
                       <Stack
                         align="center"
                         flexDirection={{ base: 'row', md: 'column' }}
@@ -289,11 +276,11 @@ export function ScanDomain() {
                         {mergedScan.scan.ssl ? (
                           generateStatusIcon(mergedScan.scan.ssl.status)
                         ) : (
-                          <Spinner color="accent" size="icons.sm" />
+                          <Spinner color="accent" size="sm" />
                         )}
                       </Stack>
                     </Box>
-                    <Box ml={{ md: 2 }} mr={{ md: 2 }}>
+                    <Box mx={{ md: 2 }}>
                       <Stack
                         align="center"
                         flexDirection={{ base: 'row', md: 'column' }}
@@ -311,11 +298,11 @@ export function ScanDomain() {
                         {mergedScan.scan.spf ? (
                           generateStatusIcon(mergedScan.scan.spf.status)
                         ) : (
-                          <Spinner color="accent" size="icons.sm" />
+                          <Spinner color="accent" size="sm" />
                         )}
                       </Stack>
                     </Box>
-                    <Box ml={{ md: 2 }} mr={{ md: 2 }}>
+                    <Box mx={{ md: 2 }}>
                       <Stack
                         align="center"
                         flexDirection={{ base: 'row', md: 'column' }}
@@ -333,11 +320,11 @@ export function ScanDomain() {
                         {mergedScan.scan.dkim ? (
                           generateStatusIcon(mergedScan.scan.dkim.status)
                         ) : (
-                          <Spinner color="accent" size="icons.sm" />
+                          <Spinner color="accent" size="sm" />
                         )}
                       </Stack>
                     </Box>
-                    <Box ml={{ md: 2 }} mr={{ md: 2 }}>
+                    <Box mx={{ md: 2 }}>
                       <Stack
                         align="center"
                         flexDirection={{ base: 'row', md: 'column' }}
@@ -355,7 +342,7 @@ export function ScanDomain() {
                         {mergedScan.scan.dmarc ? (
                           generateStatusIcon(mergedScan.scan.dmarc.status)
                         ) : (
-                          <Spinner color="accent" size="icons.sm" />
+                          <Spinner color="accent" size="sm" />
                         )}
                       </Stack>
                     </Box>
@@ -363,10 +350,10 @@ export function ScanDomain() {
                       orientation={{ base: 'horizontal', md: 'vertical' }}
                       alignSelf="stretch"
                     />
-                  </Stack>
-                </Flex>
-              </PseudoBox>
-              <Collapse isOpen={openScanIndex === index}>
+                  </Flex>
+                </AccordionButton>
+              </h2>
+              <AccordionPanel>
                 <Tabs isFitted>
                   <TabList mb="4">
                     <Tab>
@@ -405,10 +392,9 @@ export function ScanDomain() {
                                 mergedScan.scan.https.status === 'PASS' &&
                                 mergedScan.scan.ssl.status === 'PASS' ? (
                                   <Stack isInline align="center" px="2">
-                                    <Icon
-                                      name="check-circle"
+                                    <CheckCircleIcon
                                       color="strong"
-                                      size="icons.md"
+                                      size="icons.sm"
                                     />
                                     <Text fontWeight="bold" fontSize="2xl">
                                       <Trans>ITPIN Compliant</Trans>
@@ -416,8 +402,7 @@ export function ScanDomain() {
                                   </Stack>
                                 ) : (
                                   <Stack isInline align="center" px="2">
-                                    <Icon
-                                      name="warning-2"
+                                    <WarningTwoIcon
                                       color="moderate"
                                       size="icons.md"
                                     />
@@ -430,25 +415,27 @@ export function ScanDomain() {
                                 )
                               ) : (
                                 <Stack isInline align="center" px="2">
-                                  <Spinner color="accent" size="icons.md" />
+                                  <Spinner color="accent" size="md" />
                                   <Text fontWeight="bold" fontSize="2xl">
                                     <Trans>Loading Compliance Status</Trans>
                                   </Text>
                                 </Stack>
                               )}
                             </Box>
-                            {mergedScan?.scan.https && (
-                              <ScanCategoryDetails
-                                categoryName="https"
-                                categoryData={mergedScan.scan.https}
-                              />
-                            )}
-                            {mergedScan?.scan.ssl && (
-                              <ScanCategoryDetails
-                                categoryName="ssl"
-                                categoryData={mergedScan.scan.ssl}
-                              />
-                            )}
+                            <Accordion allowMultiple defaultIndex={[0, 1]}>
+                              {mergedScan?.scan.https && (
+                                <ScanCategoryDetails
+                                  categoryName="https"
+                                  categoryData={mergedScan.scan.https}
+                                />
+                              )}
+                              {mergedScan?.scan.ssl && (
+                                <ScanCategoryDetails
+                                  categoryName="ssl"
+                                  categoryData={mergedScan.scan.ssl}
+                                />
+                              )}
+                            </Accordion>
                           </Stack>
                         </Box>
                       </Box>
@@ -506,65 +493,54 @@ export function ScanDomain() {
                                 </Box>
                               ) : (
                                 <Stack isInline align="center" px="2">
-                                  <Spinner color="accent" size="icons.md" />
+                                  <Spinner color="accent" size="md" />
                                   <Text fontWeight="bold" fontSize="2xl">
                                     <Trans>Loading DMARC Phase</Trans>
                                   </Text>
                                 </Stack>
                               )}
                             </Box>
-                            {mergedScan?.scan.dkim && (
-                              <ScanCategoryDetails
-                                categoryName="dkim"
-                                categoryData={mergedScan.scan.dkim}
-                              />
-                            )}
-                            {mergedScan?.scan.dmarc && (
-                              <ScanCategoryDetails
-                                categoryName="dmarc"
-                                categoryData={mergedScan.scan.dmarc}
-                              />
-                            )}
-                            {mergedScan?.scan.spf && (
-                              <ScanCategoryDetails
-                                categoryName="spf"
-                                categoryData={mergedScan.scan.spf}
-                              />
-                            )}
+                            <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+                              {mergedScan?.scan.dkim && (
+                                <ScanCategoryDetails
+                                  categoryName="dkim"
+                                  categoryData={mergedScan.scan.dkim}
+                                />
+                              )}
+                              {mergedScan?.scan.dmarc && (
+                                <ScanCategoryDetails
+                                  categoryName="dmarc"
+                                  categoryData={mergedScan.scan.dmarc}
+                                />
+                              )}
+                              {mergedScan?.scan.spf && (
+                                <ScanCategoryDetails
+                                  categoryName="spf"
+                                  categoryData={mergedScan.scan.spf}
+                                />
+                              )}
+                            </Accordion>
                           </Stack>
                         </Box>
                       </Box>
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
-              </Collapse>
-              <PseudoBox
-                as={Flex}
-                width="100%"
-                justifyContent="center"
-                onClick={() => {
-                  if (openScanIndex === index) {
-                    setOpenScanIndex(-1)
-                    return
-                  }
+              </AccordionPanel>
 
-                  setOpenScanIndex(index)
-                }}
-                _hover={{ bg: ['', 'gray.100'] }}
-                role="button"
-              >
-                <Icon
-                  name={`${
-                    openScanIndex === index ? 'chevron-up' : 'chevron-down'
-                  }`}
-                  size="icons.lg"
-                />
-              </PseudoBox>
-              <Divider />
-            </React.Fragment>
+              <h2>
+                <AccordionButton
+                  justifyContent="center"
+                  bg="gray.100"
+                  _hover={{ bg: ['', 'gray.300'] }}
+                >
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+            </AccordionItem>
           )
         })}
-      </Stack>
+      </Accordion>
     </Box>
   )
 }
