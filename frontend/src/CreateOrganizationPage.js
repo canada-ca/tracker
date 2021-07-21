@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  SimpleGrid,
+  Heading,
+  Stack,
+  useToast,
+} from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
@@ -190,7 +198,11 @@ export default function CreateOrganizationPage() {
               />
             </InfoPanel>
 
-            <Stack mb="4" mt="4">
+            <SimpleGrid
+              columns={{ base: 1, md: 2 }}
+              spacing={{ base: 2, lg: 4 }}
+              mt="4"
+            >
               <CreateOrganizationField
                 name="nameEN"
                 language={t`English`}
@@ -201,9 +213,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Name`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="acronymEN"
                 language={t`English`}
@@ -214,9 +224,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Acronym`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="cityEN"
                 language={t`English`}
@@ -227,9 +235,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`City`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="provinceEN"
                 language={t`English`}
@@ -240,9 +246,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Province`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="countryEN"
                 language={t`English`}
@@ -253,9 +257,9 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Country`}
               />
-            </Stack>
+            </SimpleGrid>
 
-            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+            <Stack spacing={4} isInline justifyContent="space-between" my="6">
               <Button variant="primaryOutline" as={RouteLink} to="/admin">
                 <Trans>Back</Trans>
               </Button>
