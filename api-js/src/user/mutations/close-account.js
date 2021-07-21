@@ -374,6 +374,7 @@ export const closeAccount = new mutationWithClientMutationId({
                 WITH claims, domains, organizations
                 LET domainEdges = (
                   FOR v, e IN 1..1 OUTBOUND ${affiliation._from} claims
+                    FILTER e._to == ${domainObj._id}
                     RETURN { edgeKey: e._key, domainId: e._to }
                 )
                 LET removeDomainEdges = (
