@@ -56,7 +56,7 @@ describe('<DmarcGuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
     const { getByText } = render(
-      <MockedProvider addTypename={false} mocks={mocks}>
+      <MockedProvider mocks={mocks}>
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
