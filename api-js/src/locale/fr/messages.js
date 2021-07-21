@@ -110,7 +110,7 @@
       'Erreur de vérification des permissions. Impossible de demander des informations sur le domaine.',
     'Permission error, not an admin for this user.':
       "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-    'Permission error: Unable to close other users account.':
+    "Permission error: Unable to close other user's account.":
       "Erreur de permission: Impossible de fermer le compte d'un autre utilisateur.",
     'Phone number has been successfully removed.':
       'Le numéro de téléphone a été supprimé avec succès.',

@@ -106,8 +106,8 @@
       'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
       'Permission error, not an admin for this user.',
-    'Permission error: Unable to close other users account.':
-      'Permission error: Unable to close other users account.',
+    "Permission error: Unable to close other user's account.":
+      "Permission error: Unable to close other user's account.",
     'Phone number has been successfully removed.':
       'Phone number has been successfully removed.',
     'Phone number has been successfully set, you will receive a verification text message shortly.':

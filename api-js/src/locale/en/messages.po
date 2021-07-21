@@ -262,9 +262,9 @@ msgstr "Permission check error. Unable to request domain information."
 msgid "Permission error, not an admin for this user."
 msgstr "Permission error, not an admin for this user."
 
-#: src/user/mutations/close-account.js:50
-msgid "Permission error: Unable to close other users account."
-msgstr "Permission error: Unable to close other users account."
+#: src/user/mutations/close-account.js:54
+msgid "Permission error: Unable to close other user's account."
+msgstr "Permission error: Unable to close other user's account."
 
 #: src/user/mutations/remove-phone-number.js:81
 msgid "Phone number has been successfully removed."
@@ -274,7 +274,7 @@ msgstr "Phone number has been successfully removed."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:141
+#: src/user/mutations/update-user-profile.js:160
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -356,7 +356,7 @@ msgstr "Requesting {amount} records on the `SPF` connection exceeds the `{argSet
 msgid "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 
-#: src/user/mutations/close-account.js:482
+#: src/user/mutations/close-account.js:493
 msgid "Successfully closed account."
 msgstr "Successfully closed account."
 
@@ -454,25 +454,25 @@ msgstr "Unable to authenticate. Please try again."
 msgid "Unable to check permission. Please try again."
 msgstr "Unable to check permission. Please try again."
 
-#: src/user/mutations/close-account.js:62
+#: src/user/mutations/close-account.js:67
 msgid "Unable to close account of an undefined user."
 msgstr "Unable to close account of an undefined user."
 
-#: src/user/mutations/close-account.js:81
-#: src/user/mutations/close-account.js:91
-#: src/user/mutations/close-account.js:116
-#: src/user/mutations/close-account.js:126
-#: src/user/mutations/close-account.js:157
-#: src/user/mutations/close-account.js:172
-#: src/user/mutations/close-account.js:201
-#: src/user/mutations/close-account.js:211
-#: src/user/mutations/close-account.js:247
-#: src/user/mutations/close-account.js:358
-#: src/user/mutations/close-account.js:387
-#: src/user/mutations/close-account.js:411
-#: src/user/mutations/close-account.js:447
-#: src/user/mutations/close-account.js:464
-#: src/user/mutations/close-account.js:473
+#: src/user/mutations/close-account.js:88
+#: src/user/mutations/close-account.js:98
+#: src/user/mutations/close-account.js:123
+#: src/user/mutations/close-account.js:133
+#: src/user/mutations/close-account.js:164
+#: src/user/mutations/close-account.js:179
+#: src/user/mutations/close-account.js:208
+#: src/user/mutations/close-account.js:218
+#: src/user/mutations/close-account.js:254
+#: src/user/mutations/close-account.js:366
+#: src/user/mutations/close-account.js:397
+#: src/user/mutations/close-account.js:422
+#: src/user/mutations/close-account.js:458
+#: src/user/mutations/close-account.js:475
+#: src/user/mutations/close-account.js:484
 msgid "Unable to close account. Please try again."
 msgstr "Unable to close account. Please try again."
 
@@ -997,8 +997,8 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:123
-#: src/user/mutations/update-user-profile.js:132
+#: src/user/mutations/update-user-profile.js:134
+#: src/user/mutations/update-user-profile.js:143
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -1068,7 +1068,7 @@ msgstr "User could not be queried."
 msgid "User role was updated successfully."
 msgstr "User role was updated successfully."
 
-#: src/user/mutations/update-user-profile.js:73
+#: src/user/mutations/update-user-profile.js:75
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 
