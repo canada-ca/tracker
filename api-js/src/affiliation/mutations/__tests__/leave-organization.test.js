@@ -16,7 +16,17 @@ import { createQuerySchema } from '../../../query'
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('given a successful leave', () => {
-  let query, drop, truncate, schema, collections, transaction, i18n, user
+  let query,
+    drop,
+    truncate,
+    schema,
+    collections,
+    transaction,
+    i18n,
+    user,
+    org,
+    domain,
+    domain2
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -31,28 +41,6 @@ describe('given a successful leave', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-  beforeEach(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      emailValidated: true,
-    })
-  })
-  afterEach(async () => {
-    await truncate()
-    await drop()
-    consoleOutput.length = 0
-  })
-  
-  let org, domain, domain2
-  beforeAll(() => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -67,6 +55,17 @@ describe('given a successful leave', () => {
     })
   })
   beforeEach(async () => {
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+      emailValidated: true,
+    })
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -147,6 +146,12 @@ describe('given a successful leave', () => {
       _to: dmarcSummary._id,
     })
   })
+  afterEach(async () => {
+    await truncate()
+    await drop()
+    consoleOutput.length = 0
+  })
+
   describe('user is an org owner', () => {
     beforeEach(async () => {
       await collections.affiliations.save({
@@ -1555,7 +1560,7 @@ describe('given a successful leave', () => {
       )
 
       await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
-      
+
       const testAffiliationCursor =
         await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
       const testAffiliation = await testAffiliationCursor.next()
@@ -1836,7 +1841,7 @@ describe('given an unsuccessful leave', () => {
     })
     describe('user is an org owner', () => {
       describe('database error occurs', () => {
-        describe('when querying domainInfo', () => {
+        describe('when querying dmarcSummaryCheck', () => {
           it('throws an error', async () => {
             const mockedQuery = jest
               .fn()
@@ -1895,17 +1900,16 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+              `Database error occurred while checking for dmarc summaries for org: 123, when user: 123 attempted to leave: Error: Database error occurred.`,
             ])
           })
         })
-        describe('when querying dmarcSummaryCheck', () => {
+        describe('when querying domainInfo', () => {
           it('throws an error', async () => {
             const mockedQuery = jest
               .fn()
               .mockReturnValueOnce({
-                count: 1,
-                next: jest.fn().mockReturnValue({ count: 1 }),
+                all: jest.fn().mockReturnValue([]),
               })
               .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -1962,17 +1966,16 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while checking for dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+              `Database error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave: Error: Database error occurred.`,
             ])
           })
         })
       })
       describe('cursor error occurs', () => {
-        describe('when getting domainInfo', () => {
+        describe('when getting dmarc summary info', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest
+              all: jest
                 .fn()
                 .mockRejectedValue(new Error('Cursor error occurred.')),
             })
@@ -2030,7 +2033,73 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Cursor error occurred.`,
+              `Cursor error occurred when getting dmarc summary info for org: 123, when user: 123 attempted to leave: Error: Cursor error occurred.`,
+            ])
+          })
+        })
+        describe('when getting domainInfo', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockRejectedValue(new Error('Cursor error occurred.')),
+            })
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave: Error: Cursor error occurred.`,
             ])
           })
         })
@@ -2039,10 +2108,7 @@ describe('given an unsuccessful leave', () => {
         describe('when removing dmarcSummary data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest.fn().mockReturnValue([{}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2102,17 +2168,14 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove dmarc summaries for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing ownership data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest.fn().mockReturnValue([{}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2173,23 +2236,92 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove ownership for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove ownership for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing dkim result data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable leave organization. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove dkim results for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing scan data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockRejectedValue(new Error('Step error occurred.')),
             })
@@ -2245,24 +2377,22 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove scan results for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove scan results for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing domain', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce()
-                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
@@ -2323,24 +2453,22 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove domains for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove domains for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing affiliation, and org data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce()
-                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
@@ -2402,7 +2530,7 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove affiliations, and the org for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
@@ -2413,9 +2541,7 @@ describe('given an unsuccessful leave', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockReturnValue({
             count: 1,
-            next: jest.fn().mockReturnValue({
-              count: 1,
-            }),
+            all: jest.fn().mockReturnValue([]),
           })
 
           const mockedTransaction = jest.fn().mockReturnValue({
@@ -2475,7 +2601,7 @@ describe('given an unsuccessful leave', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Trx step error occurred when removing user: 123 affiliation with org: 123 err: Error: Step error occurred.`,
+            `Trx step error occurred when removing user: 123 affiliation with org: 123: Error: Step error occurred.`,
           ])
         })
       })
@@ -2545,7 +2671,7 @@ describe('given an unsuccessful leave', () => {
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `Trx commit error occurred when user: 123 attempted to leave org: 123. error: Error: Trx Commit Error`,
+          `Trx commit error occurred when user: 123 attempted to leave org: 123: Error: Trx Commit Error`,
         ])
       })
     })
@@ -2632,7 +2758,7 @@ describe('given an unsuccessful leave', () => {
     })
     describe('user is an org owner', () => {
       describe('database error occurs', () => {
-        describe('when querying domainInfo', () => {
+        describe('when querying dmarcSummaryCheck', () => {
           it('throws an error', async () => {
             const mockedQuery = jest
               .fn()
@@ -2693,17 +2819,16 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+              `Database error occurred while checking for dmarc summaries for org: 123, when user: 123 attempted to leave: Error: Database error occurred.`,
             ])
           })
         })
-        describe('when querying dmarcSummaryCheck', () => {
+        describe('when querying domainInfo', () => {
           it('throws an error', async () => {
             const mockedQuery = jest
               .fn()
               .mockReturnValueOnce({
-                count: 1,
-                next: jest.fn().mockReturnValue({ count: 1 }),
+                all: jest.fn().mockReturnValue([]),
               })
               .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -2762,17 +2887,16 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while checking for dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Database error occurred.`,
+              `Database error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave: Error: Database error occurred.`,
             ])
           })
         })
       })
       describe('cursor error occurs', () => {
-        describe('when getting domainInfo', () => {
+        describe('when getting dmarc summary info', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest
+              all: jest
                 .fn()
                 .mockRejectedValue(new Error('Cursor error occurred.')),
             })
@@ -2832,7 +2956,75 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave. error: Error: Cursor error occurred.`,
+              `Cursor error occurred when getting dmarc summary info for org: 123, when user: 123 attempted to leave: Error: Cursor error occurred.`,
+            ])
+          })
+        })
+        describe('when getting domainInfo', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockRejectedValue(new Error('Cursor error occurred.')),
+            })
+
+            const mockedTransaction = jest.fn()
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while while gathering domainInfo org: 123, when user: 123 attempted to leave: Error: Cursor error occurred.`,
             ])
           })
         })
@@ -2841,10 +3033,7 @@ describe('given an unsuccessful leave', () => {
         describe('when removing dmarcSummary data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest.fn().mockReturnValue([{}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2906,17 +3095,14 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove dmarc summaries for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove dmarc summaries for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing ownership data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest.fn().mockReturnValue([{}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2979,23 +3165,94 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove ownership for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove ownership for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
+            ])
+          })
+        })
+        describe('when removing dkim result data', () => {
+          it('throws an error', async () => {
+            const mockedQuery = jest.fn().mockReturnValue({
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
+            })
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Step error occurred.')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                  mutation {
+                    leaveOrganization (
+                      input: {
+                        orgId: "${toGlobalId('organizations', 123)}"
+                      }
+                    ) {
+                      result {
+                        ... on LeaveOrganizationResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections: jest.fn({ property: 'string' }),
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkOrgOwner: jest.fn().mockReturnValue(true),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: '123',
+                    emailValidated: true,
+                  }),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                "Impossible de quitter l'organisation. Veuillez réessayer.",
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred while attempting to remove dkim results for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing scan data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockRejectedValue(new Error('Step error occurred.')),
             })
@@ -3053,24 +3310,22 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove scan results for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove scan results for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing domain', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce()
-                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
@@ -3133,24 +3388,22 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove domains for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove domains for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
         describe('when removing affiliation, and org data', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              count: 1,
-              next: jest.fn().mockReturnValue({
-                count: 1,
-              }),
+              all: jest
+                .fn()
+                .mockReturnValueOnce([])
+                .mockReturnValue([{ count: 1 }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce()
-                .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
                 .mockReturnValueOnce()
@@ -3214,7 +3467,7 @@ describe('given an unsuccessful leave', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while attempting to remove affiliations, and the org for org: 123, when user: 123 attempted to leave. error: Error: Step error occurred.`,
+              `Trx step error occurred while attempting to remove affiliations, and the org for org: 123, when user: 123 attempted to leave: Error: Step error occurred.`,
             ])
           })
         })
@@ -3225,9 +3478,7 @@ describe('given an unsuccessful leave', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockReturnValue({
             count: 1,
-            next: jest.fn().mockReturnValue({
-              count: 1,
-            }),
+            all: jest.fn().mockReturnValue([]),
           })
 
           const mockedTransaction = jest.fn().mockReturnValue({
@@ -3289,7 +3540,7 @@ describe('given an unsuccessful leave', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Trx step error occurred when removing user: 123 affiliation with org: 123 err: Error: Step error occurred.`,
+            `Trx step error occurred when removing user: 123 affiliation with org: 123: Error: Step error occurred.`,
           ])
         })
       })
@@ -3361,7 +3612,7 @@ describe('given an unsuccessful leave', () => {
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `Trx commit error occurred when user: 123 attempted to leave org: 123. error: Error: Trx Commit Error`,
+          `Trx commit error occurred when user: 123 attempted to leave org: 123: Error: Trx Commit Error`,
         ])
       })
     })
