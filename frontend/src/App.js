@@ -11,7 +11,6 @@ import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { SkipLink } from './SkipLink'
-// import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
@@ -134,7 +133,6 @@ export default function App() {
           )}
         </Navigation>
 
-        {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
         <Main marginBottom={{ base: '40px', md: 'none' }}>
           <Suspense fallback={<LoadingMessage />}>
             <Switch>
