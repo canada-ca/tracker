@@ -17,12 +17,12 @@ import UserList from './UserList'
 export default function AdminPanel({ orgSlug, permission, orgId }) {
   return (
     <Stack spacing={10}>
-      <Tabs isFitted variant="enclosed">
+      <Tabs isFitted variant="enclosed-colored">
         <TabList mb="2">
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Users</Trans>
           </Tab>
         </TabList>
