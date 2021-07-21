@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Divider, Stack, Text, useToast } from '@chakra-ui/react'
+import { Button, Divider, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -74,8 +74,8 @@ export default function AdminPage() {
           <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
             <Trans>Welcome, Admin</Trans>
           </Text>
-          <Stack
-            flexDirection={['column', 'row']}
+          <Flex
+            flexDirection={{ base: 'column', md: 'row' }}
             align="center"
             justifyContent="space-between"
           >
@@ -99,7 +99,7 @@ export default function AdminPage() {
               <AddIcon mr={2} />
               <Trans>Create Organization</Trans>
             </Button>
-          </Stack>
+          </Flex>
           {options.length > 1 && selectedOrg !== 'none' ? (
             <>
               <OrganizationInformation
