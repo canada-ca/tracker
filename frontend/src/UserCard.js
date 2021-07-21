@@ -15,11 +15,9 @@ export function UserCard({ userName, displayName, role, ...props }) {
       <Text>{displayName}</Text>
       {role && (
         <Badge
-          color="primary"
-          bg="transparent"
-          borderColor="primary"
-          borderWidth="1px"
-          alignSelf={{ md: 'center' }}
+          variant="solid"
+          bg={role === 'USER' ? 'primary' : role === 'ADMIN' ? 'info' : 'weak'}
+          pt={1}
           mr={{ md: '1rem' }}
           justifySelf={{ base: 'start', md: 'end' }}
         >
