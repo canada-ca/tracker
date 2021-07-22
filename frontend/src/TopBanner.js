@@ -60,7 +60,7 @@ export const TopBanner = (props) => {
             variant="primaryHover"
             as={RouteLink}
             to="/"
-            mx={2}
+            mr={3}
             px={3}
             display={{ base: 'none', md: 'inline' }}
             onClick={signOut}
@@ -72,7 +72,7 @@ export const TopBanner = (props) => {
             variant="primaryWhite"
             as={RouteLink}
             to="/sign-in"
-            mx={2}
+            mr={3}
             px={3}
             display={{ base: 'none', md: 'inline' }}
           >
@@ -85,7 +85,7 @@ export const TopBanner = (props) => {
             variant="primaryHover"
             as={RouteLink}
             to="/create-user"
-            mx={2}
+            mr={3}
             px={3}
             display={{ base: 'none', md: 'inline' }}
           >
