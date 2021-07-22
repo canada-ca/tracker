@@ -102,7 +102,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed.`,
+        `Database error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
       )
       throw new Error(
         i18n._(
@@ -124,7 +124,19 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       }
     }
 
-    const affiliation = await affiliationCursor.next()
+    let affiliation
+    try {
+      affiliation = await affiliationCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
+      )
+      throw new Error(
+        i18n._(
+          t`Unable to remove user from this organization. Please try again.`,
+        ),
+      )
+    }
 
     let canRemove
     if (
@@ -161,10 +173,10 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Transaction step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
+          `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
         )
         throw new Error(
-          i18n._(t`Unable to remove user from organization. Please try again.`),
+          i18n._(t`Unable to remove user from this organization. Please try again.`),
         )
       }
 
@@ -172,10 +184,10 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         await trx.commit()
       } catch (err) {
         console.error(
-          `Transaction commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
+          `Trx commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
         )
         throw new Error(
-          i18n._(t`Unable to remove user from organization. Please try again.`),
+          i18n._(t`Unable to remove user from this organization. Please try again.`),
         )
       }
 
