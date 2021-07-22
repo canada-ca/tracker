@@ -126,7 +126,7 @@ export function DmarcReportSummaryGraph({ ...props }) {
 }
 
 function VerticalGraph({
-  width = 1200,
+  width = 1100,
   height = 500,
   margin = defaultVerticalMargin,
   ...props
@@ -177,12 +177,12 @@ function VerticalGraph({
   messageScale.range([yMax, 0])
 
   return width < 10 ? null : (
-    <div style={{ position: 'relative' }}>
-      <svg ref={containerRef} width={width} height={height}>
-        <rect width={width} height={height} fill={background} rx={14} />
+    <Box position="relative">
+      <svg ref={containerRef} width={width + 100} height={height}>
+        <rect width={width + 100} height={height} fill={background} rx={14} />
         <Grid
           top={margin.top}
-          left={margin.left}
+          left={margin.left + 60}
           xScale={dateScale}
           yScale={messageScale}
           width={xMax}
@@ -191,7 +191,7 @@ function VerticalGraph({
           strokeOpacity={0.1}
           xOffset={dateScale.bandwidth() / 2}
         />
-        <Group top={margin.top} left={margin.left}>
+        <Group top={margin.top} left={margin.left + 60}>
           <BarStack
             data={periods}
             keys={keys}
@@ -231,6 +231,9 @@ function VerticalGraph({
             }
           </BarStack>
           <AxisLeft
+            hideAxisLine={width < 500}
+            numTicks={width < 500 ? 0 : null}
+            left={0}
             scale={messageScale}
             stroke={textColour}
             tickStroke={textColour}
@@ -257,22 +260,20 @@ function VerticalGraph({
         </Group>
       </svg>
 
-      <div
-        style={{
-          position: 'absolute',
-          top: margin.top / 2 - 10,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          fontSize: '14px',
-        }}
+      <Box
+        position="absolute"
+        top={margin.top / 2 - 20}
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        fontSize="14px"
       >
         <LegendOrdinal
           scale={ordinalColorScale}
           direction="row"
           labelMargin="0 15px 0 0"
         />
-      </div>
+      </Box>
 
       {tooltipOpen && tooltipData && (
         <TooltipInPortal
@@ -307,7 +308,7 @@ function VerticalGraph({
           })}
         </TooltipInPortal>
       )}
-    </div>
+    </Box>
   )
 }
 
@@ -363,23 +364,21 @@ function HorizontalGraph({
   dateScale.rangeRound([yMax, 0])
 
   return width < 10 ? null : (
-    <div>
-      <div
-        style={{
-          position: 'absolute',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          left: margin.left / 2 - 17,
-          fontSize: '14px',
-        }}
+    <Box position="relative">
+      <Box
+        position="absolute"
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        left={margin.left / 2 - 25}
+        fontSize="14px"
       >
         <LegendOrdinal
           scale={ordinalColorScale}
           direction="row"
           labelMargin="0 15px 0 0"
         />
-      </div>
+      </Box>
       <svg ref={containerRef} width={width} height={height}>
         <rect width={width} height={height} fill={background} rx={14} />
         <Grid
@@ -494,6 +493,6 @@ function HorizontalGraph({
           })}
         </TooltipInPortal>
       )}
-    </div>
+    </Box>
   )
 }
