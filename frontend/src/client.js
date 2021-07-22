@@ -22,31 +22,6 @@ export function createCache() {
           findMyDomains: relayStylePagination(),
           findMyDmarcSummaries: relayStylePagination(),
           findMyOrganizations: relayStylePagination(['isAdmin']),
-          getOneTimeDkimScans: {
-            merge(existing = [], incoming) {
-              return [...existing, incoming]
-            },
-          },
-          getOneTimeDmarcScans: {
-            merge(existing = [], incoming) {
-              return [...existing, incoming]
-            },
-          },
-          getOneTimeHttpsScans: {
-            merge(existing = [], incoming) {
-              return [...existing, incoming]
-            },
-          },
-          getOneTimeSslScans: {
-            merge(existing = [], incoming) {
-              return [...existing, incoming]
-            },
-          },
-          getOneTimeSpfScans: {
-            merge(existing = [], incoming) {
-              return [...existing, incoming]
-            },
-          },
           getOneTimeScans: {
             merge(existing = [], incoming) {
               return [...existing, incoming]

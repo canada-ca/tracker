@@ -29,10 +29,6 @@ export default function RequestScanNotificationHandler({ children, ...props }) {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
       client.cache.writeQuery({
-        query: GET_ONE_TIME_DKIM_SCANS,
-        data: { getOneTimeDkimScans: subscriptionData.data.dkimScanData },
-      })
-      client.cache.writeQuery({
         query: GET_ONE_TIME_SCANS,
         data: { getOneTimeScans: subscriptionData.data.dkimScanData },
       })
@@ -41,10 +37,6 @@ export default function RequestScanNotificationHandler({ children, ...props }) {
   const { data: _dmarcData } = useSubscription(DMARC_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
-      client.cache.writeQuery({
-        query: GET_ONE_TIME_DMARC_SCANS,
-        data: { getOneTimeDmarcScans: subscriptionData.data.dmarcScanData },
-      })
       client.cache.writeQuery({
         query: GET_ONE_TIME_SCANS,
         data: { getOneTimeScans: subscriptionData.data.dmarcScanData },
@@ -63,10 +55,6 @@ export default function RequestScanNotificationHandler({ children, ...props }) {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
       client.cache.writeQuery({
-        query: GET_ONE_TIME_SPF_SCANS,
-        data: { getOneTimeSpfScans: subscriptionData.data.spfScanData },
-      })
-      client.cache.writeQuery({
         query: GET_ONE_TIME_SCANS,
         data: { getOneTimeScans: subscriptionData.data.spfScanData },
       })
@@ -75,10 +63,6 @@ export default function RequestScanNotificationHandler({ children, ...props }) {
   const { data: _sslData } = useSubscription(SSL_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
-      client.cache.writeQuery({
-        query: GET_ONE_TIME_SSL_SCANS,
-        data: { getOneTimeSslScans: subscriptionData.data.sslScanData },
-      })
       client.cache.writeQuery({
         query: GET_ONE_TIME_SCANS,
         data: { getOneTimeScans: subscriptionData.data.sslScanData },
@@ -96,10 +80,6 @@ export default function RequestScanNotificationHandler({ children, ...props }) {
   const { data: _httpsData } = useSubscription(HTTPS_SCAN_DATA, {
     skip: !isLoggedIn(),
     onSubscriptionData: ({ subscriptionData, client }) => {
-      client.cache.writeQuery({
-        query: GET_ONE_TIME_HTTPS_SCANS,
-        data: { getOneTimeHttpsScans: subscriptionData.data.httpsScanData },
-      })
       client.cache.writeQuery({
         query: GET_ONE_TIME_SCANS,
         data: { getOneTimeScans: subscriptionData.data.httpsScanData },
