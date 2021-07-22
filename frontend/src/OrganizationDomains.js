@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Trans } from '@lingui/macro'
 import { Box, Divider, Text } from '@chakra-ui/react'
 import { PAGINATED_ORG_DOMAINS as FORWARD } from './graphql/queries'
@@ -10,6 +10,7 @@ import { ListOf } from './ListOf'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
 import { RelayPaginationControls } from './RelayPaginationControls'
+import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
 
 export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
   const {
@@ -28,6 +29,10 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
     relayRoot: 'findOrganizationBySlug.domains',
   })
 
+  const [infoState, changeInfoState] = useState({
+    isVisible: false,
+  })
+
   if (error) return <ErrorFallbackMessage error={error} />
 
   if (loading)
@@ -39,6 +44,41 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
 
   return (
     <Box>
+      <InfoButton
+        w="100%"
+        label="Glossary"
+        state={infoState}
+        changeState={changeInfoState}
+      />
+
+      <InfoPanel state={infoState}>
+        <InfoBox title="Domain" info="The domain address." />
+        <InfoBox
+          title="Last scanned"
+          info="The time the domain was last scanned by the system."
+        />
+        <InfoBox
+          title="HTTPS"
+          info="Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments."
+        />
+        <InfoBox
+          title="SSL"
+          info="Shows if the domain meets the Secure Sockets Layer (SSL) requirements."
+        />
+        <InfoBox
+          title="SPF"
+          info="Shows if the domain meets the Sender Policy Framework (SPF) requiremtns."
+        />
+        <InfoBox
+          title="DKIM"
+          info="Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
+        />
+        <InfoBox
+          title="DMARC"
+          info="Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
+        />
+      </InfoPanel>
+
       <ListOf
         elements={nodes}
         ifEmpty={() => (
