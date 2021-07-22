@@ -199,7 +199,7 @@ msgstr "Permission Denied: Please contact organization admin for help with remov
 msgid "Permission Denied: Please contact organization admin for help with removing organization."
 msgstr "Permission Denied: Please contact organization admin for help with removing organization."
 
-#: src/affiliation/mutations/remove-user-from-org.js:202
+#: src/affiliation/mutations/remove-user-from-org.js:214
 msgid "Permission Denied: Please contact organization admin for help with removing users."
 msgstr "Permission Denied: Please contact organization admin for help with removing users."
 
@@ -372,7 +372,7 @@ msgstr "Successfully email verified account, and set TFA send method to email."
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
-#: src/affiliation/mutations/leave-organization.js:427
+#: src/affiliation/mutations/leave-organization.js:444
 msgid "Successfully left organization: {0}"
 msgstr "Successfully left organization: {0}"
 
@@ -380,11 +380,11 @@ msgstr "Successfully left organization: {0}"
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "Successfully removed domain: {0} from {1}."
 
-#: src/organization/mutations/remove-organization.js:441
+#: src/organization/mutations/remove-organization.js:471
 msgid "Successfully removed organization: {0}."
 msgstr "Successfully removed organization: {0}."
 
-#: src/affiliation/mutations/remove-user-from-org.js:188
+#: src/affiliation/mutations/remove-user-from-org.js:200
 msgid "Successfully removed user from organization."
 msgstr "Successfully removed user from organization."
 
@@ -426,14 +426,16 @@ msgstr "Two factor code length is incorrect. Please try again."
 
 #: src/affiliation/mutations/leave-organization.js:80
 #: src/affiliation/mutations/leave-organization.js:90
-#: src/affiliation/mutations/leave-organization.js:110
-#: src/affiliation/mutations/leave-organization.js:156
-#: src/affiliation/mutations/leave-organization.js:177
-#: src/affiliation/mutations/leave-organization.js:328
-#: src/affiliation/mutations/leave-organization.js:357
-#: src/affiliation/mutations/leave-organization.js:390
-#: src/affiliation/mutations/leave-organization.js:410
-#: src/affiliation/mutations/leave-organization.js:420
+#: src/affiliation/mutations/leave-organization.js:121
+#: src/affiliation/mutations/leave-organization.js:138
+#: src/affiliation/mutations/leave-organization.js:169
+#: src/affiliation/mutations/leave-organization.js:179
+#: src/affiliation/mutations/leave-organization.js:217
+#: src/affiliation/mutations/leave-organization.js:339
+#: src/affiliation/mutations/leave-organization.js:372
+#: src/affiliation/mutations/leave-organization.js:409
+#: src/affiliation/mutations/leave-organization.js:427
+#: src/affiliation/mutations/leave-organization.js:437
 msgid "Unable leave organization. Please try again."
 msgstr "Unable leave organization. Please try again."
 
@@ -809,15 +811,17 @@ msgstr "Unable to remove domain from unknown organization."
 msgid "Unable to remove domain. Please try again."
 msgstr "Unable to remove domain. Please try again."
 
-#: src/organization/mutations/remove-organization.js:113
-#: src/organization/mutations/remove-organization.js:125
-#: src/organization/mutations/remove-organization.js:147
-#: src/organization/mutations/remove-organization.js:193
-#: src/organization/mutations/remove-organization.js:214
-#: src/organization/mutations/remove-organization.js:356
-#: src/organization/mutations/remove-organization.js:385
-#: src/organization/mutations/remove-organization.js:419
-#: src/organization/mutations/remove-organization.js:430
+#: src/organization/mutations/remove-organization.js:112
+#: src/organization/mutations/remove-organization.js:124
+#: src/organization/mutations/remove-organization.js:156
+#: src/organization/mutations/remove-organization.js:173
+#: src/organization/mutations/remove-organization.js:205
+#: src/organization/mutations/remove-organization.js:217
+#: src/organization/mutations/remove-organization.js:256
+#: src/organization/mutations/remove-organization.js:378
+#: src/organization/mutations/remove-organization.js:411
+#: src/organization/mutations/remove-organization.js:449
+#: src/organization/mutations/remove-organization.js:460
 msgid "Unable to remove organization. Please try again."
 msgstr "Unable to remove organization. Please try again."
 
@@ -842,12 +846,10 @@ msgstr "Unable to remove unknown user from organization."
 msgid "Unable to remove user from organization."
 msgstr "Unable to remove user from organization."
 
-#: src/affiliation/mutations/remove-user-from-org.js:167
-#: src/affiliation/mutations/remove-user-from-org.js:178
-msgid "Unable to remove user from organization. Please try again."
-msgstr "Unable to remove user from organization. Please try again."
-
 #: src/affiliation/mutations/remove-user-from-org.js:109
+#: src/affiliation/mutations/remove-user-from-org.js:136
+#: src/affiliation/mutations/remove-user-from-org.js:179
+#: src/affiliation/mutations/remove-user-from-org.js:190
 msgid "Unable to remove user from this organization. Please try again."
 msgstr "Unable to remove user from this organization. Please try again."
 
