@@ -102,7 +102,7 @@ export const currentUserVar = makeVar({
 const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV === 'production'
-      ? 'https://tracker.alpha.canada.ca/graphql'
+      ? `https://${window.location.host}/graphql`
       : '/graphql',
 })
 
@@ -123,7 +123,7 @@ const httpLinkWithHeaders = headersLink.concat(httpLink)
 const wsLink = new WebSocketLink({
   uri:
     process.env.NODE_ENV === 'production'
-      ? 'wss://tracker.alpha.canada.ca/graphql'
+      ? `wss://${window.location.host}/graphql`
       : 'ws:localhost:3000/graphql',
 
   options: {
