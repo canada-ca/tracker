@@ -1,7 +1,11 @@
 import request from 'supertest'
 import { Server } from '../server'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { databaseOptions } from '../../database-options'
 
 const {
+  DB_PASS: rootPass,
+  DB_URL: url,
   DEPTH_LIMIT: maxDepth,
   COST_LIMIT: complexityCost,
   SCALAR_COST: scalarCost,
@@ -9,6 +13,8 @@ const {
   LIST_FACTOR: listFactor,
 } = process.env
 
+const name = dbNameFromFile(__filename)
+let drop
 describe('parse server', () => {
   const consoleOutput = []
   const mockedLog = (output) => consoleOutput.push(output)
@@ -16,7 +22,17 @@ describe('parse server', () => {
   beforeAll(async () => {
     console.log = mockedLog
     console.warn = mockedWarn
+    // create the database so that middleware can connect
+    ;({ drop } = await ensure({
+      type: 'database',
+      name,
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
+
+  afterAll(() => drop())
 
   afterEach(() => {
     consoleOutput.length = 0
@@ -24,14 +40,36 @@ describe('parse server', () => {
 
   describe('/alive', () => {
     it('returns 200', async () => {
-      const response = await request(await Server({ query: jest.fn() })).get('/alive')
+      const server = await Server({
+        arango: {
+          db: name,
+          url,
+          as: {
+            username: 'root',
+            password: rootPass,
+          },
+        },
+      })
+
+      const response = await request(server).get('/alive')
       expect(response.status).toEqual(200)
     })
   })
 
   describe('/ready', () => {
     it('returns 200', async () => {
-      const response = await request(await Server({ query: jest.fn() })).get('/ready')
+      const server = await Server({
+        arango: {
+          db: name,
+          url,
+          as: {
+            username: 'root',
+            password: rootPass,
+          },
+        },
+      })
+
+      const response = await request(server).get('/ready')
       expect(response.status).toEqual(200)
     })
   })
@@ -41,6 +79,14 @@ describe('parse server', () => {
       it('returns 200', async () => {
         const response = await request(
           await Server({
+            arango: {
+              db: name,
+              url,
+              as: {
+                username: 'root',
+                password: rootPass,
+              },
+            },
             maxDepth,
             complexityCost,
             scalarCost,
@@ -66,6 +112,14 @@ describe('parse server', () => {
         it('returns an error message', async () => {
           const response = await request(
             await Server({
+              arango: {
+                db: name,
+                url,
+                as: {
+                  username: 'root',
+                  password: rootPass,
+                },
+              },
               maxDepth,
               complexityCost: 1,
               scalarCost: 100,
@@ -92,6 +146,14 @@ describe('parse server', () => {
         it('returns an error message', async () => {
           const response = await request(
             await Server({
+              arango: {
+                db: name,
+                url,
+                as: {
+                  username: 'root',
+                  password: rootPass,
+                },
+              },
               maxDepth: 1,
               complexityCost: 1000,
               scalarCost: 1,
