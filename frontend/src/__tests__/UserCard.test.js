@@ -26,7 +26,7 @@ describe('<UserCard />', () => {
             <I18nProvider i18n={i18n}>
               <UserCard
                 userName="testuser@testemail.gc.ca"
-                tfa={false}
+                displayName="Some Test User"
                 role="USER"
               />
             </I18nProvider>
