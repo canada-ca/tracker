@@ -61,41 +61,6 @@ const failMocks = [
 ]
 
 describe('<EmailValidationPage />', () => {
-  describe('on render', () => {
-    it('page renders', async () => {
-      const { queryByText } = render(
-        <MockedProvider mocks={successMocks}>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <ChakraProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={[
-                    '/validate/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
-                  ]}
-                  initialIndex={0}
-                >
-                  <Route path="/validate/:verifyToken">
-                    <EmailValidationPage />
-                  </Route>
-                </MemoryRouter>
-              </I18nProvider>
-            </ChakraProvider>
-          </UserVarProvider>
-        </MockedProvider>,
-      )
-
-      await waitFor(() =>
-        expect(queryByText(/Email Validation Page/)).toBeInTheDocument(),
-      )
-    })
-  })
-
   describe('after loading mutation', () => {
     it('displays an error message', async () => {
       const { queryByText } = render(
@@ -123,6 +88,10 @@ describe('<EmailValidationPage />', () => {
             </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
+      )
+
+      await waitFor(() =>
+        expect(queryByText(/Email Validation Page/)).toBeInTheDocument(),
       )
 
       await waitFor(() =>
@@ -160,6 +129,10 @@ describe('<EmailValidationPage />', () => {
             </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
+      )
+
+      await waitFor(() =>
+        expect(queryByText(/Email Validation Page/)).toBeInTheDocument(),
       )
 
       await waitFor(() =>

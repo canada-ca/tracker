@@ -19,7 +19,7 @@ const i18n = setupI18n({
   },
 })
 
-const handleChange = (opt) => console.log(opt.label)
+const handleChange = () => {}
 
 describe('<Dropdown />', () => {
   const mocks = [
@@ -50,7 +50,11 @@ describe('<Dropdown />', () => {
     const { getByText, getByPlaceholderText } = render(
       <MockedProvider>
         <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+          userVar={makeVar({
+            jwt: null,
+            tfaSendMethod: null,
+            userName: null,
+          })}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>

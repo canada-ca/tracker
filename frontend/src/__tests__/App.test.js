@@ -8,6 +8,7 @@ import App from '../App'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
+import { REFRESH_TOKENS } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -19,6 +20,26 @@ const i18n = setupI18n({
   },
 })
 
+const mocks = [
+  {
+    request: {
+      query: REFRESH_TOKENS,
+    },
+    result: {
+      data: {
+        refreshTokens: {
+          result: {
+            code: 400,
+            description: 'Unable to refresh tokens, please sign in.',
+            __typename: 'AuthenticateError',
+          },
+          __typename: 'RefreshTokensPayload',
+        },
+      },
+    },
+  },
+]
+
 describe('<App/>', () => {
   afterEach(cleanup)
 
@@ -26,7 +47,7 @@ describe('<App/>', () => {
     describe('/', () => {
       it('renders the main page', async () => {
         const { getByText } = render(
-          <MockedProvider>
+          <MockedProvider mocks={mocks}>
             <UserVarProvider
               userVar={makeVar({
                 jwt: null,
@@ -51,7 +72,7 @@ describe('<App/>', () => {
     describe('/domains', () => {
       it('renders the sign-in page', async () => {
         const { getByText } = render(
-          <MockedProvider>
+          <MockedProvider mocks={mocks}>
             <UserVarProvider
               userVar={makeVar({
                 jwt: null,

@@ -233,6 +233,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <Input
               type="text"
               placeholder={t`Domain URL`}
+              aria-label={t`Domain URL`}
               onChange={(e) => setNewDomainUrl(e.target.value)}
             />
           </InputGroup>
