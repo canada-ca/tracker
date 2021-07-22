@@ -72,8 +72,8 @@ export default function AdminPage() {
         <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
           <Trans>Welcome, Admin</Trans>
         </Text>
-        <Stack
-          flexDirection={['column', 'row']}
+        <Flex
+          flexDirection={{ base: 'column', md: 'row' }}
           align="center"
           justifyContent="space-between"
         >
@@ -98,7 +98,7 @@ export default function AdminPage() {
             <AddIcon mr={2} />
             <Trans>Create Organization</Trans>
           </Button>
-        </Stack>
+        </Flex>
         {options.length > 1 && selectedOrg !== 'none' ? (
           <>
             <OrganizationInformation
