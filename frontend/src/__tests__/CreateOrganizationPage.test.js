@@ -53,7 +53,7 @@ describe('<CreateOrganizationPage />', () => {
       </MockedProvider>,
     )
 
-    const welcomeMessage = /Create an organization by filling out the following info in both English and French/i
+    const welcomeMessage = /Create an organization/i
 
     await waitFor(() => expect(getByText(welcomeMessage)).toBeInTheDocument())
   })
