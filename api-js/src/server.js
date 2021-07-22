@@ -18,6 +18,7 @@ import { createI18n } from './create-i18n'
 import { verifyToken, userRequired, verifiedRequired } from './auth'
 import { loadUserByKey } from './user/loaders'
 import { customOnConnect } from './on-connect'
+import { arangodb } from 'arango-express'
 
 const createSchema = () =>
   new GraphQLSchema({
@@ -48,6 +49,7 @@ const createValidationRules = (
 }
 
 export const Server = async ({
+  arango = {},
   maxDepth,
   complexityCost,
   scalarCost,
@@ -68,12 +70,33 @@ export const Server = async ({
     }),
   )
 
+  app.use(arangodb(arango))
+
   app.get('/alive', (_req, res) => {
     res.json({ ok: 'yes' })
   })
 
   app.get('/ready', (_req, res) => {
     res.json({ ok: 'yes' })
+  })
+
+  // default error handler
+  app.use(function (err, _req, res, _next) {
+    res.status(200).json({
+      error: {
+        errors: [
+          {
+            message: err,
+            locations: [
+              {
+                line: 1,
+                column: 1,
+              },
+            ],
+          },
+        ],
+      },
+    })
   })
 
   const httpServer = http.createServer(app)
