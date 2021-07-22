@@ -13,6 +13,7 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { i18n } from '@lingui/core'
 import { WebSocketLink } from '@apollo/client/link/ws'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 export function createCache() {
   return new InMemoryCache({
@@ -95,13 +96,11 @@ const headersLink = setContext((_, { headers }) => {
 
 const httpLinkWithHeaders = headersLink.concat(httpLink)
 
-const wsLink = new WebSocketLink({
-  uri:
-    process.env.NODE_ENV === 'production'
-      ? `wss://${window.location.host}/graphql`
-      : 'ws://localhost:3000/graphql',
-
-  options: {
+export const wsClient = new SubscriptionClient(
+  process.env.NODE_ENV === 'production'
+    ? `wss://${window.location.host}/graphql`
+    : 'ws://localhost:3000/graphql',
+  {
     lazy: true,
     reconnect: true,
     connectionParams: () => {
@@ -111,7 +110,9 @@ const wsLink = new WebSocketLink({
       }
     },
   },
-})
+)
+
+const wsLink = new WebSocketLink(wsClient)
 
 const splitLink = split(
   ({ query }) => {
