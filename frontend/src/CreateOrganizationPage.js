@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import { Box, Heading, Stack, useToast } from '@chakra-ui/core'
+import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
 import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { TrackerButton } from './TrackerButton'
 import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import CreateOrganizationField from './CreateOrganizationField'
@@ -18,7 +17,7 @@ export default function CreateOrganizationPage() {
   const history = useHistory()
 
   const [infoState, changeInfoState] = useState({
-    isHidden: true,
+    isVisible: false,
   })
 
   const validationSchema = object().shape({
@@ -259,22 +258,18 @@ export default function CreateOrganizationPage() {
             </Stack>
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <TrackerButton
-                as={RouteLink}
-                variant="primary outline"
-                to="/admin"
-              >
+              <Button variant="primaryOutline" as={RouteLink} to="/admin">
                 <Trans>Back</Trans>
-              </TrackerButton>
+              </Button>
 
-              <TrackerButton
+              <Button
+                variant="primary"
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Create Organization</Trans>
-              </TrackerButton>
+              </Button>
             </Stack>
           </form>
         )}

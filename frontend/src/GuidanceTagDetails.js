@@ -1,6 +1,12 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Icon, Link, Stack, Text } from '@chakra-ui/core'
+import { Box, Link, Stack, Text } from '@chakra-ui/react'
+import {
+  CheckCircleIcon,
+  ExternalLinkIcon,
+  InfoIcon,
+  WarningIcon,
+} from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
 
 export function GuidanceTagDetails({ guidanceTag, tagType }) {
@@ -20,7 +26,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <Icon name="external-link" />
+              <ExternalLinkIcon />
             </Stack>
           </Link>
         ))}
@@ -45,7 +51,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <Icon name="external-link" />
+              <ExternalLinkIcon />
             </Stack>
           </Link>
         ))}
@@ -54,25 +60,20 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
       ''
     )
 
-  const smallDevice = window.matchMedia('(max-width: 500px)').matches
-
-  const negativeIcon = <Icon name="warning" color="weak" />
-  const neutralIcon = <Icon name="info" color="info" />
-  const positiveIcon = <Icon name="check-circle" color="strong" />
-
-  const tagIcon = () => {
-    if (tagType === 'negative') return negativeIcon
-    else if (tagType === 'neutral') return neutralIcon
-    else if (tagType === 'positive') return positiveIcon
+  const tagIcon = (props) => {
+    if (tagType === 'negative') return <WarningIcon color="weak" {...props} />
+    else if (tagType === 'neutral') return <InfoIcon color="info" {...props} />
+    else if (tagType === 'positive')
+      return <CheckCircleIcon color="strong" {...props} />
   }
 
   return (
-    <Stack isInline align="center" px="2" pt={['2', '0']}>
-      {!smallDevice && tagIcon()}
+    <Stack isInline align="center" px="2" pt="2">
+      {tagIcon({ display: { base: 'none', md: 'inherit' } })}
       <Box>
         <Stack isInline align="center">
-          {smallDevice && tagIcon()}
-          <Text fontWeight="bold">
+          {tagIcon({ display: { base: 'inherit', md: 'none' } })}
+          <Text fontWeight="bold" ml={{ base: 2, md: 0 }}>
             <Trans>Result:</Trans>
           </Text>
           <Text>{guidanceTag.tagName}</Text>

@@ -1,17 +1,17 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { ListOf } from '../ListOf'
 
 describe('<ListOf />', () => {
   describe('when passed a null value', () => {
     it('wraps the return value of the ifEmpty prop in a List', async () => {
       const { getByText } = render(
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <ListOf elements={null} ifEmpty={() => <em>nothing</em>}>
             {() => <p>something</p>}
           </ListOf>
-        </ThemeProvider>,
+        </ChakraProvider>,
       )
 
       await waitFor(() => {
@@ -22,11 +22,11 @@ describe('<ListOf />', () => {
   describe('with an empty array', () => {
     it('wraps the return value of the ifEmpty prop in a List', async () => {
       const { getByText } = render(
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <ListOf elements={[]} ifEmpty={() => <em>nothing</em>}>
             {() => <p>something</p>}
           </ListOf>
-        </ThemeProvider>,
+        </ChakraProvider>,
       )
 
       await waitFor(() => {
@@ -39,14 +39,14 @@ describe('<ListOf />', () => {
     it('calls the child function once for each object', async () => {
       const mock = jest.fn()
       render(
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <ListOf
             elements={[{ foo: 'foo' }, { bar: 'bar' }]}
             ifEmpty={() => <em>nothing</em>}
           >
             {mock}
           </ListOf>
-        </ThemeProvider>,
+        </ChakraProvider>,
       )
 
       await waitFor(() => {
@@ -57,14 +57,14 @@ describe('<ListOf />', () => {
     it('passes the current element and the index as arguments', async () => {
       const mock = jest.fn()
       render(
-        <ThemeProvider theme={theme}>
+        <ChakraProvider theme={theme}>
           <ListOf
             elements={[{ foo: 'foo' }, { bar: 'bar' }]}
             ifEmpty={() => <em>nothing</em>}
           >
             {mock}
           </ListOf>
-        </ThemeProvider>,
+        </ChakraProvider>,
       )
 
       await waitFor(() => {

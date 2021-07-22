@@ -2,14 +2,22 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
-import { Box, Heading, Link, Text, useToast } from '@chakra-ui/core'
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  Heading,
+  Link,
+  Text,
+  useToast,
+} from '@chakra-ui/react'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { SIGN_IN } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
 import { useLingui } from '@lingui/react'
@@ -106,14 +114,18 @@ export default function SignInPage() {
     <Box px="4" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: '', password: '', rememberMe: false }}
         onSubmit={async (values) => {
           signIn({
-            variables: { userName: values.email, password: values.password },
+            variables: {
+              userName: values.email,
+              password: values.password,
+              rememberMe: values.rememberMe,
+            },
           })
         }}
       >
-        {({ handleSubmit, isSubmitting }) => (
+        {({ handleSubmit, isSubmitting, handleChange }) => (
           <form
             onSubmit={handleSubmit}
             role="form"
@@ -127,17 +139,33 @@ export default function SignInPage() {
 
             <EmailField name="email" mb="4" />
 
-            <PasswordField name="password" mb="1" />
+            <PasswordField name="password" mb="2" />
 
-            <Box width="fit-content">
-              <Link as={RouteLink} to="/forgot-password" color="primary">
-                <Text mb="4">
+            <Flex align="center" mb="4">
+              <Checkbox
+                name="rememberMe"
+                colorScheme="orange"
+                size="lg"
+                onChange={handleChange}
+              >
+                <Text fontSize="md">
+                  <Trans>Remember me</Trans>
+                </Text>
+              </Checkbox>
+
+              <Link
+                as={RouteLink}
+                to="/forgot-password"
+                color="primary"
+                ml="auto"
+              >
+                <Text>
                   <Trans>Forgot your password?</Trans>
                 </Text>
               </Link>
-            </Box>
+            </Flex>
 
-            <TrackerButton
+            <Button
               variant="primary"
               isLoading={isSubmitting}
               type="submit"
@@ -145,7 +173,7 @@ export default function SignInPage() {
               mb={5}
             >
               <Trans>Sign In</Trans>
-            </TrackerButton>
+            </Button>
           </form>
         )}
       </Formik>

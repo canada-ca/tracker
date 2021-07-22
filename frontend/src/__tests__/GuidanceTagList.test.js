@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
@@ -43,7 +43,7 @@ describe('<GuidanceTagList />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <GuidanceTagList
@@ -55,7 +55,7 @@ describe('<GuidanceTagList />', () => {
                 />
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -67,7 +67,7 @@ describe('<GuidanceTagList />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <GuidanceTagList
@@ -79,7 +79,7 @@ describe('<GuidanceTagList />', () => {
                 />
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -93,7 +93,7 @@ describe('<GuidanceTagList />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <GuidanceTagList
@@ -105,7 +105,7 @@ describe('<GuidanceTagList />', () => {
                 />
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )

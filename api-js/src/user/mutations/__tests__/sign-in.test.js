@@ -13,7 +13,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 
 const mockNotify = jest.fn()
 
@@ -377,7 +377,7 @@ describe('authenticate user account', () => {
                 httpOnly: true,
                 expires: 0,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([
@@ -472,9 +472,9 @@ describe('authenticate user account', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: 86400000,
+                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([
@@ -1672,7 +1672,7 @@ describe('authenticate user account', () => {
                 httpOnly: true,
                 expires: 0,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([
@@ -1767,9 +1767,9 @@ describe('authenticate user account', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: 86400000,
+                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
                 sameSite: true,
-                secure: false,
+                secure: true,
               },
             )
             expect(consoleOutput).toEqual([

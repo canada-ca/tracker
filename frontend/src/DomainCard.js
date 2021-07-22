@@ -2,26 +2,26 @@ import React from 'react'
 import { Trans } from '@lingui/macro'
 import {
   Box,
+  Button,
   Divider,
   Flex,
-  Icon,
   ListItem,
   Stack,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
 import { Link as RouteLink } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
-import { TrackerButton } from './TrackerButton'
 
 export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
   const generateStatusIcon = (status) => {
     let statusIcon
     if (status === 'PASS') {
-      statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
+      statusIcon = <CheckCircleIcon color="strong" size="icons.sm" />
     } else if (status === 'FAIL') {
-      statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
+      statusIcon = <WarningIcon color="weak" size="icons.sm" />
     } else {
-      statusIcon = <Icon name="info" color="info" size="icons.sm" />
+      statusIcon = <InfoIcon color="info" size="icons.sm" />
     }
     return statusIcon
   }
@@ -47,10 +47,7 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           </Text>
           <Text isTruncated>{url}</Text>
         </Box>
-        <Divider
-          orientation={{ base: 'horizontal', md: 'vertical' }}
-          alignSelf="stretch"
-        />
+        <Divider variant="card" display={{ md: 'none' }} />
         <Box
           flexShrink="0"
           textAlign="left"
@@ -70,21 +67,26 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
             </Text>
           )}
         </Box>
-        <Divider
-          orientation={{ base: 'horizontal', md: 'vertical' }}
-          alignSelf="stretch"
-        />
+        <Divider variant="card" display={{ md: 'none' }} />
         {lastRan && (
-          <Stack
-            flexDirection={{ base: 'column', md: 'row' }}
-            flexGrow={{ base: 0, md: '1' }}
-          >
-            <Box ml={{ md: 2 }} mr={{ md: 2 }}>
+          <>
+            <Flex
+              flexDirection={{ base: 'column', md: 'row' }}
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              px={{ base: 2, md: 0 }}
+              py={{ base: 1, md: 2 }}
+              mx={{ base: 0, md: 1 }}
+              my={{ base: 2, md: 0 }}
+              bg="gray.100"
+            >
               <Stack
                 align="center"
                 flexDirection={{ base: 'row', md: 'column' }}
                 justifyContent="space-between"
                 spacing={0}
+                mx={{ md: 2 }}
               >
                 <Text
                   fontWeight="bold"
@@ -96,13 +98,12 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
                 </Text>
                 {generateStatusIcon(status.https)}
               </Stack>
-            </Box>
-            <Box ml={{ md: 2 }} mr={{ md: 2 }}>
               <Stack
                 align="center"
                 flexDirection={{ base: 'row', md: 'column' }}
                 justifyContent="space-between"
                 spacing={0}
+                mx={{ md: 2 }}
               >
                 <Text
                   fontWeight="bold"
@@ -114,13 +115,24 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
                 </Text>
                 {generateStatusIcon(status.ssl)}
               </Stack>
-            </Box>
-            <Box ml={{ md: 2 }} mr={{ md: 2 }}>
+            </Flex>
+            <Flex
+              flexDirection={{ base: 'column', md: 'row' }}
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              px={{ base: 2, md: 0 }}
+              py={{ base: 1, md: 2 }}
+              mx={{ base: 0, md: 1 }}
+              my={{ base: 2, md: 0 }}
+              bg="gray.100"
+            >
               <Stack
                 align="center"
                 flexDirection={{ base: 'row', md: 'column' }}
                 justifyContent="space-between"
                 spacing={0}
+                mx={{ md: 2 }}
               >
                 <Text
                   fontWeight="bold"
@@ -132,13 +144,12 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
                 </Text>
                 {generateStatusIcon(status.spf)}
               </Stack>
-            </Box>
-            <Box ml={{ md: 2 }} mr={{ md: 2 }}>
               <Stack
                 align="center"
                 flexDirection={{ base: 'row', md: 'column' }}
                 justifyContent="space-between"
                 spacing={0}
+                mx={{ md: 2 }}
               >
                 <Text
                   fontWeight="bold"
@@ -150,13 +161,12 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
                 </Text>
                 {generateStatusIcon(status.dkim)}
               </Stack>
-            </Box>
-            <Box ml={{ md: 2 }} mr={{ md: 2 }}>
               <Stack
                 align="center"
                 flexDirection={{ base: 'row', md: 'column' }}
                 justifyContent="space-between"
                 spacing={0}
+                mx={{ md: 2 }}
               >
                 <Text
                   fontWeight="bold"
@@ -168,20 +178,18 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
                 </Text>
                 {generateStatusIcon(status.dmarc)}
               </Stack>
-            </Box>
-            <Divider
-              orientation={{ base: 'horizontal', md: 'vertical' }}
-              alignSelf="stretch"
-            />
-          </Stack>
+            </Flex>
+            <Divider variant="card" display={{ md: 'none' }} />
+          </>
         )}
         <Stack
           fontSize="sm"
           justifySelf="flex-end"
           alignSelf="stretch"
           justifyContent="center"
+          ml={2}
         >
-          <TrackerButton
+          <Button
             variant="primary"
             as={RouteLink}
             to={`/domains/${url}`}
@@ -190,10 +198,10 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
             <Text whiteSpace="noWrap">
               <Trans>Guidance</Trans>
             </Text>
-          </TrackerButton>
+          </Button>
 
           {hasDMARCReport && (
-            <TrackerButton
+            <Button
               variant="primary"
               as={RouteLink}
               to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
@@ -201,7 +209,7 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
               <Text whiteSpace="noWrap">
                 <Trans>DMARC Report</Trans>
               </Text>
-            </TrackerButton>
+            </Button>
           )}
         </Stack>
       </Flex>

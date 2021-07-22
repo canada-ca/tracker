@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { List, theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
@@ -29,16 +29,18 @@ describe('<OrganizationsCard />', () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DomainCard
-                url="tbs-sct.gc.ca"
-                lastRan="2020-09-10T00:34:26.429Z"
-                status={status}
-                hasDMARCReport={true}
-              />
+              <List>
+                <DomainCard
+                  url="tbs-sct.gc.ca"
+                  lastRan="2020-09-10T00:34:26.429Z"
+                  status={status}
+                  hasDMARCReport={true}
+                />
+              </List>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </MemoryRouter>
       </MockedProvider>,
     )
@@ -53,16 +55,18 @@ describe('<OrganizationsCard />', () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DomainCard
-                url="tbs-sct.gc.ca"
-                lastRan={null}
-                status={status}
-                hasDMARCReport={true}
-              />
+              <List>
+                <DomainCard
+                  url="tbs-sct.gc.ca"
+                  lastRan={null}
+                  status={status}
+                  hasDMARCReport={true}
+                />
+              </List>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </MemoryRouter>
       </MockedProvider>,
     )

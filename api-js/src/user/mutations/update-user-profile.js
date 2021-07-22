@@ -46,8 +46,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { userRequired },
+      request,
+      auth: { tokenize, userRequired },
       loaders: { loadUserByKey, loadUserByUserName },
+      notify: { sendVerificationEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -89,12 +91,21 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = user.tfaSendMethod
     }
 
+    
+    let emailValidated = user.emailValidated
+    let changedUserName = false
+    if (userName !== user.userName && userName !== '') {
+      changedUserName = true
+      emailValidated = false
+    }
+
     // Create object containing updated data
     const updatedUser = {
       displayName: displayName || user.displayName,
       userName: userName || user.userName,
       preferredLang: preferredLang || user.preferredLang,
       tfaSendMethod: tfaSendMethod,
+      emailValidated,
     }
 
     // Generate list of collections names
@@ -134,6 +145,14 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     await loadUserByKey.clear(user._key)
     const returnUser = await loadUserByKey.load(userKey)
+
+    if (changedUserName) {
+      const token = tokenize({ parameters: { userKey: returnUser._key } })
+  
+      const verifyUrl = `https://${request.get('host')}/validate/${token}`
+  
+      await sendVerificationEmail({ user: returnUser, verifyUrl })
+    }
 
     console.info(`User: ${user._key} successfully updated their profile.`)
     return {

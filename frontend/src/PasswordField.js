@@ -5,17 +5,17 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Icon,
   IconButton,
   Input,
   InputGroup,
   InputLeftElement,
   InputRightElement,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox.js'
+import WithWrapperBox from './WithWrapperBox.js'
 
-const PasswordField = WithPseudoBox(function PasswordField({
+const PasswordField = WithWrapperBox(function PasswordField({
   name,
   label,
   forwardedRef,
@@ -34,7 +34,7 @@ const PasswordField = WithPseudoBox(function PasswordField({
       </FormLabel>
       <InputGroup size="md">
         <InputLeftElement>
-          <Icon name="lock" color="gray.300" />
+          <LockIcon color="gray.300" />
         </InputLeftElement>
 
         <Input
@@ -52,7 +52,7 @@ const PasswordField = WithPseudoBox(function PasswordField({
             aria-label={show ? 'hide password' : 'show password'}
             h="buttons.lg"
             onClick={handleClick}
-            icon={show ? 'view-off' : 'view'}
+            icon={show ? <ViewOffIcon /> : <ViewIcon />}
             tabIndex="-1"
           />
         </InputRightElement>

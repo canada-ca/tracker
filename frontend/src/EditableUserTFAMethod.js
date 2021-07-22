@@ -3,18 +3,18 @@ import { bool, string } from 'prop-types'
 import {
   Badge,
   Box,
+  Button,
   Heading,
-  Icon,
   Select,
   Stack,
   useToast,
-} from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+} from '@chakra-ui/react'
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
+import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
-import { TrackerButton } from './TrackerButton'
 
 function EditableUserTFAMethod({
   currentTFAMethod,
@@ -79,23 +79,37 @@ function EditableUserTFAMethod({
       </Heading>
       <Stack isInline>
         <Box p="1">
-          <Icon
-            size="icons.lg"
-            name={emailValidated ? 'check' : 'close'}
-            color={emailValidated ? 'green.500' : 'red.500'}
-            pr={2}
-          />
+          {emailValidated ? (
+            <CheckIcon
+              boxSize="icons.lg"
+              color={emailValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          ) : (
+            <CloseIcon
+              boxSize="icons.lg"
+              color={emailValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          )}
           <Badge variant="outline" color="gray.900">
             <Trans>Email Validated</Trans>
           </Badge>
         </Box>
         <Box p="1">
-          <Icon
-            size="icons.lg"
-            name={phoneValidated ? 'check' : 'close'}
-            color={phoneValidated ? 'green.500' : 'red.500'}
-            pr={2}
-          />
+          {phoneValidated ? (
+            <CheckIcon
+              boxSize="icons.lg"
+              color={phoneValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          ) : (
+            <CloseIcon
+              boxSize="icons.lg"
+              color={phoneValidated ? 'green.500' : 'red.500'}
+              pr={2}
+            />
+          )}
           <Badge variant="outline" color="gray.900">
             <Trans>Phone Validated</Trans>
           </Badge>
@@ -121,19 +135,19 @@ function EditableUserTFAMethod({
                 id="tfaMethod"
                 component={Select}
                 {...getFieldProps('tfaMethod')}
-                w={['40%', '57%']}
+                w="57%"
               >
                 <option value="NONE">{t`None`}</option>
                 {emailValidated && <option value="EMAIL">{t`Email`}</option>}
                 {phoneValidated && <option value="PHONE">{t`Phone`}</option>}
               </Field>
-              <TrackerButton
+              <Button
+                variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}
-                variant="primary"
               >
                 <Trans>Save</Trans>
-              </TrackerButton>
+              </Button>
             </Stack>
           </form>
         )}
@@ -148,4 +162,4 @@ EditableUserTFAMethod.propTypes = {
   phoneValidated: bool,
 }
 
-export default WithPseudoBox(EditableUserTFAMethod)
+export default WithWrapperBox(EditableUserTFAMethod)

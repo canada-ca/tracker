@@ -58,7 +58,15 @@ const {
     }),
   }
 
-  Server({
+  const server = await Server({
+    arango: {
+      db: databaseName,
+      url,
+      as: {
+        username: 'root',
+        password: rootPass,
+      },
+    },
     maxDepth,
     complexityCost,
     scalarCost,
@@ -71,7 +79,9 @@ const {
       transaction,
       pubsubs,
     },
-  }).listen(PORT, (err) => {
+  })
+
+  await server.listen(PORT, (err) => {
     if (err) throw err
     console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`)
     console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}/graphql`)

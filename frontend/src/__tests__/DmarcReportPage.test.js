@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -81,7 +81,7 @@ describe('<DmarcReportPage />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
@@ -94,7 +94,7 @@ describe('<DmarcReportPage />', () => {
                 </Route>
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -107,7 +107,7 @@ describe('<DmarcReportPage />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
@@ -120,7 +120,7 @@ describe('<DmarcReportPage />', () => {
                 </Route>
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -133,7 +133,7 @@ describe('<DmarcReportPage />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
@@ -146,7 +146,7 @@ describe('<DmarcReportPage />', () => {
                 </Route>
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
@@ -159,7 +159,7 @@ describe('<DmarcReportPage />', () => {
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
-          <ThemeProvider theme={theme}>
+          <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
@@ -172,7 +172,7 @@ describe('<DmarcReportPage />', () => {
                 </Route>
               </MemoryRouter>
             </I18nProvider>
-          </ThemeProvider>
+          </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )

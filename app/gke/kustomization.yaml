@@ -9,7 +9,6 @@ patchesStrategicMerge:
 - tracker-frontend-deployment.yaml
 - publicgateway.yaml
 - certificate.yaml
-- knative/config/queues.yaml
 replicas:
 - name: tracker-frontend
   count: 2

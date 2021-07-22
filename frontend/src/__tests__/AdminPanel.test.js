@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserVarProvider } from '../UserState'
@@ -51,7 +51,7 @@ describe('<AdminPanel />', () => {
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
         >
           <I18nProvider i18n={i18n}>
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
               <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
                 <Route path="/admin">
                   <AdminPanel
@@ -61,7 +61,7 @@ describe('<AdminPanel />', () => {
                   />
                 </Route>
               </MemoryRouter>
-            </ThemeProvider>
+            </ChakraProvider>
           </I18nProvider>
         </UserVarProvider>
       </MockedProvider>,

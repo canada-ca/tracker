@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
@@ -117,7 +117,7 @@ describe('<OrganizationInformation />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <OrganizationInformation
@@ -126,7 +126,7 @@ describe('<OrganizationInformation />', () => {
                     />
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -146,7 +146,7 @@ describe('<OrganizationInformation />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <OrganizationInformation
@@ -155,7 +155,7 @@ describe('<OrganizationInformation />', () => {
                     />
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -224,7 +224,7 @@ describe('<OrganizationInformation />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <OrganizationInformation
@@ -233,7 +233,7 @@ describe('<OrganizationInformation />', () => {
                     />
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -266,9 +266,11 @@ describe('<OrganizationInformation />', () => {
 
         userEvent.click(confirmOrganizationRemovalButton)
 
-        const toast = await findByText(/You have successfully removed Org Name/)
+        const successfullyRemoveToastText = await findByText(
+          /You have successfully removed Org Name/,
+        )
 
-        expect(toast).toBeVisible()
+        await waitFor(() => expect(successfullyRemoveToastText).toBeVisible())
       })
 
       it('blocks the user from removing until entering the org name', async () => {
@@ -281,7 +283,7 @@ describe('<OrganizationInformation />', () => {
                 userName: null,
               })}
             >
-              <ThemeProvider theme={theme}>
+              <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <OrganizationInformation
@@ -290,7 +292,7 @@ describe('<OrganizationInformation />', () => {
                     />
                   </MemoryRouter>
                 </I18nProvider>
-              </ThemeProvider>
+              </ChakraProvider>
             </UserVarProvider>
           </MockedProvider>,
         )
@@ -335,7 +337,7 @@ describe('<OrganizationInformation />', () => {
                     userName: null,
                   })}
                 >
-                  <ThemeProvider theme={theme}>
+                  <ChakraProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
                         <OrganizationInformation
@@ -344,7 +346,7 @@ describe('<OrganizationInformation />', () => {
                         />
                       </MemoryRouter>
                     </I18nProvider>
-                  </ThemeProvider>
+                  </ChakraProvider>
                 </UserVarProvider>
               </MockedProvider>,
             )
@@ -386,7 +388,7 @@ describe('<OrganizationInformation />', () => {
               /You have successfully updated Org Name/,
             )
 
-            expect(successfulUpdateToastText).toBeVisible()
+            await waitFor(() => expect(successfulUpdateToastText).toBeVisible())
 
             // Check that the new country is shown in the info area
             const countryEl = await findByText(/Country:/)
@@ -405,7 +407,7 @@ describe('<OrganizationInformation />', () => {
                     userName: null,
                   })}
                 >
-                  <ThemeProvider theme={theme}>
+                  <ChakraProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
                         <OrganizationInformation
@@ -414,7 +416,7 @@ describe('<OrganizationInformation />', () => {
                         />
                       </MemoryRouter>
                     </I18nProvider>
-                  </ThemeProvider>
+                  </ChakraProvider>
                 </UserVarProvider>
               </MockedProvider>,
             )
@@ -443,7 +445,7 @@ describe('<OrganizationInformation />', () => {
               /No values were supplied/,
             )
 
-            expect(noValuesSuppliedToastText).toBeVisible()
+            await waitFor(() => expect(noValuesSuppliedToastText).toBeVisible())
           })
         })
       })

@@ -195,7 +195,7 @@ msgstr "Permission Denied: Please contact org owner to transfer ownership."
 msgid "Permission Denied: Please contact organization admin for help with removing domain."
 msgstr "Permission Denied: Please contact organization admin for help with removing domain."
 
-#: src/organization/mutations/remove-organization.js:85
+#: src/organization/mutations/remove-organization.js:71
 msgid "Permission Denied: Please contact organization admin for help with removing organization."
 msgstr "Permission Denied: Please contact organization admin for help with removing organization."
 
@@ -241,7 +241,7 @@ msgstr "Permission Denied: Please contact organization user for help with updati
 msgid "Permission Denied: Please contact super admin for help with removing domain."
 msgstr "Permission Denied: Please contact super admin for help with removing domain."
 
-#: src/organization/mutations/remove-organization.js:72
+#: src/organization/mutations/remove-organization.js:85
 msgid "Permission Denied: Please contact super admin for help with removing organization."
 msgstr "Permission Denied: Please contact super admin for help with removing organization."
 
@@ -262,6 +262,10 @@ msgstr "Permission check error. Unable to request domain information."
 msgid "Permission error, not an admin for this user."
 msgstr "Permission error, not an admin for this user."
 
+#: src/user/mutations/close-account.js:54
+msgid "Permission error: Unable to close other user's account."
+msgstr "Permission error: Unable to close other user's account."
+
 #: src/user/mutations/remove-phone-number.js:81
 msgid "Phone number has been successfully removed."
 msgstr "Phone number has been successfully removed."
@@ -270,7 +274,7 @@ msgstr "Phone number has been successfully removed."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:141
+#: src/user/mutations/update-user-profile.js:160
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -352,6 +356,10 @@ msgstr "Requesting {amount} records on the `SPF` connection exceeds the `{argSet
 msgid "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 
+#: src/user/mutations/close-account.js:493
+msgid "Successfully closed account."
+msgstr "Successfully closed account."
+
 #: src/domain/mutations/request-scan.js:131
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
@@ -364,15 +372,15 @@ msgstr "Successfully email verified account, and set TFA send method to email."
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
-#: src/affiliation/mutations/leave-organization.js:355
+#: src/affiliation/mutations/leave-organization.js:427
 msgid "Successfully left organization: {0}"
 msgstr "Successfully left organization: {0}"
 
-#: src/domain/mutations/remove-domain.js:335
+#: src/domain/mutations/remove-domain.js:402
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "Successfully removed domain: {0} from {1}."
 
-#: src/organization/mutations/remove-organization.js:219
+#: src/organization/mutations/remove-organization.js:441
 msgid "Successfully removed organization: {0}."
 msgstr "Successfully removed organization: {0}."
 
@@ -419,13 +427,13 @@ msgstr "Two factor code length is incorrect. Please try again."
 #: src/affiliation/mutations/leave-organization.js:80
 #: src/affiliation/mutations/leave-organization.js:90
 #: src/affiliation/mutations/leave-organization.js:110
-#: src/affiliation/mutations/leave-organization.js:154
-#: src/affiliation/mutations/leave-organization.js:174
-#: src/affiliation/mutations/leave-organization.js:271
-#: src/affiliation/mutations/leave-organization.js:291
-#: src/affiliation/mutations/leave-organization.js:319
-#: src/affiliation/mutations/leave-organization.js:338
-#: src/affiliation/mutations/leave-organization.js:348
+#: src/affiliation/mutations/leave-organization.js:156
+#: src/affiliation/mutations/leave-organization.js:177
+#: src/affiliation/mutations/leave-organization.js:328
+#: src/affiliation/mutations/leave-organization.js:357
+#: src/affiliation/mutations/leave-organization.js:390
+#: src/affiliation/mutations/leave-organization.js:410
+#: src/affiliation/mutations/leave-organization.js:420
 msgid "Unable leave organization. Please try again."
 msgstr "Unable leave organization. Please try again."
 
@@ -445,6 +453,28 @@ msgstr "Unable to authenticate. Please try again."
 #: src/auth/check-super-admin.js:30
 msgid "Unable to check permission. Please try again."
 msgstr "Unable to check permission. Please try again."
+
+#: src/user/mutations/close-account.js:67
+msgid "Unable to close account of an undefined user."
+msgstr "Unable to close account of an undefined user."
+
+#: src/user/mutations/close-account.js:88
+#: src/user/mutations/close-account.js:98
+#: src/user/mutations/close-account.js:123
+#: src/user/mutations/close-account.js:133
+#: src/user/mutations/close-account.js:164
+#: src/user/mutations/close-account.js:179
+#: src/user/mutations/close-account.js:208
+#: src/user/mutations/close-account.js:218
+#: src/user/mutations/close-account.js:254
+#: src/user/mutations/close-account.js:366
+#: src/user/mutations/close-account.js:397
+#: src/user/mutations/close-account.js:422
+#: src/user/mutations/close-account.js:458
+#: src/user/mutations/close-account.js:475
+#: src/user/mutations/close-account.js:484
+msgid "Unable to close account. Please try again."
+msgstr "Unable to close account. Please try again."
 
 #: src/domain/mutations/create-domain.js:75
 msgid "Unable to create domain in unknown organization."
@@ -587,13 +617,13 @@ msgstr "Unable to load DKIM failure data. Please try again."
 msgid "Unable to load DKIM guidance tag(s). Please try again."
 msgstr "Unable to load DKIM guidance tag(s). Please try again."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:254
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:266
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:258
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:270
 msgid "Unable to load DKIM result(s). Please try again."
 msgstr "Unable to load DKIM result(s). Please try again."
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:275
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:285
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:279
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:289
 msgid "Unable to load DKIM scan(s). Please try again."
 msgstr "Unable to load DKIM scan(s). Please try again."
 
@@ -608,8 +638,8 @@ msgstr "Unable to load DMARC failure data. Please try again."
 msgid "Unable to load DMARC guidance tag(s). Please try again."
 msgstr "Unable to load DMARC guidance tag(s). Please try again."
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:315
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:327
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:319
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:331
 msgid "Unable to load DMARC scan(s). Please try again."
 msgstr "Unable to load DMARC scan(s). Please try again."
 
@@ -628,8 +658,8 @@ msgid "Unable to load HTTPS guidance tag(s). Please try again."
 msgstr "Unable to load HTTPS guidance tag(s). Please try again."
 
 #: src/web-scan/loaders/load-https-by-key.js:33
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:329
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:341
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:333
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:345
 msgid "Unable to load HTTPS scan(s). Please try again."
 msgstr "Unable to load HTTPS scan(s). Please try again."
 
@@ -644,8 +674,8 @@ msgstr "Unable to load SPF failure data. Please try again."
 msgid "Unable to load SPF guidance tag(s). Please try again."
 msgstr "Unable to load SPF guidance tag(s). Please try again."
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:302
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:312
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:306
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:316
 msgid "Unable to load SPF scan(s). Please try again."
 msgstr "Unable to load SPF scan(s). Please try again."
 
@@ -654,8 +684,8 @@ msgstr "Unable to load SPF scan(s). Please try again."
 msgid "Unable to load SSL guidance tag(s). Please try again."
 msgstr "Unable to load SSL guidance tag(s). Please try again."
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:376
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:386
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:380
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:390
 msgid "Unable to load SSL scan(s). Please try again."
 msgstr "Unable to load SSL scan(s). Please try again."
 
@@ -770,18 +800,24 @@ msgstr "Unable to remove domain from unknown organization."
 
 #: src/domain/mutations/remove-domain.js:125
 #: src/domain/mutations/remove-domain.js:139
-#: src/domain/mutations/remove-domain.js:176
-#: src/domain/mutations/remove-domain.js:194
-#: src/domain/mutations/remove-domain.js:275
-#: src/domain/mutations/remove-domain.js:293
-#: src/domain/mutations/remove-domain.js:315
-#: src/domain/mutations/remove-domain.js:326
+#: src/domain/mutations/remove-domain.js:178
+#: src/domain/mutations/remove-domain.js:197
+#: src/domain/mutations/remove-domain.js:332
+#: src/domain/mutations/remove-domain.js:359
+#: src/domain/mutations/remove-domain.js:382
+#: src/domain/mutations/remove-domain.js:393
 msgid "Unable to remove domain. Please try again."
 msgstr "Unable to remove domain. Please try again."
 
-#: src/organization/mutations/remove-organization.js:162
-#: src/organization/mutations/remove-organization.js:197
-#: src/organization/mutations/remove-organization.js:208
+#: src/organization/mutations/remove-organization.js:113
+#: src/organization/mutations/remove-organization.js:125
+#: src/organization/mutations/remove-organization.js:147
+#: src/organization/mutations/remove-organization.js:193
+#: src/organization/mutations/remove-organization.js:214
+#: src/organization/mutations/remove-organization.js:356
+#: src/organization/mutations/remove-organization.js:385
+#: src/organization/mutations/remove-organization.js:419
+#: src/organization/mutations/remove-organization.js:430
 msgid "Unable to remove organization. Please try again."
 msgstr "Unable to remove organization. Please try again."
 
@@ -961,8 +997,8 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:123
-#: src/user/mutations/update-user-profile.js:132
+#: src/user/mutations/update-user-profile.js:134
+#: src/user/mutations/update-user-profile.js:143
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -1032,7 +1068,7 @@ msgstr "User could not be queried."
 msgid "User role was updated successfully."
 msgstr "User role was updated successfully."
 
-#: src/user/mutations/update-user-profile.js:73
+#: src/user/mutations/update-user-profile.js:75
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 

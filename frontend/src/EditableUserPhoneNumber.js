@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { string } from 'prop-types'
 import {
+  Button,
+  Flex,
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,13 +11,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SlideIn,
   Stack,
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+} from '@chakra-ui/react'
+import { PhoneIcon } from '@chakra-ui/icons'
+import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -24,7 +25,6 @@ import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { number, object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
-import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
 import AuthenticateField from './AuthenticateField'
 
@@ -127,136 +127,6 @@ function EditableUserPhoneNumber({ detailValue }) {
     },
   )
 
-  const setPhoneModal = (
-    <SlideIn in={isOpen}>
-      {(styles) => (
-        <Modal
-          isOpen={true}
-          onClose={onClose}
-          initialFocusRef={initialFocusRef}
-        >
-          <ModalOverlay opacity={styles.opacity} />
-          <ModalContent pb="4" {...styles}>
-            <Formik
-              key="setPhoneNumberFormKey"
-              validateOnBlur={false}
-              initialValues={{
-                phoneNumber: '',
-              }}
-              validationSchema={phoneValidationSchema}
-              onSubmit={async (values) => {
-                // Submit update detail mutation
-                await setPhoneNumber({
-                  variables: {
-                    phoneNumber: '+' + values.phoneNumber,
-                  },
-                })
-              }}
-            >
-              {({ handleSubmit, isSubmitting }) => (
-                <form id="form" onSubmit={handleSubmit}>
-                  <ModalHeader>
-                    <Trans>Edit Phone Number</Trans>
-                  </ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    <Stack spacing="4" p="6">
-                      {detailValue && (
-                        <Stack>
-                          <Heading as="h3" size="sm">
-                            <Trans>Current Phone Number:</Trans>
-                          </Heading>
-
-                          <Text>{detailValue}</Text>
-                        </Stack>
-                      )}
-
-                      <PhoneNumberField
-                        name="phoneNumber"
-                        label={t`New Phone Number:`}
-                      />
-                    </Stack>
-                  </ModalBody>
-
-                  <ModalFooter>
-                    <TrackerButton
-                      isLoading={isSubmitting}
-                      type="submit"
-                      mr="4"
-                      variant="primary"
-                    >
-                      <Trans>Confirm</Trans>
-                    </TrackerButton>
-                  </ModalFooter>
-                </form>
-              )}
-            </Formik>
-          </ModalContent>
-        </Modal>
-      )}
-    </SlideIn>
-  )
-
-  const verifyPhoneModal = (
-    <SlideIn in={isOpen}>
-      {(styles) => (
-        <Modal isOpen={true} onClose={onClose} initialFocusRef={verifyRef}>
-          <ModalOverlay opacity={styles.opacity} />
-          <ModalContent pb="4" {...styles}>
-            <Formik
-              key="verifyPhoneNumberFormKey"
-              validateOnBlur={false}
-              initialValues={{
-                twoFactorCode: '',
-              }}
-              validationSchema={tfaValidationSchema}
-              onSubmit={async (values) => {
-                // Submit update detail mutation
-                await verifyPhoneNumber({
-                  variables: {
-                    twoFactorCode: parseInt(values.twoFactorCode),
-                  },
-                })
-              }}
-            >
-              {({ handleSubmit, isSubmitting }) => (
-                <form id="form" onSubmit={handleSubmit}>
-                  <ModalHeader>
-                    <Trans>Verify</Trans>
-                  </ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    <Stack spacing="4" p="6">
-                      <AuthenticateField
-                        name="twoFactorCode"
-                        mb="4"
-                        sendMethod={'verifyPhone'}
-                        ref={verifyRef}
-                      />
-                    </Stack>
-                  </ModalBody>
-
-                  <ModalFooter>
-                    <TrackerButton
-                      isLoading={isSubmitting}
-                      type="submit"
-                      mr="4"
-                      variant="primary"
-                    >
-                      <Trans>Confirm</Trans>
-                    </TrackerButton>
-                  </ModalFooter>
-                </form>
-              )}
-            </Formik>
-          </ModalContent>
-        </Modal>
-      )}
-    </SlideIn>
-  )
-
-  const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
-
   const PHONE_NUMBER_REGEX = /^[1-9]\d{9,14}$/
 
   const phoneValidationSchema = object().shape({
@@ -274,29 +144,157 @@ function EditableUserPhoneNumber({ detailValue }) {
       .required(i18n._(fieldRequirements.twoFactorCode.required)),
   })
 
+  const setPhoneModal = (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      initialFocusRef={initialFocusRef}
+      motionPreset="slideInBottom"
+    >
+      <ModalOverlay />
+      <ModalContent pb="4">
+        <Formik
+          key="setPhoneNumberFormKey"
+          validateOnBlur={false}
+          initialValues={{
+            phoneNumber: '',
+          }}
+          validationSchema={phoneValidationSchema}
+          onSubmit={async (values) => {
+            // Submit update detail mutation
+            await setPhoneNumber({
+              variables: {
+                phoneNumber: '+' + values.phoneNumber,
+              },
+            })
+          }}
+        >
+          {({ handleSubmit, isSubmitting }) => (
+            <form id="form" onSubmit={handleSubmit}>
+              <ModalHeader>
+                <Trans>Edit Phone Number</Trans>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Stack spacing="4" p="6">
+                  {detailValue && (
+                    <Stack>
+                      <Heading as="h3" size="sm">
+                        <Trans>Current Phone Number:</Trans>
+                      </Heading>
+
+                      <Text>{detailValue}</Text>
+                    </Stack>
+                  )}
+
+                  <PhoneNumberField
+                    name="phoneNumber"
+                    label={t`New Phone Number:`}
+                  />
+                </Stack>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  variant="primary"
+                  isLoading={isSubmitting}
+                  type="submit"
+                  mr="4"
+                >
+                  <Trans>Confirm</Trans>
+                </Button>
+              </ModalFooter>
+            </form>
+          )}
+        </Formik>
+      </ModalContent>
+    </Modal>
+  )
+
+  const verifyPhoneModal = (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      initialFocusRef={initialFocusRef}
+      motionPreset="slideInBottom"
+    >
+      <ModalOverlay />
+      <ModalContent pb="4">
+        <Formik
+          key="verifyPhoneNumberFormKey"
+          validateOnBlur={false}
+          initialValues={{
+            twoFactorCode: '',
+          }}
+          validationSchema={tfaValidationSchema}
+          onSubmit={async (values) => {
+            // Submit update detail mutation
+            await verifyPhoneNumber({
+              variables: {
+                twoFactorCode: parseInt(values.twoFactorCode),
+              },
+            })
+          }}
+        >
+          {({ handleSubmit, isSubmitting }) => (
+            <form id="form" onSubmit={handleSubmit}>
+              <ModalHeader>
+                <Trans>Verify</Trans>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Stack spacing="4" p="6">
+                  <AuthenticateField
+                    name="twoFactorCode"
+                    mb="4"
+                    sendMethod={'verifyPhone'}
+                    ref={verifyRef}
+                  />
+                </Stack>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  variant="primary"
+                  isLoading={isSubmitting}
+                  type="submit"
+                  mr="4"
+                >
+                  <Trans>Confirm</Trans>
+                </Button>
+              </ModalFooter>
+            </form>
+          )}
+        </Formik>
+      </ModalContent>
+    </Modal>
+  )
+
+  const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
+
   return (
     <Stack>
       <Heading as="h3" size="md">
         <Trans>Phone Number:</Trans>
       </Heading>
 
-      <Stack isInline align="center">
-        <Icon name="phone" color="gray.300" />
+      <Flex align="center">
+        <PhoneIcon color="gray.300" mr={2} />
         {detailValue ? (
           <Text>{detailValue}</Text>
         ) : (
           <Trans>No current phone number</Trans>
         )}
-        <TrackerButton
+        <Button
+          variant="primary"
           ml="auto"
           onClick={onOpen}
-          variant="primary"
           fontSize="sm"
           px="3"
         >
           <Trans>Edit</Trans>
-        </TrackerButton>
-      </Stack>
+        </Button>
+      </Flex>
       {modalContent}
     </Stack>
   )
@@ -306,4 +304,4 @@ EditableUserPhoneNumber.propTypes = {
   detailValue: string,
 }
 
-export default WithPseudoBox(EditableUserPhoneNumber)
+export default WithWrapperBox(EditableUserPhoneNumber)

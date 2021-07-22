@@ -1,10 +1,9 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import { Layout } from './Layout'
 import {
+  Box,
   Heading,
-  Icon,
   IconButton,
   Stack,
   Tab,
@@ -13,7 +12,8 @@ import {
   TabPanels,
   Tabs,
   useToast,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from './graphql/queries'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
@@ -83,21 +83,21 @@ export default function OrganizationDetails() {
   }
 
   return (
-    <Layout>
+    <Box w="100%" px={4}>
       <Stack isInline align="center" mb="4">
         <IconButton
-          icon="arrow-left"
+          icon={<ArrowLeftIcon />}
           as={RouteLink}
           to={'/organizations'}
           color="gray.900"
           fontSize="2xl"
           aria-label="back to organizations"
         />
-        <Heading as="h1" textAlign={['center', 'left']}>
+        <Heading as="h1" textAlign={{ base: 'center', md: 'left' }}>
           {orgName}
         </Heading>
         {data?.organization?.verified && (
-          <Icon name="check-circle" color="blue.500" size="icons.lg" />
+          <CheckCircleIcon color="blue.500" size="icons.lg" />
         )}
       </Stack>
       <Tabs isFitted>
@@ -141,6 +141,6 @@ export default function OrganizationDetails() {
           )}
         </TabPanels>
       </Tabs>
-    </Layout>
+    </Box>
   )
 }

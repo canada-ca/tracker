@@ -2,17 +2,17 @@ import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from './graphql/queries'
 import {
+  Accordion,
   Box,
   Divider,
   Heading,
-  Icon,
   Link,
-  PseudoBox,
   Select,
   Stack,
   Text,
-} from '@chakra-ui/core'
-import DmarcReportTable from './DmarcReportTable'
+} from '@chakra-ui/react'
+import { LinkIcon } from '@chakra-ui/icons'
+import TrackerTable from './TrackerTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
@@ -22,9 +22,10 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
-import { Layout } from './Layout'
 import { InfoBox, InfoPanel } from './InfoPanel'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
+import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
+
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
@@ -40,17 +41,17 @@ export default function DmarcReportPage() {
     `${selectedPeriod}, ${selectedYear}`,
   )
 
-  const [fullPassState, changeFullPassState] = React.useState({
-    isHidden: true,
+  const [fullPassState, changeFullPassState] = useState({
+    isVisible: false,
   })
-  const [failDkimState, changeFailDkimState] = React.useState({
-    isHidden: true,
+  const [failDkimState, changeFailDkimState] = useState({
+    isVisible: false,
   })
-  const [failSpfState, changeFailSpfState] = React.useState({
-    isHidden: true,
+  const [failSpfState, changeFailSpfState] = useState({
+    isVisible: false,
   })
-  const [fullFailState, changeFullFailState] = React.useState({
-    isHidden: true,
+  const [fullFailState, changeFullFailState] = useState({
+    isVisible: false,
   })
 
   // Allows the use of forward/backward navigation
@@ -149,13 +150,12 @@ export default function DmarcReportPage() {
 
   if (!graphData?.findDomainByDomain?.hasDMARCReport) {
     return (
-      <Layout>
-        <Stack align="center">
-          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
-            <Trans>This domain does not support aggregate data</Trans>
-          </Text>
-        </Stack>
-      </Layout>
+      <Stack align="center" w="100%" px={4}>
+        <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+          <span>{domainSlug} </span>
+          <Trans>does not support aggregate data</Trans>
+        </Text>
+      </Stack>
     )
   }
 
@@ -364,8 +364,7 @@ export default function DmarcReportPage() {
 
     dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
-          mt="30px"
+        <TrackerTable
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
           title={t`DKIM Failures by IP Address`}
@@ -374,6 +373,7 @@ export default function DmarcReportPage() {
           infoPanel={failDkimInfoPanel}
           infoState={failDkimState}
           changeInfoState={changeFailDkimState}
+          searchPlaceholder={t`Search DKIM Failing Items`}
         />
       </ErrorBoundary>
     )
@@ -467,7 +467,7 @@ export default function DmarcReportPage() {
 
     fullPassTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
+        <TrackerTable
           data={fullPassNodes}
           columns={fullPassColumns}
           title={t`Fully Aligned by IP Address`}
@@ -476,6 +476,7 @@ export default function DmarcReportPage() {
           infoPanel={fullPassInfoPanel}
           infoState={fullPassState}
           changeInfoState={changeFullPassState}
+          searchPlaceholder={t`Search Fully Aligned Items`}
         />
       </ErrorBoundary>
     )
@@ -582,8 +583,7 @@ export default function DmarcReportPage() {
 
     spfFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
-          mt="30px"
+        <TrackerTable
           data={spfFailureNodes}
           columns={spfFailureColumns}
           title={t`SPF Failures by IP Address`}
@@ -592,6 +592,7 @@ export default function DmarcReportPage() {
           infoPanel={failSpfInfoPanel}
           infoState={failSpfState}
           changeInfoState={changeFailSpfState}
+          searchPlaceholder={t`Search SPF Failing Items`}
         />
       </ErrorBoundary>
     )
@@ -687,8 +688,7 @@ export default function DmarcReportPage() {
 
     dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
-          mt="30px"
+        <TrackerTable
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
           title={t`DMARC Failures by IP Address`}
@@ -697,6 +697,7 @@ export default function DmarcReportPage() {
           infoPanel={fullFailInfoPanel}
           infoState={fullFailState}
           changeInfoState={changeFullFailState}
+          searchPlaceholder={t`Search DMARC Failing Items`}
         />
       </ErrorBoundary>
     )
@@ -716,16 +717,26 @@ export default function DmarcReportPage() {
 
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-      {fullPassTable}
-      {dkimFailureTable}
-      {spfFailureTable}
-      {dmarcFailureTable}
+      <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
+        <AccordionItem buttonLabel="Fully Aligned by IP Address">
+          {fullPassTable}
+        </AccordionItem>
+        <AccordionItem buttonLabel="DKIM Failures by IP Address">
+          {dkimFailureTable}
+        </AccordionItem>
+        <AccordionItem buttonLabel="SPF Failures by IP Address">
+          {spfFailureTable}
+        </AccordionItem>
+        <AccordionItem buttonLabel="DMARC Failures by IP Address">
+          {dmarcFailureTable}
+        </AccordionItem>
+      </Accordion>
     </ErrorBoundary>
   )
 
   return (
     <Box width="100%" px="2" mx="auto" overflow="hidden" pb="4">
-      <PseudoBox d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
+      <Box d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
         <Box />
         <Heading as="h1" textAlign="center">
           {domainSlug.toUpperCase()}
@@ -741,9 +752,9 @@ export default function DmarcReportPage() {
           textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>Guidance</Trans>
-          <Icon name="link" ml="4px" />
+          <LinkIcon ml="4px" />
         </Link>
-      </PseudoBox>
+      </Box>
 
       {graphDisplay}
 

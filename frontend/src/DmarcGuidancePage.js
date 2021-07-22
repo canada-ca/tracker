@@ -3,16 +3,16 @@ import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
 import {
   Heading,
-  Icon,
   Link,
-  PseudoBox,
+  Box,
   Stack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { LinkIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
@@ -50,7 +50,7 @@ export default function DmarcGuidancePage() {
 
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
-      <PseudoBox d={{ md: 'flex' }}>
+      <Box d={{ md: 'flex' }}>
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>
@@ -66,10 +66,10 @@ export default function DmarcGuidancePage() {
             textAlign={{ base: 'center', md: 'right' }}
           >
             <Trans>DMARC Report</Trans>
-            <Icon name="link" ml="4px" />
+            <LinkIcon ml="4px" />
           </Link>
         )}
-      </PseudoBox>
+      </Box>
       <Tabs isFitted>
         <TabList mb="4">
           <Tab>

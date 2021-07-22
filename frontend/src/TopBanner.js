@@ -5,92 +5,98 @@ import { useUserVar } from './UserState'
 import { t, Trans } from '@lingui/macro'
 import sigEn from './images/goc-header-logo-en.svg'
 import sigFr from './images/goc-header-logo-fr.svg'
-import { Box, Flex, Image, useToast } from '@chakra-ui/core'
+import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react'
 import { Layout } from './Layout'
-import { TrackerButton } from './TrackerButton'
 import { Link as RouteLink } from 'react-router-dom'
+import { useMutation } from '@apollo/client'
+import { SIGN_OUT } from './graphql/mutations'
 
 export const TopBanner = (props) => {
   const { i18n } = useLingui()
   const { isLoggedIn, logout } = useUserVar()
   const toast = useToast()
 
+  const [signOut] = useMutation(SIGN_OUT, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`An error occured when you attempted to sign out`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted() {
+      logout()
+      toast({
+        title: t`Sign Out.`,
+        description: t`You have successfully been signed out.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
   return (
-    <Flex bg="primary" borderBottom="3px solid" borderBottomColor="accent">
-      <Layout>
-        <Flex
-          maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
-          mx="auto"
-          w="100%"
-          align="center"
-          fontFamily="body"
-          {...props}
-        >
-          <Box py="4" width={{ base: 272, md: 360 }}>
-            <Image
-              src={i18n.locale === 'en' ? sigEn : sigFr}
-              pr={16}
-              py={2}
-              minHeight="41px"
-              alt={'Symbol of the Government of Canada'}
-            />
-          </Box>
+    <Layout bg="primary" borderBottom="3px solid" borderBottomColor="accent">
+      <Flex align="center" fontFamily="body" {...props}>
+        <Box py="4" width={{ base: 272, md: 360 }}>
+          <Image
+            src={i18n.locale === 'en' ? sigEn : sigFr}
+            pr={16}
+            py={2}
+            minHeight="41px"
+            alt={'Symbol of the Government of Canada'}
+          />
+        </Box>
 
-          <Box ml="auto" />
+        <Box ml="auto" />
 
-          {isLoggedIn() ? (
-            <TrackerButton
-              as={RouteLink}
-              to="/"
-              variant="primary hover"
-              mx={1}
-              px={3}
-              display={{ base: 'none', md: 'inline' }}
-              onClick={() => {
-                logout()
-                toast({
-                  title: t`Sign Out.`,
-                  description: t`You have successfully been signed out.`,
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                  position: 'top-left',
-                })
-              }}
-            >
-              <Trans>Sign Out</Trans>
-            </TrackerButton>
-          ) : (
-            <TrackerButton
-              as={RouteLink}
-              variant="primary white"
-              to="/sign-in"
-              mx={1}
-              px={3}
-              display={{ base: 'none', md: 'inline' }}
-            >
-              <Trans>Sign In</Trans>
-            </TrackerButton>
-          )}
+        {isLoggedIn() ? (
+          <Button
+            variant="primaryHover"
+            as={RouteLink}
+            to="/"
+            mr={2}
+            px={3}
+            display={{ base: 'none', md: 'inline' }}
+            onClick={signOut}
+          >
+            <Trans>Sign Out</Trans>
+          </Button>
+        ) : (
+          <Button
+            variant="primaryWhite"
+            as={RouteLink}
+            to="/sign-in"
+            mr={2}
+            px={3}
+            display={{ base: 'none', md: 'inline' }}
+          >
+            <Trans>Sign In</Trans>
+          </Button>
+        )}
 
-          {!isLoggedIn() && (
-            <TrackerButton
-              as={RouteLink}
-              variant="primary hover"
-              to="/create-user"
-              mx={1}
-              px={3}
-              display={{ base: 'none', md: 'inline' }}
-            >
-              <Trans>Create Account</Trans>
-            </TrackerButton>
-          )}
+        {!isLoggedIn() && (
+          <Button
+            variant="primaryHover"
+            as={RouteLink}
+            to="/create-user"
+            mr={2}
+            px={3}
+            display={{ base: 'none', md: 'inline' }}
+          >
+            <Trans>Create Account</Trans>
+          </Button>
+        )}
 
-          <Box py={4}>
-            <LocaleSwitcher />
-          </Box>
-        </Flex>
-      </Layout>
-    </Flex>
+        <Box py={4}>
+          <LocaleSwitcher />
+        </Box>
+      </Flex>
+    </Layout>
   )
 }

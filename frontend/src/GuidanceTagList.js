@@ -1,17 +1,10 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import {
-  Box,
-  Collapse,
-  Divider,
-  Heading,
-  Icon,
-  Stack,
-  Text,
-} from '@chakra-ui/core'
+import { Accordion, Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
+import { WarningTwoIcon } from '@chakra-ui/icons'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { Trans } from '@lingui/macro'
-import { TrackerButton } from './TrackerButton'
+import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
 export function GuidanceTagList({
   negativeTags,
@@ -19,13 +12,6 @@ export function GuidanceTagList({
   neutralTags,
   selector,
 }) {
-  const [showPosi, setShowPosi] = React.useState(true)
-  const [showNega, setShowNega] = React.useState(true)
-  const [showNeut, setShowNeut] = React.useState(true)
-  const handleShowPosi = () => setShowPosi(!showPosi)
-  const handleShowNega = () => setShowNega(!showNega)
-  const handleShowNeut = () => setShowNeut(!showNeut)
-
   const selectorHeading = (
     <Heading as="h3" size="sm">
       {selector}
@@ -66,13 +52,18 @@ export function GuidanceTagList({
   const positiveTagList = setTagList(positiveTags, 'positive')
   const neutralTagList = setTagList(neutralTags, 'neutral')
 
-  const smallDevice = window.matchMedia('(max-width: 500px)').matches
   const noTags = (
     <Stack isInline align="center" bg="moderateMuted" px="2">
-      {!smallDevice && <Icon name="warning-2" color="moderate" />}
+      <WarningTwoIcon
+        color="moderate"
+        display={{ base: 'none', md: 'initial' }}
+      />
       <Box>
         <Stack isInline align="center">
-          {smallDevice && <Icon name="warning-2" color="moderate" />}
+          <WarningTwoIcon
+            color="moderate"
+            display={{ base: 'initial', md: 'none' }}
+          />
           <Text fontWeight="bold">
             <Trans>Result:</Trans>
           </Text>
@@ -104,49 +95,23 @@ export function GuidanceTagList({
   return (
     <Box my="2">
       {selectorHeading}
-      {positiveTagList?.length && (
-        <Box>
-          <TrackerButton
-            mb="2"
-            onClick={handleShowPosi}
-            variant="strong"
-            w="100%"
-          >
-            <Trans>Positive Tags</Trans>
-          </TrackerButton>
-          <Collapse isOpen={showPosi}>{positiveTagList}</Collapse>
-          <Divider borderColor="gray.50" />
-        </Box>
-      )}
-
-      {neutralTagList?.length && (
-        <Box>
-          <TrackerButton
-            mb="2"
-            onClick={handleShowNeut}
-            variant="info"
-            w="100%"
-          >
-            <Trans>Neutral Tags</Trans>
-          </TrackerButton>
-          <Collapse isOpen={showNeut}>{neutralTagList}</Collapse>
-          <Divider borderColor="gray.50" />
-        </Box>
-      )}
-
-      {negativeTagList?.length && (
-        <Box>
-          <TrackerButton
-            mb="2"
-            onClick={handleShowNega}
-            variant="weak"
-            w="100%"
-          >
-            <Trans>Negative Tags</Trans>
-          </TrackerButton>
-          <Collapse isOpen={showNega}>{negativeTagList}</Collapse>
-        </Box>
-      )}
+      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        {positiveTagList?.length && (
+          <AccordionItem buttonLabel="Positive Tags" buttonVariant="strong">
+            {positiveTagList}
+          </AccordionItem>
+        )}
+        {neutralTagList?.length && (
+          <AccordionItem buttonLabel="Neutral Tags" buttonVariant="info">
+            {neutralTagList}
+          </AccordionItem>
+        )}
+        {negativeTagList?.length && (
+          <AccordionItem buttonLabel="Negative Tags" buttonVariant="weak">
+            {negativeTagList}
+          </AccordionItem>
+        )}
+      </Accordion>
       {!positiveTagList?.length &&
         !neutralTagList?.length &&
         !negativeTagList?.length &&

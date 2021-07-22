@@ -1,5 +1,12 @@
 import React from 'react'
-import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/core'
+import {
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
 import { AdminDomains } from './AdminDomains'
@@ -10,12 +17,12 @@ import UserList from './UserList'
 export default function AdminPanel({ orgSlug, permission, orgId }) {
   return (
     <Stack spacing={10}>
-      <Tabs isFitted variant="enclosed">
+      <Tabs isFitted variant="enclosed-colored">
         <TabList mb="2">
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Users</Trans>
           </Tab>
         </TabList>

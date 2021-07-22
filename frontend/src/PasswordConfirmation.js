@@ -5,7 +5,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -13,8 +12,15 @@ import {
   InputRightElement,
   Spinner,
   Stack,
-} from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+} from '@chakra-ui/react'
+import {
+  CheckIcon,
+  CloseIcon,
+  LockIcon,
+  ViewIcon,
+  ViewOffIcon,
+} from '@chakra-ui/icons'
+import WithWrapperBox from './WithWrapperBox'
 import { useField } from 'formik'
 import { string } from 'prop-types'
 
@@ -80,19 +86,13 @@ function PasswordConfirmation({
           </FormLabel>
           <InputGroup>
             <InputLeftElement>
-              {icon === 'spinner' ? (
-                <Spinner size="sm" color="gray.300" />
-              ) : (
-                <Icon
-                  name={icon}
-                  color={
-                    icon === 'lock'
-                      ? 'gray.300'
-                      : icon === 'check'
-                      ? 'green.500'
-                      : 'red.500'
-                  }
-                />
+              {icon === 'spinner' && <Spinner size="sm" color="gray.300" />}
+              {icon === 'lock' && (
+                <LockIcon color="gray.300" aria-label="initial icon" />
+              )}
+              {icon === 'check' && <CheckIcon color="green.500" />}
+              {icon === 'close' && (
+                <CloseIcon color="red.500" aria-label="invalid password" />
               )}
             </InputLeftElement>
             <Input
@@ -107,8 +107,7 @@ function PasswordConfirmation({
                 aria-label={passwordShow ? 'hide password' : 'show password'}
                 h="buttons.lg"
                 onClick={handlePasswordShow}
-                icon={passwordShow ? 'view-off' : 'view'}
-                tabIndex="-1"
+                icon={passwordShow ? <ViewOffIcon /> : <ViewIcon />}
               />
             </InputRightElement>
           </InputGroup>
@@ -125,21 +124,12 @@ function PasswordConfirmation({
           </FormLabel>
           <InputGroup>
             <InputLeftElement>
-              {confirmIcon === 'spinner' ? (
+              {confirmIcon === 'spinner' && (
                 <Spinner size="sm" color="gray.300" />
-              ) : (
-                <Icon
-                  role="img"
-                  name={confirmIcon}
-                  color={
-                    confirmIcon === 'lock'
-                      ? 'gray.300'
-                      : confirmIcon === 'check'
-                      ? 'green.500'
-                      : 'red.500'
-                  }
-                />
               )}
+              {confirmIcon === 'lock' && <LockIcon color="gray.300" />}
+              {confirmIcon === 'check' && <CheckIcon color="green.500" />}
+              {confirmIcon === 'close' && <CloseIcon color="red.500" />}
             </InputLeftElement>
             <Input
               {...confirmPasswordField}
@@ -153,8 +143,7 @@ function PasswordConfirmation({
                 aria-label={confirmShow ? 'hide password' : 'show password'}
                 h="buttons.lg"
                 onClick={handleConfirmShow}
-                icon={confirmShow ? 'view-off' : 'view'}
-                tabIndex="-1"
+                icon={confirmShow ? <ViewOffIcon /> : <ViewIcon />}
               />
             </InputRightElement>
           </InputGroup>
@@ -172,4 +161,4 @@ PasswordConfirmation.propTypes = {
   confirmPasswordLabel: string,
 }
 
-export default WithPseudoBox(PasswordConfirmation)
+export default WithWrapperBox(PasswordConfirmation)

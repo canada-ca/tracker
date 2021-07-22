@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { string } from 'prop-types'
-import { Divider, Icon, SimpleGrid, Stack, useToast } from '@chakra-ui/core'
+import { Button, Divider, SimpleGrid, Stack, useToast } from '@chakra-ui/react'
+import { EmailIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from './graphql/queries'
 import { t, Trans } from '@lingui/macro'
@@ -12,7 +13,6 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import EditableUserTFAMethod from './EditableUserTFAMethod'
 import EditableUserPhoneNumber from './EditableUserPhoneNumber'
-import { TrackerButton } from './TrackerButton'
 import { SEND_EMAIL_VERIFICATION } from './graphql/mutations'
 
 export default function UserPage() {
@@ -103,16 +103,16 @@ export default function UserPage() {
         />
 
         {!emailValidated && (
-          <TrackerButton
+          <Button
             variant="primary"
             onClick={() => {
               sendEmailVerification({ variables: { userName: userName } })
             }}
             disabled={emailSent}
           >
-            <Icon name="email" />
+            <EmailIcon mr={2} />
             <Trans>Verify Email</Trans>
-          </TrackerButton>
+          </Button>
         )}
       </Stack>
     </SimpleGrid>

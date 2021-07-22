@@ -23,9 +23,12 @@
     "lin-clean": "npx lingui extract --clean"
   },
   "dependencies": {
+    "@graphql-tools/schema": "^7.1.5",
     "@lingui/core": "^3.10.4",
-    "apollo-server": "^2.25.2",
-    "apollo-server-express": "^2.25.2",
+    "apollo-server": "^3.0.0",
+    "apollo-server-core": "^3.0.0",
+    "apollo-server-express": "^3.0.0",
+    "arango-express": "^1.0.0",
     "arango-tools": "^0.5.0",
     "arangojs": "^7.5.0",
     "bcryptjs": "^2.4.3",
@@ -50,6 +53,7 @@
     "moment": "^2.29.1",
     "notifications-node-client": "^5.1.0",
     "psl": "^1.8.0",
+    "subscriptions-transport-ws": "^0.9.19",
     "url-slug": "^3.0.2",
     "uuid": "^8.3.2",
     "validator": "^13.6.0"
@@ -77,7 +81,7 @@
     "jest": "^27.0.6",
     "jest-fetch-mock": "^3.0.3",
     "jest-matcher-utils": "^27.0.6",
-    "nodemon": "^2.0.10",
+    "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
     "supertest": "^6.1.3"
   }
