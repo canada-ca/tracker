@@ -124,7 +124,7 @@ const wsLink = new WebSocketLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? `wss://${window.location.host}/graphql`
-      : 'ws:localhost:3000/graphql',
+      : 'ws://localhost:3000/graphql',
 
   options: {
     lazy: true,
