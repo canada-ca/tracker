@@ -69,11 +69,10 @@ export default function App() {
         else if (refreshTokens.result.user.preferredLang === 'FRENCH')
           activate('fr')
         history.replace(from)
-        console.log('successfully refreshed tokens')
       }
       // Non server error occurs
       else if (refreshTokens.result.__typename === 'AuthenticateError') {
-        console.warn('Unable to refresh tokens. Please sign in.')
+        // Could not authenticate
       } else {
         console.warn('Incorrect authenticate.result typename.')
       }
