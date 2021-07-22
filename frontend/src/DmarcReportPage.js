@@ -24,7 +24,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
 import { Layout } from './Layout'
 import { InfoBox, InfoPanel } from './InfoPanel'
-import { NewDmarcGraph } from './NewDmarcGraph'
+import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
@@ -194,7 +194,7 @@ export default function DmarcReportPage() {
     formattedGraphData.strengths = strengths
     graphDisplay = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <NewDmarcGraph data={formattedGraphData} />
+        <DmarcReportSummaryGraph data={formattedGraphData} />
       </ErrorBoundary>
     )
   }
