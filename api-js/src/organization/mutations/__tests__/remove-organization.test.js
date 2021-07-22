@@ -220,6 +220,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
             const testDmarcSummaryCursor =
               await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             const testDmarcSummary = await testDmarcSummaryCursor.next()
@@ -282,6 +285,8 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+
             const testOwnershipCursor =
               await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
             const testOwnership = await testOwnershipCursor.next()
@@ -340,6 +345,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
             const testDmarcSummaryCursor =
               await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             const testDmarcSummary = await testDmarcSummaryCursor.next()
@@ -353,6 +361,64 @@ describe('removing an organization', () => {
           })
         })
         describe('org is the only one claiming the domain', () => {
+          it('removes the dkim result data', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on OrganizationResult {
+                        status
+                        organization {
+                          name
+                        }
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  verifiedRequired: verifiedRequired({}),
+                },
+                validators: { cleanseInput },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+
+            const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(undefined)
+          })
           it('removes the scan data', async () => {
             await graphql(
               schema,
@@ -404,10 +470,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
+            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
+            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
+            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
 
             const testDkimCursor =
               await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
@@ -485,11 +552,10 @@ describe('removing an organization', () => {
               },
             )
 
-            const domainCursor = await query`
-              FOR domain IN domains
-                OPTIONS { waitForSync: true }
-                RETURN domain
-            `
+            await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+
+            const domainCursor =
+              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
@@ -544,6 +610,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+            await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+
             const testAffiliationCursor =
               await query`FOR aff IN affiliations OPTIONS { waitForSync: true } FILTER aff._from == ${org._key} RETURN aff`
             const testAffiliation = await testAffiliationCursor.next()
@@ -562,6 +631,64 @@ describe('removing an organization', () => {
               _from: secondOrg._id,
               _to: domain._id,
             })
+          })
+          it('does not remove the dkim result', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on OrganizationResult {
+                        status
+                        organization {
+                          name
+                        }
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  verifiedRequired: verifiedRequired({}),
+                },
+                validators: { cleanseInput },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+
+            const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toBeDefined()
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -614,10 +741,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toBeDefined()
+            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
+            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
+            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
 
             const testDkimCursor =
               await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
@@ -695,11 +823,10 @@ describe('removing an organization', () => {
               },
             )
 
-            const domainCursor = await query`
-              FOR domain IN domains
-                OPTIONS { waitForSync: true }
-                RETURN domain
-            `
+            await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+
+            const domainCursor =
+              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
           })
@@ -753,6 +880,9 @@ describe('removing an organization', () => {
                 },
               },
             )
+
+            await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+            await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
 
             const testAffiliationCursor =
               await query`FOR aff IN affiliations OPTIONS { waitForSync: true } FILTER aff._from == ${org._key} RETURN aff`
@@ -1046,6 +1176,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
             const testDmarcSummaryCursor =
               await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             const testDmarcSummary = await testDmarcSummaryCursor.next()
@@ -1108,6 +1241,8 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+
             const testOwnershipCursor =
               await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
             const testOwnership = await testOwnershipCursor.next()
@@ -1166,6 +1301,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
             const testDmarcSummaryCursor =
               await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             const testDmarcSummary = await testDmarcSummaryCursor.next()
@@ -1179,6 +1317,64 @@ describe('removing an organization', () => {
           })
         })
         describe('org is the only one claiming the domain', () => {
+          it('removes the dkim result data', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on OrganizationResult {
+                        status
+                        organization {
+                          name
+                        }
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  verifiedRequired: verifiedRequired({}),
+                },
+                validators: { cleanseInput },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+
+            const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(undefined)
+          })
           it('removes the scan data', async () => {
             await graphql(
               schema,
@@ -1230,10 +1426,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
+            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
+            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
+            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
 
             const testDkimCursor =
               await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
@@ -1311,11 +1508,10 @@ describe('removing an organization', () => {
               },
             )
 
-            const domainCursor = await query`
-              FOR domain IN domains
-                OPTIONS { waitForSync: true }
-                RETURN domain
-            `
+            await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+
+            const domainCursor =
+              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
@@ -1370,6 +1566,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+            await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+
             const testAffiliationCursor =
               await query`FOR aff IN affiliations OPTIONS { waitForSync: true } FILTER aff._from == ${org._key} RETURN aff`
             const testAffiliation = await testAffiliationCursor.next()
@@ -1388,6 +1587,64 @@ describe('removing an organization', () => {
               _from: secondOrg._id,
               _to: domain._id,
             })
+          })
+          it('does not remove the dkim result data', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on OrganizationResult {
+                        status
+                        organization {
+                          name
+                        }
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  verifiedRequired: verifiedRequired({}),
+                },
+                validators: { cleanseInput },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+
+            const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toBeDefined()
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -1440,10 +1697,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toBeDefined()
+            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
+            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
+            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
 
             const testDkimCursor =
               await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
@@ -1521,11 +1779,10 @@ describe('removing an organization', () => {
               },
             )
 
-            const domainCursor = await query`
-              FOR domain IN domains
-                OPTIONS { waitForSync: true }
-                RETURN domain
-            `
+              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+
+            const domainCursor = 
+              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
           })
@@ -1579,6 +1836,9 @@ describe('removing an organization', () => {
                 },
               },
             )
+
+            await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+            await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
 
             const testAffiliationCursor =
               await query`FOR aff IN affiliations OPTIONS { waitForSync: true } FILTER aff._from == ${org._key} RETURN aff`
@@ -1861,6 +2121,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+              await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
             const testDmarcSummaryCursor =
               await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             const testDmarcSummary = await testDmarcSummaryCursor.next()
@@ -1923,6 +2186,8 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+
             const testOwnershipCursor =
               await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
             const testOwnership = await testOwnershipCursor.next()
@@ -1981,6 +2246,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+
             const testDmarcSummaryCursor =
               await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             const testDmarcSummary = await testDmarcSummaryCursor.next()
@@ -1994,6 +2262,64 @@ describe('removing an organization', () => {
           })
         })
         describe('org is the only one claiming the domain', () => {
+          it('removes the dkim result data', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on OrganizationResult {
+                        status
+                        organization {
+                          name
+                        }
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  verifiedRequired: verifiedRequired({}),
+                },
+                validators: { cleanseInput },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+
+            const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toEqual(undefined)
+          })
           it('removes the scan data', async () => {
             await graphql(
               schema,
@@ -2045,10 +2371,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
+            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
+            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
+            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
 
             const testDkimCursor =
               await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
@@ -2126,11 +2453,10 @@ describe('removing an organization', () => {
               },
             )
 
-            const domainCursor = await query`
-              FOR domain IN domains
-                OPTIONS { waitForSync: true }
-                RETURN domain
-            `
+            await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+
+            const domainCursor = 
+              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
@@ -2185,6 +2511,9 @@ describe('removing an organization', () => {
               },
             )
 
+            await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+            await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+
             const testAffiliationCursor =
               await query`FOR aff IN affiliations OPTIONS { waitForSync: true } FILTER aff._from == ${org._key} RETURN aff`
             const testAffiliation = await testAffiliationCursor.next()
@@ -2203,6 +2532,64 @@ describe('removing an organization', () => {
               _from: secondOrg._id,
               _to: domain._id,
             })
+          })
+          it('does not remove the dkim result data', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    result {
+                      ... on OrganizationResult {
+                        status
+                        organization {
+                          name
+                        }
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    loadUserByKey: loadUserByKey({ query }),
+                  }),
+                  verifiedRequired: verifiedRequired({}),
+                },
+                validators: { cleanseInput },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
+                },
+              },
+            )
+
+            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+
+            const testDkimResultCursor =
+              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testDkimResult = await testDkimResultCursor.next()
+            expect(testDkimResult).toBeDefined()
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -2255,10 +2642,11 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toBeDefined()
+            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
+            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
+            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
+            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
+            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
 
             const testDkimCursor =
               await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
@@ -2336,11 +2724,10 @@ describe('removing an organization', () => {
               },
             )
 
-            const domainCursor = await query`
-              FOR domain IN domains
-                OPTIONS { waitForSync: true }
-                RETURN domain
-            `
+            await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+
+            const domainCursor = 
+              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
           })
@@ -2394,6 +2781,9 @@ describe('removing an organization', () => {
                 },
               },
             )
+
+            await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+            await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
 
             const testAffiliationCursor =
               await query`FOR aff IN affiliations OPTIONS { waitForSync: true } FILTER aff._from == ${org._key} RETURN aff`
