@@ -103,6 +103,13 @@ export function GuidanceTagList({
         )}
         {neutralTagList?.length && (
           <AccordionItem buttonLabel="Neutral Tags" buttonVariant="info">
+            <Box>
+              <Trans>
+                Neutral tags highlight relevant configuration details, but are
+                not addressed within policy requirements and have no impact on
+                scoring.
+              </Trans>
+            </Box>
             {neutralTagList}
           </AccordionItem>
         )}
