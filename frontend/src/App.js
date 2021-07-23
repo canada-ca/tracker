@@ -1,6 +1,11 @@
 import React, { Suspense, useEffect } from 'react'
 import { lazyWithRetry } from './LazyWithRetry'
-import { Switch, useHistory, useLocation } from 'react-router-dom'
+import {
+  Switch,
+  useHistory,
+  useLocation,
+  Link as RouteLink,
+} from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -247,7 +252,7 @@ export default function App() {
             <Trans>Privacy</Trans>
           </Link>
 
-          <Link href="/terms-and-conditions" ml={4}>
+          <Link as={RouteLink} to="terms-and-conditions" ml={4}>
             <Trans>Terms & conditions</Trans>
           </Link>
 
