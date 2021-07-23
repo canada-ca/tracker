@@ -26,7 +26,7 @@ export function OrganizationSummary({
         <Stack isInline align="center">
           <Text fontWeight="semibold">{domainCount}</Text>
           <Text>
-            <Trans>Internet facing services</Trans>
+            <Trans>Internet facing domains</Trans>
           </Text>
         </Stack>
 
