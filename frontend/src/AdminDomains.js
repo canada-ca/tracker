@@ -181,6 +181,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 variant="danger"
                 px="2"
                 icon={<MinusIcon />}
+                aria-label={'Remove ' + domain}
               />
               <IconButton
                 data-testid={`edit-${index}`}
@@ -194,6 +195,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   updateOnOpen()
                 }}
                 icon={<EditIcon />}
+                aria-label={'Edit ' + domain}
               />
             </Stack>
             <Domain
