@@ -49,6 +49,7 @@ const AuthenticateField = WithWrapperBox(function AuthenticateField({
       <Stack align="center">
         <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
           {codeSendMessage}
+          <span> </span>
           <Trans>Please enter your two factor code below.</Trans>
         </FormLabel>
         <InputGroup width="fit-content">

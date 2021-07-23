@@ -76,7 +76,7 @@
     },
     "ssl6": {
         "tagName": "SSL-invalid-cipher",
-        "guidance": "One or more ciphers in use are not compliant with guidelines",
+        "guidance": "One or more ciphers in use are not compliant with guidelines. A detailed list of ciphers can be found below",
         "refLinksGuide": [
             {
                 "description": "6.1.3/6.1.4/6.1.5 Direction",

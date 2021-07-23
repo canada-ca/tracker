@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  SimpleGrid,
+  Heading,
+  Stack,
+  useToast,
+} from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { CREATE_ORGANIZATION } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
@@ -115,7 +123,7 @@ export default function CreateOrganizationPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="4" mx="auto" overflow="hidden">
+    <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -157,20 +165,18 @@ export default function CreateOrganizationPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Heading as="h1" fontSize="2xl" textAlign="center">
-              <Trans>
-                Create an organization by filling out the following info in both
-                English and French
-              </Trans>
-            </Heading>
-            <InfoButton
-              label="Glossary"
-              state={infoState}
-              changeState={changeInfoState}
-              mr="0"
-              ml="auto"
-              display="block"
-            />
+            <Flex>
+              <Heading as="h1" fontSize="2xl" textAlign="center">
+                <Trans>Create an organization</Trans>
+              </Heading>
+              <InfoButton
+                label="Glossary"
+                state={infoState}
+                changeState={changeInfoState}
+                ml="auto"
+                display="block"
+              />
+            </Flex>
 
             <InfoPanel state={infoState}>
               <InfoBox title="Name" info="The name of the Organization." />
@@ -192,7 +198,11 @@ export default function CreateOrganizationPage() {
               />
             </InfoPanel>
 
-            <Stack mb="4" mt="4">
+            <SimpleGrid
+              columns={{ base: 1, md: 2 }}
+              spacing={{ base: 2, lg: 4 }}
+              mt="4"
+            >
               <CreateOrganizationField
                 name="nameEN"
                 language={t`English`}
@@ -203,9 +213,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Name`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="acronymEN"
                 language={t`English`}
@@ -216,9 +224,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Acronym`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="cityEN"
                 language={t`English`}
@@ -229,9 +235,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`City`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="provinceEN"
                 language={t`English`}
@@ -242,9 +246,7 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Province`}
               />
-            </Stack>
 
-            <Stack mb="4">
               <CreateOrganizationField
                 name="countryEN"
                 language={t`English`}
@@ -255,9 +257,9 @@ export default function CreateOrganizationPage() {
                 language={t`French`}
                 label={t`Country`}
               />
-            </Stack>
+            </SimpleGrid>
 
-            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+            <Stack spacing={4} isInline justifyContent="space-between" my="6">
               <Button variant="primaryOutline" as={RouteLink} to="/admin">
                 <Trans>Back</Trans>
               </Button>
