@@ -227,7 +227,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             mb={{ base: '8px', md: '0' }}
             mr={{ base: '0', md: '4' }}
           >
-            <InputLeftElement>
+            <InputLeftElement aria-hidden="true">
               <PlusSquareIcon color="gray.300" />
             </InputLeftElement>
             <Input

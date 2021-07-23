@@ -180,7 +180,7 @@ export default function DomainsPage() {
                   flexGrow={1}
                   w={{ base: '100%', md: '50%' }}
                 >
-                  <InputLeftElement>
+                  <InputLeftElement aria-hidden="true">
                     <SearchIcon color="gray.300" />
                   </InputLeftElement>
                   <Input

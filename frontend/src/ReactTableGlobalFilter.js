@@ -31,7 +31,7 @@ const ReactTableGlobalFilter = ({
       </Text>
 
       <InputGroup w={{ sm: '100%', md: '20rem' }}>
-        <InputLeftElement>
+        <InputLeftElement aria-hidden="true">
           <SearchIcon />
         </InputLeftElement>
         <Input

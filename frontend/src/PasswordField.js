@@ -33,7 +33,7 @@ const PasswordField = WithWrapperBox(function PasswordField({
         {labelText}
       </FormLabel>
       <InputGroup size="md">
-        <InputLeftElement>
+        <InputLeftElement aria-hidden="true">
           <LockIcon color="gray.300" />
         </InputLeftElement>
 

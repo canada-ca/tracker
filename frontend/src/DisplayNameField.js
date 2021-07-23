@@ -29,7 +29,7 @@ const DisplayNameField = WithWrapperBox(function DisplayNameField({
         {formLabel}
       </FormLabel>
       <InputGroup>
-        <InputLeftElement>
+        <InputLeftElement aria-hidden="true">
           <PersonIcon color="gray.300" size="icons.lg" />
         </InputLeftElement>
         <Input

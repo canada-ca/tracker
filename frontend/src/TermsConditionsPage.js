@@ -7,6 +7,8 @@ import { useLingui } from '@lingui/react'
 export function TermsConditionsPage() {
   const { i18n } = useLingui()
 
+  const linkIcon = <LinkIcon ml={1} aria-hidden="true" />
+
   return (
     <Box mb={20} fontSize="sm">
       <Heading as="h2" textAlign="center" fontSize="4xl">
@@ -55,7 +57,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>our Terms and Conditions on the TBS website</Trans>
-              <LinkIcon ml="4px" />
+              {linkIcon}
             </Link>
             <Trans>
               . Personal information will not be disclosed by Treasury Board
@@ -72,7 +74,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Privacy Act.</Trans>
-              <LinkIcon ml="4px" />
+              {linkIcon}
             </Link>
           </ListItem>
         </List>
@@ -100,7 +102,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Access to Information Act.</Trans>
-              <LinkIcon ml="4px" />
+              {linkIcon}
             </Link>
           </ListItem>
         </List>
@@ -162,7 +164,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Copyright Act</Trans>
-              <LinkIcon ml="4px" />
+              {linkIcon}
             </Link>
             <Trans>, and</Trans>
             <span> </span>
@@ -176,7 +178,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Trademarks Act</Trans>
-              <LinkIcon ml="4px" />
+              {linkIcon}
             </Link>
             <span> </span>
             <Trans>
@@ -235,7 +237,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>Privacy Notice Statement</Trans>
-              <LinkIcon ml="4px" />
+              {linkIcon}
             </Link>
           </ListItem>
         </List>
@@ -401,7 +403,7 @@ export function TermsConditionsPage() {
               }
             >
               <Trans>https://https-everywhere.canada.ca/en/help/</Trans>
-              <LinkIcon ml="4px" />
+              {linkIcon}
             </Link>
           </ListItem>
         </List>

@@ -348,7 +348,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             mr={{ base: '0', md: '2' }}
           >
             <InputGroup flexGrow={1} w="50%">
-              <InputLeftElement>
+              <InputLeftElement aria-hidden="true">
                 <EmailIcon color="gray.300" />
               </InputLeftElement>
               <Input
