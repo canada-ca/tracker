@@ -53,7 +53,6 @@ const PasswordField = WithWrapperBox(function PasswordField({
             h="buttons.lg"
             onClick={handleClick}
             icon={show ? <ViewOffIcon /> : <ViewIcon />}
-            tabIndex="-1"
           />
         </InputRightElement>
       </InputGroup>
