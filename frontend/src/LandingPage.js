@@ -32,9 +32,7 @@ export function LandingPage() {
       <Box
         display={{ base: 'none', md: 'flex' }}
         bg="primary"
-        height="fit-content"
-        templateAreas={{ sm: 'welcome', md: 'welcome logo' }}
-        templateColumns={{ sm: '1fr', md: '1fr 1fr' }}
+        justifyContent="center"
       >
         <Image
           bg="white"
