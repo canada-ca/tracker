@@ -11,7 +11,7 @@ import { localPoint } from '@visx/event'
 import theme from './theme/canada'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Box, Flex, Select, Stack, Text } from '@chakra-ui/core'
+import { Box, Flex, Select, Stack, Text } from '@chakra-ui/react'
 
 const { strong, moderate, moderateAlt, weak, gray } = theme.colors
 const textColour = gray['900']
