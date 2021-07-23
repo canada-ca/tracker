@@ -173,7 +173,7 @@ export default function App() {
               />
 
               <PrivatePage path="/organizations" title={t`Organizations`} exact>
-                <Organizations />
+                {() => <Organizations />}
               </PrivatePage>
 
               <PrivatePage
@@ -181,21 +181,23 @@ export default function App() {
                 setTitle={false}
                 exact
               >
-                <OrganizationDetails />
+                {() => <OrganizationDetails />}
               </PrivatePage>
 
               <PrivatePage path="/admin" title={t`Admin`}>
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <AdminPage />
-                </ErrorBoundary>
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <AdminPage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage path="/domains" title={t`Domains`} exact>
-                <DomainsPage />
+                {() => <DomainsPage />}
               </PrivatePage>
 
               <PrivatePage path="/domains/:domainSlug" setTitle={false} exact>
-                <DmarcGuidancePage />
+                {() => <DmarcGuidancePage />}
               </PrivatePage>
 
               <PrivatePage
@@ -203,7 +205,7 @@ export default function App() {
                 setTitle={false}
                 exact
               >
-                <DmarcReportPage />
+                {() => <DmarcReportPage />}
               </PrivatePage>
 
               <PrivatePage
@@ -211,22 +213,22 @@ export default function App() {
                 title={t`DMARC Summaries`}
                 exact
               >
-                <DmarcByDomainPage />
+                {() => <DmarcByDomainPage />}
               </PrivatePage>
 
               <PrivatePage path="/user" title={t`Your Account`}>
-                <UserPage username={currentUser.userName} />
+                {() => <UserPage username={currentUser.userName} />}
               </PrivatePage>
 
               <Page path="/validate/:verifyToken" title={t`Email Verification`}>
-                <EmailValidationPage />
+                {() => <EmailValidationPage />}
               </Page>
 
               <PrivatePage
                 path="/create-organization"
                 title={t`Create Organization`}
               >
-                <CreateOrganizationPage />
+                {() => <CreateOrganizationPage />}
               </PrivatePage>
 
               <Page component={PageNotFound} title="404" />
