@@ -134,6 +134,13 @@ export default extendTheme({
       mx: 'auto',
       w: '100%',
     },
+    loadingMessage: {
+      h: '45px',
+      my: 10,
+      textAlign: 'center',
+      fontSize: '3xl',
+      fontWeight: 'bold',
+    },
   },
   components: {
     Accordion,

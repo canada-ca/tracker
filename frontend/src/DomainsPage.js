@@ -83,7 +83,7 @@ export default function DomainsPage() {
     <ListOf
       elements={nodes}
       ifEmpty={() => (
-        <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+        <Text layerStyle="loadingMessage">
           <Trans>No Domains</Trans>
         </Text>
       )}

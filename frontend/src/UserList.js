@@ -266,8 +266,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       <Trans>User List</Trans>
     </LoadingMessage>
   ) : nodes.length === 0 ? (
-    <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-      <Trans>No users in this organization</Trans>
+    <Text layerStyle="loadingMessage">
+      <Trans>No users</Trans>
     </Text>
   ) : (
     nodes.map((node) => {
