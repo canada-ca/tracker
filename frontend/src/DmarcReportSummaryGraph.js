@@ -48,8 +48,6 @@ export function DmarcReportSummaryGraph({ ...props }) {
   const [isHorizontal, setIsHorizontal] = useState(false)
   const [isNormalised, setIsNormalised] = useState(false)
 
-  console.log(i18n._locale)
-
   let keys = totalKeys
 
   data.periods.sort((a, b) => {
