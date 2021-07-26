@@ -38,11 +38,6 @@ const percentageKeys = [
 const getDate = (d) => d.date
 let tooltipTimeout
 
-const ordinalColorScale = scaleOrdinal({
-  domain: [t`Pass`, t`Fail DKIM`, t`Fail SPF`, t`Fail`],
-  range: [strong, moderate, moderateAlt, weak],
-})
-
 function formatLargeInt(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
@@ -51,7 +46,9 @@ export function DmarcReportSummaryGraph({ ...props }) {
   const { i18n } = useLingui()
   const { data } = props
   const [isHorizontal, setIsHorizontal] = useState(false)
-  const [isNormalised, setIsNormailsed] = useState(false)
+  const [isNormalised, setIsNormalised] = useState(false)
+
+  console.log(i18n._locale)
 
   let keys = totalKeys
 
@@ -109,7 +106,7 @@ export function DmarcReportSummaryGraph({ ...props }) {
           </Text>
           <Select
             variant="filled"
-            onChange={() => setIsNormailsed(!isNormalised)}
+            onChange={() => setIsNormalised(!isNormalised)}
           >
             <option>{t`Total Messages`}</option>
             <option>{t`Percentages`}</option>
@@ -170,6 +167,10 @@ function VerticalGraph({
   })
   const colorScale = scaleOrdinal({
     domain: keys,
+    range: [strong, moderate, moderateAlt, weak],
+  })
+  const ordinalColorScale = scaleOrdinal({
+    domain: [t`Pass`, t`Fail DKIM`, t`Fail SPF`, t`Fail`],
     range: [strong, moderate, moderateAlt, weak],
   })
 
@@ -357,6 +358,10 @@ function HorizontalGraph({
   })
   const colorScale = scaleOrdinal({
     domain: keys,
+    range: [strong, moderate, moderateAlt, weak],
+  })
+  const ordinalColorScale = scaleOrdinal({
+    domain: [t`Pass`, t`Fail DKIM`, t`Fail SPF`, t`Fail`],
     range: [strong, moderate, moderateAlt, weak],
   })
 
