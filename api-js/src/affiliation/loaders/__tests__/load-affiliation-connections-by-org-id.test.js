@@ -129,7 +129,7 @@ describe('given the load affiliations by org id function', () => {
 
           const connectionArgs = {
             first: 5,
-            after: toGlobalId('affiliations', expectedAffiliations[0].id),
+            after: toGlobalId('affiliation', expectedAffiliations[0].id),
           }
           const affiliations = await affiliationLoader({
             orgId: org._id,
@@ -139,10 +139,7 @@ describe('given the load affiliations by org id function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId(
-                  'affiliations',
-                  expectedAffiliations[1]._key,
-                ),
+                cursor: toGlobalId('affiliation', expectedAffiliations[1]._key),
                 node: {
                   ...expectedAffiliations[1],
                 },
@@ -153,11 +150,11 @@ describe('given the load affiliations by org id function', () => {
               hasNextPage: false,
               hasPreviousPage: true,
               startCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[1]._key,
               ),
               endCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[1]._key,
               ),
             },
@@ -186,7 +183,7 @@ describe('given the load affiliations by org id function', () => {
 
           const connectionArgs = {
             first: 5,
-            before: toGlobalId('affiliations', expectedAffiliations[1].id),
+            before: toGlobalId('affiliation', expectedAffiliations[1].id),
           }
           const affiliations = await affiliationLoader({
             orgId: org._id,
@@ -197,7 +194,7 @@ describe('given the load affiliations by org id function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'affiliations',
+                  'affiliation',
                   expectedAffiliations[0]._key,
                 ),
                 node: {
@@ -210,11 +207,11 @@ describe('given the load affiliations by org id function', () => {
               hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[0]._key,
               ),
               endCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[0]._key,
               ),
             },
@@ -253,7 +250,7 @@ describe('given the load affiliations by org id function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'affiliations',
+                  'affiliation',
                   expectedAffiliations[0]._key,
                 ),
                 node: {
@@ -266,11 +263,11 @@ describe('given the load affiliations by org id function', () => {
               hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[0]._key,
               ),
               endCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[0]._key,
               ),
             },
@@ -309,7 +306,7 @@ describe('given the load affiliations by org id function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'affiliations',
+                  'affiliation',
                   expectedAffiliations[1]._key,
                 ),
                 node: {
@@ -322,11 +319,11 @@ describe('given the load affiliations by org id function', () => {
               hasNextPage: false,
               hasPreviousPage: true,
               startCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[1]._key,
               ),
               endCursor: toGlobalId(
-                'affiliations',
+                'affiliation',
                 expectedAffiliations[1]._key,
               ),
             },
@@ -376,7 +373,7 @@ describe('given the load affiliations by org id function', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'affiliations',
+                    'affiliation',
                     expectedAffiliations[0]._key,
                   ),
                   node: {
@@ -389,11 +386,11 @@ describe('given the load affiliations by org id function', () => {
                 hasNextPage: true,
                 hasPreviousPage: false,
                 startCursor: toGlobalId(
-                  'affiliations',
+                  'affiliation',
                   expectedAffiliations[0]._key,
                 ),
                 endCursor: toGlobalId(
-                  'affiliations',
+                  'affiliation',
                   expectedAffiliations[0]._key,
                 ),
               },
@@ -433,7 +430,7 @@ describe('given the load affiliations by org id function', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'affiliations',
+                    'affiliation',
                     expectedAffiliations[0]._key,
                   ),
                   node: {
@@ -446,11 +443,11 @@ describe('given the load affiliations by org id function', () => {
                 hasNextPage: true,
                 hasPreviousPage: false,
                 startCursor: toGlobalId(
-                  'affiliations',
+                  'affiliation',
                   expectedAffiliations[0]._key,
                 ),
                 endCursor: toGlobalId(
-                  'affiliations',
+                  'affiliation',
                   expectedAffiliations[0]._key,
                 ),
               },
@@ -548,8 +545,8 @@ describe('given the load affiliations by org id function', () => {
               const connectionArgs = {
                 orgId: orgOne._id,
                 first: 5,
-                after: toGlobalId('affiliations', affOne._key),
-                before: toGlobalId('affiliations', affThree._key),
+                after: toGlobalId('affiliation', affOne._key),
+                before: toGlobalId('affiliation', affThree._key),
                 orderBy: {
                   field: 'user-username',
                   direction: 'ASC',
@@ -561,7 +558,7 @@ describe('given the load affiliations by org id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('affiliations', affTwo._key),
+                    cursor: toGlobalId('affiliation', affTwo._key),
                     node: {
                       ...expectedAffiliation,
                     },
@@ -571,8 +568,8 @@ describe('given the load affiliations by org id function', () => {
                 pageInfo: {
                   hasNextPage: true,
                   hasPreviousPage: true,
-                  startCursor: toGlobalId('affiliations', affTwo._key),
-                  endCursor: toGlobalId('affiliations', affTwo._key),
+                  startCursor: toGlobalId('affiliation', affTwo._key),
+                  endCursor: toGlobalId('affiliation', affTwo._key),
                 },
               }
 
@@ -597,8 +594,8 @@ describe('given the load affiliations by org id function', () => {
               const connectionArgs = {
                 orgId: orgOne._id,
                 first: 5,
-                after: toGlobalId('affiliations', affThree._key),
-                before: toGlobalId('affiliations', affOne._key),
+                after: toGlobalId('affiliation', affThree._key),
+                before: toGlobalId('affiliation', affOne._key),
                 orderBy: {
                   field: 'user-username',
                   direction: 'DESC',
@@ -610,7 +607,7 @@ describe('given the load affiliations by org id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('affiliations', affTwo._key),
+                    cursor: toGlobalId('affiliation', affTwo._key),
                     node: {
                       ...expectedAffiliation,
                     },
@@ -620,8 +617,8 @@ describe('given the load affiliations by org id function', () => {
                 pageInfo: {
                   hasNextPage: true,
                   hasPreviousPage: true,
-                  startCursor: toGlobalId('affiliations', affTwo._key),
-                  endCursor: toGlobalId('affiliations', affTwo._key),
+                  startCursor: toGlobalId('affiliation', affTwo._key),
+                  endCursor: toGlobalId('affiliation', affTwo._key),
                 },
               }
 

@@ -465,7 +465,7 @@ export const loadAffiliationConnectionsByUserId =
 
     const edges = filteredAffiliations.affiliations.map((affiliation) => {
       return {
-        cursor: toGlobalId('affiliations', affiliation._key),
+        cursor: toGlobalId('affiliation', affiliation._key),
         node: affiliation,
       }
     })
@@ -476,8 +476,8 @@ export const loadAffiliationConnectionsByUserId =
       pageInfo: {
         hasNextPage: filteredAffiliations.hasNextPage,
         hasPreviousPage: filteredAffiliations.hasPreviousPage,
-        startCursor: toGlobalId('affiliations', filteredAffiliations.startKey),
-        endCursor: toGlobalId('affiliations', filteredAffiliations.endKey),
+        startCursor: toGlobalId('affiliation', filteredAffiliations.startKey),
+        endCursor: toGlobalId('affiliation', filteredAffiliations.endKey),
       },
     }
   }
