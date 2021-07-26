@@ -277,7 +277,7 @@ export const loadSslGuidanceTagConnectionsByTagId =
     }
 
     const edges = sslGuidanceTagInfo.sslGuidanceTags.map((tag) => ({
-      cursor: toGlobalId('guidanceTags', tag._key),
+      cursor: toGlobalId('guidanceTag', tag._key),
       node: tag,
     }))
 
@@ -287,8 +287,8 @@ export const loadSslGuidanceTagConnectionsByTagId =
       pageInfo: {
         hasNextPage: sslGuidanceTagInfo.hasNextPage,
         hasPreviousPage: sslGuidanceTagInfo.hasPreviousPage,
-        startCursor: toGlobalId('guidanceTags', sslGuidanceTagInfo.startKey),
-        endCursor: toGlobalId('guidanceTags', sslGuidanceTagInfo.endKey),
+        startCursor: toGlobalId('guidanceTag', sslGuidanceTagInfo.startKey),
+        endCursor: toGlobalId('guidanceTag', sslGuidanceTagInfo.endKey),
       },
     }
   }

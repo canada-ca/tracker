@@ -155,14 +155,14 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   if (error) return <ErrorFallbackMessage error={error} />
 
   const adminDomainList = loading ? (
-    <LoadingMessage>
+    <LoadingMessage minH="50px">
       <Trans>Domain List</Trans>
     </LoadingMessage>
   ) : (
     <ListOf
       elements={nodes}
       ifEmpty={() => (
-        <Text fontSize="lg" fontWeight="bold">
+        <Text layerStyle="loadingMessage">
           <Trans>No Domains</Trans>
         </Text>
       )}
@@ -181,6 +181,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 variant="danger"
                 px="2"
                 icon={<MinusIcon />}
+                aria-label={'Remove ' + domain}
               />
               <IconButton
                 data-testid={`edit-${index}`}
@@ -194,6 +195,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   updateOnOpen()
                 }}
                 icon={<EditIcon />}
+                aria-label={'Edit ' + domain}
               />
             </Stack>
             <Domain

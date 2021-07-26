@@ -266,8 +266,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       <Trans>User List</Trans>
     </LoadingMessage>
   ) : nodes.length === 0 ? (
-    <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-      <Trans>No users in this organization</Trans>
+    <Text layerStyle="loadingMessage">
+      <Trans>No users</Trans>
     </Text>
   ) : (
     nodes.map((node) => {
@@ -277,7 +277,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           <Flex align="center" w="100%">
             <Stack direction="row" flexGrow="0">
               <IconButton
-                aria-label="userRemoveButton"
+                aria-label="Remove User"
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
@@ -288,7 +288,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 icon={<MinusIcon />}
               />
               <IconButton
-                aria-label="userEditButton"
+                aria-label="Edit User"
                 variant="primary"
                 onClick={() => {
                   setEditingUserRole(userRole)

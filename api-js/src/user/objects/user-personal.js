@@ -10,7 +10,7 @@ import { nodeInterface } from '../../node'
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
   fields: () => ({
-    id: globalIdField('users'),
+    id: globalIdField('user'),
     userName: {
       type: GraphQLEmailAddress,
       description: 'Users email address.',

@@ -340,7 +340,7 @@ export const loadVerifiedDomainConnections =
 
     const edges = domainsInfo.domains.map((domain) => {
       return {
-        cursor: toGlobalId('verifiedDomains', domain._key),
+        cursor: toGlobalId('verifiedDomain', domain._key),
         node: domain,
       }
     })
@@ -351,8 +351,8 @@ export const loadVerifiedDomainConnections =
       pageInfo: {
         hasNextPage: domainsInfo.hasNextPage,
         hasPreviousPage: domainsInfo.hasPreviousPage,
-        startCursor: toGlobalId('verifiedDomains', domainsInfo.startKey),
-        endCursor: toGlobalId('verifiedDomains', domainsInfo.endKey),
+        startCursor: toGlobalId('verifiedDomain', domainsInfo.startKey),
+        endCursor: toGlobalId('verifiedDomain', domainsInfo.endKey),
       },
     }
   }

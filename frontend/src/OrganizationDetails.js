@@ -11,10 +11,9 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  useToast,
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
-import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from './graphql/queries'
+import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -26,53 +25,13 @@ import { useDocumentTitle } from './useDocumentTitle'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
-  const toast = useToast()
 
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },
-
-    onError: (error) => {
-      const [_, message] = error.message.split(': ')
-      toast({
-        title: 'Error',
-        description: message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
+    errorPolicy: 'ignore', // allow partial success
   })
-
-  const orgId = data?.organization?.id
-  const { data: isAdminData } = useQuery(IS_USER_ADMIN, {
-    skip: !orgId,
-    variables: { orgId: orgId },
-
-    onError: (error) => {
-      const [_, message] = error.message.split(': ')
-      toast({
-        title: 'Error',
-        description: message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-  })
-
-  let isAdmin = false
-  if (isAdminData?.isUserAdmin) {
-    isAdmin = isAdminData.isUserAdmin
-  }
-
-  let orgName = ''
-  if (data?.organization) {
-    orgName = data.organization.name
-  }
 
   if (loading) {
     return (
@@ -81,6 +40,8 @@ export default function OrganizationDetails() {
       </LoadingMessage>
     )
   }
+
+  const orgName = data?.organization?.name ?? ''
 
   return (
     <Box w="100%" px={4}>
@@ -108,7 +69,7 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          {isAdmin && (
+          {data?.organization?.affiliations && (
             <Tab>
               <Trans>Users</Trans>
             </Tab>
@@ -120,10 +81,10 @@ export default function OrganizationDetails() {
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <OrganizationSummary
                 summaries={data?.organization?.summaries}
-                domainCount={data.organization.domainCount}
-                userCount={data.organization.affiliations.totalCount}
-                city={data.organization.city}
-                province={data.organization.province}
+                domainCount={data?.organization?.domainCount}
+                userCount={data?.organization?.affiliations?.totalCount}
+                city={data?.organization?.city}
+                province={data?.organization?.province}
               />
             </ErrorBoundary>
           </TabPanel>
@@ -132,7 +93,7 @@ export default function OrganizationDetails() {
               <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
-          {isAdmin && (
+          {data?.organization?.affiliations && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />

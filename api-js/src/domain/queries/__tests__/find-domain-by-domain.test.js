@@ -157,7 +157,7 @@ describe('given findDomainByDomain query', () => {
         const expectedResponse = {
           data: {
             findDomainByDomain: {
-              id: toGlobalId('domains', domain._key),
+              id: toGlobalId('domain', domain._key),
               domain: 'test.gc.ca',
               lastRan: null,
               selectors: ['selector1._domainkey', 'selector2._domainkey'],

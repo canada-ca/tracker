@@ -26,16 +26,18 @@ export function OrganizationSummary({
         <Stack isInline align="center">
           <Text fontWeight="semibold">{domainCount}</Text>
           <Text>
-            <Trans>Internet facing services</Trans>
+            <Trans>Internet facing domains</Trans>
           </Text>
         </Stack>
 
-        <Stack isInline align="center">
-          <Text fontWeight="semibold">{userCount}</Text>
-          <Text>
-            <Trans>Total users</Trans>
-          </Text>
-        </Stack>
+        {userCount && (
+          <Stack isInline align="center">
+            <Text fontWeight="semibold">{userCount}</Text>
+            <Text>
+              <Trans>Total users</Trans>
+            </Text>
+          </Stack>
+        )}
       </Stack>
       <SummaryGroup web={summaries?.web} mail={summaries?.mail} />
     </Box>

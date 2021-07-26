@@ -179,7 +179,7 @@ describe('<UserList />', () => {
 
       const leftClick = { button: 0 }
 
-      const editUserButtons = await findAllByLabelText('userEditButton')
+      const editUserButtons = await findAllByLabelText('Edit User')
       fireEvent.click(editUserButtons[0], leftClick)
       await waitFor(() => {
         expect(getByText(/Edit Role/i)).toBeInTheDocument()
@@ -280,7 +280,7 @@ describe('<UserList />', () => {
         expect(queryByText(/Invite User/)).toBeInTheDocument()
       })
 
-      const userRemoveButtons = getAllByLabelText(/userRemoveButton/)
+      const userRemoveButtons = getAllByLabelText(/Remove User/)
       fireEvent.click(userRemoveButtons[0])
 
       await waitFor(() => {

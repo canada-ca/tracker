@@ -43,7 +43,7 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
         <ListOf
           elements={nodes}
           ifEmpty={() => (
-            <Text fontSize="xl" fontWeight="bold">
+            <Text layerStyle="loadingMessage">
               <Trans>No Users</Trans>
             </Text>
           )}

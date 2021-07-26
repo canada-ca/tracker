@@ -15,7 +15,7 @@ import { nodeInterface } from '../../node'
 export const verifiedOrganizationType = new GraphQLObjectType({
   name: 'VerifiedOrganization',
   fields: () => ({
-    id: globalIdField('verifiedOrganizations'),
+    id: globalIdField('verifiedOrganization'),
     acronym: {
       type: Acronym,
       description: 'The organizations acronym.',

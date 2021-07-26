@@ -141,7 +141,7 @@ describe('authenticate user account', () => {
               result: {
                 authToken: 'token',
                 user: {
-                  id: `${toGlobalId('users', user._key)}`,
+                  id: `${toGlobalId('user', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
                   preferredLang: 'FRENCH',
@@ -265,7 +265,7 @@ describe('authenticate user account', () => {
               result: {
                 authToken: 'token',
                 user: {
-                  id: `${toGlobalId('users', user._key)}`,
+                  id: `${toGlobalId('user', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
                   preferredLang: 'FRENCH',

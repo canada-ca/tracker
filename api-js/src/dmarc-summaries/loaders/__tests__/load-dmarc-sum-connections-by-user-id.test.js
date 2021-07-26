@@ -181,7 +181,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           first: 10,
           period: 'thirtyDays',
           year: '2021',
-          after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+          after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
         }
 
         const summaries = await connectionLoader({ ...connectionArgs })
@@ -189,7 +189,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+              cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
               node: {
                 ...expectedSummaries[1],
               },
@@ -200,10 +200,10 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             hasNextPage: false,
             hasPreviousPage: true,
             startCursor: toGlobalId(
-              'dmarcSummaries',
+              'dmarcSummary',
               expectedSummaries[1]._key,
             ),
-            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+            endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
           },
         }
 
@@ -228,7 +228,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           first: 10,
           period: 'thirtyDays',
           year: '2021',
-          before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+          before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
         }
 
         const summaries = await connectionLoader({ ...connectionArgs })
@@ -236,7 +236,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+              cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               node: {
                 ...expectedSummaries[0],
               },
@@ -247,10 +247,10 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId(
-              'dmarcSummaries',
+              'dmarcSummary',
               expectedSummaries[0]._key,
             ),
-            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+            endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
           },
         }
 
@@ -282,7 +282,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+              cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               node: {
                 ...expectedSummaries[0],
               },
@@ -293,10 +293,10 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId(
-              'dmarcSummaries',
+              'dmarcSummary',
               expectedSummaries[0]._key,
             ),
-            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+            endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
           },
         }
 
@@ -328,7 +328,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+              cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
               node: {
                 ...expectedSummaries[1],
               },
@@ -339,10 +339,10 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             hasNextPage: false,
             hasPreviousPage: true,
             startCursor: toGlobalId(
-              'dmarcSummaries',
+              'dmarcSummary',
               expectedSummaries[1]._key,
             ),
-            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+            endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
           },
         }
 
@@ -386,7 +386,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+              cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               node: {
                 ...expectedSummaries[0],
               },
@@ -397,10 +397,10 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             hasNextPage: false,
             hasPreviousPage: false,
             startCursor: toGlobalId(
-              'dmarcSummaries',
+              'dmarcSummary',
               expectedSummaries[0]._key,
             ),
-            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+            endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
           },
         }
 
@@ -428,7 +428,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -443,7 +443,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -456,11 +456,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -487,7 +487,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -502,7 +502,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -515,11 +515,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -548,7 +548,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -563,7 +563,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -576,11 +576,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -607,7 +607,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -622,7 +622,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -635,11 +635,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -668,7 +668,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -683,7 +683,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -696,11 +696,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -727,7 +727,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -742,7 +742,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -755,11 +755,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -788,7 +788,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -803,7 +803,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -816,11 +816,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -847,7 +847,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -862,7 +862,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -875,11 +875,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -908,7 +908,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -923,7 +923,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -936,11 +936,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -967,7 +967,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -982,7 +982,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -995,11 +995,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1028,7 +1028,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1043,7 +1043,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1056,11 +1056,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1087,7 +1087,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1102,7 +1102,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1115,11 +1115,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1148,7 +1148,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1163,7 +1163,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1176,11 +1176,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1207,7 +1207,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1222,7 +1222,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1235,11 +1235,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1268,7 +1268,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1283,7 +1283,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1296,11 +1296,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1327,7 +1327,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1342,7 +1342,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1355,11 +1355,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1388,7 +1388,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1403,7 +1403,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1416,11 +1416,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1447,7 +1447,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                after: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                after: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1462,7 +1462,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1475,11 +1475,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1510,7 +1510,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1525,7 +1525,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1538,11 +1538,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1569,7 +1569,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1584,7 +1584,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1597,11 +1597,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1630,7 +1630,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1645,7 +1645,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1658,11 +1658,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1689,7 +1689,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1704,7 +1704,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1717,11 +1717,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1750,7 +1750,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1765,7 +1765,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1778,11 +1778,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1809,7 +1809,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1824,7 +1824,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1837,11 +1837,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1870,7 +1870,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1885,7 +1885,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -1898,11 +1898,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -1929,7 +1929,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -1944,7 +1944,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -1957,11 +1957,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -1990,7 +1990,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2005,7 +2005,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -2018,11 +2018,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -2049,7 +2049,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2064,7 +2064,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -2077,11 +2077,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -2110,7 +2110,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2125,7 +2125,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -2138,11 +2138,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -2169,7 +2169,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2184,7 +2184,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -2197,11 +2197,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -2230,7 +2230,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2245,7 +2245,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -2258,11 +2258,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -2289,7 +2289,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2304,7 +2304,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -2317,11 +2317,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -2350,7 +2350,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2365,7 +2365,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -2378,11 +2378,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -2409,7 +2409,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2424,7 +2424,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -2437,11 +2437,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -2470,7 +2470,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2485,7 +2485,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -2498,11 +2498,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -2529,7 +2529,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2544,7 +2544,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -2557,11 +2557,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -2590,7 +2590,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2605,7 +2605,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[0]._key,
                     ),
                     node: {
@@ -2618,11 +2618,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[0]._key,
                   ),
                 },
@@ -2649,7 +2649,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
               const connectionArgs = {
                 first: 10,
-                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                before: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                 period: 'thirtyDays',
                 year: '2021',
                 orderBy: {
@@ -2664,7 +2664,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'dmarcSummaries',
+                      'dmarcSummary',
                       expectedSummaries[1]._key,
                     ),
                     node: {
@@ -2677,11 +2677,11 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                   endCursor: toGlobalId(
-                    'dmarcSummaries',
+                    'dmarcSummary',
                     expectedSummaries[1]._key,
                   ),
                 },
@@ -2719,13 +2719,13 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+              cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               node: {
                 ...expectedSummaries[0],
               },
             },
             {
-              cursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+              cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
               node: {
                 ...expectedSummaries[1],
               },
@@ -2736,10 +2736,10 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             hasNextPage: false,
             hasPreviousPage: false,
             startCursor: toGlobalId(
-              'dmarcSummaries',
+              'dmarcSummary',
               expectedSummaries[0]._key,
             ),
-            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+            endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
           },
         }
 

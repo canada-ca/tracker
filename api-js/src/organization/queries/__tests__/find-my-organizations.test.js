@@ -206,9 +206,9 @@ describe('given findMyOrganizationsQuery', () => {
                   findMyOrganizations: {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', orgOne._key),
+                        cursor: toGlobalId('organization', orgOne._key),
                         node: {
-                          id: toGlobalId('organizations', orgOne._key),
+                          id: toGlobalId('organization', orgOne._key),
                           slug: 'treasury-board-secretariat',
                           acronym: 'TBS',
                           name: 'Treasury Board of Canada Secretariat',
@@ -220,9 +220,9 @@ describe('given findMyOrganizationsQuery', () => {
                         },
                       },
                       {
-                        cursor: toGlobalId('organizations', orgTwo._key),
+                        cursor: toGlobalId('organization', orgTwo._key),
                         node: {
-                          id: toGlobalId('organizations', orgTwo._key),
+                          id: toGlobalId('organization', orgTwo._key),
                           slug: 'not-treasury-board-secretariat',
                           acronym: 'NTBS',
                           name: 'Not Treasury Board of Canada Secretariat',
@@ -236,10 +236,10 @@ describe('given findMyOrganizationsQuery', () => {
                     ],
                     totalCount: 2,
                     pageInfo: {
-                      endCursor: toGlobalId('organizations', orgTwo._key),
+                      endCursor: toGlobalId('organization', orgTwo._key),
                       hasNextPage: false,
                       hasPreviousPage: false,
-                      startCursor: toGlobalId('organizations', orgOne._key),
+                      startCursor: toGlobalId('organization', orgOne._key),
                     },
                   },
                 },
@@ -350,9 +350,9 @@ describe('given findMyOrganizationsQuery', () => {
                   findMyOrganizations: {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', orgOne._key),
+                        cursor: toGlobalId('organization', orgOne._key),
                         node: {
-                          id: toGlobalId('organizations', orgOne._key),
+                          id: toGlobalId('organization', orgOne._key),
                           slug: 'secretariat-conseil-tresor',
                           acronym: 'SCT',
                           name: 'Secrétariat du Conseil Trésor du Canada',
@@ -364,9 +364,9 @@ describe('given findMyOrganizationsQuery', () => {
                         },
                       },
                       {
-                        cursor: toGlobalId('organizations', orgTwo._key),
+                        cursor: toGlobalId('organization', orgTwo._key),
                         node: {
-                          id: toGlobalId('organizations', orgTwo._key),
+                          id: toGlobalId('organization', orgTwo._key),
                           slug: 'ne-pas-secretariat-conseil-tresor',
                           acronym: 'NPSCT',
                           name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
@@ -380,10 +380,10 @@ describe('given findMyOrganizationsQuery', () => {
                     ],
                     totalCount: 2,
                     pageInfo: {
-                      endCursor: toGlobalId('organizations', orgTwo._key),
+                      endCursor: toGlobalId('organization', orgTwo._key),
                       hasNextPage: false,
                       hasPreviousPage: false,
-                      startCursor: toGlobalId('organizations', orgOne._key),
+                      startCursor: toGlobalId('organization', orgOne._key),
                     },
                   },
                 },

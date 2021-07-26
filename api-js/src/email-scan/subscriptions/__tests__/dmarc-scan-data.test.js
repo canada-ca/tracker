@@ -272,7 +272,7 @@ describe('given the dmarcScanData subscription', () => {
           rawJson: '{"missing":true}',
           negativeGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'dmarc1'),
+              id: toGlobalId('guidanceTag', 'dmarc1'),
               tagId: 'dmarc1',
               tagName: 'DMARC-TAG',
               guidance: 'Some Interesting Guidance',
@@ -292,7 +292,7 @@ describe('given the dmarcScanData subscription', () => {
           ],
           neutralGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'dmarc1'),
+              id: toGlobalId('guidanceTag', 'dmarc1'),
               tagId: 'dmarc1',
               tagName: 'DMARC-TAG',
               guidance: 'Some Interesting Guidance',
@@ -312,7 +312,7 @@ describe('given the dmarcScanData subscription', () => {
           ],
           positiveGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'dmarc1'),
+              id: toGlobalId('guidanceTag', 'dmarc1'),
               tagId: 'dmarc1',
               tagName: 'DMARC-TAG',
               guidance: 'Some Interesting Guidance',

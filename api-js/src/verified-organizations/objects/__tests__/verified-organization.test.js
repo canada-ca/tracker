@@ -102,7 +102,7 @@ describe('given the verified organization object', () => {
         const demoType = verifiedOrganizationType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('verifiedOrganizations', 1),
+          toGlobalId('verifiedOrganization', 1),
         )
       })
     })

@@ -92,7 +92,7 @@ describe('given the findMe query', () => {
       const expectedResponse = {
         data: {
           findMe: {
-            id: toGlobalId('users', user._key),
+            id: toGlobalId('user', user._key),
           },
         },
       }

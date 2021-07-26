@@ -265,7 +265,7 @@ export default function DmarcByDomainPage() {
         />
         <Divider borderColor="gray.500" />
         <Trans>
-          A more detaild breakdown of each domain can be found by clicking on
+          A more detailed breakdown of each domain can be found by clicking on
           its address in the first column.
         </Trans>
       </InfoPanel>

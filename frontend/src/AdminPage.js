@@ -69,9 +69,6 @@ export default function AdminPage() {
   if (options.length > 1) {
     return (
       <Stack spacing={10} w="100%" px={4}>
-        <Text fontSize="4xl" fontWeight="bold" textAlign={['center', 'left']}>
-          <Trans>Welcome, Admin</Trans>
-        </Text>
         <Flex
           direction={{ base: 'column', md: 'row' }}
           align="center"

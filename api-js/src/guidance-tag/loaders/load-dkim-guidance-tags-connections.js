@@ -277,7 +277,7 @@ export const loadDkimGuidanceTagConnectionsByTagId =
     }
 
     const edges = dkimGuidanceTagInfo.dkimGuidanceTags.map((tag) => ({
-      cursor: toGlobalId('guidanceTags', tag._key),
+      cursor: toGlobalId('guidanceTag', tag._key),
       node: tag,
     }))
 
@@ -287,8 +287,8 @@ export const loadDkimGuidanceTagConnectionsByTagId =
       pageInfo: {
         hasNextPage: dkimGuidanceTagInfo.hasNextPage,
         hasPreviousPage: dkimGuidanceTagInfo.hasPreviousPage,
-        startCursor: toGlobalId('guidanceTags', dkimGuidanceTagInfo.startKey),
-        endCursor: toGlobalId('guidanceTags', dkimGuidanceTagInfo.endKey),
+        startCursor: toGlobalId('guidanceTag', dkimGuidanceTagInfo.startKey),
+        endCursor: toGlobalId('guidanceTag', dkimGuidanceTagInfo.endKey),
       },
     }
   }

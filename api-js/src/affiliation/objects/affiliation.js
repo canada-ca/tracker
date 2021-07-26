@@ -9,7 +9,7 @@ import { nodeInterface } from '../../node'
 export const affiliationType = new GraphQLObjectType({
   name: 'Affiliation',
   fields: () => ({
-    id: globalIdField('affiliations'),
+    id: globalIdField('affiliation'),
     permission: {
       type: RoleEnums,
       description: "User's level of access to a given organization.",

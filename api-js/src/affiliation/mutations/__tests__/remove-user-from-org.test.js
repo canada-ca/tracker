@@ -354,7 +354,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   result: {
                     status: 'Successfully removed user from organization.',
                     user: {
-                      id: toGlobalId('users', user._key),
+                      id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
                     },
                   },
@@ -458,7 +458,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     status:
                       "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
-                      id: toGlobalId('users', user._key),
+                      id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
                     },
                   },
@@ -644,7 +644,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   result: {
                     status: 'Successfully removed user from organization.',
                     user: {
-                      id: toGlobalId('users', user._key),
+                      id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
                     },
                   },
@@ -748,7 +748,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     status:
                       "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
-                      id: toGlobalId('users', user._key),
+                      id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
                     },
                   },
@@ -952,7 +952,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   result: {
                     status: 'Successfully removed user from organization.',
                     user: {
-                      id: toGlobalId('users', user._key),
+                      id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
                     },
                   },
@@ -1056,7 +1056,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     status:
                       "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
-                      id: toGlobalId('users', user._key),
+                      id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
                     },
                   },

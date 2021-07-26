@@ -13,7 +13,7 @@ export const dmarcSummaryType = new GraphQLObjectType({
   name: 'DmarcSummary',
   description: 'Object that contains information for a dmarc summary.',
   fields: () => ({
-    id: globalIdField('dmarcSummaries'),
+    id: globalIdField('dmarcSummary'),
     domain: {
       type: domainType,
       description: 'The domain that the data in this dmarc summary belongs to.',

@@ -541,7 +541,7 @@ export const loadOrgConnectionsByDomainId =
 
     const edges = organizationInfo.organizations.map((organization) => {
       return {
-        cursor: toGlobalId('organizations', organization._key),
+        cursor: toGlobalId('organization', organization._key),
         node: organization,
       }
     })
@@ -552,8 +552,8 @@ export const loadOrgConnectionsByDomainId =
       pageInfo: {
         hasNextPage: organizationInfo.hasNextPage,
         hasPreviousPage: organizationInfo.hasPreviousPage,
-        startCursor: toGlobalId('organizations', organizationInfo.startKey),
-        endCursor: toGlobalId('organizations', organizationInfo.endKey),
+        startCursor: toGlobalId('organization', organizationInfo.startKey),
+        endCursor: toGlobalId('organization', organizationInfo.endKey),
       },
     }
   }

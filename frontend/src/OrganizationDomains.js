@@ -82,7 +82,7 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
       <ListOf
         elements={nodes}
         ifEmpty={() => (
-          <Text fontSize="xl" fontWeight="bold">
+          <Text layerStyle="loadingMessage">
             <Trans>No Domains</Trans>
           </Text>
         )}

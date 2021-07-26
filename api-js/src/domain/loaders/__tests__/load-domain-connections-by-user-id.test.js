@@ -132,14 +132,14 @@ describe('given the load domain connections by user id function', () => {
 
           const connectionArgs = {
             first: 10,
-            after: toGlobalId('domains', expectedDomains[0].id),
+            after: toGlobalId('domain', expectedDomains[0].id),
           }
           const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('domains', expectedDomains[1]._key),
+                cursor: toGlobalId('domain', expectedDomains[1]._key),
                 node: {
                   ...expectedDomains[1],
                 },
@@ -149,8 +149,8 @@ describe('given the load domain connections by user id function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('domains', expectedDomains[1]._key),
-              endCursor: toGlobalId('domains', expectedDomains[1]._key),
+              startCursor: toGlobalId('domain', expectedDomains[1]._key),
+              endCursor: toGlobalId('domain', expectedDomains[1]._key),
             },
           }
 
@@ -176,14 +176,14 @@ describe('given the load domain connections by user id function', () => {
 
           const connectionArgs = {
             first: 10,
-            before: toGlobalId('domains', expectedDomains[1].id),
+            before: toGlobalId('domain', expectedDomains[1].id),
           }
           const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('domains', expectedDomains[0]._key),
+                cursor: toGlobalId('domain', expectedDomains[0]._key),
                 node: {
                   ...expectedDomains[0],
                 },
@@ -193,8 +193,8 @@ describe('given the load domain connections by user id function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('domains', expectedDomains[0]._key),
-              endCursor: toGlobalId('domains', expectedDomains[0]._key),
+              startCursor: toGlobalId('domain', expectedDomains[0]._key),
+              endCursor: toGlobalId('domain', expectedDomains[0]._key),
             },
           }
 
@@ -226,7 +226,7 @@ describe('given the load domain connections by user id function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('domains', expectedDomains[0]._key),
+                cursor: toGlobalId('domain', expectedDomains[0]._key),
                 node: {
                   ...expectedDomains[0],
                 },
@@ -236,8 +236,8 @@ describe('given the load domain connections by user id function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('domains', expectedDomains[0]._key),
-              endCursor: toGlobalId('domains', expectedDomains[0]._key),
+              startCursor: toGlobalId('domain', expectedDomains[0]._key),
+              endCursor: toGlobalId('domain', expectedDomains[0]._key),
             },
           }
 
@@ -269,7 +269,7 @@ describe('given the load domain connections by user id function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('domains', expectedDomains[1]._key),
+                cursor: toGlobalId('domain', expectedDomains[1]._key),
                 node: {
                   ...expectedDomains[1],
                 },
@@ -279,8 +279,8 @@ describe('given the load domain connections by user id function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('domains', expectedDomains[1]._key),
-              endCursor: toGlobalId('domains', expectedDomains[1]._key),
+              startCursor: toGlobalId('domain', expectedDomains[1]._key),
+              endCursor: toGlobalId('domain', expectedDomains[1]._key),
             },
           }
 
@@ -317,7 +317,7 @@ describe('given the load domain connections by user id function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('domains', expectedDomain._key),
+                cursor: toGlobalId('domain', expectedDomain._key),
                 node: {
                   ...expectedDomain,
                 },
@@ -327,8 +327,8 @@ describe('given the load domain connections by user id function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('domains', expectedDomain._key),
-              endCursor: toGlobalId('domains', expectedDomain._key),
+              startCursor: toGlobalId('domain', expectedDomain._key),
+              endCursor: toGlobalId('domain', expectedDomain._key),
             },
           }
 
@@ -374,7 +374,7 @@ describe('given the load domain connections by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('domains', expectedDomains[0]._key),
+                  cursor: toGlobalId('domain', expectedDomains[0]._key),
                   node: {
                     ...expectedDomains[0],
                   },
@@ -384,8 +384,8 @@ describe('given the load domain connections by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                endCursor: toGlobalId('domain', expectedDomains[0]._key),
               },
             }
 
@@ -416,19 +416,19 @@ describe('given the load domain connections by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('domains', expectedDomains[0]._key),
+                  cursor: toGlobalId('domain', expectedDomains[0]._key),
                   node: {
                     ...expectedDomains[0],
                   },
                 },
                 {
-                  cursor: toGlobalId('domains', expectedDomains[1]._key),
+                  cursor: toGlobalId('domain', expectedDomains[1]._key),
                   node: {
                     ...expectedDomains[1],
                   },
                 },
                 {
-                  cursor: toGlobalId('domains', expectedDomains[2]._key),
+                  cursor: toGlobalId('domain', expectedDomains[2]._key),
                   node: {
                     ...expectedDomains[2],
                   },
@@ -438,8 +438,8 @@ describe('given the load domain connections by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                endCursor: toGlobalId('domains', expectedDomains[2]._key),
+                startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                endCursor: toGlobalId('domain', expectedDomains[2]._key),
               },
             }
 
@@ -463,7 +463,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[0]._key),
+                  after: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'domain',
                     direction: 'ASC',
@@ -479,7 +479,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -489,8 +489,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -510,7 +510,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[1]._key),
+                  after: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'domain',
                     direction: 'DESC',
@@ -526,7 +526,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -536,8 +536,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -559,7 +559,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[0]._key),
+                  after: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'last-ran',
                     direction: 'ASC',
@@ -575,7 +575,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -585,8 +585,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -606,7 +606,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[1]._key),
+                  after: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'last-ran',
                     direction: 'DESC',
@@ -622,7 +622,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -632,8 +632,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -655,7 +655,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[0]._key),
+                  after: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'dkim-status',
                     direction: 'ASC',
@@ -671,7 +671,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -681,8 +681,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -702,7 +702,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[1]._key),
+                  after: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'dkim-status',
                     direction: 'DESC',
@@ -718,7 +718,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -728,8 +728,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -751,7 +751,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[0]._key),
+                  after: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'dmarc-status',
                     direction: 'ASC',
@@ -767,7 +767,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -777,8 +777,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -798,7 +798,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[1]._key),
+                  after: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'dmarc-status',
                     direction: 'DESC',
@@ -814,7 +814,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -824,8 +824,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -847,7 +847,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[0]._key),
+                  after: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'https-status',
                     direction: 'ASC',
@@ -863,7 +863,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -873,8 +873,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -894,7 +894,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[1]._key),
+                  after: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'https-status',
                     direction: 'DESC',
@@ -910,7 +910,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -920,8 +920,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -943,7 +943,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[0]._key),
+                  after: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'spf-status',
                     direction: 'ASC',
@@ -959,7 +959,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -969,8 +969,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -990,7 +990,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[1]._key),
+                  after: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'spf-status',
                     direction: 'DESC',
@@ -1006,7 +1006,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1016,8 +1016,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1039,7 +1039,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[0]._key),
+                  after: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'ssl-status',
                     direction: 'ASC',
@@ -1055,7 +1055,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1065,8 +1065,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1086,7 +1086,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  after: toGlobalId('domains', expectedDomains[1]._key),
+                  after: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'ssl-status',
                     direction: 'DESC',
@@ -1102,7 +1102,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1112,8 +1112,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1137,7 +1137,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[1]._key),
+                  before: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'domain',
                     direction: 'ASC',
@@ -1153,7 +1153,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1163,8 +1163,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1184,7 +1184,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[0]._key),
+                  before: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'domain',
                     direction: 'DESC',
@@ -1200,7 +1200,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1210,8 +1210,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1233,7 +1233,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[1]._key),
+                  before: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'last-ran',
                     direction: 'ASC',
@@ -1249,7 +1249,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1259,8 +1259,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1280,7 +1280,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[0]._key),
+                  before: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'last-ran',
                     direction: 'DESC',
@@ -1296,7 +1296,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1306,8 +1306,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1329,7 +1329,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[1]._key),
+                  before: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'dkim-status',
                     direction: 'ASC',
@@ -1345,7 +1345,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1355,8 +1355,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1376,7 +1376,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[0]._key),
+                  before: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'dkim-status',
                     direction: 'DESC',
@@ -1392,7 +1392,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1402,8 +1402,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1425,7 +1425,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[1]._key),
+                  before: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'dmarc-status',
                     direction: 'ASC',
@@ -1441,7 +1441,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1451,8 +1451,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1472,7 +1472,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[0]._key),
+                  before: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'dmarc-status',
                     direction: 'DESC',
@@ -1488,7 +1488,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1498,8 +1498,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1521,7 +1521,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[1]._key),
+                  before: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'https-status',
                     direction: 'ASC',
@@ -1537,7 +1537,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1547,8 +1547,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1568,7 +1568,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[0]._key),
+                  before: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'https-status',
                     direction: 'DESC',
@@ -1584,7 +1584,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1594,8 +1594,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1617,7 +1617,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[1]._key),
+                  before: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'spf-status',
                     direction: 'ASC',
@@ -1633,7 +1633,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1643,8 +1643,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1664,7 +1664,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[0]._key),
+                  before: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'spf-status',
                     direction: 'DESC',
@@ -1680,7 +1680,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1690,8 +1690,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1713,7 +1713,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[1]._key),
+                  before: toGlobalId('domain', expectedDomains[1]._key),
                   orderBy: {
                     field: 'ssl-status',
                     direction: 'ASC',
@@ -1729,7 +1729,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[0]._key),
+                      cursor: toGlobalId('domain', expectedDomains[0]._key),
                       node: {
                         ...expectedDomains[0],
                       },
@@ -1739,8 +1739,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[0]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[0]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[0]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[0]._key),
                   },
                 }
 
@@ -1760,7 +1760,7 @@ describe('given the load domain connections by user id function', () => {
 
                 const connectionArgs = {
                   first: 1,
-                  before: toGlobalId('domains', expectedDomains[0]._key),
+                  before: toGlobalId('domain', expectedDomains[0]._key),
                   orderBy: {
                     field: 'ssl-status',
                     direction: 'DESC',
@@ -1776,7 +1776,7 @@ describe('given the load domain connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('domains', expectedDomains[1]._key),
+                      cursor: toGlobalId('domain', expectedDomains[1]._key),
                       node: {
                         ...expectedDomains[1],
                       },
@@ -1786,8 +1786,8 @@ describe('given the load domain connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('domains', expectedDomains[1]._key),
-                    endCursor: toGlobalId('domains', expectedDomains[1]._key),
+                    startCursor: toGlobalId('domain', expectedDomains[1]._key),
+                    endCursor: toGlobalId('domain', expectedDomains[1]._key),
                   },
                 }
 
@@ -1823,13 +1823,13 @@ describe('given the load domain connections by user id function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('domains', expectedDomains[0]._key),
+                cursor: toGlobalId('domain', expectedDomains[0]._key),
                 node: {
                   ...expectedDomains[0],
                 },
               },
               {
-                cursor: toGlobalId('domains', expectedDomains[1]._key),
+                cursor: toGlobalId('domain', expectedDomains[1]._key),
                 node: {
                   ...expectedDomains[1],
                 },
@@ -1839,8 +1839,8 @@ describe('given the load domain connections by user id function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('domains', expectedDomains[0]._key),
-              endCursor: toGlobalId('domains', expectedDomains[1]._key),
+              startCursor: toGlobalId('domain', expectedDomains[0]._key),
+              endCursor: toGlobalId('domain', expectedDomains[1]._key),
             },
           }
 

@@ -5,7 +5,7 @@ import { Trans } from '@lingui/macro'
 
 export function LoadingMessage({ children }) {
   return (
-    <Stack align="center" my="10">
+    <Stack align="center" layerStyle="loadingMessage">
       <Stack isInline align="center">
         <Spinner
           size="lg"
@@ -14,7 +14,7 @@ export function LoadingMessage({ children }) {
           emptyColor="accent"
           thickness="0.175em"
         />
-        <Text fontWeight="bold" fontSize="3xl">
+        <Text>
           <Trans>Loading {children}...</Trans>
         </Text>
       </Stack>

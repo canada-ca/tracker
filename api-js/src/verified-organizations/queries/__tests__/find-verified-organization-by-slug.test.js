@@ -138,7 +138,7 @@ describe('given findOrganizationBySlugQuery', () => {
           const expectedResponse = {
             data: {
               findVerifiedOrganizationBySlug: {
-                id: toGlobalId('verifiedOrganizations', org._key),
+                id: toGlobalId('verifiedOrganization', org._key),
               },
             },
           }
@@ -250,7 +250,7 @@ describe('given findOrganizationBySlugQuery', () => {
           const expectedResponse = {
             data: {
               findVerifiedOrganizationBySlug: {
-                id: toGlobalId('verifiedOrganizations', org._key),
+                id: toGlobalId('verifiedOrganization', org._key),
               },
             },
           }

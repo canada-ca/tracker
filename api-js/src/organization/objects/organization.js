@@ -18,7 +18,7 @@ import { domainConnection } from '../../domain/objects'
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
   fields: () => ({
-    id: globalIdField('organizations'),
+    id: globalIdField('organization'),
     acronym: {
       type: Acronym,
       description: 'The organizations acronym.',

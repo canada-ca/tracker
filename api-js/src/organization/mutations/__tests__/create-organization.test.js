@@ -133,7 +133,7 @@ describe('create an organization', () => {
           data: {
             createOrganization: {
               result: {
-                id: `${toGlobalId('organizations', org._key)}`,
+                id: `${toGlobalId('organization', org._key)}`,
                 acronym: org.acronym,
                 slug: org.slug,
                 name: org.name,
@@ -234,7 +234,7 @@ describe('create an organization', () => {
           data: {
             createOrganization: {
               result: {
-                id: `${toGlobalId('organizations', org._key)}`,
+                id: `${toGlobalId('organization', org._key)}`,
                 acronym: org.acronym,
                 slug: org.slug,
                 name: org.name,

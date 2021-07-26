@@ -33,10 +33,15 @@ export function GuidanceTagList({
             }
             pb="1"
           >
-            <GuidanceTagDetails
-              guidanceTag={guidanceTag.node}
-              tagType={tagType}
-            />
+            {guidanceTag.node ? (
+              <GuidanceTagDetails
+                guidanceTag={guidanceTag.node}
+                tagType={tagType}
+              />
+            ) : (
+              <GuidanceTagDetails guidanceTag={guidanceTag} tagType={tagType} />
+            )}
+
             {
               // Add divider if next entry exists
               tagList[index + 1] && <Divider borderColor="gray.700" />
@@ -103,6 +108,13 @@ export function GuidanceTagList({
         )}
         {neutralTagList?.length && (
           <AccordionItem buttonLabel="Neutral Tags" buttonVariant="info">
+            <Box>
+              <Trans>
+                Neutral tags highlight relevant configuration details, but are
+                not addressed within policy requirements and have no impact on
+                scoring.
+              </Trans>
+            </Box>
             {neutralTagList}
           </AccordionItem>
         )}

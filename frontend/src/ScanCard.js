@@ -53,14 +53,20 @@ function ScanCard({ scanType, scanData, status }) {
             <Stack isInline align="center" px="2">
               <CheckCircleIcon color="strong" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
-                <Trans>ITPIN Compliant</Trans>
+                <Trans>
+                  Web Sites and Services Management Configuration Requirements
+                  Compliant
+                </Trans>
               </Text>
             </Stack>
           ) : (
             <Stack isInline align="center" px="2">
               <WarningTwoIcon color="moderate" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
-                <Trans>Changes Required for ITPIN Compliance</Trans>
+                <Trans>
+                  Changes required for Web Sites and Services Management
+                  Configuration Requirements compliance
+                </Trans>
               </Text>
             </Stack>
           )}
@@ -103,7 +109,7 @@ function ScanCard({ scanType, scanData, status }) {
       return (
         <ScanCategoryDetails
           categoryName={categoryName}
-          categoryData={categoryData}
+          categoryData={categoryData.edges[0]?.node}
           key={categoryName}
         />
       )

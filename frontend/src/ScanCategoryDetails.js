@@ -7,33 +7,54 @@ import { t, Trans } from '@lingui/macro'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
 function ScanCategoryDetails({ categoryName, categoryData }) {
-  const data = categoryData.edges[0]?.node
 
-  if (!data)
+  if (!categoryData)
     return (
       <Text fontWeight="bold" fontSize="2xl">
-        <Trans>
-          {t`No scan data available for ${categoryName.toUpperCase()}.`}
-        </Trans>
+        <Trans>No scan data available for ${categoryName.toUpperCase()}.</Trans>
       </Text>
     )
 
   const tagDetails =
     categoryName === 'dkim' ? (
-      data.results.edges.map(({ node }, idx) => (
-        <GuidanceTagList
-          negativeTags={node.negativeGuidanceTags.edges}
-          positiveTags={node.positiveGuidanceTags.edges}
-          neutralTags={node.neutralGuidanceTags.edges}
-          selector={node.selector}
-          key={categoryName + idx}
-        />
-      ))
+      categoryData?.results?.edges ? (
+        categoryData.results.edges.map(({ node }, idx) => {
+          return (
+            <GuidanceTagList
+              negativeTags={node.negativeGuidanceTags.edges}
+              positiveTags={node.positiveGuidanceTags.edges}
+              neutralTags={node.neutralGuidanceTags.edges}
+              selector={node.selector}
+              key={categoryName + idx}
+            />
+          )
+        })
+      ) : (
+        categoryData?.results?.map((result, idx) => {
+          return (
+            <GuidanceTagList
+              negativeTags={result.negativeGuidanceTags}
+              positiveTags={result.positiveGuidanceTags}
+              neutralTags={result.neutralGuidanceTags}
+              selector={result.selector}
+              key={categoryName + idx}
+            />
+          )
+        })
+      )
+    ) : categoryData.negativeGuidanceTags.__typename ===
+      'GuidanceTagConnection' ? (
+      <GuidanceTagList
+        negativeTags={categoryData.negativeGuidanceTags.edges}
+        positiveTags={categoryData.positiveGuidanceTags.edges}
+        neutralTags={categoryData.neutralGuidanceTags.edges}
+        key={categoryName}
+      />
     ) : (
       <GuidanceTagList
-        negativeTags={data.negativeGuidanceTags.edges}
-        positiveTags={data.positiveGuidanceTags.edges}
-        neutralTags={data.neutralGuidanceTags.edges}
+        negativeTags={categoryData.negativeGuidanceTags}
+        positiveTags={categoryData.positiveGuidanceTags}
+        neutralTags={categoryData.neutralGuidanceTags}
         key={categoryName}
       />
     )
@@ -45,33 +66,33 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
           <Text fontWeight="bold">
             <Trans>Implementation:</Trans>
           </Text>
-          <Text>{data?.implementation}</Text>
+          <Text>{categoryData?.implementation}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Enforcement:</Trans>
           </Text>
-          <Text>{data?.enforced}</Text>
+          <Text>{categoryData?.enforced}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>HSTS Status:</Trans>
           </Text>
-          <Text>{data?.hsts}</Text>
+          <Text>{categoryData?.hsts}</Text>
         </Stack>
-        {data?.hstsAge && (
+        {categoryData?.hstsAge && (
           <Stack isInline>
             <Text fontWeight="bold">
               <Trans>HSTS Age:</Trans>
             </Text>
-            <Text>{data?.hstsAge}</Text>
+            <Text>{categoryData?.hstsAge}</Text>
           </Stack>
         )}
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Preloaded Status:</Trans>
           </Text>
-          <Text> {data?.preloaded}</Text>
+          <Text> {categoryData?.preloaded}</Text>
         </Stack>
       </Box>
     ) : categoryName === 'ssl' ? (
@@ -80,19 +101,19 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
           <Text fontWeight="bold">
             <Trans>CCS Injection Vulnerability:</Trans>
           </Text>
-          <Text>{data?.ccsInjectionVulnerable ? t`Yes` : t`No`}</Text>
+          <Text>{categoryData?.ccsInjectionVulnerable ? t`Yes` : t`No`}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Heartbleed Vulnerability:</Trans>
           </Text>
-          <Text>{data?.heartbleedVulnerable ? t`Yes` : t`No`}</Text>
+          <Text>{categoryData?.heartbleedVulnerable ? t`Yes` : t`No`}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Supports ECDH Key Exchange:</Trans>
           </Text>
-          <Text>{data?.supportsEcdhKeyExchange ? t`Yes` : t`No`}</Text>
+          <Text>{categoryData?.supportsEcdhKeyExchange ? t`Yes` : t`No`}</Text>
         </Stack>
       </Box>
     ) : null
@@ -126,7 +147,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Strong Ciphers:</Trans>
             </Text>
           </Box>
-          {mapCiphers(data?.strongCiphers)}
+          {mapCiphers(categoryData?.strongCiphers)}
         </Box>
         <Divider />
         <Box bg="moderateMuted">
@@ -135,7 +156,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Acceptable Ciphers:</Trans>
             </Text>
           </Box>
-          {mapCiphers(data?.acceptableCiphers)}
+          {mapCiphers(categoryData?.acceptableCiphers)}
         </Box>
         <Divider />
         <Box bg="weakMuted">
@@ -144,7 +165,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Weak Ciphers:</Trans>
             </Text>
           </Box>
-          {mapCiphers(data?.weakCiphers)}
+          {mapCiphers(categoryData?.weakCiphers)}
         </Box>
       </Stack>
     </Box>
@@ -159,7 +180,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Strong Curves:</Trans>
             </Text>
           </Box>
-          {mapCiphers(data?.strongCurves)}
+          {mapCiphers(categoryData?.strongCurves)}
         </Box>
         <Divider />
         <Box bg="moderateMuted">
@@ -168,7 +189,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Acceptable Curves:</Trans>
             </Text>
           </Box>
-          {mapCiphers(data?.acceptableCurves)}
+          {mapCiphers(categoryData?.acceptableCurves)}
         </Box>
         <Divider />
         <Box bg="weakMuted">
@@ -177,7 +198,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Weak Curves:</Trans>
             </Text>
           </Box>
-          {mapCiphers(data?.weakCurves)}
+          {mapCiphers(categoryData?.weakCurves)}
         </Box>
       </Stack>
     </Box>
