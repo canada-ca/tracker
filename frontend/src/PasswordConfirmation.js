@@ -85,7 +85,7 @@ function PasswordConfirmation({
             {passwordLabelText}
           </FormLabel>
           <InputGroup>
-            <InputLeftElement>
+            <InputLeftElement aria-hidden="true">
               {icon === 'spinner' && <Spinner size="sm" color="gray.300" />}
               {icon === 'lock' && (
                 <LockIcon color="gray.300" aria-label="initial icon" />
@@ -123,7 +123,7 @@ function PasswordConfirmation({
             {confirmPasswordLabelText}
           </FormLabel>
           <InputGroup>
-            <InputLeftElement>
+            <InputLeftElement aria-hidden="true">
               {confirmIcon === 'spinner' && (
                 <Spinner size="sm" color="gray.300" />
               )}

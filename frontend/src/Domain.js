@@ -27,7 +27,7 @@ export function Domain({ url, lastRan, ...rest }) {
             rel="noopener noreferrer"
           >
             {url}
-            <ExternalLinkIcon mx="2px" />
+            <ExternalLinkIcon mx="2px" aria-hidden="true" />
           </Link>
         </Stack>
         {lastRan && (
@@ -37,7 +37,7 @@ export function Domain({ url, lastRan, ...rest }) {
             </Text>
             <Link ml="auto" as={RouteLink} to={`domains/${url}`}>
               {lastRan}
-              <LinkIcon mx="2px" />
+              <LinkIcon mx="2px" aria-hidden="true" />
             </Link>
           </Stack>
         )}

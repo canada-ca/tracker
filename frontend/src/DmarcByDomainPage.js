@@ -86,7 +86,7 @@ export default function DmarcByDomainPage() {
             to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             isExternal={false}
           >
-            {`${value} `} <LinkIcon />
+            {`${value} `} <LinkIcon aria-hidden="true" />
           </Link>
         )
       },
@@ -270,11 +270,18 @@ export default function DmarcByDomainPage() {
         </Trans>
       </InfoPanel>
 
-      <Flex align="center" mb="4px">
-        <Text fontWeight="bold" textAlign="center">
+      <Flex align="center" mb={2}>
+        <Text
+          as="label"
+          htmlFor="data-date-range"
+          fontWeight="bold"
+          textAlign="center"
+          mr={1}
+        >
           <Trans>Showing data for period: </Trans>
         </Text>
         <Select
+          id="data-date-range"
           width="fit-content"
           onChange={(e) => handleChange(e)}
           value={selectedDate}

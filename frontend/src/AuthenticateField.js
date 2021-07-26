@@ -53,7 +53,7 @@ const AuthenticateField = WithWrapperBox(function AuthenticateField({
           <Trans>Please enter your two factor code below.</Trans>
         </FormLabel>
         <InputGroup width="fit-content">
-          <InputLeftElement>
+          <InputLeftElement aria-hidden="true">
             <TwoFactorIcon color="gray.300" size="1.25rem" />
           </InputLeftElement>
           <Input

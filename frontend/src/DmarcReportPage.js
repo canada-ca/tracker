@@ -6,10 +6,10 @@ import {
   Accordion,
   Box,
   Divider,
+  Flex,
   Heading,
   Link,
   Select,
-  Stack,
   Text,
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
@@ -149,12 +149,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   if (!graphData?.findDomainByDomain?.hasDMARCReport) {
     return (
-      <Stack align="center" w="100%" px={4}>
+      <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="3xl" fontWeight="bold">
           <span>{domainSlug} </span>
           <Trans>does not support aggregate data</Trans>
         </Text>
-      </Stack>
+      </Box>
     )
   }
 
@@ -768,24 +768,32 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>Guidance</Trans>
-          <LinkIcon ml="4px" />
+          <LinkIcon ml="4px" aria-hidden="true" />
         </Link>
       </Box>
 
       {graphDisplay}
 
-      <Stack isInline align="center" mb="16px">
-        <Text fontWeight="bold" textAlign="center">
+      <Flex align="center" mb={2}>
+        <Text
+          as="label"
+          htmlFor="data-date-range"
+          fontWeight="bold"
+          textAlign="center"
+          mr={1}
+        >
           <Trans>Showing data for period: </Trans>
         </Text>
         <Select
+          id="data-date-range"
+          aria-label="date range for table data"
           width="fit-content"
           onChange={(e) => handleChange(e)}
           value={selectedDate}
         >
           {options}
         </Select>
-      </Stack>
+      </Flex>
 
       {tableDisplay}
     </Box>

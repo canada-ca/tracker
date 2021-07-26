@@ -17,11 +17,21 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
   const generateStatusIcon = (status) => {
     let statusIcon
     if (status === 'PASS') {
-      statusIcon = <CheckCircleIcon color="strong" size="icons.sm" />
+      statusIcon = (
+        <CheckCircleIcon color="strong" size="icons.sm" aria-label="passes" />
+      )
     } else if (status === 'FAIL') {
-      statusIcon = <WarningIcon color="weak" size="icons.sm" />
+      statusIcon = (
+        <WarningIcon color="weak" size="icons.sm" aria-label="fails" />
+      )
     } else {
-      statusIcon = <InfoIcon color="info" size="icons.sm" />
+      statusIcon = (
+        <InfoIcon
+          color="info"
+          size="icons.sm"
+          aria-label="Information not sufficient, please view guidance"
+        />
+      )
     }
     return statusIcon
   }

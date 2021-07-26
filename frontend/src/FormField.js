@@ -31,7 +31,9 @@ const FormField = WithWrapperBox(function FormField({
         {labelText}
       </FormLabel>
       <InputGroup>
-        {leftElement && <InputLeftElement>{leftElement}</InputLeftElement>}
+        {leftElement && (
+          <InputLeftElement aria-hidden="true">{leftElement}</InputLeftElement>
+        )}
         <Input
           {...field}
           {...props}

@@ -28,11 +28,12 @@ export function RelayPaginationControls({
 
     displayLimitControls = (
       <>
-        <Text mr={'1%'} ml="auto">
+        <Text as="label" htmlFor="Items-per-page" mr={'1%'} ml="auto">
           <Trans>Items per page:</Trans>
         </Text>
 
         <Select
+          id="Items-per-page"
           aria-label="Items per page"
           isDisabled={isLoadingMore}
           value={selectedDisplayLimit}

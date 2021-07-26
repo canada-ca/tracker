@@ -92,7 +92,7 @@ export default function AdminPage() {
             as={RouteLink}
             to="/create-organization"
           >
-            <AddIcon mr={2} />
+            <AddIcon mr={2} aria-hidden="true" />
             <Trans>Create Organization</Trans>
           </Button>
         </Flex>

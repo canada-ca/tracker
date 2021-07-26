@@ -224,18 +224,29 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         }}
       >
         <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
+          <Text
+            as="label"
+            htmlFor="Search-for-domain-field"
+            fontSize="md"
+            fontWeight="bold"
+            textAlign="center"
+            mr={2}
+          >
+            <Trans>Search: </Trans>
+          </Text>
           <InputGroup
             width={{ base: '100%', md: '75%' }}
             mb={{ base: '8px', md: '0' }}
             mr={{ base: '0', md: '4' }}
           >
-            <InputLeftElement>
+            <InputLeftElement aria-hidden="true">
               <PlusSquareIcon color="gray.300" />
             </InputLeftElement>
             <Input
+              id="Search-for-domain-field"
               type="text"
               placeholder={t`Domain URL`}
-              aria-label={t`Domain URL`}
+              aria-label={t`Search by Domain URL`}
               onChange={(e) => setNewDomainUrl(e.target.value)}
             />
           </InputGroup>
@@ -245,7 +256,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             variant="primary"
             type="submit"
           >
-            <AddIcon mr={2} />
+            <AddIcon mr={2} aria-hidden="true" />
             <Trans>Add Domain</Trans>
           </Button>
         </Flex>

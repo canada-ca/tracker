@@ -26,7 +26,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <ExternalLinkIcon />
+              <ExternalLinkIcon aria-hidden="true" />
             </Stack>
           </Link>
         ))}
@@ -51,7 +51,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <ExternalLinkIcon />
+              <ExternalLinkIcon aria-hidden="true" />
             </Stack>
           </Link>
         ))}
@@ -61,10 +61,14 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
     )
 
   const tagIcon = (props) => {
-    if (tagType === 'negative') return <WarningIcon color="weak" {...props} />
-    else if (tagType === 'neutral') return <InfoIcon color="info" {...props} />
+    if (tagType === 'negative')
+      return <WarningIcon color="weak" {...props} aria-label="negative tag" />
+    else if (tagType === 'neutral')
+      return <InfoIcon color="info" {...props} aria-label="neutral tag" />
     else if (tagType === 'positive')
-      return <CheckCircleIcon color="strong" {...props} />
+      return (
+        <CheckCircleIcon color="strong" {...props} aria-label="positive tag" />
+      )
   }
 
   return (

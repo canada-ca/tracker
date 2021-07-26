@@ -83,7 +83,13 @@ export function OrganizationCard({
             <Text fontSize="lg" fontWeight="semibold">
               ({acronym})
             </Text>
-            {verified && <CheckCircleIcon color="blue.500" size="icons.sm" />}
+            {verified && (
+              <CheckCircleIcon
+                color="blue.500"
+                size="icons.sm"
+                aria-label="Verified Organization"
+              />
+            )}
           </Stack>
         </Box>
         <Box
@@ -109,7 +115,7 @@ export function OrganizationCard({
             <Trans>Web Configuration</Trans>
           </Text>
           <Text>{webValue}%</Text>
-          <Progress value={webValue} bg="gray.300" />
+          <Progress value={webValue} bg="gray.300" aria-hidden="true" />
         </Box>
 
         <Box
@@ -121,7 +127,7 @@ export function OrganizationCard({
             <Trans>Email Configuration</Trans>
           </Text>
           <Text>{mailValue}%</Text>
-          <Progress value={mailValue} bg="gray.300" />
+          <Progress value={mailValue} bg="gray.300" aria-hidden="true" />
         </Box>
         {hasButton && (
           <Button

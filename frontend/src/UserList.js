@@ -347,14 +347,25 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             mb={{ base: '2', md: '0' }}
             mr={{ base: '0', md: '2' }}
           >
+            <Text
+              as="label"
+              htmlFor="Search-for-user-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mr={2}
+            >
+              <Trans>Search: </Trans>
+            </Text>
             <InputGroup flexGrow={1} w="50%">
-              <InputLeftElement>
+              <InputLeftElement aria-hidden="true">
                 <EmailIcon color="gray.300" />
               </InputLeftElement>
               <Input
+                id="Search-for-user-field"
                 aria-label="new-user-input"
                 type="email"
-                placeholder={t`New user email`}
+                placeholder={t`user email`}
                 isDisabled={addUserLoading}
                 {...userForm.getFieldProps('userName')}
               />
@@ -383,7 +394,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             type="submit"
             isLoading={userForm.isSubmitting}
           >
-            <AddIcon mr={2} />
+            <AddIcon mr={2} aria-hidden="true" />
             <Trans>Invite User</Trans>
           </Button>
         </Stack>
