@@ -107,8 +107,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                 }
               ) {
@@ -153,7 +153,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -176,8 +176,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   selectors: [
                     "selector3._domainkey",
                     "selector4._domainkey"
@@ -225,7 +225,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
@@ -248,8 +248,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -298,7 +298,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
@@ -330,8 +330,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                 }
               ) {
@@ -376,7 +376,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -399,8 +399,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   selectors: [
                     "selector3._domainkey",
                     "selector4._domainkey"
@@ -448,7 +448,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
@@ -471,8 +471,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -521,7 +521,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
@@ -553,8 +553,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                 }
               ) {
@@ -599,7 +599,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -622,8 +622,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   selectors: [
                     "selector3._domainkey",
                     "selector4._domainkey"
@@ -671,7 +671,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
@@ -694,8 +694,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -744,7 +744,7 @@ describe('updating a domain', () => {
             data: {
               updateDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
@@ -786,8 +786,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', 1)}"
-                  orgId: "${toGlobalId('organizations', 1)}"
+                  domainId: "${toGlobalId('domain', 1)}"
+                  orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -870,8 +870,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', 1)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -1015,8 +1015,8 @@ describe('updating a domain', () => {
               mutation {
                 updateDomain (
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domain', domain._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.canada.ca"
                     selectors: [
                       "selector3._domainkey",
@@ -1102,8 +1102,8 @@ describe('updating a domain', () => {
               mutation {
                 updateDomain (
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domain', domain._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.canada.ca"
                     selectors: [
                       "selector3._domainkey",
@@ -1220,8 +1220,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -1340,8 +1340,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -1461,8 +1461,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -1539,8 +1539,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -1624,8 +1624,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', 1)}"
-                  orgId: "${toGlobalId('organizations', 1)}"
+                  domainId: "${toGlobalId('domain', 1)}"
+                  orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -1709,8 +1709,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', 1)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -1855,8 +1855,8 @@ describe('updating a domain', () => {
               mutation {
                 updateDomain (
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domain', domain._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.canada.ca"
                     selectors: [
                       "selector3._domainkey",
@@ -1942,8 +1942,8 @@ describe('updating a domain', () => {
               mutation {
                 updateDomain (
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domain', domain._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.canada.ca"
                     selectors: [
                       "selector3._domainkey",
@@ -2060,8 +2060,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -2180,8 +2180,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -2303,8 +2303,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
@@ -2383,8 +2383,8 @@ describe('updating a domain', () => {
             mutation {
               updateDomain (
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  domainId: "${toGlobalId('domain', domain._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
                     "selector3._domainkey",
