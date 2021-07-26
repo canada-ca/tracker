@@ -49,7 +49,7 @@ describe('given the verified domains object', () => {
         const demoType = verifiedDomainType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('verifiedDomains', 1),
+          toGlobalId('verifiedDomain', 1),
         )
       })
     })

@@ -135,7 +135,7 @@ describe('given findVerifiedDomainByDomain query', () => {
       const expectedResponse = {
         data: {
           findVerifiedDomainByDomain: {
-            id: toGlobalId('verifiedDomains', domain._key),
+            id: toGlobalId('verifiedDomain', domain._key),
           },
         },
       }
