@@ -277,7 +277,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           <Flex align="center" w="100%">
             <Stack direction="row" flexGrow="0">
               <IconButton
-                aria-label="Remove user button"
+                aria-label="userRemoveButton"
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
@@ -288,7 +288,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 icon={<MinusIcon />}
               />
               <IconButton
-                aria-label="Edit user button"
+                aria-label="userEditButton"
                 variant="primary"
                 onClick={() => {
                   setEditingUserRole(userRole)
