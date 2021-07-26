@@ -31,7 +31,7 @@ The big idea here is that realizing the benefits of microservices requires prote
 The dev workflow being created here centers on [Docker-compose](https://docs.docker.com/compose/), a tool that helps developers run multiple containers together.
 So here we use docker-compose to bring up the frontend service with a mocked API. Running those two services behind [Envoy](https://www.envoyproxy.io/) allows us a way to present the API at `/graphql` just as it would be in production.
 
-The files to support this are the docker compose configuration (`docker-compose.yaml`), the config file for Envoy telling it to proxy requests to the API and frontend (`envoy-dev.yaml`), and the schema file that [Graphql-Faker](https://github.com/APIs-guru/graphql-faker) uses to generate it's mock data from (`schema.faker.graphql`).
+The files to support this are the docker compose configuration (`docker-compose.yaml`), the config file for Envoy telling it to proxy requests to the API and frontend (`envoy-dev.yaml`).
 
 #### Starting it
 
