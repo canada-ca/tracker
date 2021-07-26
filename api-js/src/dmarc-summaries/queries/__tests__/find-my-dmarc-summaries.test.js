@@ -215,9 +215,9 @@ describe('given the findMyDmarcSummaries query', () => {
           findMyDmarcSummaries: {
             edges: [
               {
-                cursor: toGlobalId('dmarcSummaries', dmarcSummary1._key),
+                cursor: toGlobalId('dmarcSummary', dmarcSummary1._key),
                 node: {
-                  id: toGlobalId('dmarcSummaries', dmarcSummary1._key),
+                  id: toGlobalId('dmarcSummary', dmarcSummary1._key),
                   month: 'JANUARY',
                   year: '2021',
                 },
@@ -226,8 +226,8 @@ describe('given the findMyDmarcSummaries query', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('dmarcSummaries', dmarcSummary1._key),
-              endCursor: toGlobalId('dmarcSummaries', dmarcSummary1._key),
+              startCursor: toGlobalId('dmarcSummary', dmarcSummary1._key),
+              endCursor: toGlobalId('dmarcSummary', dmarcSummary1._key),
             },
             totalCount: 1,
           },
