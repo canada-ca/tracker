@@ -33,63 +33,6 @@ describe('given the loadHttpsGuidanceTagByTagId function', () => {
     consoleErrorOutput.length = 0
   })
 
-  describe('given a successful load', () => {
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-    beforeEach(async () => {
-      await collections.httpsGuidanceTags.save({})
-      await collections.httpsGuidanceTags.save({})
-    })
-    afterEach(async () => {
-      await truncate()
-    })
-    afterAll(async () => {
-      await drop()
-    })
-    describe('given a single id', () => {
-      it('returns a single https guidance tag', async () => {
-        // Get https tag from db
-        const expectedCursor = await query`
-          FOR tag IN httpsGuidanceTags
-            SORT tag._key ASC LIMIT 1
-            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-        `
-        const expectedHttpsTag = await expectedCursor.next()
-
-        const loader = loadHttpsGuidanceTagByTagId({ query, i18n })
-        const httpsTag = await loader.load(expectedHttpsTag._key)
-
-        expect(httpsTag).toEqual(expectedHttpsTag)
-      })
-    })
-    describe('given multiple ids', () => {
-      it('returns multiple https guidance tags', async () => {
-        const httpsTagKeys = []
-        const expectedHttpsTags = []
-        const expectedCursor = await query`
-          FOR tag IN httpsGuidanceTags
-            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-        `
-
-        while (expectedCursor.hasMore) {
-          const tempHttps = await expectedCursor.next()
-          httpsTagKeys.push(tempHttps._key)
-          expectedHttpsTags.push(tempHttps)
-        }
-
-        const loader = loadHttpsGuidanceTagByTagId({ query, i18n })
-        const httpsTags = await loader.loadMany(httpsTagKeys)
-        expect(httpsTags).toEqual(expectedHttpsTags)
-      })
-    })
-  })
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -105,13 +48,141 @@ describe('given the loadHttpsGuidanceTagByTagId function', () => {
         },
       })
     })
+    describe('given a successful load', () => {
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        await collections.httpsGuidanceTags.save({
+          _key: 'https1',
+          en: {
+            tagName: 'Some Cool Tag Name A',
+            guidance: 'Some Cool Guidance A',
+            refLinksGuide: [
+              {
+                description: 'IT PIN A',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo a',
+            guidance: 'todo a',
+            refLinksGuide: [
+              {
+                description: 'todo a',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+        await collections.httpsGuidanceTags.save({
+          _key: 'https2',
+          en: {
+            tagName: 'Some Cool Tag Name B',
+            guidance: 'Some Cool Guidance B',
+            refLinksGuide: [
+              {
+                description: 'IT PIN B',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo b',
+            guidance: 'todo b',
+            refLinksGuide: [
+              {
+                description: 'todo b',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+      })
+      afterEach(async () => {
+        await truncate()
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      describe('given a single id', () => {
+        it('returns a single https guidance tag', async () => {
+          // Get https tag from db
+          const expectedCursor = await query`
+            FOR tag IN httpsGuidanceTags
+              SORT tag._key ASC LIMIT 1
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("en", tag)
+              )
+          `
+          const expectedHttpsTag = await expectedCursor.next()
+
+          const loader = loadHttpsGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'en',
+          })
+          const httpsTag = await loader.load(expectedHttpsTag._key)
+
+          expect(httpsTag).toEqual(expectedHttpsTag)
+        })
+      })
+      describe('given multiple ids', () => {
+        it('returns multiple https guidance tags', async () => {
+          const httpsTagKeys = []
+          const expectedHttpsTags = []
+          const expectedCursor = await query`
+            FOR tag IN httpsGuidanceTags
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("en", tag)
+              )
+          `
+
+          while (expectedCursor.hasMore) {
+            const tempHttps = await expectedCursor.next()
+            httpsTagKeys.push(tempHttps._key)
+            expectedHttpsTags.push(tempHttps)
+          }
+
+          const loader = loadHttpsGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'en',
+          })
+          const httpsTags = await loader.loadMany(httpsTagKeys)
+          expect(httpsTags).toEqual(expectedHttpsTags)
+        })
+      })
+    })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
         const loader = loadHttpsGuidanceTagByTagId({
-          query,
+          query: jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.')),
           userKey: '1234',
           i18n,
         })
@@ -133,14 +204,13 @@ describe('given the loadHttpsGuidanceTagByTagId function', () => {
     })
     describe('given a cursor error', () => {
       it('raises an error', async () => {
-        const cursor = {
+        const mockedCursor = {
           forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
         const loader = loadHttpsGuidanceTagByTagId({
-          query,
+          query: jest.fn().mockReturnValue(mockedCursor),
           userKey: '1234',
           i18n,
         })
@@ -176,13 +246,141 @@ describe('given the loadHttpsGuidanceTagByTagId function', () => {
         },
       })
     })
+    describe('given a successful load', () => {
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        await collections.httpsGuidanceTags.save({
+          _key: 'https1',
+          en: {
+            tagName: 'Some Cool Tag Name A',
+            guidance: 'Some Cool Guidance A',
+            refLinksGuide: [
+              {
+                description: 'IT PIN A',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo a',
+            guidance: 'todo a',
+            refLinksGuide: [
+              {
+                description: 'todo a',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+        await collections.httpsGuidanceTags.save({
+          _key: 'https2',
+          en: {
+            tagName: 'Some Cool Tag Name B',
+            guidance: 'Some Cool Guidance B',
+            refLinksGuide: [
+              {
+                description: 'IT PIN B',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo b',
+            guidance: 'todo b',
+            refLinksGuide: [
+              {
+                description: 'todo b',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+      })
+      afterEach(async () => {
+        await truncate()
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      describe('given a single id', () => {
+        it('returns a single https guidance tag', async () => {
+          // Get https tag from db
+          const expectedCursor = await query`
+            FOR tag IN httpsGuidanceTags
+              SORT tag._key ASC LIMIT 1
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("fr", tag)
+              )
+          `
+          const expectedHttpsTag = await expectedCursor.next()
+
+          const loader = loadHttpsGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'fr',
+          })
+          const httpsTag = await loader.load(expectedHttpsTag._key)
+
+          expect(httpsTag).toEqual(expectedHttpsTag)
+        })
+      })
+      describe('given multiple ids', () => {
+        it('returns multiple https guidance tags', async () => {
+          const httpsTagKeys = []
+          const expectedHttpsTags = []
+          const expectedCursor = await query`
+            FOR tag IN httpsGuidanceTags
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("fr", tag)
+              )
+          `
+
+          while (expectedCursor.hasMore) {
+            const tempHttps = await expectedCursor.next()
+            httpsTagKeys.push(tempHttps._key)
+            expectedHttpsTags.push(tempHttps)
+          }
+
+          const loader = loadHttpsGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'fr',
+          })
+          const httpsTags = await loader.loadMany(httpsTagKeys)
+          expect(httpsTags).toEqual(expectedHttpsTags)
+        })
+      })
+    })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
         const loader = loadHttpsGuidanceTagByTagId({
-          query,
+          query: jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.')),
           userKey: '1234',
           i18n,
         })
@@ -204,14 +402,13 @@ describe('given the loadHttpsGuidanceTagByTagId function', () => {
     })
     describe('given a cursor error', () => {
       it('raises an error', async () => {
-        const cursor = {
+        const mockedCursor = {
           forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
         const loader = loadHttpsGuidanceTagByTagId({
-          query,
+          query: jest.fn().mockReturnValue(mockedCursor),
           userKey: '1234',
           i18n,
         })
