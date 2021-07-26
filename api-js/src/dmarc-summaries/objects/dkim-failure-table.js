@@ -58,8 +58,8 @@ export const dkimFailureTableType = new GraphQLObjectType({
       resolve: async (
         { guidance },
         _args,
-        { loaders: { loadAggregateGuidanceTagById } },
-      ) => await loadAggregateGuidanceTagById.load(guidance),
+        { loaders: { loadAggregateGuidanceTagByTagId } },
+      ) => await loadAggregateGuidanceTagByTagId.load(guidance),
     },
     headerFrom: {
       type: GraphQLString,

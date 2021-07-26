@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { loadAggregateGuidanceTagById } from '../index'
+import { loadAggregateGuidanceTagByTagId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the loadAggregateGuidanceTagById function', () => {
+describe('given the loadAggregateGuidanceTagByTagId function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -130,7 +130,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
         `
           const expectedAggregateTag = await expectedCursor.next()
 
-          const loader = loadAggregateGuidanceTagById({
+          const loader = loadAggregateGuidanceTagByTagId({
             query,
             i18n,
             language: 'en',
@@ -166,7 +166,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
             expectedAggregateTags.push(tempAggregate)
           }
 
-          const loader = loadAggregateGuidanceTagById({
+          const loader = loadAggregateGuidanceTagByTagId({
             query,
             i18n,
             language: 'en',
@@ -178,7 +178,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
     })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        const loader = loadAggregateGuidanceTagById({
+        const loader = loadAggregateGuidanceTagByTagId({
           query: jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.')),
@@ -197,7 +197,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadAggregateGuidanceTagById: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -208,7 +208,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
             throw new Error('Cursor error occurred.')
           },
         }
-        const loader = loadAggregateGuidanceTagById({
+        const loader = loadAggregateGuidanceTagByTagId({
           query: jest.fn().mockReturnValue(mockedCursor),
           userKey: '1234',
           i18n,
@@ -225,7 +225,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagById: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -328,7 +328,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
           `
           const expectedAggregateTag = await expectedCursor.next()
 
-          const loader = loadAggregateGuidanceTagById({
+          const loader = loadAggregateGuidanceTagByTagId({
             query,
             i18n,
             language: 'fr',
@@ -364,7 +364,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
             expectedAggregateTags.push(tempAggregate)
           }
 
-          const loader = loadAggregateGuidanceTagById({
+          const loader = loadAggregateGuidanceTagByTagId({
             query,
             i18n,
             language: 'fr',
@@ -376,7 +376,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
     })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        const loader = loadAggregateGuidanceTagById({
+        const loader = loadAggregateGuidanceTagByTagId({
           query: jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.')),
@@ -395,7 +395,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadAggregateGuidanceTagById: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -407,7 +407,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
           },
         }
 
-        const loader = loadAggregateGuidanceTagById({
+        const loader = loadAggregateGuidanceTagByTagId({
           query: jest.fn().mockReturnValue(mockedCursor),
           userKey: '1234',
           i18n,
@@ -424,7 +424,7 @@ describe('given the loadAggregateGuidanceTagById function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagById: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })

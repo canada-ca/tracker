@@ -1,7 +1,12 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const loadDkimGuidanceTagById = ({ query, userKey, i18n, language }) =>
+export const loadDkimGuidanceTagByTagId = ({
+  query,
+  userKey,
+  i18n,
+  language,
+}) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -23,7 +28,7 @@ export const loadDkimGuidanceTagById = ({ query, userKey, i18n, language }) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running loadDkimGuidanceTagById: ${err}`,
+        `Database error occurred when user: ${userKey} running loadDkimGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DKIM guidance tag(s). Please try again.`),
@@ -37,7 +42,7 @@ export const loadDkimGuidanceTagById = ({ query, userKey, i18n, language }) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running loadDkimGuidanceTagById: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadDkimGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DKIM guidance tag(s). Please try again.`),

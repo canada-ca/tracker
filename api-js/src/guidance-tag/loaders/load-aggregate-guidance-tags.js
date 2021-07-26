@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import DataLoader from 'dataloader'
 
-export const loadAggregateGuidanceTagById = ({
+export const loadAggregateGuidanceTagByTagId = ({
   query,
   userKey,
   i18n,
@@ -28,7 +28,7 @@ export const loadAggregateGuidanceTagById = ({
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running loadAggregateGuidanceTagById: ${err}`,
+        `Database error occurred when user: ${userKey} running loadAggregateGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find Aggregate guidance tag(s). Please try again.`),
@@ -42,7 +42,7 @@ export const loadAggregateGuidanceTagById = ({
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running loadAggregateGuidanceTagById: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadAggregateGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find Aggregate guidance tag(s). Please try again.`),

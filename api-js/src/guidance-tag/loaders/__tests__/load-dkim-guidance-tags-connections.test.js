@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadDkimGuidanceTagConnectionsByTagId,
-  loadDkimGuidanceTagById,
+  loadDkimGuidanceTagByTagId,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -90,7 +90,7 @@ describe('when given the load dkim guidance tag connection function', () => {
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const dkimTagLoader = loadDkimGuidanceTagById({ query })
+        const dkimTagLoader = loadDkimGuidanceTagByTagId({ query })
         const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
@@ -135,7 +135,7 @@ describe('when given the load dkim guidance tag connection function', () => {
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const dkimTagLoader = loadDkimGuidanceTagById({ query })
+        const dkimTagLoader = loadDkimGuidanceTagByTagId({ query })
         const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
@@ -180,7 +180,7 @@ describe('when given the load dkim guidance tag connection function', () => {
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const dkimTagLoader = loadDkimGuidanceTagById({ query })
+        const dkimTagLoader = loadDkimGuidanceTagByTagId({ query })
         const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
@@ -224,7 +224,7 @@ describe('when given the load dkim guidance tag connection function', () => {
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const dkimTagLoader = loadDkimGuidanceTagById({ query })
+        const dkimTagLoader = loadDkimGuidanceTagByTagId({ query })
         const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
@@ -268,7 +268,7 @@ describe('when given the load dkim guidance tag connection function', () => {
       describe('ordering on TAG_ID', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = loadDkimGuidanceTagById({ query })
+            const loader = loadDkimGuidanceTagByTagId({ query })
             const expectedDkimTag = await loader.load('dkim2')
 
             const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
@@ -313,7 +313,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = loadDkimGuidanceTagById({ query })
+            const loader = loadDkimGuidanceTagByTagId({ query })
             const expectedDkimTag = await loader.load('dkim2')
 
             const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
@@ -360,7 +360,7 @@ describe('when given the load dkim guidance tag connection function', () => {
       describe('ordering on TAG_NAME', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = loadDkimGuidanceTagById({ query })
+            const loader = loadDkimGuidanceTagByTagId({ query })
             const expectedDkimTag = await loader.load('dkim2')
 
             const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
@@ -405,7 +405,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = loadDkimGuidanceTagById({ query })
+            const loader = loadDkimGuidanceTagByTagId({ query })
             const expectedDkimTag = await loader.load('dkim2')
 
             const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
@@ -452,7 +452,7 @@ describe('when given the load dkim guidance tag connection function', () => {
       describe('ordering on GUIDANCE', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = loadDkimGuidanceTagById({ query })
+            const loader = loadDkimGuidanceTagByTagId({ query })
             const expectedDkimTag = await loader.load('dkim2')
 
             const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
@@ -497,7 +497,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = loadDkimGuidanceTagById({ query })
+            const loader = loadDkimGuidanceTagByTagId({ query })
             const expectedDkimTag = await loader.load('dkim2')
 
             const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
