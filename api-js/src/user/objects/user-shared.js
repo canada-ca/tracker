@@ -7,7 +7,7 @@ import { nodeInterface } from '../../node'
 export const userSharedType = new GraphQLObjectType({
   name: 'SharedUser',
   fields: () => ({
-    id: globalIdField('users'),
+    id: globalIdField('user'),
     displayName: {
       type: GraphQLString,
       description: 'Users display name.',

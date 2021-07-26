@@ -32,7 +32,7 @@ describe('given the user object', () => {
         const demoType = userSharedType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('users', '1'),
+          toGlobalId('user', '1'),
         )
       })
     })
