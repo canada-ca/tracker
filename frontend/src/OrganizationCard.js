@@ -83,7 +83,13 @@ export function OrganizationCard({
             <Text fontSize="lg" fontWeight="semibold">
               ({acronym})
             </Text>
-            {verified && <CheckCircleIcon color="blue.500" size="icons.sm" />}
+            {verified && (
+              <CheckCircleIcon
+                color="blue.500"
+                size="icons.sm"
+                aria-label="Verified Organization"
+              />
+            )}
           </Stack>
         </Box>
         <Box
