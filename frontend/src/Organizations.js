@@ -166,7 +166,7 @@ export default function Organisations() {
           >
             <Text
               as="label"
-              for="Search-for-field"
+              htmlFor="Search-for-field"
               fontSize="md"
               fontWeight="bold"
               textAlign="center"
@@ -193,7 +193,7 @@ export default function Organisations() {
           <Stack isInline align="center" ml={{ md: '5%' }}>
             <Text
               as="label"
-              for="Sort-by-field"
+              htmlFor="Sort-by-field"
               fontSize="md"
               fontWeight="bold"
               textAlign="center"

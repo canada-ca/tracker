@@ -349,7 +349,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           >
             <Text
               as="label"
-              for="Search-for-user-field"
+              htmlFor="Search-for-user-field"
               fontSize="md"
               fontWeight="bold"
               textAlign="center"

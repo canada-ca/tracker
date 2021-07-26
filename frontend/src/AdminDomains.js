@@ -224,7 +224,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
           <Text
             as="label"
-            for="Search-for-domain-field"
+            htmlFor="Search-for-domain-field"
             fontSize="md"
             fontWeight="bold"
             textAlign="center"

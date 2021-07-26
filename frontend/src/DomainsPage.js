@@ -177,7 +177,7 @@ export default function DomainsPage() {
                 >
                   <Text
                     as="label"
-                    for="Search-for-field"
+                    htmlFor="Search-for-field"
                     fontSize="md"
                     fontWeight="bold"
                     textAlign="center"
@@ -204,7 +204,7 @@ export default function DomainsPage() {
                 <Stack isInline align="center" ml={{ md: '10%' }}>
                   <Text
                     as="label"
-                    for="Sort-by-field"
+                    htmlFor="Sort-by-field"
                     fontSize="md"
                     fontWeight="bold"
                     textAlign="center"
