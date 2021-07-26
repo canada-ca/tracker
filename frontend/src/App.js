@@ -178,7 +178,11 @@ export default function App() {
               />
 
               <PrivatePage path="/organizations" title={t`Organizations`} exact>
-                {() => <Organizations />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Organizations />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage
@@ -186,7 +190,11 @@ export default function App() {
                 setTitle={false}
                 exact
               >
-                {() => <OrganizationDetails />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <OrganizationDetails />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage path="/admin" title={t`Admin`}>
@@ -198,11 +206,19 @@ export default function App() {
               </PrivatePage>
 
               <PrivatePage path="/domains" title={t`Domains`} exact>
-                {() => <DomainsPage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DomainsPage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage path="/domains/:domainSlug" setTitle={false} exact>
-                {() => <DmarcGuidancePage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcGuidancePage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage
@@ -210,7 +226,11 @@ export default function App() {
                 setTitle={false}
                 exact
               >
-                {() => <DmarcReportPage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcReportPage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage
@@ -218,7 +238,11 @@ export default function App() {
                 title={t`DMARC Summaries`}
                 exact
               >
-                {() => <DmarcByDomainPage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcByDomainPage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage path="/user" title={t`Your Account`}>
@@ -254,7 +278,7 @@ export default function App() {
             <Trans>Privacy</Trans>
           </Link>
 
-          <Link as={RouteLink} to="terms-and-conditions" ml={4}>
+          <Link as={RouteLink} to="/terms-and-conditions" ml={4}>
             <Trans>Terms & conditions</Trans>
           </Link>
 
