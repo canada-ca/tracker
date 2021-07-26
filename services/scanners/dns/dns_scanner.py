@@ -39,7 +39,7 @@ class ScanTimeoutException(BaseException):
 
 
 def dispatch_results(payload, client, ots):
-    client.post(DEST_URL(ots) + "/dns", json=json.dumps(payload))
+    client.post(DEST_URL(ots) + "/dns", json=payload)
     logging.info("Scan results dispatched to result queue")
 
 
