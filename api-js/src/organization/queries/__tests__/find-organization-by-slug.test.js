@@ -172,7 +172,7 @@ describe('given findOrganizationBySlugQuery', () => {
           const expectedResponse = {
             data: {
               findOrganizationBySlug: {
-                id: toGlobalId('organizations', org._key),
+                id: toGlobalId('organization', org._key),
                 slug: 'treasury-board-secretariat',
                 acronym: 'TBS',
                 name: 'Treasury Board of Canada Secretariat',
@@ -391,7 +391,7 @@ describe('given findOrganizationBySlugQuery', () => {
           const expectedResponse = {
             data: {
               findOrganizationBySlug: {
-                id: toGlobalId('organizations', org._key),
+                id: toGlobalId('organization', org._key),
                 slug: 'secretariat-conseil-tresor',
                 acronym: 'SCT',
                 name: 'Secrétariat du Conseil Trésor du Canada',
