@@ -108,7 +108,7 @@ describe('when given the load https guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedHttpsTags[1]._key),
               node: {
                 ...expectedHttpsTags[1],
               },
@@ -118,8 +118,8 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+            startCursor: toGlobalId('guidanceTag', expectedHttpsTags[1]._key),
+            endCursor: toGlobalId('guidanceTag', expectedHttpsTags[1]._key),
           },
         }
 
@@ -144,7 +144,7 @@ describe('when given the load https guidance tag connection function', () => {
 
         const connectionArgs = {
           first: 5,
-          before: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+          before: toGlobalId('guidanceTag', expectedHttpsTags[1]._key),
         }
 
         const httpsTags = await connectionLoader({
@@ -155,7 +155,7 @@ describe('when given the load https guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedHttpsTags[0]._key),
               node: {
                 ...expectedHttpsTags[0],
               },
@@ -165,8 +165,8 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+            startCursor: toGlobalId('guidanceTag', expectedHttpsTags[0]._key),
+            endCursor: toGlobalId('guidanceTag', expectedHttpsTags[0]._key),
           },
         }
 
@@ -201,7 +201,7 @@ describe('when given the load https guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedHttpsTags[0]._key),
               node: {
                 ...expectedHttpsTags[0],
               },
@@ -211,8 +211,8 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+            startCursor: toGlobalId('guidanceTag', expectedHttpsTags[0]._key),
+            endCursor: toGlobalId('guidanceTag', expectedHttpsTags[0]._key),
           },
         }
 
@@ -247,7 +247,7 @@ describe('when given the load https guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedHttpsTags[1]._key),
               node: {
                 ...expectedHttpsTags[1],
               },
@@ -257,8 +257,8 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+            startCursor: toGlobalId('guidanceTag', expectedHttpsTags[1]._key),
+            endCursor: toGlobalId('guidanceTag', expectedHttpsTags[1]._key),
           },
         }
 
@@ -289,8 +289,8 @@ describe('when given the load https guidance tag connection function', () => {
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'https1'),
-              before: toGlobalId('guidanceTags', 'https3'),
+              after: toGlobalId('guidanceTag', 'https1'),
+              before: toGlobalId('guidanceTag', 'https3'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'ASC',
@@ -301,7 +301,7 @@ describe('when given the load https guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
                   node: {
                     ...expectedHttpsTag,
                   },
@@ -311,8 +311,8 @@ describe('when given the load https guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
               },
             }
 
@@ -334,8 +334,8 @@ describe('when given the load https guidance tag connection function', () => {
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'https3'),
-              before: toGlobalId('guidanceTags', 'https1'),
+              after: toGlobalId('guidanceTag', 'https3'),
+              before: toGlobalId('guidanceTag', 'https1'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'DESC',
@@ -346,7 +346,7 @@ describe('when given the load https guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
                   node: {
                     ...expectedHttpsTag,
                   },
@@ -356,8 +356,8 @@ describe('when given the load https guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
               },
             }
 
@@ -381,8 +381,8 @@ describe('when given the load https guidance tag connection function', () => {
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'https1'),
-              before: toGlobalId('guidanceTags', 'https3'),
+              after: toGlobalId('guidanceTag', 'https1'),
+              before: toGlobalId('guidanceTag', 'https3'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'ASC',
@@ -393,7 +393,7 @@ describe('when given the load https guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
                   node: {
                     ...expectedHttpsTag,
                   },
@@ -403,8 +403,8 @@ describe('when given the load https guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
               },
             }
 
@@ -426,8 +426,8 @@ describe('when given the load https guidance tag connection function', () => {
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'https3'),
-              before: toGlobalId('guidanceTags', 'https1'),
+              after: toGlobalId('guidanceTag', 'https3'),
+              before: toGlobalId('guidanceTag', 'https1'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'DESC',
@@ -438,7 +438,7 @@ describe('when given the load https guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
                   node: {
                     ...expectedHttpsTag,
                   },
@@ -448,8 +448,8 @@ describe('when given the load https guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
               },
             }
 
@@ -473,8 +473,8 @@ describe('when given the load https guidance tag connection function', () => {
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'https1'),
-              before: toGlobalId('guidanceTags', 'https3'),
+              after: toGlobalId('guidanceTag', 'https1'),
+              before: toGlobalId('guidanceTag', 'https3'),
               orderBy: {
                 field: 'guidance',
                 direction: 'ASC',
@@ -485,7 +485,7 @@ describe('when given the load https guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
                   node: {
                     ...expectedHttpsTag,
                   },
@@ -495,8 +495,8 @@ describe('when given the load https guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
               },
             }
 
@@ -518,8 +518,8 @@ describe('when given the load https guidance tag connection function', () => {
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'https3'),
-              before: toGlobalId('guidanceTags', 'https1'),
+              after: toGlobalId('guidanceTag', 'https3'),
+              before: toGlobalId('guidanceTag', 'https1'),
               orderBy: {
                 field: 'guidance',
                 direction: 'DESC',
@@ -530,7 +530,7 @@ describe('when given the load https guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
                   node: {
                     ...expectedHttpsTag,
                   },
@@ -540,8 +540,8 @@ describe('when given the load https guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedHttpsTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedHttpsTag._key),
               },
             }
 

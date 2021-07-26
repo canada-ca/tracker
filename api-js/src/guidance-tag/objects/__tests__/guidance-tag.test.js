@@ -50,7 +50,7 @@ describe('given the guidanceTag gql object', () => {
         const demoType = guidanceTagType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('guidanceTags', 1),
+          toGlobalId('guidanceTag', 1),
         )
       })
     })

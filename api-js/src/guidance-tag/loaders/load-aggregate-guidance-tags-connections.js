@@ -271,7 +271,7 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
     }
 
     const edges = aggregateGuidanceTagInfo.aggregateGuidanceTags.map((tag) => ({
-      cursor: toGlobalId('guidanceTags', tag._key),
+      cursor: toGlobalId('guidanceTag', tag._key),
       node: tag,
     }))
 
@@ -282,10 +282,10 @@ export const loadAggregateGuidanceTagConnectionsByTagId =
         hasNextPage: aggregateGuidanceTagInfo.hasNextPage,
         hasPreviousPage: aggregateGuidanceTagInfo.hasPreviousPage,
         startCursor: toGlobalId(
-          'guidanceTags',
+          'guidanceTag',
           aggregateGuidanceTagInfo.startKey,
         ),
-        endCursor: toGlobalId('guidanceTags', aggregateGuidanceTagInfo.endKey),
+        endCursor: toGlobalId('guidanceTag', aggregateGuidanceTagInfo.endKey),
       },
     }
   }
