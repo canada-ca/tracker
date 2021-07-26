@@ -30,10 +30,10 @@ export function createCache() {
           },
         },
       },
+      AffiliationsConnection: relayStylePagination(),
       Organization: {
         fields: {
           domains: relayStylePagination(),
-          affiliations: relayStylePagination(),
         },
       },
       Period: {
