@@ -109,7 +109,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedAggregateTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedAggregateTags[1]._key),
               node: {
                 ...expectedAggregateTags[1],
               },
@@ -120,11 +120,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             hasNextPage: false,
             hasPreviousPage: true,
             startCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[1]._key,
             ),
             endCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[1]._key,
             ),
           },
@@ -162,7 +162,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedAggregateTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedAggregateTags[0]._key),
               node: {
                 ...expectedAggregateTags[0],
               },
@@ -173,11 +173,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[0]._key,
             ),
             endCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[0]._key,
             ),
           },
@@ -214,7 +214,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedAggregateTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedAggregateTags[0]._key),
               node: {
                 ...expectedAggregateTags[0],
               },
@@ -225,11 +225,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[0]._key,
             ),
             endCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[0]._key,
             ),
           },
@@ -266,7 +266,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedAggregateTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedAggregateTags[1]._key),
               node: {
                 ...expectedAggregateTags[1],
               },
@@ -277,11 +277,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             hasNextPage: false,
             hasPreviousPage: true,
             startCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[1]._key,
             ),
             endCursor: toGlobalId(
-              'guidanceTags',
+              'guidanceTag',
               expectedAggregateTags[1]._key,
             ),
           },
@@ -317,8 +317,8 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             const connectionArgs = {
               aggregateGuidanceTags,
               first: 1,
-              after: toGlobalId('guidanceTags', 'aggregate1'),
-              before: toGlobalId('guidanceTags', 'aggregate3'),
+              after: toGlobalId('guidanceTag', 'aggregate1'),
+              before: toGlobalId('guidanceTag', 'aggregate3'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'ASC',
@@ -333,7 +333,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'guidanceTags',
+                    'guidanceTag',
                     expectedAggregateTags[1]._key,
                   ),
                   node: {
@@ -346,11 +346,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
                 hasNextPage: true,
                 hasPreviousPage: true,
                 startCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
                 endCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
               },
@@ -384,8 +384,8 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             const connectionArgs = {
               aggregateGuidanceTags,
               first: 1,
-              after: toGlobalId('guidanceTags', 'aggregate3'),
-              before: toGlobalId('guidanceTags', 'aggregate1'),
+              after: toGlobalId('guidanceTag', 'aggregate3'),
+              before: toGlobalId('guidanceTag', 'aggregate1'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'DESC',
@@ -400,7 +400,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'guidanceTags',
+                    'guidanceTag',
                     expectedAggregateTags[1]._key,
                   ),
                   node: {
@@ -413,11 +413,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
                 hasNextPage: true,
                 hasPreviousPage: true,
                 startCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
                 endCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
               },
@@ -453,8 +453,8 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             const connectionArgs = {
               aggregateGuidanceTags,
               first: 1,
-              after: toGlobalId('guidanceTags', 'aggregate1'),
-              before: toGlobalId('guidanceTags', 'aggregate3'),
+              after: toGlobalId('guidanceTag', 'aggregate1'),
+              before: toGlobalId('guidanceTag', 'aggregate3'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'ASC',
@@ -469,7 +469,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'guidanceTags',
+                    'guidanceTag',
                     expectedAggregateTags[1]._key,
                   ),
                   node: {
@@ -482,11 +482,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
                 hasNextPage: true,
                 hasPreviousPage: true,
                 startCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
                 endCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
               },
@@ -520,8 +520,8 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             const connectionArgs = {
               aggregateGuidanceTags,
               first: 1,
-              after: toGlobalId('guidanceTags', 'aggregate3'),
-              before: toGlobalId('guidanceTags', 'aggregate1'),
+              after: toGlobalId('guidanceTag', 'aggregate3'),
+              before: toGlobalId('guidanceTag', 'aggregate1'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'DESC',
@@ -536,7 +536,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'guidanceTags',
+                    'guidanceTag',
                     expectedAggregateTags[1]._key,
                   ),
                   node: {
@@ -549,11 +549,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
                 hasNextPage: true,
                 hasPreviousPage: true,
                 startCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
                 endCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
               },
@@ -589,8 +589,8 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             const connectionArgs = {
               aggregateGuidanceTags,
               first: 1,
-              after: toGlobalId('guidanceTags', 'aggregate1'),
-              before: toGlobalId('guidanceTags', 'aggregate3'),
+              after: toGlobalId('guidanceTag', 'aggregate1'),
+              before: toGlobalId('guidanceTag', 'aggregate3'),
               orderBy: {
                 field: 'guidance',
                 direction: 'ASC',
@@ -605,7 +605,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'guidanceTags',
+                    'guidanceTag',
                     expectedAggregateTags[1]._key,
                   ),
                   node: {
@@ -618,11 +618,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
                 hasNextPage: true,
                 hasPreviousPage: true,
                 startCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
                 endCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
               },
@@ -656,8 +656,8 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
             const connectionArgs = {
               aggregateGuidanceTags,
               first: 1,
-              after: toGlobalId('guidanceTags', 'aggregate3'),
-              before: toGlobalId('guidanceTags', 'aggregate1'),
+              after: toGlobalId('guidanceTag', 'aggregate3'),
+              before: toGlobalId('guidanceTag', 'aggregate1'),
               orderBy: {
                 field: 'guidance',
                 direction: 'DESC',
@@ -672,7 +672,7 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
               edges: [
                 {
                   cursor: toGlobalId(
-                    'guidanceTags',
+                    'guidanceTag',
                     expectedAggregateTags[1]._key,
                   ),
                   node: {
@@ -685,11 +685,11 @@ describe('given the loadAggregateGuidanceTagConnectionsByTagId loader', () => {
                 hasNextPage: true,
                 hasPreviousPage: true,
                 startCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
                 endCursor: toGlobalId(
-                  'guidanceTags',
+                  'guidanceTag',
                   expectedAggregateTags[1]._key,
                 ),
               },

@@ -113,7 +113,7 @@ describe('given the organization object', () => {
         const demoType = organizationType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('organizations', 1),
+          toGlobalId('organization', 1),
         )
       })
     })
@@ -280,7 +280,7 @@ describe('given the organization object', () => {
           const expectedResults = {
             edges: [
               {
-                cursor: toGlobalId('affiliations', '1'),
+                cursor: toGlobalId('affiliation', '1'),
                 node: {
                   _from: 'organizations/1',
                   _to: 'users/1',
@@ -299,8 +299,8 @@ describe('given the organization object', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('affiliations', '1'),
-              endCursor: toGlobalId('affiliations', '1'),
+              startCursor: toGlobalId('affiliation', '1'),
+              endCursor: toGlobalId('affiliation', '1'),
             },
           }
 

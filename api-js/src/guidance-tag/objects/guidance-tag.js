@@ -9,7 +9,7 @@ export const guidanceTagType = new GraphQLObjectType({
   description:
     'Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags',
   fields: () => ({
-    id: globalIdField('guidanceTags'),
+    id: globalIdField('guidanceTag'),
     tagId: {
       type: GraphQLString,
       description: 'The guidance tag ID.',

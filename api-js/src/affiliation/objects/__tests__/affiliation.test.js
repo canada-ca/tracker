@@ -40,7 +40,7 @@ describe('given the user affiliation object', () => {
         const demoType = affiliationType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('affiliations', '1'),
+          toGlobalId('affiliation', '1'),
         )
       })
     })

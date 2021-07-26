@@ -11,7 +11,7 @@ import { nodeInterface } from '../../node'
 export const verifiedDomainType = new GraphQLObjectType({
   name: 'VerifiedDomain',
   fields: () => ({
-    id: globalIdField('verifiedDomains'),
+    id: globalIdField('verifiedDomain'),
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',

@@ -266,7 +266,7 @@ describe('given the spfScanData subscription', () => {
           rawJson: '{"missing":true}',
           negativeGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'spf1'),
+              id: toGlobalId('guidanceTag', 'spf1'),
               tagId: 'spf1',
               tagName: 'SPF-TAG',
               guidance: 'Some Interesting Guidance',
@@ -286,7 +286,7 @@ describe('given the spfScanData subscription', () => {
           ],
           neutralGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'spf1'),
+              id: toGlobalId('guidanceTag', 'spf1'),
               tagId: 'spf1',
               tagName: 'SPF-TAG',
               guidance: 'Some Interesting Guidance',
@@ -306,7 +306,7 @@ describe('given the spfScanData subscription', () => {
           ],
           positiveGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'spf1'),
+              id: toGlobalId('guidanceTag', 'spf1'),
               tagId: 'spf1',
               tagName: 'SPF-TAG',
               guidance: 'Some Interesting Guidance',

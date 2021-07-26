@@ -109,7 +109,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedDmarcTags[1]._key),
               node: {
                 ...expectedDmarcTags[1],
               },
@@ -119,8 +119,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDmarcTags[1]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDmarcTags[1]._key),
           },
         }
 
@@ -145,7 +145,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
 
         const connectionArgs = {
           first: 5,
-          before: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
+          before: toGlobalId('guidanceTag', expectedDmarcTags[1]._key),
         }
 
         const dmarcTags = await connectionLoader({
@@ -156,7 +156,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedDmarcTags[0]._key),
               node: {
                 ...expectedDmarcTags[0],
               },
@@ -166,8 +166,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDmarcTags[0]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDmarcTags[0]._key),
           },
         }
 
@@ -202,7 +202,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedDmarcTags[0]._key),
               node: {
                 ...expectedDmarcTags[0],
               },
@@ -212,8 +212,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDmarcTags[0]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDmarcTags[0]._key),
           },
         }
 
@@ -248,7 +248,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedDmarcTags[1]._key),
               node: {
                 ...expectedDmarcTags[1],
               },
@@ -258,8 +258,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDmarcTags[1]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDmarcTags[1]._key),
           },
         }
 
@@ -290,8 +290,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dmarc1'),
-              before: toGlobalId('guidanceTags', 'dmarc3'),
+              after: toGlobalId('guidanceTag', 'dmarc1'),
+              before: toGlobalId('guidanceTag', 'dmarc3'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'ASC',
@@ -302,7 +302,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
                   node: {
                     ...expectedDmarcTag,
                   },
@@ -312,8 +312,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
               },
             }
 
@@ -335,8 +335,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dmarc3'),
-              before: toGlobalId('guidanceTags', 'dmarc1'),
+              after: toGlobalId('guidanceTag', 'dmarc3'),
+              before: toGlobalId('guidanceTag', 'dmarc1'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'DESC',
@@ -347,7 +347,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
                   node: {
                     ...expectedDmarcTag,
                   },
@@ -357,8 +357,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
               },
             }
 
@@ -382,8 +382,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dmarc1'),
-              before: toGlobalId('guidanceTags', 'dmarc3'),
+              after: toGlobalId('guidanceTag', 'dmarc1'),
+              before: toGlobalId('guidanceTag', 'dmarc3'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'ASC',
@@ -394,7 +394,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
                   node: {
                     ...expectedDmarcTag,
                   },
@@ -404,8 +404,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
               },
             }
 
@@ -427,8 +427,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dmarc3'),
-              before: toGlobalId('guidanceTags', 'dmarc1'),
+              after: toGlobalId('guidanceTag', 'dmarc3'),
+              before: toGlobalId('guidanceTag', 'dmarc1'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'DESC',
@@ -439,7 +439,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
                   node: {
                     ...expectedDmarcTag,
                   },
@@ -449,8 +449,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
               },
             }
 
@@ -474,8 +474,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dmarc1'),
-              before: toGlobalId('guidanceTags', 'dmarc3'),
+              after: toGlobalId('guidanceTag', 'dmarc1'),
+              before: toGlobalId('guidanceTag', 'dmarc3'),
               orderBy: {
                 field: 'guidance',
                 direction: 'ASC',
@@ -486,7 +486,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
                   node: {
                     ...expectedDmarcTag,
                   },
@@ -496,8 +496,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
               },
             }
 
@@ -519,8 +519,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dmarc3'),
-              before: toGlobalId('guidanceTags', 'dmarc1'),
+              after: toGlobalId('guidanceTag', 'dmarc3'),
+              before: toGlobalId('guidanceTag', 'dmarc1'),
               orderBy: {
                 field: 'guidance',
                 direction: 'DESC',
@@ -531,7 +531,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
                   node: {
                     ...expectedDmarcTag,
                   },
@@ -541,8 +541,8 @@ describe('when given the load dmarc guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDmarcTag._key),
               },
             }
 

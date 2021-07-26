@@ -102,7 +102,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -179,7 +179,7 @@ describe('create a domain', () => {
             data: {
               createDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -194,7 +194,7 @@ describe('create a domain', () => {
                     edges: [
                       {
                         node: {
-                          id: toGlobalId('organizations', org._key),
+                          id: toGlobalId('organization', org._key),
                           name: 'Treasury Board of Canada Secretariat',
                         },
                       },
@@ -252,7 +252,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -330,7 +330,7 @@ describe('create a domain', () => {
             data: {
               createDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -345,7 +345,7 @@ describe('create a domain', () => {
                     edges: [
                       {
                         node: {
-                          id: toGlobalId('organizations', org._key),
+                          id: toGlobalId('organization', org._key),
                           name: 'Treasury Board of Canada Secretariat',
                         },
                       },
@@ -379,7 +379,7 @@ describe('create a domain', () => {
             mutation {
               createDomain(
                 input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.gc.ca"
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
@@ -457,7 +457,7 @@ describe('create a domain', () => {
           data: {
             createDomain: {
               result: {
-                id: toGlobalId('domains', domain._key),
+                id: toGlobalId('domain', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -472,7 +472,7 @@ describe('create a domain', () => {
                   edges: [
                     {
                       node: {
-                        id: toGlobalId('organizations', org._key),
+                        id: toGlobalId('organization', org._key),
                         name: 'Treasury Board of Canada Secretariat',
                       },
                     },
@@ -505,7 +505,7 @@ describe('create a domain', () => {
             mutation {
               createDomain(
                 input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
+                  orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.gc.ca"
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
@@ -583,7 +583,7 @@ describe('create a domain', () => {
           data: {
             createDomain: {
               result: {
-                id: toGlobalId('domains', domain._key),
+                id: toGlobalId('domain', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -598,7 +598,7 @@ describe('create a domain', () => {
                   edges: [
                     {
                       node: {
-                        id: toGlobalId('organizations', org._key),
+                        id: toGlobalId('organization', org._key),
                         name: 'Treasury Board of Canada Secretariat',
                       },
                     },
@@ -675,7 +675,7 @@ describe('create a domain', () => {
             mutation {
               createDomain(
                 input: {
-                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
                 }
               ) {
@@ -752,7 +752,7 @@ describe('create a domain', () => {
             data: {
               createDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -767,13 +767,13 @@ describe('create a domain', () => {
                     edges: [
                       {
                         node: {
-                          id: toGlobalId('organizations', org._key),
+                          id: toGlobalId('organization', org._key),
                           name: 'Treasury Board of Canada Secretariat',
                         },
                       },
                       {
                         node: {
-                          id: toGlobalId('organizations', secondOrg._key),
+                          id: toGlobalId('organization', secondOrg._key),
                           name: 'Communications Security Establishment',
                         },
                       },
@@ -817,7 +817,7 @@ describe('create a domain', () => {
             mutation {
               createDomain(
                 input: {
-                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
@@ -895,7 +895,7 @@ describe('create a domain', () => {
             data: {
               createDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -910,13 +910,13 @@ describe('create a domain', () => {
                     edges: [
                       {
                         node: {
-                          id: toGlobalId('organizations', org._key),
+                          id: toGlobalId('organization', org._key),
                           name: 'Treasury Board of Canada Secretariat',
                         },
                       },
                       {
                         node: {
-                          id: toGlobalId('organizations', secondOrg._key),
+                          id: toGlobalId('organization', secondOrg._key),
                           name: 'Communications Security Establishment',
                         },
                       },
@@ -960,7 +960,7 @@ describe('create a domain', () => {
             mutation {
               createDomain(
                 input: {
-                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
                   selectors: ["selector3._domainkey", "selector4._domainkey"]
                 }
@@ -1038,7 +1038,7 @@ describe('create a domain', () => {
             data: {
               createDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: [
@@ -1058,13 +1058,13 @@ describe('create a domain', () => {
                     edges: [
                       {
                         node: {
-                          id: toGlobalId('organizations', org._key),
+                          id: toGlobalId('organization', org._key),
                           name: 'Treasury Board of Canada Secretariat',
                         },
                       },
                       {
                         node: {
-                          id: toGlobalId('organizations', secondOrg._key),
+                          id: toGlobalId('organization', secondOrg._key),
                           name: 'Communications Security Establishment',
                         },
                       },
@@ -1108,7 +1108,7 @@ describe('create a domain', () => {
             mutation {
               createDomain(
                 input: {
-                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
@@ -1186,7 +1186,7 @@ describe('create a domain', () => {
             data: {
               createDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: '2021-01-01 12:00:00.000000',
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -1201,13 +1201,13 @@ describe('create a domain', () => {
                     edges: [
                       {
                         node: {
-                          id: toGlobalId('organizations', org._key),
+                          id: toGlobalId('organization', org._key),
                           name: 'Treasury Board of Canada Secretariat',
                         },
                       },
                       {
                         node: {
-                          id: toGlobalId('organizations', secondOrg._key),
+                          id: toGlobalId('organization', secondOrg._key),
                           name: 'Communications Security Establishment',
                         },
                       },
@@ -1251,7 +1251,7 @@ describe('create a domain', () => {
             mutation {
               createDomain(
                 input: {
-                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
@@ -1329,7 +1329,7 @@ describe('create a domain', () => {
             data: {
               createDomain: {
                 result: {
-                  id: toGlobalId('domains', domain._key),
+                  id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: '',
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -1344,13 +1344,13 @@ describe('create a domain', () => {
                     edges: [
                       {
                         node: {
-                          id: toGlobalId('organizations', org._key),
+                          id: toGlobalId('organization', org._key),
                           name: 'Treasury Board of Canada Secretariat',
                         },
                       },
                       {
                         node: {
-                          id: toGlobalId('organizations', secondOrg._key),
+                          id: toGlobalId('organization', secondOrg._key),
                           name: 'Communications Security Establishment',
                         },
                       },
@@ -1489,7 +1489,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -1597,7 +1597,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -1703,7 +1703,7 @@ describe('create a domain', () => {
                 mutation {
                   createDomain(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                       domain: "test.gc.ca"
                       selectors: ["selector1._domainkey", "selector2._domainkey"]
                     }
@@ -1812,7 +1812,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -1914,7 +1914,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2021,7 +2021,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2121,7 +2121,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2234,7 +2234,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2434,7 +2434,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -2542,7 +2542,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -2648,7 +2648,7 @@ describe('create a domain', () => {
                 mutation {
                   createDomain(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                       domain: "test.gc.ca"
                       selectors: ["selector1._domainkey", "selector2._domainkey"]
                     }
@@ -2759,7 +2759,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2863,7 +2863,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2972,7 +2972,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -3074,7 +3074,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -3189,7 +3189,7 @@ describe('create a domain', () => {
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organizations', org._key)}"
+                        orgId: "${toGlobalId('organization', org._key)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }

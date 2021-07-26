@@ -501,7 +501,7 @@ export const loadDmarcSummaryConnectionsByUserId =
     const edges = summariesInfo.summaries.map((summary) => {
       summary.startDate = startDate
       return {
-        cursor: toGlobalId('dmarcSummaries', summary.id),
+        cursor: toGlobalId('dmarcSummary', summary.id),
         node: summary,
       }
     })
@@ -512,8 +512,8 @@ export const loadDmarcSummaryConnectionsByUserId =
       pageInfo: {
         hasNextPage: summariesInfo.hasNextPage,
         hasPreviousPage: summariesInfo.hasPreviousPage,
-        startCursor: toGlobalId('dmarcSummaries', summariesInfo.startKey),
-        endCursor: toGlobalId('dmarcSummaries', summariesInfo.endKey),
+        startCursor: toGlobalId('dmarcSummary', summariesInfo.startKey),
+        endCursor: toGlobalId('dmarcSummary', summariesInfo.endKey),
       },
     }
   }

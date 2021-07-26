@@ -152,9 +152,9 @@ describe('given findVerifiedDomains query', () => {
           findVerifiedDomains: {
             edges: [
               {
-                cursor: toGlobalId('verifiedDomains', domain._key),
+                cursor: toGlobalId('verifiedDomain', domain._key),
                 node: {
-                  id: toGlobalId('verifiedDomains', domain._key),
+                  id: toGlobalId('verifiedDomain', domain._key),
                 },
               },
             ],
@@ -162,8 +162,8 @@ describe('given findVerifiedDomains query', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('verifiedDomains', domain._key),
-              endCursor: toGlobalId('verifiedDomains', domain._key),
+              startCursor: toGlobalId('verifiedDomain', domain._key),
+              endCursor: toGlobalId('verifiedDomain', domain._key),
             },
           },
         },

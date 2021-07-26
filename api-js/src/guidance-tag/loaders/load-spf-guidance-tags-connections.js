@@ -277,7 +277,7 @@ export const loadSpfGuidanceTagConnectionsByTagId =
     }
 
     const edges = spfGuidanceTagInfo.spfGuidanceTags.map((tag) => ({
-      cursor: toGlobalId('guidanceTags', tag._key),
+      cursor: toGlobalId('guidanceTag', tag._key),
       node: tag,
     }))
 
@@ -287,8 +287,8 @@ export const loadSpfGuidanceTagConnectionsByTagId =
       pageInfo: {
         hasNextPage: spfGuidanceTagInfo.hasNextPage,
         hasPreviousPage: spfGuidanceTagInfo.hasPreviousPage,
-        startCursor: toGlobalId('guidanceTags', spfGuidanceTagInfo.startKey),
-        endCursor: toGlobalId('guidanceTags', spfGuidanceTagInfo.endKey),
+        startCursor: toGlobalId('guidanceTag', spfGuidanceTagInfo.startKey),
+        endCursor: toGlobalId('guidanceTag', spfGuidanceTagInfo.endKey),
       },
     }
   }
