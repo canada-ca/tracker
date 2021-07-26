@@ -50,7 +50,7 @@ export function OrganizationCard({
   }
 
   // 'as' property does not accept responsive values, this works as a replacement
-  const cardType = useBreakpointValue({ base: Flex, md: RouteLink })
+  const hasButton = useBreakpointValue({ base: true, md: false })
 
   return (
     <ListItem {...rest}>
@@ -60,7 +60,7 @@ export function OrganizationCard({
         alignItems={{ base: 'flex-start', md: 'center' }}
         _hover={{ md: { bg: ['', 'gray.100'] } }}
         p="4"
-        as={cardType}
+        as={hasButton ? Flex : RouteLink}
         to={`${path}/${slug}`}
       >
         <Box
@@ -123,7 +123,7 @@ export function OrganizationCard({
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
-        {cardType?.displayName === 'Flex' && (
+        {hasButton && (
           <Button
             variant="primary"
             as={RouteLink}
