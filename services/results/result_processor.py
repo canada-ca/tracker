@@ -922,7 +922,7 @@ def Server(
         logging.info(f"Results received.")
         payload = await result_request.json()
         try:
-            payload_dict = formatted_dictionary(str(payload))
+            payload_dict = formatted_dictionary(payload)
             try:
                 results = payload_dict["results"]
                 scan_type = payload_dict["scan_type"]
