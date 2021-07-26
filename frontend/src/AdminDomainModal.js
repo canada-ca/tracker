@@ -7,6 +7,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Grid,
+  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -226,15 +227,15 @@ export function AdminDomainModal({
                         >
                           {values.selectors.map((_selector, index) => (
                             <React.Fragment key={index}>
-                              <Button
+                              <IconButton
                                 variant="danger"
+                                icon={<MinusIcon size="icons.xs" />}
                                 data-testid="remove-dkim-selector"
                                 type="button"
                                 p="3"
                                 onClick={() => arrayHelpers.remove(index)}
-                              >
-                                <MinusIcon size="icons.xs" />
-                              </Button>
+                                aria-label="remove-dkim-selector"
+                              />
                               <Field
                                 id={`selectors.${index}`}
                                 name={`selectors.${index}`}
@@ -275,15 +276,15 @@ export function AdminDomainModal({
                             </React.Fragment>
                           ))}
                         </Grid>
-                        <Button
+                        <IconButton
                           variant="primary"
+                          icon={<SmallAddIcon size="icons.md" />}
                           data-testid="add-dkim-selector"
                           type="button"
                           px="2"
                           onClick={() => arrayHelpers.push('')}
-                        >
-                          <SmallAddIcon size="icons.md" />
-                        </Button>
+                          aria-label="add-dkim-selector"
+                        />
                       </Box>
                     )}
                   />
