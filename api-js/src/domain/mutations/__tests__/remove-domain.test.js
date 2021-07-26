@@ -17,7 +17,7 @@ import { loadUserByKey } from '../../../user/loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('removing a domain', () => {
-  let query, drop, truncate, schema, collections, transaction, i18n, user
+  let schema, i18n, query, drop, truncate, collections, transaction, user
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -33,25 +33,27 @@ describe('removing a domain', () => {
       mutation: createMutationSchema(),
     })
   })
-  beforeEach(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      emailValidated: true,
-    })
+  afterEach(() => {
     consoleOutput.length = 0
   })
-  afterEach(async () => {
-    await truncate()
-    await drop()
-  })
   describe('given a successful domain removal', () => {
+    beforeEach(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+      await drop()
+    })
     describe('users permission is super admin', () => {
       let org, domain, secondOrg, superAdminOrg
       beforeEach(async () => {
@@ -3351,20 +3353,19 @@ describe('removing a domain', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
+                loadOrgByKey: jest.fn(),
+                loadUserByKey: jest.fn(),
               },
             },
           )
@@ -3382,18 +3383,11 @@ describe('removing a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to remove 1 however no domain is associated with that id.`,
+            `User: 123 attempted to remove 1 however no domain is associated with that id.`,
           ])
         })
       })
       describe('organization does not exist', () => {
-        let domain
-        beforeEach(async () => {
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-        })
         it('returns an error', async () => {
           const response = await graphql(
             schema,
@@ -3401,7 +3395,7 @@ describe('removing a domain', () => {
             mutation {
               removeDomain(
                 input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
+                  domainId: "${toGlobalId('domains', 123)}"
                   orgId: "${toGlobalId('organizations', 1)}"
                 }
               ) {
@@ -3426,19 +3420,20 @@ describe('removing a domain', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue({}),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -3458,56 +3453,12 @@ describe('removing a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to remove test-gc-ca in org: 1 however there is no organization associated with that id.`,
+            `User: 123 attempted to remove undefined in org: 1 however there is no organization associated with that id.`,
           ])
         })
       })
       describe('user attempts to remove domain from verified check org', () => {
-        let org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: true,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
         describe('users permission is admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-          })
           it('returns an error', async () => {
             const response = await graphql(
               schema,
@@ -3515,8 +3466,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -3540,23 +3491,25 @@ describe('removing a domain', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: true,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -3575,18 +3528,11 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
         describe('users permission is user', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('returns an error', async () => {
             const response = await graphql(
               schema,
@@ -3594,8 +3540,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -3619,23 +3565,25 @@ describe('removing a domain', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('user'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: true,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -3654,7 +3602,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3666,8 +3614,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -3691,23 +3639,25 @@ describe('removing a domain', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue(undefined),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: true,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -3726,57 +3676,13 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
       })
       describe('user attempts to remove domain from a regular org', () => {
-        let org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
         describe('users permission is user', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('returns an error', async () => {
             const response = await graphql(
               schema,
@@ -3784,8 +3690,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -3809,23 +3715,25 @@ describe('removing a domain', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('user'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: false,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -3844,7 +3752,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -3856,8 +3764,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -3881,23 +3789,25 @@ describe('removing a domain', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue(undefined),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: false,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -3916,83 +3826,22 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
       })
       describe('database error occurs', () => {
-        let user, org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
-        })
         describe('when checking to see how many edges there are', () => {
           it('returns an error', async () => {
-            const domainLoader = loadDomainByKey({ query })
-            const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const userLoader = loadUserByKey({ query })
-
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'admin'
-                },
-              })
-              .mockReturnValueOnce({
-                next() {
-                  return 'admin'
-                },
-              })
-              .mockRejectedValue(new Error('Database error occurred.'))
-
             const response = await graphql(
               schema,
               `
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -4013,26 +3862,28 @@ describe('removing a domain', () => {
               null,
               {
                 i18n,
-                query: mockedQuery,
+                query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query: mockedQuery,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: userLoader,
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: domainLoader,
-                  loadOrgByKey: orgLoader,
-                  loadUserByKey: userLoader,
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: false,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -4043,25 +3894,20 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: ${user._key}, when counting domain claims for domain: test-gc-ca, error: Error: Database error occurred.`,
+              `Database error occurred for user: 123, when counting domain claims for domain: domain-gc-ca, error: Error: database error`,
             ])
           })
         })
         describe('when checking to see if domain has dmarc summary data', () => {
           it('returns an error', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce()
-              .mockRejectedValue(new Error('Database error occurred.'))
-
             const response = await graphql(
               schema,
               `
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -4082,23 +3928,31 @@ describe('removing a domain', () => {
               null,
               {
                 i18n,
-                query: mockedQuery,
+                query: jest
+                  .fn()
+                  .mockReturnValueOnce({})
+                  .mockRejectedValue(new Error('database error')),
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: false,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -4109,75 +3963,13 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: ${user._key}, when counting ownership claims for domain: test-gc-ca, error: Error: Database error occurred.`,
+              `Database error occurred for user: 123, when counting ownership claims for domain: domain-gc-ca, error: Error: database error`,
             ])
           })
         })
       })
       describe('trx step error occurs', () => {
-        let user, org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
-
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
         describe('domain has dmarc summary info', () => {
-          beforeEach(async () => {
-            const dmarcSummary = await collections.dmarcSummaries.save({
-              dmarcSummary: true,
-            })
-            await collections.domainsToDmarcSummaries.save({
-              _from: domain._id,
-              _to: dmarcSummary._id,
-            })
-            await collections.ownership.save({
-              _from: org._id,
-              _to: domain._id,
-            })
-          })
           describe('when removing dmarc summary data', () => {
             it('throws an error', async () => {
               const mockedTransaction = jest.fn().mockReturnValue({
@@ -4190,8 +3982,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -4212,26 +4004,28 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query,
+                  query: jest.fn().mockReturnValue({ count: 1 }),
                   collections,
                   transaction: mockedTransaction,
-                  userKey: user._key,
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'domain-gc-ca',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                        slug: 'temp-org',
+                      }),
+                    },
                   },
                 },
               )
@@ -4242,7 +4036,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dmarc summary data for user: ${user._key} while attempting to remove domain: test-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
               ])
             })
           })
@@ -4261,8 +4055,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -4283,26 +4077,28 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query,
+                  query: jest.fn().mockReturnValue({ count: 1 }),
                   collections,
                   transaction: mockedTransaction,
-                  userKey: user._key,
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'domain-gc-ca',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                        slug: 'temp-org',
+                      }),
+                    },
                   },
                 },
               )
@@ -4313,21 +4109,19 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing ownership data for user: ${user._key} while attempting to remove domain: test-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
               ])
             })
           })
         })
         describe('when removing scans', () => {
           it('returns an error', async () => {
-            const domainLoader = loadDomainByKey({ query })
-            const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const userLoader = loadUserByKey({ query })
-
             const mockedTransaction = jest.fn().mockReturnValue({
-              step() {
-                throw new Error('Transaction error occurred.')
-              },
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('Transaction error occurred.')),
             })
 
             const response = await graphql(
@@ -4336,8 +4130,8 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -4358,26 +4152,31 @@ describe('removing a domain', () => {
               null,
               {
                 i18n,
-                query,
+                query: jest
+                  .fn()
+                  .mockReturnValueOnce({ count: 0 })
+                  .mockReturnValue({ count: 1 }),
                 collections,
                 transaction: mockedTransaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: userLoader,
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadDomainByKey: domainLoader,
-                  loadOrgByKey: orgLoader,
-                  loadUserByKey: userLoader,
+                  loadDomainByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'domain-gc-ca',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: false,
+                      slug: 'temp-org',
+                    }),
+                  },
                 },
               },
             )
@@ -4388,7 +4187,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: ${user._key} attempted to remove scan data for test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove scan data for domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -4404,6 +4203,8 @@ describe('removing a domain', () => {
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
+                  .mockReturnValueOnce()
+                  .mockReturnValueOnce()
                   .mockRejectedValue(new Error('Step error')),
               })
 
@@ -4413,8 +4214,8 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
-                      domainId: "${toGlobalId('domains', domain._key)}"
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domainId: "${toGlobalId('domains', 123)}"
+                      orgId: "${toGlobalId('organizations', 456)}"
                     }
                   ) {
                     result {
@@ -4435,26 +4236,28 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: query,
+                  query: jest.fn().mockReturnValue({ count: 1 }),
                   collections,
                   transaction: mockedTransaction,
-                  userKey: user._key,
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'domain-gc-ca',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                        slug: 'temp-org',
+                      }),
+                    },
                   },
                 },
               )
@@ -4465,7 +4268,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: ${user._key} attempted to remove test-gc-ca in org: treasury-board-secretariat, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -4487,8 +4290,8 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
-                      domainId: "${toGlobalId('domains', domain._key)}"
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domainId: "${toGlobalId('domains', 123)}"
+                      orgId: "${toGlobalId('organizations', 456)}"
                     }
                   ) {
                     result {
@@ -4512,23 +4315,25 @@ describe('removing a domain', () => {
                   query: mockedQuery,
                   collections,
                   transaction: mockedTransaction,
-                  userKey: user._key,
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'domain-gc-ca',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                        slug: 'temp-org',
+                      }),
+                    },
                   },
                 },
               )
@@ -4539,85 +4344,29 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: ${user._key} attempted to remove claim for test-gc-ca in org: treasury-board-secretariat, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove claim for domain-gc-ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
         })
       })
       describe('trx commit error occurs', () => {
-        let user, org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
+        it('returns an error', async () => {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step: jest.fn().mockReturnValue({}),
+            commit: jest
+              .fn()
+              .mockRejectedValue(new Error('Transaction error occurred.')),
           })
 
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
-
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        describe('when committing to db', () => {
-          it('returns an error', async () => {
-            const domainLoader = loadDomainByKey({ query })
-            const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const userLoader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step() {
-                return undefined
-              },
-              commit() {
-                throw new Error('Transaction error occurred.')
-              },
-            })
-
-            const response = await graphql(
-              schema,
-              `
+          const response = await graphql(
+            schema,
+            `
               mutation {
                 removeDomain(
                   input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domainId: "${toGlobalId('domains', 123)}"
+                    orgId: "${toGlobalId('organizations', 456)}"
                   }
                 ) {
                   result {
@@ -4635,1429 +4384,43 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: domainLoader,
-                  loadOrgByKey: orgLoader,
-                  loadUserByKey: userLoader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to remove domain. Please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: ${user._key} attempted to remove test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,
-            ])
-          })
-        })
-      })
-    })
-    describe('users language is set to french', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'fr',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
-      describe('domain does not exist', () => {
-        it('returns an error', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              removeDomain(
-                input: {
-                  domainId: "${toGlobalId('domains', 1)}"
-                  orgId: "${toGlobalId('organizations', 1)}"
-                }
-              ) {
-                result {
-                  ... on DomainResult {
-                    status
-                    domain {
-                      domain
-                    }
-                  }
-                  ... on DomainError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
             null,
             {
               i18n,
-              query,
+              query: jest.fn().mockReturnValue({ count: 2 }),
               collections,
-              transaction,
-              userKey: user._key,
+              transaction: mockedTransaction,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: {
+                  load: jest.fn().mockReturnValue({
+                    slug: 'domain-gc-ca',
+                  }),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({
+                    verified: false,
+                    slug: 'temp-org',
+                  }),
+                },
               },
             },
           )
 
-          const error = {
-            data: {
-              removeDomain: {
-                result: {
-                  code: 400,
-                  description: 'Impossible de supprimer un domaine inconnu.',
-                },
-              },
-            },
-          }
+          const error = [
+            new GraphQLError('Unable to remove domain. Please try again.'),
+          ]
 
-          expect(response).toEqual(error)
+          expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to remove 1 however no domain is associated with that id.`,
+            `Trx commit error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
           ])
-        })
-      })
-      describe('organization does not exist', () => {
-        let domain
-        beforeEach(async () => {
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-        })
-        it('returns an error', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              removeDomain(
-                input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', 1)}"
-                }
-              ) {
-                result {
-                  ... on DomainResult {
-                    status
-                    domain {
-                      domain
-                    }
-                  }
-                  ... on DomainError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              validators: { cleanseInput },
-              loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              removeDomain: {
-                result: {
-                  code: 400,
-                  description:
-                    "Impossible de supprimer le domaine d'une organisation inconnue.",
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to remove test-gc-ca in org: 1 however there is no organization associated with that id.`,
-          ])
-        })
-      })
-      describe('user attempts to remove domain from verified check org', () => {
-        let org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: true,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
-        describe('users permission is admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-          })
-          it('returns an error', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-              },
-            )
-
-            const error = {
-              data: {
-                removeDomain: {
-                  result: {
-                    code: 403,
-                    description:
-                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
-            ])
-          })
-        })
-        describe('users permission is user', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
-          it('returns an error', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-              },
-            )
-
-            const error = {
-              data: {
-                removeDomain: {
-                  result: {
-                    code: 403,
-                    description:
-                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
-            ])
-          })
-        })
-        describe('user does not belong to org', () => {
-          it('returns an error', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-              },
-            )
-
-            const error = {
-              data: {
-                removeDomain: {
-                  result: {
-                    code: 403,
-                    description:
-                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
-            ])
-          })
-        })
-      })
-      describe('user attempts to remove domain from a regular org', () => {
-        let org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
-        describe('users permission is user', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
-          it('returns an error', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-              },
-            )
-
-            const error = {
-              data: {
-                removeDomain: {
-                  result: {
-                    code: 403,
-                    description:
-                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
-            ])
-          })
-        })
-        describe('user does not belong to org', () => {
-          it('returns an error', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-              },
-            )
-
-            const error = {
-              data: {
-                removeDomain: {
-                  result: {
-                    code: 403,
-                    description:
-                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
-            ])
-          })
-        })
-      })
-      describe('database error occurs', () => {
-        let user, org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
-        })
-        describe('when checking to see how many edges there are', () => {
-          it('returns an error', async () => {
-            const domainLoader = loadDomainByKey({ query })
-            const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const userLoader = loadUserByKey({ query })
-
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'admin'
-                },
-              })
-              .mockReturnValueOnce({
-                next() {
-                  return 'admin'
-                },
-              })
-              .mockRejectedValue(new Error('Database error occurred.'))
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query: mockedQuery,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: userLoader,
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: domainLoader,
-                  loadOrgByKey: orgLoader,
-                  loadUserByKey: userLoader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Impossible de supprimer le domaine. Veuillez réessayer.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Database error occurred for user: ${user._key}, when counting domain claims for domain: test-gc-ca, error: Error: Database error occurred.`,
-            ])
-          })
-        })
-        describe('when checking to see if domain has dmarc summary data', () => {
-          it('returns an error', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce()
-              .mockRejectedValue(new Error('Database error occurred.'))
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Impossible de supprimer le domaine. Veuillez réessayer.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Database error occurred for user: ${user._key}, when counting ownership claims for domain: test-gc-ca, error: Error: Database error occurred.`,
-            ])
-          })
-        })
-      })
-      describe('trx step error occurs', () => {
-        let user, org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
-
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        describe('domain has dmarc summary info', () => {
-          beforeEach(async () => {
-            const dmarcSummary = await collections.dmarcSummaries.save({
-              dmarcSummary: true,
-            })
-            await collections.domainsToDmarcSummaries.save({
-              _from: domain._id,
-              _to: dmarcSummary._id,
-            })
-            await collections.ownership.save({
-              _from: org._id,
-              _to: domain._id,
-            })
-          })
-          describe('when removing dmarc summary data', () => {
-            it('throws an error', async () => {
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step: jest.fn().mockRejectedValue(new Error('trx step error')),
-              })
-
-              const response = await graphql(
-                schema,
-                `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-                null,
-                {
-                  i18n,
-                  query,
-                  collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
-                  auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                  },
-                },
-              )
-
-              const error = [
-                new GraphQLError(
-                  'Impossible de supprimer le domaine. Veuillez réessayer.',
-                ),
-              ]
-
-              expect(response.errors).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dmarc summary data for user: ${user._key} while attempting to remove domain: test-gc-ca, error: Error: trx step error`,
-              ])
-            })
-          })
-          describe('when removing ownership info', () => {
-            it('throws an error', async () => {
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step: jest
-                  .fn()
-                  .mockReturnValueOnce()
-                  .mockRejectedValue(new Error('trx step error')),
-              })
-
-              const response = await graphql(
-                schema,
-                `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-                null,
-                {
-                  i18n,
-                  query,
-                  collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
-                  auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                  },
-                },
-              )
-
-              const error = [
-                new GraphQLError(
-                  'Impossible de supprimer le domaine. Veuillez réessayer.',
-                ),
-              ]
-
-              expect(response.errors).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing ownership data for user: ${user._key} while attempting to remove domain: test-gc-ca, error: Error: trx step error`,
-              ])
-            })
-          })
-        })
-        describe('when removing scans', () => {
-          it('returns an error', async () => {
-            const domainLoader = loadDomainByKey({ query })
-            const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const userLoader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step() {
-                throw new Error('Transaction error occurred.')
-              },
-            })
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: userLoader,
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: domainLoader,
-                  loadOrgByKey: orgLoader,
-                  loadUserByKey: userLoader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Impossible de supprimer le domaine. Veuillez réessayer.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: ${user._key} attempted to remove scan data for test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,
-            ])
-          })
-        })
-        describe('when removing edge', () => {
-          describe('domain has only one edge', () => {
-            it('returns an error', async () => {
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step: jest
-                  .fn()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockRejectedValue(new Error('Step error')),
-              })
-
-              const response = await graphql(
-                schema,
-                `
-                mutation {
-                  removeDomain(
-                    input: {
-                      domainId: "${toGlobalId('domains', domain._key)}"
-                      orgId: "${toGlobalId('organizations', org._key)}"
-                    }
-                  ) {
-                    result {
-                      ... on DomainResult {
-                        status
-                        domain {
-                          domain
-                        }
-                      }
-                      ... on DomainError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-                null,
-                {
-                  i18n,
-                  query: query,
-                  collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
-                  auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                  },
-                },
-              )
-
-              const error = [
-                new GraphQLError(
-                  'Impossible de supprimer le domaine. Veuillez réessayer.',
-                ),
-              ]
-
-              expect(response.errors).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: ${user._key} attempted to remove test-gc-ca in org: treasury-board-secretariat, error: Error: Step error`,
-              ])
-            })
-          })
-          describe('domain has more than one edge', () => {
-            it('returns an error', async () => {
-              const cursor = {
-                count: 2,
-              }
-
-              const mockedQuery = jest.fn().mockReturnValue(cursor)
-
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step: jest.fn().mockRejectedValue(new Error('Step error')),
-              })
-
-              const response = await graphql(
-                schema,
-                `
-                mutation {
-                  removeDomain(
-                    input: {
-                      domainId: "${toGlobalId('domains', domain._key)}"
-                      orgId: "${toGlobalId('organizations', org._key)}"
-                    }
-                  ) {
-                    result {
-                      ... on DomainResult {
-                        status
-                        domain {
-                          domain
-                        }
-                      }
-                      ... on DomainError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-                null,
-                {
-                  i18n,
-                  query: mockedQuery,
-                  collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
-                  auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                  },
-                  validators: { cleanseInput },
-                  loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                  },
-                },
-              )
-
-              const error = [
-                new GraphQLError(
-                  'Impossible de supprimer le domaine. Veuillez réessayer.',
-                ),
-              ]
-
-              expect(response.errors).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: ${user._key} attempted to remove claim for test-gc-ca in org: treasury-board-secretariat, error: Error: Step error`,
-              ])
-            })
-          })
-        })
-      })
-      describe('trx commit error occurs', () => {
-        let user, org, domain
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
-
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        describe('when committing to db', () => {
-          it('returns an error', async () => {
-            const domainLoader = loadDomainByKey({ query })
-            const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const userLoader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step() {
-                return undefined
-              },
-              commit() {
-                throw new Error('Transaction error occurred.')
-              },
-            })
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeDomain(
-                  input: {
-                    domainId: "${toGlobalId('domains', domain._key)}"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on DomainResult {
-                      status
-                      domain {
-                        domain
-                      }
-                    }
-                    ... on DomainError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadDomainByKey: domainLoader,
-                  loadOrgByKey: orgLoader,
-                  loadUserByKey: userLoader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Impossible de supprimer le domaine. Veuillez réessayer.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: ${user._key} attempted to remove test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,
-            ])
-          })
         })
       })
     })
