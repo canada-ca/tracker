@@ -85,7 +85,7 @@ export default function Organisations() {
       <ListOf
         elements={nodes}
         ifEmpty={() => (
-          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+          <Text layerStyle="loadingMessage">
             <Trans>No Organizations</Trans>
           </Text>
         )}

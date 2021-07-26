@@ -155,14 +155,14 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   if (error) return <ErrorFallbackMessage error={error} />
 
   const adminDomainList = loading ? (
-    <LoadingMessage>
+    <LoadingMessage minH="50px">
       <Trans>Domain List</Trans>
     </LoadingMessage>
   ) : (
     <ListOf
       elements={nodes}
       ifEmpty={() => (
-        <Text fontSize="lg" fontWeight="bold">
+        <Text layerStyle="loadingMessage">
           <Trans>No Domains</Trans>
         </Text>
       )}
