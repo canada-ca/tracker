@@ -254,7 +254,7 @@ describe('<AdminDomains />', () => {
       )
 
       const domainUrlInput = await findByRole('textbox', {
-        label: 'Search by Domain URL',
+        name: 'Search by Domain URL',
       })
 
       userEvent.type(domainUrlInput, 'test-domain.gc.ca')
