@@ -383,7 +383,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             type="submit"
             isLoading={userForm.isSubmitting}
           >
-            <AddIcon mr={2} />
+            <AddIcon mr={2} aria-hidden="true" />
             <Trans>Invite User</Trans>
           </Button>
         </Stack>

@@ -279,7 +279,7 @@ function EditableUserPhoneNumber({ detailValue }) {
       </Heading>
 
       <Flex align="center">
-        <PhoneIcon color="gray.300" mr={2} />
+        <PhoneIcon color="gray.300" mr={2} aria-hidden="true" />
         {detailValue ? (
           <Text>{detailValue}</Text>
         ) : (

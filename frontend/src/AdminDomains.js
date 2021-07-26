@@ -243,7 +243,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             variant="primary"
             type="submit"
           >
-            <AddIcon mr={2} />
+            <AddIcon mr={2} aria-hidden="true" />
             <Trans>Add Domain</Trans>
           </Button>
         </Flex>

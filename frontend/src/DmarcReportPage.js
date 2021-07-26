@@ -768,7 +768,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>Guidance</Trans>
-          <LinkIcon ml="4px" />
+          <LinkIcon ml="4px" aria-hidden="true" />
         </Link>
       </Box>
 

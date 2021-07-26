@@ -86,7 +86,7 @@ export default function DmarcByDomainPage() {
             to={`domains/${value}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             isExternal={false}
           >
-            {`${value} `} <LinkIcon />
+            {`${value} `} <LinkIcon aria-hidden="true" />
           </Link>
         )
       },

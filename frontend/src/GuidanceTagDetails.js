@@ -26,7 +26,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <ExternalLinkIcon />
+              <ExternalLinkIcon aria-hidden="true" />
             </Stack>
           </Link>
         ))}
@@ -51,7 +51,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
           >
             <Stack isInline spacing="2px" align="center">
               <Text>{node.description}</Text>
-              <ExternalLinkIcon />
+              <ExternalLinkIcon aria-hidden="true" />
             </Stack>
           </Link>
         ))}

@@ -110,7 +110,7 @@ export default function UserPage() {
             }}
             disabled={emailSent}
           >
-            <EmailIcon mr={2} />
+            <EmailIcon mr={2} aria-hidden="true" />
             <Trans>Verify Email</Trans>
           </Button>
         )}

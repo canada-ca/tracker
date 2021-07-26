@@ -109,7 +109,7 @@ export function OrganizationCard({
             <Trans>Web Configuration</Trans>
           </Text>
           <Text>{webValue}%</Text>
-          <Progress value={webValue} bg="gray.300" />
+          <Progress value={webValue} bg="gray.300" aria-hidden="true" />
         </Box>
 
         <Box
@@ -121,7 +121,7 @@ export function OrganizationCard({
             <Trans>Email Configuration</Trans>
           </Text>
           <Text>{mailValue}%</Text>
-          <Progress value={mailValue} bg="gray.300" />
+          <Progress value={mailValue} bg="gray.300" aria-hidden="true" />
         </Box>
         {cardType?.displayName === 'Flex' && (
           <Button

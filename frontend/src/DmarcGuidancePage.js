@@ -66,7 +66,7 @@ export default function DmarcGuidancePage() {
             textAlign={{ base: 'center', md: 'right' }}
           >
             <Trans>DMARC Report</Trans>
-            <LinkIcon ml="4px" />
+            <LinkIcon ml="4px" aria-hidden="true" />
           </Link>
         )}
       </Box>
