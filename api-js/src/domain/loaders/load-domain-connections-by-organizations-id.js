@@ -389,7 +389,7 @@ export const loadDomainConnectionsByOrgId =
 
     const edges = domainsInfo.domains.map((domain) => {
       return {
-        cursor: toGlobalId('domains', domain._key),
+        cursor: toGlobalId('domain', domain._key),
         node: domain,
       }
     })
@@ -400,8 +400,8 @@ export const loadDomainConnectionsByOrgId =
       pageInfo: {
         hasNextPage: domainsInfo.hasNextPage,
         hasPreviousPage: domainsInfo.hasPreviousPage,
-        startCursor: toGlobalId('domains', domainsInfo.startKey),
-        endCursor: toGlobalId('domains', domainsInfo.endKey),
+        startCursor: toGlobalId('domain', domainsInfo.startKey),
+        endCursor: toGlobalId('domain', domainsInfo.endKey),
       },
     }
   }
