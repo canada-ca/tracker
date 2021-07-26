@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from './graphql/queries'
-import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import {
   Accordion,
   Box,
@@ -24,9 +23,11 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
 import { InfoBox, InfoPanel } from './InfoPanel'
+import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
-export default function DmarcReportPage({ summaryListResponsiveWidth }) {
+
+export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
   const { i18n } = useLingui()
@@ -165,30 +166,17 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   // Set graph display using data if data exists
   else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
-      strong: [
-        {
-          name: 'fullPass',
-          displayName: t`Pass`,
-        },
-      ],
-      moderate: [
-        {
-          name: 'passSpfOnly',
-          displayName: t`Fail DKIM`,
-        },
-      ],
-      moderateAlt: [
-        {
-          name: 'passDkimOnly',
-          displayName: t`Fail SPF`,
-        },
-      ],
-      weak: [
-        {
-          name: 'fail',
-          displayName: t`Fail`,
-        },
-      ],
+      fullPass: t`Pass`,
+      fullPassPercentage: t`Pass`,
+
+      passSpfOnly: t`Fail DKIM`,
+      passSpfOnlyPercentage: t`Fail DKIM`,
+
+      passDkimOnly: t`Fail SPF`,
+      passDkimOnlyPercentage: t`Fail SPF`,
+
+      fail: t`Fail`,
+      failPercentage: t`Fail`,
     }
 
     const formattedGraphData = {
@@ -198,6 +186,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
             month: entry.month,
             year: entry.year,
             ...entry.categoryTotals,
+            ...entry.categoryPercentages,
           }
         },
       ),
@@ -205,12 +194,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     formattedGraphData.strengths = strengths
     graphDisplay = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcTimeGraph
-          data={formattedGraphData}
-          width="100%"
-          mr="400px"
-          responsiveWidth={summaryListResponsiveWidth}
-        />
+        <DmarcReportSummaryGraph data={formattedGraphData} />
       </ErrorBoundary>
     )
   }

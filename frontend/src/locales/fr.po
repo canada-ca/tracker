@@ -981,11 +981,13 @@ msgstr "Enveloppe De"
 
 #: src/DmarcReportPage.js:195
 #: src/fixtures/summaryListData.js:171
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Fail"
 msgstr "Échec"
 
 #: src/DmarcReportPage.js:183
 #: src/fixtures/summaryListData.js:161
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Fail DKIM"
 msgstr "Échec DKIM"
 
@@ -995,6 +997,7 @@ msgstr "Échec DKIM %"
 
 #: src/DmarcReportPage.js:189
 #: src/fixtures/summaryListData.js:165
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Fail SPF"
 msgstr "Échec du SPF"
 
@@ -1885,6 +1888,7 @@ msgstr "Page {0} de {1}"
 
 #: src/DmarcReportPage.js:177
 #: src/fixtures/summaryListData.js:155
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Pass"
 msgstr "Passez"
 
@@ -3142,3 +3146,111 @@ msgstr ""
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
+
+#:src/AdminDomains.js:465
+msgid "DKIM Selectors:"
+msgstr "Sélecteurs DKIM:"
+
+#:src/AdminDomains.js:498
+msgid "DKIM Selector"
+msgstr "Sélecteur DKIM"
+
+#:src/fieldRequirements.js:52
+msgid "Selector cannot be empty"
+msgstr "Le sélecteur ne peut pas être vide"
+
+#:src/fieldRequirements.js:55
+msgid "Selector must be string ending in '._domainkey'"
+msgstr "Le sélecteur doit être une chaîne se terminant par '._domainkey'"
+
+#: src/ScanCategoryDetails.js:166
+msgid "Strong Curves:"
+msgstr "Courbes fortes:"
+
+#: src/ScanCategoryDetails.js:175
+msgid "Acceptable Curves:"
+msgstr "Courbes acceptables:"
+
+#: src/ScanCategoryDetails.js:184
+msgid "Weak Curves:"
+msgstr "Courbes faibles:"
+
+#: src/ScanCategoryDetails.js:232
+msgid "Curves"
+msgstr "Courbes"
+
+#: src/ScanCard.js:24
+msgid "Identify all domains and subdomains used to send mail;"
+msgstr "Déterminer tous les domaines et sous-domaines utilisés pour envoyer des courriels."
+
+#: src/ScanCard.js:25
+msgid "Assess current state;"
+msgstr "Évaluer l’état actuel."
+
+#: src/ScanCard.js:26
+msgid "Deploy initial DMARC records with policy of none; and"
+msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie Aucune (None)"
+
+#: src/ScanCard.js:27
+msgid "Collect and analyze DMARC reports."
+msgstr "Recueillir et analyser les rapports DMARC."
+
+#: src/ScanCard.js:30
+msgid "Identify all authorized senders;"
+msgstr "Déterminer tous les expéditeurs autorisés."
+
+#: src/ScanCard.js:31
+msgid "Deploy SPF records for all domains;"
+msgstr "Déployer les enregistrements SPF pour tous les domaines."
+
+#: src/ScanCard.js:32
+msgid "Deploy DKIM records and keys for all domains and senders; and"
+msgstr "Déployer les enregistrements DKIM et les clés pour tous les domaines et expéditeurs."
+
+#: src/ScanCard.js:33
+msgid "Monitor DMARC reports and correct misconfigurations."
+msgstr "Surveiller les rapports DMARC et corriger les erreurs de configuration."
+
+#: src/ScanCard.js:36
+msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
+msgstr "Faire passer la stratégie DMARC à Mettre en quarantaine (Quarantine) (l’appliquer progressivement pour passer de 25 % à 100 %)."
+
+#: src/ScanCard.js:37
+msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
+msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer progressivement pour passer de 25 % à 100 %)."
+
+#: src/ScanCard.js:38
+msgid "Reject all messages from non-mail domains."
+msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
+
+#: src/ScanCard.js:41
+msgid "Monitor DMARC reports;"
+msgstr "Surveiller les rapports DMARC."
+
+#: src/ScanCard.js:42
+msgid "Correct misconfigurations and update records as required; and"
+msgstr "Corriger les erreurs de configuration et mettre à jour les enregistrements, au besoin."
+
+#: src/ScanCard.js:43
+msgid "Rotate DKIM keys annually."
+msgstr "Effectuer la rotation des clés DKIM annuellement."
+
+#: src/DmarcReportSummaryGraph.js:90
+msgid "Graph:"
+msgstr "Graphique:"
+
+#: src/DmarcReportSummaryGraph.js:96
+msgid "Vertical View"
+msgstr "Vue verticale"
+
+#: src/DmarcReportSummaryGraph.js:97
+msgid "Horizontal View"
+msgstr "Vue horizontale"
+
+#: src/DmarcReportSummaryGraph.js:102
+msgid "Data:"
+msgstr "Données:"
+
+#: src/DmarcReportSummaryGraph.js:109
+msgid "Percentages"
+msgstr "Pourcentages"

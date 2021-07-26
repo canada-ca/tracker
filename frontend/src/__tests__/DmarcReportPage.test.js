@@ -13,6 +13,24 @@ import { rawDmarcReportData } from '../fixtures/dmarcReportData.js'
 import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
 
+// ** need to mock the ResizeObserver and polute the window object to avoid errors
+class ResizeObserver {
+  observe() {
+    // do nothing
+  }
+
+  unobserve() {
+    // do nothing
+  }
+
+  disconnect() {
+    // do nothing
+  }
+}
+
+window.ResizeObserver = ResizeObserver
+// **
+
 const i18n = setupI18n({
   locale: 'en',
   messages: {
@@ -72,7 +90,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -98,7 +116,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -124,7 +142,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -150,7 +168,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>

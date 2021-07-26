@@ -985,11 +985,13 @@ msgstr "Envelope From"
 
 #: src/DmarcReportPage.js:195
 #: src/fixtures/summaryListData.js:171
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Fail"
 msgstr "Fail"
 
 #: src/DmarcReportPage.js:183
 #: src/fixtures/summaryListData.js:161
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Fail DKIM"
 msgstr "Fail DKIM"
 
@@ -999,6 +1001,7 @@ msgstr "Fail DKIM %"
 
 #: src/DmarcReportPage.js:189
 #: src/fixtures/summaryListData.js:165
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Fail SPF"
 msgstr "Fail SPF"
 
@@ -1889,6 +1892,7 @@ msgstr "Page {0} of {1}"
 
 #: src/DmarcReportPage.js:177
 #: src/fixtures/summaryListData.js:155
+#: src/DmarcReportSummaryGraph.js:41
 msgid "Pass"
 msgstr "Pass"
 
@@ -3150,3 +3154,112 @@ msgstr "{title}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Tracker"
+
+#:src/AdminDomains.js:465
+msgid "DKIM Selectors:"
+msgstr "DKIM Selectors:"
+
+#:src/AdminDomains.js:498
+msgid "DKIM Selector"
+msgstr "DKIM Selector"
+
+#:src/fieldRequirements.js:52
+msgid "Selector cannot be empty"
+msgstr "Selector cannot be empty"
+
+#:src/fieldRequirements.js:55
+msgid "Selector must be string ending in '._domainkey'"
+msgstr "Selector must be string ending in '._domainkey'"
+
+#: src/ScanCategoryDetails.js:166
+msgid "Strong Curves:"
+msgstr "Strong Curves:"
+
+#: src/ScanCategoryDetails.js:175
+msgid "Acceptable Curves:"
+msgstr "Acceptable Curves:"
+
+#: src/ScanCategoryDetails.js:184
+msgid "Weak Curves:"
+msgstr "Weak Curves:"
+
+#: src/ScanCategoryDetails.js:232
+msgid "Curves"
+msgstr "Curves"
+
+#: src/ScanCard.js:24
+msgid "Identify all domains and subdomains used to send mail;"
+msgstr "Identify all domains and subdomains used to send mail;"
+
+#: src/ScanCard.js:25
+msgid "Assess current state;"
+msgstr "Assess current state;"
+
+#: src/ScanCard.js:26
+msgid "Deploy initial DMARC records with policy of none; and"
+msgstr "Deploy initial DMARC records with policy of none; and"
+
+#: src/ScanCard.js:27
+msgid "Collect and analyze DMARC reports."
+msgstr "Collect and analyze DMARC reports."
+
+#: src/ScanCard.js:30
+msgid "Identify all authorized senders;"
+msgstr "Identify all authorized senders;"
+
+#: src/ScanCard.js:31
+msgid "Deploy SPF records for all domains;"
+msgstr "Deploy SPF records for all domains;"
+
+#: src/ScanCard.js:32
+msgid "Deploy DKIM records and keys for all domains and senders; and"
+msgstr "Deploy DKIM records and keys for all domains and senders; and"
+
+#: src/ScanCard.js:33
+msgid "Monitor DMARC reports and correct misconfigurations."
+msgstr "Monitor DMARC reports and correct misconfigurations."
+
+#: src/ScanCard.js:36
+msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
+msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
+
+#: src/ScanCard.js:37
+msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
+msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
+
+#: src/ScanCard.js:38
+msgid "Reject all messages from non-mail domains."
+msgstr "Reject all messages from non-mail domains."
+
+#: src/ScanCard.js:41
+msgid "Monitor DMARC reports;"
+msgstr "Monitor DMARC reports;"
+
+#: src/ScanCard.js:42
+msgid "Correct misconfigurations and update records as required; and"
+msgstr "Correct misconfigurations and update records as required; and"
+
+#: src/ScanCard.js:43
+msgid "Rotate DKIM keys annually."
+msgstr "Rotate DKIM keys annually."
+
+#: src/DmarcReportSummaryGraph.js:90
+msgid "Graph:"
+msgstr "Graph:"
+
+#: src/DmarcReportSummaryGraph.js:96
+msgid "Vertical View"
+msgstr "Vertical View"
+
+#: src/DmarcReportSummaryGraph.js:97
+msgid "Horizontal View"
+msgstr "Horizontal View"
+
+#: src/DmarcReportSummaryGraph.js:102
+msgid "Data:"
+msgstr "Data:"
+
+#: src/DmarcReportSummaryGraph.js:109
+msgid "Percentages"
+msgstr "Percentages"
+

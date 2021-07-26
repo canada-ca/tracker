@@ -894,6 +894,13 @@ export const DMARC_REPORT_GRAPH = gql`
           fullPass
           fail
         }
+        categoryPercentages {
+          failPercentage
+          fullPassPercentage
+          passDkimOnlyPercentage
+          passSpfOnlyPercentage
+          totalMessages
+        }
       }
     }
   }
