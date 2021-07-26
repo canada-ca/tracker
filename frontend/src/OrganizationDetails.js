@@ -33,7 +33,7 @@ export default function OrganizationDetails() {
     errorPolicy: 'ignore', // allow partial success
   })
 
-  if (loading || !data) {
+  if (loading) {
     return (
       <LoadingMessage>
         <Trans>Organization Details</Trans>
