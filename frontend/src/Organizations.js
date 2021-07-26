@@ -157,28 +157,51 @@ export default function Organisations() {
           alignItems={{ base: 'stretch', md: 'center' }}
           mb={{ base: '4', md: '8' }}
         >
-          <InputGroup
-            mb={{ base: '8px', md: '0' }}
+          <Flex
+            direction="row"
+            minW={{ base: '100%', md: '50%' }}
+            alignItems="center"
             flexGrow={1}
-            w={{ base: '100%', md: '50%' }}
+            mb={2}
           >
-            <InputLeftElement aria-hidden="true">
-              <SearchIcon color="gray.300" />
-            </InputLeftElement>
-            <Input
-              type="text"
-              placeholder={t`Search for an organization`}
-              onChange={(e) => {
-                setSearchTerm(e.target.value)
-                resetToFirstPage()
-              }}
-            />
-          </InputGroup>
-          <Stack isInline align="center" ml={{ md: '10%' }}>
-            <Text fontSize="md" fontWeight="bold" textAlign="center">
+            <Text
+              as="label"
+              for="Search-for-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mr={2}
+            >
+              <Trans>Search: </Trans>
+            </Text>
+            <InputGroup flexGrow={1}>
+              <InputLeftElement aria-hidden="true">
+                <SearchIcon color="gray.300" />
+              </InputLeftElement>
+              <Input
+                id="Search-for-field"
+                type="text"
+                placeholder={t`Search for an organization`}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                  resetToFirstPage()
+                }}
+                aria-label="Organization Search Bar"
+              />
+            </InputGroup>
+          </Flex>
+          <Stack isInline align="center" ml={{ md: '5%' }}>
+            <Text
+              as="label"
+              for="Sort-by-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+            >
               <Trans>Sort by: </Trans>
             </Text>
             <Select
+              id="Sort-by-field"
               aria-label="Sort by field"
               w="fit-content"
               size="md"

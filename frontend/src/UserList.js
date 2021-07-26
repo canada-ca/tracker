@@ -277,7 +277,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           <Flex align="center" w="100%">
             <Stack direction="row" flexGrow="0">
               <IconButton
-                aria-label="userRemoveButton"
+                aria-label="Remove user button"
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
@@ -288,7 +288,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 icon={<MinusIcon />}
               />
               <IconButton
-                aria-label="userEditButton"
+                aria-label="Edit user button"
                 variant="primary"
                 onClick={() => {
                   setEditingUserRole(userRole)
@@ -347,14 +347,25 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             mb={{ base: '2', md: '0' }}
             mr={{ base: '0', md: '2' }}
           >
+            <Text
+              as="label"
+              for="Search-for-user-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mr={2}
+            >
+              <Trans>Search: </Trans>
+            </Text>
             <InputGroup flexGrow={1} w="50%">
               <InputLeftElement aria-hidden="true">
                 <EmailIcon color="gray.300" />
               </InputLeftElement>
               <Input
+                id="Search-for-user-field"
                 aria-label="new-user-input"
                 type="email"
-                placeholder={t`New user email`}
+                placeholder={t`user email`}
                 isDisabled={addUserLoading}
                 {...userForm.getFieldProps('userName')}
               />

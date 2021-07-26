@@ -13,6 +13,7 @@ import { SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 
 const ReactTableGlobalFilter = ({
+  title,
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
@@ -26,7 +27,11 @@ const ReactTableGlobalFilter = ({
 
   return (
     <Stack isInline align="center">
-      <Text fontWeight="bold">
+      <Text
+        as="label"
+        htmlFor={`${title.replace(/\s+/g, '-')}-search-field`}
+        fontWeight="bold"
+      >
         <Trans>Search:</Trans>
       </Text>
 
@@ -35,6 +40,7 @@ const ReactTableGlobalFilter = ({
           <SearchIcon />
         </InputLeftElement>
         <Input
+          id={`${title.replace(/\s+/g, '-')}-search-field`}
           value={value || ''}
           onChange={(e) => {
             setValue(e.target.value)
@@ -50,6 +56,7 @@ const ReactTableGlobalFilter = ({
 
 ReactTableGlobalFilter.propTypes = {
   // TODO: Add accurate prop types for these
+  title: string,
   preGlobalFilteredRows: any,
   globalFilter: any,
   setGlobalFilter: any,
