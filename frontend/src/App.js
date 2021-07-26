@@ -26,6 +26,8 @@ import { useUserVar } from './UserState'
 import { useMutation } from '@apollo/client'
 import { REFRESH_TOKENS } from './graphql/mutations'
 import { activate } from './i18n.config'
+import RequestScanNotificationHandler from './RequestScanNotificationHandler'
+import { wsClient } from './client'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
@@ -87,8 +89,21 @@ export default function App() {
     refreshTokens()
   }, [refreshTokens])
 
+  // Close websocket on user jwt change (refresh/logout)
+  // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
+  useEffect(() => {
+    // User is logged out and websocket connection is active
+    if (
+      (currentUser?.jwt === '' && wsClient.status === 0) ||
+      wsClient.status === 1
+    ) {
+      wsClient.close()
+    }
+  }, [currentUser.jwt])
+
   return (
     <>
+      <RequestScanNotificationHandler />
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />

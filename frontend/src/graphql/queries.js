@@ -96,6 +96,38 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
+export const GET_ONE_TIME_SCANS = gql`
+  query GetOneTimeScans {
+    getOneTimeScans @client
+  }
+`
+
+export const GET_ONE_TIME_DMARC_SCANS = gql`
+  query GetOneTimeDmarcScans {
+    getOneTimeDmarcScans @client
+  }
+`
+export const GET_ONE_TIME_DKIM_SCANS = gql`
+  query GetOneTimeDkimScans {
+    getOneTimeDkimScans @client
+  }
+`
+export const GET_ONE_TIME_HTTPS_SCANS = gql`
+  query GetOneTimeHttpsScans {
+    getOneTimeHttpsScans @client
+  }
+`
+export const GET_ONE_TIME_SPF_SCANS = gql`
+  query GetOneTimeSpfScans {
+    getOneTimeSpfScans @client
+  }
+`
+export const GET_ONE_TIME_SSL_SCANS = gql`
+  query GetOneTimeSslScans {
+    getOneTimeSslScans @client
+  }
+`
+
 export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
   query FindDomainByDomain($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {

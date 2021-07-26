@@ -109,7 +109,7 @@ function ScanCard({ scanType, scanData, status }) {
       return (
         <ScanCategoryDetails
           categoryName={categoryName}
-          categoryData={categoryData}
+          categoryData={categoryData.edges[0]?.node}
           key={categoryName}
         />
       )

@@ -27,9 +27,17 @@ export const getTypeNames = () => gql`
 
       # An optional string used to filter the results based on domains.
       search: String
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DmarcSummaryConnection
 
@@ -49,9 +57,17 @@ export const getTypeNames = () => gql`
 
       # String used to search for domains.
       search: String
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DomainConnection
 
@@ -68,9 +84,17 @@ export const getTypeNames = () => gql`
 
       # Filter org list to either include or exclude the super admin org.
       includeSuperAdminOrg: Boolean
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): OrganizationConnection
 
@@ -97,8 +121,8 @@ export const getTypeNames = () => gql`
 
     # Query used to check if the user has an admin role.
     isUserAdmin(
-      # The organization that you want to check for admin permissions on.
-      orgId: ID!
+      # Optional org id to see if user is an admin for the requested org.
+      orgId: ID
     ): Boolean
 
     # Query used to check if the user has a super admin role.
@@ -114,9 +138,17 @@ export const getTypeNames = () => gql`
     findVerifiedDomains(
       # Ordering options for verified domain connections.
       orderBy: VerifiedDomainOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): VerifiedDomainConnection
 
@@ -130,9 +162,17 @@ export const getTypeNames = () => gql`
     findVerifiedOrganizations(
       # Ordering options for verified organization connections.
       orderBy: VerifiedOrganizationOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): VerifiedOrganizationConnection
   }
@@ -239,9 +279,17 @@ export const getTypeNames = () => gql`
 
       # Filter org list to either include or exclude the super admin org.
       includeSuperAdminOrg: Boolean
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): OrganizationConnection
 
@@ -369,9 +417,17 @@ export const getTypeNames = () => gql`
 
       # String used to search for domains.
       search: String
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DomainConnection
 
@@ -382,9 +438,17 @@ export const getTypeNames = () => gql`
 
       # String used to search for affiliated users.
       search: String
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): AffiliationConnection
   }
@@ -644,9 +708,17 @@ export const getTypeNames = () => gql`
 
       # Ordering options for dkim connections.
       orderBy: DKIMOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DKIMConnection
 
@@ -660,9 +732,17 @@ export const getTypeNames = () => gql`
 
       # Ordering options for dmarc connections.
       orderBy: DMARCOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DMARCConnection
 
@@ -676,9 +756,17 @@ export const getTypeNames = () => gql`
 
       # Ordering options for spf connections.
       orderBy: SPFOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): SPFConnection
   }
@@ -723,9 +811,17 @@ export const getTypeNames = () => gql`
     results(
       # Ordering options for DKIM result connections.
       orderBy: DKIMResultOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DKIMResultConnection
   }
@@ -778,9 +874,17 @@ export const getTypeNames = () => gql`
     guidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
       @deprecated(
@@ -791,9 +895,17 @@ export const getTypeNames = () => gql`
     negativeGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -801,9 +913,17 @@ export const getTypeNames = () => gql`
     neutralGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -811,9 +931,17 @@ export const getTypeNames = () => gql`
     positiveGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
   }
@@ -986,9 +1114,17 @@ export const getTypeNames = () => gql`
     guidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
       @deprecated(
@@ -999,9 +1135,17 @@ export const getTypeNames = () => gql`
     negativeGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1009,9 +1153,17 @@ export const getTypeNames = () => gql`
     neutralGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1019,9 +1171,17 @@ export const getTypeNames = () => gql`
     positiveGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
   }
@@ -1107,9 +1267,17 @@ export const getTypeNames = () => gql`
     guidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
       @deprecated(
@@ -1120,9 +1288,17 @@ export const getTypeNames = () => gql`
     negativeGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1130,9 +1306,17 @@ export const getTypeNames = () => gql`
     neutralGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1140,9 +1324,17 @@ export const getTypeNames = () => gql`
     positiveGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
   }
@@ -1186,9 +1378,17 @@ export const getTypeNames = () => gql`
 
       # Ordering options for https connections.
       orderBy: HTTPSOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): HTTPSConnection
 
@@ -1202,9 +1402,17 @@ export const getTypeNames = () => gql`
 
       # Ordering options for ssl connections.
       orderBy: SSLOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): SSLConnection
   }
@@ -1263,9 +1471,17 @@ export const getTypeNames = () => gql`
     guidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
       @deprecated(
@@ -1276,9 +1492,17 @@ export const getTypeNames = () => gql`
     negativeGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1286,9 +1510,17 @@ export const getTypeNames = () => gql`
     neutralGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1296,9 +1528,17 @@ export const getTypeNames = () => gql`
     positiveGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
   }
@@ -1399,9 +1639,17 @@ export const getTypeNames = () => gql`
     guidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
       @deprecated(
@@ -1412,9 +1660,17 @@ export const getTypeNames = () => gql`
     negativeGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1422,9 +1678,17 @@ export const getTypeNames = () => gql`
     neutralGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
 
@@ -1432,9 +1696,17 @@ export const getTypeNames = () => gql`
     positiveGuidanceTags(
       # Ordering options for guidance tag connections
       orderBy: GuidanceTagOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
   }
@@ -1563,33 +1835,61 @@ export const getTypeNames = () => gql`
   type DetailTables {
     # List of senders that are failing DKIM checks.
     dkimFailure(
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DkimFailureTableConnection
 
     # List of senders that are failing DMARC checks.
     dmarcFailure(
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): DmarcFailureTableConnection
 
     # List of senders that are passing all checks.
     fullPass(
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): FullPassTableConnection
 
     # List of senders that are failing SPF checks.
     spfFailure(
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): SpfFailureTableConnection
   }
@@ -1898,9 +2198,17 @@ export const getTypeNames = () => gql`
 
       # String used to search for affiliated organizations.
       search: String
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): AffiliationConnection
   }
@@ -2006,9 +2314,17 @@ export const getTypeNames = () => gql`
     organizations(
       # Ordering options for verified organization connections.
       orderBy: VerifiedOrganizationOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): VerifiedOrganizationConnection
   }
@@ -2076,9 +2392,17 @@ export const getTypeNames = () => gql`
     domains(
       # Ordering options for verified domain connections.
       orderBy: VerifiedDomainOrder
+
+      # Returns the items in the list that come after the specified cursor.
       after: String
+
+      # Returns the first n items from the list.
       first: Int
+
+      # Returns the items in the list that come before the specified cursor.
       before: String
+
+      # Returns the last n items from the list.
       last: Int
     ): VerifiedDomainConnection
   }
@@ -2190,6 +2514,9 @@ export const getTypeNames = () => gql`
     # organizations, if the invited user does not have an account, they will be
     # able to sign-up and be assigned to that organization in one mutation.
     inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
+
+    # This mutation allows users to leave a given organization.
+    leaveOrganization(input: LeaveOrganizationInput!): LeaveOrganizationPayload
 
     # This mutation allows admins or higher to remove users from any organizations they belong to.
     removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
@@ -2319,6 +2646,27 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type LeaveOrganizationPayload {
+    # \`LeaveOrganizationUnion\` resolving to either a \`LeaveOrganizationResult\` or \`AffiliationError\`.
+    result: LeaveOrganizationUnion
+    clientMutationId: String
+  }
+
+  # This union is used with the \`leaveOrganization\` mutation, allowing for users to leave a given organization, and support any errors that may occur.
+  union LeaveOrganizationUnion = AffiliationError | LeaveOrganizationResult
+
+  # This object is used to inform the user that they successful left a given organization.
+  type LeaveOrganizationResult {
+    # Status message confirming the user left the org.
+    status: String
+  }
+
+  input LeaveOrganizationInput {
+    # Id of the organization the user is looking to leave.
+    orgId: ID!
+    clientMutationId: String
+  }
+
   type RemoveUserFromOrgPayload {
     # \`RemoveUserFromOrgUnion\` returning either a \`RemoveUserFromOrgResult\`, or \`RemoveUserFromOrgError\` object.
     result: RemoveUserFromOrgUnion
@@ -2435,9 +2783,6 @@ export const getTypeNames = () => gql`
   }
 
   type RequestScanPayload {
-    # The id used to specify the channel in the various subscriptions.
-    subscriptionId: String
-
     # Informs the user if the scan was dispatched successfully.
     status: String
     clientMutationId: String
@@ -2897,6 +3242,9 @@ export const getTypeNames = () => gql`
 
     # A token sent by email, that will assign a user to an organization with a pre-determined role.
     signUpToken: String
+
+    # Whether or not the user wants to stay signed in after leaving the site.
+    rememberMe: Boolean = false
     clientMutationId: String
   }
 
@@ -3045,5 +3393,225 @@ export const getTypeNames = () => gql`
     # The two factor code that was received via text message.
     twoFactorCode: Int!
     clientMutationId: String
+  }
+
+  type Subscription {
+    # This subscription allows the user to receive dkim data directly from the scanners in real time.
+    dkimScanData: DkimSub
+
+    # This subscription allows the user to receive dmarc data directly from the scanners in real time.
+    dmarcScanData: DmarcSub
+
+    # This subscription allows the user to receive spf data directly from the scanners in real time.
+    spfScanData: SpfSub
+
+    # This subscription allows the user to receive https data directly from the scanners in real time.
+    httpsScanData: HttpsSub
+
+    # This subscription allows the user to receive ssl data directly from the scanners in real time.
+    sslScanData: SslSub
+  }
+
+  # DKIM gql object containing the fields for the \`dkimScanData\` subscription.
+  type DkimSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The success status of the scan.
+    status: StatusEnum
+
+    # Individual scans results for each dkim selector.
+    results: [DkimResultSub]
+  }
+
+  # Individual one-off scans results for the given dkim selector.
+  type DkimResultSub {
+    # The selector the scan was ran on.
+    selector: String
+
+    # DKIM record retrieved during the scan of the domain.
+    record: String
+
+    # Size of the Public Key in bits
+    keyLength: String
+
+    # Raw scan result.
+    rawJson: JSON
+
+    # Negative guidance tags found during scan.
+    negativeGuidanceTags: [GuidanceTag]
+
+    # Neutral guidance tags found during scan.
+    neutralGuidanceTags: [GuidanceTag]
+
+    # Positive guidance tags found during scan.
+    positiveGuidanceTags: [GuidanceTag]
+  }
+
+  # DMARC gql object containing the fields for the \`dkimScanData\` subscription.
+  type DmarcSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The current dmarc phase the domain is compliant to.
+    dmarcPhase: String
+
+    # The success status of the scan.
+    status: StatusEnum
+
+    # DMARC record retrieved during scan.
+    record: String
+
+    # The requested policy you wish mailbox providers to apply
+    # when your email fails DMARC authentication and alignment checks.
+    pPolicy: String
+
+    # This tag is used to indicate a requested policy for all
+    # subdomains where mail is failing the DMARC authentication and alignment checks.
+    spPolicy: String
+
+    # The percentage of messages to which the DMARC policy is to be applied.
+    pct: Int
+
+    # Raw scan result.
+    rawJson: JSON
+
+    # Negative guidance tags found during DMARC Scan.
+    negativeGuidanceTags: [GuidanceTag]
+
+    # Neutral guidance tags found during DMARC Scan.
+    neutralGuidanceTags: [GuidanceTag]
+
+    # Positive guidance tags found during DMARC Scan.
+    positiveGuidanceTags: [GuidanceTag]
+  }
+
+  # SPF gql object containing the fields for the \`dkimScanData\` subscription.
+  type SpfSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The success status of the scan.
+    status: StatusEnum
+
+    # The amount of DNS lookups.
+    lookups: Int
+
+    # SPF record retrieved during the scan of the given domain.
+    record: String
+
+    # Instruction of what a recipient should do if there is not a match to your SPF record.
+    spfDefault: String
+
+    # Raw scan result.
+    rawJson: JSON
+
+    # Negative guidance tags found during scan.
+    negativeGuidanceTags: [GuidanceTag]
+
+    # Neutral guidance tags found during scan.
+    neutralGuidanceTags: [GuidanceTag]
+
+    # Positive guidance tags found during scan.
+    positiveGuidanceTags: [GuidanceTag]
+  }
+
+  # HTTPS gql object containing the fields for the \`dkimScanData\` subscription.
+  type HttpsSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The success status of the scan.
+    status: StatusEnum
+
+    # State of the HTTPS implementation on the server and any issues therein.
+    implementation: String
+
+    # Degree to which HTTPS is enforced on the server based on behaviour.
+    enforced: String
+
+    # Presence and completeness of HSTS implementation.
+    hsts: String
+
+    # Denotes how long the domain should only be accessed using HTTPS
+    hstsAge: String
+
+    # Denotes whether the domain has been submitted and included within HSTS preload list.
+    preloaded: String
+
+    # Raw scan result.
+    rawJson: JSON
+
+    # Negative guidance tags found during scan.
+    negativeGuidanceTags: [GuidanceTag]
+
+    # Neutral guidance tags found during scan.
+    neutralGuidanceTags: [GuidanceTag]
+
+    # Positive guidance tags found during scan.
+    positiveGuidanceTags: [GuidanceTag]
+  }
+
+  # SSL gql object containing the fields for the \`dkimScanData\` subscription.
+  type SslSub {
+    # The shared id to match scans together.
+    sharedId: ID
+
+    # The domain the scan was ran on.
+    domain: Domain
+
+    # The success status of the scan.
+    status: StatusEnum
+
+    # List of ciphers in use by the server deemed to be "acceptable".
+    acceptableCiphers: [String]
+
+    # List of curves in use by the server deemed to be "acceptable".
+    acceptableCurves: [String]
+
+    # Denotes vulnerability to OpenSSL CCS Injection.
+    ccsInjectionVulnerable: Boolean
+
+    # Denotes vulnerability to "Heartbleed" exploit.
+    heartbleedVulnerable: Boolean
+
+    # List of ciphers in use by the server deemed to be "strong".
+    strongCiphers: [String]
+
+    # List of curves in use by the server deemed to be "strong".
+    strongCurves: [String]
+
+    # Denotes support for elliptic curve key pairs.
+    supportsEcdhKeyExchange: Boolean
+
+    # List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+    weakCiphers: [String]
+
+    # List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+    weakCurves: [String]
+
+    # Raw scan result.
+    rawJson: JSON
+
+    # Negative guidance tags found during scan.
+    negativeGuidanceTags: [GuidanceTag]
+
+    # Neutral guidance tags found during scan.
+    neutralGuidanceTags: [GuidanceTag]
+
+    # Positive guidance tags found during scan.
+    positiveGuidanceTags: [GuidanceTag]
   }
 `
