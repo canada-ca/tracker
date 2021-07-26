@@ -254,7 +254,7 @@ export default function App() {
             <Trans>Privacy</Trans>
           </Link>
 
-          <Link as={RouteLink} to="terms-and-conditions" ml={4}>
+          <Link as={RouteLink} to="/terms-and-conditions" ml={4}>
             <Trans>Terms & conditions</Trans>
           </Link>
 
