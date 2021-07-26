@@ -183,7 +183,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            after: toGlobalId('verifiedOrganizations', expectedOrgs[0].id),
+            after: toGlobalId('verifiedOrganization', expectedOrgs[0].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -193,7 +193,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[1]._key,
                 ),
                 node: {
@@ -206,11 +206,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: false,
               hasPreviousPage: true,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
             },
@@ -236,7 +236,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            before: toGlobalId('verifiedOrganizations', expectedOrgs[1].id),
+            before: toGlobalId('verifiedOrganization', expectedOrgs[1].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -246,7 +246,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[0]._key,
                 ),
                 node: {
@@ -259,11 +259,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
             },
@@ -298,7 +298,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[0]._key,
                 ),
                 node: {
@@ -311,11 +311,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
             },
@@ -350,7 +350,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[1]._key,
                 ),
                 node: {
@@ -363,11 +363,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: false,
               hasPreviousPage: true,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
             },
@@ -443,8 +443,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'acronym',
                   direction: 'ASC',
@@ -459,7 +459,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -472,11 +472,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -502,8 +502,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'acronym',
                   direction: 'DESC',
@@ -518,7 +518,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -531,11 +531,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -563,8 +563,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'name',
                   direction: 'ASC',
@@ -579,7 +579,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -592,11 +592,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -622,8 +622,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'name',
                   direction: 'DESC',
@@ -638,7 +638,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -651,11 +651,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -683,8 +683,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'zone',
                   direction: 'ASC',
@@ -699,7 +699,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -712,11 +712,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -742,8 +742,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'zone',
                   direction: 'DESC',
@@ -758,7 +758,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -771,11 +771,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -803,8 +803,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'sector',
                   direction: 'ASC',
@@ -819,7 +819,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -832,11 +832,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -862,8 +862,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'sector',
                   direction: 'DESC',
@@ -878,7 +878,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -891,11 +891,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -923,8 +923,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'country',
                   direction: 'ASC',
@@ -939,7 +939,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -952,11 +952,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -982,8 +982,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'country',
                   direction: 'DESC',
@@ -998,7 +998,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1011,11 +1011,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1043,8 +1043,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-mail-pass',
                   direction: 'ASC',
@@ -1059,7 +1059,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1072,11 +1072,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1102,8 +1102,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-mail-pass',
                   direction: 'DESC',
@@ -1118,7 +1118,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1131,11 +1131,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1163,8 +1163,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-mail-fail',
                   direction: 'ASC',
@@ -1179,7 +1179,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1192,11 +1192,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1222,8 +1222,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-mail-fail',
                   direction: 'DESC',
@@ -1238,7 +1238,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1251,11 +1251,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1283,8 +1283,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-mail-total',
                   direction: 'ASC',
@@ -1299,7 +1299,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1312,11 +1312,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1342,8 +1342,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-mail-total',
                   direction: 'DESC',
@@ -1358,7 +1358,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1371,11 +1371,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1403,8 +1403,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-web-pass',
                   direction: 'ASC',
@@ -1419,7 +1419,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1432,11 +1432,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1462,8 +1462,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-web-pass',
                   direction: 'DESC',
@@ -1478,7 +1478,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1491,11 +1491,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1523,8 +1523,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-web-fail',
                   direction: 'ASC',
@@ -1539,7 +1539,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1552,11 +1552,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1582,8 +1582,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-web-fail',
                   direction: 'DESC',
@@ -1598,7 +1598,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1611,11 +1611,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1643,8 +1643,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-web-total',
                   direction: 'ASC',
@@ -1659,7 +1659,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1672,11 +1672,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1702,8 +1702,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-web-total',
                   direction: 'DESC',
@@ -1718,7 +1718,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1731,11 +1731,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1763,8 +1763,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'domain-count',
                   direction: 'ASC',
@@ -1779,7 +1779,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1792,11 +1792,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1822,8 +1822,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'domain-count',
                   direction: 'DESC',
@@ -1838,7 +1838,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -1851,11 +1851,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -1931,7 +1931,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            after: toGlobalId('verifiedOrganizations', expectedOrgs[0].id),
+            after: toGlobalId('verifiedOrganization', expectedOrgs[0].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -1941,7 +1941,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[1]._key,
                 ),
                 node: {
@@ -1954,11 +1954,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: false,
               hasPreviousPage: true,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
             },
@@ -1984,7 +1984,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            before: toGlobalId('verifiedOrganizations', expectedOrgs[1].id),
+            before: toGlobalId('verifiedOrganization', expectedOrgs[1].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -1994,7 +1994,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[0]._key,
                 ),
                 node: {
@@ -2007,11 +2007,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
             },
@@ -2046,7 +2046,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[0]._key,
                 ),
                 node: {
@@ -2059,11 +2059,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[0]._key,
               ),
             },
@@ -2098,7 +2098,7 @@ describe('given the load organizations connection function', () => {
             edges: [
               {
                 cursor: toGlobalId(
-                  'verifiedOrganizations',
+                  'verifiedOrganization',
                   expectedOrgs[1]._key,
                 ),
                 node: {
@@ -2111,11 +2111,11 @@ describe('given the load organizations connection function', () => {
               hasNextPage: false,
               hasPreviousPage: true,
               startCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
               endCursor: toGlobalId(
-                'verifiedOrganizations',
+                'verifiedOrganization',
                 expectedOrgs[1]._key,
               ),
             },
@@ -2191,8 +2191,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'acronym',
                   direction: 'ASC',
@@ -2207,7 +2207,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2220,11 +2220,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2250,8 +2250,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'acronym',
                   direction: 'DESC',
@@ -2266,7 +2266,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2279,11 +2279,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2311,8 +2311,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'name',
                   direction: 'ASC',
@@ -2327,7 +2327,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2340,11 +2340,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2370,8 +2370,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'name',
                   direction: 'DESC',
@@ -2386,7 +2386,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2399,11 +2399,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2431,8 +2431,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'zone',
                   direction: 'ASC',
@@ -2447,7 +2447,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2460,11 +2460,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2490,8 +2490,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'zone',
                   direction: 'DESC',
@@ -2506,7 +2506,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2519,11 +2519,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2551,8 +2551,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'sector',
                   direction: 'ASC',
@@ -2567,7 +2567,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2580,11 +2580,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2610,8 +2610,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'sector',
                   direction: 'DESC',
@@ -2626,7 +2626,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2639,11 +2639,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2671,8 +2671,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'country',
                   direction: 'ASC',
@@ -2687,7 +2687,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2700,11 +2700,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2730,8 +2730,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'country',
                   direction: 'DESC',
@@ -2746,7 +2746,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2759,11 +2759,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2791,8 +2791,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-mail-pass',
                   direction: 'ASC',
@@ -2807,7 +2807,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2820,11 +2820,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2850,8 +2850,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-mail-pass',
                   direction: 'DESC',
@@ -2866,7 +2866,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2879,11 +2879,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2911,8 +2911,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-mail-fail',
                   direction: 'ASC',
@@ -2927,7 +2927,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2940,11 +2940,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -2970,8 +2970,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-mail-fail',
                   direction: 'DESC',
@@ -2986,7 +2986,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -2999,11 +2999,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3031,8 +3031,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-mail-total',
                   direction: 'ASC',
@@ -3047,7 +3047,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3060,11 +3060,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3090,8 +3090,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-mail-total',
                   direction: 'DESC',
@@ -3106,7 +3106,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3119,11 +3119,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3151,8 +3151,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-web-pass',
                   direction: 'ASC',
@@ -3167,7 +3167,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3180,11 +3180,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3210,8 +3210,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-web-pass',
                   direction: 'DESC',
@@ -3226,7 +3226,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3239,11 +3239,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3271,8 +3271,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-web-fail',
                   direction: 'ASC',
@@ -3287,7 +3287,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3300,11 +3300,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3330,8 +3330,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-web-fail',
                   direction: 'DESC',
@@ -3346,7 +3346,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3359,11 +3359,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3391,8 +3391,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'summary-web-total',
                   direction: 'ASC',
@@ -3407,7 +3407,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3420,11 +3420,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3450,8 +3450,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'summary-web-total',
                   direction: 'DESC',
@@ -3466,7 +3466,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3479,11 +3479,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3511,8 +3511,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', org._key),
-                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                after: toGlobalId('verifiedOrganization', org._key),
+                before: toGlobalId('verifiedOrganization', orgTwo._key),
                 orderBy: {
                   field: 'domain-count',
                   direction: 'ASC',
@@ -3527,7 +3527,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3540,11 +3540,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
@@ -3570,8 +3570,8 @@ describe('given the load organizations connection function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('verifiedOrganizations', orgTwo._key),
-                before: toGlobalId('verifiedOrganizations', org._key),
+                after: toGlobalId('verifiedOrganization', orgTwo._key),
+                before: toGlobalId('verifiedOrganization', org._key),
                 orderBy: {
                   field: 'domain-count',
                   direction: 'DESC',
@@ -3586,7 +3586,7 @@ describe('given the load organizations connection function', () => {
                 edges: [
                   {
                     cursor: toGlobalId(
-                      'verifiedOrganizations',
+                      'verifiedOrganization',
                       expectedOrg._key,
                     ),
                     node: {
@@ -3599,11 +3599,11 @@ describe('given the load organizations connection function', () => {
                   hasNextPage: true,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                   endCursor: toGlobalId(
-                    'verifiedOrganizations',
+                    'verifiedOrganization',
                     expectedOrg._key,
                   ),
                 },
