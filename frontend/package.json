@@ -44,7 +44,6 @@
     "isomorphic-unfetch": "^3.1.0",
     "make-plural": "^6.2.2",
     "prop-types": "^15.7.2",
-    "qrcode.react": "^1.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-error-boundary": "^3.1.3",
