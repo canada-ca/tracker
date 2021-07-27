@@ -13,15 +13,15 @@ import { UserVarProvider } from './UserState'
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <UserVarProvider userVar={currentUserVar}>
-      <ChakraProvider theme={canada}>
-        <I18nProvider i18n={i18n}>
-          <Router>
+    <Router>
+      <UserVarProvider userVar={currentUserVar}>
+        <ChakraProvider theme={canada}>
+          <I18nProvider i18n={i18n}>
             <App />
-          </Router>
-        </I18nProvider>
-      </ChakraProvider>
-    </UserVarProvider>
+          </I18nProvider>
+        </ChakraProvider>
+      </UserVarProvider>
+    </Router>
   </ApolloProvider>,
   document.getElementById('root'),
 )

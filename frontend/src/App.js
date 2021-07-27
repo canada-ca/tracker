@@ -1,11 +1,6 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense } from 'react'
 import { lazyWithRetry } from './LazyWithRetry'
-import {
-  Switch,
-  useHistory,
-  useLocation,
-  Link as RouteLink,
-} from 'react-router-dom'
+import { Switch, Link as RouteLink } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -23,9 +18,6 @@ import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
-import { useMutation } from '@apollo/client'
-import { REFRESH_TOKENS } from './graphql/mutations'
-import { activate } from './i18n.config'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
@@ -52,40 +44,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
-  const history = useHistory()
-  const location = useLocation()
-  const { currentUser, isLoggedIn, login } = useUserVar()
-  const { from } = location.state || { from: { pathname: '/' } }
-
-  const [refreshTokens, { _loading }] = useMutation(REFRESH_TOKENS, {
-    onError(error) {
-      console.error(error.message)
-    },
-    onCompleted({ refreshTokens }) {
-      if (refreshTokens.result.__typename === 'AuthResult') {
-        login({
-          jwt: refreshTokens.result.authToken,
-          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
-          userName: refreshTokens.result.user.userName,
-        })
-        if (refreshTokens.result.user.preferredLang === 'ENGLISH')
-          activate('en')
-        else if (refreshTokens.result.user.preferredLang === 'FRENCH')
-          activate('fr')
-        history.replace(from)
-      }
-      // Non server error occurs
-      else if (refreshTokens.result.__typename === 'AuthenticateError') {
-        // Could not authenticate
-      } else {
-        console.warn('Incorrect authenticate.result typename.')
-      }
-    },
-  })
-
-  useEffect(() => {
-    refreshTokens()
-  }, [refreshTokens])
+  const { currentUser, isLoggedIn } = useUserVar()
 
   return (
     <>
