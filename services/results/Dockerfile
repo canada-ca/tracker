@@ -19,4 +19,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip3 install -r requirements.txt
 
 # Run the web service on container startup. Using uvicorn, in this case.
-CMD exec gunicorn result_processor:app -w 1 --timeout 1000 -k uvicorn.workers.UvicornWorker
+CMD exec gunicorn result_processor:app -w 4 --timeout 1000 -k uvicorn.workers.UvicornWorker
