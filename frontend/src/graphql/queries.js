@@ -617,7 +617,7 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      affiliations {
+      affiliations(first: 1) {
         totalCount
       }
     }
