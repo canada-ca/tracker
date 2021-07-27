@@ -15,7 +15,7 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "4"
-        autoscaling.knative.dev/maxScale: "25"
+        autoscaling.knative.dev/maxScale: "20"
     spec:
       timeoutSeconds: 600
       containerConcurrency: 8
@@ -38,13 +38,13 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "4"
-        autoscaling.knative.dev/maxScale: "4"
+        autoscaling.knative.dev/maxScale: "20"
       labels:
         app: scanners
         role: result-processor
     spec:
       timeoutSeconds: 600
-      containerConcurrency: 1
+      containerConcurrency: 8
       containers:
       - name: result-processor
         image: gcr.io/track-compliance/services/results:master-e76be9d-1625836859 # {"$imagepolicy": "flux-system:result-processor"}
