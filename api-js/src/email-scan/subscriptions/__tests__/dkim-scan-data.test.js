@@ -86,20 +86,22 @@ describe('given the dkimScanData subscription', () => {
     })
     await collections.dkimGuidanceTags.save({
       _key: 'dkim1',
-      tagName: 'DKIM-TAG',
-      guidance: 'Some Interesting Guidance',
-      refLinksGuide: [
-        {
-          description: 'refLinksGuide Description',
-          ref_link: 'www.refLinksGuide.ca',
-        },
-      ],
-      refLinksTechnical: [
-        {
-          description: 'refLinksTechnical Description',
-          ref_link: 'www.refLinksTechnical.ca',
-        },
-      ],
+      en: {
+        tagName: 'DKIM-TAG',
+        guidance: 'Some Interesting Guidance',
+        refLinksGuide: [
+          {
+            description: 'refLinksGuide Description',
+            ref_link: 'www.refLinksGuide.ca',
+          },
+        ],
+        refLinksTechnical: [
+          {
+            description: 'refLinksTechnical Description',
+            ref_link: 'www.refLinksTechnical.ca',
+          },
+        ],
+      },
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
@@ -249,6 +251,7 @@ describe('given the dkimScanData subscription', () => {
             query,
             userKey: '1',
             i18n: {},
+            language: 'en',
           }),
         },
       },

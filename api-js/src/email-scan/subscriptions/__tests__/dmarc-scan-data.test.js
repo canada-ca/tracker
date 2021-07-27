@@ -85,20 +85,22 @@ describe('given the dmarcScanData subscription', () => {
 
     await collections.dmarcGuidanceTags.save({
       _key: 'dmarc1',
-      tagName: 'DMARC-TAG',
-      guidance: 'Some Interesting Guidance',
-      refLinksGuide: [
-        {
-          description: 'refLinksGuide Description',
-          ref_link: 'www.refLinksGuide.ca',
-        },
-      ],
-      refLinksTechnical: [
-        {
-          description: 'refLinksTechnical Description',
-          ref_link: 'www.refLinksTechnical.ca',
-        },
-      ],
+      en: {
+        tagName: 'DMARC-TAG',
+        guidance: 'Some Interesting Guidance',
+        refLinksGuide: [
+          {
+            description: 'refLinksGuide Description',
+            ref_link: 'www.refLinksGuide.ca',
+          },
+        ],
+        refLinksTechnical: [
+          {
+            description: 'refLinksTechnical Description',
+            ref_link: 'www.refLinksTechnical.ca',
+          },
+        ],
+      },
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
@@ -248,6 +250,7 @@ describe('given the dmarcScanData subscription', () => {
             query,
             userKey: '1',
             i18n: {},
+            language: 'en',
           }),
         },
       },

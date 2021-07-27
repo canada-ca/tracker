@@ -191,20 +191,22 @@ describe('given the dmarcSubType object', () => {
         await truncate()
         dmarcGT = await collections.dmarcGuidanceTags.save({
           _key: 'dmarc1',
-          tagName: 'DMARC-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DMARC-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -217,6 +219,7 @@ describe('given the dmarcSubType object', () => {
           query,
           userKey: 1,
           i18n: {},
+          language: 'en',
         })
         const negativeTags = ['dmarc1']
 
@@ -267,20 +270,22 @@ describe('given the dmarcSubType object', () => {
         await truncate()
         dmarcGT = await collections.dmarcGuidanceTags.save({
           _key: 'dmarc1',
-          tagName: 'DMARC-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DMARC-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -293,6 +298,7 @@ describe('given the dmarcSubType object', () => {
           query,
           userKey: 1,
           i18n: {},
+          language: 'en',
         })
         const neutralTags = ['dmarc1']
 
@@ -343,20 +349,22 @@ describe('given the dmarcSubType object', () => {
         await truncate()
         dmarcGT = await collections.dmarcGuidanceTags.save({
           _key: 'dmarc1',
-          tagName: 'DMARC-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DMARC-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -369,6 +377,7 @@ describe('given the dmarcSubType object', () => {
           query,
           userKey: 1,
           i18n: {},
+          language: 'en',
         })
         const positiveTags = ['dmarc1']
 

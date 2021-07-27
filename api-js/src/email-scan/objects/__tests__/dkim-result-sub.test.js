@@ -114,20 +114,22 @@ describe('Given The dkimResultSubType object', () => {
         await truncate()
         dkimGT = await collections.dkimGuidanceTags.save({
           _key: 'dkim1',
-          tagName: 'DKIM-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DKIM-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -140,6 +142,7 @@ describe('Given The dkimResultSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const negativeTags = ['dkim1']
 
@@ -190,20 +193,22 @@ describe('Given The dkimResultSubType object', () => {
         await truncate()
         dkimGT = await collections.dkimGuidanceTags.save({
           _key: 'dkim1',
-          tagName: 'DKIM-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DKIM-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -216,6 +221,7 @@ describe('Given The dkimResultSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const neutralTags = ['dkim1']
 
@@ -266,20 +272,22 @@ describe('Given The dkimResultSubType object', () => {
         await truncate()
         dkimGT = await collections.dkimGuidanceTags.save({
           _key: 'dkim1',
-          tagName: 'DKIM-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DKIM-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -292,6 +300,7 @@ describe('Given The dkimResultSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const positiveTags = ['dkim1']
 
