@@ -44,540 +44,6 @@ describe('when given the load spf guidance tag connection function', () => {
     consoleErrorOutput.length = 0
   })
 
-  describe('given a successful load', () => {
-    beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
-    })
-    beforeEach(async () => {
-      user = await collections.users.save({
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        tfaValidated: false,
-        emailValidated: false,
-      })
-
-      await collections.spfGuidanceTags.save({
-        _key: 'spf1',
-        tagName: 'a',
-        guidance: 'a',
-      })
-      await collections.spfGuidanceTags.save({
-        _key: 'spf2',
-        tagName: 'b',
-        guidance: 'b',
-      })
-    })
-    afterEach(async () => {
-      await truncate()
-    })
-    afterAll(async () => {
-      await drop()
-    })
-    describe('using after cursor', () => {
-      it('returns spf result(s) after a given node id', async () => {
-        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-          query,
-          userKey: user._key,
-          cleanseInput,
-          i18n,
-        })
-
-        const spfGuidanceTags = ['spf1', 'spf2']
-
-        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
-        const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
-
-        const connectionArgs = {
-          first: 5,
-          after: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
-        }
-
-        const spfTags = await connectionLoader({
-          spfGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
-              node: {
-                ...expectedSpfTags[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
-            endCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
-          },
-        }
-
-        expect(spfTags).toEqual(expectedStructure)
-      })
-    })
-    describe('using before cursor', () => {
-      it('returns spf result(s) before a given node id', async () => {
-        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-          query,
-          userKey: user._key,
-          cleanseInput,
-          i18n,
-        })
-
-        const spfGuidanceTags = ['spf1', 'spf2']
-
-        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
-        const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
-
-        const connectionArgs = {
-          first: 5,
-          before: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
-        }
-
-        const spfTags = await connectionLoader({
-          spfGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
-              node: {
-                ...expectedSpfTags[0],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: true,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
-            endCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
-          },
-        }
-
-        expect(spfTags).toEqual(expectedStructure)
-      })
-    })
-    describe('using first limit', () => {
-      it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-          query,
-          userKey: user._key,
-          cleanseInput,
-          i18n,
-        })
-
-        const spfGuidanceTags = ['spf1', 'spf2']
-
-        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
-        const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
-
-        const connectionArgs = {
-          first: 1,
-        }
-
-        const spfTags = await connectionLoader({
-          spfGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
-              node: {
-                ...expectedSpfTags[0],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: true,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
-            endCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
-          },
-        }
-
-        expect(spfTags).toEqual(expectedStructure)
-      })
-    })
-    describe('using last limit', () => {
-      it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-          query,
-          userKey: user._key,
-          cleanseInput,
-          i18n,
-        })
-
-        const spfGuidanceTags = ['spf1', 'spf2']
-
-        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
-        const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
-
-        const connectionArgs = {
-          last: 1,
-        }
-
-        const spfTags = await connectionLoader({
-          spfGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
-              node: {
-                ...expectedSpfTags[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
-            endCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
-          },
-        }
-
-        expect(spfTags).toEqual(expectedStructure)
-      })
-    })
-    describe('using orderBy field', () => {
-      beforeEach(async () => {
-        await collections.spfGuidanceTags.save({
-          _key: 'spf3',
-          tagName: 'c',
-          guidance: 'c',
-        })
-      })
-      describe('ordering on TAG_ID', () => {
-        describe('order is set to ASC', () => {
-          it('returns guidance tag', async () => {
-            const loader = loadSpfGuidanceTagByTagId({ query })
-            const expectedSpfTag = await loader.load('spf2')
-
-            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-              query,
-              userKey: user._key,
-              cleanseInput,
-              i18n,
-            })
-
-            const connectionArgs = {
-              spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
-              first: 5,
-              after: toGlobalId('guidanceTag', 'spf1'),
-              before: toGlobalId('guidanceTag', 'spf3'),
-              orderBy: {
-                field: 'tag-id',
-                direction: 'ASC',
-              },
-            }
-            const spfTags = await connectionLoader(connectionArgs)
-
-            const expectedStructure = {
-              edges: [
-                {
-                  cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                  node: {
-                    ...expectedSpfTag,
-                  },
-                },
-              ],
-              totalCount: 3,
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-              },
-            }
-
-            expect(spfTags).toEqual(expectedStructure)
-          })
-        })
-        describe('ordering is set to DESC', () => {
-          it('returns guidance tag', async () => {
-            const loader = loadSpfGuidanceTagByTagId({ query })
-            const expectedSpfTag = await loader.load('spf2')
-
-            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-              query,
-              userKey: user._key,
-              cleanseInput,
-              i18n,
-            })
-
-            const connectionArgs = {
-              spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
-              first: 5,
-              after: toGlobalId('guidanceTag', 'spf3'),
-              before: toGlobalId('guidanceTag', 'spf1'),
-              orderBy: {
-                field: 'tag-id',
-                direction: 'DESC',
-              },
-            }
-            const spfTags = await connectionLoader(connectionArgs)
-
-            const expectedStructure = {
-              edges: [
-                {
-                  cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                  node: {
-                    ...expectedSpfTag,
-                  },
-                },
-              ],
-              totalCount: 3,
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-              },
-            }
-
-            expect(spfTags).toEqual(expectedStructure)
-          })
-        })
-      })
-      describe('ordering on TAG_NAME', () => {
-        describe('order is set to ASC', () => {
-          it('returns guidance tag', async () => {
-            const loader = loadSpfGuidanceTagByTagId({ query })
-            const expectedSpfTag = await loader.load('spf2')
-
-            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-              query,
-              userKey: user._key,
-              cleanseInput,
-              i18n,
-            })
-
-            const connectionArgs = {
-              spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
-              first: 5,
-              after: toGlobalId('guidanceTag', 'spf1'),
-              before: toGlobalId('guidanceTag', 'spf3'),
-              orderBy: {
-                field: 'tag-name',
-                direction: 'ASC',
-              },
-            }
-            const spfTags = await connectionLoader(connectionArgs)
-
-            const expectedStructure = {
-              edges: [
-                {
-                  cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                  node: {
-                    ...expectedSpfTag,
-                  },
-                },
-              ],
-              totalCount: 3,
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-              },
-            }
-
-            expect(spfTags).toEqual(expectedStructure)
-          })
-        })
-        describe('ordering is set to DESC', () => {
-          it('returns guidance tag', async () => {
-            const loader = loadSpfGuidanceTagByTagId({ query })
-            const expectedSpfTag = await loader.load('spf2')
-
-            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-              query,
-              userKey: user._key,
-              cleanseInput,
-              i18n,
-            })
-
-            const connectionArgs = {
-              spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
-              first: 5,
-              after: toGlobalId('guidanceTag', 'spf3'),
-              before: toGlobalId('guidanceTag', 'spf1'),
-              orderBy: {
-                field: 'tag-name',
-                direction: 'DESC',
-              },
-            }
-            const spfTags = await connectionLoader(connectionArgs)
-
-            const expectedStructure = {
-              edges: [
-                {
-                  cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                  node: {
-                    ...expectedSpfTag,
-                  },
-                },
-              ],
-              totalCount: 3,
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-              },
-            }
-
-            expect(spfTags).toEqual(expectedStructure)
-          })
-        })
-      })
-      describe('ordering on GUIDANCE', () => {
-        describe('order is set to ASC', () => {
-          it('returns guidance tag', async () => {
-            const loader = loadSpfGuidanceTagByTagId({ query })
-            const expectedSpfTag = await loader.load('spf2')
-
-            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-              query,
-              userKey: user._key,
-              cleanseInput,
-              i18n,
-            })
-
-            const connectionArgs = {
-              spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
-              first: 5,
-              after: toGlobalId('guidanceTag', 'spf1'),
-              before: toGlobalId('guidanceTag', 'spf3'),
-              orderBy: {
-                field: 'guidance',
-                direction: 'ASC',
-              },
-            }
-            const spfTags = await connectionLoader(connectionArgs)
-
-            const expectedStructure = {
-              edges: [
-                {
-                  cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                  node: {
-                    ...expectedSpfTag,
-                  },
-                },
-              ],
-              totalCount: 3,
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-              },
-            }
-
-            expect(spfTags).toEqual(expectedStructure)
-          })
-        })
-        describe('ordering is set to DESC', () => {
-          it('returns guidance tag', async () => {
-            const loader = loadSpfGuidanceTagByTagId({ query })
-            const expectedSpfTag = await loader.load('spf2')
-
-            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-              query,
-              userKey: user._key,
-              cleanseInput,
-              i18n,
-            })
-
-            const connectionArgs = {
-              spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
-              first: 5,
-              after: toGlobalId('guidanceTag', 'spf3'),
-              before: toGlobalId('guidanceTag', 'spf1'),
-              orderBy: {
-                field: 'guidance',
-                direction: 'DESC',
-              },
-            }
-            const spfTags = await connectionLoader(connectionArgs)
-
-            const expectedStructure = {
-              edges: [
-                {
-                  cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                  node: {
-                    ...expectedSpfTag,
-                  },
-                },
-              ],
-              totalCount: 3,
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-                endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
-              },
-            }
-
-            expect(spfTags).toEqual(expectedStructure)
-          })
-        })
-      })
-    })
-    describe('no spf results are found', () => {
-      it('returns an empty structure', async () => {
-        await truncate()
-        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
-          query,
-          userKey: user._key,
-          cleanseInput,
-          i18n,
-        })
-
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const spfGuidanceTags = ['spf1', 'spf2']
-        const spfTags = await connectionLoader({
-          spfGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [],
-          totalCount: 0,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: '',
-            endCursor: '',
-          },
-        }
-
-        expect(spfTags).toEqual(expectedStructure)
-      })
-    })
-  })
   describe('language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -591,6 +57,617 @@ describe('when given the load spf guidance tag connection function', () => {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
         },
+      })
+    })
+    describe('given a successful load', () => {
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          tfaValidated: false,
+          emailValidated: false,
+        })
+  
+        await collections.spfGuidanceTags.save({
+          _key: 'spf1',
+          en: {
+            tagName: 'Some Cool Tag Name A',
+            guidance: 'Some Cool Guidance A',
+            refLinksGuide: [
+              {
+                description: 'IT PIN A',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo a',
+            guidance: 'todo a',
+            refLinksGuide: [
+              {
+                description: 'todo a',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+        await collections.spfGuidanceTags.save({
+          _key: 'spf2',
+          en: {
+            tagName: 'Some Cool Tag Name B',
+            guidance: 'Some Cool Guidance B',
+            refLinksGuide: [
+              {
+                description: 'IT PIN B',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo b',
+            guidance: 'todo b',
+            refLinksGuide: [
+              {
+                description: 'todo b',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+        await collections.spfGuidanceTags.save({
+          _key: 'spf3',
+          en: {
+            tagName: 'Some Cool Tag Name C',
+            guidance: 'Some Cool Guidance C',
+            refLinksGuide: [
+              {
+                description: 'IT PIN C',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo c',
+            guidance: 'todo c',
+            refLinksGuide: [
+              {
+                description: 'todo c',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+      })
+      afterEach(async () => {
+        await truncate()
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      describe('using after cursor', () => {
+        it('returns spf result(s) after a given node id', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'en',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'en',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            first: 5,
+            after: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+                node: {
+                  ...expectedSpfTags[1],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: true,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using before cursor', () => {
+        it('returns spf result(s) before a given node id', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'en',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'en',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            first: 5,
+            before: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+                node: {
+                  ...expectedSpfTags[0],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: true,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using first limit', () => {
+        it('returns the first n amount of item(s)', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'en',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'en',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            first: 1,
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+                node: {
+                  ...expectedSpfTags[0],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: true,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using last limit', () => {
+        it('returns the last n amount of item(s)', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'en',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'en',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            last: 1,
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+                node: {
+                  ...expectedSpfTags[1],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: true,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using orderBy field', () => {
+        describe('ordering on TAG_ID', () => {
+          describe('order is set to ASC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'en' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'en',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf1'),
+                before: toGlobalId('guidanceTag', 'spf3'),
+                orderBy: {
+                  field: 'tag-id',
+                  direction: 'ASC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+          describe('ordering is set to DESC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'en' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'en',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf3'),
+                before: toGlobalId('guidanceTag', 'spf1'),
+                orderBy: {
+                  field: 'tag-id',
+                  direction: 'DESC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering on TAG_NAME', () => {
+          describe('order is set to ASC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'en' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'en',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf1'),
+                before: toGlobalId('guidanceTag', 'spf3'),
+                orderBy: {
+                  field: 'tag-name',
+                  direction: 'ASC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+          describe('ordering is set to DESC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'en' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'en',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf3'),
+                before: toGlobalId('guidanceTag', 'spf1'),
+                orderBy: {
+                  field: 'tag-name',
+                  direction: 'DESC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering on GUIDANCE', () => {
+          describe('order is set to ASC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'en' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'en',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf1'),
+                before: toGlobalId('guidanceTag', 'spf3'),
+                orderBy: {
+                  field: 'guidance',
+                  direction: 'ASC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+          describe('ordering is set to DESC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'en' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'en',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf3'),
+                before: toGlobalId('guidanceTag', 'spf1'),
+                orderBy: {
+                  field: 'guidance',
+                  direction: 'DESC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+        })
+      })
+      describe('no spf results are found', () => {
+        beforeEach(async () => {
+          await truncate()
+        })
+        it('returns an empty structure', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'en',
+          })
+  
+          const connectionArgs = {
+            first: 5,
+          }
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [],
+            totalCount: 0,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: '',
+              endCursor: '',
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
       })
     })
     describe('given a unsuccessful load', () => {
@@ -943,6 +1020,617 @@ describe('when given the load spf guidance tag connection function', () => {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
         },
+      })
+    })
+    describe('given a successful load', () => {
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          tfaValidated: false,
+          emailValidated: false,
+        })
+  
+        await collections.spfGuidanceTags.save({
+          _key: 'spf1',
+          en: {
+            tagName: 'Some Cool Tag Name A',
+            guidance: 'Some Cool Guidance A',
+            refLinksGuide: [
+              {
+                description: 'IT PIN A',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo a',
+            guidance: 'todo a',
+            refLinksGuide: [
+              {
+                description: 'todo a',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+        await collections.spfGuidanceTags.save({
+          _key: 'spf2',
+          en: {
+            tagName: 'Some Cool Tag Name B',
+            guidance: 'Some Cool Guidance B',
+            refLinksGuide: [
+              {
+                description: 'IT PIN B',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo b',
+            guidance: 'todo b',
+            refLinksGuide: [
+              {
+                description: 'todo b',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+        await collections.spfGuidanceTags.save({
+          _key: 'spf3',
+          en: {
+            tagName: 'Some Cool Tag Name C',
+            guidance: 'Some Cool Guidance C',
+            refLinksGuide: [
+              {
+                description: 'IT PIN C',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+          fr: {
+            tagName: 'todo c',
+            guidance: 'todo c',
+            refLinksGuide: [
+              {
+                description: 'todo c',
+              },
+            ],
+            refLinksTechnical: [''],
+          },
+        })
+      })
+      afterEach(async () => {
+        await truncate()
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      describe('using after cursor', () => {
+        it('returns spf result(s) after a given node id', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'fr',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'fr',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            first: 5,
+            after: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+                node: {
+                  ...expectedSpfTags[1],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: true,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using before cursor', () => {
+        it('returns spf result(s) before a given node id', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'fr',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'fr',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            first: 5,
+            before: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+                node: {
+                  ...expectedSpfTags[0],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: true,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using first limit', () => {
+        it('returns the first n amount of item(s)', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'fr',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'fr',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            first: 1,
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+                node: {
+                  ...expectedSpfTags[0],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: true,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[0]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using last limit', () => {
+        it('returns the last n amount of item(s)', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'fr',
+          })
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+  
+          const spfTagLoader = loadSpfGuidanceTagByTagId({
+            query,
+            language: 'fr',
+          })
+          const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
+  
+          const connectionArgs = {
+            last: 1,
+          }
+  
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+                node: {
+                  ...expectedSpfTags[1],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: true,
+              startCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+              endCursor: toGlobalId('guidanceTag', expectedSpfTags[1]._key),
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
+      })
+      describe('using orderBy field', () => {
+        describe('ordering on TAG_ID', () => {
+          describe('order is set to ASC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'fr' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'fr',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf1'),
+                before: toGlobalId('guidanceTag', 'spf3'),
+                orderBy: {
+                  field: 'tag-id',
+                  direction: 'ASC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+          describe('ordering is set to DESC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'fr' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'fr',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf3'),
+                before: toGlobalId('guidanceTag', 'spf1'),
+                orderBy: {
+                  field: 'tag-id',
+                  direction: 'DESC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering on TAG_NAME', () => {
+          describe('order is set to ASC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'fr' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'fr',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf1'),
+                before: toGlobalId('guidanceTag', 'spf3'),
+                orderBy: {
+                  field: 'tag-name',
+                  direction: 'ASC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+          describe('ordering is set to DESC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'fr' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'fr',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf3'),
+                before: toGlobalId('guidanceTag', 'spf1'),
+                orderBy: {
+                  field: 'tag-name',
+                  direction: 'DESC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering on GUIDANCE', () => {
+          describe('order is set to ASC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'fr' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'fr',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf1'),
+                before: toGlobalId('guidanceTag', 'spf3'),
+                orderBy: {
+                  field: 'guidance',
+                  direction: 'ASC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+          describe('ordering is set to DESC', () => {
+            it('returns guidance tag', async () => {
+              const loader = loadSpfGuidanceTagByTagId({ query, language: 'fr' })
+              const expectedSpfTag = await loader.load('spf2')
+  
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                language: 'fr',
+              })
+  
+              const connectionArgs = {
+                spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
+                first: 5,
+                after: toGlobalId('guidanceTag', 'spf3'),
+                before: toGlobalId('guidanceTag', 'spf1'),
+                orderBy: {
+                  field: 'guidance',
+                  direction: 'DESC',
+                },
+              }
+              const spfTags = await connectionLoader(connectionArgs)
+  
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                    node: {
+                      ...expectedSpfTag,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                  endCursor: toGlobalId('guidanceTag', expectedSpfTag._key),
+                },
+              }
+  
+              expect(spfTags).toEqual(expectedStructure)
+            })
+          })
+        })
+      })
+      describe('no spf results are found', () => {
+        beforeEach(async () => {
+          await truncate()
+        })
+        it('returns an empty structure', async () => {
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            i18n,
+            language: 'fr',
+          })
+  
+          const connectionArgs = {
+            first: 5,
+          }
+  
+          const spfGuidanceTags = ['spf1', 'spf2']
+          const spfTags = await connectionLoader({
+            spfGuidanceTags,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [],
+            totalCount: 0,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: '',
+              endCursor: '',
+            },
+          }
+  
+          expect(spfTags).toEqual(expectedStructure)
+        })
       })
     })
     describe('given a unsuccessful load', () => {
