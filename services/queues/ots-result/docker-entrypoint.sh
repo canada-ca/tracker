@@ -2,10 +2,28 @@
 
 service redis-server start
 sleep 5
-rq worker https &
+rq worker https dns ssl &
 sleep 1
-rq worker ssl &
+rq worker https dns ssl &
 sleep 1
-rq worker dns &
+rq worker https dns ssl &
+sleep 1
+rq worker https dns ssl &
+sleep 1
+rq worker ssl dns https &
+sleep 1
+rq worker ssl dns https &
+sleep 1
+rq worker ssl dns https &
+sleep 1
+rq worker ssl dns https &
+sleep 1
+rq worker dns ssl https &
+sleep 1
+rq worker dns ssl https &
+sleep 1
+rq worker dns ssl https &
+sleep 1
+rq worker dns ssl https &
 sleep 1
 gunicorn result_queue:app -w 4 --timeout 300
