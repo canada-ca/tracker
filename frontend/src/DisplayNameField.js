@@ -1,5 +1,5 @@
 import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import { func, object, oneOfType, shape, string } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -11,14 +11,8 @@ import {
 } from '@chakra-ui/react'
 import { PersonIcon } from './theme/Icons'
 import { useField } from 'formik'
-import WithWrapperBox from './WithWrapperBox'
 
-const DisplayNameField = WithWrapperBox(function DisplayNameField({
-  name,
-  label,
-  forwardedRef,
-  ...props
-}) {
+function DisplayNameField({ name, label, forwardedRef, ...props }) {
   const [field, meta] = useField(name)
 
   const formLabel = label === undefined ? <Trans>Display Name:</Trans> : label
@@ -45,11 +39,12 @@ const DisplayNameField = WithWrapperBox(function DisplayNameField({
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-})
+}
 
 DisplayNameField.propTypes = {
   name: string.isRequired,
-  forwardedRef: oneOfType([func, shape({ current: elementType })]),
+  label: string,
+  forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {

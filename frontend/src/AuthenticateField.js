@@ -1,5 +1,5 @@
 import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import { func, object, oneOfType, shape, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -13,14 +13,8 @@ import {
 } from '@chakra-ui/react'
 import { TwoFactorIcon } from './theme/Icons'
 import { useField } from 'formik'
-import WithWrapperBox from './WithWrapperBox'
 
-const AuthenticateField = WithWrapperBox(function AuthenticateField({
-  name,
-  forwardedRef,
-  sendMethod,
-  ...props
-}) {
+function AuthenticateField({ name, forwardedRef, sendMethod, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
@@ -72,11 +66,11 @@ const AuthenticateField = WithWrapperBox(function AuthenticateField({
       </Stack>
     </FormControl>
   )
-})
+}
 
 AuthenticateField.propTypes = {
   name: string.isRequired,
-  forwardedRef: oneOfType([func, shape({ current: elementType })]),
+  forwardedRef: oneOfType([func, shape({ current: object })]),
   sendMethod: string.isRequired,
 }
 

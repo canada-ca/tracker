@@ -10,13 +10,12 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
-import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 
-function EditableUserTFAMethod({
+export default function EditableUserTFAMethod({
   currentTFAMethod,
   emailValidated,
   phoneValidated,
@@ -165,5 +164,3 @@ EditableUserTFAMethod.propTypes = {
   emailValidated: bool,
   phoneValidated: bool,
 }
-
-export default WithWrapperBox(EditableUserTFAMethod)

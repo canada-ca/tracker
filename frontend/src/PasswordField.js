@@ -1,5 +1,5 @@
 import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import { func, oneOfType, shape, string, object } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -13,14 +13,8 @@ import {
 } from '@chakra-ui/react'
 import { LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useField } from 'formik'
-import WithWrapperBox from './WithWrapperBox.js'
 
-const PasswordField = WithWrapperBox(function PasswordField({
-  name,
-  label,
-  forwardedRef,
-  ...props
-}) {
+function PasswordField({ name, label, forwardedRef, ...props }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
@@ -59,12 +53,12 @@ const PasswordField = WithWrapperBox(function PasswordField({
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-})
+}
 
 PasswordField.propTypes = {
   name: string.isRequired,
   label: string,
-  forwardedRef: oneOfType([func, shape({ current: elementType })]),
+  forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {

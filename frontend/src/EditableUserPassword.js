@@ -16,7 +16,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { LockIcon } from '@chakra-ui/icons'
-import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -27,7 +26,7 @@ import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
 import PasswordConfirmation from './PasswordConfirmation'
 
-function EditableUserPassword() {
+export default function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -196,5 +195,3 @@ function EditableUserPassword() {
     </Stack>
   )
 }
-
-export default WithWrapperBox(EditableUserPassword)
