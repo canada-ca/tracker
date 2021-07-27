@@ -1,6 +1,5 @@
 import os
 import sys
-import ast
 import json
 import logging
 import traceback
@@ -83,14 +82,3 @@ def retrieve_tls_guidance():
             },
             "extensions": {"1.2": {"recommended": []}, "1.3": {"recommended": []}},
         }
-
-
-def formatted_dictionary(data):
-    formatted = (
-        data.replace("false", "False")
-        .replace("true", "True")
-        .replace("null", "None")
-        .replace("none", "None")
-    )
-    formatted_dict = ast.literal_eval(formatted)
-    return formatted_dict
