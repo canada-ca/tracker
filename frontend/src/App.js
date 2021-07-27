@@ -93,10 +93,7 @@ export default function App() {
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
   useEffect(() => {
     // User is logged out and websocket connection is active
-    if (
-      (currentUser?.jwt === '' && wsClient.status === 0) ||
-      wsClient.status === 1
-    ) {
+    if (currentUser?.jwt === '' && [0, 1].includes(wsClient.status)) {
       wsClient.close()
     }
   }, [currentUser.jwt])
