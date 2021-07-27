@@ -7,6 +7,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { OrganizationCard } from '../OrganizationCard'
 import matchMediaSize from '../helpers/matchMedia'
+import { en } from 'make-plural/plurals'
 
 matchMediaSize()
 
@@ -16,7 +17,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 
