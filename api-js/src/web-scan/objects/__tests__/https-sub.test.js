@@ -207,20 +207,22 @@ describe('given the httpsSubType object', () => {
         await truncate()
         httpsGT = await collections.httpsGuidanceTags.save({
           _key: 'https1',
-          tagName: 'HTTPS-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'HTTPS-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -233,6 +235,7 @@ describe('given the httpsSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const negativeTags = ['https1']
 
@@ -283,20 +286,22 @@ describe('given the httpsSubType object', () => {
         await truncate()
         httpsGT = await collections.httpsGuidanceTags.save({
           _key: 'https1',
-          tagName: 'HTTPS-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'HTTPS-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -309,6 +314,7 @@ describe('given the httpsSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const neutralTags = ['https1']
 
@@ -359,20 +365,22 @@ describe('given the httpsSubType object', () => {
         await truncate()
         httpsGT = await collections.httpsGuidanceTags.save({
           _key: 'https1',
-          tagName: 'HTTPS-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'HTTPS-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -385,6 +393,7 @@ describe('given the httpsSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const positiveTags = ['https1']
 

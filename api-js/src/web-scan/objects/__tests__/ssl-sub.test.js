@@ -272,12 +272,12 @@ describe('given the sslSubType object', () => {
           'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
         ]
 
-        expect(
-          demoType.weakCiphers.resolve({ weak_ciphers: ciphers }),
-        ).toEqual([
-          'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
-          'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
-        ])
+        expect(demoType.weakCiphers.resolve({ weak_ciphers: ciphers })).toEqual(
+          [
+            'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384',
+            'TLS_DHE_RSA_WITH_AES_128_GCM_SHA256',
+          ],
+        )
       })
     })
     describe('testing the weakCurves resolver', () => {
@@ -317,20 +317,22 @@ describe('given the sslSubType object', () => {
         await truncate()
         sslGT = await collections.sslGuidanceTags.save({
           _key: 'ssl1',
-          tagName: 'SSL-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'SSL-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -343,6 +345,7 @@ describe('given the sslSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const negativeTags = ['ssl1']
 
@@ -393,20 +396,22 @@ describe('given the sslSubType object', () => {
         await truncate()
         sslGT = await collections.sslGuidanceTags.save({
           _key: 'ssl1',
-          tagName: 'SSL-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'SSL-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -419,6 +424,7 @@ describe('given the sslSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const neutralTags = ['ssl1']
 
@@ -469,20 +475,22 @@ describe('given the sslSubType object', () => {
         await truncate()
         sslGT = await collections.sslGuidanceTags.save({
           _key: 'ssl1',
-          tagName: 'SSL-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'SSL-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -495,6 +503,7 @@ describe('given the sslSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const positiveTags = ['ssl1']
 
