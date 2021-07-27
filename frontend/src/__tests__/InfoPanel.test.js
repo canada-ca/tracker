@@ -4,6 +4,7 @@ import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -11,7 +12,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: {plurals: en},
   },
 })
 

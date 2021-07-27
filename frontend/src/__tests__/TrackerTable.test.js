@@ -3,6 +3,7 @@ import { ChakraProvider, theme } from '@chakra-ui/react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { en } from 'make-plural/plurals'
 import TrackerTable from '../TrackerTable'
 import {
   rawDmarcReportSummaryTableColumns,
@@ -15,7 +16,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 
