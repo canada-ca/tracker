@@ -196,6 +196,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           i18n,
           cleanseInput,
+          language: request.language,
         }),
       loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
@@ -325,6 +326,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
         query,
@@ -338,6 +340,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
         query,
@@ -351,6 +354,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
         query,
@@ -364,6 +368,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadOrgByKey: loadOrgByKey({
         query,
