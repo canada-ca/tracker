@@ -1,7 +1,5 @@
 import React from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
-import { I18nProvider } from '@lingui/react'
-import { i18n } from '@lingui/core'
 import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
@@ -13,15 +11,13 @@ import { UserVarProvider } from './UserState'
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Router>
-      <UserVarProvider userVar={currentUserVar}>
-        <ChakraProvider theme={canada}>
-          <I18nProvider i18n={i18n}>
-            <App />
-          </I18nProvider>
-        </ChakraProvider>
-      </UserVarProvider>
-    </Router>
+    <UserVarProvider userVar={currentUserVar}>
+      <ChakraProvider theme={canada}>
+        <Router>
+          <App />
+        </Router>
+      </ChakraProvider>
+    </UserVarProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 )

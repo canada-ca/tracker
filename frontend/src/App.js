@@ -1,7 +1,13 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { lazyWithRetry } from './LazyWithRetry'
-import { Switch, Link as RouteLink } from 'react-router-dom'
-import { useLingui } from '@lingui/react'
+import {
+  Switch,
+  Link as RouteLink,
+  useHistory,
+  useLocation,
+} from 'react-router-dom'
+import { I18nProvider } from '@lingui/react'
+import { i18n } from '@lingui/core'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
 import { t, Trans } from '@lingui/macro'
@@ -18,6 +24,9 @@ import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
+import { REFRESH_TOKENS } from './graphql/mutations'
+import { useMutation } from '@apollo/client'
+import { activate } from './i18n.config'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
@@ -43,11 +52,62 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 
 export default function App() {
   // Hooks to be used with this functional component
-  const { i18n } = useLingui()
-  const { currentUser, isLoggedIn } = useUserVar()
+  const { currentUser, isLoggedIn, login } = useUserVar()
+  const location = useLocation()
+  const { from } = location.state || { from: { pathname: '/' } }
+  const history = useHistory()
+
+  const [refreshTokens, { _loading }] = useMutation(REFRESH_TOKENS, {
+    onError(error) {
+      console.error(error.message)
+    },
+    onCompleted({ refreshTokens }) {
+      if (refreshTokens.result.__typename === 'AuthResult') {
+        login({
+          jwt: refreshTokens.result.authToken,
+          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
+          userName: refreshTokens.result.user.userName,
+        })
+        // if (refreshTokens.result.user.preferredLang === 'ENGLISH')
+        //   activate('en')
+        // else if (refreshTokens.result.user.preferredLang === 'FRENCH')
+        activate('fr')
+        history.replace(from)
+      }
+      // Non server error occurs
+      else if (refreshTokens.result.__typename === 'AuthenticateError') {
+        // Could not authenticate
+      } else {
+        console.warn('Incorrect authenticate.result typename.')
+      }
+    },
+  })
+
+  useEffect(() => {
+    if (currentUser?.jwt) {
+      const jwt =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjc5MjQ2MTcsImlhdCI6MTYyNzMxOTgxNywicGFyYW1ldGVycyI6eyJ1c2VyS2V5IjoiMjUwOTAxMiIsInV1aWQiOiJkYTM4MzhiZC1jNmM4LTRiODYtOWEwOC1hODdhMzgxZTU3YjUifX0.3G6Nyl7eicmGXKPrZi8j7MTAtsvlfLPx_RiLz_GW42A'
+      const jwtPayload = jwt.split('.')[1]
+      // const jwtPayload = currentUser.jwt.split('.')[1]
+      const payloadDecoded = window.atob(jwtPayload)
+      const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
+      // using seconds as that's what the api uses
+      const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
+      const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
+      const timeoutID = setTimeout(
+        refreshTokens,
+        (jwtExpiresAfterSeconds - 60) * 1000,
+      )
+      return () => {
+        clearTimeout(timeoutID)
+      }
+    } else {
+      refreshTokens()
+    }
+  }, [currentUser, refreshTokens])
 
   return (
-    <>
+    <I18nProvider i18n={i18n}>
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />
@@ -226,6 +286,6 @@ export default function App() {
           </Link>
         </Footer>
       </Flex>
-    </>
+    </I18nProvider>
   )
 }
