@@ -34,8 +34,10 @@ import {
 import { t, Trans } from '@lingui/macro'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 import { InfoButton } from './InfoPanel'
+import { useLingui } from '@lingui/react'
 
 export default function TrackerTable({ ...props }) {
+  const { i18n } = useLingui()
   const {
     data,
     columns,
@@ -234,7 +236,7 @@ export default function TrackerTable({ ...props }) {
             >
               {[5, 10, 20].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
-                  {t`Show ${pageSize}`}
+                  {i18n._(t`Show ${pageSize}`)}
                 </option>
               ))}
             </Select>

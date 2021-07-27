@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import {
   Box,
   Button,
@@ -41,9 +40,11 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { useDebouncedFunction } from './useDebouncedFunction'
 import { AdminDomainModal } from './AdminDomainModal'
+import { useLingui } from '@lingui/react'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const toast = useToast()
+  const { i18n } = useLingui()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
@@ -95,7 +96,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       refetchQueries: ['PaginatedOrgDomains'],
       onError(error) {
         toast({
-          title: t`An error occurred.`,
+          title: i18n._(t`An error occurred.`),
           description: error.message,
           status: 'error',
           duration: 9000,
@@ -107,8 +108,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         if (removeDomain.result.__typename === 'DomainResult') {
           removeOnClose()
           toast({
-            title: t`Domain removed`,
-            description: t`Domain removed from ${orgSlug}`,
+            title: i18n._(t`Domain removed`),
+            description: i18n._(t`Domain removed from ${orgSlug}`),
             status: 'success',
             duration: 9000,
             isClosable: true,
@@ -116,7 +117,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           })
         } else if (removeDomain.result.__typename === 'DomainError') {
           toast({
-            title: t`Unable to remove domain.`,
+            title: i18n._(t`Unable to remove domain.`),
             description: removeDomain.result.description,
             status: 'error',
             duration: 9000,
@@ -125,8 +126,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           })
         } else {
           toast({
-            title: t`Incorrect send method received.`,
-            description: t`Incorrect removeDomain.result typename.`,
+            title: i18n._(t`Incorrect send method received.`),
+            description: i18n._(t`Incorrect removeDomain.result typename.`),
             status: 'error',
             duration: 9000,
             isClosable: true,
@@ -245,8 +246,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <Input
               id="Search-for-domain-field"
               type="text"
-              placeholder={t`Domain URL`}
-              aria-label={t`Search by Domain URL`}
+              placeholder={i18n._(t`Domain URL`)}
+              aria-label={i18n._(t`Search by Domain URL`)}
               onChange={(e) => setNewDomainUrl(e.target.value)}
             />
           </InputGroup>

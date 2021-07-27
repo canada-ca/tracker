@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function ReactTableGlobalFilter({
   title,
@@ -18,6 +19,7 @@ export default function ReactTableGlobalFilter({
   setGlobalFilter,
   placeholder,
 }) {
+  const { i18n } = useLingui()
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
   const onChange = useAsyncDebounce((value) => {
@@ -45,7 +47,7 @@ export default function ReactTableGlobalFilter({
             setValue(e.target.value)
             onChange(e.target.value)
           }}
-          placeholder={placeholder || t`${count} records...`}
+          placeholder={placeholder || i18n._(t`${count} records...`)}
           aria-label="Filter the table"
         />
       </InputGroup>

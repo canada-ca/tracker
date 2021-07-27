@@ -36,7 +36,7 @@ class ScanTimeoutException(BaseException):
 
 
 def dispatch_results(payload, client, ots):
-    client.post(DEST_URL(ots) + "/https", json=json.dumps(payload))
+    client.post(DEST_URL(ots) + "/https", json=payload)
     logging.info("Scan results dispatched to result queue")
 
 

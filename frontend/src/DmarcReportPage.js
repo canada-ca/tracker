@@ -32,7 +32,7 @@ export default function DmarcReportPage() {
   const history = useHistory()
   const { i18n } = useLingui()
 
-  useDocumentTitle(t`DMARC Report for ${domainSlug}`)
+  useDocumentTitle(i18n._(t`DMARC Report for ${domainSlug}`))
 
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period)
@@ -89,7 +89,7 @@ export default function DmarcReportPage() {
       key="LAST30DAYS"
       value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
     >
-      {t`Last 30 Days`}
+      {i18n._(t`Last 30 Days`)}
     </option>,
   ]
 
@@ -166,17 +166,17 @@ export default function DmarcReportPage() {
   // Set graph display using data if data exists
   else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
-      fullPass: t`Pass`,
-      fullPassPercentage: t`Pass`,
+      fullPass: i18n._(t`Pass`),
+      fullPassPercentage: i18n._(t`Pass`),
 
-      passSpfOnly: t`Fail DKIM`,
-      passSpfOnlyPercentage: t`Fail DKIM`,
+      passSpfOnly: i18n._(t`Fail DKIM`),
+      passSpfOnlyPercentage: i18n._(t`Fail DKIM`),
 
-      passDkimOnly: t`Fail SPF`,
-      passDkimOnlyPercentage: t`Fail SPF`,
+      passDkimOnly: i18n._(t`Fail SPF`),
+      passDkimOnlyPercentage: i18n._(t`Fail SPF`),
 
-      fail: t`Fail`,
-      failPercentage: t`Fail`,
+      fail: i18n._(t`Fail`),
+      failPercentage: i18n._(t`Fail`),
     }
 
     const formattedGraphData = {
@@ -284,7 +284,7 @@ export default function DmarcReportPage() {
   ) {
     const dkimFailureColumns = [
       {
-        Header: t`DKIM Failures by IP Address`,
+        Header: i18n._(t`DKIM Failures by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -367,13 +367,13 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
-          title={t`DKIM Failures by IP Address`}
+          title={i18n._(t`DKIM Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={failDkimInfoPanel}
           infoState={failDkimState}
           changeInfoState={changeFailDkimState}
-          searchPlaceholder={t`Search DKIM Failing Items`}
+          searchPlaceholder={i18n._(t`Search DKIM Failing Items`)}
         />
       </ErrorBoundary>
     )
@@ -409,7 +409,7 @@ export default function DmarcReportPage() {
   ) {
     const fullPassColumns = [
       {
-        Header: t`Fully Aligned by IP Address`,
+        Header: i18n._(t`Fully Aligned by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -470,13 +470,13 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={fullPassNodes}
           columns={fullPassColumns}
-          title={t`Fully Aligned by IP Address`}
+          title={i18n._(t`Fully Aligned by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={fullPassInfoPanel}
           infoState={fullPassState}
           changeInfoState={changeFullPassState}
-          searchPlaceholder={t`Search Fully Aligned Items`}
+          searchPlaceholder={i18n._(t`Search Fully Aligned Items`)}
         />
       </ErrorBoundary>
     )
@@ -512,7 +512,7 @@ export default function DmarcReportPage() {
   ) {
     const spfFailureColumns = [
       {
-        Header: t`SPF Failures by IP Address`,
+        Header: i18n._(t`SPF Failures by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -586,13 +586,13 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={spfFailureNodes}
           columns={spfFailureColumns}
-          title={t`SPF Failures by IP Address`}
+          title={i18n._(t`SPF Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={failSpfInfoPanel}
           infoState={failSpfState}
           changeInfoState={changeFailSpfState}
-          searchPlaceholder={t`Search SPF Failing Items`}
+          searchPlaceholder={i18n._(t`Search SPF Failing Items`)}
         />
       </ErrorBoundary>
     )
@@ -628,7 +628,7 @@ export default function DmarcReportPage() {
   ) {
     const dmarcFailureColumns = [
       {
-        Header: t`DMARC Failures by IP Address`,
+        Header: i18n._(t`DMARC Failures by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -691,13 +691,13 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
-          title={t`DMARC Failures by IP Address`}
+          title={i18n._(t`DMARC Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={fullFailInfoPanel}
           infoState={fullFailState}
           changeInfoState={changeFullFailState}
-          searchPlaceholder={t`Search DMARC Failing Items`}
+          searchPlaceholder={i18n._(t`Search DMARC Failing Items`)}
         />
       </ErrorBoundary>
     )
