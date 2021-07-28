@@ -23,7 +23,7 @@
     "lin-clean": "npx lingui extract --clean"
   },
   "dependencies": {
-    "@graphql-tools/schema": "^7.1.5",
+    "@graphql-tools/schema": "^8.0.0",
     "@lingui/core": "^3.10.4",
     "apollo-server": "^3.0.2",
     "apollo-server-core": "^3.0.2",
