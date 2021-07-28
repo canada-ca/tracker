@@ -93,7 +93,7 @@ export default function OrganizationDetails() {
               <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
-          {data?.organization?.affiliations && (
+          {!isNaN(data?.organization?.affiliations) && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
