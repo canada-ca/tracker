@@ -58,20 +58,20 @@ export const PAGINATED_ORGANIZATIONS = gql`
 export const WEB_AND_EMAIL_SUMMARIES = gql`
   query LandingPageSummaries {
     webSummary {
+      total
       categories {
         name
         count
         percentage
       }
-      total
     }
     mailSummary {
+      total
       categories {
         name
         count
         percentage
       }
-      total
     }
   }
 `

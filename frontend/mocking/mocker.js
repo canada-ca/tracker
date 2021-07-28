@@ -56,6 +56,29 @@ const mocks = {
   AuthResult: () => ({
     authToken: faker.datatype.uuid(),
   }),
+  CategorizedSummary: () => {
+    const domainCount = faker.datatype.number({ min: 4000, max: 10000 })
+    const passCount = faker.datatype.number({ min: 0, max: domainCount })
+    const failCount = domainCount - passCount
+    const passPercentage = (passCount / domainCount) * 100
+    const failPercentage = 100 - passPercentage
+
+    return {
+      total: domainCount,
+      categories: [
+        {
+          name: 'pass',
+          count: passCount,
+          percentage: passPercentage,
+        },
+        {
+          name: 'fail',
+          count: failCount,
+          percentage: failPercentage,
+        },
+      ],
+    }
+  },
   CategoryPercentages: () => {
     let maxNumber = 100
     const fullPassPercentage = faker.datatype.number({ min: 0, max: maxNumber })

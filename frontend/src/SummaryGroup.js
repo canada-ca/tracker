@@ -64,7 +64,6 @@ export function SummaryGroup({ web, mail }) {
       columns={{ base: 1, md: 2 }}
       spacing="30px"
       justifyItems="center"
-      maxWidth="width.60"
       mx="auto"
     >
       {webCard}
