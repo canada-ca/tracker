@@ -80,7 +80,7 @@ msgstr "Acronyme (FR)"
 
 #: src/OrganizationInformation.js:417
 msgid "Acronym:"
-msgstr "Acronyme :"
+msgstr "Acronyme:"
 
 #: src/fieldRequirements.js:41
 msgid "Acronyms can only use upper case letters and underscores"
@@ -284,7 +284,7 @@ msgstr "Ville (FR)"
 
 #: src/OrganizationInformation.js:437
 msgid "City:"
-msgstr "Ville :"
+msgstr "Ville:"
 
 #: src/OrganizationInformation.js:380
 msgid "Clear"
@@ -324,11 +324,11 @@ msgstr "Confirmer"
 
 #: src/EditableUserPassword.js:176
 msgid "Confirm New Password:"
-msgstr "Confirmer le nouveau mot de passe :"
+msgstr "Confirmer le nouveau mot de passe:"
 
 #: src/PasswordConfirmation.js:75
 msgid "Confirm Password:"
-msgstr "Confirmez le mot de passe :"
+msgstr "Confirmez le mot de passe:"
 
 #: src/PasswordConfirmation.js:137
 msgid "Confirm password"
@@ -336,11 +336,11 @@ msgstr "Confirmer le mot de passe"
 
 #: src/AdminDomains.js:303
 msgid "Confirm removal of domain:"
-msgstr "Confirmer la suppression du domaine :"
+msgstr "Confirmer la suppression du domaine:"
 
 #: src/UserList.js:428
 msgid "Confirm removal of user:"
-msgstr "Confirmer le retrait de l'utilisateur :"
+msgstr "Confirmer le retrait de l'utilisateur:"
 
 #: src/EmailValidationPage.js:84
 msgid "Continue"
@@ -370,7 +370,7 @@ msgstr "Pays (FR)"
 
 #: src/OrganizationInformation.js:450
 msgid "Country:"
-msgstr "Pays :"
+msgstr "Pays:"
 
 #: src/CreateUserPage.js:179
 #: src/FloatingMenu.js:185
@@ -399,15 +399,15 @@ msgstr "Créer une organisation"
 
 #: src/EditableUserDisplayName.js:151
 msgid "Current Display Name:"
-msgstr "Nom de l'affichage actuel :"
+msgstr "Nom de l'affichage actuel:"
 
 #: src/EditableUserEmail.js:146
 msgid "Current Email:"
-msgstr "Courriel actuel :"
+msgstr "Courriel actuel:"
 
 #: src/EditableUserPassword.js:166
 msgid "Current Password:"
-msgstr "Mot de passe actuel :"
+msgstr "Mot de passe actuel:"
 
 #: src/EditableUserPhoneNumber.js:183
 msgid "Current Phone Number:"
@@ -476,7 +476,7 @@ msgstr "Défaillances du DMARC par adresse IP"
 #: src/ScanCard.js:83
 #: src/ScanDomain.js:472
 msgid "DMARC Implementation Phase: {0}"
-msgstr "Phase de mise en œuvre de DMARC : {0}"
+msgstr "Phase de mise en œuvre de DMARC: {0}"
 
 #: src/DmarcGuidancePage.js:68
 #: src/DomainCard.js:220
@@ -557,7 +557,7 @@ msgstr "Nom d'affichage"
 #: src/DisplayNameField.js:24
 #: src/EditableUserDisplayName.js:94
 msgid "Display Name:"
-msgstr "Nom d'affichage :"
+msgstr "Nom d'affichage:"
 
 #: src/fieldRequirements.js:9
 msgid "Display name cannot be empty"
@@ -717,7 +717,7 @@ msgstr "Courriel envoyé avec succès"
 #: src/EditableUserEmail.js:94
 #: src/EmailField.js:26
 msgid "Email:"
-msgstr "Courrier électronique :"
+msgstr "Courrier électronique:"
 
 #: src/ScanCategoryDetails.js:72
 msgid "Enforcement:"
@@ -737,7 +737,7 @@ msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est se
 
 #: src/EditableUserPassword.js:171
 msgid "Enter and confirm your new password below:"
-msgstr "Entrez et confirmez votre nouveau mot de passe ci-dessous :"
+msgstr "Entrez et confirmez votre nouveau mot de passe ci-dessous:"
 
 #: src/ResetPasswordPage.js:99
 msgid "Enter and confirm your new password."
@@ -799,11 +799,11 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 
 #: src/GuidanceTagDetails.js:18
 msgid "For in-depth CCCS implementation guidance:"
-msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS :"
+msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS:"
 
 #: src/GuidanceTagDetails.js:43
 msgid "For technical implementation guidance:"
-msgstr "Pour des conseils de mise en œuvre technique :"
+msgstr "Pour des conseils de mise en œuvre technique:"
 
 #: src/App.js:177
 msgid "Forgot Password"
@@ -871,7 +871,7 @@ msgstr "Étiquettes d'orientation"
 #: src/GuidanceTagDetails.js:87
 #: src/GuidanceTagList.js:81
 msgid "Guidance:"
-msgstr "Orientation :"
+msgstr "Orientation:"
 
 #: src/ScanCategoryDetails.js:85
 msgid "HSTS Age:"
@@ -1179,7 +1179,7 @@ msgstr "Les balises neutres mettent en évidence les détails pertinents de la c
 
 #: src/EditableUserDisplayName.js:158
 msgid "New Display Name:"
-msgstr "Nouveau nom d'affichage :"
+msgstr "Nouveau nom d'affichage:"
 
 #: src/AdminDomainModal.js:211
 msgid "New Domain URL"
@@ -1191,11 +1191,11 @@ msgstr "Nouvelle URL de domaine:"
 
 #: src/EditableUserEmail.js:153
 msgid "New Email Address:"
-msgstr "Nouvelle adresse électronique :"
+msgstr "Nouvelle adresse électronique:"
 
 #: src/EditableUserPassword.js:175
 msgid "New Password:"
-msgstr "Nouveau mot de passe :"
+msgstr "Nouveau mot de passe:"
 
 #: src/EditableUserPhoneNumber.js:192
 msgid "New Phone Number:"
@@ -1384,7 +1384,7 @@ msgstr "Le mot de passe doit comporter au moins 12 caractères"
 #: src/PasswordConfirmation.js:72
 #: src/PasswordField.js:28
 msgid "Password:"
-msgstr "Mot de passe :"
+msgstr "Mot de passe:"
 
 #: src/ResetPasswordPage.js:23
 #: src/fieldRequirements.js:19
@@ -1473,7 +1473,7 @@ msgstr "Province (FR)"
 
 #: src/OrganizationInformation.js:443
 msgid "Province:"
-msgstr "Province :"
+msgstr "Province:"
 
 #: src/ScanCard.js:39
 #: src/ScanDomain.js:140
@@ -1657,11 +1657,11 @@ msgstr "Rechercher une organisation"
 #: src/ReactTableGlobalFilter.js:37
 #: src/UserList.js:358
 msgid "Search:"
-msgstr "Recherche :"
+msgstr "Recherche:"
 
 #: src/OrganizationInformation.js:430
 msgid "Sector:"
-msgstr "Secteur :"
+msgstr "Secteur:"
 
 #: src/LanguageSelect.js:23
 msgid "Select Preferred Language"
@@ -1703,7 +1703,7 @@ msgstr "Voir {pageSize}"
 #: src/DmarcByDomainPage.js:281
 #: src/DmarcReportPage.js:769
 msgid "Showing data for period:"
-msgstr "Affichage des données pour la période :"
+msgstr "Affichage des données pour la période:"
 
 #: src/DomainsPage.js:145
 #: src/OrganizationDomains.js:74
@@ -1794,7 +1794,7 @@ msgstr "Passer au contenu principal"
 
 #: src/OrganizationInformation.js:411
 msgid "Slug:"
-msgstr "Slug :"
+msgstr "Slug:"
 
 #: src/DomainsPage.js:212
 #: src/Organizations.js:201
@@ -1943,7 +1943,7 @@ msgstr "Authentification à deux facteurs"
 
 #: src/EditableUserTFAMethod.js:78
 msgid "Two-Factor Authentication:"
-msgstr "Authentification à deux facteurs :"
+msgstr "Authentification à deux facteurs:"
 
 #: src/UserList.js:384
 #: src/UserList.js:511
@@ -2279,7 +2279,7 @@ msgstr "L'email de votre compte a été vérifié avec succès"
 
 #: src/OrganizationInformation.js:424
 msgid "Zone:"
-msgstr "Zone :"
+msgstr "Zone:"
 
 #: src/TermsConditionsPage.js:184
 msgid "and by applicable laws, policies, regulations and international agreements."
