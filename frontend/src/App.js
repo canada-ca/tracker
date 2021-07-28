@@ -108,11 +108,6 @@ export default function App() {
     } catch (error) {}
   }, [currentUser, refreshTokens])
 
-  // gets rid of jumping navbar
-  if (loading) {
-    return <div />
-  }
-
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
   useEffect(() => {
@@ -121,6 +116,11 @@ export default function App() {
       wsClient.close()
     }
   }, [currentUser.jwt])
+
+  // gets rid of jumping navbar
+  if (loading) {
+    return <div />
+  }
 
   return (
     <I18nProvider i18n={i18n}>
