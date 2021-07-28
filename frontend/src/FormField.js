@@ -1,5 +1,5 @@
 import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import { elementType, func, object, oneOfType, shape, string } from 'prop-types'
 import {
   FormControl,
   FormErrorMessage,
@@ -9,9 +9,8 @@ import {
   InputLeftElement,
 } from '@chakra-ui/react'
 import { useField } from 'formik'
-import WithWrapperBox from './WithWrapperBox'
 
-const FormField = WithWrapperBox(function FormField({
+function FormField({
   name,
   id,
   label,
@@ -47,7 +46,7 @@ const FormField = WithWrapperBox(function FormField({
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-})
+}
 
 FormField.propTypes = {
   name: string.isRequired,
@@ -56,7 +55,7 @@ FormField.propTypes = {
   type: string,
   placeholder: string,
   leftElement: elementType,
-  forwardedRef: oneOfType([func, shape({ current: elementType })]),
+  forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {

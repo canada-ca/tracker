@@ -1,5 +1,5 @@
 import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import { func, object, oneOfType, shape, string } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -9,14 +9,8 @@ import {
   InputGroup,
 } from '@chakra-ui/react'
 import { useField } from 'formik'
-import WithWrapperBox from './WithWrapperBox'
 
-const DomainField = WithWrapperBox(function DomainField({
-  name,
-  label,
-  forwardedRef,
-  ...props
-}) {
+function DomainField({ name, label, forwardedRef, ...props }) {
   const [field, meta] = useField(name)
 
   const labelText = label === undefined ? <Trans>Domain URL:</Trans> : label
@@ -39,11 +33,12 @@ const DomainField = WithWrapperBox(function DomainField({
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-})
+}
 
 DomainField.propTypes = {
   name: string.isRequired,
-  forwardedRef: oneOfType([func, shape({ current: elementType })]),
+  label: string,
+  forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {

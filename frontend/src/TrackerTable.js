@@ -32,12 +32,11 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
-import WithWrapperBox from './WithWrapperBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 import { InfoButton } from './InfoPanel'
 import { useLingui } from '@lingui/react'
 
-function TrackerTable({ ...props }) {
+export default function TrackerTable({ ...props }) {
   const { i18n } = useLingui()
   const {
     data,
@@ -260,5 +259,3 @@ TrackerTable.propTypes = {
   changeInfoState: func,
   searchPlaceholder: string,
 }
-
-export default WithWrapperBox(TrackerTable)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import { func, object, oneOfType, shape, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -12,14 +12,8 @@ import {
 } from '@chakra-ui/react'
 import { EmailIcon } from '@chakra-ui/icons'
 import { useField } from 'formik'
-import WithWrapperBox from './WithWrapperBox'
 
-const EmailField = WithWrapperBox(function EmailField({
-  name,
-  label,
-  forwardedRef,
-  ...props
-}) {
+function EmailField({ name, label, forwardedRef, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
@@ -48,11 +42,12 @@ const EmailField = WithWrapperBox(function EmailField({
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-})
+}
 
 EmailField.propTypes = {
   name: string.isRequired,
-  forwardedRef: oneOfType([func, shape({ current: elementType })]),
+  label: string,
+  forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {

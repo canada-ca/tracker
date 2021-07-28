@@ -20,11 +20,10 @@ import {
   ViewIcon,
   ViewOffIcon,
 } from '@chakra-ui/icons'
-import WithWrapperBox from './WithWrapperBox'
 import { useField } from 'formik'
 import { string } from 'prop-types'
 
-function PasswordConfirmation({
+export default function PasswordConfirmation({
   passwordLabel,
   confirmPasswordLabel,
   ...props
@@ -160,5 +159,3 @@ PasswordConfirmation.propTypes = {
   passwordLabel: string,
   confirmPasswordLabel: string,
 }
-
-export default WithWrapperBox(PasswordConfirmation)

@@ -8,9 +8,8 @@ import {
   Select,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import WithWrapperBox from './WithWrapperBox'
 
-function LanguageSelect({ name, ...props }) {
+export default function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
 
   return (
@@ -33,4 +32,3 @@ function LanguageSelect({ name, ...props }) {
 LanguageSelect.propTypes = {
   name: string.isRequired,
 }
-export default WithWrapperBox(LanguageSelect)

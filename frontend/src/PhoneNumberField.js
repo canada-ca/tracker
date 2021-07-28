@@ -5,14 +5,10 @@ import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
 import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react'
 import { useField, useFormikContext } from 'formik'
-import WithWrapperBox from './WithWrapperBox'
 import { fieldRequirements } from './fieldRequirements'
 const PhoneInput = lazyWithRetry(() => import('react-phone-input-2'))
 
-const PhoneNumberField = WithWrapperBox(function PhoneNumberField({
-  name,
-  label,
-}) {
+function PhoneNumberField({ name, label }) {
   const [, meta] = useField(name)
   const { values, setFieldValue } = useFormikContext()
   const { i18n } = useLingui()
@@ -50,7 +46,7 @@ const PhoneNumberField = WithWrapperBox(function PhoneNumberField({
       {errorText}
     </FormControl>
   )
-})
+}
 
 PhoneNumberField.propTypes = {
   name: string.isRequired,
