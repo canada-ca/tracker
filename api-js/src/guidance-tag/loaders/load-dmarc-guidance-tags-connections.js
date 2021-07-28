@@ -277,7 +277,7 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
     }
 
     const edges = dmarcGuidanceTagInfo.dmarcGuidanceTags.map((tag) => ({
-      cursor: toGlobalId('guidanceTags', tag._key),
+      cursor: toGlobalId('guidanceTag', tag._key),
       node: tag,
     }))
 
@@ -287,8 +287,8 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
       pageInfo: {
         hasNextPage: dmarcGuidanceTagInfo.hasNextPage,
         hasPreviousPage: dmarcGuidanceTagInfo.hasPreviousPage,
-        startCursor: toGlobalId('guidanceTags', dmarcGuidanceTagInfo.startKey),
-        endCursor: toGlobalId('guidanceTags', dmarcGuidanceTagInfo.endKey),
+        startCursor: toGlobalId('guidanceTag', dmarcGuidanceTagInfo.startKey),
+        endCursor: toGlobalId('guidanceTag', dmarcGuidanceTagInfo.endKey),
       },
     }
   }

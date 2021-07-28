@@ -113,6 +113,7 @@ export const Doughnut = ({
               height={30}
               width={30}
               style={{ display: 'inline', marginRight: '1em' }}
+              aria-hidden="true"
             >
               {patternDefs}
               <g>

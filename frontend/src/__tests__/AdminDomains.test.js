@@ -20,6 +20,7 @@ import {
 } from '../fixtures/orgDomainListData'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
+import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -27,7 +28,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 
@@ -254,7 +255,7 @@ describe('<AdminDomains />', () => {
       )
 
       const domainUrlInput = await findByRole('textbox', {
-        name: 'Domain URL',
+        name: 'Search by Domain URL',
       })
 
       userEvent.type(domainUrlInput, 'test-domain.gc.ca')

@@ -10,6 +10,7 @@ import { createCache } from '../client'
 import { ScanDomain } from '../ScanDomain'
 import { REQUEST_SCAN } from '../graphql/mutations'
 import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -17,7 +18,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 

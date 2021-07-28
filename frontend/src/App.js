@@ -27,6 +27,8 @@ import { useUserVar } from './UserState'
 import { REFRESH_TOKENS } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { activate } from './i18n.config'
+import RequestScanNotificationHandler from './RequestScanNotificationHandler'
+import { wsClient } from './client'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
@@ -111,8 +113,18 @@ export default function App() {
     return <div />
   }
 
+  // Close websocket on user jwt change (refresh/logout)
+  // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
+  useEffect(() => {
+    // User is logged out and websocket connection is active
+    if (currentUser?.jwt === '' && [0, 1].includes(wsClient.status)) {
+      wsClient.close()
+    }
+  }, [currentUser.jwt])
+
   return (
     <I18nProvider i18n={i18n}>
+      <RequestScanNotificationHandler />
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />
@@ -202,7 +214,11 @@ export default function App() {
               />
 
               <PrivatePage path="/organizations" title={t`Organizations`} exact>
-                {() => <Organizations />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Organizations />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage
@@ -210,7 +226,11 @@ export default function App() {
                 setTitle={false}
                 exact
               >
-                {() => <OrganizationDetails />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <OrganizationDetails />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage path="/admin" title={t`Admin`}>
@@ -222,11 +242,19 @@ export default function App() {
               </PrivatePage>
 
               <PrivatePage path="/domains" title={t`Domains`} exact>
-                {() => <DomainsPage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DomainsPage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage path="/domains/:domainSlug" setTitle={false} exact>
-                {() => <DmarcGuidancePage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcGuidancePage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage
@@ -234,7 +262,11 @@ export default function App() {
                 setTitle={false}
                 exact
               >
-                {() => <DmarcReportPage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcReportPage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage
@@ -242,7 +274,11 @@ export default function App() {
                 title={t`DMARC Summaries`}
                 exact
               >
-                {() => <DmarcByDomainPage />}
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcByDomainPage />
+                  </ErrorBoundary>
+                )}
               </PrivatePage>
 
               <PrivatePage path="/user" title={t`Your Account`}>
@@ -278,7 +314,7 @@ export default function App() {
             <Trans>Privacy</Trans>
           </Link>
 
-          <Link as={RouteLink} to="terms-and-conditions" ml={4}>
+          <Link as={RouteLink} to="/terms-and-conditions" ml={4}>
             <Trans>Terms & conditions</Trans>
           </Link>
 

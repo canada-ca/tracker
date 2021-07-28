@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import {
   Box,
   Button,
@@ -7,6 +8,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Grid,
+  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -38,12 +40,13 @@ export function AdminDomainModal({
 }) {
   const toast = useToast()
   const initialFocusRef = useRef()
+  const { i18n } = useLingui()
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
     onError(error) {
       toast({
-        title: t`An error occurred.`,
+        title: i18n._(t`An error occurred.`),
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -54,8 +57,10 @@ export function AdminDomainModal({
     onCompleted({ createDomain }) {
       if (createDomain.result.__typename === 'Domain') {
         toast({
-          title: t`Domain added`,
-          description: t`${createDomain.result.domain} was added to ${orgSlug}`,
+          title: i18n._(t`Domain added`),
+          description: i18n._(
+            t`${createDomain.result.domain} was added to ${orgSlug}`,
+          ),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -64,7 +69,7 @@ export function AdminDomainModal({
         onClose()
       } else if (createDomain.result.__typename === 'DomainError') {
         toast({
-          title: t`Unable to create new domain.`,
+          title: i18n._(t`Unable to create new domain.`),
           description: createDomain.result.description,
           status: 'error',
           duration: 9000,
@@ -73,8 +78,8 @@ export function AdminDomainModal({
         })
       } else {
         toast({
-          title: t`Incorrect send method received.`,
-          description: t`Incorrect createDomain.result typename.`,
+          title: i18n._(t`Incorrect send method received.`),
+          description: i18n._(t`Incorrect createDomain.result typename.`),
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -90,7 +95,7 @@ export function AdminDomainModal({
 
     onError(error) {
       toast({
-        title: t`An error occurred.`,
+        title: i18n._(t`An error occurred.`),
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -101,8 +106,10 @@ export function AdminDomainModal({
     onCompleted({ updateDomain }) {
       if (updateDomain.result.__typename === 'Domain') {
         toast({
-          title: t`Domain updated`,
-          description: t`${editingDomainUrl} from ${orgSlug} successfully updated to ${updateDomain.result.domain}`,
+          title: i18n._(t`Domain updated`),
+          description: i18n._(
+            t`${editingDomainUrl} from ${orgSlug} successfully updated to ${updateDomain.result.domain}`,
+          ),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -111,7 +118,7 @@ export function AdminDomainModal({
         onClose()
       } else if (updateDomain.result.__typename === 'DomainError') {
         toast({
-          title: t`Unable to update domain.`,
+          title: i18n._(t`Unable to update domain.`),
           description: updateDomain.result.description,
           status: 'error',
           duration: 9000,
@@ -120,8 +127,8 @@ export function AdminDomainModal({
         })
       } else {
         toast({
-          title: t`Incorrect send method received.`,
-          description: t`Incorrect updateDomain.result typename.`,
+          title: i18n._(t`Incorrect send method received.`),
+          description: i18n._(t`Incorrect updateDomain.result typename.`),
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -201,7 +208,7 @@ export function AdminDomainModal({
                           mb="2"
                           {...field}
                           id="domainUrl"
-                          placeholder={t`New Domain URL`}
+                          placeholder={i18n._(t`New Domain URL`)}
                           ref={initialFocusRef}
                         />
                         <FormErrorMessage>
@@ -226,15 +233,15 @@ export function AdminDomainModal({
                         >
                           {values.selectors.map((_selector, index) => (
                             <React.Fragment key={index}>
-                              <Button
+                              <IconButton
                                 variant="danger"
+                                icon={<MinusIcon size="icons.xs" />}
                                 data-testid="remove-dkim-selector"
                                 type="button"
                                 p="3"
                                 onClick={() => arrayHelpers.remove(index)}
-                              >
-                                <MinusIcon size="icons.xs" />
-                              </Button>
+                                aria-label="remove-dkim-selector"
+                              />
                               <Field
                                 id={`selectors.${index}`}
                                 name={`selectors.${index}`}
@@ -253,7 +260,7 @@ export function AdminDomainModal({
                                       {...field}
                                       id={`selectors.${index}`}
                                       name={`selectors.${index}`}
-                                      placeholder={t`DKIM Selector`}
+                                      placeholder={i18n._(t`DKIM Selector`)}
                                       ref={initialFocusRef}
                                     />
                                   </FormControl>
@@ -275,15 +282,15 @@ export function AdminDomainModal({
                             </React.Fragment>
                           ))}
                         </Grid>
-                        <Button
+                        <IconButton
                           variant="primary"
+                          icon={<SmallAddIcon size="icons.md" />}
                           data-testid="add-dkim-selector"
                           type="button"
                           px="2"
                           onClick={() => arrayHelpers.push('')}
-                        >
-                          <SmallAddIcon size="icons.md" />
-                        </Button>
+                          aria-label="add-dkim-selector"
+                        />
                       </Box>
                     )}
                   />

@@ -10,6 +10,7 @@ import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 import ForgotPasswordPage from '../ForgotPasswordPage'
 import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
 
 const mocks = [
   {
@@ -34,7 +35,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 

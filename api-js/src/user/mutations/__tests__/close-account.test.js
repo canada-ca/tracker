@@ -1564,7 +1564,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', user._key)}"
+                    userId: "${toGlobalId('user', user._key)}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -1638,7 +1638,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', user._key)}"
+                    userId: "${toGlobalId('user', user._key)}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -1713,7 +1713,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', user._key)}"
+                    userId: "${toGlobalId('user', user._key)}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -1854,7 +1854,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', user._key)}"
+                    userId: "${toGlobalId('user', user._key)}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -1921,7 +1921,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', user._key)}"
+                    userId: "${toGlobalId('user', user._key)}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -2012,7 +2012,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', user._key)}"
+                    userId: "${toGlobalId('user', user._key)}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -2079,7 +2079,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', user._key)}"
+                    userId: "${toGlobalId('user', user._key)}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -2953,7 +2953,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', '456')}"
+                    userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -3015,7 +3015,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', '456')}"
+                    userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -4245,7 +4245,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', '456')}"
+                    userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
                       ... on CloseAccountResult {
@@ -4307,7 +4307,7 @@ describe('given the closeAccount mutation', () => {
               `
                 mutation {
                   closeAccount(input: {
-                    userId: "${toGlobalId('users', '456')}"
+                    userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
                       ... on CloseAccountResult {

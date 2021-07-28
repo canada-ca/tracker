@@ -3,8 +3,26 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import DmarcTimeGraph from '../DmarcReportSummaryGraph'
+import { DmarcReportSummaryGraph } from '../DmarcReportSummaryGraph'
 import { formattedBarData } from '../fixtures/summaryListData'
+
+// ** need to mock the ResizeObserver and polute the window object to avoid errors
+class ResizeObserver {
+  observe() {
+    // do nothing
+  }
+
+  unobserve() {
+    // do nothing
+  }
+
+  disconnect() {
+    // do nothing
+  }
+}
+
+window.ResizeObserver = ResizeObserver
+// **
 
 const i18n = setupI18n({
   locale: 'en',
@@ -21,7 +39,7 @@ describe('<DmarcReportTimeGraph />', () => {
     const { getByText } = render(
       <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
-          <DmarcTimeGraph data={formattedBarData} responsiveWidth={500} />
+          <DmarcReportSummaryGraph data={formattedBarData} />
         </I18nProvider>
       </ChakraProvider>,
     )

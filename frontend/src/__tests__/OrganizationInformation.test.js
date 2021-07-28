@@ -12,6 +12,7 @@ import { ORGANIZATION_INFORMATION } from '../graphql/queries'
 import userEvent from '@testing-library/user-event'
 import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -19,7 +20,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 

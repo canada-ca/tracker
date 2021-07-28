@@ -30,12 +30,14 @@ export function OrganizationSummary({
           </Text>
         </Stack>
 
-        <Stack isInline align="center">
-          <Text fontWeight="semibold">{userCount}</Text>
-          <Text>
-            <Trans>Total users</Trans>
-          </Text>
-        </Stack>
+        {userCount && (
+          <Stack isInline align="center">
+            <Text fontWeight="semibold">{userCount}</Text>
+            <Text>
+              <Trans>Total users</Trans>
+            </Text>
+          </Stack>
+        )}
       </Stack>
       <SummaryGroup web={summaries?.web} mail={summaries?.mail} />
     </Box>

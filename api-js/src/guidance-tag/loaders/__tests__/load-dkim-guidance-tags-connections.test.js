@@ -106,7 +106,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedDkimTags[1]._key),
               node: {
                 ...expectedDkimTags[1],
               },
@@ -116,8 +116,8 @@ describe('when given the load dkim guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDkimTags[1]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDkimTags[1]._key),
           },
         }
 
@@ -140,7 +140,7 @@ describe('when given the load dkim guidance tag connection function', () => {
 
         const connectionArgs = {
           first: 5,
-          before: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
+          before: toGlobalId('guidanceTag', expectedDkimTags[1]._key),
         }
 
         const dkimTags = await connectionLoader({
@@ -151,7 +151,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedDkimTags[0]._key),
               node: {
                 ...expectedDkimTags[0],
               },
@@ -161,8 +161,8 @@ describe('when given the load dkim guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDkimTags[0]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDkimTags[0]._key),
           },
         }
 
@@ -195,7 +195,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
+              cursor: toGlobalId('guidanceTag', expectedDkimTags[0]._key),
               node: {
                 ...expectedDkimTags[0],
               },
@@ -205,8 +205,8 @@ describe('when given the load dkim guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDkimTags[0]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDkimTags[0]._key),
           },
         }
 
@@ -239,7 +239,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
+              cursor: toGlobalId('guidanceTag', expectedDkimTags[1]._key),
               node: {
                 ...expectedDkimTags[1],
               },
@@ -249,8 +249,8 @@ describe('when given the load dkim guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
+            startCursor: toGlobalId('guidanceTag', expectedDkimTags[1]._key),
+            endCursor: toGlobalId('guidanceTag', expectedDkimTags[1]._key),
           },
         }
 
@@ -281,8 +281,8 @@ describe('when given the load dkim guidance tag connection function', () => {
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dkim1'),
-              before: toGlobalId('guidanceTags', 'dkim3'),
+              after: toGlobalId('guidanceTag', 'dkim1'),
+              before: toGlobalId('guidanceTag', 'dkim3'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'ASC',
@@ -293,7 +293,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDkimTag._key),
                   node: {
                     ...expectedDkimTag,
                   },
@@ -303,8 +303,8 @@ describe('when given the load dkim guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
               },
             }
 
@@ -326,8 +326,8 @@ describe('when given the load dkim guidance tag connection function', () => {
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dkim3'),
-              before: toGlobalId('guidanceTags', 'dkim1'),
+              after: toGlobalId('guidanceTag', 'dkim3'),
+              before: toGlobalId('guidanceTag', 'dkim1'),
               orderBy: {
                 field: 'tag-id',
                 direction: 'DESC',
@@ -338,7 +338,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDkimTag._key),
                   node: {
                     ...expectedDkimTag,
                   },
@@ -348,8 +348,8 @@ describe('when given the load dkim guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
               },
             }
 
@@ -373,8 +373,8 @@ describe('when given the load dkim guidance tag connection function', () => {
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dkim1'),
-              before: toGlobalId('guidanceTags', 'dkim3'),
+              after: toGlobalId('guidanceTag', 'dkim1'),
+              before: toGlobalId('guidanceTag', 'dkim3'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'ASC',
@@ -385,7 +385,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDkimTag._key),
                   node: {
                     ...expectedDkimTag,
                   },
@@ -395,8 +395,8 @@ describe('when given the load dkim guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
               },
             }
 
@@ -418,8 +418,8 @@ describe('when given the load dkim guidance tag connection function', () => {
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dkim3'),
-              before: toGlobalId('guidanceTags', 'dkim1'),
+              after: toGlobalId('guidanceTag', 'dkim3'),
+              before: toGlobalId('guidanceTag', 'dkim1'),
               orderBy: {
                 field: 'tag-name',
                 direction: 'DESC',
@@ -430,7 +430,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDkimTag._key),
                   node: {
                     ...expectedDkimTag,
                   },
@@ -440,8 +440,8 @@ describe('when given the load dkim guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
               },
             }
 
@@ -465,8 +465,8 @@ describe('when given the load dkim guidance tag connection function', () => {
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dkim1'),
-              before: toGlobalId('guidanceTags', 'dkim3'),
+              after: toGlobalId('guidanceTag', 'dkim1'),
+              before: toGlobalId('guidanceTag', 'dkim3'),
               orderBy: {
                 field: 'guidance',
                 direction: 'ASC',
@@ -477,7 +477,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDkimTag._key),
                   node: {
                     ...expectedDkimTag,
                   },
@@ -487,8 +487,8 @@ describe('when given the load dkim guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
               },
             }
 
@@ -510,8 +510,8 @@ describe('when given the load dkim guidance tag connection function', () => {
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
               first: 5,
-              after: toGlobalId('guidanceTags', 'dkim3'),
-              before: toGlobalId('guidanceTags', 'dkim1'),
+              after: toGlobalId('guidanceTag', 'dkim3'),
+              before: toGlobalId('guidanceTag', 'dkim1'),
               orderBy: {
                 field: 'guidance',
                 direction: 'DESC',
@@ -522,7 +522,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                  cursor: toGlobalId('guidanceTag', expectedDkimTag._key),
                   node: {
                     ...expectedDkimTag,
                   },
@@ -532,8 +532,8 @@ describe('when given the load dkim guidance tag connection function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
-                endCursor: toGlobalId('guidanceTags', expectedDkimTag._key),
+                startCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
+                endCursor: toGlobalId('guidanceTag', expectedDkimTag._key),
               },
             }
 

@@ -176,7 +176,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -241,7 +241,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -301,7 +301,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -368,7 +368,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -426,7 +426,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -508,7 +508,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -566,7 +566,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -639,7 +639,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -697,7 +697,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -779,7 +779,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -837,7 +837,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -917,7 +917,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1003,7 +1003,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1132,7 +1132,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1197,7 +1197,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1257,7 +1257,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1324,7 +1324,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1382,7 +1382,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1464,7 +1464,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1522,7 +1522,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1595,7 +1595,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1653,7 +1653,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1735,7 +1735,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1793,7 +1793,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1873,7 +1873,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -1959,7 +1959,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2077,7 +2077,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2142,7 +2142,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2202,7 +2202,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2269,7 +2269,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2327,7 +2327,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2409,7 +2409,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2467,7 +2467,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2540,7 +2540,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2598,7 +2598,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2680,7 +2680,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2738,7 +2738,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2818,7 +2818,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2904,7 +2904,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organization', org._key)}"
                     }
                   ) {
                     result {
@@ -2995,7 +2995,7 @@ describe('removing an organization', () => {
               mutation {
                 removeOrganization(
                   input: {
-                    orgId: "${toGlobalId('organizations', 123)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
                 ) {
                   result {
@@ -3062,7 +3062,7 @@ describe('removing an organization', () => {
                     mutation {
                       removeOrganization(
                         input: {
-                          orgId: "${toGlobalId('organizations', 123)}"
+                          orgId: "${toGlobalId('organization', 123)}"
                         }
                       ) {
                         result {
@@ -3154,7 +3154,7 @@ describe('removing an organization', () => {
                     mutation {
                       removeOrganization(
                         input: {
-                          orgId: "${toGlobalId('organizations', 123)}"
+                          orgId: "${toGlobalId('organization', 123)}"
                         }
                       ) {
                         result {
@@ -3252,7 +3252,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -3345,7 +3345,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -3440,7 +3440,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -3533,7 +3533,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -3629,7 +3629,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -3726,7 +3726,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -3823,7 +3823,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -3923,7 +3923,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -4028,7 +4028,7 @@ describe('removing an organization', () => {
               mutation {
                 removeOrganization(
                   input: {
-                    orgId: "${toGlobalId('organizations', 123)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
                 ) {
                   result {
@@ -4134,7 +4134,7 @@ describe('removing an organization', () => {
               mutation {
                 removeOrganization(
                   input: {
-                    orgId: "${toGlobalId('organizations', 123)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
                 ) {
                   result {
@@ -4230,7 +4230,7 @@ describe('removing an organization', () => {
             mutation {
               removeOrganization(
                 input: {
-                  orgId: "${toGlobalId('organizations', 123)}"
+                  orgId: "${toGlobalId('organization', 123)}"
                 }
               ) {
                 result {
@@ -4330,7 +4330,7 @@ describe('removing an organization', () => {
               mutation {
                 removeOrganization(
                   input: {
-                    orgId: "${toGlobalId('organizations', 123)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
                 ) {
                   result {
@@ -4398,7 +4398,7 @@ describe('removing an organization', () => {
                     mutation {
                       removeOrganization(
                         input: {
-                          orgId: "${toGlobalId('organizations', 123)}"
+                          orgId: "${toGlobalId('organization', 123)}"
                         }
                       ) {
                         result {
@@ -4490,7 +4490,7 @@ describe('removing an organization', () => {
                     mutation {
                       removeOrganization(
                         input: {
-                          orgId: "${toGlobalId('organizations', 123)}"
+                          orgId: "${toGlobalId('organization', 123)}"
                         }
                       ) {
                         result {
@@ -4588,7 +4588,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -4681,7 +4681,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -4776,7 +4776,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -4869,7 +4869,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -4965,7 +4965,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -5062,7 +5062,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -5159,7 +5159,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -5259,7 +5259,7 @@ describe('removing an organization', () => {
                 mutation {
                   removeOrganization(
                     input: {
-                      orgId: "${toGlobalId('organizations', 123)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -5364,7 +5364,7 @@ describe('removing an organization', () => {
               mutation {
                 removeOrganization(
                   input: {
-                    orgId: "${toGlobalId('organizations', 123)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
                 ) {
                   result {
@@ -5470,7 +5470,7 @@ describe('removing an organization', () => {
               mutation {
                 removeOrganization(
                   input: {
-                    orgId: "${toGlobalId('organizations', 123)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                   }
                 ) {
                   result {
@@ -5566,7 +5566,7 @@ describe('removing an organization', () => {
             mutation {
               removeOrganization(
                 input: {
-                  orgId: "${toGlobalId('organizations', 123)}"
+                  orgId: "${toGlobalId('organization', 123)}"
                 }
               ) {
                 result {

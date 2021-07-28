@@ -207,14 +207,14 @@ describe('given the load organization connections by user id function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('organizations', expectedOrgs[0].id),
+                after: toGlobalId('organization', expectedOrgs[0].id),
               }
               const orgs = await connectionLoader({ ...connectionArgs })
 
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -225,10 +225,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[1]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -256,14 +256,14 @@ describe('given the load organization connections by user id function', () => {
 
               const connectionArgs = {
                 first: 5,
-                before: toGlobalId('organizations', expectedOrgs[1].id),
+                before: toGlobalId('organization', expectedOrgs[1].id),
               }
               const orgs = await connectionLoader({ ...connectionArgs })
 
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[0]._key),
                     node: {
                       ...expectedOrgs[0],
                     },
@@ -274,10 +274,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[0]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
 
@@ -311,7 +311,7 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[0]._key),
                     node: {
                       ...expectedOrgs[0],
                     },
@@ -322,10 +322,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[0]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
 
@@ -359,7 +359,7 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -370,10 +370,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[1]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -419,7 +419,7 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrg._key),
+                      cursor: toGlobalId('organization', expectedOrg._key),
                       node: {
                         ...expectedOrg,
                       },
@@ -429,8 +429,8 @@ describe('given the load organization connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('organizations', expectedOrg._key),
-                    endCursor: toGlobalId('organizations', expectedOrg._key),
+                    startCursor: toGlobalId('organization', expectedOrg._key),
+                    endCursor: toGlobalId('organization', expectedOrg._key),
                   },
                 }
 
@@ -461,7 +461,7 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrg._key),
+                      cursor: toGlobalId('organization', expectedOrg._key),
                       node: {
                         ...expectedOrg,
                       },
@@ -471,8 +471,8 @@ describe('given the load organization connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('organizations', expectedOrg._key),
-                    endCursor: toGlobalId('organizations', expectedOrg._key),
+                    startCursor: toGlobalId('organization', expectedOrg._key),
+                    endCursor: toGlobalId('organization', expectedOrg._key),
                   },
                 }
 
@@ -506,13 +506,13 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[0]._key),
                       node: {
                         ...expectedOrgs[0],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[1]._key),
                       node: {
                         ...expectedOrgs[1],
                       },
@@ -523,11 +523,11 @@ describe('given the load organization connections by user id function', () => {
                     hasNextPage: false,
                     hasPreviousPage: false,
                     startCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[0]._key,
                     ),
                     endCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[1]._key,
                     ),
                   },
@@ -606,8 +606,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'acronym',
                       direction: 'ASC',
@@ -620,7 +620,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -631,10 +631,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -655,8 +655,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'acronym',
                       direction: 'DESC',
@@ -669,7 +669,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -680,10 +680,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -706,8 +706,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'name',
                       direction: 'ASC',
@@ -720,7 +720,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -731,10 +731,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -755,8 +755,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'name',
                       direction: 'DESC',
@@ -769,7 +769,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -780,10 +780,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -806,8 +806,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'slug',
                       direction: 'ASC',
@@ -820,7 +820,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -831,10 +831,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -855,8 +855,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'slug',
                       direction: 'DESC',
@@ -869,7 +869,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -880,10 +880,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -906,8 +906,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'zone',
                       direction: 'ASC',
@@ -920,7 +920,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -931,10 +931,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -955,8 +955,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'zone',
                       direction: 'DESC',
@@ -969,7 +969,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -980,10 +980,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1006,8 +1006,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'sector',
                       direction: 'ASC',
@@ -1020,7 +1020,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1031,10 +1031,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1055,8 +1055,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'sector',
                       direction: 'DESC',
@@ -1069,7 +1069,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1080,10 +1080,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1106,8 +1106,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'country',
                       direction: 'ASC',
@@ -1120,7 +1120,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1131,10 +1131,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1155,8 +1155,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'country',
                       direction: 'DESC',
@@ -1169,7 +1169,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1180,10 +1180,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1206,8 +1206,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'province',
                       direction: 'ASC',
@@ -1220,7 +1220,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1231,10 +1231,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1255,8 +1255,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'province',
                       direction: 'DESC',
@@ -1269,7 +1269,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1280,10 +1280,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1306,8 +1306,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'city',
                       direction: 'ASC',
@@ -1320,7 +1320,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1331,10 +1331,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1355,8 +1355,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'city',
                       direction: 'DESC',
@@ -1369,7 +1369,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1380,10 +1380,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1406,8 +1406,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgThree._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgThree._key),
                     orderBy: {
                       field: 'verified',
                       direction: 'ASC',
@@ -1420,7 +1420,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1431,10 +1431,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1455,8 +1455,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgThree._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgThree._key),
                     orderBy: {
                       field: 'verified',
                       direction: 'DESC',
@@ -1469,7 +1469,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1480,10 +1480,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1506,8 +1506,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-pass',
                       direction: 'ASC',
@@ -1520,7 +1520,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1531,10 +1531,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1555,8 +1555,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-pass',
                       direction: 'DESC',
@@ -1569,7 +1569,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1580,10 +1580,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1606,8 +1606,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-fail',
                       direction: 'ASC',
@@ -1620,7 +1620,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1631,10 +1631,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1655,8 +1655,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-fail',
                       direction: 'DESC',
@@ -1669,7 +1669,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1680,10 +1680,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1706,8 +1706,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-total',
                       direction: 'ASC',
@@ -1720,7 +1720,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1731,10 +1731,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1755,8 +1755,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-total',
                       direction: 'DESC',
@@ -1769,7 +1769,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1780,10 +1780,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1806,8 +1806,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-pass',
                       direction: 'ASC',
@@ -1820,7 +1820,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1831,10 +1831,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1855,8 +1855,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-pass',
                       direction: 'DESC',
@@ -1869,7 +1869,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1880,10 +1880,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1906,8 +1906,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-fail',
                       direction: 'ASC',
@@ -1920,7 +1920,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1931,10 +1931,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -1955,8 +1955,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-fail',
                       direction: 'DESC',
@@ -1969,7 +1969,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -1980,10 +1980,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2006,8 +2006,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-total',
                       direction: 'ASC',
@@ -2020,7 +2020,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2031,10 +2031,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2055,8 +2055,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-total',
                       direction: 'DESC',
@@ -2069,7 +2069,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2080,10 +2080,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2106,8 +2106,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'domain-count',
                       direction: 'ASC',
@@ -2120,7 +2120,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2131,10 +2131,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2155,8 +2155,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'domain-count',
                       direction: 'DESC',
@@ -2169,7 +2169,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2180,10 +2180,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2220,13 +2220,13 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[0]._key),
                     node: {
                       ...expectedOrgs[0],
                     },
                   },
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -2237,10 +2237,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[0]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -2272,7 +2272,7 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -2283,10 +2283,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[1]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -2365,19 +2365,19 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[0]._key),
                       node: {
                         ...expectedOrgs[0],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[1]._key),
                       node: {
                         ...expectedOrgs[1],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[2]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[2]._key),
                       node: {
                         ...expectedOrgs[2],
                       },
@@ -2388,11 +2388,11 @@ describe('given the load organization connections by user id function', () => {
                     hasNextPage: false,
                     hasPreviousPage: false,
                     startCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[0]._key,
                     ),
                     endCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[2]._key,
                     ),
                   },
@@ -2427,13 +2427,13 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[0]._key),
                       node: {
                         ...expectedOrgs[0],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[1]._key),
                       node: {
                         ...expectedOrgs[1],
                       },
@@ -2444,11 +2444,11 @@ describe('given the load organization connections by user id function', () => {
                     hasNextPage: false,
                     hasPreviousPage: false,
                     startCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[0]._key,
                     ),
                     endCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[1]._key,
                     ),
                   },
@@ -2530,14 +2530,14 @@ describe('given the load organization connections by user id function', () => {
 
               const connectionArgs = {
                 first: 5,
-                after: toGlobalId('organizations', expectedOrgs[0].id),
+                after: toGlobalId('organization', expectedOrgs[0].id),
               }
               const orgs = await connectionLoader({ ...connectionArgs })
 
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -2548,10 +2548,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[1]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -2579,14 +2579,14 @@ describe('given the load organization connections by user id function', () => {
 
               const connectionArgs = {
                 first: 5,
-                before: toGlobalId('organizations', expectedOrgs[1].id),
+                before: toGlobalId('organization', expectedOrgs[1].id),
               }
               const orgs = await connectionLoader({ ...connectionArgs })
 
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[0]._key),
                     node: {
                       ...expectedOrgs[0],
                     },
@@ -2597,10 +2597,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[0]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
 
@@ -2634,7 +2634,7 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[0]._key),
                     node: {
                       ...expectedOrgs[0],
                     },
@@ -2645,10 +2645,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: true,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[0]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
 
@@ -2682,7 +2682,7 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -2693,10 +2693,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: true,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[1]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -2772,8 +2772,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'acronym',
                       direction: 'ASC',
@@ -2786,7 +2786,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2797,10 +2797,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2821,8 +2821,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'acronym',
                       direction: 'DESC',
@@ -2835,7 +2835,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2846,10 +2846,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2872,8 +2872,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'name',
                       direction: 'ASC',
@@ -2886,7 +2886,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2897,10 +2897,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2921,8 +2921,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'name',
                       direction: 'DESC',
@@ -2935,7 +2935,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2946,10 +2946,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -2972,8 +2972,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'slug',
                       direction: 'ASC',
@@ -2986,7 +2986,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -2997,10 +2997,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3021,8 +3021,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'slug',
                       direction: 'DESC',
@@ -3035,7 +3035,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3046,10 +3046,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3072,8 +3072,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'zone',
                       direction: 'ASC',
@@ -3086,7 +3086,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3097,10 +3097,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3121,8 +3121,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'zone',
                       direction: 'DESC',
@@ -3135,7 +3135,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3146,10 +3146,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3172,8 +3172,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'sector',
                       direction: 'ASC',
@@ -3186,7 +3186,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3197,10 +3197,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3221,8 +3221,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'sector',
                       direction: 'DESC',
@@ -3235,7 +3235,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3246,10 +3246,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3272,8 +3272,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'country',
                       direction: 'ASC',
@@ -3286,7 +3286,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3297,10 +3297,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3321,8 +3321,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'country',
                       direction: 'DESC',
@@ -3335,7 +3335,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3346,10 +3346,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3372,8 +3372,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'province',
                       direction: 'ASC',
@@ -3386,7 +3386,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3397,10 +3397,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3421,8 +3421,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'province',
                       direction: 'DESC',
@@ -3435,7 +3435,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3446,10 +3446,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3472,8 +3472,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'city',
                       direction: 'ASC',
@@ -3486,7 +3486,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3497,10 +3497,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3521,8 +3521,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'city',
                       direction: 'DESC',
@@ -3535,7 +3535,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3546,10 +3546,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3572,8 +3572,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgThree._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgThree._key),
                     orderBy: {
                       field: 'verified',
                       direction: 'ASC',
@@ -3586,7 +3586,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3597,10 +3597,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3621,8 +3621,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgThree._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgThree._key),
                     orderBy: {
                       field: 'verified',
                       direction: 'DESC',
@@ -3635,7 +3635,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3646,10 +3646,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3672,8 +3672,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-pass',
                       direction: 'ASC',
@@ -3686,7 +3686,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3697,10 +3697,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3721,8 +3721,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-pass',
                       direction: 'DESC',
@@ -3735,7 +3735,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3746,10 +3746,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3772,8 +3772,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-fail',
                       direction: 'ASC',
@@ -3786,7 +3786,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3797,10 +3797,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3821,8 +3821,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-fail',
                       direction: 'DESC',
@@ -3835,7 +3835,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3846,10 +3846,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3872,8 +3872,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-total',
                       direction: 'ASC',
@@ -3886,7 +3886,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3897,10 +3897,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3921,8 +3921,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-mail-total',
                       direction: 'DESC',
@@ -3935,7 +3935,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3946,10 +3946,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -3972,8 +3972,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-pass',
                       direction: 'ASC',
@@ -3986,7 +3986,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -3997,10 +3997,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4021,8 +4021,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-pass',
                       direction: 'DESC',
@@ -4035,7 +4035,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -4046,10 +4046,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4072,8 +4072,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-fail',
                       direction: 'ASC',
@@ -4086,7 +4086,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -4097,10 +4097,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4121,8 +4121,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-fail',
                       direction: 'DESC',
@@ -4135,7 +4135,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -4146,10 +4146,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4172,8 +4172,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-total',
                       direction: 'ASC',
@@ -4186,7 +4186,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -4197,10 +4197,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4221,8 +4221,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'summary-web-total',
                       direction: 'DESC',
@@ -4235,7 +4235,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -4246,10 +4246,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4272,8 +4272,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    after: toGlobalId('organizations', orgOne._key),
-                    before: toGlobalId('organizations', orgTwo._key),
+                    after: toGlobalId('organization', orgOne._key),
+                    before: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'domain-count',
                       direction: 'ASC',
@@ -4286,7 +4286,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -4297,10 +4297,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4321,8 +4321,8 @@ describe('given the load organization connections by user id function', () => {
                   })
                   const connectionArgs = {
                     first: 5,
-                    before: toGlobalId('organizations', orgOne._key),
-                    after: toGlobalId('organizations', orgTwo._key),
+                    before: toGlobalId('organization', orgOne._key),
+                    after: toGlobalId('organization', orgTwo._key),
                     orderBy: {
                       field: 'domain-count',
                       direction: 'DESC',
@@ -4335,7 +4335,7 @@ describe('given the load organization connections by user id function', () => {
                   const expectedStructure = {
                     edges: [
                       {
-                        cursor: toGlobalId('organizations', expectedOrg._key),
+                        cursor: toGlobalId('organization', expectedOrg._key),
                         node: {
                           ...expectedOrg,
                         },
@@ -4346,10 +4346,10 @@ describe('given the load organization connections by user id function', () => {
                       hasNextPage: true,
                       hasPreviousPage: true,
                       startCursor: toGlobalId(
-                        'organizations',
+                        'organization',
                         expectedOrg._key,
                       ),
-                      endCursor: toGlobalId('organizations', expectedOrg._key),
+                      endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
 
@@ -4397,7 +4397,7 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrg._key),
+                      cursor: toGlobalId('organization', expectedOrg._key),
                       node: {
                         ...expectedOrg,
                       },
@@ -4407,8 +4407,8 @@ describe('given the load organization connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('organizations', expectedOrg._key),
-                    endCursor: toGlobalId('organizations', expectedOrg._key),
+                    startCursor: toGlobalId('organization', expectedOrg._key),
+                    endCursor: toGlobalId('organization', expectedOrg._key),
                   },
                 }
 
@@ -4439,7 +4439,7 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrg._key),
+                      cursor: toGlobalId('organization', expectedOrg._key),
                       node: {
                         ...expectedOrg,
                       },
@@ -4449,8 +4449,8 @@ describe('given the load organization connections by user id function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId('organizations', expectedOrg._key),
-                    endCursor: toGlobalId('organizations', expectedOrg._key),
+                    startCursor: toGlobalId('organization', expectedOrg._key),
+                    endCursor: toGlobalId('organization', expectedOrg._key),
                   },
                 }
 
@@ -4484,13 +4484,13 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[0]._key),
                       node: {
                         ...expectedOrgs[0],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[1]._key),
                       node: {
                         ...expectedOrgs[1],
                       },
@@ -4501,11 +4501,11 @@ describe('given the load organization connections by user id function', () => {
                     hasNextPage: false,
                     hasPreviousPage: false,
                     startCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[0]._key,
                     ),
                     endCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[1]._key,
                     ),
                   },
@@ -4543,13 +4543,13 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[0]._key),
                     node: {
                       ...expectedOrgs[0],
                     },
                   },
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -4560,10 +4560,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[0]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -4595,7 +4595,7 @@ describe('given the load organization connections by user id function', () => {
               const expectedStructure = {
                 edges: [
                   {
-                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
                     node: {
                       ...expectedOrgs[1],
                     },
@@ -4606,10 +4606,10 @@ describe('given the load organization connections by user id function', () => {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   startCursor: toGlobalId(
-                    'organizations',
+                    'organization',
                     expectedOrgs[1]._key,
                   ),
-                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
 
@@ -4688,19 +4688,19 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[0]._key),
                       node: {
                         ...expectedOrgs[0],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[1]._key),
                       node: {
                         ...expectedOrgs[1],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[2]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[2]._key),
                       node: {
                         ...expectedOrgs[2],
                       },
@@ -4711,11 +4711,11 @@ describe('given the load organization connections by user id function', () => {
                     hasNextPage: false,
                     hasPreviousPage: false,
                     startCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[0]._key,
                     ),
                     endCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[2]._key,
                     ),
                   },
@@ -4750,13 +4750,13 @@ describe('given the load organization connections by user id function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[0]._key),
                       node: {
                         ...expectedOrgs[0],
                       },
                     },
                     {
-                      cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                      cursor: toGlobalId('organization', expectedOrgs[1]._key),
                       node: {
                         ...expectedOrgs[1],
                       },
@@ -4767,11 +4767,11 @@ describe('given the load organization connections by user id function', () => {
                     hasNextPage: false,
                     hasPreviousPage: false,
                     startCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[0]._key,
                     ),
                     endCursor: toGlobalId(
-                      'organizations',
+                      'organization',
                       expectedOrgs[1]._key,
                     ),
                   },

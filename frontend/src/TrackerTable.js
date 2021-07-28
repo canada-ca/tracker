@@ -35,8 +35,10 @@ import { t, Trans } from '@lingui/macro'
 import WithWrapperBox from './WithWrapperBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 import { InfoButton } from './InfoPanel'
+import { useLingui } from '@lingui/react'
 
 function TrackerTable({ ...props }) {
+  const { i18n } = useLingui()
   const {
     data,
     columns,
@@ -84,6 +86,7 @@ function TrackerTable({ ...props }) {
     <Box>
       <Flex direction="row" my={2}>
         <ReactTableGlobalFilter
+          title={title}
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={state.globalFilter}
           setGlobalFilter={setGlobalFilter}
@@ -114,6 +117,7 @@ function TrackerTable({ ...props }) {
                   key={column.getHeaderProps(column.getSortByToggleProps()).key}
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   isNumeric={column.isNumeric}
+                  tabIndex="0"
                 >
                   {column.render('Header')}
                   <chakra.span>
@@ -190,14 +194,14 @@ function TrackerTable({ ...props }) {
               aria-label="Go to last page"
             />
             <Stack isInline align="center" spacing="4px">
-              <Box as="label" htmlFor={`${title}-goTo`}>
+              <Box as="label" htmlFor={`${title.replace(/\s+/g, '-')}-goTo`}>
                 <Trans>Go to page:</Trans>
               </Box>
               <NumberInput
                 defaultValue={1}
                 min={1}
                 max={pageOptions.length}
-                id={`${title}-goTo`}
+                id={`${title.replace(/\s+/g, '-')}-goTo`}
                 width="6rem"
                 onChange={(event) => {
                   gotoPage(parseInt(event) - 1)
@@ -213,7 +217,16 @@ function TrackerTable({ ...props }) {
             </Text>
           </Stack>
           <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+            <Text
+              as="label"
+              htmlFor={`${title.replace(/\s+/g, '-')}-items-per-page`}
+              fontSize="md"
+              textAlign="center"
+            >
+              <Trans>Items per page: </Trans>
+            </Text>
             <Select
+              id={`${title.replace(/\s+/g, '-')}-items-per-page`}
               value={state.pageSize}
               onChange={(e) => {
                 setPageSize(Number(e.target.value))
@@ -224,7 +237,7 @@ function TrackerTable({ ...props }) {
             >
               {[5, 10, 20].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
-                  {t`Show ${pageSize}`}
+                  {i18n._(t`Show ${pageSize}`)}
                 </option>
               ))}
             </Select>

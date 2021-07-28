@@ -185,18 +185,18 @@ describe('given findMyDomainsQuery', () => {
             findMyDomains: {
               edges: [
                 {
-                  cursor: toGlobalId('domains', domainOne._key),
+                  cursor: toGlobalId('domain', domainOne._key),
                   node: {
-                    id: toGlobalId('domains', domainOne._key),
+                    id: toGlobalId('domain', domainOne._key),
                     domain: 'test1.gc.ca',
                     lastRan: null,
                     selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   },
                 },
                 {
-                  cursor: toGlobalId('domains', domainTwo._key),
+                  cursor: toGlobalId('domain', domainTwo._key),
                   node: {
-                    id: toGlobalId('domains', domainTwo._key),
+                    id: toGlobalId('domain', domainTwo._key),
                     domain: 'test2.gc.ca',
                     lastRan: null,
                     selectors: ['selector1._domainkey', 'selector2._domainkey'],
@@ -204,10 +204,10 @@ describe('given findMyDomainsQuery', () => {
                 },
               ],
               pageInfo: {
-                endCursor: toGlobalId('domains', domainTwo._key),
+                endCursor: toGlobalId('domain', domainTwo._key),
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('domains', domainOne._key),
+                startCursor: toGlobalId('domain', domainOne._key),
               },
               totalCount: 2,
             },

@@ -10,11 +10,13 @@ import { LoadingMessage } from './LoadingMessage'
 import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
 import { Dropdown } from './Dropdown'
+import { useLingui } from '@lingui/react'
 
 export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
   const toast = useToast()
+  const { i18n } = useLingui()
 
   const { loading, error, data } = useQuery(ADMIN_AFFILIATIONS, {
     fetchPolicy: 'cache-and-network',
@@ -75,10 +77,10 @@ export default function AdminPage() {
           justifyContent="space-between"
         >
           <Dropdown
-            label={t`Organization: `}
+            label={i18n._(t`Organization: `)}
             labelDirection="row"
             options={options}
-            placeholder={t`Select an organization`}
+            placeholder={i18n._(t`Select an organization`)}
             onChange={(opt) => {
               setOrgDetails(opt.value)
               setSelectedOrg(opt.label)
@@ -92,7 +94,7 @@ export default function AdminPage() {
             as={RouteLink}
             to="/create-organization"
           >
-            <AddIcon mr={2} />
+            <AddIcon mr={2} aria-hidden="true" />
             <Trans>Create Organization</Trans>
           </Button>
         </Flex>

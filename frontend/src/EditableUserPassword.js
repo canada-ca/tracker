@@ -110,7 +110,7 @@ function EditableUserPassword() {
       </Heading>
 
       <Flex align="center">
-        <LockIcon color="gray.300" mr={2} />
+        <LockIcon color="gray.300" mr={2} aria-hidden="true" />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
         <Button
           variant="primary"

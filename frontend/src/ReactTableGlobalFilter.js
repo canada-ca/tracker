@@ -11,13 +11,16 @@ import {
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 const ReactTableGlobalFilter = ({
+  title,
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
   placeholder,
 }) => {
+  const { i18n } = useLingui()
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
   const onChange = useAsyncDebounce((value) => {
@@ -26,21 +29,26 @@ const ReactTableGlobalFilter = ({
 
   return (
     <Stack isInline align="center">
-      <Text fontWeight="bold">
+      <Text
+        as="label"
+        htmlFor={`${title.replace(/\s+/g, '-')}-search-field`}
+        fontWeight="bold"
+      >
         <Trans>Search:</Trans>
       </Text>
 
       <InputGroup w={{ sm: '100%', md: '20rem' }}>
-        <InputLeftElement>
+        <InputLeftElement aria-hidden="true">
           <SearchIcon />
         </InputLeftElement>
         <Input
+          id={`${title.replace(/\s+/g, '-')}-search-field`}
           value={value || ''}
           onChange={(e) => {
             setValue(e.target.value)
             onChange(e.target.value)
           }}
-          placeholder={placeholder || t`${count} records...`}
+          placeholder={placeholder || i18n._(t`${count} records...`)}
           aria-label="Filter the table"
         />
       </InputGroup>
@@ -50,6 +58,7 @@ const ReactTableGlobalFilter = ({
 
 ReactTableGlobalFilter.propTypes = {
   // TODO: Add accurate prop types for these
+  title: string,
   preGlobalFilteredRows: any,
   globalFilter: any,
   setGlobalFilter: any,

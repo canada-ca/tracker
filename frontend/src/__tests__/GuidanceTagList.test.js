@@ -9,6 +9,7 @@ import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagList } from '../GuidanceTagList'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -16,7 +17,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 

@@ -9,6 +9,7 @@ import { UserVarProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -16,12 +17,13 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 
 const categoryName = 'https'
-const categoryData = rawDmarcGuidancePageData.findDomainByDomain.web.https
+const categoryData =
+  rawDmarcGuidancePageData.findDomainByDomain.web.https.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

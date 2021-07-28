@@ -17,12 +17,13 @@ import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import CreateOrganizationField from './CreateOrganizationField'
-import { i18n } from '@lingui/core'
 import { InfoButton, InfoBox, InfoPanel } from './InfoPanel'
+import { useLingui } from '@lingui/react'
 
 export default function CreateOrganizationPage() {
   const toast = useToast()
   const history = useHistory()
+  const { i18n } = useLingui()
 
   const [infoState, changeInfoState] = useState({
     isVisible: false,

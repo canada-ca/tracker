@@ -272,7 +272,7 @@ describe('given the httpsScanData subscription', () => {
           rawJson: '{"missing":true}',
           negativeGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'https1'),
+              id: toGlobalId('guidanceTag', 'https1'),
               tagId: 'https1',
               tagName: 'HTTPS-TAG',
               guidance: 'Some Interesting Guidance',
@@ -292,7 +292,7 @@ describe('given the httpsScanData subscription', () => {
           ],
           neutralGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'https1'),
+              id: toGlobalId('guidanceTag', 'https1'),
               tagId: 'https1',
               tagName: 'HTTPS-TAG',
               guidance: 'Some Interesting Guidance',
@@ -312,7 +312,7 @@ describe('given the httpsScanData subscription', () => {
           ],
           positiveGuidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'https1'),
+              id: toGlobalId('guidanceTag', 'https1'),
               tagId: 'https1',
               tagName: 'HTTPS-TAG',
               guidance: 'Some Interesting Guidance',

@@ -114,7 +114,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
 
         const connectionArgs = {
           first: 10,
-          after: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+          after: toGlobalId('verifiedDomain', expectedDomains[0]._key),
         }
         const domains = await connectionLoader({
           orgId: org._id,
@@ -124,7 +124,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
+              cursor: toGlobalId('verifiedDomain', expectedDomains[1]._key),
               node: {
                 ...expectedDomains[1],
               },
@@ -133,8 +133,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
-            endCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
+            startCursor: toGlobalId('verifiedDomain', expectedDomains[1]._key),
+            endCursor: toGlobalId('verifiedDomain', expectedDomains[1]._key),
           },
           totalCount: 2,
         }
@@ -160,7 +160,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
 
         const connectionArgs = {
           first: 10,
-          before: toGlobalId('verifiedDomains', expectedDomains[1]._key),
+          before: toGlobalId('verifiedDomain', expectedDomains[1]._key),
         }
         const domains = await connectionLoader({
           orgId: org._id,
@@ -170,7 +170,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+              cursor: toGlobalId('verifiedDomain', expectedDomains[0]._key),
               node: {
                 ...expectedDomains[0],
               },
@@ -179,8 +179,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
-            endCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+            startCursor: toGlobalId('verifiedDomain', expectedDomains[0]._key),
+            endCursor: toGlobalId('verifiedDomain', expectedDomains[0]._key),
           },
           totalCount: 2,
         }
@@ -215,7 +215,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+              cursor: toGlobalId('verifiedDomain', expectedDomains[0]._key),
               node: {
                 ...expectedDomains[0],
               },
@@ -224,8 +224,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
-            endCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+            startCursor: toGlobalId('verifiedDomain', expectedDomains[0]._key),
+            endCursor: toGlobalId('verifiedDomain', expectedDomains[0]._key),
           },
           totalCount: 2,
         }
@@ -260,7 +260,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
+              cursor: toGlobalId('verifiedDomain', expectedDomains[1]._key),
               node: {
                 ...expectedDomains[1],
               },
@@ -269,8 +269,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
-            endCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
+            startCursor: toGlobalId('verifiedDomain', expectedDomains[1]._key),
+            endCursor: toGlobalId('verifiedDomain', expectedDomains[1]._key),
           },
           totalCount: 2,
         }
@@ -367,8 +367,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainOne._key),
-              before: toGlobalId('verifiedDomains', domainThree._key),
+              after: toGlobalId('verifiedDomain', domainOne._key),
+              before: toGlobalId('verifiedDomain', domainThree._key),
               orderBy: {
                 field: 'domain',
                 direction: 'ASC',
@@ -380,7 +380,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -390,8 +390,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -411,8 +411,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainThree._key),
-              before: toGlobalId('verifiedDomains', domainOne._key),
+              after: toGlobalId('verifiedDomain', domainThree._key),
+              before: toGlobalId('verifiedDomain', domainOne._key),
               orderBy: {
                 field: 'domain',
                 direction: 'DESC',
@@ -424,7 +424,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -434,8 +434,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -457,8 +457,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainOne._key),
-              before: toGlobalId('verifiedDomains', domainThree._key),
+              after: toGlobalId('verifiedDomain', domainOne._key),
+              before: toGlobalId('verifiedDomain', domainThree._key),
               orderBy: {
                 field: 'last-ran',
                 direction: 'ASC',
@@ -470,7 +470,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -480,8 +480,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -501,8 +501,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainThree._key),
-              before: toGlobalId('verifiedDomains', domainOne._key),
+              after: toGlobalId('verifiedDomain', domainThree._key),
+              before: toGlobalId('verifiedDomain', domainOne._key),
               orderBy: {
                 field: 'last-ran',
                 direction: 'DESC',
@@ -514,7 +514,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -524,8 +524,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -547,8 +547,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainOne._key),
-              before: toGlobalId('verifiedDomains', domainThree._key),
+              after: toGlobalId('verifiedDomain', domainOne._key),
+              before: toGlobalId('verifiedDomain', domainThree._key),
               orderBy: {
                 field: 'dkim-status',
                 direction: 'ASC',
@@ -560,7 +560,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -570,8 +570,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -591,8 +591,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainThree._key),
-              before: toGlobalId('verifiedDomains', domainOne._key),
+              after: toGlobalId('verifiedDomain', domainThree._key),
+              before: toGlobalId('verifiedDomain', domainOne._key),
               orderBy: {
                 field: 'dkim-status',
                 direction: 'DESC',
@@ -604,7 +604,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -614,8 +614,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -637,8 +637,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainOne._key),
-              before: toGlobalId('verifiedDomains', domainThree._key),
+              after: toGlobalId('verifiedDomain', domainOne._key),
+              before: toGlobalId('verifiedDomain', domainThree._key),
               orderBy: {
                 field: 'dmarc-status',
                 direction: 'ASC',
@@ -650,7 +650,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -660,8 +660,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -681,8 +681,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainThree._key),
-              before: toGlobalId('verifiedDomains', domainOne._key),
+              after: toGlobalId('verifiedDomain', domainThree._key),
+              before: toGlobalId('verifiedDomain', domainOne._key),
               orderBy: {
                 field: 'dmarc-status',
                 direction: 'DESC',
@@ -694,7 +694,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -704,8 +704,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -727,8 +727,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainOne._key),
-              before: toGlobalId('verifiedDomains', domainThree._key),
+              after: toGlobalId('verifiedDomain', domainOne._key),
+              before: toGlobalId('verifiedDomain', domainThree._key),
               orderBy: {
                 field: 'https-status',
                 direction: 'ASC',
@@ -740,7 +740,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -750,8 +750,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -771,8 +771,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainThree._key),
-              before: toGlobalId('verifiedDomains', domainOne._key),
+              after: toGlobalId('verifiedDomain', domainThree._key),
+              before: toGlobalId('verifiedDomain', domainOne._key),
               orderBy: {
                 field: 'https-status',
                 direction: 'DESC',
@@ -784,7 +784,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -794,8 +794,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -817,8 +817,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainOne._key),
-              before: toGlobalId('verifiedDomains', domainThree._key),
+              after: toGlobalId('verifiedDomain', domainOne._key),
+              before: toGlobalId('verifiedDomain', domainThree._key),
               orderBy: {
                 field: 'spf-status',
                 direction: 'ASC',
@@ -830,7 +830,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -840,8 +840,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -861,8 +861,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainThree._key),
-              before: toGlobalId('verifiedDomains', domainOne._key),
+              after: toGlobalId('verifiedDomain', domainThree._key),
+              before: toGlobalId('verifiedDomain', domainOne._key),
               orderBy: {
                 field: 'spf-status',
                 direction: 'DESC',
@@ -874,7 +874,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -884,8 +884,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -907,8 +907,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainOne._key),
-              before: toGlobalId('verifiedDomains', domainThree._key),
+              after: toGlobalId('verifiedDomain', domainOne._key),
+              before: toGlobalId('verifiedDomain', domainThree._key),
               orderBy: {
                 field: 'ssl-status',
                 direction: 'ASC',
@@ -920,7 +920,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -930,8 +930,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 
@@ -951,8 +951,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const connectionArgs = {
               orgId: org._id,
               first: 5,
-              after: toGlobalId('verifiedDomains', domainThree._key),
-              before: toGlobalId('verifiedDomains', domainOne._key),
+              after: toGlobalId('verifiedDomain', domainThree._key),
+              before: toGlobalId('verifiedDomain', domainOne._key),
               orderBy: {
                 field: 'ssl-status',
                 direction: 'DESC',
@@ -964,7 +964,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  cursor: toGlobalId('verifiedDomain', domainTwo._key),
                   node: {
                     ...expectedDomain,
                   },
@@ -974,8 +974,8 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
-                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                startCursor: toGlobalId('verifiedDomain', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomain', domainTwo._key),
               },
             }
 

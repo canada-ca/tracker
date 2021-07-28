@@ -95,7 +95,7 @@ function EditableUserEmail({ detailValue }) {
       </Heading>
 
       <Flex align="center">
-        <EmailIcon color="gray.300" mr={2} />
+        <EmailIcon color="gray.300" mr={2} aria-hidden="true" />
         <Text>{detailValue}</Text>
         <Button
           variant="primary"

@@ -114,7 +114,7 @@ describe('given the domain object', () => {
         const demoType = domainType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('domains', 1),
+          toGlobalId('domain', 1),
         )
       })
     })

@@ -158,7 +158,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key),
+                  id: toGlobalId('user', userTwo._key),
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },
@@ -219,7 +219,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key),
+                  id: toGlobalId('user', userTwo._key),
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },
@@ -411,7 +411,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key),
+                  id: toGlobalId('user', userTwo._key),
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },
@@ -472,7 +472,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key),
+                  id: toGlobalId('user', userTwo._key),
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },

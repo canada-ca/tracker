@@ -273,7 +273,7 @@ describe('given the dkimScanData subscription', () => {
               rawJson: '{"missing":true}',
               negativeGuidanceTags: [
                 {
-                  id: toGlobalId('guidanceTags', 'dkim1'),
+                  id: toGlobalId('guidanceTag', 'dkim1'),
                   tagId: 'dkim1',
                   tagName: 'DKIM-TAG',
                   guidance: 'Some Interesting Guidance',
@@ -293,7 +293,7 @@ describe('given the dkimScanData subscription', () => {
               ],
               neutralGuidanceTags: [
                 {
-                  id: toGlobalId('guidanceTags', 'dkim1'),
+                  id: toGlobalId('guidanceTag', 'dkim1'),
                   tagId: 'dkim1',
                   tagName: 'DKIM-TAG',
                   guidance: 'Some Interesting Guidance',
@@ -313,7 +313,7 @@ describe('given the dkimScanData subscription', () => {
               ],
               positiveGuidanceTags: [
                 {
-                  id: toGlobalId('guidanceTags', 'dkim1'),
+                  id: toGlobalId('guidanceTag', 'dkim1'),
                   tagId: 'dkim1',
                   tagName: 'DKIM-TAG',
                   guidance: 'Some Interesting Guidance',

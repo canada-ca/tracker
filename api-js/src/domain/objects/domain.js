@@ -21,7 +21,7 @@ import { organizationConnection } from '../../organization/objects'
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
   fields: () => ({
-    id: globalIdField('domains'),
+    id: globalIdField('domain'),
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',

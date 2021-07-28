@@ -16,6 +16,7 @@ import { rawOrgUserListData } from '../fixtures/orgUserListData'
 import { createCache } from '../client'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,7 +24,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 
@@ -179,7 +180,7 @@ describe('<UserList />', () => {
 
       const leftClick = { button: 0 }
 
-      const editUserButtons = await findAllByLabelText('userEditButton')
+      const editUserButtons = await findAllByLabelText('Edit User')
       fireEvent.click(editUserButtons[0], leftClick)
       await waitFor(() => {
         expect(getByText(/Edit Role/i)).toBeInTheDocument()
@@ -280,7 +281,7 @@ describe('<UserList />', () => {
         expect(queryByText(/Invite User/)).toBeInTheDocument()
       })
 
-      const userRemoveButtons = getAllByLabelText(/userRemoveButton/)
+      const userRemoveButtons = getAllByLabelText(/Remove User/)
       fireEvent.click(userRemoveButtons[0])
 
       await waitFor(() => {

@@ -12,6 +12,25 @@ import { rawDmarcReportGraphData } from '../fixtures/dmarcReportGraphData'
 import { rawDmarcReportData } from '../fixtures/dmarcReportData.js'
 import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
+
+// ** need to mock the ResizeObserver and polute the window object to avoid errors
+class ResizeObserver {
+  observe() {
+    // do nothing
+  }
+
+  unobserve() {
+    // do nothing
+  }
+
+  disconnect() {
+    // do nothing
+  }
+}
+
+window.ResizeObserver = ResizeObserver
+// **
 
 const i18n = setupI18n({
   locale: 'en',
@@ -19,7 +38,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {},
+    en: { plurals: en },
   },
 })
 
@@ -72,7 +91,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -98,7 +117,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -124,7 +143,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -150,7 +169,7 @@ describe('<DmarcReportPage />', () => {
                 initialIndex={0}
               >
                 <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
+                  <DmarcReportPage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>

@@ -15,7 +15,7 @@ from arango import ArangoClient
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
-from utils import formatted_dictionary, retrieve_tls_guidance
+from utils import retrieve_tls_guidance
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -922,18 +922,17 @@ def Server(
         logging.info(f"Results received.")
         payload = await result_request.json()
         try:
-            payload_dict = formatted_dictionary(str(payload))
             try:
-                results = payload_dict["results"]
-                scan_type = payload_dict["scan_type"]
-                user_key = payload_dict["user_key"]
-                domain_key = payload_dict["domain_key"]
-                shared_id = payload_dict["shared_id"]
+                results = payload["results"]
+                scan_type = payload["scan_type"]
+                user_key = payload["user_key"]
+                domain_key = payload["domain_key"]
+                shared_id = payload["shared_id"]
                 logging.info(
                     f"Results received for {scan_type} scan (TIME={datetime.datetime.utcnow()})"
                 )
             except KeyError:
-                msg = f"Invalid result format received: {str(payload_dict)}"
+                msg = f"Invalid result format received: {str(payload)}"
                 logging.error(msg)
                 return PlainTextResponse(msg)
 

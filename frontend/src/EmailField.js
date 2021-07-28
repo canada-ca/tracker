@@ -31,7 +31,7 @@ const EmailField = WithWrapperBox(function EmailField({
         {labelText}
       </FormLabel>
       <InputGroup>
-        <InputLeftElement>
+        <InputLeftElement aria-hidden="true">
           <EmailIcon color="gray.300" />
         </InputLeftElement>
         <Input

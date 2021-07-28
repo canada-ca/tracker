@@ -13,136 +13,72 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/TermsConditionsPage.js:173
+#: src/TermsConditionsPage.js:169
 msgid ", and"
 msgstr ""
 
-#: src/TermsConditionsPage.js:65
+#: src/TermsConditionsPage.js:62
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ""
 
-#: src/guidanceTagConstants.js:5
-msgid "3.2.2 Third Parties and DKIM"
-msgstr "3.2.2 Expéditeurs tiers et DKIM"
-
-#: src/PageNotFound.js:11
+#: src/PageNotFound.js:16
 msgid "404 - Page Not Found"
 msgstr "404 - Page non trouvée"
 
-#: src/guidanceTagConstants.js:326
-msgid "A-all"
-msgstr "A-all"
+#: src/DmarcByDomainPage.js:267
+msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
+msgstr ""
 
-#: src/guidanceTagConstants.js:9
-msgid "A.2.3 Deploy Initial DMARC record"
-msgstr "A.2.3 Déployer l’enregistrement DMARC initial"
-
-#: src/guidanceTagConstants.js:13
-msgid "A.3.3 Deploy SPF for All Domains"
-msgstr "A.3.3 Déployer le protocole SPF pour tous les domaines"
-
-#: src/guidanceTagConstants.js:17
-msgid "A.3.4 Deploy DKIM for All Domains and Senders"
-msgstr "A.3.4 Déployer le protocole DKIM pour tous les domaines et expéditeurs"
-
-#: src/guidanceTagConstants.js:21
-msgid "A.3.5 Monitor DMARC Reports and Correct Misconfigurations"
-msgstr "A.3.5 Surveiller les rapports DMARC et corriger les erreurs de configuration"
-
-#: src/guidanceTagConstants.js:25
-msgid "A.4 Enforce"
-msgstr "A.4 Appliquer"
-
-#: src/guidanceTagConstants.js:29
-msgid "A.5 Maintain"
-msgstr "A.5 Tenir les éléments à jour"
-
-#: src/guidanceTagConstants.js:33
-msgid "A.5.3 Rotate DKIM Keys"
-msgstr "A.5.3 Assurer la rotation des clés DKIM"
-
-#: src/UserList.js:376
-#: src/UserList.js:502
+#: src/UserList.js:385
+#: src/UserList.js:515
 msgid "ADMIN"
 msgstr "ADMIN"
 
-#: src/guidanceTagConstants.js:291
-msgid "ALL-allow"
-msgstr "ALL-allow"
-
-#: src/guidanceTagConstants.js:312
-msgid "ALL-hardfail"
-msgstr "ALL-hardfail"
-
-#: src/guidanceTagConstants.js:284
-msgid "ALL-missing"
-msgstr "ALL-missing"
-
-#: src/guidanceTagConstants.js:298
-msgid "ALL-neutral"
-msgstr "ALL-neutral"
-
-#: src/guidanceTagConstants.js:319
-msgid "ALL-redirect"
-msgstr "ALL-redirect"
-
-#: src/guidanceTagConstants.js:305
-msgid "ALL-softfail"
-msgstr "ALL-softfail"
-
-#: src/ScanCategoryDetails.js:142
+#: src/ScanCategoryDetails.js:156
 msgid "Acceptable Ciphers:"
 msgstr "Ciphers acceptés:"
 
-#: src/ScanCategoryDetails.js:175
+#: src/ScanCategoryDetails.js:189
 msgid "Acceptable Curves:"
 msgstr "Courbes acceptables:"
 
-#: src/guidanceTagConstants.js:448
-msgid "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01"
-msgstr "La liste de chiffrement acceptée contient le chiffrement 3DES à blocs de clés symétriques, tel qu'interdit par la DBO 18-01"
-
-#: src/guidanceTagConstants.js:442
-msgid "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
-msgstr "La liste de chiffrement acceptée contient le chiffrement de flux RC4, tel qu'interdit par le BOD 18-01"
-
-#: src/TermsConditionsPage.js:89
+#: src/TermsConditionsPage.js:85
 msgid "Access to Information"
 msgstr ""
 
-#: src/TermsConditionsPage.js:109
+#: src/TermsConditionsPage.js:104
 msgid "Access to Information Act."
 msgstr ""
 
-#: src/TermsConditionsPage.js:247
+#: src/TermsConditionsPage.js:248
 msgid "Account"
 msgstr ""
 
-#: src/App.js:87
-#: src/FloatingMenu.js:128
-#: src/UserPage.js:65
+#: src/App.js:144
+#: src/FloatingMenu.js:150
+#: src/UserPage.js:57
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
-#: src/CreateUserPage.js:76
+#: src/CreateUserPage.js:74
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/CreateOrganizationPage.js:187
-#: src/CreateOrganizationPage.js:192
-#: src/Organizations.js:156
+#: src/CreateOrganizationPage.js:221
+#: src/CreateOrganizationPage.js:226
+#: src/Organizations.js:218
 msgid "Acronym"
 msgstr "Acronyme"
 
-#: src/OrganizationInformation.js:364
+#: src/OrganizationInformation.js:341
 msgid "Acronym (EN)"
 msgstr "Acronyme (EN)"
 
-#: src/OrganizationInformation.js:367
+#: src/OrganizationInformation.js:344
 msgid "Acronym (FR)"
 msgstr "Acronyme (FR)"
 
-#: src/OrganizationInformation.js:450
+#: src/OrganizationInformation.js:417
 msgid "Acronym:"
 msgstr "Acronyme :"
 
@@ -154,31 +90,27 @@ msgstr "Les acronymes ne peuvent utiliser que des lettres majuscules et des cara
 msgid "Acronyms must be at most 50 characters"
 msgstr "Les acronymes doivent comporter au maximum 50 caractères."
 
-#: src/AdminDomains.js:366
+#: src/AdminDomains.js:261
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
-#: src/AdminDomains.js:264
-#~ msgid "Add a domain"
-#~ msgstr "Ajouter un domaine"
+#: src/AdminDomainModal.js:190
+msgid "Add Domain Details"
+msgstr "Ajouter les détails du domaine"
 
-#: src/App.js:175
+#: src/App.js:215
 msgid "Admin"
 msgstr "Administrateur"
 
-#: src/AdminPage.js:68
-msgid "Admin Affiliations"
-msgstr "Affiliations administratives"
-
-#: src/FloatingMenu.js:130
+#: src/FloatingMenu.js:152
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/App.js:93
+#: src/App.js:150
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
-#: src/ForgotPasswordPage.js:39
+#: src/ForgotPasswordPage.js:38
 msgid "An email was sent with a link to reset your password"
 msgstr "Un courriel a été envoyé avec un lien pour réinitialiser votre mot de passe"
 
@@ -186,222 +118,176 @@ msgstr "Un courriel a été envoyé avec un lien pour réinitialiser votre mot d
 msgid "An error has occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/OrganizationInformation.js:85
+#: src/TopBanner.js:23
+msgid "An error occured when you attempted to sign out"
+msgstr ""
+
+#: src/OrganizationInformation.js:73
 msgid "An error occurred while removing this organization."
 msgstr "Une erreur s'est produite lors de la suppression de cette organisation."
 
-#: src/OrganizationInformation.js:153
+#: src/OrganizationInformation.js:137
 msgid "An error occurred while updating this organization."
 msgstr "Une erreur s'est produite lors de la mise à jour de cette organisation."
 
-#: src/EditableUserTFAMethod.js:38
+#: src/EditableUserTFAMethod.js:31
 msgid "An error occurred while updating your TFA send method."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre méthode d'envoi de TFA."
 
-#: src/EditableUserDisplayName.js:47
+#: src/EditableUserDisplayName.js:40
 msgid "An error occurred while updating your display name."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre nom d'affichage."
 
-#: src/EditableUserEmail.js:47
+#: src/EditableUserEmail.js:40
 msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
 
-#: src/EditableUserLanguage.js:29
+#: src/EditableUserLanguage.js:21
 msgid "An error occurred while updating your language."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre langue."
 
-#: src/EditableUserPassword.js:47
+#: src/EditableUserPassword.js:40
 msgid "An error occurred while updating your password."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre mot de passe."
 
-#: src/EditableUserPhoneNumber.js:51
+#: src/EditableUserPhoneNumber.js:44
 msgid "An error occurred while updating your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
-#: src/EditableUserPhoneNumber.js:96
+#: src/EditableUserPhoneNumber.js:84
 msgid "An error occurred while verifying your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
-#: src/AdminDomains.js:123
-#: src/AdminDomains.js:176
-#: src/AdminDomains.js:228
-#: src/AdminDomains.js:339
-#: src/CreateOrganizationPage.js:76
-#: src/TwoFactorAuthenticatePage.js:36
-#: src/UserList.js:187
-#: src/UserList.js:237
-#: src/UserList.js:328
+#: src/AdminDomainModal.js:49
+#: src/AdminDomainModal.js:98
+#: src/AdminDomains.js:99
+#: src/CreateOrganizationPage.js:82
+#: src/TwoFactorAuthenticatePage.js:35
+#: src/UserList.js:179
+#: src/UserList.js:229
+#: src/UserList.js:326
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/TermsConditionsPage.js:223
+#: src/TermsConditionsPage.js:225
 msgid "Any data or information disclosed to TBS will be used in a manner consistent with our"
 msgstr ""
 
-#: src/TermsConditionsPage.js:145
+#: src/TermsConditionsPage.js:136
 msgid "Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada."
 msgstr ""
-
-#: src/UserList.js:369
-#~ msgid "Apply"
-#~ msgstr "Appliquer"
 
 #: src/months.js:7
 msgid "April"
 msgstr "Avril"
 
-#: src/OrganizationInformation.js:526
+#: src/OrganizationInformation.js:492
 msgid "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer définitivement l'organisation \"{0}\" ?"
 
-#: src/guidanceTagConstants.js:420
-msgid "As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled."
-msgstr "Conformément à la section 3.6.1 du RFC, l'indicateur de test t=y signifie que les vérificateurs DOIVENT traiter les messages comme non signés (c'est-à-dire que DKIM n'est pas activé), donc cet indicateur ne doit pas être activé."
+#: src/ScanCard.js:26
+#: src/ScanDomain.js:127
+msgid "Assess current state;"
+msgstr "Évaluer l’état actuel."
 
 #: src/months.js:11
 msgid "August"
 msgstr "Août"
 
-#: src/App.js:142
+#: src/App.js:174
 msgid "Authenticate"
 msgstr "Authentifier"
 
-#: src/App.js:202
-#~ msgid "Authentication QR Code"
-#~ msgstr "Code QR d'authentification"
-
-#: src/guidanceTagConstants.js:37
-msgid "B.1.1 SPF Records"
-msgstr "B.1.1 Enregistrements SPF"
-
-#: src/guidanceTagConstants.js:41
-msgid "B.1.3 DNS Lookup Limit"
-msgstr "B.1.3 Limite de recherches DNS"
-
-#: src/guidanceTagConstants.js:45
-msgid "B.2.1 DKIM Records"
-msgstr "B.2.1 Enregistrements DKIM"
-
-#: src/guidanceTagConstants.js:49
-msgid "B.2.2 Cryptographic Considerations"
-msgstr "B.2.2 Considérations cryptographiques"
-
-#: src/guidanceTagConstants.js:53
-msgid "B.3.1 DMARC Records"
-msgstr "B.3.1 Enregistrements DMARC"
-
-#: src/CreateOrganizationPage.js:267
-#: src/CreateUserPage.js:163
-#: src/ForgotPasswordPage.js:97
-#: src/QRcodePage.js:66
+#: src/CreateOrganizationPage.js:265
+#: src/CreateUserPage.js:170
+#: src/ForgotPasswordPage.js:89
 msgid "Back"
 msgstr "Retour"
 
-#: src/OrganizationSummary.js:20
+#: src/OrganizationSummary.js:19
 msgid "Based in:"
 msgstr "Basé à:"
 
-#: src/TermsConditionsPage.js:29
-msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
-msgstr ""
-
-#: src/OrganizationInformation.js:358
+#: src/OrganizationInformation.js:335
 msgid "Blank fields will not be included when updating the organization."
 msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de l'organisation."
 
-#: src/guidanceTagConstants.js:164
-msgid "CCCS added to Aggregate sender list"
-msgstr "Le CCCS ajouté à la liste agrégée des expéditeurs"
+#: src/TermsConditionsPage.js:25
+msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
+msgstr ""
 
-#: src/guidanceTagConstants.js:171
-msgid "CCCS added to Forensic sender list"
-msgstr "Le CCCS ajouté à la liste des expéditeurs de la police scientifique"
-
-#: src/ScanCategoryDetails.js:88
+#: src/ScanCategoryDetails.js:102
 msgid "CCS Injection Vulnerability:"
 msgstr "Vulnérabilité d'injection de CCS:"
 
-#: src/guidanceTagConstants.js:253
-msgid "CNAME-DMARC"
-msgstr "CNAME-DMARC"
-
 #: src/LandingPage.js:24
-#: src/WelcomeMessage.js:19
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour le courrier électronique et les services Web. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
-#: src/guidanceTagConstants.js:493
-msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
-msgstr "Le CCCS ajouté à la liste des expéditeurs de la police scientifique"
-
-#: src/guidanceTagConstants.js:454
-msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
-msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
-
-#: src/EditableUserPassword.js:167
-#: src/ResetPasswordPage.js:112
+#: src/EditableUserPassword.js:159
+#: src/ResetPasswordPage.js:111
 msgid "Change Password"
 msgstr "Changer le mot de passe"
 
-#: src/EditableUserTFAMethod.js:49
+#: src/EditableUserTFAMethod.js:42
 msgid "Changed TFA Send Method"
 msgstr "Changement de la méthode d'envoi des TFA"
 
-#: src/EditableUserDisplayName.js:58
+#: src/EditableUserDisplayName.js:51
 msgid "Changed User Display Name"
 msgstr "Changement du nom d'affichage de l'utilisateur"
 
-#: src/EditableUserEmail.js:58
+#: src/EditableUserEmail.js:51
 msgid "Changed User Email"
 msgstr "Changement d'adresse électronique de l'utilisateur"
 
-#: src/EditableUserLanguage.js:40
+#: src/EditableUserLanguage.js:32
 msgid "Changed User Language"
 msgstr "Changement de la langue de l'utilisateur"
 
-#: src/EditableUserPassword.js:61
+#: src/EditableUserPassword.js:54
 msgid "Changed User Password"
 msgstr "Modification du mot de passe de l'utilisateur"
 
-#: src/EditableUserPhoneNumber.js:107
+#: src/EditableUserPhoneNumber.js:95
 msgid "Changed User Phone Number"
 msgstr "Changement du numéro de téléphone de l'utilisateur"
 
-#: src/ScanCard.js:37
+#: src/ScanDomain.js:410
 msgid "Changes Required for ITPIN Compliance"
 msgstr "Changements requis pour la mise en conformité ITPIN"
 
-#: src/UserPage.js:39
+#: src/ScanCard.js:66
+msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
+msgstr ""
+
+#: src/UserPage.js:37
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
-#: src/ScanCategoryDetails.js:218
-msgid "Ciphers"
-msgstr "Ciphers"
-
-#: src/CreateOrganizationPage.js:226
-#: src/CreateOrganizationPage.js:231
+#: src/CreateOrganizationPage.js:232
+#: src/CreateOrganizationPage.js:237
 msgid "City"
 msgstr "Ville"
 
-#: src/OrganizationInformation.js:400
+#: src/OrganizationInformation.js:365
 msgid "City (EN)"
 msgstr "Ville (EN)"
 
-#: src/OrganizationInformation.js:406
+#: src/OrganizationInformation.js:371
 msgid "City (FR)"
 msgstr "Ville (FR)"
 
-#: src/OrganizationInformation.js:470
+#: src/OrganizationInformation.js:437
 msgid "City:"
 msgstr "Ville :"
 
-#: src/OrganizationInformation.js:414
+#: src/OrganizationInformation.js:380
 msgid "Clear"
 msgstr "Dégager"
 
-#: src/FloatingMenu.js:219
-#: src/OrganizationInformation.js:422
+#: src/FloatingMenu.js:243
+#: src/OrganizationInformation.js:389
 msgid "Close"
 msgstr "Fermer"
 
@@ -409,241 +295,189 @@ msgstr "Fermer"
 msgid "Code field must not be empty"
 msgstr "Le champ de code ne doit pas être vide"
 
+#: src/ScanCard.js:28
+#: src/ScanDomain.js:129
+msgid "Collect and analyze DMARC reports."
+msgstr "Recueillir et analyser les rapports DMARC."
+
 #: src/SummaryGroup.js:21
 msgid "Compliant TLS"
 msgstr "TLS conformant"
 
-#: src/AdminDomains.js:463
-#: src/AdminDomains.js:505
-#: src/EditableUserDisplayName.js:174
-#: src/EditableUserEmail.js:174
-#: src/EditableUserPassword.js:198
-#: src/EditableUserPhoneNumber.js:201
-#: src/EditableUserPhoneNumber.js:259
-#: src/OrganizationInformation.js:430
-#: src/OrganizationInformation.js:554
-#: src/UserList.js:432
-#: src/UserList.js:520
+#: src/AdminDomainModal.js:307
+#: src/AdminDomains.js:323
+#: src/EditableUserDisplayName.js:171
+#: src/EditableUserEmail.js:166
+#: src/EditableUserPassword.js:188
+#: src/EditableUserPhoneNumber.js:204
+#: src/EditableUserPhoneNumber.js:263
+#: src/OrganizationInformation.js:397
+#: src/OrganizationInformation.js:520
+#: src/UserList.js:448
+#: src/UserList.js:533
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: src/EditableUserPassword.js:186
+#: src/EditableUserPassword.js:176
 msgid "Confirm New Password:"
 msgstr "Confirmer le nouveau mot de passe :"
 
-#: src/PasswordConfirmation.js:69
+#: src/PasswordConfirmation.js:75
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe :"
 
-#: src/PasswordConfirmation.js:147
+#: src/PasswordConfirmation.js:137
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: src/AdminDomains.js:485
+#: src/AdminDomains.js:303
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine :"
 
-#: src/UserList.js:412
+#: src/UserList.js:428
 msgid "Confirm removal of user:"
 msgstr "Confirmer le retrait de l'utilisateur :"
 
-#: src/guidanceTagConstants.js:204
-msgid "Contact 3rd party"
-msgstr "Contacter une tierce partie"
-
-#: src/EmailValidationPage.js:79
+#: src/EmailValidationPage.js:84
 msgid "Continue"
 msgstr "Continuer"
 
-#: src/TermsConditionsPage.js:168
+#: src/TermsConditionsPage.js:166
 msgid "Copyright Act"
 msgstr ""
 
-#: src/CreateOrganizationPage.js:252
-#: src/CreateOrganizationPage.js:257
+#: src/ScanCard.js:43
+#: src/ScanDomain.js:144
+msgid "Correct misconfigurations and update records as required; and"
+msgstr "Corriger les erreurs de configuration et mettre à jour les enregistrements, au besoin."
+
+#: src/CreateOrganizationPage.js:254
+#: src/CreateOrganizationPage.js:259
 msgid "Country"
 msgstr "Pays"
 
-#: src/OrganizationInformation.js:388
+#: src/OrganizationInformation.js:353
 msgid "Country (EN)"
 msgstr "Pays (EN)"
 
-#: src/OrganizationInformation.js:391
+#: src/OrganizationInformation.js:356
 msgid "Country (FR)"
 msgstr "Pays (FR)"
 
-#: src/OrganizationInformation.js:483
+#: src/OrganizationInformation.js:450
 msgid "Country:"
 msgstr "Pays :"
 
-#: src/CreateUserPage.js:172
-#: src/SignInPage.js:154
+#: src/CreateUserPage.js:179
+#: src/FloatingMenu.js:185
+#: src/TopBanner.js:92
 msgid "Create Account"
 msgstr "Créer un compte"
 
-#: src/AdminPage.js:133
-#: src/AdminPage.js:173
-#: src/CreateOrganizationPage.js:276
+#: src/AdminPage.js:98
+#: src/AdminPage.js:138
+#: src/App.js:273
+#: src/CreateOrganizationPage.js:274
 msgid "Create Organization"
 msgstr "Créer une organisation"
 
-#: src/App.js:132
+#: src/App.js:164
 msgid "Create an Account"
 msgstr "Créer un compte"
 
-#: src/CreateUserPage.js:144
+#: src/CreateUserPage.js:142
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
-#: src/CreateOrganizationPage.js:164
-msgid "Create an organization by filling out the following info in both English and French"
-msgstr "Créez une organisation en remplissant les informations suivantes en anglais et en français"
+#: src/CreateOrganizationPage.js:171
+msgid "Create an organization"
+msgstr ""
 
-#: src/EditableUserDisplayName.js:154
+#: src/EditableUserDisplayName.js:151
 msgid "Current Display Name:"
 msgstr "Nom de l'affichage actuel :"
 
-#: src/AdminDomains.js:420
-msgid "Current Domain URL:"
-msgstr "URL du domaine actuel :"
-
-#: src/EditableUserEmail.js:154
+#: src/EditableUserEmail.js:146
 msgid "Current Email:"
 msgstr "Courriel actuel :"
 
-#: src/EditableUserPassword.js:174
+#: src/EditableUserPassword.js:166
 msgid "Current Password:"
 msgstr "Mot de passe actuel :"
 
-#: src/EditableUserPhoneNumber.js:179
+#: src/EditableUserPhoneNumber.js:183
 msgid "Current Phone Number:"
 msgstr "Numéro de téléphone actuel:"
 
-#: src/ScanCategoryDetails.js:232
-msgid "Curves"
-msgstr "Courbes"
-
-#: src/DmarcReportPage.js:322
+#: src/DmarcReportPage.js:254
 msgid "DKIM Aligned"
 msgstr "DKIM Aligné"
 
-#: src/guidanceTagConstants.js:365
-msgid "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365."
-msgstr "Les CNAME DKIM n'existent pas, mais MX pointe vers *.onmicrosoft.com et l'enregistrement SPF inclut O365."
-
-#: src/DmarcReportPage.js:289
+#: src/DmarcReportPage.js:221
 msgid "DKIM Domains"
 msgstr "Domaines DKIM"
 
-#: src/DmarcReportPage.js:344
+#: src/DmarcReportPage.js:276
 msgid "DKIM Failure Table"
 msgstr "Tableau des échecs DKIM"
 
-#: src/DmarcReportPage.js:355
-#: src/DmarcReportPage.js:387
+#: src/DmarcReportPage.js:287
+#: src/DmarcReportPage.js:370
 msgid "DKIM Failures by IP Address"
 msgstr "Défaillances DKIM par adresse IP"
 
-#: src/guidanceTagConstants.js:423
-msgid "DKIM Flag t"
-msgstr "DKIM Flag t"
-
-#: src/DmarcReportPage.js:326
+#: src/DmarcReportPage.js:258
 msgid "DKIM Results"
 msgstr "Résultats DKIM"
 
-#: src/DmarcReportPage.js:293
+#: src/AdminDomainModal.js:263
+msgid "DKIM Selector"
+msgstr "Sélecteur DKIM"
+
+#: src/DmarcReportPage.js:225
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
-#: src/DomainsPage.js:174
+#: src/AdminDomainModal.js:226
+msgid "DKIM Selectors:"
+msgstr "Sélecteurs DKIM:"
+
+#: src/DomainsPage.js:231
 msgid "DKIM Status"
 msgstr "Statut DKIM"
 
-#: src/guidanceTagConstants.js:414
-msgid "DKIM TXT record invalid"
-msgstr "Enregistrement DKIM TXT non valable"
-
-#: src/guidanceTagConstants.js:408
-msgid "DKIM key does not use RSA"
-msgstr "La clé DKIM n'utilise pas le RSA"
-
-#: src/guidanceTagConstants.js:358
-msgid "DKIM record missing but MX uses O365. Follow cloud-specific guidance"
-msgstr "DKIM record missing but MX uses O365. Follow cloud-specific guidance"
-
-#: src/guidanceTagConstants.js:343
-msgid "DKIM-GC"
-msgstr "DKIM-GC"
-
-#: src/guidanceTagConstants.js:407
-msgid "DKIM-invalid-crypto"
-msgstr "DKIM-invalid-crypto"
-
-#: src/guidanceTagConstants.js:350
-msgid "DKIM-missing"
-msgstr "DKIM-missing"
-
-#: src/guidanceTagConstants.js:364
-msgid "DKIM-missing-O365-misconfigured"
-msgstr "DKIM-missing-O365-misconfigured"
-
-#: src/guidanceTagConstants.js:357
-msgid "DKIM-missing-mx-O365"
-msgstr "DKIM-missing-mx-O365"
-
-#: src/guidanceTagConstants.js:413
-msgid "DKIM-value-invalid"
-msgstr "DKIM-value-invalid"
-
-#: src/DmarcReportPage.js:547
+#: src/DmarcReportPage.js:620
 msgid "DMARC Failure Table"
 msgstr "Tableau des échecs de la DMARC"
 
-#: src/DmarcReportPage.js:558
-#: src/DmarcReportPage.js:587
+#: src/DmarcReportPage.js:631
+#: src/DmarcReportPage.js:694
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
-#: src/DomainCard.js:136
-#~ msgid "DMARC Guidance"
-#~ msgstr "Conseils sur le DMARC"
-
-#: src/ScanCard.js:51
+#: src/ScanCard.js:83
+#: src/ScanDomain.js:472
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC : {0}"
 
-#: src/ScanCard.js:61
-#~ msgid "DMARC Implementation Phase: {status}"
-#~ msgstr "Phase de mise en œuvre de la DMARC: {status}"
-
-#: src/DmarcByDomainPage.js:160
-#: src/DmarcByDomainPage.js:263
-#~ msgid "DMARC Messages"
-#~ msgstr "Messages de la DMARC"
-
-#: src/ScanCard.js:50
-#~ msgid "DMARC Not Implemented"
-#~ msgstr "La DMARC n'est pas mise en œuvre"
-
-#: src/DmarcGuidancePage.js:75
-#: src/DomainCard.js:202
+#: src/DmarcGuidancePage.js:68
+#: src/DomainCard.js:220
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
-#: src/DmarcReportPage.js:40
+#: src/DmarcReportPage.js:35
 msgid "DMARC Report for {domainSlug}"
 msgstr "Rapport DMARC pour {domainSlug}"
 
-#: src/DomainsPage.js:175
+#: src/DomainsPage.js:232
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/App.js:80
-#: src/App.js:192
-#: src/DmarcByDomainPage.js:176
-#: src/DmarcByDomainPage.js:276
-#: src/FloatingMenu.js:78
+#: src/App.js:138
+#: src/App.js:253
+#: src/DmarcByDomainPage.js:136
+#: src/DmarcByDomainPage.js:233
+#: src/FloatingMenu.js:104
 msgid "DMARC Summaries"
 msgstr "Résumés DMARC"
 
@@ -655,36 +489,55 @@ msgstr "DMARC échoue"
 msgid "DMARC pass"
 msgstr "Passe DMARC"
 
-#: src/guidanceTagConstants.js:94
-msgid "DMARC-GC"
-msgstr "DMARC-GC"
-
-#: src/guidanceTagConstants.js:101
-msgid "DMARC-missing"
-msgstr "DMARC-missing"
-
-#: src/DmarcReportPage.js:302
+#: src/DmarcReportPage.js:234
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
-#: src/TermsConditionsPage.js:206
+#: src/RequestScanNotificationHandler.js:45
+msgid "DNS Scan Complete"
+msgstr "Scan DNS terminé"
+
+#: src/RequestScanNotificationHandler.js:46
+msgid "DNS scan for domain \"{0}\" has completed."
+msgstr "Le scan DNS du domaine \"{0}\" est terminé."
+
+#: src/TermsConditionsPage.js:201
 msgid "Data Handling"
 msgstr ""
 
-#: src/TermsConditionsPage.js:120
+#: src/TermsConditionsPage.js:113
 msgid "Data Security and Use"
 msgstr ""
+
+#: src/DmarcReportSummaryGraph.js:103
+msgid "Data:"
+msgstr "Données:"
 
 #: src/months.js:15
 msgid "December"
 msgstr "Décembre"
+
+#: src/ScanCard.js:33
+#: src/ScanDomain.js:134
+msgid "Deploy DKIM records and keys for all domains and senders; and"
+msgstr "Déployer les enregistrements DKIM et les clés pour tous les domaines et expéditeurs."
+
+#: src/ScanCard.js:32
+#: src/ScanDomain.js:133
+msgid "Deploy SPF records for all domains;"
+msgstr "Déployer les enregistrements SPF pour tous les domaines."
+
+#: src/ScanCard.js:27
+#: src/ScanDomain.js:128
+msgid "Deploy initial DMARC records with policy of none; and"
+msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie Aucune (None)"
 
 #: src/DisplayNameField.js:41
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
 #: src/DisplayNameField.js:24
-#: src/EditableUserDisplayName.js:101
+#: src/EditableUserDisplayName.js:94
 msgid "Display Name:"
 msgstr "Nom d'affichage :"
 
@@ -692,28 +545,20 @@ msgstr "Nom d'affichage :"
 msgid "Display name cannot be empty"
 msgstr "Le nom d'affichage ne peut pas être vide"
 
-#: src/DmarcReportPage.js:330
+#: src/DmarcReportPage.js:262
 msgid "Disposition"
 msgstr "Disposition"
 
-#: src/DmarcByDomainPage.js:120
-#: src/DomainsPage.js:169
+#: src/DmarcByDomainPage.js:79
+#: src/DomainsPage.js:226
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/App.js:209
-#~ msgid "Domain DMARC Report"
-#~ msgstr ""
-
-#: src/App.js:165
-#~ msgid "Domain Details"
-#~ msgstr "Détails du domaine"
-
-#: src/AdminDomains.js:280
+#: src/AdminDomains.js:160
 msgid "Domain List"
 msgstr "Liste des domaines"
 
-#: src/AdminDomains.js:356
+#: src/AdminDomains.js:249
 #: src/DomainField.js:36
 msgid "Domain URL"
 msgstr "URL du domaine"
@@ -722,39 +567,19 @@ msgstr "URL du domaine"
 msgid "Domain URL:"
 msgstr "URL du domaine:"
 
-#: src/AdminDomains.js:134
+#: src/AdminDomainModal.js:60
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
-#: src/guidanceTagConstants.js:523
-msgid "Domain defaults to HTTPS, but eventually redirects to HTTP"
-msgstr "Le domaine passe par défaut en HTTPS, mais finit par être redirigé vers HTTP"
-
-#: src/guidanceTagConstants.js:517
-msgid "Domain does not default to HTTPS"
-msgstr "Le domaine ne passe pas par défaut en HTTPS"
-
-#: src/guidanceTagConstants.js:511
-msgid "Domain does not enforce HTTPS"
-msgstr "Le domaine n'applique pas le HTTPS"
-
-#: src/guidanceTagConstants.js:547
-msgid "Domain not pre-loaded by HSTS"
-msgstr "Domaine non préchargé par le HSTS"
-
-#: src/guidanceTagConstants.js:541
-msgid "Domain not pre-loaded by HSTS, but is pre-load ready"
-msgstr "Le domaine n'est pas préchargé par le HSTS, mais est prêt à être préchargé"
-
-#: src/AdminDomains.js:188
+#: src/AdminDomains.js:111
 msgid "Domain removed"
 msgstr "Domaine supprimé"
 
-#: src/AdminDomains.js:189
+#: src/AdminDomains.js:112
 msgid "Domain removed from {orgSlug}"
 msgstr "Domaine supprimé de {orgSlug}"
 
-#: src/AdminDomains.js:239
+#: src/AdminDomainModal.js:109
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
@@ -762,105 +587,96 @@ msgstr "Domaine mis à jour"
 msgid "Domain url field must not be empty"
 msgstr "Le champ de l'url du domaine ne doit pas être vide"
 
-#: src/guidanceTagConstants.js:254
-msgid "Domain uses potentially-outsourced DMARC service"
-msgstr "Le domaine utilise un service DMARC potentiellement externalisé"
-
-#: src/Domain.js:14
-#: src/DomainCard.js:46
+#: src/Domain.js:18
+#: src/DomainCard.js:56
+#: src/ScanDomain.js:231
 msgid "Domain:"
 msgstr "Domaine:"
 
-#: src/AdminPanel.js:16
-#: src/App.js:74
-#: src/App.js:174
-#: src/DomainsPage.js:78
-#: src/DomainsPage.js:112
-#: src/FloatingMenu.js:67
-#: src/OrganizationDetails.js:92
-#: src/OrganizationDomains.js:39
+#: src/AdminPanel.js:23
+#: src/App.js:132
+#: src/App.js:223
+#: src/DomainsPage.js:80
+#: src/DomainsPage.js:115
+#: src/FloatingMenu.js:89
+#: src/OrganizationDetails.js:70
+#: src/OrganizationDomains.js:41
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/DmarcByDomainPage.js:59
-#~ msgid "Domains Table"
-#~ msgstr "Tableau des domaines"
-
-#: src/EditableUserDisplayName.js:114
-#: src/EditableUserEmail.js:114
-#: src/EditableUserPassword.js:129
-#: src/EditableUserPhoneNumber.js:310
+#: src/EditableUserDisplayName.js:112
+#: src/EditableUserEmail.js:107
+#: src/EditableUserPassword.js:122
+#: src/EditableUserPhoneNumber.js:295
 msgid "Edit"
 msgstr "Edit"
 
-#: src/EditableUserDisplayName.js:148
+#: src/EditableUserDisplayName.js:145
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/AdminDomains.js:414
+#: src/AdminDomainModal.js:188
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
-#: src/AdminDomainModal.js:196
-msgid "Add Domain Details"
-msgstr "Ajouter les détails du domaine"
-
-#: src/EditableUserEmail.js:148
+#: src/EditableUserEmail.js:140
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
 
-#: src/OrganizationInformation.js:274
+#: src/OrganizationInformation.js:251
 msgid "Edit Organization"
 msgstr "Organisation d'édition"
 
-#: src/EditableUserPhoneNumber.js:171
+#: src/EditableUserPhoneNumber.js:175
 msgid "Edit Phone Number"
 msgstr "Modifier le numéro de téléphone"
 
-#: src/UserList.js:470
+#: src/UserList.js:483
 msgid "Edit Role"
 msgstr "Rôle d'édition"
 
-#: src/EditableUserTFAMethod.js:134
+#: src/EditableUserTFAMethod.js:145
 #: src/EmailField.js:43
 msgid "Email"
 msgstr "Courriel"
 
-#: src/OrganizationCard.js:116
+#: src/OrganizationCard.js:127
 #: src/SummaryGroup.js:39
 msgid "Email Configuration"
 msgstr "Configuration du courriel"
 
-#: src/DmarcGuidancePage.js:86
+#: src/DmarcGuidancePage.js:79
+#: src/ScanDomain.js:363
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
-#: src/ScanCard.js:13
+#: src/ScanCard.js:14
+#: src/ScanDomain.js:455
 msgid "Email Scan Results"
 msgstr "Résultats de l'analyse des courriels"
 
-#: src/ForgotPasswordPage.js:38
+#: src/ForgotPasswordPage.js:37
 msgid "Email Sent"
 msgstr "Courriel envoyé"
 
-#: src/EditableUserTFAMethod.js:96
+#: src/EditableUserTFAMethod.js:98
 msgid "Email Validated"
 msgstr "Courriel validé"
 
-#: src/EmailValidationPage.js:64
+#: src/EmailValidationPage.js:69
 msgid "Email Validation Page"
 msgstr "Page de validation des e-mails"
 
-#: src/App.js:209
+#: src/App.js:267
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
-#: src/ForgotPasswordPage.js:18
+#: src/ForgotPasswordPage.js:17
 #: src/fieldRequirements.js:6
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
-#: src/UserList.js:199
+#: src/UserList.js:191
 msgid "Email invitation sent to {addedUserName}"
 msgstr "Invitation par courrier électronique envoyée à jim@hotmail.com"
 
@@ -868,73 +684,80 @@ msgstr "Invitation par courrier électronique envoyée à jim@hotmail.com"
 msgid "Email security settings summary"
 msgstr "Résumé des paramètres de sécurité du courriel"
 
-#: src/UserPage.js:38
+#: src/UserPage.js:36
 msgid "Email successfully sent"
 msgstr "Courriel envoyé avec succès"
 
-#: src/EditableUserEmail.js:101
+#: src/EditableUserEmail.js:94
 #: src/EmailField.js:26
 msgid "Email:"
 msgstr "Courrier électronique :"
 
-#: src/ScanCategoryDetails.js:59
+#: src/ScanCategoryDetails.js:73
 msgid "Enforcement:"
 msgstr "Application de la loi:"
 
-#: src/CreateOrganizationPage.js:173
-#: src/CreateOrganizationPage.js:186
-#: src/CreateOrganizationPage.js:199
-#: src/CreateOrganizationPage.js:212
-#: src/CreateOrganizationPage.js:225
-#: src/CreateOrganizationPage.js:238
-#: src/CreateOrganizationPage.js:251
+#: src/CreateOrganizationPage.js:209
+#: src/CreateOrganizationPage.js:220
+#: src/CreateOrganizationPage.js:231
+#: src/CreateOrganizationPage.js:242
+#: src/CreateOrganizationPage.js:253
 msgid "English"
 msgstr "Anglais"
 
-#: src/OrganizationInformation.js:535
+#: src/OrganizationInformation.js:501
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/EditableUserPassword.js:179
+#: src/EditableUserPassword.js:171
 msgid "Enter and confirm your new password below:"
 msgstr "Entrez et confirmez votre nouveau mot de passe ci-dessous :"
 
-#: src/ResetPasswordPage.js:100
+#: src/ResetPasswordPage.js:99
 msgid "Enter and confirm your new password."
 msgstr "Entrez et confirmez votre nouveau mot de passe."
 
-#: src/AuthenticateField.js:68
+#: src/AuthenticateField.js:64
 msgid "Enter two factor code"
 msgstr "Entrez le code à deux facteurs"
 
-#: src/ForgotPasswordPage.js:70
+#: src/ForgotPasswordPage.js:69
 msgid "Enter your user account's verified email address and we will send you a password reset link."
 msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
 
-#: src/DmarcReportPage.js:284
+#: src/DmarcReportPage.js:216
 msgid "Envelope From"
 msgstr "Enveloppe De"
 
-#: src/DmarcReportPage.js:241
+#: src/DmarcReportPage.js:178
+#: src/DmarcReportPage.js:179
+#: src/DmarcReportSummaryGraph.js:171
+#: src/DmarcReportSummaryGraph.js:362
 #: src/fixtures/summaryListData.js:171
 msgid "Fail"
 msgstr "Échec"
 
-#: src/DmarcReportPage.js:229
+#: src/DmarcReportPage.js:172
+#: src/DmarcReportPage.js:173
+#: src/DmarcReportSummaryGraph.js:171
+#: src/DmarcReportSummaryGraph.js:362
 #: src/fixtures/summaryListData.js:161
 msgid "Fail DKIM"
 msgstr "Échec DKIM"
 
-#: src/DmarcByDomainPage.js:151
+#: src/DmarcByDomainPage.js:111
 msgid "Fail DKIM %"
 msgstr "Échec DKIM %"
 
-#: src/DmarcReportPage.js:235
+#: src/DmarcReportPage.js:175
+#: src/DmarcReportPage.js:176
+#: src/DmarcReportSummaryGraph.js:171
+#: src/DmarcReportSummaryGraph.js:362
 #: src/fixtures/summaryListData.js:165
 msgid "Fail SPF"
 msgstr "Échec du SPF"
 
-#: src/DmarcByDomainPage.js:158
+#: src/DmarcByDomainPage.js:118
 msgid "Fail SPF %"
 msgstr "Échec du SPF %"
 
@@ -942,374 +765,261 @@ msgstr "Échec du SPF %"
 msgid "February"
 msgstr "Février"
 
-#: src/guidanceTagConstants.js:102
-#: src/guidanceTagConstants.js:109
-#: src/guidanceTagConstants.js:116
-#: src/guidanceTagConstants.js:124
-#: src/guidanceTagConstants.js:208
-#: src/guidanceTagConstants.js:215
-#: src/guidanceTagConstants.js:223
-#: src/guidanceTagConstants.js:271
-#: src/guidanceTagConstants.js:285
-#: src/guidanceTagConstants.js:292
-#: src/guidanceTagConstants.js:299
-#: src/guidanceTagConstants.js:327
-#: src/guidanceTagConstants.js:351
-#: src/guidanceTagConstants.js:436
-#: src/guidanceTagConstants.js:487
-msgid "Follow implementation guide"
-msgstr "Suivre le guide de mise en œuvre"
-
-#: src/TermsConditionsPage.js:47
+#: src/TermsConditionsPage.js:45
 msgid "For details related to terms pertaining to privacy, please refer to"
 msgstr ""
 
-#: src/GuidanceTagDetails.js:12
+#: src/GuidanceTagDetails.js:18
 msgid "For in-depth CCCS implementation guidance:"
 msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS :"
 
-#: src/GuidanceTagDetails.js:37
+#: src/GuidanceTagDetails.js:43
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique :"
 
-#: src/App.js:148
+#: src/App.js:180
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
-#: src/SignInPage.js:135
+#: src/SignInPage.js:163
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
-#: src/CreateOrganizationPage.js:178
-#: src/CreateOrganizationPage.js:191
-#: src/CreateOrganizationPage.js:204
-#: src/CreateOrganizationPage.js:217
-#: src/CreateOrganizationPage.js:230
-#: src/CreateOrganizationPage.js:243
-#: src/CreateOrganizationPage.js:256
+#: src/CreateOrganizationPage.js:214
+#: src/CreateOrganizationPage.js:225
+#: src/CreateOrganizationPage.js:236
+#: src/CreateOrganizationPage.js:247
+#: src/CreateOrganizationPage.js:258
 msgid "French"
 msgstr "Français"
 
-#: src/DmarcByDomainPage.js:165
+#: src/DmarcByDomainPage.js:125
 msgid "Full Fail %"
 msgstr "Échec total %"
 
-#: src/DmarcByDomainPage.js:144
+#: src/DmarcByDomainPage.js:104
 msgid "Full Pass %"
 msgstr "Passage complet %"
 
-#: src/DmarcReportPage.js:414
+#: src/DmarcReportPage.js:401
 msgid "Fully Aligned Table"
 msgstr "Tableau entièrement aligné"
 
-#: src/DmarcReportPage.js:425
-#: src/DmarcReportPage.js:452
+#: src/DmarcReportPage.js:412
+#: src/DmarcReportPage.js:473
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
-#: src/DmarcReportTable.js:296
-#: src/SummaryTable.js:178
+#: src/Organizations.js:148
+msgid "Further details for each organization can be found by clicking on its row."
+msgstr ""
+
+#: src/TrackerTable.js:198
 msgid "Go to page:"
 msgstr "Aller à la page"
 
-#: src/guidanceTagConstants.js:95
-#: src/guidanceTagConstants.js:264
-#: src/guidanceTagConstants.js:344
-#: src/guidanceTagConstants.js:430
-#: src/guidanceTagConstants.js:481
-msgid "Government of Canada domains subject to TBS guidelines"
-msgstr "Les domaines du gouvernement du Canada sont soumis aux directives du SCT"
+#: src/DmarcReportSummaryGraph.js:91
+msgid "Graph:"
+msgstr "Graphique:"
 
-#: src/DmarcReportPage.js:312
-#: src/DmarcReportPage.js:633
-#: src/DomainCard.js:191
+#: src/DmarcReportPage.js:244
+#: src/DmarcReportPage.js:754
+#: src/DomainCard.js:209
 msgid "Guidance"
 msgstr "Conseils"
 
-#: src/DmarcGuidancePage.js:47
+#: src/DmarcGuidancePage.js:40
 msgid "Guidance Tags"
 msgstr "Étiquettes d'orientation"
 
-#: src/GuidanceTagDetails.js:82
-#: src/GuidanceTagList.js:85
+#: src/GuidanceTagDetails.js:87
+#: src/GuidanceTagList.js:81
 msgid "Guidance:"
 msgstr "Orientation :"
 
-#: src/ScanCategoryDetails.js:72
+#: src/ScanCategoryDetails.js:86
 msgid "HSTS Age:"
 msgstr "Âge du HSTS:"
 
-#: src/ScanCategoryDetails.js:65
+#: src/ScanCategoryDetails.js:79
 msgid "HSTS Status:"
 msgstr "Statut HSTS:"
 
-#: src/guidanceTagConstants.js:528
-msgid "HSTS-missing"
-msgstr "HSTS-missing"
+#: src/RequestScanNotificationHandler.js:88
+msgid "HTTPS Scan Complete"
+msgstr "Scan HTTPS terminé"
 
-#: src/guidanceTagConstants.js:546
-msgid "HSTS-not-preloaded"
-msgstr "HSTS-not-preloaded"
-
-#: src/guidanceTagConstants.js:540
-msgid "HSTS-preload-ready"
-msgstr ""
-
-#: src/guidanceTagConstants.js:534
-msgid "HSTS-short-age"
-msgstr ""
-
-#: src/guidanceTagConstants.js:529
-msgid "HTTP Strict Transport Security (HSTS) not implemented"
-msgstr "HTTP Strict Transport Security (HSTS) non mis en œuvre"
-
-#: src/guidanceTagConstants.js:535
-msgid "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
-msgstr "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an"
-
-#: src/DomainsPage.js:171
+#: src/DomainsPage.js:228
 msgid "HTTPS Status"
 msgstr "Statut HTTPS"
 
-#: src/guidanceTagConstants.js:499
-msgid "HTTPS certificate chain is invalid"
-msgstr "La chaîne de certificats HTTPS n'est pas valable"
+#: src/RequestScanNotificationHandler.js:89
+msgid "HTTPS scan for domain \"{0}\" has completed."
+msgstr "L'analyse HTTPS du domaine \"{0}\" est terminée."
 
-#: src/guidanceTagConstants.js:553
-msgid "HTTPS certificate is expired"
-msgstr "Le certificat HTTPS est expiré"
-
-#: src/guidanceTagConstants.js:559
-msgid "HTTPS certificate is self-signed"
-msgstr "Le certificat HTTPS est auto-signé"
-
-#: src/guidanceTagConstants.js:505
-msgid "HTTPS endpoint failed hostname validation"
-msgstr "Le point terminal HTTPS a échoué dans la validation du nom d'hôte"
-
-#: src/guidanceTagConstants.js:480
-msgid "HTTPS-GC"
-msgstr ""
-
-#: src/guidanceTagConstants.js:498
-msgid "HTTPS-bad-chain"
-msgstr ""
-
-#: src/guidanceTagConstants.js:504
-msgid "HTTPS-bad-hostname"
-msgstr ""
-
-#: src/guidanceTagConstants.js:552
-msgid "HTTPS-certificate-expired"
-msgstr ""
-
-#: src/guidanceTagConstants.js:558
-msgid "HTTPS-certificate-self-signed"
-msgstr ""
-
-#: src/guidanceTagConstants.js:492
-msgid "HTTPS-downgraded"
-msgstr ""
-
-#: src/guidanceTagConstants.js:486
-msgid "HTTPS-missing"
-msgstr ""
-
-#: src/guidanceTagConstants.js:522
-msgid "HTTPS-moderately-enforced"
-msgstr ""
-
-#: src/guidanceTagConstants.js:510
-msgid "HTTPS-not-enforced"
-msgstr ""
-
-#: src/guidanceTagConstants.js:516
-msgid "HTTPS-weakly-enforced"
-msgstr ""
-
-#: src/DmarcReportPage.js:308
+#: src/DmarcReportPage.js:240
 msgid "Header From"
 msgstr "En-tête De"
 
-#: src/ScanCategoryDetails.js:94
+#: src/ScanCategoryDetails.js:108
 msgid "Heartbleed Vulnerability:"
 msgstr "Vulnérabilité Heartbleed:"
 
-#: src/App.js:64
-#: src/App.js:126
-#: src/FloatingMenu.js:126
+#: src/App.js:121
+#: src/App.js:158
+#: src/FloatingMenu.js:148
 msgid "Home"
 msgstr "Accueil"
 
-#: src/guidanceTagConstants.js:333
-msgid "INCLUDE-limit"
-msgstr ""
+#: src/DmarcReportSummaryGraph.js:98
+msgid "Horizontal View"
+msgstr "Vue horizontale"
 
-#: src/guidanceTagConstants.js:98
-msgid "IT PIN"
-msgstr ""
-
-#: src/guidanceTagConstants.js:267
-#: src/guidanceTagConstants.js:347
-#: src/guidanceTagConstants.js:432
-#: src/guidanceTagConstants.js:483
-msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
-msgstr ""
-
-#: src/ScanCard.js:30
+#: src/ScanDomain.js:400
 msgid "ITPIN Compliant"
 msgstr "Conforme à l'ITPIN"
 
-#: src/TermsConditionsPage.js:365
+#: src/ScanCard.js:31
+#: src/ScanDomain.js:132
+msgid "Identify all authorized senders;"
+msgstr "Déterminer tous les expéditeurs autorisés."
+
+#: src/ScanCard.js:25
+#: src/ScanDomain.js:126
+msgid "Identify all domains and subdomains used to send mail;"
+msgstr "Déterminer tous les domaines et sous-domaines utilisés pour envoyer des courriels."
+
+#: src/TermsConditionsPage.js:391
 msgid "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
 msgstr ""
 
-#: src/GuidanceTagList.js:95
+#: src/GuidanceTagList.js:91
 msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
 msgstr "Si vous pensez que cela est dû à un problème avec Tracker, veuillez utiliser le lien \"Signaler un problème\" ci-dessous"
 
-#: src/PolicyComplianceDetails.js:17
-#~ msgid "Implementation Status:"
-#~ msgstr "État d'avancement de la mise en œuvre:"
-
-#: src/ScanCategoryDetails.js:53
+#: src/ScanCategoryDetails.js:67
 msgid "Implementation:"
 msgstr "Mise en œuvre:"
 
-#: src/TwoFactorAuthenticatePage.js:84
+#: src/TwoFactorAuthenticatePage.js:83
 msgid "Incorrect authenticate.result typename."
 msgstr ""
 
-#: src/AdminDomains.js:154
+#: src/AdminDomainModal.js:82
 msgid "Incorrect createDomain.result typename."
 msgstr ""
 
-#: src/CreateOrganizationPage.js:107
+#: src/CreateOrganizationPage.js:113
 msgid "Incorrect createOrganization.result typename."
 msgstr "createOrganization.result incorrecte typename."
 
-#: src/UserList.js:217
+#: src/UserList.js:209
 msgid "Incorrect inviteUserToOrg.result typename."
 msgstr ""
 
-#: src/AdminDomains.js:207
+#: src/AdminDomains.js:130
 msgid "Incorrect removeDomain.result typename."
 msgstr ""
 
-#: src/OrganizationInformation.js:110
+#: src/OrganizationInformation.js:98
 msgid "Incorrect removeOrganization.result typename."
 msgstr ""
 
-#: src/ResetPasswordPage.js:61
+#: src/ResetPasswordPage.js:60
 msgid "Incorrect resetPassword.result typename."
 msgstr ""
 
-#: src/AdminDomains.js:153
-#: src/AdminDomains.js:206
-#: src/AdminDomains.js:258
-#: src/CreateOrganizationPage.js:106
-#: src/CreateUserPage.js:94
-#: src/EditableUserDisplayName.js:79
-#: src/EditableUserEmail.js:79
-#: src/EditableUserLanguage.js:60
-#: src/EditableUserPassword.js:82
-#: src/EditableUserPhoneNumber.js:73
-#: src/EditableUserPhoneNumber.js:129
-#: src/EditableUserTFAMethod.js:69
-#: src/ResetPasswordPage.js:60
-#: src/SignInPage.js:91
-#: src/TwoFactorAuthenticatePage.js:83
-#: src/UserList.js:163
-#: src/UserList.js:216
+#: src/AdminDomainModal.js:81
+#: src/AdminDomainModal.js:130
+#: src/AdminDomains.js:129
+#: src/CreateOrganizationPage.js:112
+#: src/CreateUserPage.js:92
+#: src/EditableUserDisplayName.js:72
+#: src/EditableUserEmail.js:72
+#: src/EditableUserLanguage.js:52
+#: src/EditableUserPassword.js:75
+#: src/EditableUserPhoneNumber.js:66
+#: src/EditableUserPhoneNumber.js:117
+#: src/EditableUserTFAMethod.js:62
+#: src/ResetPasswordPage.js:59
+#: src/SignInPage.js:99
+#: src/TwoFactorAuthenticatePage.js:82
+#: src/UserList.js:159
+#: src/UserList.js:208
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
-#: src/EditableUserPhoneNumber.js:74
+#: src/EditableUserPhoneNumber.js:67
 msgid "Incorrect setPhoneNumber.result typename."
 msgstr ""
 
-#: src/SignInPage.js:92
+#: src/SignInPage.js:100
 msgid "Incorrect signIn.result typename."
 msgstr "Nom d'utilisateur incorrect signIn.result."
 
-#: src/CreateUserPage.js:95
+#: src/CreateUserPage.js:93
 msgid "Incorrect signUp.result typename."
 msgstr ""
 
-#: src/OrganizationInformation.js:109
-#: src/OrganizationInformation.js:184
+#: src/OrganizationInformation.js:97
+#: src/OrganizationInformation.js:168
 msgid "Incorrect typename received."
 msgstr ""
 
-#: src/AdminDomains.js:259
+#: src/AdminDomainModal.js:131
 msgid "Incorrect updateDomain.result typename."
 msgstr ""
 
-#: src/OrganizationInformation.js:185
+#: src/OrganizationInformation.js:169
 msgid "Incorrect updateOrganization.result typename."
 msgstr ""
 
-#: src/EditableUserPassword.js:83
+#: src/EditableUserPassword.js:76
 msgid "Incorrect updateUserPassword.result typename."
 msgstr ""
 
-#: src/EditableUserDisplayName.js:80
-#: src/EditableUserEmail.js:80
-#: src/EditableUserLanguage.js:61
-#: src/EditableUserTFAMethod.js:70
+#: src/EditableUserDisplayName.js:73
+#: src/EditableUserEmail.js:73
+#: src/EditableUserLanguage.js:53
+#: src/EditableUserTFAMethod.js:63
 msgid "Incorrect updateUserProfile.result typename."
 msgstr ""
 
-#: src/UserList.js:164
+#: src/UserList.js:160
 msgid "Incorrect updateUserRole.result typename."
 msgstr ""
 
-#: src/EditableUserPhoneNumber.js:130
+#: src/EditableUserPhoneNumber.js:118
 msgid "Incorrect verifyPhoneNumber.result typename."
 msgstr "Une erreur s'est produite lors de la vérification de votre numéro de téléphone."
 
-#: src/TermsConditionsPage.js:309
+#: src/TermsConditionsPage.js:328
 msgid "Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:"
 msgstr ""
 
-#: src/TermsConditionsPage.js:96
+#: src/TermsConditionsPage.js:90
 msgid "Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the"
 msgstr ""
 
-#: src/TermsConditionsPage.js:138
+#: src/TermsConditionsPage.js:131
 msgid "Intellectual Property, Copyright and Trademarks"
 msgstr ""
 
-#: src/OrganizationSummary.js:30
-msgid "Internet facing services"
-msgstr "Services d'accès à Internet"
+#: src/OrganizationSummary.js:29
+msgid "Internet facing domains"
+msgstr ""
 
-#: src/Organization.js:19
-msgid "Internet facing services: {domainCount}"
-msgstr "Services d'accès à Internet: {domainCount}"
-
-#: src/ForgotPasswordPage.js:19
+#: src/ForgotPasswordPage.js:18
 #: src/fieldRequirements.js:7
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
-#: src/guidanceTagConstants.js:156
-msgid "Invalid percent"
-msgstr "Pourcentage non valable"
-
-#: src/guidanceTagConstants.js:396
-msgid "Invalid public key"
-msgstr "Clé publique invalide"
-
-#: src/UserList.js:384
+#: src/UserList.js:398
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
-#: src/UserList.js:282
-#~ msgid "Invite a user"
-#~ msgstr "Inviter un utilisateur"
-
 #: src/RelayPaginationControls.js:32
+#: src/TrackerTable.js:226
 msgid "Items per page:"
 msgstr "Objets par page:"
 
@@ -1325,118 +1035,52 @@ msgstr "Juillet"
 msgid "June"
 msgstr "Juin"
 
-#: src/TermsConditionsPage.js:390
+#: src/TermsConditionsPage.js:414
 msgid "Jurisdiction"
 msgstr ""
 
-#: src/DmarcReportSummaryGraph.js:67
+#: src/DmarcReportSummaryGraph.js:65
 msgid "L-30-D"
 msgstr ""
 
-#: src/EditableUserLanguage.js:82
+#: src/EditableUserLanguage.js:74
 #: src/LanguageSelect.js:19
 msgid "Language:"
 msgstr "La langue:"
 
-#: src/DmarcByDomainPage.js:237
-#: src/DmarcReportPage.js:142
+#: src/DmarcByDomainPage.js:193
+#: src/DmarcReportPage.js:92
 msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
 
-#: src/DomainsPage.js:170
+#: src/DomainsPage.js:227
 msgid "Last Scanned"
 msgstr "Dernière numérisation"
 
-#: src/Domain.js:32
-#: src/DomainCard.js:63
+#: src/Domain.js:36
+#: src/DomainCard.js:70
 msgid "Last scanned:"
 msgstr "Dernier scan:"
 
-#: src/PolicyComplianceDetails.js:23
-#~ msgid "Level of Enforcment:"
-#~ msgstr "Niveau d'application:"
-
-#: src/TermsConditionsPage.js:276
+#: src/TermsConditionsPage.js:281
 msgid "Limitation of Liability"
 msgstr ""
 
-#: src/DmarcByDomainPage.js:319
+#: src/ScanDomain.js:420
+msgid "Loading Compliance Status"
+msgstr "Statut de conformité du chargement"
+
+#: src/ScanDomain.js:498
+msgid "Loading DMARC Phase"
+msgstr "Chargement de la phase DMARC"
+
+#: src/DmarcByDomainPage.js:298
 msgid "Loading Data..."
 msgstr "Chargement des données..."
 
 #: src/LoadingMessage.js:18
 msgid "Loading {children}..."
 msgstr "Chargement {children}..."
-
-#: src/TwoFactorAuthenticatePage.js:95
-#~ msgid "Loading..."
-#~ msgstr "Chargement..."
-
-#: src/guidanceTagConstants.js:105
-#: src/guidanceTagConstants.js:112
-#: src/guidanceTagConstants.js:120
-#: src/guidanceTagConstants.js:128
-#: src/guidanceTagConstants.js:136
-#: src/guidanceTagConstants.js:144
-#: src/guidanceTagConstants.js:152
-#: src/guidanceTagConstants.js:160
-#: src/guidanceTagConstants.js:167
-#: src/guidanceTagConstants.js:211
-#: src/guidanceTagConstants.js:219
-#: src/guidanceTagConstants.js:227
-#: src/guidanceTagConstants.js:235
-#: src/guidanceTagConstants.js:243
-#: src/guidanceTagConstants.js:257
-#: src/guidanceTagConstants.js:274
-#: src/guidanceTagConstants.js:281
-#: src/guidanceTagConstants.js:288
-#: src/guidanceTagConstants.js:295
-#: src/guidanceTagConstants.js:302
-#: src/guidanceTagConstants.js:309
-#: src/guidanceTagConstants.js:316
-#: src/guidanceTagConstants.js:323
-#: src/guidanceTagConstants.js:330
-#: src/guidanceTagConstants.js:337
-#: src/guidanceTagConstants.js:354
-#: src/guidanceTagConstants.js:361
-#: src/guidanceTagConstants.js:368
-#: src/guidanceTagConstants.js:374
-#: src/guidanceTagConstants.js:380
-#: src/guidanceTagConstants.js:386
-#: src/guidanceTagConstants.js:392
-#: src/guidanceTagConstants.js:398
-#: src/guidanceTagConstants.js:404
-#: src/guidanceTagConstants.js:410
-#: src/guidanceTagConstants.js:416
-#: src/guidanceTagConstants.js:438
-#: src/guidanceTagConstants.js:444
-#: src/guidanceTagConstants.js:450
-#: src/guidanceTagConstants.js:456
-#: src/guidanceTagConstants.js:462
-#: src/guidanceTagConstants.js:468
-#: src/guidanceTagConstants.js:474
-#: src/guidanceTagConstants.js:489
-#: src/guidanceTagConstants.js:495
-#: src/guidanceTagConstants.js:501
-#: src/guidanceTagConstants.js:507
-#: src/guidanceTagConstants.js:513
-#: src/guidanceTagConstants.js:519
-#: src/guidanceTagConstants.js:525
-#: src/guidanceTagConstants.js:531
-#: src/guidanceTagConstants.js:537
-#: src/guidanceTagConstants.js:543
-#: src/guidanceTagConstants.js:549
-#: src/guidanceTagConstants.js:555
-#: src/guidanceTagConstants.js:561
-msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
-msgstr ""
-
-#: src/guidanceTagConstants.js:132
-#: src/guidanceTagConstants.js:231
-#: src/guidanceTagConstants.js:306
-#: src/guidanceTagConstants.js:313
-msgid "Maintain deployment"
-msgstr "Maintenir le déploiement"
 
 #: src/months.js:6
 msgid "March"
@@ -1446,138 +1090,112 @@ msgstr "Mars"
 msgid "May"
 msgstr "Mai"
 
-#: src/FloatingMenu.js:97
-#: src/FloatingMenu.js:120
+#: src/FloatingMenu.js:119
+#: src/FloatingMenu.js:142
 msgid "Menu"
 msgstr "Menu"
 
-#: src/guidanceTagConstants.js:174
-msgid "Missing from guide- need v1.1"
-msgstr "Absent du guide - besoin v1.1"
+#: src/ScanCard.js:34
+#: src/ScanDomain.js:135
+msgid "Monitor DMARC reports and correct misconfigurations."
+msgstr "Surveiller les rapports DMARC et corriger les erreurs de configuration."
 
-#: src/guidanceTagConstants.js:334
-msgid "More than 10 lookups - Follow implementation guide"
-msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
+#: src/ScanCard.js:42
+#: src/ScanDomain.js:143
+msgid "Monitor DMARC reports;"
+msgstr "Surveiller les rapports DMARC."
 
-#: src/CreateOrganizationPage.js:174
-#: src/CreateOrganizationPage.js:179
-#: src/Organizations.js:153
+#: src/CreateOrganizationPage.js:210
+#: src/CreateOrganizationPage.js:215
+#: src/Organizations.js:215
 msgid "Name"
 msgstr "Nom"
 
-#: src/OrganizationInformation.js:370
+#: src/OrganizationInformation.js:347
 msgid "Name (EN)"
 msgstr "Nom (EN)"
 
-#: src/OrganizationInformation.js:373
+#: src/OrganizationInformation.js:350
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
-#: src/GuidanceTagList.js:145
-msgid "Negative Tags"
-msgstr "Étiquettes négatives"
+#: src/GuidanceTagList.js:112
+msgid "Neutral tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
+msgstr ""
 
-#: src/GuidanceTagList.js:130
-msgid "Neutral Tags"
-msgstr "Étiquettes neutres"
-
-#: src/EditableUserDisplayName.js:161
+#: src/EditableUserDisplayName.js:158
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
 
-#: src/AdminDomains.js:444
-msgid "New Domain Url"
-msgstr "Nouvel Url de domaine"
+#: src/AdminDomainModal.js:211
+msgid "New Domain URL"
+msgstr ""
 
-#: src/AdminDomains.js:437
-msgid "New Domain Url:"
-msgstr "Nouvelle URL de domaine :"
+#: src/AdminDomainModal.js:204
+msgid "New Domain URL:"
+msgstr ""
 
-#: src/EditableUserEmail.js:161
+#: src/EditableUserEmail.js:153
 msgid "New Email Address:"
 msgstr "Nouvelle adresse électronique :"
 
-#: src/EditableUserPassword.js:185
+#: src/EditableUserPassword.js:175
 msgid "New Password:"
 msgstr "Nouveau mot de passe :"
 
-#: src/EditableUserPhoneNumber.js:188
+#: src/EditableUserPhoneNumber.js:192
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
-#: src/AdminDomains.js:276
-#~ msgid "New domain name cannot be empty"
-#~ msgstr "Un nouveau nom de domaine ne peut pas être vide"
-
-#: src/UserList.js:359
-msgid "New user email"
-msgstr "Courriel du nouvel utilisateur"
-
-#: src/RelayPaginationControls.js:71
+#: src/RelayPaginationControls.js:75
 msgid "Next"
 msgstr "Suivant"
 
-#: src/ScanCategoryDetails.js:90
-#: src/ScanCategoryDetails.js:96
-#: src/ScanCategoryDetails.js:102
+#: src/ScanCategoryDetails.js:104
+#: src/ScanCategoryDetails.js:110
+#: src/ScanCategoryDetails.js:116
 msgid "No"
 msgstr "Non"
 
-#: src/AdminDomains.js:288
-#: src/DomainsPage.js:85
-#: src/OrganizationDomains.js:49
+#: src/AdminDomains.js:167
+#: src/DomainsPage.js:87
+#: src/OrganizationDomains.js:86
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:87
+#: src/Organizations.js:89
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
-#: src/guidanceTagConstants.js:178
-msgid "No RUAs defined"
-msgstr "Pas de RUA définis"
-
-#: src/guidanceTagConstants.js:186
-msgid "No RUFs defined"
-msgstr "Pas de RUF définis"
-
-#: src/OrganizationAffiliations.js:50
+#: src/OrganizationAffiliations.js:47
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
 
-#: src/EditableUserPhoneNumber.js:301
+#: src/EditableUserPhoneNumber.js:286
 msgid "No current phone number"
 msgstr "Pas de numéro de téléphone actuel"
 
-#: src/DmarcReportPage.js:402
+#: src/DmarcReportPage.js:389
 msgid "No data for the DKIM Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances DKIM par adresse IP"
 
-#: src/DmarcReportPage.js:602
+#: src/DmarcReportPage.js:713
 msgid "No data for the DMARC Failures by IP Address table"
 msgstr "Pas de données pour le tableau des défaillances DMARC par adresse IP"
 
-#: src/DmarcByDomainPage.js:161
-#~ msgid "No data for the DMARC summary table"
-#~ msgstr "Pas de données pour le tableau récapitulatif de la DMARC"
-
-#: src/DmarcReportPage.js:273
+#: src/DmarcReportPage.js:205
 msgid "No data for the DMARC yearly report graph"
 msgstr "Pas de données pour le graphique du rapport annuel de la DMARC"
 
-#: src/DmarcReportPage.js:467
+#: src/DmarcReportPage.js:492
 msgid "No data for the Fully Aligned by IP Address table"
 msgstr "Pas de données pour le tableau Entièrement aligné par adresse IP"
 
-#: src/DmarcReportPage.js:535
+#: src/DmarcReportPage.js:608
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 
-#: src/DomainList.js:12
-msgid "No domains scanned yet."
-msgstr "Aucun domaine n'a encore été scanné."
-
-#: src/GuidanceTagList.js:80
+#: src/GuidanceTagList.js:76
 msgid "No guidance tags were found for this scan category"
 msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
 
@@ -1585,19 +1203,19 @@ msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de 
 msgid "No mail configuration information available for this org."
 msgstr "Aucune information sur la configuration du courrier n'est disponible pour cette organisation."
 
-#: src/ScanCategoryDetails.js:23
-msgid "No scan data available for {0}."
-msgstr "No scan data available for {0}."
+#: src/ScanCategoryDetails.js:14
+msgid "No scan data available for ${0}."
+msgstr "Aucune donnée d'analyse disponible pour ${0}."
 
-#: src/Doughnut.js:66
+#: src/Doughnut.js:82
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
-#: src/UserList.js:278
-msgid "No users in this organization"
-msgstr "Aucun utilisateur dans cette organisation"
+#: src/UserList.js:270
+msgid "No users"
+msgstr ""
 
-#: src/OrganizationInformation.js:316
+#: src/OrganizationInformation.js:293
 msgid "No values were supplied when attempting to update organization details."
 msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des détails de l'organisation."
 
@@ -1609,21 +1227,21 @@ msgstr "Aucune information de configuration web disponible pour cette org."
 msgid "Non-compliant TLS"
 msgstr "TLS non conforme"
 
-#: src/EditableUserTFAMethod.js:133
-#: src/ScanCategoryDetails.js:120
+#: src/EditableUserTFAMethod.js:144
+#: src/ScanCategoryDetails.js:134
 msgid "None"
 msgstr "Aucun"
 
-#: src/Domain.js:43
-#: src/DomainCard.js:69
+#: src/Domain.js:47
+#: src/DomainCard.js:76
 msgid "Not scanned yet."
 msgstr "Pas encore scanné."
 
-#: src/TermsConditionsPage.js:22
+#: src/TermsConditionsPage.js:20
 msgid "Notice of Agreement"
 msgstr ""
 
-#: src/TermsConditionsPage.js:336
+#: src/TermsConditionsPage.js:361
 msgid "Notification of Changes"
 msgstr ""
 
@@ -1635,211 +1253,103 @@ msgstr "Novembre"
 msgid "October"
 msgstr "Octobre"
 
-#: src/guidanceTagConstants.js:460
-msgid "One or more ciphers in use are not compliant with guidelines"
-msgstr "Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes directrices"
-
-#: src/OrganizationDetails.js:63
+#: src/OrganizationDetails.js:39
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
 
-#: src/OrganizationInformation.js:200
+#: src/OrganizationInformation.js:184
 msgid "Organization Information"
 msgstr "Informations sur l'organisation"
 
-#: src/OrganizationInformation.js:543
+#: src/OrganizationInformation.js:509
 msgid "Organization Name"
 msgstr "Nom de l'organisation"
 
-#: src/CreateOrganizationPage.js:87
+#: src/CreateOrganizationPage.js:93
 msgid "Organization created"
 msgstr "Organisation créée"
 
-#: src/OrganizationInformation.js:225
+#: src/OrganizationInformation.js:209
 msgid "Organization name does not match."
 msgstr "Le nom de l'organisation ne correspond pas."
 
-#: src/OrganizationInformation.js:315
+#: src/OrganizationInformation.js:292
 msgid "Organization not updated"
 msgstr "Organisation non mise à jour"
 
-#: src/AdminPage.js:111
+#: src/AdminPage.js:80
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/App.js:69
-#: src/App.js:163
-#: src/FloatingMenu.js:56
-#: src/Organizations.js:78
-#: src/Organizations.js:117
+#: src/App.js:126
+#: src/App.js:195
+#: src/FloatingMenu.js:76
+#: src/Organizations.js:80
+#: src/Organizations.js:120
 msgid "Organizations"
 msgstr "Organisations"
 
-#: src/guidanceTagConstants.js:182
-msgid "Owner has not configured Aggregate reporting."
-msgstr "Le propriétaire n'a pas configuré le rapport agrégé."
-
-#: src/guidanceTagConstants.js:190
-msgid "Owner has not configured Forensic reporting. Missing from guide- need v1.1"
-msgstr "Le propriétaire n'a pas configuré le rapport médico-légal. Manque dans le guide - besoin v1.1"
-
-#: src/guidanceTagConstants.js:119
-#: src/guidanceTagConstants.js:127
-#: src/guidanceTagConstants.js:135
-msgid "P"
-msgstr ""
-
-#: src/guidanceTagConstants.js:377
-msgid "P-1024"
-msgstr ""
-
-#: src/guidanceTagConstants.js:383
-msgid "P-2048"
-msgstr ""
-
-#: src/guidanceTagConstants.js:389
-msgid "P-4096"
-msgstr ""
-
-#: src/guidanceTagConstants.js:395
-msgid "P-invalid"
-msgstr ""
-
-#: src/guidanceTagConstants.js:108
-msgid "P-missing"
-msgstr ""
-
-#: src/guidanceTagConstants.js:115
-msgid "P-none"
-msgstr ""
-
-#: src/guidanceTagConstants.js:123
-msgid "P-quarantine"
-msgstr ""
-
-#: src/guidanceTagConstants.js:131
-msgid "P-reject"
-msgstr ""
-
-#: src/guidanceTagConstants.js:371
-msgid "P-sub1024"
-msgstr ""
-
-#: src/guidanceTagConstants.js:401
-msgid "P-update-recommended"
-msgstr ""
-
-#: src/guidanceTagConstants.js:143
-#: src/guidanceTagConstants.js:151
-#: src/guidanceTagConstants.js:159
-#: src/guidanceTagConstants.js:242
-msgid "PCT"
-msgstr ""
-
-#: src/guidanceTagConstants.js:239
-msgid "PCT should be 100, or not included, if p=none"
-msgstr "PCT doit être de 100, ou non inclus, si p=none"
-
-#: src/guidanceTagConstants.js:246
-msgid "PCT-0"
-msgstr ""
-
-#: src/guidanceTagConstants.js:139
-msgid "PCT-100"
-msgstr ""
-
-#: src/guidanceTagConstants.js:155
-msgid "PCT-invalid"
-msgstr ""
-
-#: src/guidanceTagConstants.js:238
-msgid "PCT-none-exists"
-msgstr ""
-
-#: src/guidanceTagConstants.js:147
-msgid "PCT-xx"
-msgstr ""
-
-#: src/SummaryTable.js:172
-msgid "Page"
-msgstr "Page"
-
-#: src/RelayPaginationControls.js:31
-#~ msgid "Page Size:"
-#~ msgstr "Taille de la page :"
-
-#: src/DmarcReportTable.js:309
+#: src/TrackerTable.js:214
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
-#: src/DmarcReportPage.js:223
+#: src/DmarcReportPage.js:169
+#: src/DmarcReportPage.js:170
+#: src/DmarcReportSummaryGraph.js:171
+#: src/DmarcReportSummaryGraph.js:362
 #: src/fixtures/summaryListData.js:155
 msgid "Pass"
 msgstr "Passez"
-
-#: src/DmarcReportPage.js:235
-#: src/fixtures/summaryListData.js:165
-#~ msgid "Pass Only DKIM"
-#~ msgstr "Passez seulement DKIM"
-
-#: src/DmarcReportPage.js:229
-#: src/fixtures/summaryListData.js:161
-#~ msgid "Pass Only SPF"
-#~ msgstr "Passez seulement SPF"
-
-#: src/DmarcByDomainPage.js:212
-msgid "Pass/Fail Ratios by Domain"
-msgstr "Ratios succès/échec par domaine"
 
 #: src/PasswordConfirmation.js:101
 #: src/PasswordField.js:43
 msgid "Password"
 msgstr "Mot de passe"
 
-#: src/ResetPasswordPage.js:42
+#: src/ResetPasswordPage.js:41
 msgid "Password Updated"
 msgstr "Mot de passe mis à jour"
 
-#: src/ResetPasswordPage.js:20
+#: src/ResetPasswordPage.js:19
 #: src/fieldRequirements.js:11
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
-#: src/ResetPasswordPage.js:23
+#: src/ResetPasswordPage.js:22
 #: src/fieldRequirements.js:18
 msgid "Password confirmation cannot be empty"
 msgstr "La confirmation du mot de passe ne peut pas être vide"
 
-#: src/ResetPasswordPage.js:21
+#: src/ResetPasswordPage.js:20
 #: src/fieldRequirements.js:14
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
 
-#: src/EditableUserPassword.js:116
-#: src/PasswordConfirmation.js:66
+#: src/EditableUserPassword.js:109
+#: src/PasswordConfirmation.js:72
 #: src/PasswordField.js:28
 msgid "Password:"
 msgstr "Mot de passe :"
 
-#: src/ResetPasswordPage.js:24
+#: src/ResetPasswordPage.js:23
 #: src/fieldRequirements.js:19
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
 
-#: src/EditableUserTFAMethod.js:135
+#: src/DmarcReportSummaryGraph.js:110
+msgid "Percentages"
+msgstr "Pourcentages"
+
+#: src/EditableUserTFAMethod.js:146
 msgid "Phone"
 msgstr "Téléphone"
 
-#: src/PhoneNumberField.js:52
-msgid "Phone Number"
-msgstr "Numéro de téléphone"
-
-#: src/EditableUserPhoneNumber.js:293
-#: src/PhoneNumberField.js:28
+#: src/EditableUserPhoneNumber.js:278
+#: src/PhoneNumberField.js:20
 msgid "Phone Number:"
 msgstr "Numéro de téléphone:"
 
-#: src/EditableUserTFAMethod.js:107
+#: src/EditableUserTFAMethod.js:118
 msgid "Phone Validated"
 msgstr "Téléphone validé"
 
@@ -1848,374 +1358,239 @@ msgid "Phone number field must not be empty"
 msgstr "Le champ du numéro de téléphone ne doit pas être vide"
 
 #: src/fieldRequirements.js:34
-msgid "Phone number must be a valid phone number of the form +17895551234 (10-15 digits)"
-msgstr "Le numéro de téléphone doit être un numéro de téléphone valide de la forme +17895551234 (10-15 chiffres)"
+msgid "Phone number must be a valid phone number that is 10-15 digits long"
+msgstr ""
 
 #: src/fieldRequirements.js:22
 msgid "Please choose your preferred language"
 msgstr "Veuillez choisir votre langue préférée"
 
-#: src/EditableUserPassword.js:109
+#: src/EditableUserPassword.js:102
 msgid "Please enter your current password."
 msgstr "Veuillez entrer votre mot de passe actuel."
 
-#: src/AuthenticateField.js:57
+#: src/AuthenticateField.js:53
 msgid "Please enter your two factor code below."
 msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 
-#: src/GuidanceTagList.js:95
-#~ msgid "Please use the contact form to notify an admin"
-#~ msgstr "Veuillez utiliser le formulaire de contact pour informer un administrateur"
-
-#: src/guidanceTagConstants.js:140
-msgid "Policy applies to all of mailflow"
-msgstr "La politique s'applique à l'ensemble du flux de courrier"
-
-#: src/guidanceTagConstants.js:247
-msgid "Policy applies to no part of mailflow - irregular config"
-msgstr "La politique ne s'applique à aucune partie du flux de courrier - configuration irrégulière"
-
-#: src/guidanceTagConstants.js:148
-msgid "Policy applies to percentage of mailflow"
-msgstr "La politique s'applique au pourcentage du flux de courrier"
-
-#: src/GuidanceTagList.js:115
-msgid "Positive Tags"
-msgstr "Étiquettes positives"
-
-#: src/App.js:56
+#: src/App.js:113
 msgid "Pre-Alpha"
-msgstr "préalpha"
+msgstr ""
 
-#: src/ScanCategoryDetails.js:79
+#: src/ScanCategoryDetails.js:93
 msgid "Preloaded Status:"
 msgstr "Statut préchargé:"
 
-#: src/RelayPaginationControls.js:61
+#: src/RelayPaginationControls.js:63
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/App.js:238
-#: src/FloatingMenu.js:174
+#: src/App.js:293
+#: src/FloatingMenu.js:203
 #: src/TermsConditionsPage.js:40
 msgid "Privacy"
 msgstr "Confidentialité"
 
-#: src/TermsConditionsPage.js:78
+#: src/TermsConditionsPage.js:76
 msgid "Privacy Act."
 msgstr ""
 
-#: src/TermsConditionsPage.js:236
+#: src/TermsConditionsPage.js:239
 msgid "Privacy Notice Statement"
 msgstr ""
 
-#: src/GuidanceTagList.js:73
-#~ msgid "Properly configured!"
-#~ msgstr "Bien configuré !"
-
-#: src/CreateOrganizationPage.js:239
-#: src/CreateOrganizationPage.js:244
+#: src/CreateOrganizationPage.js:243
+#: src/CreateOrganizationPage.js:248
 msgid "Province"
 msgstr "Province"
 
-#: src/OrganizationInformation.js:394
+#: src/OrganizationInformation.js:359
 msgid "Province (EN)"
 msgstr "Province (EN)"
 
-#: src/OrganizationInformation.js:397
+#: src/OrganizationInformation.js:362
 msgid "Province (FR)"
 msgstr "Province (FR)"
 
-#: src/OrganizationInformation.js:476
+#: src/OrganizationInformation.js:443
 msgid "Province:"
 msgstr "Province :"
 
-#: src/guidanceTagConstants.js:378
-msgid "Public key RSA and key length 1024"
-msgstr "Clé publique RSA et longueur de la clé 1024"
+#: src/ScanCard.js:39
+#: src/ScanDomain.js:140
+msgid "Reject all messages from non-mail domains."
+msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
 
-#: src/guidanceTagConstants.js:384
-msgid "Public key RSA and key length 2048"
-msgstr "Clé publique RSA et longueur de la clé 2048"
-
-#: src/guidanceTagConstants.js:390
-msgid "Public key RSA and key length 4096 or higher"
-msgstr "Clé publique RSA et longueur de clé 4096 ou plus"
-
-#: src/guidanceTagConstants.js:372
-msgid "Public key RSA and key length <1024"
-msgstr "RSA à clé publique et longueur de clé <1024"
-
-#: src/guidanceTagConstants.js:402
-msgid "Public key in use for longer than 1 year"
-msgstr "Clé publique en usage depuis plus d'un an"
-
-#: src/QRcodePage.js:25
-msgid "QR Code"
-msgstr "Code QR"
-
-#: src/guidanceTagConstants.js:71
-msgid "RFC 4.6.4.  DNS Lookup Limits"
-msgstr "RFC 4.6.4.  DNS Lookup Limits (en anglais seulement)"
-
-#: src/guidanceTagConstants.js:75
-msgid "RFC 6.1.  redirect: Redirected Query"
-msgstr "RFC 6.1.  redirect: Redirected Query (en anglais seulement)"
-
-#: src/guidanceTagConstants.js:60
-msgid "RFC 6.3.  General Record Format"
-msgstr "RFC 6.3.  General Record Format (en anglais seulement)"
-
-#: src/guidanceTagConstants.js:64
-msgid "RFC 7.1.  Verifying External Destinations"
-msgstr "RFC 7.1.  Verifying External Destinations (en anglais seulement)"
-
-#: src/guidanceTagConstants.js:181
-msgid "RUA"
+#: src/SignInPage.js:152
+msgid "Remember me"
 msgstr ""
 
-#: src/guidanceTagConstants.js:163
-msgid "RUA-CCCS"
-msgstr ""
-
-#: src/guidanceTagConstants.js:177
-msgid "RUA-none"
-msgstr ""
-
-#: src/guidanceTagConstants.js:189
-msgid "RUF"
-msgstr ""
-
-#: src/guidanceTagConstants.js:170
-msgid "RUF-CCCS"
-msgstr ""
-
-#: src/guidanceTagConstants.js:185
-msgid "RUF-none"
-msgstr ""
-
-#: src/AdminDomains.js:479
+#: src/AdminDomains.js:297
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
-#: src/OrganizationInformation.js:263
-#: src/OrganizationInformation.js:521
+#: src/OrganizationInformation.js:241
+#: src/OrganizationInformation.js:487
 msgid "Remove Organization"
 msgstr "Supprimer l'organisation"
 
-#: src/UserList.js:406
+#: src/UserList.js:422
 msgid "Remove User"
 msgstr "Supprimer l'utilisateur"
 
-#: src/UserList.js:397
-#~ msgid "Remove user \"{0}\" from \"{orgSlug}\" ?"
-#~ msgstr "Supprimer l'utilisateur \"{0}\" de \"{orgSlug}\" ?"
-
-#: src/OrganizationInformation.js:124
+#: src/OrganizationInformation.js:112
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
-#: src/App.js:249
-#: src/FloatingMenu.js:190
+#: src/App.js:305
+#: src/FloatingMenu.js:214
 msgid "Report an Issue"
 msgstr "Signaler un problème"
 
-#: src/ScanDomain.js:76
+#: src/ScanDomain.js:188
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
-#: src/App.js:154
+#: src/App.js:186
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
-#: src/GuidanceTagDetails.js:76
-#: src/GuidanceTagList.js:77
+#: src/GuidanceTagDetails.js:81
+#: src/GuidanceTagList.js:73
 msgid "Result:"
 msgstr "Résultat"
 
-#: src/ScanCard.js:19
+#: src/ScanCard.js:20
+#: src/ScanDomain.js:458
 msgid "Results for scans of email technologies (DMARC, SPF, DKIM)."
 msgstr "Résultats des analyses des technologies du courrier électronique (DMARC, SPF, DKIM)."
 
-#: src/ScanCard.js:17
+#: src/ScanCard.js:18
+#: src/ScanDomain.js:381
 msgid "Results for scans of web technologies (SSL, HTTPS)."
 msgstr "Résultats des analyses des technologies du web (SSL, HTTPS)."
 
-#: src/UserList.js:144
+#: src/UserList.js:140
 msgid "Role updated"
 msgstr "Rôle mis à jour"
 
-#: src/UserList.js:485
+#: src/UserList.js:498
 msgid "Role:"
 msgstr "Fonction:"
 
-#: src/guidanceTagConstants.js:218
-#: src/guidanceTagConstants.js:226
-#: src/guidanceTagConstants.js:234
-msgid "SP"
-msgstr ""
+#: src/ScanCard.js:44
+#: src/ScanDomain.js:145
+msgid "Rotate DKIM keys annually."
+msgstr "Effectuer la rotation des clés DKIM annuellement."
 
-#: src/guidanceTagConstants.js:207
-msgid "SP-missing"
-msgstr ""
-
-#: src/guidanceTagConstants.js:214
-msgid "SP-none"
-msgstr ""
-
-#: src/guidanceTagConstants.js:222
-msgid "SP-quarantine"
-msgstr ""
-
-#: src/guidanceTagConstants.js:230
-msgid "SP-reject"
-msgstr ""
-
-#: src/DmarcReportPage.js:314
+#: src/DmarcReportPage.js:246
 msgid "SPF Aligned"
 msgstr "Alignement du SPF"
 
-#: src/DmarcReportPage.js:304
+#: src/DmarcReportPage.js:236
 msgid "SPF Domains"
 msgstr "Domaine SPF"
 
-#: src/DmarcReportPage.js:479
+#: src/DmarcReportPage.js:504
 msgid "SPF Failure Table"
 msgstr "Tableau des échecs du SPF"
 
-#: src/DmarcReportPage.js:490
-#: src/DmarcReportPage.js:520
+#: src/DmarcReportPage.js:515
+#: src/DmarcReportPage.js:589
 msgid "SPF Failures by IP Address"
 msgstr "Défaillances du SPF par adresse IP"
 
-#: src/DmarcReportPage.js:318
+#: src/DmarcReportPage.js:250
 msgid "SPF Results"
 msgstr "Résultats du SPF"
 
-#: src/DomainsPage.js:173
+#: src/DomainsPage.js:230
 msgid "SPF Status"
 msgstr "Statut SPF"
 
-#: src/guidanceTagConstants.js:278
-msgid "SPF implemented in incorrect subdomain"
-msgstr "SPF implémenté dans un sous-domaine incorrect"
+#: src/RequestScanNotificationHandler.js:71
+msgid "SSL Scan Complete"
+msgstr "Analyse SSL terminée"
 
-#: src/guidanceTagConstants.js:263
-msgid "SPF-GC"
-msgstr ""
-
-#: src/guidanceTagConstants.js:277
-msgid "SPF-bad-path"
-msgstr ""
-
-#: src/guidanceTagConstants.js:270
-msgid "SPF-missing"
-msgstr ""
-
-#: src/DomainsPage.js:172
+#: src/DomainsPage.js:229
 msgid "SSL Status"
 msgstr "Statut SSL"
 
-#: src/guidanceTagConstants.js:447
-msgid "SSL-3des"
-msgstr ""
+#: src/RequestScanNotificationHandler.js:72
+msgid "SSL scan for domain \"{0}\" has completed."
+msgstr "Le scan SSL pour le domaine \"{0}\" est terminé."
 
-#: src/guidanceTagConstants.js:429
-msgid "SSL-GC"
-msgstr ""
-
-#: src/guidanceTagConstants.js:453
-msgid "SSL-acceptable-certificate"
-msgstr ""
-
-#: src/guidanceTagConstants.js:459
-msgid "SSL-invalid-cipher"
-msgstr ""
-
-#: src/guidanceTagConstants.js:435
-msgid "SSL-missing"
-msgstr ""
-
-#: src/guidanceTagConstants.js:441
-msgid "SSL-rc4"
-msgstr ""
-
-#: src/UserList.js:372
-#: src/UserList.js:507
+#: src/UserList.js:381
+#: src/UserList.js:520
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
-#: src/EditableUserTFAMethod.js:142
+#: src/EditableUserTFAMethod.js:153
 msgid "Save"
 msgstr "Sauvez"
 
-#: src/EditableUserLanguage.js:116
+#: src/EditableUserLanguage.js:108
 msgid "Save Language"
 msgstr "Sauvegarder la langue"
 
-#: src/EditableUserTFAMethod.js:144
-#~ msgid "Save TFA Method"
-#~ msgstr "Méthode Save TFA"
-
-#: src/DomainsPage.js:121
+#: src/DomainsPage.js:159
 msgid "Scan"
 msgstr "Scanner"
 
-#: src/ScanDomain.js:88
+#: src/ScanDomain.js:200
 msgid "Scan Domain"
 msgstr "Domaine de balayage"
 
-#: src/ScanDomain.js:41
+#: src/ScanDomain.js:63
 msgid "Scan Request"
 msgstr "Demande de numérisation"
 
-#: src/ScanDomain.js:42
+#: src/ScanDomain.js:64
 msgid "Scan of domain successfully requested"
 msgstr "Scan du domaine demandé avec succès"
 
-#: src/QRcodePage.js:34
-msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
-msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
-
-#: src/DomainsPage.js:118
+#: src/DomainsPage.js:156
 msgid "Search"
 msgstr "Recherchez"
 
-#: src/DmarcByDomainPage.js:305
-#: src/DomainsPage.js:146
+#: src/DmarcReportPage.js:376
+msgid "Search DKIM Failing Items"
+msgstr ""
+
+#: src/DmarcReportPage.js:700
+msgid "Search DMARC Failing Items"
+msgstr ""
+
+#: src/DmarcReportPage.js:479
+msgid "Search Fully Aligned Items"
+msgstr ""
+
+#: src/DmarcReportPage.js:595
+msgid "Search SPF Failing Items"
+msgstr ""
+
+#: src/AdminDomains.js:250
+msgid "Search by Domain URL"
+msgstr ""
+
+#: src/DmarcByDomainPage.js:176
+#: src/DomainsPage.js:195
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
-#: src/UserList.js:253
-#~ msgid "Search for a user"
-#~ msgstr "Rechercher un utilisateur"
-
-#: src/Organizations.js:131
+#: src/Organizations.js:184
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
-#: src/DomainsPage.js:132
-msgid "Search for any Government of Canada tracked domain:"
-msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
-
-#: src/ReactTableGlobalFilter.js:29
+#: src/AdminDomains.js:236
+#: src/DomainsPage.js:186
+#: src/Organizations.js:175
+#: src/ReactTableGlobalFilter.js:37
+#: src/UserList.js:358
 msgid "Search:"
 msgstr "Recherche :"
 
-#: src/CreateOrganizationPage.js:213
-#: src/CreateOrganizationPage.js:218
-msgid "Sector"
-msgstr "Secteur"
-
-#: src/OrganizationInformation.js:382
-msgid "Sector (EN)"
-msgstr "Secteur (EN)"
-
-#: src/OrganizationInformation.js:385
-msgid "Sector (FR)"
-msgstr "Secteur (FR)"
-
-#: src/OrganizationInformation.js:463
+#: src/OrganizationInformation.js:430
 msgid "Sector:"
 msgstr "Secteur :"
 
@@ -2223,189 +1598,169 @@ msgstr "Secteur :"
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
-#: src/AdminPage.js:90
+#: src/AdminPage.js:83
 msgid "Select an organization"
 msgstr "Sélectionnez une organisation"
 
-#: src/AdminPage.js:152
+#: src/AdminPage.js:119
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
+
+#: src/fieldRequirements.js:52
+msgid "Selector cannot be empty"
+msgstr "Le sélecteur ne peut pas être vide"
+
+#: src/fieldRequirements.js:55
+msgid "Selector must be string ending in '._domainkey'"
+msgstr "Le sélecteur doit être une chaîne se terminant par '._domainkey'"
 
 #: src/months.js:12
 msgid "September"
 msgstr "Septembre"
 
-#: src/Organizations.js:159
+#: src/Organizations.js:221
 msgid "Services"
 msgstr "Services"
 
-#: src/OrganizationCard.js:94
+#: src/OrganizationCard.js:104
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
-#: src/DmarcReportTable.js:325
+#: src/TrackerTable.js:240
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/DmarcByDomainPage.js:281
-#: src/DmarcReportPage.js:642
+#: src/DmarcReportPage.js:769
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période :"
 
-#: src/App.js:117
-#: src/App.js:137
-#: src/FloatingMenu.js:157
-#: src/SignInPage.js:146
+#: src/App.js:169
+#: src/FloatingMenu.js:179
+#: src/SignInPage.js:175
+#: src/TopBanner.js:79
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:61
-#: src/TwoFactorAuthenticatePage.js:61
+#: src/SignInPage.js:69
+#: src/TwoFactorAuthenticatePage.js:60
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/App.js:113
-#: src/FloatingMenu.js:143
+#: src/FloatingMenu.js:165
+#: src/TopBanner.js:68
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: src/App.js:103
-#: src/FloatingMenu.js:147
+#: src/FloatingMenu.js:169
+#: src/TopBanner.js:33
 msgid "Sign Out."
 msgstr "Déconnexion."
 
-#: src/SignInPage.js:125
+#: src/SignInPage.js:137
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/App.js:54
+#: src/App.js:111
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
-#: src/OrganizationInformation.js:444
+#: src/OrganizationInformation.js:411
 msgid "Slug:"
 msgstr "Slug :"
 
-#: src/DomainsPage.js:156
-#: src/Organizations.js:140
+#: src/DomainsPage.js:212
+#: src/Organizations.js:201
 msgid "Sort by:"
 msgstr "Trier par:"
 
-#: src/DmarcReportPage.js:279
+#: src/DmarcReportPage.js:211
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
-#: src/ScanCategoryDetails.js:133
+#: src/ScanCategoryDetails.js:147
 msgid "Strong Ciphers:"
 msgstr "Ciphers forts:"
 
-#: src/ScanCategoryDetails.js:166
+#: src/ScanCategoryDetails.js:180
 msgid "Strong Curves:"
 msgstr "Courbes fortes:"
 
-#: src/ForgotPasswordPage.js:86
-#: src/TwoFactorAuthenticatePage.js:138
+#: src/ForgotPasswordPage.js:85
+#: src/TwoFactorAuthenticatePage.js:133
 msgid "Submit"
 msgstr "Soumettre"
 
-#: src/UserList.js:250
+#: src/UserList.js:242
 msgid "Successfully removed user {0}."
 msgstr "L'utilisateur {0} a été supprimé."
 
-#: src/UserList.js:197
-#~ msgid "Successfully removed user."
-#~ msgstr "L'utilisateur a été supprimé avec succès."
-
-#: src/OrganizationDetails.js:89
+#: src/OrganizationDetails.js:67
 msgid "Summary"
 msgstr "Résumé"
 
-#: src/ScanCategoryDetails.js:100
+#: src/ScanCategoryDetails.js:114
 msgid "Supports ECDH Key Exchange:"
 msgstr "Supporte l'échange de clés ECDH:"
 
-#: src/guidanceTagConstants.js:419
-msgid "T-enabled"
-msgstr ""
-
-#: src/guidanceTagConstants.js:197
-msgid "TBD"
-msgstr ""
-
-#: src/TermsConditionsPage.js:213
+#: src/TermsConditionsPage.js:206
 msgid "TBS agrees to protect any information you disclose to us in a manner commensurate with the level of protection you use to secure such information, but in any event, with no less than a reasonable level of care."
 msgstr ""
 
-#: src/TermsConditionsPage.js:320
+#: src/TermsConditionsPage.js:345
 msgid "TBS be identified as the source; and"
 msgstr ""
 
-#: src/TermsConditionsPage.js:267
+#: src/TermsConditionsPage.js:270
 msgid "TBS reserves the right to refuse service, and may reject your application for an account, or cancel an existing account, for any reason, at our sole discretion."
 msgstr ""
 
-#: src/EditableUserTFAMethod.js:88
-#~ msgid "TFA Method:"
-#~ msgstr "Méthode TFA:"
-
-#: src/guidanceTagConstants.js:193
-msgid "TXT-DMARC-enabled"
-msgstr ""
-
-#: src/guidanceTagConstants.js:200
-msgid "TXT-DMARC-missing"
-msgstr ""
-
-#: src/TermsConditionsPage.js:353
+#: src/TermsConditionsPage.js:380
 msgid "Termination"
 msgstr ""
 
-#: src/App.js:160
+#: src/App.js:192
 msgid "Terms & Conditions"
 msgstr ""
 
-#: src/App.js:242
-#: src/FloatingMenu.js:184
+#: src/App.js:297
+#: src/FloatingMenu.js:209
 msgid "Terms & conditions"
 msgstr "Avis"
 
-#: src/TermsConditionsPage.js:12
+#: src/TermsConditionsPage.js:15
 msgid "Terms and Conditions"
 msgstr ""
 
-#: src/TermsConditionsPage.js:293
+#: src/TermsConditionsPage.js:302
 msgid "Terms of Use"
 msgstr ""
 
-#: src/guidanceTagConstants.js:86
-msgid "Textual Representation"
-msgstr "Représentation textuelle"
-
-#: src/TermsConditionsPage.js:283
+#: src/TermsConditionsPage.js:286
 msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
 msgstr ""
 
-#: src/TermsConditionsPage.js:150
+#: src/TermsConditionsPage.js:142
 msgid "The graphics displayed on the Tracker website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada’s approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs."
 msgstr ""
 
-#: src/TermsConditionsPage.js:155
+#: src/TermsConditionsPage.js:153
 msgid "The material available on this web site is subject to the"
 msgstr ""
 
-#: src/PageNotFound.js:16
+#: src/PageNotFound.js:21
 msgid "The page you are looking for has moved or does not exist."
 msgstr "La page que vous recherchez a été déplacée ou n'existe pas."
 
-#: src/TermsConditionsPage.js:325
+#: src/TermsConditionsPage.js:348
 msgid "The reproduction is not represented as an official version of the materials reproduced, nor as having been made, in affiliation with or under the direction of TBS."
 msgstr ""
 
-#: src/UserList.js:145
+#: src/UserList.js:141
 msgid "The user's role has been successfully updated"
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 
-#: src/TermsConditionsPage.js:397
+#: src/TermsConditionsPage.js:419
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr ""
 
@@ -2413,28 +1768,21 @@ msgstr ""
 msgid "This component is currently unavailable. Try reloading the page."
 msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la page."
 
-#: src/GuidanceTagList.js:88
+#: src/GuidanceTagList.js:84
 msgid "This could be due to improper configuration, or could be the result of a scan error"
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
-
-#: src/GuidanceTagList.js:89
-#~ msgid "This could be due to improper configurations, or could be the result of a scan error"
-#~ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
-
-#: src/DmarcReportPage.js:206
-msgid "This domain does not support aggregate data"
-msgstr "Ce domaine ne prend pas en charge les données agrégées"
 
 #: src/fieldRequirements.js:49
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/App.js:57
+#: src/App.js:114
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
-#: src/DmarcByDomainPage.js:137
-#: src/DmarcReportPage.js:297
+#: src/DmarcByDomainPage.js:97
+#: src/DmarcReportPage.js:229
+#: src/DmarcReportSummaryGraph.js:109
 msgid "Total Messages"
 msgstr "Total des messages"
 
@@ -2443,139 +1791,126 @@ msgid "Total users"
 msgstr "total des utilisateurs"
 
 #: src/LandingPage.js:20
-#: src/WelcomeMessage.js:15
 msgid "Track Digital Security"
 msgstr "Suivre la sécurité numérique"
 
-#: src/Page.js:8
-#~ msgid "Tracker"
-#~ msgstr "Suivi"
-
-#: src/TopBanner.js:36
-msgid "Tracker Logo"
-msgstr "Logo du Tracker"
-
-#: src/TermsConditionsPage.js:186
+#: src/TermsConditionsPage.js:180
 msgid "Trademarks Act"
 msgstr ""
 
-#: src/TwoFactorAuthenticatePage.js:123
+#: src/TwoFactorAuthenticatePage.js:122
 msgid "Two Factor Authentication"
 msgstr "Authentification à deux facteurs"
 
-#: src/EditableUserTFAMethod.js:85
+#: src/EditableUserTFAMethod.js:78
 msgid "Two-Factor Authentication:"
 msgstr "Authentification à deux facteurs :"
 
-#: src/UserList.js:375
-#: src/UserList.js:498
+#: src/UserList.js:384
+#: src/UserList.js:511
 msgid "USER"
 msgstr "UTILISATEUR"
 
-#: src/UserList.js:134
+#: src/UserList.js:130
 msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
-#: src/CreateUserPage.js:85
+#: src/CreateUserPage.js:83
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
-#: src/AdminDomains.js:144
+#: src/AdminDomainModal.js:72
 msgid "Unable to create new domain."
 msgstr "Impossible de créer un nouveau domaine."
 
-#: src/CreateOrganizationPage.js:97
+#: src/CreateOrganizationPage.js:103
 msgid "Unable to create new organization."
 msgstr "Impossible de créer une nouvelle organisation."
 
-#: src/CreateUserPage.js:56
+#: src/CreateUserPage.js:54
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
-#: src/UserList.js:207
+#: src/UserList.js:199
 msgid "Unable to invite user."
 msgstr "Impossible d'inviter un utilisateur."
 
-#: src/AdminDomains.js:197
+#: src/AdminDomains.js:120
 msgid "Unable to remove domain."
 msgstr "Impossible de supprimer le domaine."
 
-#: src/OrganizationInformation.js:100
+#: src/OrganizationInformation.js:88
 msgid "Unable to remove this organization."
 msgstr "Impossible de supprimer cette organisation."
 
-#: src/UserList.js:258
+#: src/UserList.js:250
 msgid "Unable to remove user."
 msgstr "Impossible de supprimer l'utilisateur."
 
-#: src/ScanDomain.js:32
+#: src/ScanDomain.js:54
 msgid "Unable to request scan, please try again."
 msgstr "Impossible de demander un balayage, veuillez réessayer."
 
-#: src/ResetPasswordPage.js:51
+#: src/ResetPasswordPage.js:50
 msgid "Unable to reset your password, please try again."
 msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
 
-#: src/ForgotPasswordPage.js:28
+#: src/ForgotPasswordPage.js:27
 msgid "Unable to send password reset link to email."
 msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
 
-#: src/UserPage.js:29
+#: src/UserPage.js:27
 msgid "Unable to send verification email"
 msgstr "Impossible d'envoyer l'e-mail de vérification"
 
-#: src/SignInPage.js:40
-#: src/SignInPage.js:82
-#: src/TwoFactorAuthenticatePage.js:38
-#: src/TwoFactorAuthenticatePage.js:73
+#: src/SignInPage.js:48
+#: src/SignInPage.js:90
+#: src/TwoFactorAuthenticatePage.js:37
+#: src/TwoFactorAuthenticatePage.js:72
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/AdminDomains.js:249
+#: src/AdminDomainModal.js:121
 msgid "Unable to update domain."
 msgstr "Impossible de mettre à jour le domaine."
 
-#: src/ResetPasswordPage.js:31
+#: src/ResetPasswordPage.js:30
 msgid "Unable to update password"
 msgstr "Impossible de mettre à jour le mot de passe"
 
-#: src/OrganizationInformation.js:175
+#: src/OrganizationInformation.js:159
 msgid "Unable to update this organization."
 msgstr "Impossible de mettre à jour cette organisation."
 
-#: src/EditableUserTFAMethod.js:60
+#: src/EditableUserTFAMethod.js:53
 msgid "Unable to update to your TFA send method, please try again."
 msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer."
 
-#: src/EditableUserDisplayName.js:70
+#: src/EditableUserDisplayName.js:63
 msgid "Unable to update to your display name, please try again."
 msgstr "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer."
 
-#: src/EditableUserPhoneNumber.js:64
-#~ msgid "Unable to update to your phone number, please try again."
-#~ msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer."
-
-#: src/EditableUserLanguage.js:51
+#: src/EditableUserLanguage.js:43
 msgid "Unable to update to your preferred language, please try again."
 msgstr "Impossible de mettre à jour votre langue préférée, veuillez réessayer."
 
-#: src/EditableUserEmail.js:70
+#: src/EditableUserEmail.js:63
 msgid "Unable to update to your username, please try again."
 msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer."
 
-#: src/UserList.js:154
+#: src/UserList.js:150
 msgid "Unable to update user role."
 msgstr "Impossible de mettre à jour le rôle de l'utilisateur."
 
-#: src/EditableUserPassword.js:73
+#: src/EditableUserPassword.js:66
 msgid "Unable to update your password, please try again."
 msgstr "Impossible de mettre à jour votre mot de passe, veuillez réessayer."
 
-#: src/EditableUserPhoneNumber.js:64
+#: src/EditableUserPhoneNumber.js:57
 msgid "Unable to update your phone number, please try again."
 msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer."
 
-#: src/EditableUserPhoneNumber.js:120
+#: src/EditableUserPhoneNumber.js:108
 msgid "Unable to verify your phone number, please try again."
 msgstr "Impossible de vérifier votre numéro de téléphone, veuillez réessayer."
 
@@ -2584,105 +1919,82 @@ msgstr "Impossible de vérifier votre numéro de téléphone, veuillez réessaye
 msgid "Unscanned"
 msgstr "Non balayé"
 
-#: src/OrganizationInformation.js:164
+#: src/OrganizationInformation.js:148
 msgid "Updated Organization"
 msgstr "Organisation mise à jour"
 
-#: src/guidanceTagConstants.js:82
-msgid "Use DKIM to validate outbound email sent from your custom domain"
-msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
+#: src/ScanCard.js:37
+#: src/ScanDomain.js:138
+msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
+msgstr "Faire passer la stratégie DMARC à Mettre en quarantaine (Quarantine) (l’appliquer progressivement pour passer de 25 % à 100 %)."
 
-#: src/TermsConditionsPage.js:197
+#: src/ScanCard.js:38
+#: src/ScanDomain.js:139
+msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
+msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer progressivement pour passer de 25 % à 100 %)."
+
+#: src/TermsConditionsPage.js:190
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 msgstr ""
 
-#: src/OrganizationAffiliations.js:39
+#: src/OrganizationAffiliations.js:36
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
-#: src/UserList.js:274
+#: src/UserList.js:266
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
-#: src/App.js:83
-#: src/UserPage.js:35
-#~ msgid "User Profile"
-#~ msgstr "Profil de l'utilisateur"
-
-#: src/UserList.js:198
+#: src/UserList.js:190
 msgid "User invited"
 msgstr "Utilisateur invité"
 
-#: src/UserList.js:249
+#: src/UserList.js:241
 msgid "User removed."
 msgstr "Utilisateur supprimé."
 
-#: src/UserList.js:477
+#: src/UserList.js:490
 msgid "User:"
 msgstr "Utilisateur:"
 
-#: src/AdminPanel.js:19
-#: src/OrganizationDetails.js:95
+#: src/AdminPanel.js:26
+#: src/OrganizationDetails.js:74
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: src/TermsConditionsPage.js:315
+#: src/TermsConditionsPage.js:339
 msgid "Users exercise due diligence in ensuring the accuracy of the materials reproduced;"
 msgstr ""
-
-#: src/guidanceTagConstants.js:320
-msgid "Uses redirect tag with All"
-msgstr "Utilise la balise de redirection avec All"
-
-#: src/guidanceTagConstants.js:194
-msgid "Verification TXT records for all 3rd party senders exist"
-msgstr "Il existe des enregistrements TXT de vérification pour tous les expéditeurs tiers"
-
-#: src/guidanceTagConstants.js:201
-msgid "Verification TXT records for some/all 3rd party senders missing"
-msgstr "Vérification des enregistrements TXT pour certains/toutes les expéditeurs tiers manquants"
 
 #: src/fieldRequirements.js:26
 msgid "Verification code must only contains numbers"
 msgstr "Le code de vérification ne doit contenir que des chiffres"
 
-#: src/Organizations.js:162
+#: src/Organizations.js:224
 msgid "Verified"
 msgstr "Vérifié"
 
-#: src/EditableUserPhoneNumber.js:238
+#: src/EditableUserPhoneNumber.js:242
 msgid "Verify"
 msgstr "Vérifier"
 
-#: src/UserPage.js:122
+#: src/UserPage.js:114
 msgid "Verify Email"
 msgstr "Vérifier l'e-mail"
 
-#: src/OrganizationCard.js:129
+#: src/DmarcReportSummaryGraph.js:97
+msgid "Vertical View"
+msgstr "Vue verticale"
+
+#: src/OrganizationCard.js:141
 msgid "View Details"
 msgstr "Voir les détails"
 
-#: src/guidanceTagConstants.js:471
-msgid "Vulnerability-ccs-injection"
-msgstr ""
-
-#: src/guidanceTagConstants.js:465
-msgid "Vulnerability-heartbleed"
-msgstr ""
-
-#: src/guidanceTagConstants.js:466
-msgid "Vulnerable to Heartbleed bug"
-msgstr "Vulnérable à la maladie du cœur"
-
-#: src/guidanceTagConstants.js:472
-msgid "Vulnerable to OpenSSL CCS Injection"
-msgstr "Vulnérable à l'injection de CCS OpenSSL"
-
-#: src/TermsConditionsPage.js:343
+#: src/TermsConditionsPage.js:366
 msgid "We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change."
 msgstr ""
 
-#: src/TermsConditionsPage.js:360
+#: src/TermsConditionsPage.js:385
 msgid "We reserve the right to modify or terminate our services for any reason, without notice, at any time."
 msgstr ""
 
@@ -2698,364 +2010,189 @@ msgstr "Nous avons envoyé un SMS à votre numéro de téléphone enregistré av
 msgid "We've sent you an email with an authentication code to sign into Tracker."
 msgstr "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Suivi."
 
-#: src/ScanCategoryDetails.js:151
+#: src/ScanCategoryDetails.js:165
 msgid "Weak Ciphers:"
 msgstr "Ciphers faibles:"
 
-#: src/ScanCategoryDetails.js:184
+#: src/ScanCategoryDetails.js:198
 msgid "Weak Curves:"
 msgstr "Courbes faibles:"
 
-#: src/OrganizationCard.js:108
+#: src/OrganizationCard.js:115
 #: src/SummaryGroup.js:13
 msgid "Web Configuration"
 msgstr "Configuration Web"
 
-#: src/DmarcGuidancePage.js:83
+#: src/DmarcGuidancePage.js:76
+#: src/ScanDomain.js:360
 msgid "Web Guidance"
 msgstr "Conseils sur le Web"
 
-#: src/ScanCard.js:11
+#: src/ScanCard.js:12
+#: src/ScanDomain.js:378
 msgid "Web Scan Results"
 msgstr "Résultats de l'analyse du Web"
+
+#: src/ScanCard.js:56
+msgid "Web Sites and Services Management Configuration Requirements Compliant"
+msgstr ""
 
 #: src/SummaryGroup.js:14
 msgid "Web encryption settings summary"
 msgstr "Résumé des paramètres de cryptage du Web"
 
-#: src/AdminPage.js:107
-msgid "Welcome, Admin"
-msgstr "Bienvenue à l'administration"
-
-#: src/CreateUserPage.js:77
+#: src/CreateUserPage.js:75
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
-#: src/SignInPage.js:62
-#: src/TwoFactorAuthenticatePage.js:62
+#: src/SignInPage.js:70
+#: src/TwoFactorAuthenticatePage.js:61
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
-#: src/DmarcReportPage.js:196
+#: src/DmarcReportPage.js:146
 msgid "Yearly DMARC Graph"
 msgstr "Graphique annuel du DMARC"
 
-#: src/ScanCategoryDetails.js:90
-#: src/ScanCategoryDetails.js:96
-#: src/ScanCategoryDetails.js:102
+#: src/ScanCategoryDetails.js:104
+#: src/ScanCategoryDetails.js:110
+#: src/ScanCategoryDetails.js:116
 msgid "Yes"
 msgstr "Oui"
 
-#: src/TermsConditionsPage.js:262
+#: src/TermsConditionsPage.js:264
 msgid "You acknowledge that TBS will use the email address you provide as the primary method for communication."
 msgstr ""
 
-#: src/TermsConditionsPage.js:218
+#: src/TermsConditionsPage.js:214
 msgid "You acknowledge that any data or information disclosed to TBS may be used to protect the Government of Canada as well as electronic information and information infrastructures designated as being of importance to the Government of Canada in accordance with cyber security and information assurance aspect of TBS’s mandate under the Policy on Government Security and the Policy on Service and Digital."
 msgstr ""
 
-#: src/TermsConditionsPage.js:127
+#: src/TermsConditionsPage.js:118
 msgid "You agree to protect any information disclosed to you by TBS in accordance with the data handling measures outlined in these Terms & Conditions. Similarly, TBS agrees to protect any information you disclose to us. Any such information must only be used for the purposes for which it was intended."
 msgstr ""
 
-#: src/TermsConditionsPage.js:300
+#: src/TermsConditionsPage.js:307
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr ""
 
-#: src/AdminPage.js:163
+#: src/AdminPage.js:128
 msgid "You do not have admin permissions in any organization"
 msgstr "Vous n'avez pas d'autorisations administratives dans une organisation"
 
-#: src/TwoFactorNotificationBar.js:16
-msgid "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
-msgstr "Vous n'avez pas activé l'authentification à deux facteurs. Pour maximiser la sécurité de votre compte, <0>veuillez activer l'authentification à deux facteurs</0>."
-
-#: src/App.js:104
-#: src/FloatingMenu.js:148
+#: src/FloatingMenu.js:170
+#: src/TopBanner.js:34
 msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
 
-#: src/OrganizationInformation.js:125
+#: src/OrganizationInformation.js:113
 msgid "You have successfully removed {0}."
 msgstr "Vous avez retiré {0} avec succès."
 
-#: src/EditableUserTFAMethod.js:50
+#: src/EditableUserTFAMethod.js:43
 msgid "You have successfully updated your TFA send method."
 msgstr "Vous avez mis à jour avec succès votre méthode d'envoi de TFA."
 
-#: src/EditableUserDisplayName.js:59
+#: src/EditableUserDisplayName.js:52
 msgid "You have successfully updated your display name."
 msgstr "Vous avez réussi à mettre à jour votre nom d'affichage."
 
-#: src/EditableUserEmail.js:59
+#: src/EditableUserEmail.js:52
 msgid "You have successfully updated your email."
 msgstr "Vous avez mis à jour votre courriel avec succès."
 
-#: src/EditableUserPassword.js:62
+#: src/EditableUserPassword.js:55
 msgid "You have successfully updated your password."
 msgstr "Vous avez mis à jour votre mot de passe avec succès."
 
-#: src/EditableUserPhoneNumber.js:108
+#: src/EditableUserPhoneNumber.js:96
 msgid "You have successfully updated your phone number."
 msgstr "Vous avez réussi à mettre à jour votre numéro de téléphone."
 
-#: src/EditableUserLanguage.js:41
+#: src/EditableUserLanguage.js:33
 msgid "You have successfully updated your preferred language."
 msgstr "Vous avez réussi à mettre à jour votre langue préférée."
 
-#: src/OrganizationInformation.js:165
+#: src/OrganizationInformation.js:149
 msgid "You have successfully updated {0}."
 msgstr "Vous avez réussi à mettre à jour {0}."
 
-#: src/ResetPasswordPage.js:43
+#: src/ResetPasswordPage.js:42
 msgid "You may now sign in with your new password"
 msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 
-#: src/TermsConditionsPage.js:254
+#: src/TermsConditionsPage.js:253
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr ""
 
-#: src/QRcodePage.js:51
-msgid "Your 2FA app will then have a valid code that you can use when you sign in."
-msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
-
-#: src/App.js:205
+#: src/App.js:263
 msgid "Your Account"
 msgstr "Votre compte"
 
-#: src/EmailValidationPage.js:47
+#: src/EmailValidationPage.js:52
 msgid "Your account email could not be verified at this time. Please try again."
 msgstr "L'email de votre compte n'a pas pu être vérifié pour le moment. Veuillez réessayer."
 
-#: src/EmailValidationPage.js:37
+#: src/EmailValidationPage.js:42
 msgid "Your account email was successfully verified"
 msgstr "L'email de votre compte a été vérifié avec succès"
 
-#: src/CreateOrganizationPage.js:200
-#: src/CreateOrganizationPage.js:205
-msgid "Zone"
-msgstr "Zone"
-
-#: src/TermsConditionsPage.js:192
-msgid "and by applicable laws, policies, regulations and international agreements."
-msgstr ""
-
-#: src/OrganizationInformation.js:376
-msgid "Zone (EN)"
-msgstr "Zone (EN)"
-
-#: src/OrganizationInformation.js:379
-msgid "Zone (FR)"
-msgstr "Zone (FR)"
-
-#: src/OrganizationInformation.js:457
+#: src/OrganizationInformation.js:424
 msgid "Zone:"
 msgstr "Zone :"
 
-#: src/guidanceTagConstants.js:6
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322"
+#: src/TermsConditionsPage.js:184
+msgid "and by applicable laws, policies, regulations and international agreements."
+msgstr ""
 
-#: src/guidanceTagConstants.js:10
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
+#: src/DmarcReportPage.js:156
+msgid "does not support aggregate data"
+msgstr ""
 
-#: src/guidanceTagConstants.js:14
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna33"
-
-#: src/guidanceTagConstants.js:18
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34"
-
-#: src/guidanceTagConstants.js:22
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35"
-
-#: src/guidanceTagConstants.js:26
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4"
-
-#: src/guidanceTagConstants.js:30
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5"
-
-#: src/guidanceTagConstants.js:34
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna53"
-
-#: src/guidanceTagConstants.js:38
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
-
-#: src/guidanceTagConstants.js:42
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb13"
-
-#: src/guidanceTagConstants.js:46
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
-
-#: src/guidanceTagConstants.js:50
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22"
-
-#: src/guidanceTagConstants.js:54
-msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
-
-#: src/guidanceTagConstants.js:83
-msgid "https://docs.microsoft.com/en-ca/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
-msgstr "https://docs.microsoft.com/fr-ca/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
-
-#: src/TermsConditionsPage.js:379
+#: src/TermsConditionsPage.js:405
 msgid "https://https-everywhere.canada.ca/en/help/"
 msgstr ""
 
-#: src/guidanceTagConstants.js:87
-msgid "https://tools.ietf.org/html/rfc6376#section-3.6.1"
-msgstr ""
-
-#: src/guidanceTagConstants.js:72
-msgid "https://tools.ietf.org/html/rfc7208#section-4.6.4"
-msgstr ""
-
-#: src/guidanceTagConstants.js:76
-msgid "https://tools.ietf.org/html/rfc7208#section-6.1"
-msgstr ""
-
-#: src/guidanceTagConstants.js:61
-msgid "https://tools.ietf.org/html/rfc7489#section-6.3"
-msgstr ""
-
-#: src/guidanceTagConstants.js:65
-msgid "https://tools.ietf.org/html/rfc7489#section-7.1"
-msgstr ""
-
-#: src/SummaryTable.js:172
-msgid "of"
-msgstr "de"
-
-#: src/TermsConditionsPage.js:60
+#: src/TermsConditionsPage.js:59
 msgid "our Terms and Conditions on the TBS website"
 msgstr ""
 
-#: src/guidanceTagConstants.js:250
-msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be none but mail agents may process messages based on Quarantine)"
+#: src/UserList.js:368
+msgid "user email"
 msgstr ""
 
-#: src/ScanCategoryDetails.js:22
-msgid "{0}"
-msgstr ""
-
-#: src/AdminDomains.js:135
+#: src/AdminDomainModal.js:62
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
 
-#: src/CreateOrganizationPage.js:88
+#: src/CreateOrganizationPage.js:94
 msgid "{0} was created"
 msgstr "{0} a été créée"
 
-#: src/ReactTableGlobalFilter.js:42
+#: src/TrackerAccordionItem.js:27
+msgid "{buttonLabel}"
+msgstr ""
+
+#: src/ReactTableGlobalFilter.js:51
 msgid "{count} records..."
 msgstr "{count} enregistrements..."
 
-#: src/AdminDomains.js:240
+#: src/AdminDomainModal.js:111
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 
-#: src/OrganizationDetails.js:80
-#~ msgid "{orgName}"
-#~ msgstr ""
+#: src/InfoPanel.js:23
+msgid "{info}"
+msgstr ""
 
-#: src/useDocumentTitle.js:6
+#: src/InfoPanel.js:42
+msgid "{label}"
+msgstr ""
+
+#: src/InfoPanel.js:20
+msgid "{title}"
+msgstr ""
+
+#: src/useDocumentTitle.js:8
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
-
-#:src/AdminDomains.js:465
-msgid "DKIM Selectors:"
-msgstr "Sélecteurs DKIM:"
-
-#:src/AdminDomains.js:498
-msgid "DKIM Selector"
-msgstr "Sélecteur DKIM"
-
-#:src/fieldRequirements.js:52
-msgid "Selector cannot be empty"
-msgstr "Le sélecteur ne peut pas être vide"
-
-#:src/fieldRequirements.js:55
-msgid "Selector must be string ending in '._domainkey'"
-msgstr "Le sélecteur doit être une chaîne se terminant par '._domainkey'"
-
-#: src/ScanCategoryDetails.js:166
-msgid "Strong Curves:"
-msgstr "Courbes fortes:"
-
-#: src/ScanCategoryDetails.js:175
-msgid "Acceptable Curves:"
-msgstr "Courbes acceptables:"
-
-#: src/ScanCategoryDetails.js:184
-msgid "Weak Curves:"
-msgstr "Courbes faibles:"
-
-#: src/ScanCategoryDetails.js:232
-msgid "Curves"
-msgstr "Courbes"
-
-#: src/ScanCard.js:24
-msgid "Identify all domains and subdomains used to send mail;"
-msgstr "Déterminer tous les domaines et sous-domaines utilisés pour envoyer des courriels."
-
-#: src/ScanCard.js:25
-msgid "Assess current state;"
-msgstr "Évaluer l’état actuel."
-
-#: src/ScanCard.js:26
-msgid "Deploy initial DMARC records with policy of none; and"
-msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie Aucune (None)"
-
-#: src/ScanCard.js:27
-msgid "Collect and analyze DMARC reports."
-msgstr "Recueillir et analyser les rapports DMARC."
-
-#: src/ScanCard.js:30
-msgid "Identify all authorized senders;"
-msgstr "Déterminer tous les expéditeurs autorisés."
-
-#: src/ScanCard.js:31
-msgid "Deploy SPF records for all domains;"
-msgstr "Déployer les enregistrements SPF pour tous les domaines."
-
-#: src/ScanCard.js:32
-msgid "Deploy DKIM records and keys for all domains and senders; and"
-msgstr "Déployer les enregistrements DKIM et les clés pour tous les domaines et expéditeurs."
-
-#: src/ScanCard.js:33
-msgid "Monitor DMARC reports and correct misconfigurations."
-msgstr "Surveiller les rapports DMARC et corriger les erreurs de configuration."
-
-#: src/ScanCard.js:36
-msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
-msgstr "Faire passer la stratégie DMARC à Mettre en quarantaine (Quarantine) (l’appliquer progressivement pour passer de 25 % à 100 %)."
-
-#: src/ScanCard.js:37
-msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
-msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer progressivement pour passer de 25 % à 100 %)."
-
-#: src/ScanCard.js:38
-msgid "Reject all messages from non-mail domains."
-msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
-
-#: src/ScanCard.js:41
-msgid "Monitor DMARC reports;"
-msgstr "Surveiller les rapports DMARC."
-
-#: src/ScanCard.js:42
-msgid "Correct misconfigurations and update records as required; and"
-msgstr "Corriger les erreurs de configuration et mettre à jour les enregistrements, au besoin."
-
-#: src/ScanCard.js:43
-msgid "Rotate DKIM keys annually."
-msgstr "Effectuer la rotation des clés DKIM annuellement."

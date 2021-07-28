@@ -167,24 +167,24 @@ describe('given findVerifiedOrganizations', () => {
               findVerifiedOrganizations: {
                 edges: [
                   {
-                    cursor: toGlobalId('verifiedOrganizations', orgOne._key),
+                    cursor: toGlobalId('verifiedOrganization', orgOne._key),
                     node: {
-                      id: toGlobalId('verifiedOrganizations', orgOne._key),
+                      id: toGlobalId('verifiedOrganization', orgOne._key),
                     },
                   },
                   {
-                    cursor: toGlobalId('verifiedOrganizations', orgTwo._key),
+                    cursor: toGlobalId('verifiedOrganization', orgTwo._key),
                     node: {
-                      id: toGlobalId('verifiedOrganizations', orgTwo._key),
+                      id: toGlobalId('verifiedOrganization', orgTwo._key),
                     },
                   },
                 ],
                 totalCount: 2,
                 pageInfo: {
-                  endCursor: toGlobalId('verifiedOrganizations', orgTwo._key),
+                  endCursor: toGlobalId('verifiedOrganization', orgTwo._key),
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId('verifiedOrganizations', orgOne._key),
+                  startCursor: toGlobalId('verifiedOrganization', orgOne._key),
                 },
               },
             },
@@ -319,24 +319,24 @@ describe('given findVerifiedOrganizations', () => {
               findVerifiedOrganizations: {
                 edges: [
                   {
-                    cursor: toGlobalId('verifiedOrganizations', orgOne._key),
+                    cursor: toGlobalId('verifiedOrganization', orgOne._key),
                     node: {
-                      id: toGlobalId('verifiedOrganizations', orgOne._key),
+                      id: toGlobalId('verifiedOrganization', orgOne._key),
                     },
                   },
                   {
-                    cursor: toGlobalId('verifiedOrganizations', orgTwo._key),
+                    cursor: toGlobalId('verifiedOrganization', orgTwo._key),
                     node: {
-                      id: toGlobalId('verifiedOrganizations', orgTwo._key),
+                      id: toGlobalId('verifiedOrganization', orgTwo._key),
                     },
                   },
                 ],
                 totalCount: 2,
                 pageInfo: {
-                  endCursor: toGlobalId('verifiedOrganizations', orgTwo._key),
+                  endCursor: toGlobalId('verifiedOrganization', orgTwo._key),
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId('verifiedOrganizations', orgOne._key),
+                  startCursor: toGlobalId('verifiedOrganization', orgOne._key),
                 },
               },
             },

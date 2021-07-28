@@ -158,7 +158,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', users[0]._key)}`,
+                      id: `${toGlobalId('user', users[0]._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'ENGLISH',
@@ -334,7 +334,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', users[0]._key)}`,
+                      id: `${toGlobalId('user', users[0]._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'ENGLISH',
@@ -548,7 +548,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', user._key)}`,
+                      id: `${toGlobalId('user', user._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'ENGLISH',
@@ -813,7 +813,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', user._key)}`,
+                      id: `${toGlobalId('user', user._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'ENGLISH',
@@ -1813,7 +1813,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', user._key)}`,
+                      id: `${toGlobalId('user', user._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'FRENCH',
@@ -1989,7 +1989,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', user._key)}`,
+                      id: `${toGlobalId('user', user._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'FRENCH',
@@ -2203,7 +2203,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', user._key)}`,
+                      id: `${toGlobalId('user', user._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'FRENCH',
@@ -2468,7 +2468,7 @@ describe('testing user sign up', () => {
                   result: {
                     authToken: 'token',
                     user: {
-                      id: `${toGlobalId('users', user._key)}`,
+                      id: `${toGlobalId('user', user._key)}`,
                       userName: 'test.account@istio.actually.exists',
                       displayName: 'Test Account',
                       preferredLang: 'FRENCH',

@@ -82,14 +82,16 @@ function EditableUserTFAMethod({
           {emailValidated ? (
             <CheckIcon
               boxSize="icons.lg"
-              color={emailValidated ? 'green.500' : 'red.500'}
+              color="green.500"
               pr={2}
+              aria-label="Email is validated"
             />
           ) : (
             <CloseIcon
               boxSize="icons.lg"
-              color={emailValidated ? 'green.500' : 'red.500'}
+              color="red.500"
               pr={2}
+              aria-label="Email is not validated"
             />
           )}
           <Badge variant="outline" color="gray.900">
@@ -100,14 +102,16 @@ function EditableUserTFAMethod({
           {phoneValidated ? (
             <CheckIcon
               boxSize="icons.lg"
-              color={phoneValidated ? 'green.500' : 'red.500'}
+              color="green.500"
               pr={2}
+              aria-label="Phone is validated"
             />
           ) : (
             <CloseIcon
               boxSize="icons.lg"
-              color={phoneValidated ? 'green.500' : 'red.500'}
+              color="red.500"
               pr={2}
+              aria-label="Phone is not validated"
             />
           )}
           <Badge variant="outline" color="gray.900">

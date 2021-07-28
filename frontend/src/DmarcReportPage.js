@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from './graphql/queries'
-import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import {
   Accordion,
   Box,
   Divider,
+  Flex,
   Heading,
   Link,
   Select,
-  Stack,
   Text,
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
@@ -24,14 +23,16 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { useDocumentTitle } from './useDocumentTitle'
 import { InfoBox, InfoPanel } from './InfoPanel'
+import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
-export default function DmarcReportPage({ summaryListResponsiveWidth }) {
+
+export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
   const { i18n } = useLingui()
 
-  useDocumentTitle(t`DMARC Report for ${domainSlug}`)
+  useDocumentTitle(i18n._(t`DMARC Report for ${domainSlug}`))
 
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period)
@@ -88,7 +89,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       key="LAST30DAYS"
       value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
     >
-      {t`Last 30 Days`}
+      {i18n._(t`Last 30 Days`)}
     </option>,
   ]
 
@@ -149,12 +150,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   if (!graphData?.findDomainByDomain?.hasDMARCReport) {
     return (
-      <Stack align="center" w="100%" px={4}>
+      <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="3xl" fontWeight="bold">
           <span>{domainSlug} </span>
           <Trans>does not support aggregate data</Trans>
         </Text>
-      </Stack>
+      </Box>
     )
   }
 
@@ -165,30 +166,17 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   // Set graph display using data if data exists
   else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
-      strong: [
-        {
-          name: 'fullPass',
-          displayName: t`Pass`,
-        },
-      ],
-      moderate: [
-        {
-          name: 'passSpfOnly',
-          displayName: t`Fail DKIM`,
-        },
-      ],
-      moderateAlt: [
-        {
-          name: 'passDkimOnly',
-          displayName: t`Fail SPF`,
-        },
-      ],
-      weak: [
-        {
-          name: 'fail',
-          displayName: t`Fail`,
-        },
-      ],
+      fullPass: i18n._(t`Pass`),
+      fullPassPercentage: i18n._(t`Pass`),
+
+      passSpfOnly: i18n._(t`Fail DKIM`),
+      passSpfOnlyPercentage: i18n._(t`Fail DKIM`),
+
+      passDkimOnly: i18n._(t`Fail SPF`),
+      passDkimOnlyPercentage: i18n._(t`Fail SPF`),
+
+      fail: i18n._(t`Fail`),
+      failPercentage: i18n._(t`Fail`),
     }
 
     const formattedGraphData = {
@@ -198,6 +186,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
             month: entry.month,
             year: entry.year,
             ...entry.categoryTotals,
+            ...entry.categoryPercentages,
           }
         },
       ),
@@ -205,12 +194,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     formattedGraphData.strengths = strengths
     graphDisplay = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcTimeGraph
-          data={formattedGraphData}
-          width="100%"
-          mr="400px"
-          responsiveWidth={summaryListResponsiveWidth}
-        />
+        <DmarcReportSummaryGraph data={formattedGraphData} />
       </ErrorBoundary>
     )
   }
@@ -300,7 +284,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   ) {
     const dkimFailureColumns = [
       {
-        Header: t`DKIM Failures by IP Address`,
+        Header: i18n._(t`DKIM Failures by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -383,13 +367,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         <TrackerTable
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
-          title={t`DKIM Failures by IP Address`}
+          title={i18n._(t`DKIM Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={failDkimInfoPanel}
           infoState={failDkimState}
           changeInfoState={changeFailDkimState}
-          searchPlaceholder={t`Search DKIM Failing Items`}
+          searchPlaceholder={i18n._(t`Search DKIM Failing Items`)}
         />
       </ErrorBoundary>
     )
@@ -425,7 +409,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   ) {
     const fullPassColumns = [
       {
-        Header: t`Fully Aligned by IP Address`,
+        Header: i18n._(t`Fully Aligned by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -486,13 +470,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         <TrackerTable
           data={fullPassNodes}
           columns={fullPassColumns}
-          title={t`Fully Aligned by IP Address`}
+          title={i18n._(t`Fully Aligned by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={fullPassInfoPanel}
           infoState={fullPassState}
           changeInfoState={changeFullPassState}
-          searchPlaceholder={t`Search Fully Aligned Items`}
+          searchPlaceholder={i18n._(t`Search Fully Aligned Items`)}
         />
       </ErrorBoundary>
     )
@@ -528,7 +512,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   ) {
     const spfFailureColumns = [
       {
-        Header: t`SPF Failures by IP Address`,
+        Header: i18n._(t`SPF Failures by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -602,13 +586,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         <TrackerTable
           data={spfFailureNodes}
           columns={spfFailureColumns}
-          title={t`SPF Failures by IP Address`}
+          title={i18n._(t`SPF Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={failSpfInfoPanel}
           infoState={failSpfState}
           changeInfoState={changeFailSpfState}
-          searchPlaceholder={t`Search SPF Failing Items`}
+          searchPlaceholder={i18n._(t`Search SPF Failing Items`)}
         />
       </ErrorBoundary>
     )
@@ -644,7 +628,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   ) {
     const dmarcFailureColumns = [
       {
-        Header: t`DMARC Failures by IP Address`,
+        Header: i18n._(t`DMARC Failures by IP Address`),
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -707,13 +691,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         <TrackerTable
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
-          title={t`DMARC Failures by IP Address`}
+          title={i18n._(t`DMARC Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
           infoPanel={fullFailInfoPanel}
           infoState={fullFailState}
           changeInfoState={changeFullFailState}
-          searchPlaceholder={t`Search DMARC Failing Items`}
+          searchPlaceholder={i18n._(t`Search DMARC Failing Items`)}
         />
       </ErrorBoundary>
     )
@@ -768,24 +752,32 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>Guidance</Trans>
-          <LinkIcon ml="4px" />
+          <LinkIcon ml="4px" aria-hidden="true" />
         </Link>
       </Box>
 
       {graphDisplay}
 
-      <Stack isInline align="center" mb="16px">
-        <Text fontWeight="bold" textAlign="center">
+      <Flex align="center" mb={2}>
+        <Text
+          as="label"
+          htmlFor="data-date-range"
+          fontWeight="bold"
+          textAlign="center"
+          mr={1}
+        >
           <Trans>Showing data for period: </Trans>
         </Text>
         <Select
+          id="data-date-range"
+          aria-label="date range for table data"
           width="fit-content"
           onChange={(e) => handleChange(e)}
           value={selectedDate}
         >
           {options}
         </Select>
-      </Stack>
+      </Flex>
 
       {tableDisplay}
     </Box>

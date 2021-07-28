@@ -23,6 +23,7 @@ export const SkipLink = ({ invisible, ...rest }) => (
   <Link
     backgroundColor="white"
     css={invisible ? makeInvisible : null}
+    aria-label="Skip to main Content"
     {...rest}
   />
 )

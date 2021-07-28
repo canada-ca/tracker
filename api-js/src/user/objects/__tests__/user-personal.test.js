@@ -80,7 +80,7 @@ describe('given the user object', () => {
         const demoType = userPersonalType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('users', '1'),
+          toGlobalId('user', '1'),
         )
       })
     })
@@ -216,7 +216,7 @@ describe('given the user object', () => {
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('affiliations', '1'),
+              cursor: toGlobalId('affiliation', '1'),
               node: {
                 _from: 'organizations/1',
                 _id: 'affiliations/1',
@@ -235,8 +235,8 @@ describe('given the user object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('affiliations', '1'),
-            endCursor: toGlobalId('affiliations', '1'),
+            startCursor: toGlobalId('affiliation', '1'),
+            endCursor: toGlobalId('affiliation', '1'),
           },
         }
 

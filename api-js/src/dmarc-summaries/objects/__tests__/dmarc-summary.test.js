@@ -63,7 +63,7 @@ describe('testing the period gql object', () => {
         const demoType = dmarcSummaryType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('dmarcSummaries', 1),
+          toGlobalId('dmarcSummary', 1),
         )
       })
     })
