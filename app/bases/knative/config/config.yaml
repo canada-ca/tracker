@@ -47,7 +47,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: result-processor
-        image: gcr.io/track-compliance/services/results:master-0d8ce8a-1627389086 # {"$imagepolicy": "flux-system:result-processor"}
+        image: gcr.io/track-compliance/services/results:master-1729578-1627474063 # {"$imagepolicy": "flux-system:result-processor"}
         env:
         - name: DB_USER
           valueFrom:
