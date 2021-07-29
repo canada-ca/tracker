@@ -23,7 +23,7 @@ const I18nApp = () => {
   const { from } = location.state || { from: { pathname: '/' } }
   const history = useHistory()
 
-  const [refreshTokens, { loading }] = useMutation(REFRESH_TOKENS, {
+  const [refreshTokens] = useMutation(REFRESH_TOKENS, {
     onError(error) {
       console.error(error.message)
     },
@@ -70,11 +70,6 @@ const I18nApp = () => {
       refreshTokens()
     }
   }, [currentUser, refreshTokens])
-
-  // gets rid of jumping navbar
-  if (loading) {
-    return <div />
-  }
 
   return (
     <I18nProvider i18n={i18n}>
