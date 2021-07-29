@@ -18,11 +18,7 @@ import { REFRESH_TOKENS } from './graphql/mutations'
 import { activate } from './i18n.config'
 
 const I18nApp = () => {
-  // useEffect(() => {
-  //   dynamicActivate(defaultLocale)
-  // }, [])
-
-  const { login } = useUserVar()
+  const { currentUser, login } = useUserVar()
   const location = useLocation()
   const { from } = location.state || { from: { pathname: '/' } }
   const history = useHistory()
@@ -47,7 +43,6 @@ const I18nApp = () => {
       // Non server error occurs
       else if (refreshTokens.result.__typename === 'AuthenticateError') {
         // Could not authenticate
-        console.warn('no refreshy')
       } else {
         console.warn('Incorrect authenticate.result typename.')
       }
@@ -55,9 +50,30 @@ const I18nApp = () => {
   })
 
   useEffect(() => {
-    refreshTokens()
-  }, [refreshTokens])
+    // wrap in trycatch to prevent errors on local session
+    try {
+      console.log(currentUser)
+      if (currentUser?.jwt) {
+        const jwtPayload = currentUser.jwt.split('.')[1]
+        const payloadDecoded = window.atob(jwtPayload)
+        const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
+        // using seconds as that's what the api uses
+        const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
+        const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
+        const timeoutID = setTimeout(
+          refreshTokens,
+          (jwtExpiresAfterSeconds - 60) * 1000,
+        )
+        return () => {
+          clearTimeout(timeoutID)
+        }
+      } else {
+        refreshTokens()
+      }
+    } catch (error) {}
+  }, [currentUser, refreshTokens])
 
+  // gets rid of jumping navbar
   if (loading) {
     return <div />
   }
