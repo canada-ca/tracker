@@ -6,3 +6,4 @@ redis
 rq
 flask
 pretend
+supervisor
