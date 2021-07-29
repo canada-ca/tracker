@@ -59,22 +59,25 @@ export default function App() {
   const { currentUser, isLoggedIn, login } = useUserVar()
   const { from } = location.state || { from: { pathname: '/' } }
 
-  const [refreshTokens, { _loading }] = useMutation(REFRESH_TOKENS, {
+  const [refreshTokens] = useMutation(REFRESH_TOKENS, {
     onError(error) {
       console.error(error.message)
     },
     onCompleted({ refreshTokens }) {
       if (refreshTokens.result.__typename === 'AuthResult') {
+        if (!currentUser.jwt) {
+          // User not logged in yet, set up environment (redirect and lang)
+          history.replace(from)
+          if (refreshTokens.result.user.preferredLang === 'ENGLISH')
+            activate('en')
+          else if (refreshTokens.result.user.preferredLang === 'FRENCH')
+            activate('fr')
+        }
         login({
           jwt: refreshTokens.result.authToken,
           tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
           userName: refreshTokens.result.user.userName,
         })
-        if (refreshTokens.result.user.preferredLang === 'ENGLISH')
-          activate('en')
-        else if (refreshTokens.result.user.preferredLang === 'FRENCH')
-          activate('fr')
-        history.replace(from)
       }
       // Non server error occurs
       else if (refreshTokens.result.__typename === 'AuthenticateError') {
@@ -86,8 +89,23 @@ export default function App() {
   })
 
   useEffect(() => {
-    refreshTokens()
-  }, [refreshTokens])
+    if (currentUser?.jwt) {
+      const jwtPayload = currentUser.jwt.split('.')[1]
+      const payloadDecoded = window.atob(jwtPayload)
+      const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
+      // using seconds as that's what the api uses
+      const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
+      const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
+      const timeoutID = setTimeout(() => {
+        refreshTokens()
+      }, (jwtExpiresAfterSeconds - 5) * 1000)
+      return () => {
+        clearTimeout(timeoutID)
+      }
+    } else {
+      refreshTokens()
+    }
+  }, [currentUser, refreshTokens])
 
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
