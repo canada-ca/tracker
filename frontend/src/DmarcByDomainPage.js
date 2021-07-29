@@ -235,33 +235,33 @@ export default function DmarcByDomainPage() {
 
         <InfoButton
           ml="auto"
-          label="Glossary"
+          label={t`Glossary`}
           state={infoState}
           changeState={changeInfoState}
         />
       </Flex>
 
       <InfoPanel state={infoState}>
-        <InfoBox title="Domain" info="The domain address." />
+        <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
-          title="Total Messages"
-          info="Shows the total number of emails that have been sent by this domain during the selected time range."
+          title={t`Total Messages`}
+          info={t`Shows the total number of emails that have been sent by this domain during the selected time range.`}
         />
         <InfoBox
-          title="Full Pass %"
-          info="Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
+          title={t`Full Pass %`}
+          info={t`Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.`}
         />
         <InfoBox
-          title="Fail SPF %"
-          info="Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
+          title={t`Fail SPF %`}
+          info={t`Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments.`}
         />
         <InfoBox
-          title="Fail DKIM %"
-          info="Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
+          title={t`Fail DKIM %`}
+          info={t`Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments.`}
         />
         <InfoBox
-          title="Full Fail %"
-          info="Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
+          title={t`Full Fail %`}
+          info={t`Shows the percentage of emails from the domain that fail both SPF and DKIM requirments.`}
         />
         <Divider borderColor="gray.500" />
         <Trans>

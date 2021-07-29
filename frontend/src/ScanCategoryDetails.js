@@ -209,9 +209,11 @@ export default function ScanCategoryDetails({ categoryName, categoryData }) {
       {tagDetails}
       <Accordion allowMultiple defaultIndex={[0, 1]}>
         {ciphers && (
-          <AccordionItem buttonLabel="Ciphers">{ciphers}</AccordionItem>
+          <AccordionItem buttonLabel={t`Ciphers`}>{ciphers}</AccordionItem>
         )}
-        {curves && <AccordionItem buttonLabel="Curves">{curves}</AccordionItem>}
+        {curves && (
+          <AccordionItem buttonLabel={t`Curves`}>{curves}</AccordionItem>
+        )}
       </Accordion>
     </AccordionItem>
   )
