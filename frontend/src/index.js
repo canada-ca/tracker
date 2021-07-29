@@ -29,16 +29,19 @@ const I18nApp = () => {
     },
     onCompleted({ refreshTokens }) {
       if (refreshTokens.result.__typename === 'AuthResult') {
+        if (!currentUser.jwt) {
+          // User not logged in yet, set up environment (redirect and lang)
+          history.replace(from)
+          if (refreshTokens.result.user.preferredLang === 'ENGLISH')
+            activate('en')
+          else if (refreshTokens.result.user.preferredLang === 'FRENCH')
+            activate('fr')
+        }
         login({
           jwt: refreshTokens.result.authToken,
           tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
           userName: refreshTokens.result.user.userName,
         })
-        if (refreshTokens.result.user.preferredLang === 'ENGLISH')
-          activate('en')
-        else if (refreshTokens.result.user.preferredLang === 'FRENCH')
-          activate('fr')
-        history.replace(from)
       }
       // Non server error occurs
       else if (refreshTokens.result.__typename === 'AuthenticateError') {
@@ -50,27 +53,22 @@ const I18nApp = () => {
   })
 
   useEffect(() => {
-    // wrap in trycatch to prevent errors on local session
-    try {
-      console.log(currentUser)
-      if (currentUser?.jwt) {
-        const jwtPayload = currentUser.jwt.split('.')[1]
-        const payloadDecoded = window.atob(jwtPayload)
-        const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
-        // using seconds as that's what the api uses
-        const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
-        const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
-        const timeoutID = setTimeout(
-          refreshTokens,
-          (jwtExpiresAfterSeconds - 60) * 1000,
-        )
-        return () => {
-          clearTimeout(timeoutID)
-        }
-      } else {
+    if (currentUser?.jwt) {
+      const jwtPayload = currentUser.jwt.split('.')[1]
+      const payloadDecoded = window.atob(jwtPayload)
+      const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
+      // using seconds as that's what the api uses
+      const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
+      const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
+      const timeoutID = setTimeout(() => {
         refreshTokens()
+      }, (jwtExpiresAfterSeconds - 60) * 1000)
+      return () => {
+        clearTimeout(timeoutID)
       }
-    } catch (error) {}
+    } else {
+      refreshTokens()
+    }
   }, [currentUser, refreshTokens])
 
   // gets rid of jumping navbar
