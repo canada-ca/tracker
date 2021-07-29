@@ -17,7 +17,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { PhoneIcon } from '@chakra-ui/icons'
-import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -28,7 +27,7 @@ import { fieldRequirements } from './fieldRequirements'
 import PhoneNumberField from './PhoneNumberField'
 import AuthenticateField from './AuthenticateField'
 
-function EditableUserPhoneNumber({ detailValue }) {
+export default function EditableUserPhoneNumber({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -303,5 +302,3 @@ function EditableUserPhoneNumber({ detailValue }) {
 EditableUserPhoneNumber.propTypes = {
   detailValue: string,
 }
-
-export default WithWrapperBox(EditableUserPhoneNumber)

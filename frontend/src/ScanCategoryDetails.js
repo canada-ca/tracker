@@ -2,11 +2,10 @@ import React from 'react'
 import { object, string } from 'prop-types'
 import { Accordion, Box, Divider, Stack, Text } from '@chakra-ui/react'
 import { GuidanceTagList } from './GuidanceTagList'
-import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
-function ScanCategoryDetails({ categoryName, categoryData }) {
+export default function ScanCategoryDetails({ categoryName, categoryData }) {
   if (!categoryData)
     return (
       <Text fontWeight="bold" fontSize="2xl">
@@ -224,5 +223,3 @@ ScanCategoryDetails.propTypes = {
   categoryName: string,
   categoryData: object,
 }
-
-export default WithWrapperBox(ScanCategoryDetails)

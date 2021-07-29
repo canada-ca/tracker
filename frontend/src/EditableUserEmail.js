@@ -17,7 +17,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { EmailIcon } from '@chakra-ui/icons'
-import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -27,7 +26,7 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
 
-function EditableUserEmail({ detailValue }) {
+export default function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -178,5 +177,3 @@ function EditableUserEmail({ detailValue }) {
 EditableUserEmail.propTypes = {
   detailValue: string,
 }
-
-export default WithWrapperBox(EditableUserEmail)

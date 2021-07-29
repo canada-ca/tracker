@@ -3,10 +3,9 @@ import { Accordion, Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { any, object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
-import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 
-function ScanCard({ scanType, scanData, status }) {
+export default function ScanCard({ scanType, scanData, status }) {
   const cardTitle =
     scanType === 'web'
       ? t`Web Scan Results`
@@ -136,8 +135,6 @@ function ScanCard({ scanType, scanData, status }) {
     </Box>
   )
 }
-
-export default WithWrapperBox(ScanCard)
 
 ScanCard.propTypes = {
   scanType: string,
