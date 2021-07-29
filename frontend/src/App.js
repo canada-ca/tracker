@@ -98,7 +98,7 @@ export default function App() {
       const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
       const timeoutID = setTimeout(() => {
         refreshTokens()
-      }, (jwtExpiresAfterSeconds - 5) * 1000)
+      }, (jwtExpiresAfterSeconds - 60) * 1000)
       return () => {
         clearTimeout(timeoutID)
       }
