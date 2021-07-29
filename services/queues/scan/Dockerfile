@@ -5,8 +5,6 @@ ENV HOME /queue
 WORKDIR $HOME
 COPY . ./
 
-RUN chmod +x docker-entrypoint.sh && touch redis-server.log
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
     python3 \
