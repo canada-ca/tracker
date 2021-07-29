@@ -3,7 +3,7 @@ import { Box, Text } from '@chakra-ui/react'
 import { arrayOf, number, objectOf, shape, string } from 'prop-types'
 import { Doughnut, Segment } from './Doughnut'
 
-function SummaryCard({ title, categoryDisplay, description, data }) {
+function SummaryCard({ title, categoryDisplay, description, data, ...props }) {
   return (
     <Box
       bg="primary"
@@ -12,6 +12,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
       boxShadow="medium"
       width="min-content"
       height="auto"
+      {...props}
     >
       <Box bg="primary" px="8">
         <Text
