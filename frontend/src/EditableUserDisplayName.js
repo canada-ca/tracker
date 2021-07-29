@@ -17,7 +17,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { PersonIcon } from './theme/Icons'
-import WithWrapperBox from './WithWrapperBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -27,7 +26,7 @@ import { useMutation } from '@apollo/client'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 
-function EditableUserDisplayName({ detailValue }) {
+export default function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -183,5 +182,3 @@ function EditableUserDisplayName({ detailValue }) {
 EditableUserDisplayName.propTypes = {
   detailValue: string,
 }
-
-export default WithWrapperBox(EditableUserDisplayName)

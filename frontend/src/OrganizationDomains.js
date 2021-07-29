@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Box, Divider, Text } from '@chakra-ui/react'
 import { PAGINATED_ORG_DOMAINS as FORWARD } from './graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -52,30 +52,30 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
       />
 
       <InfoPanel state={infoState}>
-        <InfoBox title="Domain" info="The domain address." />
+        <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
-          title="Last scanned"
-          info="The time the domain was last scanned by the system."
+          title={t`Last scanned`}
+          info={t`The time the domain was last scanned by the system.`}
         />
         <InfoBox
-          title="HTTPS"
-          info="Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments."
+          title={t`HTTPS`}
+          info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.`}
         />
         <InfoBox
-          title="SSL"
-          info="Shows if the domain meets the Secure Sockets Layer (SSL) requirements."
+          title={t`SSL`}
+          info={t`Shows if the domain meets the Secure Sockets Layer (SSL) requirements.`}
         />
         <InfoBox
-          title="SPF"
-          info="Shows if the domain meets the Sender Policy Framework (SPF) requiremtns."
+          title={t`SPF`}
+          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requiremtns.`}
         />
         <InfoBox
-          title="DKIM"
-          info="Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
+          title={t`DKIM`}
+          info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
         />
         <InfoBox
-          title="DMARC"
-          info="Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
+          title={t`DMARC`}
+          info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
         />
       </InfoPanel>
 

@@ -8,6 +8,43 @@ import { getStringOfDomains } from './helpers/getStringOfDomains'
 import { getDmarcTableResults } from './helpers/getDmarcTableResults'
 import { getDkimSelectors } from './helpers/getDkimSelectors'
 import { getCanadianLocation } from './helpers/getCanadianLocation'
+import jwt from 'jsonwebtoken'
+
+const NEW_DKIM_DATA_STREAM = 'NEW_DKIM_DATA'
+const NEW_DMARC_DATA_STREAM = 'NEW_DMARC_DATA'
+const NEW_SPF_DATA_STREAM = 'NEW_SPF_DATA'
+const NEW_HTTPS_DATA_STREAM = 'NEW_HTTPS_DATA'
+const NEW_SSL_DATA_STREAM = 'NEW_SLL_DATA'
+const REFRESH_TOKEN_EXPIRY_SECONDS = 60 * 5
+const JWT_TOKEN_EXPIRY_SECONDS = 60 * 2
+
+const parseCookies = (str) => {
+  if (!str) return {}
+  return str.split('; ').reduce((a, c) => {
+    const [n, v] = c.split('=')
+    return { ...a, [n]: decodeURIComponent(v) }
+  }, {})
+}
+
+const now = () => Math.floor(new Date().getTime() / 1000)
+
+const future = (expPeriod) =>
+  Math.floor(new Date((now() + expPeriod) * 1000) / 1000)
+
+const tokenize = ({
+  parameters = {},
+  expPeriod = JWT_TOKEN_EXPIRY_SECONDS, // seconds until expiry
+  iat = now(),
+  exp = future(expPeriod),
+}) =>
+  jwt.sign(
+    {
+      exp,
+      iat,
+      parameters,
+    },
+    'secret',
+  )
 
 const pubsub = new PubSub()
 
@@ -54,8 +91,33 @@ const mocks = {
       'TBS',
     ]),
   AuthResult: () => ({
-    authToken: faker.datatype.uuid(),
+    authToken: tokenize({
+      parameters: { userKey: faker.datatype.number({ min: 0, max: 100 }) },
+    }),
   }),
+  CategorizedSummary: () => {
+    const domainCount = faker.datatype.number({ min: 4000, max: 10000 })
+    const passCount = faker.datatype.number({ min: 0, max: domainCount })
+    const failCount = domainCount - passCount
+    const passPercentage = (passCount / domainCount) * 100
+    const failPercentage = 100 - passPercentage
+
+    return {
+      total: domainCount,
+      categories: [
+        {
+          name: 'pass',
+          count: passCount,
+          percentage: passPercentage,
+        },
+        {
+          name: 'fail',
+          count: failCount,
+          percentage: failPercentage,
+        },
+      ],
+    }
+  },
   CategoryPercentages: () => {
     let maxNumber = 100
     const fullPassPercentage = faker.datatype.number({ min: 0, max: maxNumber })
@@ -483,12 +545,6 @@ const getConnectionObject = (store, args, resolveInfo) => {
   }
 }
 
-const NEW_DKIM_DATA_STREAM = 'NEW_DKIM_DATA'
-const NEW_DMARC_DATA_STREAM = 'NEW_DMARC_DATA'
-const NEW_SPF_DATA_STREAM = 'NEW_SPF_DATA'
-const NEW_HTTPS_DATA_STREAM = 'NEW_HTTPS_DATA'
-const NEW_SSL_DATA_STREAM = 'NEW_SLL_DATA'
-
 // Create a new schema with mocks and resolvers
 const schemaWithMocks = addMocksToSchema({
   schema,
@@ -496,7 +552,7 @@ const schemaWithMocks = addMocksToSchema({
   resolvers: (store) => ({
     Query: {
       findMe: (_, _args, context, _resolveInfo, ___) => {
-        return store.get('PersonalUser', context.token)
+        return store.get('PersonalUser', jwt.decode(context.token, 'secret'))
       },
       findMyDmarcSummaries: (_, args, _context, resolveInfo, ___) => {
         return getConnectionObject(store, args, resolveInfo)
@@ -531,52 +587,129 @@ const schemaWithMocks = addMocksToSchema({
       },
     },
     Mutation: {
+      refreshTokens: (_, _args, context, _resolveInfo) => {
+        if (!context.cookies.refresh_token) {
+          return {
+            result: {
+              code: 401,
+              description: 'Failed to refresh tokens. Please log in.',
+              type: 'AuthenticateError',
+            },
+          }
+        }
+
+        const cookieData = {
+          maxAge: 1000 * REFRESH_TOKEN_EXPIRY_SECONDS,
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        }
+
+        const refreshToken = tokenize({
+          parameters: {
+            userKey: jwt.decode(context.cookies.refresh_token, 'secret')
+              .parameters.userKey,
+          },
+          expPeriod: REFRESH_TOKEN_EXPIRY_SECONDS,
+        })
+
+        context.res.cookie('refresh_token', refreshToken, cookieData)
+        return {
+          result: {
+            authToken: tokenize({
+              parameters: {
+                userKey: jwt.decode(context.cookies.refresh_token, 'secret')
+                  .parameters.userKey,
+              },
+            }),
+            user: store.get(
+              'PersonalUser',
+              jwt.decode(context.cookies.refresh_token, 'secret').parameters
+                .userKey,
+            ),
+            type: 'AuthResult',
+          },
+        }
+      },
       requestScan: async (_, _args, context, _resolveInfo) => {
         const scanUuid = faker.datatype.uuid()
 
         store.set('DkimSub', scanUuid, 'sharedId', scanUuid)
         const dkimScanData = store.get('DkimSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(`${NEW_DKIM_DATA_STREAM}/${context.token}`, {
-            dkimScanData: dkimScanData,
-          })
+          pubsub.publish(
+            `${NEW_DKIM_DATA_STREAM}/$.parameters.userKey{
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`.parameters.userKey,
+            {
+              dkimScanData: dkimScanData,
+            },
+          )
         }, Math.random() * 10000)
 
         store.set('DmarcSub', scanUuid, 'sharedId', scanUuid)
         const dmarcScanData = store.get('DmarcSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(`${NEW_DMARC_DATA_STREAM}/${context.token}`, {
-            dmarcScanData: dmarcScanData,
-          })
+          pubsub.publish(
+            `${NEW_DMARC_DATA_STREAM}/$.parameters.userKey{
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`.parameters.userKey,
+            {
+              dmarcScanData: dmarcScanData,
+            },
+          )
         }, Math.random() * 10000)
 
         store.set('SpfSub', scanUuid, 'sharedId', scanUuid)
         const spfScanData = store.get('SpfSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(`${NEW_SPF_DATA_STREAM}/${context.token}`, {
-            spfScanData: spfScanData,
-          })
+          pubsub.publish(
+            `${NEW_SPF_DATA_STREAM}/$.parameters.userKey{
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`.parameters.userKey,
+            {
+              spfScanData: spfScanData,
+            },
+          )
         }, Math.random() * 10000)
 
         store.set('HttpsSub', scanUuid, 'sharedId', scanUuid)
         const httpsScanData = store.get('HttpsSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(`${NEW_HTTPS_DATA_STREAM}/${context.token}`, {
-            httpsScanData: httpsScanData,
-          })
+          pubsub.publish(
+            `${NEW_HTTPS_DATA_STREAM}/$.parameters.userKey{
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`.parameters.userKey,
+            {
+              httpsScanData: httpsScanData,
+            },
+          )
         }, Math.random() * 10000)
 
         store.set('SslSub', scanUuid, 'sharedId', scanUuid)
         const sslScanData = store.get('SslSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(`${NEW_SSL_DATA_STREAM}/${context.token}`, {
-            sslScanData: sslScanData,
-          })
+          pubsub.publish(
+            `${NEW_SSL_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
+            {
+              sslScanData: sslScanData,
+            },
+          )
         }, Math.random() * 10000)
 
         return {
           status: 'Scan requested.',
         }
+      },
+      signOut: (_, _args, context, _resolveInfo) => {
+        context.res.cookie('refresh_token', '', {
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        })
+        return { status: 'Successfully signed out.' }
       },
       updateOrganization: (_, args, _context, _resolveInfo) => {
         Object.entries(args.input).forEach((entry) => {
@@ -599,7 +732,7 @@ const schemaWithMocks = addMocksToSchema({
       setPhoneNumber: (_, args, context, _resolveInfo) => {
         store.set(
           'PersonalUser',
-          context.token,
+          jwt.decode(context.token, 'secret').parameters.userKey,
           'phoneNumber',
           args.input.phoneNumber,
         )
@@ -607,21 +740,49 @@ const schemaWithMocks = addMocksToSchema({
           result: {
             status:
               'Phone number has been successfully set, you will receive a verification text message shortly.',
-            user: store.get('PersonalUser', context.token),
+            user: store.get(
+              'PersonalUser',
+              jwt.decode(context.token, 'secret').parameters.userKey,
+            ),
             type: 'SetPhoneNumberResult',
           },
         }
       },
-      signIn: (_, _args, _context, _resolveInfo) => {
-        const uuid = faker.datatype.uuid()
-        const user = store.get('PersonalUser', uuid)
+      signIn: (_, _args, context, _resolveInfo) => {
+        const userId = faker.datatype.number({ min: 0, max: 100 })
+        const user = store.get('PersonalUser', userId)
+
+        const cookieData = {
+          maxAge: 1000 * 60 * 5,
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        }
+
+        const refreshToken = tokenize({
+          parameters: {
+            userKey: userId,
+            expPeriod: REFRESH_TOKEN_EXPIRY_SECONDS,
+          },
+        })
+
+        context.res.cookie('refresh_token', refreshToken, cookieData)
 
         return {
           result: {
-            authToken: uuid,
+            authToken: tokenize({
+              parameters: {
+                userKey: userId,
+              },
+            }),
             user,
           },
         }
+      },
+    },
+    RefreshTokensUnion: {
+      __resolveType: ({ type }) => {
+        return type
       },
     },
     SetPhoneNumberUnion: {
@@ -637,23 +798,33 @@ const schemaWithMocks = addMocksToSchema({
     Subscription: {
       dkimScanData: {
         subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(`${NEW_DKIM_DATA_STREAM}/${context.token}`),
+          pubsub.asyncIterator(
+            `${NEW_DKIM_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+          ),
       },
       dmarcScanData: {
         subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(`${NEW_DMARC_DATA_STREAM}/${context.token}`),
+          pubsub.asyncIterator(
+            `${NEW_DMARC_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+          ),
       },
       spfScanData: {
         subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(`${NEW_SPF_DATA_STREAM}/${context.token}`),
+          pubsub.asyncIterator(
+            `${NEW_SPF_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+          ),
       },
       httpsScanData: {
         subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(`${NEW_HTTPS_DATA_STREAM}/${context.token}`),
+          pubsub.asyncIterator(
+            `${NEW_HTTPS_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+          ),
       },
       sslScanData: {
         subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(`${NEW_SSL_DATA_STREAM}/${context.token}`),
+          pubsub.asyncIterator(
+            `${NEW_SSL_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+          ),
       },
     },
   }),
@@ -661,7 +832,7 @@ const schemaWithMocks = addMocksToSchema({
 
 const server = new ApolloServer({
   schema: schemaWithMocks,
-  context: ({ req, connection }) => {
+  context: async ({ req, res, connection }) => {
     if (connection) {
       // Operation is a Subscription
       const token = connection.context.authorization
@@ -671,7 +842,9 @@ const server = new ApolloServer({
 
     const token = req.headers.authorization
 
-    return { token }
+    const cookies = req.headers.cookie ? parseCookies(req.headers.cookie) : {}
+
+    return { token, res, cookies }
   },
   subscriptions: {
     onConnect: (connectionParams, _websocket) => {

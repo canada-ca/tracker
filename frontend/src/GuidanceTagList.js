@@ -3,7 +3,7 @@ import { array, string } from 'prop-types'
 import { Accordion, Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
 export function GuidanceTagList({
@@ -102,12 +102,12 @@ export function GuidanceTagList({
       {selectorHeading}
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
         {positiveTagList?.length && (
-          <AccordionItem buttonLabel="Positive Tags" buttonVariant="strong">
+          <AccordionItem buttonLabel={t`Positive Tags`} buttonVariant="strong">
             {positiveTagList}
           </AccordionItem>
         )}
         {neutralTagList?.length && (
-          <AccordionItem buttonLabel="Neutral Tags" buttonVariant="info">
+          <AccordionItem buttonLabel={t`Neutral Tags`} buttonVariant="info">
             <Box>
               <Trans>
                 Neutral tags highlight relevant configuration details, but are
@@ -119,7 +119,7 @@ export function GuidanceTagList({
           </AccordionItem>
         )}
         {negativeTagList?.length && (
-          <AccordionItem buttonLabel="Negative Tags" buttonVariant="weak">
+          <AccordionItem buttonLabel={t`Negative Tags`} buttonVariant="weak">
             {negativeTagList}
           </AccordionItem>
         )}

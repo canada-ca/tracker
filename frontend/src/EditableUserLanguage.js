@@ -1,7 +1,6 @@
 import React from 'react'
 import { string } from 'prop-types'
 import { Button, Heading, Select, Stack, useToast } from '@chakra-ui/react'
-import WithWrapperBox from './WithWrapperBox'
 import { t, Trans } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import { Field, Formik } from 'formik'
@@ -10,7 +9,7 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 
-function EditableUserLanguage({ currentLang }) {
+export default function EditableUserLanguage({ currentLang }) {
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
@@ -118,5 +117,3 @@ function EditableUserLanguage({ currentLang }) {
 EditableUserLanguage.propTypes = {
   currentLang: string,
 }
-
-export default WithWrapperBox(EditableUserLanguage)

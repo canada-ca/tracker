@@ -1,6 +1,5 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
-import WithWrapperBox from './WithWrapperBox'
 import { any, string } from 'prop-types'
 import {
   Input,
@@ -13,13 +12,13 @@ import { SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-const ReactTableGlobalFilter = ({
+export default function ReactTableGlobalFilter({
   title,
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
   placeholder,
-}) => {
+}) {
   const { i18n } = useLingui()
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
@@ -64,5 +63,3 @@ ReactTableGlobalFilter.propTypes = {
   setGlobalFilter: any,
   placeholder: string,
 }
-
-export default WithWrapperBox(ReactTableGlobalFilter)

@@ -134,7 +134,7 @@ export default function AdminPage() {
           as={RouteLink}
           to="/create-organization"
         >
-          <AddIcon />
+          <AddIcon mr={2} />
           <Trans>Create Organization</Trans>
         </Button>
       </Stack>
