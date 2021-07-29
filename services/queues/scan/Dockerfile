@@ -19,6 +19,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     systemd
 
 RUN pip3 install -r requirements.txt
-RUN sed -i 's/\/var\/log\/redis\/redis-server\.log/\"\"/g' /etc/redis/redis.conf
 
-CMD exec ~/./docker-entrypoint.sh
+CMD /usr/local/bin/supervisord -c supervisord.conf
