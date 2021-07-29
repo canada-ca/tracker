@@ -31,7 +31,6 @@ const I18nApp = () => {
       if (refreshTokens.result.__typename === 'AuthResult') {
         if (!currentUser.jwt) {
           // User not logged in yet, set up environment (redirect and lang)
-          history.replace(from)
           if (refreshTokens.result.user.preferredLang === 'ENGLISH')
             activate('en')
           else if (refreshTokens.result.user.preferredLang === 'FRENCH')
@@ -42,6 +41,7 @@ const I18nApp = () => {
           tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
           userName: refreshTokens.result.user.userName,
         })
+        if (from.pathname !== '/') history.replace(from)
       }
       // Non server error occurs
       else if (refreshTokens.result.__typename === 'AuthenticateError') {
