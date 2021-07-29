@@ -121,7 +121,8 @@
     },
     "setupFilesAfterEnv": [
       "./src/setupTests.js"
-    ]
+    ],
+    "testTimeout": 30000
   },
   "browserslist": {
     "production": [

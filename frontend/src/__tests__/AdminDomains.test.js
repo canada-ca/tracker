@@ -43,9 +43,6 @@ const mocks = [
 ]
 
 describe('<AdminDomains />', () => {
-  beforeEach(() => {
-    jest.setTimeout(30000)
-  })
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>

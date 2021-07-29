@@ -102,10 +102,6 @@ const mocks = [
 ]
 
 describe('<OrganizationInformation />', () => {
-  beforeEach(() => {
-    jest.setTimeout(30000)
-  })
-
   describe('given a valid organization slug', () => {
     describe('the organization has the required fields', () => {
       it('displays the organization information', async () => {
