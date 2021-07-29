@@ -121,7 +121,7 @@ export default function Organisations() {
         </Heading>
 
         <InfoButton
-          label="Glossary"
+          label={t`Glossary`}
           state={infoState}
           changeState={changeInfoState}
         />
@@ -129,20 +129,20 @@ export default function Organisations() {
 
       <InfoPanel state={infoState}>
         <InfoBox
-          title="Organization Name"
-          info="Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
+          title={t`Organization Name`}
+          info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
         />
         <InfoBox
-          title="Services"
-          info="Shows the number of domains that the organization is in control of."
+          title={t`Services`}
+          info={t`Shows the number of domains that the organization is in control of.`}
         />
         <InfoBox
-          title="Web Configuration"
-          info="Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts."
+          title={t`Web Configuration`}
+          info={t`Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts.`}
         />
         <InfoBox
-          title="Email Configuration"
-          info="Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
+          title={t`Email Configuration`}
+          info={t`Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC.`}
         />
         <Divider borderColor="gray.500" mb={4} />
         <Trans>

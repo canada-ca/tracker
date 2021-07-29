@@ -1,6 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { SimpleGrid, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import SummaryCard from './SummaryCard'
 import { object } from 'prop-types'
 import theme from './theme/canada'
@@ -27,6 +27,7 @@ export function SummaryGroup({ web, mail }) {
         },
       }}
       data={web}
+      mb={{ base: 6, md: 0 }}
     />
   ) : (
     <Text fontWeight="bold" textAlign="center">
@@ -53,6 +54,7 @@ export function SummaryGroup({ web, mail }) {
         },
       }}
       data={mail}
+      mb={{ base: 6, md: 0 }}
     />
   ) : (
     <Text fontWeight="bold" textAlign="center">
@@ -60,16 +62,10 @@ export function SummaryGroup({ web, mail }) {
     </Text>
   )
   return (
-    <SimpleGrid
-      columns={{ base: 1, md: 2 }}
-      spacing="30px"
-      justifyItems="center"
-      maxWidth="width.60"
-      mx="auto"
-    >
+    <Flex flexWrap="wrap" justifyContent="space-evenly">
       {webCard}
       {mailCard}
-    </SimpleGrid>
+    </Flex>
   )
 }
 
