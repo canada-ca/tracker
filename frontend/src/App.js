@@ -3,10 +3,10 @@ import { lazyWithRetry } from './LazyWithRetry'
 import {
   Switch,
   Link as RouteLink,
-  useHistory,
-  useLocation,
+  // useHistory,
+  // useLocation,
 } from 'react-router-dom'
-import { I18nProvider } from '@lingui/react'
+// import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -24,9 +24,9 @@ import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
-import { REFRESH_TOKENS } from './graphql/mutations'
-import { useMutation } from '@apollo/client'
-import { activate } from './i18n.config'
+// import { REFRESH_TOKENS } from './graphql/mutations'
+// import { useMutation } from '@apollo/client'
+// import { activate } from './i18n.config'
 import RequestScanNotificationHandler from './RequestScanNotificationHandler'
 import { wsClient } from './client'
 
@@ -54,59 +54,59 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 
 export default function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn, login } = useUserVar()
-  const location = useLocation()
-  const { from } = location.state || { from: { pathname: '/' } }
-  const history = useHistory()
+  const { currentUser, isLoggedIn } = useUserVar()
+  // const location = useLocation()
+  // const { from } = location.state || { from: { pathname: '/' } }
+  // const history = useHistory()
 
-  const [refreshTokens, { loading }] = useMutation(REFRESH_TOKENS, {
-    onError(error) {
-      console.error(error.message)
-    },
-    onCompleted({ refreshTokens }) {
-      if (refreshTokens.result.__typename === 'AuthResult') {
-        login({
-          jwt: refreshTokens.result.authToken,
-          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
-          userName: refreshTokens.result.user.userName,
-        })
-        if (refreshTokens.result.user.preferredLang === 'ENGLISH')
-          activate('en')
-        else if (refreshTokens.result.user.preferredLang === 'FRENCH')
-          activate('fr')
-        history.replace(from)
-      }
-      // Non server error occurs
-      else if (refreshTokens.result.__typename === 'AuthenticateError') {
-        // Could not authenticate
-      } else {
-        console.warn('Incorrect authenticate.result typename.')
-      }
-    },
-  })
+  // const [refreshTokens, { loading }] = useMutation(REFRESH_TOKENS, {
+  //   onError(error) {
+  //     console.error(error.message)
+  //   },
+  //   onCompleted({ refreshTokens }) {
+  //     if (refreshTokens.result.__typename === 'AuthResult') {
+  //       login({
+  //         jwt: refreshTokens.result.authToken,
+  //         tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
+  //         userName: refreshTokens.result.user.userName,
+  //       })
+  //       if (refreshTokens.result.user.preferredLang === 'ENGLISH')
+  //         activate('en')
+  //       else if (refreshTokens.result.user.preferredLang === 'FRENCH')
+  //         activate('fr')
+  //       history.replace(from)
+  //     }
+  //     // Non server error occurs
+  //     else if (refreshTokens.result.__typename === 'AuthenticateError') {
+  //       // Could not authenticate
+  //     } else {
+  //       console.warn('Incorrect authenticate.result typename.')
+  //     }
+  //   },
+  // })
 
-  useEffect(() => {
-    // wrap in trycatch to prevent errors on local session
-    try {
-      if (currentUser?.jwt) {
-        const jwtPayload = currentUser.jwt.split('.')[1]
-        const payloadDecoded = window.atob(jwtPayload)
-        const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
-        // using seconds as that's what the api uses
-        const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
-        const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
-        const timeoutID = setTimeout(
-          refreshTokens,
-          (jwtExpiresAfterSeconds - 60) * 1000,
-        )
-        return () => {
-          clearTimeout(timeoutID)
-        }
-      } else {
-        refreshTokens()
-      }
-    } catch (error) {}
-  }, [currentUser, refreshTokens])
+  // useEffect(() => {
+  //   // wrap in trycatch to prevent errors on local session
+  //   try {
+  //     if (currentUser?.jwt) {
+  //       const jwtPayload = currentUser.jwt.split('.')[1]
+  //       const payloadDecoded = window.atob(jwtPayload)
+  //       const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
+  //       // using seconds as that's what the api uses
+  //       const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
+  //       const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
+  //       const timeoutID = setTimeout(
+  //         refreshTokens,
+  //         (jwtExpiresAfterSeconds - 60) * 1000,
+  //       )
+  //       return () => {
+  //         clearTimeout(timeoutID)
+  //       }
+  //     } else {
+  //       refreshTokens()
+  //     }
+  //   } catch (error) {}
+  // }, [currentUser, refreshTokens])
 
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
@@ -118,12 +118,12 @@ export default function App() {
   }, [currentUser.jwt])
 
   // gets rid of jumping navbar
-  if (loading) {
-    return <div />
-  }
+  // if (loading) {
+  //   return <div />
+  // }
 
   return (
-    <I18nProvider i18n={i18n}>
+    <>
       <RequestScanNotificationHandler />
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
@@ -327,6 +327,6 @@ export default function App() {
           </Link>
         </Footer>
       </Flex>
-    </I18nProvider>
+    </>
   )
 }

@@ -1,20 +1,80 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-import { BrowserRouter as Router } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  useHistory,
+  useLocation,
+} from 'react-router-dom'
 import canada from './theme/canada'
 import { client, currentUserVar } from './client'
-import { ApolloProvider } from '@apollo/client'
-import { UserVarProvider } from './UserState'
+import { ApolloProvider, useMutation } from '@apollo/client'
+import { UserVarProvider, useUserVar } from './UserState'
+import { I18nProvider } from '@lingui/react'
+import { i18n } from '@lingui/core'
+import { REFRESH_TOKENS } from './graphql/mutations'
+import { activate } from './i18n.config'
+
+const I18nApp = () => {
+  // useEffect(() => {
+  //   dynamicActivate(defaultLocale)
+  // }, [])
+
+  const { login } = useUserVar()
+  const location = useLocation()
+  const { from } = location.state || { from: { pathname: '/' } }
+  const history = useHistory()
+
+  const [refreshTokens, { loading }] = useMutation(REFRESH_TOKENS, {
+    onError(error) {
+      console.error(error.message)
+    },
+    onCompleted({ refreshTokens }) {
+      if (refreshTokens.result.__typename === 'AuthResult') {
+        login({
+          jwt: refreshTokens.result.authToken,
+          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
+          userName: refreshTokens.result.user.userName,
+        })
+        if (refreshTokens.result.user.preferredLang === 'ENGLISH')
+          activate('en')
+        else if (refreshTokens.result.user.preferredLang === 'FRENCH')
+          activate('fr')
+        history.replace(from)
+      }
+      // Non server error occurs
+      else if (refreshTokens.result.__typename === 'AuthenticateError') {
+        // Could not authenticate
+        console.warn('no refreshy')
+      } else {
+        console.warn('Incorrect authenticate.result typename.')
+      }
+    },
+  })
+
+  useEffect(() => {
+    refreshTokens()
+  }, [refreshTokens])
+
+  if (loading) {
+    return <div />
+  }
+
+  return (
+    <I18nProvider i18n={i18n}>
+      <App />
+    </I18nProvider>
+  )
+}
 
 ReactDOM.render(
   <ApolloProvider client={client}>
     <UserVarProvider userVar={currentUserVar}>
       <ChakraProvider theme={canada}>
         <Router>
-          <App />
+          <I18nApp />
         </Router>
       </ChakraProvider>
     </UserVarProvider>
