@@ -601,7 +601,7 @@ const schemaWithMocks = addMocksToSchema({
         const cookieData = {
           maxAge: 1000 * REFRESH_TOKEN_EXPIRY_SECONDS,
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: true,
         }
 
@@ -706,7 +706,7 @@ const schemaWithMocks = addMocksToSchema({
       signOut: (_, _args, context, _resolveInfo) => {
         context.res.cookie('refresh_token', '', {
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: true,
         })
         return { status: 'Successfully signed out.' }
@@ -755,7 +755,7 @@ const schemaWithMocks = addMocksToSchema({
         const cookieData = {
           maxAge: 1000 * 60 * 5,
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: true,
         }
 
