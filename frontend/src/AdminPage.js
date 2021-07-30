@@ -68,7 +68,7 @@ export default function AdminPage() {
     options.push({ label: name, value: { slug: slug, id: id } })
   })
 
-  if (options.length > 1) {
+  if (options.length > 0) {
     return (
       <Stack spacing={10} w="100%" px={4}>
         <Flex
@@ -98,7 +98,7 @@ export default function AdminPage() {
             <Trans>Create Organization</Trans>
           </Button>
         </Flex>
-        {options.length > 1 && selectedOrg !== 'none' ? (
+        {options.length > 0 && selectedOrg !== 'none' ? (
           <>
             <OrganizationInformation
               orgSlug={orgDetails.slug}
