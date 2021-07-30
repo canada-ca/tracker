@@ -5,6 +5,7 @@ import {
   useHistory,
   useLocation,
   Link as RouteLink,
+  Redirect,
 } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
@@ -181,7 +182,21 @@ export default function App() {
                 <CreateUserPage />
               </Page>
 
-              <Page path="/sign-in" component={SignInPage} title={t`Sign In`} />
+              <Page
+                path="/sign-in"
+                title={t`Sign In`}
+                render={() => {
+                  return isLoggedIn() ? (
+                    <Redirect
+                      to={{
+                        pathname: '/',
+                      }}
+                    />
+                  ) : (
+                    <SignInPage />
+                  )
+                }}
+              />
 
               <Page
                 path="/authenticate/:sendMethod/:authenticateToken"
