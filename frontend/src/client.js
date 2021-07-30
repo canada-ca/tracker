@@ -31,21 +31,6 @@ export function createCache() {
         },
       },
       AffiliationsConnection: relayStylePagination(),
-      Organization: {
-        fields: {
-          domains: relayStylePagination(),
-        },
-      },
-      Period: {
-        keyFields: ['month', 'year', 'domain'],
-        fields: {
-          detailTables: {
-            merge(existing = {}, incoming) {
-              return { ...existing, ...incoming }
-            },
-          },
-        },
-      },
       DetailTables: {
         fields: {
           dkimFailure: relayStylePagination(),
@@ -62,6 +47,24 @@ export function createCache() {
             },
           },
         },
+      },
+      Organization: {
+        fields: {
+          domains: relayStylePagination(),
+        },
+      },
+      Period: {
+        keyFields: ['month', 'year', 'domain'],
+        fields: {
+          detailTables: {
+            merge(existing = {}, incoming) {
+              return { ...existing, ...incoming }
+            },
+          },
+        },
+      },
+      PersonalUser: {
+        keyFields: [],
       },
     },
   })
