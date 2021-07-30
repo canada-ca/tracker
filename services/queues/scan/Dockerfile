@@ -13,9 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-wheel \
     build-essential \
     python3-dev \
-    redis-server \
-    systemd
+    redis-server 
 
 RUN pip3 install -r requirements.txt
 
-CMD /usr/local/bin/supervisord -c supervisord.conf
+CMD ["/usr/local/bin/supervisord", "-c", "supervisord.conf"]
