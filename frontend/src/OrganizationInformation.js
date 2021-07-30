@@ -420,18 +420,22 @@ export default function OrganizationInformation({
             </Box>
           </Text>
 
-          <Text fontWeight="bold">
-            <Trans>Zone:</Trans>{' '}
-            <Box as="span" fontWeight="normal">
-              {org.zone}
-            </Box>
-          </Text>
-          <Text fontWeight="bold">
-            <Trans>Sector:</Trans>{' '}
-            <Box as="span" fontWeight="normal">
-              {org.sector}
-            </Box>
-          </Text>
+          {org.zone && (
+            <Text fontWeight="bold">
+              <Trans>Zone:</Trans>{' '}
+              <Box as="span" fontWeight="normal">
+                {org.zone}
+              </Box>
+            </Text>
+          )}
+          {org.sector && (
+            <Text fontWeight="bold">
+              <Trans>Sector:</Trans>{' '}
+              <Box as="span" fontWeight="normal">
+                {org.sector}
+              </Box>
+            </Text>
+          )}
 
           <Text fontWeight="bold">
             <Trans>City:</Trans>{' '}
