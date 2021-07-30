@@ -69,7 +69,7 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          {data?.organization?.affiliations && (
+          {!isNaN(data?.organization?.affiliations?.totalCount) && (
             <Tab>
               <Trans>Users</Trans>
             </Tab>
@@ -93,7 +93,7 @@ export default function OrganizationDetails() {
               <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
-          {!isNaN(data?.organization?.affiliations) && (
+          {!isNaN(data?.organization?.affiliations?.totalCount) && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
