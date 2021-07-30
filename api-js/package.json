@@ -25,7 +25,7 @@
   "dependencies": {
     "@graphql-tools/schema": "^7.1.5",
     "@lingui/core": "^3.10.4",
-    "apollo-server": "^3.0.2",
+    "apollo-server": "^3.1.1",
     "apollo-server-core": "^3.0.2",
     "apollo-server-express": "^3.0.2",
     "arango-express": "^1.0.0",
