@@ -6,7 +6,6 @@ import {
   useLocation,
   Link as RouteLink,
   Redirect,
-  Route,
 } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
