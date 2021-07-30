@@ -45,4 +45,4 @@ if (navigator.languages) {
   defaultLanguage = 'en'
 }
 
-activate(defaultLanguage)
+export const defaultLocale = defaultLanguage
