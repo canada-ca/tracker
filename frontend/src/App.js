@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { lazyWithRetry } from './LazyWithRetry'
-import { Switch, Link as RouteLink } from 'react-router-dom'
+import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
 import { i18n } from '@lingui/core'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
