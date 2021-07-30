@@ -52,14 +52,6 @@ export default function CreateOrganizationPage() {
         i18n._(fieldRequirements.acronym.max.message),
       )
       .required(i18n._(fieldRequirements.field.required.message)),
-    zoneEN: string().required(i18n._(fieldRequirements.field.required.message)),
-    zoneFR: string().required(i18n._(fieldRequirements.field.required.message)),
-    sectorEN: string().required(
-      i18n._(fieldRequirements.field.required.message),
-    ),
-    sectorFR: string().required(
-      i18n._(fieldRequirements.field.required.message),
-    ),
     cityEN: string().required(i18n._(fieldRequirements.field.required.message)),
     cityFR: string().required(i18n._(fieldRequirements.field.required.message)),
     provinceEN: string().required(
