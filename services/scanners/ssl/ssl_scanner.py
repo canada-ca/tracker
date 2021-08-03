@@ -10,7 +10,8 @@ import traceback
 import scapy
 import datetime as dt
 from enum import Enum
-from multiprocessing import Process, Queue
+from pebble import concurrent
+from concurrent.futures import TimeoutError
 from OpenSSL import SSL
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
@@ -29,8 +30,7 @@ from sslyze.server_setting import (
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-TIMEOUT = 80  # 80 second scan timeout
-RES_QUEUE = Queue()
+TIMEOUT = os.getenv("SCAN_TIMEOUT", 80)
 
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
@@ -39,10 +39,6 @@ OTS_QUEUE_URL = os.getenv(
     "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
 )
 DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
-
-
-class ScanTimeoutException(BaseException):
-    pass
 
 
 class TlsVersionEnum(Enum):
@@ -56,174 +52,179 @@ class TlsVersionEnum(Enum):
 
 
 def dispatch_results(payload, client, ots):
-    client.post(DEST_URL(ots) + "/ssl", json=payload)
+    client.post(DEST_URL(ots) + "/ssl", json=json.dumps(payload))
     logging.info("Scan results dispatched to result queue")
 
 
-def get_server_info(domain):
-    """
-    Retrieve server connectivity info by performing a connection test
-    :param domain: Domain to be assessed
-    :return: Server connectivity information
-    """
-
-    # Retrieve server information, look-up IP address
-    server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
-        domain, 443
-    )
-    server_tester = ServerConnectivityTester()
-
-    logging.info(
-        f"Testing connectivity with {server_location.hostname}:{server_location.port}..."
-    )
-    # Test connection to server and retrieve info
-    server_info = server_tester.perform(server_location)
-    logging.info("Server Info %s\n" % server_info)
-
-    return server_info
+class SSLScanner():
+    domain = None
 
 
-def get_supported_tls(highest_supported, domain):
-
-    supported = [highest_supported]
-
-    for version, method in {
-        "SSL_2_0": TlsVersionEnum.SSLV2,
-        "SSL_3_0": TlsVersionEnum.SSLV3,
-        "TLS_1_0": TlsVersionEnum.TLSV1,
-        "TLS_1_1": TlsVersionEnum.TLSV1_1,
-        "TLS_1_2": TlsVersionEnum.TLSV1_2,
-    }.items():
-
-        # Only test SSL/TLS connections with lesser versions
-        if highest_supported == version:
-            break
-
-        try:
-            # Attempt connection
-            # If connection fails, exception will be raised, causing the failure to be
-            # logged and the version to not be appended to the supported list
-            ctx = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
-                domain, 443
-            )
-            cfg = ServerNetworkConfiguration(domain)
-            connx = SslConnection(ctx, cfg, method, True)
-            connx.connect(domain)
-            supported.append(version)
-        except Exception as e:
-            logging.info(f"Failed to connect using %{version}: ({type(e)}) - {e}")
-
-    return supported
+    def __init__(self, target_domain):
+        self.domain = target_domain
 
 
-def scan_ssl(domain):
-    try:
-        server_info = get_server_info(domain)
+    def get_server_info(self):
+        """
+        Retrieve server connectivity info by performing a connection test
+        :return: Server connectivity information
+        """
 
-        highest_tls_supported = str(
-            server_info.tls_probing_result.highest_tls_version_supported
-        ).split(".")[1]
+        # Retrieve server information, look-up IP address
+        server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
+            self.domain, 443
+        )
+        server_tester = ServerConnectivityTester()
 
-        tls_supported = get_supported_tls(highest_tls_supported, domain)
-    except ConnectionToServerFailed as e:
-        logging.error(f"Failed to connect to {domain}: {e}")
-        RES_QUEUE.put({})
-        return
-    except ServerHostnameCouldNotBeResolved as e:
-        logging.error(f"{domain} could not be resolved: {e}")
-        RES_QUEUE.put({})
-        return
-    except gaierror as e:
-        logging.error(f"Could not retrieve address info for {domain} {e}")
-        RES_QUEUE.put({})
-        return
+        logging.info(
+            f"Testing connectivity with {server_location.hostname}:{server_location.port}..."
+        )
+        # Test connection to server and retrieve info
+        server_info = server_tester.perform(server_location)
+        logging.info("Server Info %s\n" % server_info)
 
-    scanner = Scanner()
+        return server_info
 
-    designated_scans = set()
 
-    # Scan for common vulnerabilities, certificate info, elliptic curves
-    designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
-    designated_scans.add(ScanCommand.HEARTBLEED)
-    designated_scans.add(ScanCommand.CERTIFICATE_INFO)
-    designated_scans.add(ScanCommand.ELLIPTIC_CURVES)
+    def get_supported_tls(self, highest_supported):
 
-    # Test supported SSL/TLS
-    if "SSL_2_0" in tls_supported:
-        designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
-    elif "SSL_3_0" in tls_supported:
-        designated_scans.add(ScanCommand.SSL_3_0_CIPHER_SUITES)
-    elif "TLS_1_0" in tls_supported:
-        designated_scans.add(ScanCommand.TLS_1_0_CIPHER_SUITES)
-    elif "TLS_1_1" in tls_supported:
-        designated_scans.add(ScanCommand.TLS_1_1_CIPHER_SUITES)
-    elif "TLS_1_2" in tls_supported:
-        designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
-    elif "TLS_1_3" in tls_supported:
-        designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
+        supported = [highest_supported]
 
-    scan_request = ServerScanRequest(
-        server_info=server_info, scan_commands=designated_scans
-    )
+        for version, method in {
+            "SSL_2_0": TlsVersionEnum.SSLV2,
+            "SSL_3_0": TlsVersionEnum.SSLV3,
+            "TLS_1_0": TlsVersionEnum.TLSV1,
+            "TLS_1_1": TlsVersionEnum.TLSV1_1,
+            "TLS_1_2": TlsVersionEnum.TLSV1_2,
+        }.items():
 
-    scanner.start_scans([scan_request])
+            # Only test SSL/TLS connections with lesser versions
+            if highest_supported == version:
+                break
 
-    # Wait for asynchronous scans to complete
-    # get_results() returns a generator with a single "ServerScanResult". We only want that object
-    scan_results = [x for x in scanner.get_results()][0]
-    logging.info("Scan results retrieved from generator")
-
-    res = {
-        "TLS": {
-            "supported": tls_supported,
-            "accepted_cipher_list": [],
-            "rejected_cipher_list": [],
-        }
-    }
-
-    # Parse scan results for required info
-    for name, result in scan_results.scan_commands_results.items():
-
-        # If CipherSuitesScanResults
-        if name.endswith("suites"):
-            logging.info("Parsing Cipher Suite Scan results...")
-
-            for c in result.accepted_cipher_suites:
-                res["TLS"]["accepted_cipher_list"].append(c.cipher_suite.name)
-
-            for c in result.rejected_cipher_suites:
-                res["TLS"]["rejected_cipher_list"].append(c.cipher_suite.name)
-
-        elif name == "openssl_ccs_injection":
-            logging.info("Parsing OpenSSL CCS Injection Vulnerability Scan results...")
-            res[
-                "is_vulnerable_to_ccs_injection"
-            ] = result.is_vulnerable_to_ccs_injection
-
-        elif name == "heartbleed":
-            logging.info("Parsing Heartbleed Vulnerability Scan results...")
-            res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
-
-        elif name == "certificate_info":
-            logging.info("Parsing Certificate Info Scan results...")
             try:
-                res["signature_algorithm"] = (
-                    result.certificate_deployments[0]
-                    .verified_certificate_chain[0]
-                    .signature_hash_algorithm.__class__.__name__
+                # Attempt connection
+                # If connection fails, exception will be raised, causing the failure to be
+                # logged and the version to not be appended to the supported list
+                ctx = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
+                    self.domain, 443
                 )
-            except TypeError:
-                res["signature_algorithm"] = None
+                cfg = ServerNetworkConfiguration(self.domain)
+                connx = SslConnection(ctx, cfg, method, True)
+                connx.connect(self.domain)
+                supported.append(version)
+            except Exception as e:
+                logging.info(f"Failed to connect using %{version}: ({type(e)}) - {e}")
 
-        else:
-            logging.info("Parsing Elliptic Curve Scan results...")
-            res["supports_ecdh_key_exchange"] = result.supports_ecdh_key_exchange
-            res["supported_curves"] = []
-            if result.supported_curves is not None:
-                for curve in result.supported_curves:
-                    res["supported_curves"].append(curve.name)
+        return supported
 
-    RES_QUEUE.put(res)
+
+    @concurrent.process(timeout=TIMEOUT)
+    def run(self):
+        try:
+            server_info = self.get_server_info()
+
+            highest_tls_supported = str(
+                server_info.tls_probing_result.highest_tls_version_supported
+            ).split(".")[1]
+
+            tls_supported = self.get_supported_tls(highest_tls_supported)
+        except ConnectionToServerFailed as e:
+            logging.error(f"Failed to connect to {self.domain}: {e}")
+            return {}
+        except ServerHostnameCouldNotBeResolved as e:
+            logging.error(f"{self.domain} could not be resolved: {e}")
+            return {}
+        except gaierror as e:
+            logging.error(f"Could not retrieve address info for {self.domain} {e}")
+            return {}
+
+        scanner = Scanner()
+
+        designated_scans = set()
+
+        # Scan for common vulnerabilities, certificate info, elliptic curves
+        designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
+        designated_scans.add(ScanCommand.HEARTBLEED)
+        designated_scans.add(ScanCommand.CERTIFICATE_INFO)
+        designated_scans.add(ScanCommand.ELLIPTIC_CURVES)
+
+        # Test supported SSL/TLS
+        if "SSL_2_0" in tls_supported:
+            designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
+        elif "SSL_3_0" in tls_supported:
+            designated_scans.add(ScanCommand.SSL_3_0_CIPHER_SUITES)
+        elif "TLS_1_0" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_0_CIPHER_SUITES)
+        elif "TLS_1_1" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_1_CIPHER_SUITES)
+        elif "TLS_1_2" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
+        elif "TLS_1_3" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
+
+        scan_request = ServerScanRequest(
+            server_info=server_info, scan_commands=designated_scans
+        )
+
+        scanner.start_scans([scan_request])
+
+        # Wait for asynchronous scans to complete
+        # get_results() returns a generator with a single "ServerScanResult". We only want that object
+        scan_results = [x for x in scanner.get_results()][0]
+        logging.info("Scan results retrieved from generator")
+
+        res = {
+            "TLS": {
+                "supported": tls_supported,
+                "accepted_cipher_list": [],
+                "rejected_cipher_list": [],
+            }
+        }
+
+        # Parse scan results for required info
+        for name, result in scan_results.scan_commands_results.items():
+
+            # If CipherSuitesScanResults
+            if name.endswith("suites"):
+                logging.info("Parsing Cipher Suite Scan results...")
+
+                for c in result.accepted_cipher_suites:
+                    res["TLS"]["accepted_cipher_list"].append(c.cipher_suite.name)
+
+                for c in result.rejected_cipher_suites:
+                    res["TLS"]["rejected_cipher_list"].append(c.cipher_suite.name)
+
+            elif name == "openssl_ccs_injection":
+                logging.info("Parsing OpenSSL CCS Injection Vulnerability Scan results...")
+                res[
+                    "is_vulnerable_to_ccs_injection"
+                ] = result.is_vulnerable_to_ccs_injection
+
+            elif name == "heartbleed":
+                logging.info("Parsing Heartbleed Vulnerability Scan results...")
+                res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
+
+            elif name == "certificate_info":
+                logging.info("Parsing Certificate Info Scan results...")
+                try:
+                    res["signature_algorithm"] = (
+                        result.certificate_deployments[0]
+                        .verified_certificate_chain[0]
+                        .signature_hash_algorithm.__class__.__name__
+                    )
+                except TypeError:
+                    res["signature_algorithm"] = None
+
+            else:
+                logging.info("Parsing Elliptic Curve Scan results...")
+                res["supports_ecdh_key_exchange"] = result.supports_ecdh_key_exchange
+                res["supported_curves"] = []
+                if result.supported_curves is not None:
+                    for curve in result.supported_curves:
+                        res["supported_curves"].append(curve.name)
+
+        return res
 
 
 def process_results(results):
@@ -264,7 +265,8 @@ def process_results(results):
 def Server(server_client=requests):
 
 
-    def wait_timeout(proc, seconds):
+    def wait_timeout(proc, group, seconds):
+        logging.info(f"Scan initiated for {proc.domain}...")
         proc.start()
         start = time.time()
         end = start + seconds
@@ -272,13 +274,15 @@ def Server(server_client=requests):
 
         while True:
             result = proc.is_alive()
+            present = time.time()
             if not result:
+                logging.info(f"Scan completed for {proc.domain}")
                 proc.join()
                 return
-            if time.time() >= end:
+            if present >= end:
                 proc.terminate()
                 proc.join()
-                logging.error("Timeout while scanning")
+                logging.error(f"Timeout while scanning {proc.domain} (Aborted after {present-start} seconds)")
                 raise ScanTimeoutException("Scan timed out")
             time.sleep(interval)
 
@@ -300,10 +304,25 @@ def Server(server_client=requests):
 
         logging.info("Performing scan...")
 
-        p = Process(target=scan_ssl, args=(domain,))
-        wait_timeout(p, TIMEOUT)
+        try:
+            scanner = SslScanner(domain)
+            start = time.time()
 
-        scan_results = RES_QUEUE.get()
+            future = scanner.run()
+            scan_results = future.result()
+        except TimeoutError:
+            logging.error(f"Timeout while scanning {domain} (Aborted after {round(time.time()-start, 2)} seconds)")
+            outbound_payload = json.dumps(
+                {
+                    "results": {"error": "unreachable"},
+                    "scan_type": "ssl",
+                    "user_key": user_key,
+                    "domain_key": domain_key,
+                    "shared_id": shared_id
+                }
+            )
+            dispatch_results(outbound_payload, server_client, (user_key is not None))
+            return Response("Timeout occurred while scanning", status_code=500)
 
         processed_results = process_results(scan_results)
 
