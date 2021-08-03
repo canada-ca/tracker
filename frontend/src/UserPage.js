@@ -18,6 +18,7 @@ import {
 import { EmailIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from './graphql/queries'
+import { useHistory } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import EditableUserLanguage from './EditableUserLanguage'
@@ -32,6 +33,7 @@ import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT } from './graphql/mutations'
 
 export default function UserPage() {
   const toast = useToast()
+  const history = useHistory()
   const { i18n } = useLingui()
   const [emailSent, setEmailSent] = useState(false)
   const [sendEmailVerification, { error }] = useMutation(
@@ -83,6 +85,7 @@ export default function UserPage() {
           position: 'top-left',
         })
         closeAccountOnClose()
+        history.push('/')
       } else if (closeAccount.result.__typename === 'CloseAccountError') {
         toast({
           title: i18n._(t`Unable to close the account.`),
