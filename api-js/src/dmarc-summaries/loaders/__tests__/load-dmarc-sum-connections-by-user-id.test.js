@@ -31,9 +31,12 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
   const mockedError = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
     console.error = mockedError
     console.warn = mockedWarn
+  })
+
+  beforeEach(async () => {
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -41,10 +44,6 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-  })
-
-  beforeEach(async () => {
-    await truncate()
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -156,9 +155,6 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
 
   afterEach(async () => {
     await truncate()
-  })
-
-  afterAll(async () => {
     await drop()
   })
 
