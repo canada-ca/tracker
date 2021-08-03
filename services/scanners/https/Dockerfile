@@ -20,4 +20,4 @@ RUN pip3 install -r requirements.txt
 RUN moz_crlite_query --force-update
 
 # Run the web service on container startup. Using uvicorn, in this case.
-CMD exec gunicorn https_scanner:app -w 4 --timeout 10000 -k uvicorn.workers.UvicornWorker
+CMD exec gunicorn server:app -w 4 --timeout 10000 -k uvicorn.workers.UvicornWorker
