@@ -26,7 +26,7 @@ import {
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { LEAVE_ORG } from './graphql/mutations'
-import { Link as RouteLink, useParams } from 'react-router-dom'
+import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -38,6 +38,7 @@ import { useDocumentTitle } from './useDocumentTitle'
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
   const toast = useToast()
+  const history = useHistory()
   const { i18n } = useLingui()
 
   useDocumentTitle(`${orgSlug}`)
@@ -69,6 +70,7 @@ export default function OrganizationDetails() {
           position: 'top-left',
         })
         leaveOrgOnClose()
+        history.push('/organizations')
       } else if (leaveOrganization.result.__typename === 'AffiliationError') {
         toast({
           title: i18n._(t`Unable to leave organization.`),
