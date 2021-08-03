@@ -207,9 +207,9 @@ msgstr "Autorisation refusée : Veuillez contacter l'administrateur de l'organis
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs."
 
-#: src/affiliation/mutations/update-user-role.js:180
-#: src/affiliation/mutations/update-user-role.js:203
-#: src/affiliation/mutations/update-user-role.js:221
+#: src/affiliation/mutations/update-user-role.js:190
+#: src/affiliation/mutations/update-user-role.js:213
+#: src/affiliation/mutations/update-user-role.js:231
 msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs."
 
@@ -368,7 +368,7 @@ msgstr "Un seul balayage a été effectué avec succès."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:196
+#: src/affiliation/mutations/invite-user-to-org.js:194
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé."
 
@@ -438,10 +438,6 @@ msgstr "La longueur du code à deux facteurs est incorrecte. Veuillez réessayer
 #: src/affiliation/mutations/leave-organization.js:437
 msgid "Unable leave organization. Please try again."
 msgstr "Impossible de quitter l'organisation. Veuillez réessayer."
-
-#: src/affiliation/mutations/invite-user-to-org.js:170
-msgid "Unable to add user to organization. Please try again."
-msgstr "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer."
 
 #: src/user/mutations/authenticate.js:77
 #: src/user/mutations/authenticate.js:125
@@ -591,7 +587,8 @@ msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuill
 msgid "Unable to invite user to unknown organization."
 msgstr "Impossible d'inviter un utilisateur à une organisation inconnue."
 
-#: src/affiliation/mutations/invite-user-to-org.js:186
+#: src/affiliation/mutations/invite-user-to-org.js:169
+#: src/affiliation/mutations/invite-user-to-org.js:184
 msgid "Unable to invite user. Please try again."
 msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 
@@ -1025,8 +1022,9 @@ msgid "Unable to update unknown organization."
 msgstr "Impossible de mettre à jour une organisation inconnue."
 
 #: src/affiliation/mutations/update-user-role.js:131
-#: src/affiliation/mutations/update-user-role.js:241
-#: src/affiliation/mutations/update-user-role.js:252
+#: src/affiliation/mutations/update-user-role.js:156
+#: src/affiliation/mutations/update-user-role.js:251
+#: src/affiliation/mutations/update-user-role.js:262
 msgid "Unable to update user's role. Please try again."
 msgstr "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer."
 
@@ -1066,7 +1064,7 @@ msgstr "Impossible de vérifier une organisation inconnue."
 msgid "User could not be queried."
 msgstr "L'utilisateur n'a pas pu être interrogé."
 
-#: src/affiliation/mutations/update-user-role.js:262
+#: src/affiliation/mutations/update-user-role.js:272
 msgid "User role was updated successfully."
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès."
 
