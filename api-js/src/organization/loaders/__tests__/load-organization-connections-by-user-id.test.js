@@ -30,145 +30,146 @@ describe('given the load organization connections by user id function', () => {
   beforeAll(async () => {
     console.error = mockedError
     console.warn = mockedWarn
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
 
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    orgOne = await collections.organizations.save({
-      verified: false,
-      summaries: {
-        web: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
-        },
-        mail: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
-        },
-      },
-      orgDetails: {
-        en: {
-          slug: 'slug-org-one',
-          acronym: 'ONE',
-          name: 'org One',
-          zone: 'zone one',
-          sector: 'sector one',
-          country: 'country one',
-          province: 'province one',
-          city: 'city one',
-        },
-        fr: {
-          slug: 'slug-org-one',
-          acronym: 'ONE',
-          name: 'org One',
-          zone: 'zone one',
-          sector: 'sector one',
-          country: 'country one',
-          province: 'province one',
-          city: 'city one',
-        },
-      },
-    })
-    orgTwo = await collections.organizations.save({
-      verified: false,
-      summaries: {
-        web: {
-          pass: 52,
-          fail: 1002,
-          total: 1054,
-        },
-        mail: {
-          pass: 52,
-          fail: 1002,
-          total: 1054,
-        },
-      },
-      orgDetails: {
-        en: {
-          slug: 'slug-org-two',
-          acronym: 'TWO',
-          name: 'org two',
-          zone: 'zone two',
-          sector: 'sector two',
-          country: 'country two',
-          province: 'province two',
-          city: 'city two',
-        },
-        fr: {
-          slug: 'slug-org-two',
-          acronym: 'TWO',
-          name: 'org two',
-          zone: 'zone two',
-          sector: 'sector two',
-          country: 'country two',
-          province: 'province two',
-          city: 'city two',
-        },
-      },
-    })
-    await collections.affiliations.save({
-      _from: orgOne._id,
-      _to: user._id,
-      permission: 'user',
-    })
-    await collections.affiliations.save({
-      _from: orgTwo._id,
-      _to: user._id,
-      permission: 'admin',
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-    })
-    domainThree = await collections.domains.save({
-      domain: 'test.domain.canada.gc.ca',
-    })
-    domainTwo = await collections.domains.save({
-      domain: 'test.domain.canada.ca',
-    })
-    await collections.claims.save({
-      _from: orgOne._id,
-      _to: domain._id,
-    })
-    await collections.claims.save({
-      _from: orgTwo._id,
-      _to: domain._id,
-    })
-    await collections.claims.save({
-      _from: orgTwo._id,
-      _to: domainTwo._id,
-    })
-    await collections.claims.save({
-      _from: orgTwo._id,
-      _to: domainThree._id,
-    })
-
+  afterEach(() => {
     consoleOutput.length = 0
   })
 
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
   describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      orgOne = await collections.organizations.save({
+        verified: false,
+        summaries: {
+          web: {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          },
+          mail: {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          },
+        },
+        orgDetails: {
+          en: {
+            slug: 'slug-org-one',
+            acronym: 'ONE',
+            name: 'org One',
+            zone: 'zone one',
+            sector: 'sector one',
+            country: 'country one',
+            province: 'province one',
+            city: 'city one',
+          },
+          fr: {
+            slug: 'slug-org-one',
+            acronym: 'ONE',
+            name: 'org One',
+            zone: 'zone one',
+            sector: 'sector one',
+            country: 'country one',
+            province: 'province one',
+            city: 'city one',
+          },
+        },
+      })
+      orgTwo = await collections.organizations.save({
+        verified: false,
+        summaries: {
+          web: {
+            pass: 52,
+            fail: 1002,
+            total: 1054,
+          },
+          mail: {
+            pass: 52,
+            fail: 1002,
+            total: 1054,
+          },
+        },
+        orgDetails: {
+          en: {
+            slug: 'slug-org-two',
+            acronym: 'TWO',
+            name: 'org two',
+            zone: 'zone two',
+            sector: 'sector two',
+            country: 'country two',
+            province: 'province two',
+            city: 'city two',
+          },
+          fr: {
+            slug: 'slug-org-two',
+            acronym: 'TWO',
+            name: 'org two',
+            zone: 'zone two',
+            sector: 'sector two',
+            country: 'country two',
+            province: 'province two',
+            city: 'city two',
+          },
+        },
+      })
+      await collections.affiliations.save({
+        _from: orgOne._id,
+        _to: user._id,
+        permission: 'user',
+      })
+      await collections.affiliations.save({
+        _from: orgTwo._id,
+        _to: user._id,
+        permission: 'admin',
+      })
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+      })
+      domainThree = await collections.domains.save({
+        domain: 'test.domain.canada.gc.ca',
+      })
+      domainTwo = await collections.domains.save({
+        domain: 'test.domain.canada.ca',
+      })
+      await collections.claims.save({
+        _from: orgOne._id,
+        _to: domain._id,
+      })
+      await collections.claims.save({
+        _from: orgTwo._id,
+        _to: domain._id,
+      })
+      await collections.claims.save({
+        _from: orgTwo._id,
+        _to: domainTwo._id,
+      })
+      await collections.claims.save({
+        _from: orgTwo._id,
+        _to: domainThree._id,
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('users language is set to english', () => {
       beforeAll(() => {
         i18n = setupI18n({
@@ -4837,7 +4838,7 @@ describe('given the load organization connections by user id function', () => {
           it('returns an error message', async () => {
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'en',
               i18n,
@@ -4857,7 +4858,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
+              `User: 123 did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -4865,7 +4866,7 @@ describe('given the load organization connections by user id function', () => {
           it('returns an error message', async () => {
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'en',
               i18n,
@@ -4888,7 +4889,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
+              `User: 123 attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -4897,7 +4898,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'en',
                 i18n,
@@ -4919,7 +4920,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`first\` set below zero for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`first\` set below zero for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -4927,7 +4928,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'en',
                 i18n,
@@ -4949,7 +4950,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`last\` set below zero for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`last\` set below zero for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -4959,7 +4960,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'en',
                 i18n,
@@ -4981,7 +4982,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`first\` to 101 for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`first\` to 101 for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -4989,7 +4990,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'en',
                 i18n,
@@ -5011,7 +5012,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`last\` to 101 for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`last\` to 101 for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -5024,7 +5025,7 @@ describe('given the load organization connections by user id function', () => {
               )}`, async () => {
                 const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  userKey: user._key,
+                  userKey: 123,
                   cleanseInput,
                   language: 'en',
                   i18n,
@@ -5046,9 +5047,7 @@ describe('given the load organization connections by user id function', () => {
                   )
                 }
                 expect(consoleOutput).toEqual([
-                  `User: ${
-                    user._key
-                  } attempted to have \`first\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
+                  `User: 123 attempted to have \`first\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
                 ])
               })
             })
@@ -5060,7 +5059,7 @@ describe('given the load organization connections by user id function', () => {
               )}`, async () => {
                 const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  userKey: user._key,
+                  userKey: 123,
                   cleanseInput,
                   language: 'en',
                   i18n,
@@ -5082,9 +5081,7 @@ describe('given the load organization connections by user id function', () => {
                   )
                 }
                 expect(consoleOutput).toEqual([
-                  `User: ${
-                    user._key
-                  } attempted to have \`last\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
+                  `User: 123 attempted to have \`last\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
                 ])
               })
             })
@@ -5102,7 +5099,7 @@ describe('given the load organization connections by user id function', () => {
 
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'en',
               i18n,
@@ -5122,7 +5119,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Database error occurred while user: ${user._key} was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
+              `Database error occurred while user: 123 was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
             ])
           })
         })
@@ -5141,7 +5138,7 @@ describe('given the load organization connections by user id function', () => {
 
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'en',
               i18n,
@@ -5161,7 +5158,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather organizations in loadOrgConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
+              `Cursor error occurred while user: 123 was trying to gather organizations in loadOrgConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
             ])
           })
         })
@@ -5187,7 +5184,7 @@ describe('given the load organization connections by user id function', () => {
           it('returns an error message', async () => {
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'fr',
               i18n,
@@ -5207,7 +5204,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
+              `User: 123 did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -5215,7 +5212,7 @@ describe('given the load organization connections by user id function', () => {
           it('returns an error message', async () => {
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'fr',
               i18n,
@@ -5238,7 +5235,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
+              `User: 123 attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -5247,7 +5244,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'fr',
                 i18n,
@@ -5269,7 +5266,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`first\` set below zero for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`first\` set below zero for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -5277,7 +5274,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'fr',
                 i18n,
@@ -5299,7 +5296,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`last\` set below zero for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`last\` set below zero for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -5309,7 +5306,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'fr',
                 i18n,
@@ -5331,7 +5328,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`first\` to 101 for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`first\` to 101 for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -5339,7 +5336,7 @@ describe('given the load organization connections by user id function', () => {
             it('returns an error message', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                userKey: user._key,
+                userKey: 123,
                 cleanseInput,
                 language: 'fr',
                 i18n,
@@ -5361,7 +5358,7 @@ describe('given the load organization connections by user id function', () => {
               }
 
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to have \`last\` to 101 for: loadOrgConnectionsByUserId.`,
+                `User: 123 attempted to have \`last\` to 101 for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -5374,7 +5371,7 @@ describe('given the load organization connections by user id function', () => {
               )}`, async () => {
                 const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  userKey: user._key,
+                  userKey: 123,
                   cleanseInput,
                   language: 'fr',
                   i18n,
@@ -5396,9 +5393,7 @@ describe('given the load organization connections by user id function', () => {
                   )
                 }
                 expect(consoleOutput).toEqual([
-                  `User: ${
-                    user._key
-                  } attempted to have \`first\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
+                  `User: 123 attempted to have \`first\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
                 ])
               })
             })
@@ -5410,7 +5405,7 @@ describe('given the load organization connections by user id function', () => {
               )}`, async () => {
                 const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  userKey: user._key,
+                  userKey: 123,
                   cleanseInput,
                   language: 'fr',
                   i18n,
@@ -5432,9 +5427,7 @@ describe('given the load organization connections by user id function', () => {
                   )
                 }
                 expect(consoleOutput).toEqual([
-                  `User: ${
-                    user._key
-                  } attempted to have \`last\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
+                  `User: 123 attempted to have \`last\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
                 ])
               })
             })
@@ -5452,7 +5445,7 @@ describe('given the load organization connections by user id function', () => {
 
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'fr',
               i18n,
@@ -5474,7 +5467,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Database error occurred while user: ${user._key} was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
+              `Database error occurred while user: 123 was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
             ])
           })
         })
@@ -5493,7 +5486,7 @@ describe('given the load organization connections by user id function', () => {
 
             const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              userKey: user._key,
+              userKey: 123,
               cleanseInput,
               language: 'fr',
               i18n,
@@ -5515,7 +5508,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather organizations in loadOrgConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
+              `Cursor error occurred while user: 123 was trying to gather organizations in loadOrgConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
             ])
           })
         })
