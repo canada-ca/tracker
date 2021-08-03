@@ -40,52 +40,56 @@ describe('create a domain', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      emailValidated: true,
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
+  afterEach(() => {
     consoleOutput.length = 0
   })
-  afterEach(async () => {
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
-  })
   describe('given a successful domain creation', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('user has super admin permission level', () => {
       describe('user belongs to the same org', () => {
         beforeEach(async () => {
@@ -1439,25 +1443,23 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn(),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn(),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
+                loadOrgConnectionsByDomainId: jest.fn(),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
               validators: { cleanseInput, slugify },
             },
@@ -1477,7 +1479,7 @@ describe('create a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to create a domain to an organization: 1 that does not exist.`,
+            `User: 123 attempted to create a domain to an organization: 1 that does not exist.`,
           ])
         })
       })
@@ -1489,7 +1491,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organization', org._key)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -1533,25 +1535,25 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn(),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({
+                    slug: 'treasury-board-secretariat',
+                  }),
+                },
+                loadOrgConnectionsByDomainId: jest.fn(),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
               validators: { cleanseInput, slugify },
             },
@@ -1571,25 +1573,11 @@ describe('create a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
+            `User: 123 attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
         })
       })
       describe('the domain already exists in the given organization', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-          const domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
         it('returns an error', async () => {
           const response = await graphql(
             schema,
@@ -1597,7 +1585,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organization', org._key)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -1638,28 +1626,30 @@ describe('create a domain', () => {
               request: {
                 language: 'en',
               },
-              query,
+              query: jest.fn().mockReturnValue({
+                next: jest.fn().mockReturnValue({}),
+              }),
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn(),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({
+                    slug: 'treasury-board-secretariat',
+                  }),
+                },
+                loadOrgConnectionsByDomainId: jest.fn(),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
               validators: { cleanseInput, slugify },
             },
@@ -1679,31 +1669,20 @@ describe('create a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
+            `User: 123 attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
           ])
         })
       })
       describe('database error occurs', () => {
         describe('when checking to see if org already contains domain', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('returns an error message', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
-
             const response = await graphql(
               schema,
               `
                 mutation {
                   createDomain(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
                       selectors: ["selector1._domainkey", "selector2._domainkey"]
                     }
@@ -1744,31 +1723,30 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query: mockedQuery,
+                query: jest
+                  .fn()
+                  .mockRejectedValue(new Error('Database error occurred.')),
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query: query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 loaders: {
-                  loadDomainByDomain: loadDomainByDomain({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    cleanseInput,
-                  }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByDomain: {
+                    load: jest.fn(),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1785,34 +1763,203 @@ describe('create a domain', () => {
           })
         })
       })
-      describe('transaction step error occurs', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
+      describe('cursor error occurs', () => {
+        describe('when checking to see if org already contains domain', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', 123)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                        lastRan
+                        selectors
+                        status {
+                          dkim
+                          dmarc
+                          https
+                          spf
+                          ssl
+                        }
+                        organizations(first: 5) {
+                          edges {
+                            node {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query: jest.fn().mockReturnValue({
+                  next: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Cursor error occurred.')),
+                }),
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadDomainByDomain: {
+                    load: jest.fn(),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to create domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while running check to see if domain already exists in an org: Error: Cursor error occurred.`,
+            ])
           })
         })
+        describe('when gathering inserted domain', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', 123)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                        lastRan
+                        selectors
+                        status {
+                          dkim
+                          dmarc
+                          https
+                          spf
+                          ssl
+                        }
+                        organizations(first: 5) {
+                          edges {
+                            node {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query: jest.fn().mockReturnValue({
+                  next: jest.fn().mockReturnValue(undefined),
+                }),
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValueOnce({
+                    next: jest
+                      .fn()
+                      .mockRejectedValue(new Error('cursor error')),
+                  }),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadDomainByDomain: {
+                    load: jest.fn(),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to create domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred for user: 123 after inserting new domain and gathering its domain info: Error: cursor error`,
+            ])
+          })
+        })
+      })
+      describe('transaction step error occurs', () => {
         describe('when creating a new domain', () => {
           describe('when inserting new domain', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -1853,31 +2000,34 @@ describe('create a domain', () => {
                   request: {
                     language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValue(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn(),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1889,32 +2039,19 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting new domain: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting new domain: Error: trx step error`,
               ])
             })
           })
           describe('when inserting new edge', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockReturnValueOnce({
-                  next: jest.fn(),
-                })
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -1955,31 +2092,37 @@ describe('create a domain', () => {
                   request: {
                     language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValue(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce({
+                        next: jest.fn(),
+                      })
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn(),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1991,37 +2134,21 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting new domain edge: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting new domain edge: Error: trx step error`,
               ])
             })
           })
         })
         describe('when domain already exists', () => {
-          beforeEach(async () => {
-            await collections.domains.save({
-              domain: 'test.gc.ca',
-              selectors: [],
-            })
-          })
           describe('when upserting domain', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2062,31 +2189,39 @@ describe('create a domain', () => {
                   request: {
                     language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValueOnce(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn().mockReturnValue({
+                        domain: 'domain.ca',
+                        selectors: [],
+                        status: {},
+                        lastRan: '',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2098,30 +2233,19 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting domain selectors: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting domain selectors: Error: trx step error`,
               ])
             })
           })
           describe('when inserting edge to new org', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2162,31 +2286,40 @@ describe('create a domain', () => {
                   request: {
                     language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValueOnce(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn().mockReturnValue({
+                        domain: 'domain.ca',
+                        selectors: [],
+                        status: {},
+                        lastRan: '',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2198,7 +2331,7 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting domain edge: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting domain edge: Error: trx step error`,
               ])
             })
           })
@@ -2206,35 +2339,14 @@ describe('create a domain', () => {
       })
       describe('transaction commit error occurs', () => {
         describe('when committing transaction', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('returns an error message', async () => {
-            const mockedStep = jest.fn().mockReturnValueOnce({
-              next: jest.fn(),
-            })
-
-            const mockedCommit = jest
-              .fn()
-              .mockRejectedValue(
-                new Error('Transaction Commit Error Occurred.'),
-              )
-
-            const mockedTransaction = jest
-              .fn()
-              .mockReturnValue({ step: mockedStep, commit: mockedCommit })
-
             const response = await graphql(
               schema,
               `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2275,31 +2387,40 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query: query,
+                query: jest.fn().mockReturnValue({
+                  next: jest.fn().mockReturnValueOnce(undefined),
+                }),
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue(),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('trx commit error')),
+                }),
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query: query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 loaders: {
-                  loadDomainByDomain: loadDomainByDomain({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    cleanseInput,
-                  }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByDomain: {
+                    load: jest.fn().mockReturnValue({
+                      domain: 'domain.ca',
+                      selectors: [],
+                      status: {},
+                      lastRan: '',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -2311,7 +2432,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} was creating domain: Error: Transaction Commit Error Occurred.`,
+              `Transaction commit error occurred while user: 123 was creating domain: Error: trx commit error`,
             ])
           })
         })
@@ -2384,25 +2505,23 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn(),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn(),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
+                loadOrgConnectionsByDomainId: jest.fn(),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
               validators: { cleanseInput, slugify },
             },
@@ -2422,7 +2541,7 @@ describe('create a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to create a domain to an organization: 1 that does not exist.`,
+            `User: 123 attempted to create a domain to an organization: 1 that does not exist.`,
           ])
         })
       })
@@ -2434,7 +2553,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organization', org._key)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -2478,25 +2597,25 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn(),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({
+                    slug: 'treasury-board-secretariat',
+                  }),
+                },
+                loadOrgConnectionsByDomainId: jest.fn(),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
               validators: { cleanseInput, slugify },
             },
@@ -2516,25 +2635,11 @@ describe('create a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
+            `User: 123 attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
         })
       })
       describe('the domain already exists in the given organization', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-          const domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
         it('returns an error', async () => {
           const response = await graphql(
             schema,
@@ -2542,7 +2647,7 @@ describe('create a domain', () => {
               mutation {
                 createDomain(
                   input: {
-                    orgId: "${toGlobalId('organization', org._key)}"
+                    orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
@@ -2583,28 +2688,30 @@ describe('create a domain', () => {
               request: {
                 language: 'en',
               },
-              query,
+              query: jest.fn().mockReturnValue({
+                next: jest.fn().mockReturnValue({}),
+              }),
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByDomain: {
+                  load: jest.fn(),
+                },
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({
+                    slug: 'treasury-board-secretariat',
+                  }),
+                },
+                loadOrgConnectionsByDomainId: jest.fn(),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
               validators: { cleanseInput, slugify },
             },
@@ -2624,31 +2731,20 @@ describe('create a domain', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
+            `User: 123 attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
           ])
         })
       })
       describe('database error occurs', () => {
         describe('when checking to see if org already contains domain', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('returns an error message', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
-
             const response = await graphql(
               schema,
               `
                 mutation {
                   createDomain(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
                       selectors: ["selector1._domainkey", "selector2._domainkey"]
                     }
@@ -2687,33 +2783,32 @@ describe('create a domain', () => {
               {
                 i18n,
                 request: {
-                  language: 'fr',
+                  language: 'en',
                 },
-                query: mockedQuery,
+                query: jest
+                  .fn()
+                  .mockRejectedValue(new Error('Database error occurred.')),
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query: query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 loaders: {
-                  loadDomainByDomain: loadDomainByDomain({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    cleanseInput,
-                  }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByDomain: {
+                    load: jest.fn(),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -2732,34 +2827,207 @@ describe('create a domain', () => {
           })
         })
       })
-      describe('transaction step error occurs', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
+      describe('cursor error occurs', () => {
+        describe('when checking to see if org already contains domain', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', 123)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                        lastRan
+                        selectors
+                        status {
+                          dkim
+                          dmarc
+                          https
+                          spf
+                          ssl
+                        }
+                        organizations(first: 5) {
+                          edges {
+                            node {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query: jest.fn().mockReturnValue({
+                  next: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Cursor error occurred.')),
+                }),
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadDomainByDomain: {
+                    load: jest.fn(),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de créer un domaine. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while running check to see if domain already exists in an org: Error: Cursor error occurred.`,
+            ])
           })
         })
+        describe('when gathering inserted domain', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organization', 123)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                        lastRan
+                        selectors
+                        status {
+                          dkim
+                          dmarc
+                          https
+                          spf
+                          ssl
+                        }
+                        organizations(first: 5) {
+                          edges {
+                            node {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query: jest.fn().mockReturnValue({
+                  next: jest.fn().mockReturnValue(undefined),
+                }),
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValueOnce({
+                    next: jest
+                      .fn()
+                      .mockRejectedValue(new Error('cursor error')),
+                  }),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadDomainByDomain: {
+                    load: jest.fn(),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de créer un domaine. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred for user: 123 after inserting new domain and gathering its domain info: Error: cursor error`,
+            ])
+          })
+        })
+      })
+      describe('transaction step error occurs', () => {
         describe('when creating a new domain', () => {
           describe('when inserting new domain', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2798,33 +3066,36 @@ describe('create a domain', () => {
                 {
                   i18n,
                   request: {
-                    language: 'fr',
+                    language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValue(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'fr',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn(),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2838,32 +3109,19 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting new domain: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting new domain: Error: trx step error`,
               ])
             })
           })
           describe('when inserting new edge', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockReturnValueOnce({
-                  next: jest.fn(),
-                })
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -2902,33 +3160,39 @@ describe('create a domain', () => {
                 {
                   i18n,
                   request: {
-                    language: 'fr',
+                    language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValue(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce({
+                        next: jest.fn(),
+                      })
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'fr',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn(),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2942,37 +3206,21 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting new domain edge: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting new domain edge: Error: trx step error`,
               ])
             })
           })
         })
         describe('when domain already exists', () => {
-          beforeEach(async () => {
-            await collections.domains.save({
-              domain: 'test.gc.ca',
-              selectors: [],
-            })
-          })
           describe('when upserting domain', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -3011,33 +3259,41 @@ describe('create a domain', () => {
                 {
                   i18n,
                   request: {
-                    language: 'fr',
+                    language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValueOnce(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'fr',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn().mockReturnValue({
+                        domain: 'domain.ca',
+                        selectors: [],
+                        status: {},
+                        lastRan: '',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -3051,30 +3307,19 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting domain selectors: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting domain selectors: Error: trx step error`,
               ])
             })
           })
           describe('when inserting edge to new org', () => {
             it('returns an error message', async () => {
-              const mockedStep = jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockRejectedValue(
-                  new Error('Transaction Step Error Occurred.'),
-                )
-
-              const mockedTransaction = jest
-                .fn()
-                .mockReturnValue({ step: mockedStep })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -3113,33 +3358,42 @@ describe('create a domain', () => {
                 {
                   i18n,
                   request: {
-                    language: 'fr',
+                    language: 'en',
                   },
-                  query: query,
+                  query: jest.fn().mockReturnValue({
+                    next: jest.fn().mockReturnValueOnce(undefined),
+                  }),
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query: query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadDomainByDomain: loadDomainByDomain({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                      query,
-                      language: 'fr',
-                      userKey: user._key,
-                      cleanseInput,
-                    }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByDomain: {
+                      load: jest.fn().mockReturnValue({
+                        domain: 'domain.ca',
+                        selectors: [],
+                        status: {},
+                        lastRan: '',
+                      }),
+                    },
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadOrgConnectionsByDomainId: jest.fn(),
+                    loadUserByKey: {
+                      load: jest.fn(),
+                    },
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -3153,7 +3407,7 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: ${user._key} when inserting domain edge: Error: Transaction Step Error Occurred.`,
+                `Transaction step error occurred for user: 123 when inserting domain edge: Error: trx step error`,
               ])
             })
           })
@@ -3161,35 +3415,14 @@ describe('create a domain', () => {
       })
       describe('transaction commit error occurs', () => {
         describe('when committing transaction', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('returns an error message', async () => {
-            const mockedStep = jest.fn().mockReturnValueOnce({
-              next: jest.fn(),
-            })
-
-            const mockedCommit = jest
-              .fn()
-              .mockRejectedValue(
-                new Error('Transaction Commit Error Occurred.'),
-              )
-
-            const mockedTransaction = jest
-              .fn()
-              .mockReturnValue({ step: mockedStep, commit: mockedCommit })
-
             const response = await graphql(
               schema,
               `
                   mutation {
                     createDomain(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
                         selectors: ["selector1._domainkey", "selector2._domainkey"]
                       }
@@ -3228,33 +3461,42 @@ describe('create a domain', () => {
               {
                 i18n,
                 request: {
-                  language: 'fr',
+                  language: 'en',
                 },
-                query: query,
+                query: jest.fn().mockReturnValue({
+                  next: jest.fn().mockReturnValueOnce(undefined),
+                }),
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue(),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('trx commit error')),
+                }),
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query: query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 loaders: {
-                  loadDomainByDomain: loadDomainByDomain({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                    query,
-                    language: 'fr',
-                    userKey: user._key,
-                    cleanseInput,
-                  }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByDomain: {
+                    load: jest.fn().mockReturnValue({
+                      domain: 'domain.ca',
+                      selectors: [],
+                      status: {},
+                      lastRan: '',
+                    }),
+                  },
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadOrgConnectionsByDomainId: jest.fn(),
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -3268,7 +3510,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Transaction commit error occurred while user: ${user._key} was creating domain: Error: Transaction Commit Error Occurred.`,
+              `Transaction commit error occurred while user: 123 was creating domain: Error: trx commit error`,
             ])
           })
         })
