@@ -11,3 +11,4 @@ uvloop
 httptools
 scapy
 sockets
+Pebble==4.6.1
