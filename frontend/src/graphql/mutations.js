@@ -393,6 +393,22 @@ export const VERIFY_ACCOUNT = gql`
   }
 `
 
+export const CLOSE_ACCOUNT = gql`
+  mutation CloseAccount($userId: ID!) {
+    closeAccount(input: { userId: $userId }) {
+      result {
+        ... on CloseAccountError {
+          code
+          description
+        }
+        ... on CloseAccountResult {
+          status
+        }
+      }
+    }
+  }
+`
+
 export const CREATE_ORGANIZATION = gql`
   mutation CreateOrganization(
     $acronymEN: Acronym!
