@@ -1,10 +1,25 @@
 import React, { useState } from 'react'
 import { string } from 'prop-types'
-import { Button, Divider, SimpleGrid, Stack, useToast } from '@chakra-ui/react'
+import {
+  Button,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  SimpleGrid,
+  Stack,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react'
 import { EmailIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from './graphql/queries'
 import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
@@ -13,10 +28,11 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import EditableUserTFAMethod from './EditableUserTFAMethod'
 import EditableUserPhoneNumber from './EditableUserPhoneNumber'
-import { SEND_EMAIL_VERIFICATION } from './graphql/mutations'
+import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT } from './graphql/mutations'
 
 export default function UserPage() {
   const toast = useToast()
+  const { i18n } = useLingui()
   const [emailSent, setEmailSent] = useState(false)
   const [sendEmailVerification, { error }] = useMutation(
     SEND_EMAIL_VERIFICATION,
@@ -45,6 +61,57 @@ export default function UserPage() {
     },
   )
 
+  const [closeAccount] = useMutation(CLOSE_ACCOUNT, {
+    onError(error) {
+      toast({
+        title: i18n._(t`An error occurred.`),
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ closeAccount }) {
+      if (closeAccount.result.__typename === 'CloseAccountResult') {
+        toast({
+          title: i18n._(t`Account Closed Sussessfully`),
+          description: i18n._(t`Traccer account has been successfully closed.`),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        closeAccountOnClose()
+      } else if (closeAccount.result.__typename === 'CloseAccountError') {
+        toast({
+          title: i18n._(t`Unable to close the account.`),
+          description: closeAccount.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: i18n._(t`Incorrect send method received.`),
+          description: i18n._(t`Incorrect closeAccount.result typename.`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect closeAccount.result typename.')
+      }
+    },
+  })
+
+  const {
+    isOpen: closeAccountIsOpen,
+    onOpen: closeAccountOnOpen,
+    onClose: closeAccountOnClose,
+  } = useDisclosure()
+
   const {
     loading: queryUserLoading,
     error: queryUserError,
@@ -64,6 +131,7 @@ export default function UserPage() {
   }
 
   const {
+    id,
     displayName,
     userName,
     preferredLang,
