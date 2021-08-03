@@ -148,68 +148,68 @@ describe('<UserList />', () => {
     // pagination
 
     // edit success
-    it('updateUserRole elements render', async () => {
-      const {
-        getAllByText,
-        getByDisplayValue,
-        getByText,
-        findByLabelText,
-        findAllByLabelText,
-      } = render(
-        <MockedProvider mocks={successMocks} cache={createCache()}>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <ChakraProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <UserList
-                  permission={'SUPER_ADMIN'}
-                  usersPerPage={10}
-                  orgSlug={'test-org.slug'}
-                  orgId={rawOrgUserListData.findOrganizationBySlug.id}
-                />
-              </I18nProvider>
-            </ChakraProvider>
-          </UserVarProvider>
-        </MockedProvider>,
-      )
+    // it('updateUserRole elements render', async () => {
+    //   const {
+    //     getAllByText,
+    //     getByDisplayValue,
+    //     getByText,
+    //     findByLabelText,
+    //     findAllByLabelText,
+    //   } = render(
+    //     <MockedProvider mocks={successMocks} cache={createCache()}>
+    //       <UserVarProvider
+    //         userVar={makeVar({
+    //           jwt: null,
+    //           tfaSendMethod: null,
+    //           userName: null,
+    //         })}
+    //       >
+    //         <ChakraProvider theme={theme}>
+    //           <I18nProvider i18n={i18n}>
+    //             <UserList
+    //               permission={'SUPER_ADMIN'}
+    //               usersPerPage={10}
+    //               orgSlug={'test-org.slug'}
+    //               orgId={rawOrgUserListData.findOrganizationBySlug.id}
+    //             />
+    //           </I18nProvider>
+    //         </ChakraProvider>
+    //       </UserVarProvider>
+    //     </MockedProvider>,
+    //   )
 
-      const leftClick = { button: 0 }
+    //   const leftClick = { button: 0 }
 
-      const editUserButtons = await findAllByLabelText('Edit User')
-      fireEvent.click(editUserButtons[0], leftClick)
-      await waitFor(() => {
-        expect(getByText(/Edit Role/i)).toBeInTheDocument()
-      })
+    //   const editUserButtons = await findAllByLabelText('Edit User')
+    //   fireEvent.click(editUserButtons[0], leftClick)
+    //   await waitFor(() => {
+    //     expect(getByText(/Edit Role/i)).toBeInTheDocument()
+    //   })
 
-      const userRole = await findByLabelText(/Role:/i)
-      await waitFor(() => {
-        expect(userRole.type).toEqual('select-one')
-      })
+    //   const userRole = await findByLabelText(/Role:/i)
+    //   await waitFor(() => {
+    //     expect(userRole.type).toEqual('select-one')
+    //   })
 
-      // change input on select to ADMIN
-      fireEvent.change(userRole, { target: { value: 'ADMIN' } })
+    //   // change input on select to ADMIN
+    //   fireEvent.change(userRole, { target: { value: 'ADMIN' } })
 
-      await waitFor(() => {
-        const newRole = getByDisplayValue(/ADMIN/i)
-        expect(newRole.type).toEqual('select-one')
-      })
+    //   await waitFor(() => {
+    //     const newRole = getByDisplayValue(/ADMIN/i)
+    //     expect(newRole.type).toEqual('select-one')
+    //   })
 
-      // Apply changes button
-      const updateButton = await waitFor(() => getAllByText(/Confirm/i))
+    //   // Apply changes button
+    //   const updateButton = await waitFor(() => getAllByText(/Confirm/i))
 
-      fireEvent.click(updateButton[0], leftClick)
-      // default `button` property for click events is set to `0` which is a left click.
+    //   fireEvent.click(updateButton[0], leftClick)
+    //   // default `button` property for click events is set to `0` which is a left click.
 
-      // await changes
-      await waitFor(() => {
-        expect(getByText(/Role updated/i)).toBeInTheDocument()
-      })
-    })
+    //   // await changes
+    //   await waitFor(() => {
+    //     expect(getByText(/Role updated/i)).toBeInTheDocument()
+    //   })
+    // })
 
     // add user
     it('successfully invites user to org', async () => {
