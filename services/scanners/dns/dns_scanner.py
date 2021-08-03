@@ -1,6 +1,14 @@
 import os
 import sys
 import logging
+import nacl
+import base64
+import tldextract
+import dkim
+from checkdmarc import *
+from dns import resolver
+from dkim import dnsplug, crypto, KeyFormatError
+from dkim.util import InvalidTagValueList
 from pebble import concurrent
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

@@ -5,17 +5,9 @@ import requests
 import logging
 import json
 import emoji
-import dkim
 import asyncio
-import nacl
-import base64
-import tldextract
 import traceback
 import datetime as dt
-from checkdmarc import *
-from dns import resolver
-from dkim import dnsplug, crypto, KeyFormatError
-from dkim.util import InvalidTagValueList
 from concurrent.futures import TimeoutError
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute

@@ -1,11 +1,35 @@
 import os
 import sys
 import logging
+import scapy
+from enum import Enum
+from OpenSSL import SSL
+from socket import gaierror
+from sslyze.server_connectivity import ServerConnectivityTester
+from sslyze.errors import ConnectionToServerFailed, ServerHostnameCouldNotBeResolved
+from sslyze.plugins.scan_commands import ScanCommand
+from sslyze.connection_helpers.tls_connection import SslConnection
+from sslyze.scanner import Scanner, ServerScanRequest
+from sslyze.server_setting import (
+    ServerNetworkLocation,
+    ServerNetworkLocationViaDirectConnection,
+    ServerNetworkConfiguration,
+)
 from pebble import concurrent
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 TIMEOUT = os.getenv("SCAN_TIMEOUT", 80)
+
+
+class TlsVersionEnum(Enum):
+    """SSL version constants. (Sourced from OpenSSL)"""
+
+    SSLV2 = 1
+    SSLV3 = 2
+    TLSV1 = 3
+    TLSV1_1 = 4
+    TLSV1_2 = 5
 
 
 class SSLScanner():

@@ -7,25 +7,11 @@ import json
 import emoji
 import asyncio
 import traceback
-import scapy
 import datetime as dt
-from enum import Enum
 from concurrent.futures import TimeoutError
-from OpenSSL import SSL
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import Response
-from socket import gaierror
-from sslyze.server_connectivity import ServerConnectivityTester
-from sslyze.errors import ConnectionToServerFailed, ServerHostnameCouldNotBeResolved
-from sslyze.plugins.scan_commands import ScanCommand
-from sslyze.connection_helpers.tls_connection import SslConnection
-from sslyze.scanner import Scanner, ServerScanRequest
-from sslyze.server_setting import (
-    ServerNetworkLocation,
-    ServerNetworkLocationViaDirectConnection,
-    ServerNetworkConfiguration,
-)
 from ssl_scanner import SSLScanner
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -37,16 +23,6 @@ OTS_QUEUE_URL = os.getenv(
     "OTS_RESULT_QUEUE_URL", "http://ots-result-queue.scanners.svc.cluster.local"
 )
 DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
-
-
-class TlsVersionEnum(Enum):
-    """SSL version constants. (Sourced from OpenSSL)"""
-
-    SSLV2 = 1
-    SSLV3 = 2
-    TLSV1 = 3
-    TLSV1_1 = 4
-    TLSV1_2 = 5
 
 
 def dispatch_results(payload, client, ots):
