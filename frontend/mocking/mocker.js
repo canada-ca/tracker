@@ -552,7 +552,10 @@ const schemaWithMocks = addMocksToSchema({
   resolvers: (store) => ({
     Query: {
       findMe: (_, _args, context, _resolveInfo, ___) => {
-        return store.get('PersonalUser', jwt.decode(context.token, 'secret'))
+        return store.get(
+          'PersonalUser',
+          jwt.decode(context.token, 'secret').parameters.userKey,
+        )
       },
       findMyDmarcSummaries: (_, args, _context, resolveInfo, ___) => {
         return getConnectionObject(store, args, resolveInfo)
