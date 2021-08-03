@@ -70,7 +70,7 @@ export default function OrganizationDetails() {
           position: 'top-left',
         })
         leaveOrgOnClose()
-      } else if (leaveOrg.result.__typename === 'DomainError') {
+      } else if (leaveOrg.result.__typename === 'AffiliationError') {
         toast({
           title: i18n._(t`Unable to leave organization.`),
           description: leaveOrg.result.description,
@@ -193,7 +193,7 @@ export default function OrganizationDetails() {
           <ModalCloseButton />
           <ModalBody>
             <Trans>
-              Are you sure you wish to leave {data?.name}? You will have to be
+              Are you sure you wish to leave {orgName}? You will have to be
               invited back in to access it.
             </Trans>
           </ModalBody>
