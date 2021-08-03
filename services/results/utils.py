@@ -87,7 +87,7 @@ def retrieve_tls_guidance():
 def formatted_dictionary(data):
     data_str = json.dumps(data)
     formatted = (
-        data.replace("false", "False")
+        data_str.replace("false", "False")
         .replace("true", "True")
         .replace("null", "None")
         .replace("none", "None")
