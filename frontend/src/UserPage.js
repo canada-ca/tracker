@@ -196,6 +196,7 @@ export default function UserPage() {
           ml="auto"
           w={{ base: '100%', md: 'auto' }}
           mb={2}
+          alignSelf="flex-end"
         >
           <Trans> Close Account </Trans>
         </Button>
