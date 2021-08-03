@@ -142,7 +142,7 @@ export default function OrganizationDetails() {
               <CheckCircleIcon color="blue.500" boxSize="icons.lg" />
             </>
           )}
-        </Heading>{' '}
+        </Heading>
         <Button
           variant="danger"
           order={{ base: 1, md: 2 }}
