@@ -17,44 +17,43 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('removing an organization', () => {
   let query, drop, truncate, schema, collections, transaction, i18n, user
+
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
-    // Generate DB Items
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
   })
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      emailValidated: true,
-    })
-    consoleOutput = []
+
+  afterEach(() => {
+    consoleOutput.length = 0
   })
-  afterEach(async () => {
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
-  })
+
   describe('given a successful org verification', () => {
     let org
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
+      })
       org = await collections.organizations.save({
         verified: false,
         orgDetails: {
@@ -85,6 +84,12 @@ describe('removing an organization', () => {
         _to: user._id,
         permission: 'super_admin',
       })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
     })
     describe('users language is set to english', () => {
       beforeAll(() => {
@@ -327,157 +332,7 @@ describe('removing an organization', () => {
           },
         })
       })
-      describe('organization is already verified', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: true,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
-        })
-        it('throws an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organization', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on OrganizationResult {
-                      status
-                      organization {
-                        name
-                      }
-                    }
-                    ... on OrganizationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({
-                  userKey: user._key,
-                  query,
-                  i18n,
-                }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  i18n,
-                }),
-                verifiedRequired: verifiedRequired({}),
-              },
-              validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  i18n,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyOrganization: {
-                result: {
-                  code: 400,
-                  description: 'Organization has already been verified.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to verify organization: ${org._key}, however the organization has already been verified.`,
-          ])
-        })
-      })
       describe('organization is not found', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: true,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
-        })
         it('throws an error message', async () => {
           const response = await graphql(
             schema,
@@ -509,37 +364,17 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({
-                  userKey: user._key,
-                  query,
-                  i18n,
-                }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  i18n,
-                }),
-                verifiedRequired: verifiedRequired({}),
+                checkPermission: jest.fn(),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  i18n,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -557,45 +392,12 @@ describe('removing an organization', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to verify organization: -1, however no organizations is associated with that id.`,
+            `User: 123 attempted to verify organization: -1, however no organizations is associated with that id.`,
           ])
         })
       })
       describe('user permission is not super admin', () => {
         describe('users permission level is admin', () => {
-          let org
-          beforeEach(async () => {
-            org = await collections.organizations.save({
-              verified: false,
-              orgDetails: {
-                en: {
-                  slug: 'treasury-board-secretariat',
-                  acronym: 'TBS',
-                  name: 'Treasury Board of Canada Secretariat',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'secretariat-conseil-tresor',
-                  acronym: 'SCT',
-                  name: 'Secrétariat du Conseil Trésor du Canada',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-          })
           it('throws an error message', async () => {
             const response = await graphql(
               schema,
@@ -603,7 +405,7 @@ describe('removing an organization', () => {
                 mutation {
                   verifyOrganization(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -627,40 +429,23 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                    i18n,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    i18n,
-                  }),
-                  verifiedRequired: verifiedRequired({}),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _id: 'organizations/123',
+                    }),
+                  },
                 },
               },
             )
+
             const error = {
               data: {
                 verifyOrganization: {
@@ -675,44 +460,11 @@ describe('removing an organization', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: admin`,
+              `User: 123 attempted to verify organization: 123, however they do not have the correct permission level. Permission: admin`,
             ])
           })
         })
         describe('users permission level is user', () => {
-          let org
-          beforeEach(async () => {
-            org = await collections.organizations.save({
-              verified: true,
-              orgDetails: {
-                en: {
-                  slug: 'treasury-board-secretariat',
-                  acronym: 'TBS',
-                  name: 'Treasury Board of Canada Secretariat',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'secretariat-conseil-tresor',
-                  acronym: 'SCT',
-                  name: 'Secrétariat du Conseil Trésor du Canada',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('throws an error message', async () => {
             const response = await graphql(
               schema,
@@ -720,7 +472,7 @@ describe('removing an organization', () => {
                 mutation {
                   verifyOrganization(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -744,37 +496,19 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                    i18n,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    i18n,
-                  }),
-                  verifiedRequired: verifiedRequired({}),
+                  checkPermission: jest.fn().mockReturnValue('user'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _id: 'organizations/123',
+                    }),
+                  },
                 },
               },
             )
@@ -793,64 +527,88 @@ describe('removing an organization', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: user`,
+              `User: 123 attempted to verify organization: 123, however they do not have the correct permission level. Permission: user`,
             ])
           })
         })
       })
-      describe('transaction error occurs', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
+      describe('organization is already verified', () => {
+        it('throws an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                verifyOrganization(
+                  input: {
+                    orgId: "${toGlobalId('organization', 123)}"
+                  }
+                ) {
+                  result {
+                    ... on OrganizationResult {
+                      status
+                      organization {
+                        name
+                      }
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('super_admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
+              validators: { cleanseInput },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({
+                    verified: true,
+                  }),
+                },
               },
             },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
+          )
+
+          const error = {
+            data: {
+              verifyOrganization: {
+                result: {
+                  code: 400,
+                  description: 'Organization has already been verified.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to verify organization: 123, however the organization has already been verified.`,
+          ])
         })
+      })
+      describe('transaction error occurs', () => {
         describe('when stepping transaction', () => {
           describe('when upserting org information', () => {
             it('throws an error message', async () => {
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step() {
-                  throw new Error('Database error occurred.')
-                },
-                commit() {
-                  throw new Error('Database error occurred.')
-                },
-              })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     verifyOrganization(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                       }
                     ) {
                       result {
@@ -873,38 +631,24 @@ describe('removing an organization', () => {
                   i18n,
                   query,
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                      i18n,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({
-                        query,
-                        userKey: user._key,
-                        i18n,
-                      }),
-                      i18n,
-                    }),
-                    verifiedRequired: verifiedRequired({}),
+                    checkPermission: jest.fn().mockReturnValue('super_admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                      }),
+                    },
                   },
                 },
               )
@@ -918,26 +662,19 @@ describe('removing an organization', () => {
               expect(response.errors).toEqual(error)
 
               expect(consoleOutput).toEqual([
-                `Transaction error occurred while upserting verified org: ${org._key}, err: Error: Database error occurred.`,
+                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
               ])
             })
           })
           describe('when clearing owners', () => {
             it('throws an error message', async () => {
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step: jest
-                  .fn()
-                  .mockReturnValueOnce({})
-                  .mockRejectedValue(new Error('Trx step error')),
-              })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     verifyOrganization(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                       }
                     ) {
                       result {
@@ -960,38 +697,25 @@ describe('removing an organization', () => {
                   i18n,
                   query,
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                      i18n,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({
-                        query,
-                        userKey: user._key,
-                        i18n,
-                      }),
-                      i18n,
-                    }),
-                    verifiedRequired: verifiedRequired({}),
+                    checkPermission: jest.fn().mockReturnValue('super_admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                      }),
+                    },
                   },
                 },
               )
@@ -1005,29 +729,20 @@ describe('removing an organization', () => {
               expect(response.errors).toEqual(error)
 
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when clearing owners for org: ${org._key}: Error: Trx step error`,
+                `Trx step error occurred when clearing owners for org: 123: Error: trx step error`,
               ])
             })
           })
         })
         describe('when committing transaction', () => {
           it('throws an error message', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step() {
-                return undefined
-              },
-              commit() {
-                throw new Error('Database error occurred.')
-              },
-            })
-
             const response = await graphql(
               schema,
               `
                 mutation {
                   verifyOrganization(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -1050,38 +765,25 @@ describe('removing an organization', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue(),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('trx commit error')),
+                }),
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                    i18n,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    i18n,
-                  }),
-                  verifiedRequired: verifiedRequired({}),
+                  checkPermission: jest.fn().mockReturnValue('super_admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: false,
+                    }),
+                  },
                 },
               },
             )
@@ -1095,7 +797,7 @@ describe('removing an organization', () => {
             expect(response.errors).toEqual(error)
 
             expect(consoleOutput).toEqual([
-              `Transaction error occurred while committing newly verified org: ${org._key}, err: Error: Database error occurred.`,
+              `Transaction error occurred while committing newly verified org: 123, err: Error: trx commit error`,
             ])
           })
         })
@@ -1116,157 +818,7 @@ describe('removing an organization', () => {
           },
         })
       })
-      describe('organization is already verified', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: true,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
-        })
-        it('throws an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organization', org._key)}"
-                  }
-                ) {
-                  result {
-                    ... on OrganizationResult {
-                      status
-                      organization {
-                        name
-                      }
-                    }
-                    ... on OrganizationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({
-                  userKey: user._key,
-                  query,
-                  i18n,
-                }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  i18n,
-                }),
-                verifiedRequired: verifiedRequired({}),
-              },
-              validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  i18n,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyOrganization: {
-                result: {
-                  code: 400,
-                  description: "L'organisation a déjà été vérifiée.",
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to verify organization: ${org._key}, however the organization has already been verified.`,
-          ])
-        })
-      })
       describe('organization is not found', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: true,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
-        })
         it('throws an error message', async () => {
           const response = await graphql(
             schema,
@@ -1298,37 +850,17 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({
-                  userKey: user._key,
-                  query,
-                  i18n,
-                }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  i18n,
-                }),
-                verifiedRequired: verifiedRequired({}),
+                checkPermission: jest.fn(),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  i18n,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -1347,45 +879,12 @@ describe('removing an organization', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to verify organization: -1, however no organizations is associated with that id.`,
+            `User: 123 attempted to verify organization: -1, however no organizations is associated with that id.`,
           ])
         })
       })
       describe('user permission is not super admin', () => {
         describe('users permission level is admin', () => {
-          let org
-          beforeEach(async () => {
-            org = await collections.organizations.save({
-              verified: false,
-              orgDetails: {
-                en: {
-                  slug: 'treasury-board-secretariat',
-                  acronym: 'TBS',
-                  name: 'Treasury Board of Canada Secretariat',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'secretariat-conseil-tresor',
-                  acronym: 'SCT',
-                  name: 'Secrétariat du Conseil Trésor du Canada',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-          })
           it('throws an error message', async () => {
             const response = await graphql(
               schema,
@@ -1393,7 +892,7 @@ describe('removing an organization', () => {
                 mutation {
                   verifyOrganization(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -1417,37 +916,19 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                    i18n,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    i18n,
-                  }),
-                  verifiedRequired: verifiedRequired({}),
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _id: 'organizations/123',
+                    }),
+                  },
                 },
               },
             )
@@ -1466,44 +947,11 @@ describe('removing an organization', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: admin`,
+              `User: 123 attempted to verify organization: 123, however they do not have the correct permission level. Permission: admin`,
             ])
           })
         })
         describe('users permission level is user', () => {
-          let org
-          beforeEach(async () => {
-            org = await collections.organizations.save({
-              verified: true,
-              orgDetails: {
-                en: {
-                  slug: 'treasury-board-secretariat',
-                  acronym: 'TBS',
-                  name: 'Treasury Board of Canada Secretariat',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'secretariat-conseil-tresor',
-                  acronym: 'SCT',
-                  name: 'Secrétariat du Conseil Trésor du Canada',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
           it('throws an error message', async () => {
             const response = await graphql(
               schema,
@@ -1511,7 +959,7 @@ describe('removing an organization', () => {
                 mutation {
                   verifyOrganization(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -1535,37 +983,19 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userKey: user._key,
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                    i18n,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    i18n,
-                  }),
-                  verifiedRequired: verifiedRequired({}),
+                  checkPermission: jest.fn().mockReturnValue('user'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _id: 'organizations/123',
+                    }),
+                  },
                 },
               },
             )
@@ -1584,64 +1014,88 @@ describe('removing an organization', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: user`,
+              `User: 123 attempted to verify organization: 123, however they do not have the correct permission level. Permission: user`,
             ])
           })
         })
       })
-      describe('transaction error occurs', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
+      describe('organization is already verified', () => {
+        it('throws an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                verifyOrganization(
+                  input: {
+                    orgId: "${toGlobalId('organization', 123)}"
+                  }
+                ) {
+                  result {
+                    ... on OrganizationResult {
+                      status
+                      organization {
+                        name
+                      }
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('super_admin'),
+                userRequired: jest.fn(),
+                verifiedRequired: jest.fn(),
               },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
+              validators: { cleanseInput },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({
+                    verified: true,
+                  }),
+                },
               },
             },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
+          )
+
+          const error = {
+            data: {
+              verifyOrganization: {
+                result: {
+                  code: 400,
+                  description: "L'organisation a déjà été vérifiée.",
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to verify organization: 123, however the organization has already been verified.`,
+          ])
         })
-        describe('when running transaction', () => {
+      })
+      describe('transaction error occurs', () => {
+        describe('when stepping transaction', () => {
           describe('when upserting org information', () => {
             it('throws an error message', async () => {
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step() {
-                  throw new Error('Database error occurred.')
-                },
-                commit() {
-                  throw new Error('Database error occurred.')
-                },
-              })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     verifyOrganization(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                       }
                     ) {
                       result {
@@ -1664,38 +1118,24 @@ describe('removing an organization', () => {
                   i18n,
                   query,
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                      i18n,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({
-                        query,
-                        userKey: user._key,
-                        i18n,
-                      }),
-                      i18n,
-                    }),
-                    verifiedRequired: verifiedRequired({}),
+                    checkPermission: jest.fn().mockReturnValue('super_admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                      }),
+                    },
                   },
                 },
               )
@@ -1709,26 +1149,19 @@ describe('removing an organization', () => {
               expect(response.errors).toEqual(error)
 
               expect(consoleOutput).toEqual([
-                `Transaction error occurred while upserting verified org: ${org._key}, err: Error: Database error occurred.`,
+                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
               ])
             })
           })
           describe('when clearing owners', () => {
             it('throws an error message', async () => {
-              const mockedTransaction = jest.fn().mockReturnValue({
-                step: jest
-                  .fn()
-                  .mockReturnValueOnce({})
-                  .mockRejectedValue(new Error('Trx step error')),
-              })
-
               const response = await graphql(
                 schema,
                 `
                   mutation {
                     verifyOrganization(
                       input: {
-                        orgId: "${toGlobalId('organization', org._key)}"
+                        orgId: "${toGlobalId('organization', 123)}"
                       }
                     ) {
                       result {
@@ -1751,38 +1184,25 @@ describe('removing an organization', () => {
                   i18n,
                   query,
                   collections,
-                  transaction: mockedTransaction,
-                  userKey: user._key,
+                  transaction: jest.fn().mockReturnValue({
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce()
+                      .mockRejectedValue(new Error('trx step error')),
+                  }),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                      i18n,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({
-                        query,
-                        userKey: user._key,
-                        i18n,
-                      }),
-                      i18n,
-                    }),
-                    verifiedRequired: verifiedRequired({}),
+                    checkPermission: jest.fn().mockReturnValue('super_admin'),
+                    userRequired: jest.fn(),
+                    verifiedRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({
-                      query,
-                      language: 'en',
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        verified: false,
+                      }),
+                    },
                   },
                 },
               )
@@ -1796,29 +1216,20 @@ describe('removing an organization', () => {
               expect(response.errors).toEqual(error)
 
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when clearing owners for org: ${org._key}: Error: Trx step error`,
+                `Trx step error occurred when clearing owners for org: 123: Error: trx step error`,
               ])
             })
           })
         })
         describe('when committing transaction', () => {
           it('throws an error message', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step() {
-                return undefined
-              },
-              commit() {
-                throw new Error('Database error occurred.')
-              },
-            })
-
             const response = await graphql(
               schema,
               `
                 mutation {
                   verifyOrganization(
                     input: {
-                      orgId: "${toGlobalId('organization', org._key)}"
+                      orgId: "${toGlobalId('organization', 123)}"
                     }
                   ) {
                     result {
@@ -1841,38 +1252,25 @@ describe('removing an organization', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue(),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('trx commit error')),
+                }),
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                    i18n,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                    i18n,
-                  }),
-                  verifiedRequired: verifiedRequired({}),
+                  checkPermission: jest.fn().mockReturnValue('super_admin'),
+                  userRequired: jest.fn(),
+                  verifiedRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    userKey: user._key,
-                    i18n,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      verified: false,
+                    }),
+                  },
                 },
               },
             )
@@ -1886,7 +1284,7 @@ describe('removing an organization', () => {
             expect(response.errors).toEqual(error)
 
             expect(consoleOutput).toEqual([
-              `Transaction error occurred while committing newly verified org: ${org._key}, err: Error: Database error occurred.`,
+              `Transaction error occurred while committing newly verified org: 123, err: Error: trx commit error`,
             ])
           })
         })
