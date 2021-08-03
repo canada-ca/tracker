@@ -182,6 +182,20 @@ export default function UserPage() {
             <Trans>Verify Email</Trans>
           </Button>
         )}
+
+        <Divider />
+
+        <Button
+          variant="danger"
+          onClick={() => {
+            closeAccountOnOpen()
+          }}
+          ml="auto"
+          w={{ base: '100%', md: 'auto' }}
+          mb={2}
+        >
+          <Trans> Close Account </Trans>
+        </Button>
       </Stack>
     </SimpleGrid>
   )
