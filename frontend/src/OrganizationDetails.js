@@ -48,7 +48,7 @@ export default function OrganizationDetails() {
     errorPolicy: 'ignore', // allow partial success
   })
 
-  const [leaveOrg] = useMutation(LEAVE_ORG, {
+  const [leaveOrganization] = useMutation(LEAVE_ORG, {
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -59,21 +59,21 @@ export default function OrganizationDetails() {
         position: 'top-left',
       })
     },
-    onCompleted({ leaveOrg }) {
-      if (leaveOrg.result.__typename === 'Domain') {
+    onCompleted({ leaveOrganization }) {
+      if (leaveOrganization.result.__typename === 'LeaveOrganizationResult') {
         toast({
           title: i18n._(t`Organization left successfully`),
-          description: i18n._(t`${leaveOrg.result.domain} left ${orgSlug}`),
+          description: i18n._(t`You have successfully left ${orgSlug}`),
           status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
         leaveOrgOnClose()
-      } else if (leaveOrg.result.__typename === 'AffiliationError') {
+      } else if (leaveOrganization.result.__typename === 'AffiliationError') {
         toast({
           title: i18n._(t`Unable to leave organization.`),
-          description: leaveOrg.result.description,
+          description: leaveOrganization.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -82,13 +82,13 @@ export default function OrganizationDetails() {
       } else {
         toast({
           title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect leaveOrg.result typename.`),
+          description: i18n._(t`Incorrect leaveOrganization.result typename.`),
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-        console.log('Incorrect leaveOrg.result typename.')
+        console.log('Incorrect leaveOrganization.result typename.')
       }
     },
   })
@@ -207,7 +207,7 @@ export default function OrganizationDetails() {
               variant="primary"
               mr="4"
               onClick={async () => {
-                await leaveOrg({
+                await leaveOrganization({
                   variables: {
                     orgId: data?.organization?.id,
                   },
