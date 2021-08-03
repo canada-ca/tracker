@@ -82,3 +82,15 @@ def retrieve_tls_guidance():
             },
             "extensions": {"1.2": {"recommended": []}, "1.3": {"recommended": []}},
         }
+
+
+def formatted_dictionary(data):
+    data_str = json.dumps(data)
+    formatted = (
+        data.replace("false", "False")
+        .replace("true", "True")
+        .replace("null", "None")
+        .replace("none", "None")
+    )
+    formatted_dict = json.loads(formatted)
+    return formatted_dict
