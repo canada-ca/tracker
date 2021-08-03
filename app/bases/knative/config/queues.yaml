@@ -103,7 +103,7 @@ spec:
       timeoutSeconds: 500
       containers:
       - name: ots-result-queue
-        image: gcr.io/track-compliance/services/queues/ots-result:master-1729578-1627474047 # {"$imagepolicy": "flux-system:ots-result-queue"}
+        image: gcr.io/track-compliance/services/queues/ots-result:master-aae5946-1627998663 # {"$imagepolicy": "flux-system:ots-result-queue"}
         env:
         - name: PUBSUB_HOST
           valueFrom:
