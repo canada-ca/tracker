@@ -7,6 +7,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Flex,
 } from '@chakra-ui/react'
 
 export function Dropdown({
@@ -116,7 +117,7 @@ export function Dropdown({
         }}
       >
         <label>
-          <Stack
+          <Flex
             flexDirection={{ base: 'column', md: labelDirection }}
             align="center"
           >
@@ -153,7 +154,7 @@ export function Dropdown({
                 />
               </InputRightElement>
             </InputGroup>
-          </Stack>
+          </Flex>
         </label>
       </Box>
       <Box
