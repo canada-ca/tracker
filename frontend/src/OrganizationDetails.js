@@ -15,7 +15,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -111,18 +110,12 @@ export default function OrganizationDetails() {
 
   return (
     <Box w="100%" px={4}>
-      <Flex w="100%">
-        <Button
-          variant="danger"
-          onClick={() => {
-            leaveOrgOnOpen()
-          }}
-          ml="auto"
-        >
-          <Trans> Leave Organization </Trans>
-        </Button>
-      </Flex>
-      <Stack isInline align="center" mb="4">
+      <Flex
+        flexDirection="row"
+        align="center"
+        mb="4"
+        flexWrap={{ base: 'wrap', md: 'nowrap' }}
+      >
         <IconButton
           icon={<ArrowLeftIcon />}
           as={RouteLink}
@@ -130,14 +123,36 @@ export default function OrganizationDetails() {
           color="gray.900"
           fontSize="2xl"
           aria-label="back to organizations"
+          mr="0.5rem"
+          order={0}
         />
-        <Heading as="h1" textAlign={{ base: 'center', md: 'left' }}>
+        <Heading
+          as="h1"
+          textAlign={{ base: 'center', md: 'left' }}
+          mr={{ base: '0', md: '0.5rem' }}
+          order={{ base: 2, md: 1 }}
+          flexBasis={{ base: '100%', md: 'auto' }}
+        >
           {orgName}
-        </Heading>
-        {data?.organization?.verified && (
-          <CheckCircleIcon color="blue.500" size="icons.lg" />
-        )}
-      </Stack>
+          {data?.organization?.verified && (
+            <>
+              {' '}
+              <CheckCircleIcon color="blue.500" boxSize="icons.lg" />
+            </>
+          )}
+        </Heading>{' '}
+        <Button
+          variant="danger"
+          order={{ base: 1, md: 2 }}
+          onClick={() => {
+            leaveOrgOnOpen()
+          }}
+          flexShrink={0}
+          ml="auto"
+        >
+          <Trans> Leave Organization </Trans>
+        </Button>
+      </Flex>
       <Tabs isFitted>
         <TabList mb="4">
           <Tab>
