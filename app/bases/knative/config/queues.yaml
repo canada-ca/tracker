@@ -20,7 +20,7 @@ spec:
       timeoutSeconds: 500
       containers:
       - name: scan-queue
-        image: gcr.io/track-compliance/services/queues/scan:master-1729578-1627474043 # {"$imagepolicy": "flux-system:scan-queue"}
+        image: gcr.io/track-compliance/services/queues/scan:master-aae5946-1627998662 # {"$imagepolicy": "flux-system:scan-queue"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
@@ -68,7 +68,7 @@ spec:
       timeoutSeconds: 500
       containers:
       - name: ots-scan-queue
-        image: gcr.io/track-compliance/services/queues/ots-scan:master-1729578-1627474045 # {"$imagepolicy": "flux-system:ots-scan-queue"}
+        image: gcr.io/track-compliance/services/queues/ots-scan:master-aae5946-1627998661 # {"$imagepolicy": "flux-system:ots-scan-queue"}
         env:
         - name: PUBSUB_HOST
           valueFrom:
