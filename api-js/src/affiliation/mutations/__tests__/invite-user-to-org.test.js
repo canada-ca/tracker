@@ -39,45 +39,50 @@ describe('invite user to org', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     tokenize = jest.fn().mockReturnValue('token')
   })
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      emailValidated: true,
-    })
+  afterEach(() => {
     consoleOutput.length = 0
   })
-  afterEach(async () => {
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
-  })
 
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
+  describe('given a successful invitation', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+      tokenize = jest.fn().mockReturnValue('token')
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
       })
     })
-    describe('given a successful invitation', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       let org
       beforeEach(async () => {
         org = await collections.organizations.save({
@@ -1090,694 +1095,21 @@ describe('invite user to org', () => {
         })
       })
     })
-    describe('given an unsuccessful invitation', () => {
-      describe('user attempts to invite themselves', () => {
-        it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', 1)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteCreateAccount },
-              validators: { cleanseInput },
-            },
-          )
-
-          const error = {
-            data: {
-              inviteUserToOrg: {
-                result: {
-                  code: 400,
-                  description: 'Unable to invite yourself to an org.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite themselves to 1.`,
-          ])
-        })
-      })
-      describe('user attempts to invite to an org that does not exist', () => {
-        it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', 1)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteCreateAccount },
-              validators: { cleanseInput },
-            },
-          )
-
-          const error = {
-            data: {
-              inviteUserToOrg: {
-                result: {
-                  code: 400,
-                  description: 'Unable to invite user to unknown organization.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
-          ])
-        })
-      })
-      describe('user with undefined permission attempts to invite a user', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-        })
-        it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteCreateAccount },
-              validators: { cleanseInput },
-            },
-          )
-
-          const error = {
-            data: {
-              inviteUserToOrg: {
-                result: {
-                  code: 403,
-                  description:
-                    'Permission Denied: Please contact organization admin for help with user invitations.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
-          ])
-        })
-      })
-      describe('user with user level permission attempts to invite a user', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-        })
-        it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteCreateAccount },
-              validators: { cleanseInput },
-            },
-          )
-
-          const error = {
-            data: {
-              inviteUserToOrg: {
-                result: {
-                  code: 403,
-                  description:
-                    'Permission Denied: Please contact organization admin for help with user invitations.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
-          ])
-        })
-      })
-      describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: SUPER_ADMIN
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteCreateAccount },
-              validators: { cleanseInput },
-            },
-          )
-
-          const error = {
-            data: {
-              inviteUserToOrg: {
-                result: {
-                  code: 403,
-                  description:
-                    'Permission Denied: Please contact organization admin for help with user invitations.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: super_admin but does not have permission to do so.`,
-          ])
-        })
-      })
-    })
-    describe('transaction error occurs', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
         })
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'super_admin',
-        })
-
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'french',
-        })
       })
-      describe('when creating affiliation', () => {
-        it('returns an error message', async () => {
-          const sendOrgInviteEmail = jest.fn()
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              throw new Error('Transaction error occurred.')
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteEmail },
-              validators: { cleanseInput },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              'Unable to add user to organization. Please try again.',
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction step error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
-          ])
-        })
-      })
-      describe('when committing transaction', () => {
-        it('returns an error message', async () => {
-          const sendOrgInviteEmail = jest.fn()
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              return undefined
-            },
-            commit() {
-              throw new Error('Transaction error occurred.')
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteEmail },
-              validators: { cleanseInput },
-            },
-          )
-
-          const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction commit error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
-          ])
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a successful invitation', () => {
       let org
       beforeEach(async () => {
         org = await collections.organizations.save({
@@ -1829,27 +1161,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: SUPER_ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: SUPER_ADMIN
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -1925,27 +1257,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: ADMIN
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2021,27 +1353,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: USER
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2111,27 +1443,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: SUPER_ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: SUPER_ADMIN
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2204,27 +1536,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: ADMIN
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2297,27 +1629,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: USER
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2409,27 +1741,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: ADMIN
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2505,27 +1837,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: USER
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2595,27 +1927,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: ADMIN
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2688,27 +2020,27 @@ describe('invite user to org', () => {
               const response = await graphql(
                 schema,
                 `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      result {
-                        ... on InviteUserToOrgResult {
-                          status
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: USER
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: FRENCH
                         }
-                        ... on AffiliationError {
-                          code
-                          description
+                      ) {
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on AffiliationError {
+                            code
+                            description
+                          }
                         }
                       }
                     }
-                  }
-                `,
+                  `,
                 null,
                 {
                   i18n,
@@ -2777,35 +2109,49 @@ describe('invite user to org', () => {
         })
       })
     })
-    describe('given an unsuccessful invitation', () => {
+  })
+  describe('given an unsuccessful invitation', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('user attempts to invite themselves', () => {
         it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
           const response = await graphql(
             schema,
             `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', 1)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 1)}"
+                      preferredLang: FRENCH
                     }
-                    ... on AffiliationError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
+              `,
             null,
             {
               i18n,
@@ -2817,22 +2163,605 @@ describe('invite user to org', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@istio.actually.exists',
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn(),
+                  },
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn(),
+                  },
+                },
               },
-              notify: { sendOrgInviteCreateAccount },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to invite yourself to an org.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to invite themselves to 1.`,
+          ])
+        })
+      })
+      describe('user attempts to invite to an org that does not exist', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 1)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'https',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
+              },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to invite user to unknown organization.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
+          ])
+        })
+      })
+      describe('user with undefined permission attempts to invite a user', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'https',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
+              },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user invitations.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to invite user: test@email.gc.ca to org: 123 with role: user but does not have permission to do so.`,
+          ])
+        })
+      })
+      describe('user with user level permission attempts to invite a user', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'https',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('user'),
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
+              },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user invitations.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to invite user: test@email.gc.ca to org: 123 with role: user but does not have permission to do so.`,
+          ])
+        })
+      })
+      describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: SUPER_ADMIN
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'https',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
+              },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user invitations.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to invite user: test@email.gc.ca to org: 123 with role: super_admin but does not have permission to do so.`,
+          ])
+        })
+      })
+      describe('transaction error occurs', () => {
+        describe('when creating affiliation', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'fr',
+                  protocol: 'https',
+                  get: (text) => text,
+                },
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockRejectedValue('trx step err'),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@exists.ca',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      slug: 'secretariat-conseil-tresor',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                notify: { sendOrgInviteCreateAccount: jest.fn() },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to invite user. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction step error occurred while user: 123 attempted to invite user: 456 to org: secretariat-conseil-tresor, error: trx step err`,
+            ])
+          })
+        })
+        describe('when committing transaction', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'fr',
+                  protocol: 'https',
+                  get: (text) => text,
+                },
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn(),
+                  commit: jest.fn().mockRejectedValue('trx commit err'),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@exists.ca',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      slug: 'secretariat-conseil-tresor',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                notify: {
+                  sendOrgInviteCreateAccount: jest.fn(),
+                  sendOrgInviteEmail: jest.fn(),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to invite user. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction commit error occurred while user: 123 attempted to invite user: 456 to org: secretariat-conseil-tresor, error: trx commit err`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('user attempts to invite themselves', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test.account@istio.actually.exists"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 1)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'https',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue('admin'),
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@istio.actually.exists',
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              loaders: {
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn(),
+                  },
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn(),
+                  },
+                },
+              },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
           )
@@ -2850,38 +2779,36 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite themselves to 1.`,
+            `User: 123 attempted to invite themselves to 1.`,
           ])
         })
       })
       describe('user attempts to invite to an org that does not exist', () => {
         it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
           const response = await graphql(
             schema,
             `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', 1)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 1)}"
+                      preferredLang: FRENCH
                     }
-                    ... on AffiliationError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
+              `,
             null,
             {
               i18n,
@@ -2893,22 +2820,27 @@ describe('invite user to org', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
               },
-              notify: { sendOrgInviteCreateAccount },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
           )
@@ -2918,8 +2850,7 @@ describe('invite user to org', () => {
               inviteUserToOrg: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible d'inviter un utilisateur à une organisation inconnue.",
+                  description: "Impossible d'inviter un utilisateur à une organisation inconnue.",
                 },
               },
             },
@@ -2927,70 +2858,116 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
+            `User: 123 attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
+          ])
+        })
+      })
+      describe('user with undefined permission attempts to invite a user', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'https',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              loaders: {
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
+              },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description:
+                  "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to invite user: test@email.gc.ca to org: 123 with role: user but does not have permission to do so.`,
           ])
         })
       })
       describe('user with user level permission attempts to invite a user', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-        })
         it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
           const response = await graphql(
             schema,
             `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
                     }
-                    ... on AffiliationError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
+              `,
             null,
             {
               i18n,
@@ -3002,22 +2979,27 @@ describe('invite user to org', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: jest.fn().mockReturnValue('user'),
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
               },
-              notify: { sendOrgInviteCreateAccount },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
           )
@@ -3028,7 +3010,7 @@ describe('invite user to org', () => {
                 result: {
                   code: 403,
                   description:
-                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
+                  "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
                 },
               },
             },
@@ -3036,70 +3018,36 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
+            `User: 123 attempted to invite user: test@email.gc.ca to org: 123 with role: user but does not have permission to do so.`,
           ])
         })
       })
       describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
-        let org
-        beforeEach(async () => {
-          org = await collections.organizations.save({
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
         it('returns an error message', async () => {
-          const sendOrgInviteCreateAccount = jest.fn()
-
           const response = await graphql(
             schema,
             `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: SUPER_ADMIN
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: SUPER_ADMIN
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
                     }
-                    ... on AffiliationError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
+              `,
             null,
             {
               i18n,
@@ -3111,22 +3059,27 @@ describe('invite user to org', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: jest.fn().mockReturnValue('admin'),
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  userName: 'test.account@exists.ca',
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadOrgByKey: {
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+                loadUserByUserName: {
+                  load: jest.fn(),
+                },
               },
-              notify: { sendOrgInviteCreateAccount },
+              notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
           )
@@ -3137,7 +3090,7 @@ describe('invite user to org', () => {
                 result: {
                   code: 403,
                   description:
-                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
+                  "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
                 },
               },
             },
@@ -3145,205 +3098,170 @@ describe('invite user to org', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: super_admin but does not have permission to do so.`,
+            `User: 123 attempted to invite user: test@email.gc.ca to org: 123 with role: super_admin but does not have permission to do so.`,
           ])
         })
       })
-    })
-    describe('transaction error occurs', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'super_admin',
-        })
-
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'french',
-        })
-      })
-      describe('when creating affiliation', () => {
-        it('returns an error message', async () => {
-          const sendOrgInviteEmail = jest.fn()
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              throw new Error('Transaction error occurred.')
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
+      describe('transaction error occurs', () => {
+        describe('when creating affiliation', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
                     }
-                    ... on AffiliationError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'fr',
+                  protocol: 'https',
+                  get: (text) => text,
+                },
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockRejectedValue('trx step err'),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@exists.ca',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      slug: 'secretariat-conseil-tresor',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                notify: { sendOrgInviteCreateAccount: jest.fn() },
+                validators: { cleanseInput },
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteEmail },
-              validators: { cleanseInput },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer.",
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                "Impossible d'inviter un utilisateur. Veuillez réessayer.",
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction step error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
-          ])
-        })
-      })
-      describe('when committing transaction', () => {
-        it('returns an error message', async () => {
-          const sendOrgInviteEmail = jest.fn()
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              return undefined
-            },
-            commit() {
-              throw new Error('Transaction error occurred.')
-            },
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction step error occurred while user: 123 attempted to invite user: 456 to org: secretariat-conseil-tresor, error: trx step err`,
+            ])
           })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                inviteUserToOrg(
-                  input: {
-                    userName: "test@email.gc.ca"
-                    requestedRole: USER
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    preferredLang: FRENCH
-                  }
-                ) {
-                  result {
-                    ... on InviteUserToOrgResult {
-                      status
+        })
+        describe('when committing transaction', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  inviteUserToOrg(
+                    input: {
+                      userName: "test@email.gc.ca"
+                      requestedRole: USER
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      preferredLang: FRENCH
                     }
-                    ... on AffiliationError {
-                      code
-                      description
+                  ) {
+                    result {
+                      ... on InviteUserToOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              request: {
-                language: 'fr',
-                protocol: 'https',
-                get: (text) => text,
-              },
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'fr',
+                  protocol: 'https',
+                  get: (text) => text,
+                },
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn(),
+                  commit: jest.fn().mockRejectedValue('trx commit err'),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@exists.ca',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      slug: 'secretariat-conseil-tresor',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                notify: {
+                  sendOrgInviteCreateAccount: jest.fn(),
+                  sendOrgInviteEmail: jest.fn(),
+                },
+                validators: { cleanseInput },
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              notify: { sendOrgInviteEmail },
-              validators: { cleanseInput },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              "Impossible d'inviter un utilisateur. Veuillez réessayer.",
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                "Impossible d'inviter un utilisateur. Veuillez réessayer.",
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction commit error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction commit error occurred while user: 123 attempted to invite user: 456 to org: secretariat-conseil-tresor, error: trx commit err`,
+            ])
+          })
         })
       })
     })
