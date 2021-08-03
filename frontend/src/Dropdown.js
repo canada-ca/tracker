@@ -92,7 +92,7 @@ export function Dropdown({
 
   return (
     <Box
-      // className="dropdown"
+      // Parent box
       {...props}
       w={{ base: '100%', md: '75%' }}
       position="relative"
@@ -102,7 +102,7 @@ export function Dropdown({
       aria-expanded={open}
     >
       <Box
-        // className="selected-value"
+        // Box containing label and input
         lineHeight={1.5}
         fontSize="1rem"
         boxSizing="border-box"
@@ -137,7 +137,7 @@ export function Dropdown({
               />
               <InputRightElement>
                 <Box
-                  // className={`arrow ${open ? 'open' : null}`}
+                  // arrow icon
                   borderColor={
                     open
                       ? 'transparent transparent #999'
@@ -157,7 +157,7 @@ export function Dropdown({
         </label>
       </Box>
       <Box
-        // className={`options ${open ? 'open' : null}`}
+        // Box containing list of options
         display={open ? 'block' : 'none'}
         bgColor="#fff"
         border="1px solid #ccc"
@@ -173,7 +173,7 @@ export function Dropdown({
       >
         {filter(options).map((option, idx) => (
           <Box
-            // className="option"
+            // Box containing individual options
             tabIndex={0}
             key={option.value.id}
             boxSizing="border-box"
