@@ -30,8 +30,6 @@ from ssl_scanner import SSLScanner
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-TIMEOUT = os.getenv("SCAN_TIMEOUT", 80)
-
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
 )

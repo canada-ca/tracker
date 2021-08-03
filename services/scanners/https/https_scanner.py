@@ -1,5 +1,8 @@
 from pebble import concurrent
 
+TIMEOUT = os.getenv("SCAN_TIMEOUT", 80)
+
+
 class HTTPSScanner():
     domain = None
 

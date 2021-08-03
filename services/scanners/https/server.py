@@ -23,8 +23,6 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 MIN_HSTS_AGE = 31536000  # one year
 
-TIMEOUT = os.getenv("SCAN_TIMEOUT", 80)
-
 QUEUE_URL = os.getenv(
     "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
 )
