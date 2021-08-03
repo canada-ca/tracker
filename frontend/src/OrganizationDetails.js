@@ -48,51 +48,56 @@ export default function OrganizationDetails() {
     errorPolicy: 'ignore', // allow partial success
   })
 
-  const [leaveOrganization] = useMutation(LEAVE_ORG, {
-    onError(error) {
-      toast({
-        title: i18n._(t`An error occurred.`),
-        description: error.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-    onCompleted({ leaveOrganization }) {
-      if (leaveOrganization.result.__typename === 'LeaveOrganizationResult') {
+  const [leaveOrganization, { loading: loadingLeaveOrg }] = useMutation(
+    LEAVE_ORG,
+    {
+      onError(error) {
         toast({
-          title: i18n._(t`Organization left successfully`),
-          description: i18n._(t`You have successfully left ${orgSlug}`),
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        leaveOrgOnClose()
-        history.push('/organizations')
-      } else if (leaveOrganization.result.__typename === 'AffiliationError') {
-        toast({
-          title: i18n._(t`Unable to leave organization.`),
-          description: leaveOrganization.result.description,
+          title: i18n._(t`An error occurred.`),
+          description: error.message,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      } else {
-        toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect leaveOrganization.result typename.`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        console.log('Incorrect leaveOrganization.result typename.')
-      }
+      },
+      onCompleted({ leaveOrganization }) {
+        if (leaveOrganization.result.__typename === 'LeaveOrganizationResult') {
+          toast({
+            title: i18n._(t`Organization left successfully`),
+            description: i18n._(t`You have successfully left ${orgSlug}`),
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          leaveOrgOnClose()
+          history.push('/organizations')
+        } else if (leaveOrganization.result.__typename === 'AffiliationError') {
+          toast({
+            title: i18n._(t`Unable to leave organization.`),
+            description: leaveOrganization.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: i18n._(t`Incorrect send method received.`),
+            description: i18n._(
+              t`Incorrect leaveOrganization.result typename.`,
+            ),
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect leaveOrganization.result typename.')
+        }
+      },
     },
-  })
+  )
 
   const {
     isOpen: leaveOrgIsOpen,
@@ -230,6 +235,7 @@ export default function OrganizationDetails() {
                   },
                 })
               }}
+              isLoading={loadingLeaveOrg}
             >
               <Trans>Confirm</Trans>
             </Button>
