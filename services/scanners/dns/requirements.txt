@@ -12,3 +12,4 @@ PyNaCl
 pretend
 uvloop
 httptools
+Pebble==4.6.1
