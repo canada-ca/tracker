@@ -11,7 +11,7 @@
         "refLinksTechnical": [""]
     },
     "https2": {
-        "tagName": "HTTPS-missing",
+        "tagName": "Missing",
         "guidance": "Follow implementation guide",
         "refLinksGuide": [
             {
@@ -22,7 +22,7 @@
         "refLinksTechnical": [""]
     },
     "https3": {
-        "tagName": "HTTPS-downgraded",
+        "tagName": "Downgraded",
         "guidance": "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.",
         "refLinksGuide": [
             {
@@ -33,7 +33,7 @@
         "refLinksTechnical": [""]
     },
     "https4": {
-        "tagName": "HTTPS-bad-chain",
+        "tagName": "Bad-chain",
         "guidance": "HTTPS certificate chain is invalid",
         "refLinksGuide": [
             {
@@ -44,7 +44,7 @@
         "refLinksTechnical": [""]
     },
     "https5": {
-        "tagName": "HTTPS-bad-hostname",
+        "tagName": "Bad-hostname",
         "guidance": "HTTPS endpoint failed hostname validation",
         "refLinksGuide": [
             {
@@ -55,7 +55,7 @@
         "refLinksTechnical": [""]
     },
     "https6": {
-        "tagName": "HTTPS-not-enforced",
+        "tagName": "Not-enforced",
         "guidance": "Domain does not enforce HTTPS",
         "refLinksGuide": [
             {
@@ -66,7 +66,7 @@
         "refLinksTechnical": [""]
     },
     "https7": {
-        "tagName": "HTTPS-weakly-enforced",
+        "tagName": "Weakly-enforced",
         "guidance": "Domain does not default to HTTPS",
         "refLinksGuide": [
             {
@@ -77,7 +77,7 @@
         "refLinksTechnical": [""]
     },
     "https8": {
-        "tagName": "HTTPS-moderately-enforced",
+        "tagName": "Moderately-enforced",
         "guidance": "Domain defaults to HTTPS, but eventually redirects to HTTP",
         "refLinksGuide": [
             {
@@ -132,7 +132,7 @@
         "refLinksTechnical": [""]
     },
     "https13": {
-        "tagName": "HTTPS-certificate-expired",
+        "tagName": "Certificate-expired",
         "guidance": "HTTPS certificate is expired",
         "refLinksGuide": [
             {
@@ -143,7 +143,7 @@
         "refLinksTechnical": [""]
     },
     "https14": {
-        "tagName": "HTTPS-certificate-self-signed",
+        "tagName": "Certificate-self-signed",
         "guidance": "HTTPS certificate is self-signed",
         "refLinksGuide": [
             {
@@ -154,7 +154,7 @@
         "refLinksTechnical": [""]
     },
     "https15": {
-        "tagName": "HTTPS-certificate-revoked",
+        "tagName": "Certificate-revoked",
         "guidance": "HTTPS certificate has been revoked",
         "refLinksGuide": [
             {
@@ -165,7 +165,7 @@
         "refLinksTechnical": [""]
     },
     "https16": {
-        "tagName": "HTTPS-certificate-revocation-unknown",
+        "tagName": "Certificate-revocation-unknown",
         "guidance": "Revocation status of HTTPS certificate could not be checked",
         "refLinksGuide": [
             {
@@ -174,6 +174,16 @@
             }
         ],
         "refLinksTechnical": [""]
+    },
+    "https17": {
+        "tagName": "Unreachable",
+        "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
+        "refLinksGuide": [
+            {
+                "description": "6.1.1 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "refLinksTechnical": [""]
     }
-    
 }
