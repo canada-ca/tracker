@@ -11,7 +11,7 @@
         "refLinksTechnical": [""]
     },
     "spf2": {
-        "tagName": "SPF-missing",
+        "tagName": "Missing",
         "guidance": "Follow implementation guide",
         "refLinksGuide": [
             {
@@ -27,7 +27,7 @@
         ]
     },
     "spf3": {
-        "tagName": "SPF-bad-path",
+        "tagName": "Bad-path",
         "guidance": "SPF implemented in incorrect subdomain",
         "refLinksGuide": [
             {
@@ -171,7 +171,7 @@
         ]
     },
     "spf12": {
-        "tagName": "SPF-valid",
+        "tagName": "Valid",
         "guidance": "SPF record is properly formed",
         "refLinksGuide": [
             {
