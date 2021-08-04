@@ -84,9 +84,9 @@ export default function UserPage() {
       onCompleted({ closeAccount }) {
         if (closeAccount.result.__typename === 'CloseAccountResult') {
           toast({
-            title: i18n._(t`Account Closed Sussessfully`),
+            title: i18n._(t`Account Closed Successfully`),
             description: i18n._(
-              t`Traccer account has been successfully closed.`,
+              t`Tracker account has been successfully closed.`,
             ),
             status: 'success',
             duration: 9000,
