@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+from scan import https
 from pebble import concurrent
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
