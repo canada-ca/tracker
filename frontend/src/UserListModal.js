@@ -16,6 +16,8 @@ import {
   FormControl,
   FormErrorMessage,
   Text,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { bool, func, object, string } from 'prop-types'
@@ -25,6 +27,7 @@ import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
 import { fieldRequirements } from './fieldRequirements'
 import { object as yupObject, string as yupString } from 'yup'
+import { EmailIcon } from '@chakra-ui/icons'
 
 export function UserListModal({
   isOpen,
@@ -210,14 +213,19 @@ export function UserListModal({
                         <FormLabel htmlFor="userName" fontWeight="bold">
                           <Trans>User:</Trans>
                         </FormLabel>
-                        <Input
-                          mb="2"
-                          {...field}
-                          type="email"
-                          id="userName"
-                          placeholder={i18n._(t`user email`)}
-                          ref={initialFocusRef}
-                        />
+                        <InputGroup>
+                          <InputLeftElement aria-hidden="true">
+                            <EmailIcon color="gray.300" />
+                          </InputLeftElement>
+                          <Input
+                            mb="2"
+                            {...field}
+                            type="email"
+                            id="userName"
+                            placeholder={i18n._(t`user email`)}
+                            ref={initialFocusRef}
+                          />
+                        </InputGroup>
                         <FormErrorMessage>
                           {form.errors.userName}
                         </FormErrorMessage>
@@ -226,12 +234,12 @@ export function UserListModal({
                   </Field>
                 )}
                 <Stack isInline align="center">
-                  <FormLabel htmlFor="role_select" fontWeight="bold">
+                  <FormLabel htmlFor="role" fontWeight="bold">
                     <Trans>Role:</Trans>
                   </FormLabel>
                   <Select
                     w="35%"
-                    id="role_select"
+                    id="role"
                     size="sm"
                     name="role"
                     defaultValue={editingUserRole}

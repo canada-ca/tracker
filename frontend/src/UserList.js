@@ -227,7 +227,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             w={{ base: '100%', md: '25%' }}
             variant="primary"
             type="submit"
-            // isLoading={userForm.isSubmitting}
           >
             <AddIcon mr={2} aria-hidden="true" />
             <Trans>Invite User</Trans>
@@ -289,7 +288,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       <UserListModal
         isOpen={updateIsOpen}
         onClose={updateOnClose}
-        // validationSchema={validationSchema}
         orgId={orgId}
         editingUserName={editingUserName}
         editingUserRole={editingUserRole}
