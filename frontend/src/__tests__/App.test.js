@@ -66,7 +66,7 @@ describe('<App/>', () => {
             </UserVarProvider>
           </MockedProvider>,
         )
-        await waitFor(() => expect(getByText(/Track digital security/i)))
+        await waitFor(() => expect(getByText(/Tracker 2.0/i)))
       })
     })
 
