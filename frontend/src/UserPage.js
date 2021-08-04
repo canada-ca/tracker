@@ -63,51 +63,56 @@ export default function UserPage() {
     },
   )
 
-  const [closeAccount] = useMutation(CLOSE_ACCOUNT, {
-    onError(error) {
-      toast({
-        title: i18n._(t`An error occurred.`),
-        description: error.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-    onCompleted({ closeAccount }) {
-      if (closeAccount.result.__typename === 'CloseAccountResult') {
+  const [closeAccount, { loading: loadingCloseAccount }] = useMutation(
+    CLOSE_ACCOUNT,
+    {
+      onError(error) {
         toast({
-          title: i18n._(t`Account Closed Sussessfully`),
-          description: i18n._(t`Traccer account has been successfully closed.`),
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        closeAccountOnClose()
-        history.push('/')
-      } else if (closeAccount.result.__typename === 'CloseAccountError') {
-        toast({
-          title: i18n._(t`Unable to close the account.`),
-          description: closeAccount.result.description,
+          title: i18n._(t`An error occurred.`),
+          description: error.message,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      } else {
-        toast({
-          title: i18n._(t`Incorrect send method received.`),
-          description: i18n._(t`Incorrect closeAccount.result typename.`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        console.log('Incorrect closeAccount.result typename.')
-      }
+      },
+      onCompleted({ closeAccount }) {
+        if (closeAccount.result.__typename === 'CloseAccountResult') {
+          toast({
+            title: i18n._(t`Account Closed Sussessfully`),
+            description: i18n._(
+              t`Traccer account has been successfully closed.`,
+            ),
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          closeAccountOnClose()
+          history.push('/')
+        } else if (closeAccount.result.__typename === 'CloseAccountError') {
+          toast({
+            title: i18n._(t`Unable to close the account.`),
+            description: closeAccount.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: i18n._(t`Incorrect send method received.`),
+            description: i18n._(t`Incorrect closeAccount.result typename.`),
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect closeAccount.result typename.')
+        }
+      },
     },
-  })
+  )
 
   const {
     isOpen: closeAccountIsOpen,
@@ -239,6 +244,7 @@ export default function UserPage() {
                   },
                 })
               }}
+              isLoading={loadingCloseAccount}
             >
               <Trans>Confirm</Trans>
             </Button>
