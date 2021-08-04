@@ -10,7 +10,7 @@
         "refLinksTechnical": [""]
     },
     "dkim2": {
-        "tagName": "DKIM-missing",
+        "tagName": "Missing",
         "guidance": "Follow implementation guide",
         "refLinksGuide": [
             {
@@ -26,7 +26,7 @@
         ]
     },
     "dkim3": {
-        "tagName": "DKIM-missing-mx-O365",
+        "tagName": "Missing-mx-O365",
         "guidance": "DKIM record missing but MX uses O365.  Follow cloud-specific guidance.",
         "refLinksGuide": [
             {
@@ -42,7 +42,7 @@
         ]
     },
     "dkim4": {
-        "tagName": "DKIM-missing-O365-misconfigured",
+        "tagName": "Missing-O365-misconfigured",
         "guidance": "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365",
         "refLinksGuide": [
             {
@@ -149,7 +149,7 @@
         "refLinksTechnical": [""]
     },
     "dkim11": {
-        "tagName": "DKIM-invalid-crypto",
+        "tagName": "Invalid-crypto",
         "guidance": "DKIM key does not use RSA",
         "refLinksGuide": [
             {
@@ -165,7 +165,7 @@
         ]
     },
     "dkim12": {
-        "tagName": "DKIM-value-invalid",
+        "tagName": "Value-invalid",
         "guidance": "DKIM TXT record invalid",
         "refLinksGuide": [
             {
