@@ -11,7 +11,7 @@
         "refLinksTechnical": [""]
     },
     "ssl2": {
-        "tagName": "SSL-missing",
+        "tagName": "Missing",
         "guidance": "Follow implementation guide",
         "refLinksGuide": [
             {
@@ -27,7 +27,7 @@
         ]
     },
     "ssl3": {
-        "tagName": "SSL-rc4",
+        "tagName": "RC4",
         "guidance": "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18.01",
         "refLinksGuide": [
             {
@@ -43,7 +43,7 @@
         ]
     },
     "ssl4": {
-        "tagName": "SSL-3des",
+        "tagName": "3DES",
         "guidance": "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01",
         "refLinksGuide": [
             {
@@ -59,7 +59,7 @@
         ]
     },
     "ssl5": {
-        "tagName": "SSL-acceptable-certificate",
+        "tagName": "Acceptable-certificate",
         "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
         "refLinksGuide": [
             {
@@ -75,7 +75,7 @@
         ]
     },
     "ssl6": {
-        "tagName": "SSL-invalid-cipher",
+        "tagName": "Invalid-cipher",
         "guidance": "One or more ciphers in use are not compliant with guidelines. A detailed list of ciphers can be found below",
         "refLinksGuide": [
             {
@@ -121,5 +121,16 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
             }
         ]
+    },
+    "ssl9": {
+        "tagName": "Unreachable",
+        "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
+        "refLinksGuide": [
+            {
+                "description": "6.1.1 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "refLinksTechnical": [""]
     }
 }
