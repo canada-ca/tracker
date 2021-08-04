@@ -29,7 +29,7 @@
     },
     "ssl2": {
         "en": {
-            "tagName": "SSL-missing",
+            "tagName": "Missing",
             "guidance": "Follow implementation guide",
             "refLinksGuide": [
                 {
@@ -45,7 +45,7 @@
             ]
         },
         "fr": {
-            "tagName": "SSL-missing",
+            "tagName": "Missing",
             "guidance": "Suivre le guide de mise en œuvre",
             "refLinksGuide": [
                 {
@@ -63,7 +63,7 @@
     },
     "ssl3": {
         "en": {
-            "tagName": "SSL-rc4",
+            "tagName": "RC4",
             "guidance": "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18.01",
             "refLinksGuide": [
                 {
@@ -79,7 +79,7 @@
             ]
         },
         "fr": {
-            "tagName": "SSL-rc4",
+            "tagName": "RC4",
             "guidance": "La liste de chiffrement acceptée contient le chiffrement de flux RC4, interdit par le BOD 18.01",
             "refLinksGuide": [
                 {
@@ -97,7 +97,7 @@
     },
     "ssl4": {
         "en": {
-            "tagName": "SSL-3des",
+            "tagName": "3DES",
             "guidance": "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01",
             "refLinksGuide": [
                 {
@@ -113,7 +113,7 @@
             ]
         },
         "fr": {
-            "tagName": "SSL-3des",
+            "tagName": "3DES",
             "guidance": "La liste de chiffrement acceptée contient le chiffrement par blocs à clé symétrique 3DES, interdit par le BOD 18-01",
             "refLinksGuide": [
                 {
@@ -131,7 +131,7 @@
     },
     "ssl5": {
         "en": {
-            "tagName": "SSL-acceptable-certificate",
+            "tagName": "Acceptable-certificate",
             "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
             "refLinksGuide": [
                 {
@@ -147,7 +147,7 @@
             ]
         },
         "fr": {
-            "tagName": "SSL-acceptable-certificate",
+            "tagName": "Acceptable-certificate",
             "guidance": "Chaîne de certificats signée en utilisant SHA-256/SHA-384/AEAD",
             "refLinksGuide": [
                 {
@@ -165,7 +165,7 @@
     },
     "ssl6": {
         "en": {
-            "tagName": "SSL-invalid-cipher",
+            "tagName": "Invalid-cipher",
             "guidance": "One or more ciphers in use are not compliant with guidelines",
             "refLinksGuide": [
                 {
@@ -181,7 +181,7 @@
             ]
         },
         "fr": {
-            "tagName": "SSL-invalid-cipher",
+            "tagName": "Invalid-cipher",
             "guidance": "Un ou plusieurs chiffrements utilisés ne sont pas conformes aux directives",
             "refLinksGuide": [
                 {
@@ -257,6 +257,30 @@
             "refLinksTechnical": [
                 ""
             ]
+        }
+    },
+    "ssl9": {
+        "en": {
+            "tagName": "Unreachable",
+            "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
+            "refLinksGuide": [
+                {
+                    "description": "6.1.1 Direction",
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                }
+            ],
+            "refLinksTechnical": [""]
+        },
+        "fr": {
+            "tagName": "Unreachable",
+            "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
+            "refLinksGuide": [
+                {
+                    "description": "6.1.1 Direction",
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                }
+            ],
+            "refLinksTechnical": [""]
         }
     }
 }
