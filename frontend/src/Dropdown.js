@@ -1,100 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-import styled from '@emotion/styled'
 import { array, func, string } from 'prop-types'
 import {
-  Stack,
+  Box,
   Text,
   Input,
   InputGroup,
   InputRightElement,
+  Flex,
 } from '@chakra-ui/react'
-
-const Select = styled.div`
-  .dropdown {
-    position: relative;
-    color: #333;
-    cursor: default;
-  }
-
-  .dropdown .arrow {
-    border-color: #999 transparent transparent;
-    border-style: solid;
-    border-width: 5px 5px 0;
-    content: ' ';
-    display: block;
-    height: 0;
-    margin-top: 0.3rem;
-    position: absolute;
-    right: 10px;
-    top: 14px;
-    width: 0;
-  }
-
-  .dropdown .arrow.open {
-    border-color: transparent transparent #999;
-    border-width: 0 5px 5px;
-  }
-
-  .dropdown .selected-value input {
-    line-height: 1.5;
-    font-size: 1rem;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    padding: 8px 52px 8px 10px;
-    transition: all 200ms ease;
-    width: 100%;
-  }
-
-  .dropdown .options {
-    display: none;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
-    box-sizing: border-box;
-    margin-top: -1px;
-    max-height: 200px;
-    overflow-y: auto;
-    position: absolute;
-    top: 100%;
-    width: 100%;
-    z-index: 1000;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .dropdown .options.open {
-    display: block;
-  }
-
-  .dropdown .option {
-    box-sizing: border-box;
-    color: rgba(51, 51, 51, 0.8);
-    cursor: pointer;
-    display: block;
-    padding: 8px 10px;
-  }
-
-  .dropdown .option.selected,
-  .dropdown .option:hover {
-    background-color: #f2f9fc;
-    color: #333;
-  }
-
-  .dropdown .option.selected,
-  .dropdown .option:focus {
-    background-color: #f2f9fc;
-    border: 2px solid blue;
-    color: #222;
-  }
-
-  .dropdown .selected-value input:focus {
-    border: 2px solid blue;
-    color: #222;
-  }
-`
 
 export function Dropdown({
   label,
@@ -178,55 +91,115 @@ export function Dropdown({
   }
 
   return (
-    <Select {...props}>
-      <div className="dropdown" aria-pressed={open} aria-expanded={open}>
-        <div className="selected-value">
-          <label>
-            <Stack flexDirection={['column', labelDirection]} align="center">
-              <Text fontWeight="bold" fontSize="2xl" mr="4" mb="2">
-                {label}
-              </Text>
-              <InputGroup>
-                <Input
-                  w="100%"
-                  mb="2"
-                  ref={inputRef}
-                  type="text"
-                  placeholder={placeholder}
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value)
-                  }}
-                  onClick={close}
-                  onKeyDown={handleInputOnKeyDown}
+    <Box
+      // Parent box
+      {...props}
+      w={{ base: '100%', md: '75%' }}
+      position="relative"
+      color="#333"
+      cursor="default"
+      aria-pressed={open}
+      aria-expanded={open}
+    >
+      <Box
+        // Box containing label and input
+        lineHeight={1.5}
+        fontSize="1rem"
+        boxSizing="border-box"
+        cursor="default"
+        outline="none"
+        transition="all 200ms ease"
+        width="100%"
+        _focus={{
+          border: '2px solid blue',
+          color: '#222',
+        }}
+      >
+        <label>
+          <Flex
+            flexDirection={{ base: 'column', md: labelDirection }}
+            align="center"
+          >
+            <Text fontWeight="bold" fontSize="2xl" mr={{ base: '0', md: '4' }}>
+              {label}
+            </Text>
+            <InputGroup>
+              <Input
+                ref={inputRef}
+                type="text"
+                placeholder={placeholder}
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                }}
+                onClick={close}
+                onKeyDown={handleInputOnKeyDown}
+              />
+              <InputRightElement>
+                <Box
+                  // arrow icon
+                  borderColor={
+                    open
+                      ? 'transparent transparent #999'
+                      : '#999 transparent transparent'
+                  }
+                  borderWidth={open ? '0 5px 5px' : '5px 5px 0'}
+                  borderStyle="solid"
+                  display="block"
+                  marginTop="0.3rem"
+                  position="absolute"
+                  right="10px"
+                  top="14px"
                 />
-                <InputRightElement>
-                  <div className={`arrow ${open ? 'open' : null}`} />
-                </InputRightElement>
-              </InputGroup>
-            </Stack>
-          </label>
-        </div>
-        <div className={`options ${open ? 'open' : null}`}>
-          {filter(options).map((option, idx) => (
-            <div
-              tabIndex={0}
-              key={option.value.id}
-              className="option"
-              onClick={() => {
-                onChange(option)
-                setSearchTerm('')
-                setOpen(false)
-              }}
-              onKeyDown={(e) => handleOptionOnKeyDown(e, option, idx)}
-              ref={setOptRef}
-            >
-              {option.label}
-            </div>
-          ))}
-        </div>
-      </div>
-    </Select>
+              </InputRightElement>
+            </InputGroup>
+          </Flex>
+        </label>
+      </Box>
+      <Box
+        // Box containing list of options
+        display={open ? 'block' : 'none'}
+        bgColor="#fff"
+        border="1px solid #ccc"
+        boxShadow="0 1px 0 rgba(0, 0, 0, 0.06)"
+        boxSizing="border-box"
+        marginTop="2px"
+        maxH="200px"
+        overflowY="auto"
+        position="absolute"
+        top="100%"
+        width="100%"
+        zIndex={1000}
+      >
+        {filter(options).map((option, idx) => (
+          <Box
+            // Box containing individual options
+            tabIndex={0}
+            key={option.value.id}
+            boxSizing="border-box"
+            color="rgba(51, 51, 51, 0.8)"
+            cursor="pointer"
+            display="block"
+            padding="8px 10px"
+            _hover={{ bgColor: '#f2f9fc', color: '#333' }}
+            _focus={{
+              bgColor: '#f2f9fc',
+              border: '2px solid blue',
+              color: '#222',
+            }}
+            onClick={() => {
+              onChange(option)
+              setSearchTerm('')
+              setOpen(false)
+            }}
+            onKeyDown={(e) => handleOptionOnKeyDown(e, option, idx)}
+            ref={setOptRef}
+          >
+            {option.label}
+          </Box>
+        ))}
+      </Box>
+    </Box>
   )
 }
 
