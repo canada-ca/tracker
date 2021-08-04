@@ -11,7 +11,7 @@
     "refLinksTechnical": [""]
     },
     "dmarc2": {
-        "tagName": "DMARC-missing",
+        "tagName": "Missing",
         "guidance": "No DMARC record for header-from domain",
         "refLinksGuide": [
             {
@@ -347,7 +347,7 @@
         ]
     },
     "dmarc23": {
-        "tagName": "DMARC-valid",
+        "tagName": "Valid",
         "guidance": "DMARC record is properly formed",
         "refLinksGuide": [
             {
