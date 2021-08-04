@@ -28,7 +28,7 @@
     },
     "dmarc2": {
         "en": {
-            "tagName": "DMARC-missing",
+            "tagName": "Missing",
             "guidance": "No DMARC record for header-from domain",
             "refLinksGuide": [
                 {
@@ -44,7 +44,7 @@
             ]
         },
         "fr": {
-            "tagName": "DMARC-missing",
+            "tagName": "Missing",
             "guidance": "Pas d'enregistrement DMARC pour le domaine \"header-from\".",
             "refLinksGuide": [
                 {
@@ -742,7 +742,7 @@
     },
     "dmarc23": {
         "en": {
-            "tagName": "DMARC-valid",
+            "tagName": "Valid",
             "guidance": "DMARC record is properly formed",
             "refLinksGuide": [
                 {
@@ -758,7 +758,7 @@
             ]
         },
         "fr": {
-            "tagName": "DMARC-valid",
+            "tagName": "Valid",
             "guidance": "L'enregistrement DMARC est correctement formé",
             "refLinksGuide": [
                 {
