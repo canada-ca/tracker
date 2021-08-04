@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { array, func, string } from 'prop-types'
 import {
   Box,
-  Stack,
   Text,
   Input,
   InputGroup,
