@@ -59,9 +59,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   const [debouncedSearchUser, setDebouncedSearchUser] = useState('')
 
-  // const isSuperAdminInSuperAdminOrg =
-  //   permission === 'SUPER_ADMIN' && orgSlug === 'super-admin'
-
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchUser(addedUserName)
   }, [addedUserName])

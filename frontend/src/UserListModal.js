@@ -1,13 +1,8 @@
 import React, { useRef } from 'react'
 import {
   Button,
-  Divider,
-  // FormControl,
-  // FormErrorMessage,
   FormLabel,
-  // Grid,
-  // IconButton,
-  // Input,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,20 +11,24 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text,
   useToast,
   Select,
+  FormControl,
+  FormErrorMessage,
+  Text,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { bool, func, object, string } from 'prop-types'
-import { Formik } from 'formik'
+import { Field, Formik } from 'formik'
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
+import { useLingui } from '@lingui/react'
+import { fieldRequirements } from './fieldRequirements'
+import { object as yupObject, string as yupString } from 'yup'
 
 export function UserListModal({
   isOpen,
   onClose,
-  validationSchema,
   orgId,
   editingUserRole,
   editingUserName,
@@ -39,6 +38,7 @@ export function UserListModal({
 }) {
   const toast = useToast()
   const initialFocusRef = useRef()
+  const { i18n } = useLingui()
 
   const [addUser, { loading: _addUserLoading }] = useMutation(
     INVITE_USER_TO_ORG,
@@ -154,7 +154,11 @@ export function UserListModal({
             role: editingUserRole,
             userName: editingUserName,
           }}
-          validationSchema={validationSchema}
+          validationSchema={yupObject().shape({
+            userName: yupString()
+              .required(i18n._(fieldRequirements.email.required.message))
+              .email(i18n._(fieldRequirements.email.email.message)),
+          })}
           onSubmit={async (values) => {
             // Submit update role mutation
             if (mutation === 'update') {
@@ -180,20 +184,47 @@ export function UserListModal({
           {({ handleSubmit, handleChange, isSubmitting }) => (
             <form id="form" onSubmit={handleSubmit}>
               <ModalHeader>
-                <Stack isInline align="center">
-                  <Trans>Edit Role</Trans>
-                </Stack>
+                {mutation === 'update' ? (
+                  <Trans>Edit User</Trans>
+                ) : (
+                  <Trans>Add User</Trans>
+                )}
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Stack isInline align="center">
-                  <Text fontWeight="bold">
-                    <Trans>User:</Trans>
-                  </Text>
-                  <Text>{editingUserName}</Text>
-                </Stack>
-
-                <Divider />
+                {mutation === 'update' ? (
+                  <Stack isInline align="center" mb="2">
+                    <Text fontWeight="bold">
+                      <Trans>User: </Trans>
+                    </Text>
+                    <Text>{editingUserName}</Text>
+                  </Stack>
+                ) : (
+                  <Field id="userName" name="userName">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.userName && form.touched.userName
+                        }
+                      >
+                        <FormLabel htmlFor="userName" fontWeight="bold">
+                          <Trans>User:</Trans>
+                        </FormLabel>
+                        <Input
+                          mb="2"
+                          {...field}
+                          type="email"
+                          id="userName"
+                          placeholder={i18n._(t`user email`)}
+                          ref={initialFocusRef}
+                        />
+                        <FormErrorMessage>
+                          {form.errors.userName}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+                )}
                 <Stack isInline align="center">
                   <FormLabel htmlFor="role_select" fontWeight="bold">
                     <Trans>Role:</Trans>
