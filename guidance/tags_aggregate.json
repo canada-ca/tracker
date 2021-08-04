@@ -1,7 +1,7 @@
 {
     "agg1": {
         "en": {
-            "tagName": "agg-spf-no-record",
+            "tagName": "SPF-no-record",
             "guidance": "No SPF record for envelope-from domain",
             "refLinksGuide": [
                 {
@@ -17,7 +17,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-spf-no-record",
+            "tagName": "SPF-no-record",
             "guidance": "Pas d'enregistrement SPF pour le domaine \"envelope-from\"",
             "refLinksGuide": [
                 {
@@ -35,7 +35,7 @@
     },
     "agg2": {
         "en": {
-            "tagName": "agg-spf-invalid",
+            "tagName": "SPF-invalid",
             "guidance": "SPF record is invalid",
             "refLinksGuide": [
                 {
@@ -51,7 +51,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-spf-invalid",
+            "tagName": "SPF-invalid",
             "guidance": "L'enregistrement SPF n'est pas valide",
             "refLinksGuide": [
                 {
@@ -69,7 +69,7 @@
     },
     "agg3": {
         "en": {
-            "tagName": "agg-spf-failed",
+            "tagName": "SPF-failed",
             "guidance": "IP address not authorized for envelope-from or header-from domain",
             "refLinksGuide": [
                 {
@@ -85,7 +85,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-spf-failed",
+            "tagName": "SPF-failed",
             "guidance": "Adresse IP non autorisée pour le domaine \"envelope-from\" ou \"header-from\"",
             "refLinksGuide": [
                 {
@@ -103,7 +103,7 @@
     },
     "agg4": {
         "en": {
-            "tagName": "agg-spf-mismatch",
+            "tagName": "SPF-mismatch",
             "guidance": "Header-from and envelope-from are different public domains",
             "refLinksGuide": [
                 {
@@ -119,7 +119,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-spf-mismatch",
+            "tagName": "SPF-mismatch",
             "guidance": "\"Header-from\" et \"envelope-from\" sont des domaines publics différents",
             "refLinksGuide": [
                 {
@@ -137,7 +137,7 @@
     },
     "agg5": {
         "en": {
-            "tagName": "agg-spf-strict",
+            "tagName": "SPF-strict",
             "guidance": "Header-from and envelope-from domains are not strictly aligned",
             "refLinksGuide": [
                 {
@@ -153,7 +153,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-spf-strict",
+            "tagName": "SPF-strict",
             "guidance": "Les domaines \"Header-from\" et \"envelope-from\" ne sont pas strictement alignés",
             "refLinksGuide": [
                 {
@@ -171,7 +171,7 @@
     },
     "agg6": {
         "en": {
-            "tagName": "agg-dkim-unsigned",
+            "tagName": "DKIM-unsigned",
             "guidance": "No DKIM signature was applied",
             "refLinksGuide": [
                 {
@@ -187,7 +187,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-dkim-unsigned",
+            "tagName": "DKIM-unsigned",
             "guidance": "Aucune signature DKIM n'a été appliquée",
             "refLinksGuide": [
                 {
@@ -205,7 +205,7 @@
     },
     "agg7": {
         "en": {
-            "tagName": "agg-dkim-invalid",
+            "tagName": "DKIM-invalid",
             "guidance": "DKIM record is invalid",
             "refLinksGuide": [
                 {
@@ -221,7 +221,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-dkim-invalid",
+            "tagName": "DKIM-invalid",
             "guidance": "L'enregistrement DKIM est invalide",
             "refLinksGuide": [
                 {
@@ -239,7 +239,7 @@
     },
     "agg8": {
         "en": {
-            "tagName": "agg-dkim-failed",
+            "tagName": "DKIM-failed",
             "guidance": "DKIM signature verification failed",
             "refLinksGuide": [
                 {
@@ -255,7 +255,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-dkim-failed",
+            "tagName": "DKIM-failed",
             "guidance": "La vérification de la signature DKIM a échoué",
             "refLinksGuide": [
                 {
@@ -273,7 +273,7 @@
     },
     "agg9": {
         "en": {
-            "tagName": "agg-dkim-mismatch",
+            "tagName": "DKIM-mismatch",
             "guidance": "DKIM header and envelope-from are different public domains",
             "refLinksGuide": [
                 {
@@ -289,7 +289,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-dkim-mismatch",
+            "tagName": "DKIM-mismatch",
             "guidance": "DKIM \"header-from\" et \"envelope-from\" sont des domaines publics différents",
             "refLinksGuide": [
                 {
@@ -307,7 +307,7 @@
     },
     "agg10": {
         "en": {
-            "tagName": "agg-dkim-strict",
+            "tagName": "DKIM-strict",
             "guidance": "DKIM header and envelope-from are not strictly aligned",
             "refLinksGuide": [
                 {
@@ -323,7 +323,7 @@
             ]
         },
         "fr": {
-            "tagName": "agg-dkim-strict",
+            "tagName": "DKIM-strict",
             "guidance": "DKIM \"header-from\" et \"envelope-from\" ne sont pas strictement alignés",
             "refLinksGuide": [
                 {
