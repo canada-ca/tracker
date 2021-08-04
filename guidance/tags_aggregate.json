@@ -1,6 +1,6 @@
 {
     "agg1": {
-        "tagName": "agg-spf-no-record",
+        "tagName": "SPF-no-record",
         "guidance": "No SPF record for envelope-from domain",
         "refLinksGuide": [
             {
@@ -16,7 +16,7 @@
         ]
     },
     "agg2": {
-        "tagName": "agg-spf-invalid",
+        "tagName": "SPF-invalid",
         "guidance": "SPF record is invalid",
         "refLinksGuide": [
             {
@@ -32,7 +32,7 @@
         ]
     },
     "agg3": {
-        "tagName": "agg-spf-failed",
+        "tagName": "SPF-failed",
         "guidance": "IP address not authorized for envelope-from or header-from domain",
         "refLinksGuide": [
             {
@@ -48,7 +48,7 @@
         ]
     },
     "agg4": {
-        "tagName": "agg-spf-mismatch",
+        "tagName": "SPF-mismatch",
         "guidance": "Header-from and envelope-from are different public domains",
         "refLinksGuide": [
             {
@@ -64,7 +64,7 @@
         ]
     },
     "agg5": {
-        "tagName": "agg-spf-strict",
+        "tagName": "SPF-strict",
         "guidance": "Header-from and envelope-from domains are not strictly aligned",
         "refLinksGuide": [
             {
@@ -80,7 +80,7 @@
         ]
     },
     "agg6": {
-        "tagName": "agg-dkim-unsigned",
+        "tagName": "DKIM-unsigned",
         "guidance": "No DKIM signature was applied",
         "refLinksGuide": [
             {
@@ -96,7 +96,7 @@
         ]
     },
     "agg7": {
-        "tagName": "agg-dkim-invalid",
+        "tagName": "DKIM-invalid",
         "guidance": "DKIM record is invalid",
         "refLinksGuide": [
             {
@@ -112,7 +112,7 @@
         ]
     },
     "agg8": {
-        "tagName": "agg-dkim-failed",
+        "tagName": "DKIM-failed",
         "guidance": "DKIM signature verification failed",
         "refLinksGuide": [
             {
@@ -128,7 +128,7 @@
         ]
     },
     "agg9": {
-        "tagName": "agg-dkim-mismatch",
+        "tagName": "DKIM-mismatch",
         "guidance": "DKIM header and envelope-from are different public domains",
         "refLinksGuide": [
             {
@@ -144,7 +144,7 @@
         ]
     },
     "agg10": {
-        "tagName": "agg-dkim-strict",
+        "tagName": "DKIM-strict",
         "guidance": "DKIM header and envelope-from are not strictly aligned",
         "refLinksGuide": [
             {
