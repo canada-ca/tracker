@@ -12,7 +12,6 @@ import datetime as dt
 import subprocess
 from ctypes import c_char_p
 from concurrent.futures import TimeoutError
-from scan import https
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import Response
