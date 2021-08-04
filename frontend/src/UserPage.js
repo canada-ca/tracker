@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
@@ -30,6 +31,10 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import EditableUserTFAMethod from './EditableUserTFAMethod'
 import EditableUserPhoneNumber from './EditableUserPhoneNumber'
 import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT } from './graphql/mutations'
+import { Formik } from 'formik'
+import FormField from './FormField'
+import { object, string as yupString } from 'yup'
+import { fieldRequirements } from './fieldRequirements'
 
 export default function UserPage() {
   const toast = useToast()
@@ -149,6 +154,12 @@ export default function UserPage() {
     phoneValidated,
   } = queryUserData?.userPage
 
+  const closeAccountValidationSchema = object().shape({
+    userNameConfirm: yupString()
+      .required(i18n._(fieldRequirements.field.required.message))
+      .matches(userName, t`User email does not match.`),
+  })
+
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} width="100%">
       <Stack py={25} px="4">
@@ -212,44 +223,73 @@ export default function UserPage() {
         onClose={closeAccountOnClose}
         motionPreset="slideInBottom"
       >
-        <ModalOverlay />
-        <ModalContent pb={4}>
-          <ModalHeader>
-            <Trans>Close Account</Trans>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Trans>
-              This action CANNOT be reversed, are you sure you wish to to close
-              the account {displayName}?
-            </Trans>
-          </ModalBody>
+        <Formik
+          validateOnBlur={false}
+          initialValues={{
+            userNameConfirm: '',
+          }}
+          initialTouched={{
+            userNameConfirm: true,
+          }}
+          validationSchema={closeAccountValidationSchema}
+          onSubmit={async () => {
+            await closeAccount({
+              variables: {
+                userId: id,
+              },
+            })
+          }}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <ModalOverlay />
+              <ModalContent pb={4}>
+                <ModalHeader>
+                  <Trans>Close Account</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Trans>
+                    This action CANNOT be reversed, are you sure you wish to to
+                    close the account {displayName}?
+                  </Trans>
 
-          <ModalFooter>
-            <Button
-              variant="primaryOutline"
-              mr="4"
-              onClick={closeAccountOnClose}
-            >
-              <Trans>Cancel</Trans>
-            </Button>
+                  <Text mb="1rem">
+                    <Trans>
+                      Enter "{userName}" below to confirm removal. This field is
+                      case-sensitive.
+                    </Trans>
+                  </Text>
 
-            <Button
-              variant="primary"
-              mr="4"
-              onClick={async () => {
-                await closeAccount({
-                  variables: {
-                    userId: id,
-                  },
-                })
-              }}
-              isLoading={loadingCloseAccount}
-            >
-              <Trans>Confirm</Trans>
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+                  <FormField
+                    name="userNameConfirm"
+                    label={t`User Email`}
+                    placeholder={userName}
+                  />
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button
+                    variant="primaryOutline"
+                    mr="4"
+                    onClick={closeAccountOnClose}
+                  >
+                    <Trans>Cancel</Trans>
+                  </Button>
+
+                  <Button
+                    variant="primary"
+                    mr="4"
+                    type="submit"
+                    isLoading={loadingCloseAccount}
+                  >
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </form>
+          )}
+        </Formik>
       </Modal>
     </SimpleGrid>
   )
