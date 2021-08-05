@@ -22,19 +22,16 @@ export function LandingPage() {
             fontWeight="semibold"
             color="white"
           >
-            <Trans>Tracker 2.0</Trans>
+            <Trans>Track Digital Security</Trans>
           </Text>
           <Divider borderColor="accent" my={2} borderTopWidth="2" w="20%" />
           <Text color="white" fontSize={{ base: 'sm', lg: 'lg', xl: 'xl' }}>
             <Trans>
-              The Government of Canada is committed to providing secure and
-              accessible digital services to Canadians. Tracker improves on its
-              predecessor by increasing its scanning accuracy for web security
-              and HTTPS compliance, and by providing tailored feedback for each
-              domain. Email security is an integral part of enabling secure
-              digital services and has been built into Tracker to provide
-              in-depth DMARC compliance reporting. Track how the Government of
-              Canada’s digital services are becoming more secure.
+              Canadians rely on the Government of Canada to provide secure
+              digital services. The Policy on Service and Digital guides
+              government online services to adopt good security practices for
+              email and web services. Track how government sites are becoming
+              more secure.
             </Trans>
           </Text>
         </Box>
