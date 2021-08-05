@@ -26,7 +26,7 @@ DEST_URL = lambda ots : OTS_QUEUE_URL if ots else QUEUE_URL
 
 
 def dispatch_results(payload, client, ots):
-    client.post(DEST_URL(ots) + "/dns", json=json.dumps(payload))
+    client.post(DEST_URL(ots) + "/dns", json=payload)
     logging.info("Scan results dispatched to result queue")
 
 
