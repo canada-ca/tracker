@@ -14,7 +14,7 @@ export function LandingPage() {
         bg="primary"
         height="fit-content"
         templateAreas={{ sm: 'welcome', md: 'welcome logo' }}
-        templateColumns={{ sm: '1fr', md: '1fr 1fr' }}
+        templateColumns={{ sm: '1fr', md: '4fr 3fr' }}
       >
         <Box mx="10" my="10">
           <Text
@@ -48,8 +48,8 @@ export function LandingPage() {
             p="2em"
             src={trackerLogo}
             alt={'Tracker Logo'}
-            width="auto"
-            height={{ md: '80%', lg: '87%' }}
+            width={{ md: '80%', lg: '87%' }}
+            height="auto"
             alignSelf="center"
           />
         </Box>
