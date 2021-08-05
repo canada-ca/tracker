@@ -193,13 +193,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           updateOnOpen()
         }}
       >
-        <Stack
-          align="center"
-          w="100%"
-          flexDirection={{ base: 'column', md: 'row' }}
-          isInline
-          mb="2"
-        >
+        <Flex align="center" flexDirection={{ base: 'column', md: 'row' }}>
           <Text
             as="label"
             htmlFor="Search-for-user-field"
@@ -210,7 +204,11 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           >
             <Trans>Search: </Trans>
           </Text>
-          <InputGroup flexGrow={1} w="50%">
+          <InputGroup
+            width={{ base: '100%', md: '75%' }}
+            mb={{ base: '8px', md: '0' }}
+            mr={{ base: '0', md: '4' }}
+          >
             <InputLeftElement aria-hidden="true">
               <EmailIcon color="gray.300" />
             </InputLeftElement>
@@ -230,7 +228,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             <AddIcon mr={2} aria-hidden="true" />
             <Trans>Invite User</Trans>
           </Button>
-        </Stack>
+        </Flex>
       </form>
 
       {userList}
