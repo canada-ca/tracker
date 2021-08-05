@@ -41,10 +41,7 @@ export const verifyAccount = new mutationWithClientMutationId({
     const tokenParameters = verifyToken({ token: verifyTokenString })
 
     // Check to see if userKey exists in tokenParameters
-    if (
-      tokenParameters.userKey === 'undefined' ||
-      typeof tokenParameters.userKey === 'undefined'
-    ) {
+    if (!tokenParameters?.userKey) {
       console.warn(
         `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
       )

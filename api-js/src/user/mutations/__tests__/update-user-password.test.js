@@ -20,111 +20,115 @@ const mockNotfiy = jest.fn()
 
 describe('authenticate user account', () => {
   let query, drop, truncate, schema, i18n, user, collections, transaction
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-  const consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            result {
-              ... on AuthResult {
-                user {
-                  id
+  afterEach(() => {
+    consoleOutput.length = 0
+  })
+
+  describe('given a successful update', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      await graphql(
+        schema,
+        `
+          mutation {
+            signUp(
+              input: {
+                displayName: "Test Account"
+                userName: "test.account@istio.actually.exists"
+                password: "testpassword123"
+                confirmPassword: "testpassword123"
+                preferredLang: FRENCH
+              }
+            ) {
+              result {
+                ... on AuthResult {
+                  user {
+                    id
+                  }
                 }
               }
             }
           }
-        }
-      `,
-      null,
-      {
-        query,
-        collections,
-        transaction,
-        jwt,
-        uuidv4,
-        auth: {
-          bcrypt,
-          tokenize,
+        `,
+        null,
+        {
+          query,
+          collections,
+          transaction,
+          jwt,
+          uuidv4,
+          auth: {
+            bcrypt,
+            tokenize,
+          },
+          validators: {
+            cleanseInput,
+          },
+          loaders: {
+            loadUserByUserName: loadUserByUserName({ query }),
+          },
+          notify: {
+            sendVerificationEmail: jest.fn(),
+          },
+          request: {
+            protocol: 'https',
+            get: (text) => text,
+          },
         },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          loadUserByUserName: loadUserByUserName({ query }),
-        },
-        notify: {
-          sendVerificationEmail: jest.fn(),
-        },
-        request: {
-          protocol: 'https',
-          get: (text) => text,
-        },
-      },
-    )
-    const userCursor = await query`
-      FOR user IN users
-        FILTER user.userName == "test.account@istio.actually.exists"
-        UPDATE { _key: user._key, tfaSendMethod: 'email' } IN users
-        RETURN user
-    `
-    user = await userCursor.next()
-    consoleOutput.length = 0
-  })
-  afterEach(async () => {
-    consoleOutput.length = 0
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
-  })
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
+      )
+      const userCursor = await query`
+        FOR user IN users
+          FILTER user.userName == "test.account@istio.actually.exists"
+          UPDATE { _key: user._key, tfaSendMethod: 'email' } IN users
+          RETURN user
+      `
+      user = await userCursor.next()
     })
-    describe('given successful update of users password', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       it('returns a successful status message', async () => {
         const response = await graphql(
           schema,
@@ -248,372 +252,21 @@ describe('authenticate user account', () => {
         ])
       })
     })
-    describe('given unsuccessful update of users password', () => {
-      describe('the current password does not match the password in the database', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "randompassword"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "newtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
-                    }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserPassword: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to update password, current password does not match. Please try again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`,
-          ])
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('the new password does not match the new password confirmation', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "oldtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
-                    }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserPassword: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to update password, new passwords do not match. Please try again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
-          ])
-        })
-      })
-      describe('the new password does not meet GoC requirements', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "password"
-                    updatedPasswordConfirm: "password"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
-                    }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserPassword: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to update password, passwords do not match requirements. Please try again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`,
-          ])
-        })
-      })
-      describe('transaction step error occurs', () => {
-        describe('when updating password', () => {
-          it('returns an error message', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  updateUserPassword(
-                    input: {
-                      currentPassword: "testpassword123"
-                      updatedPassword: "newtestpassword123"
-                      updatedPasswordConfirm: "newtestpassword123"
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserPasswordResultType {
-                        status
-                      }
-                      ... on UpdateUserPasswordError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to update password. Please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: ${user._key} attempted to update their password: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when updating password', () => {
-          it('returns an error message', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  updateUserPassword(
-                    input: {
-                      currentPassword: "testpassword123"
-                      updatedPassword: "newtestpassword123"
-                      updatedPasswordConfirm: "newtestpassword123"
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserPasswordResultType {
-                        status
-                      }
-                      ... on UpdateUserPasswordError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to update password. Please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error ocurred when user: ${user._key} attempted to update their password: Error: Transaction commit error`,
-            ])
-          })
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given successful update of users password', () => {
       it('returns a successful status message', async () => {
         const response = await graphql(
           schema,
@@ -737,7 +390,23 @@ describe('authenticate user account', () => {
         ])
       })
     })
-    describe('given unsuccessful update of users password', () => {
+  })
+  describe('given an unsuccessful update', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('the current password does not match the password in the database', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -769,21 +438,18 @@ describe('authenticate user account', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                bcrypt,
+                bcrypt: {
+                  compareSync: jest.fn().mockReturnValue(false),
+                },
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
                 }),
               },
               validators: {
                 cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -794,7 +460,7 @@ describe('authenticate user account', () => {
                 result: {
                   code: 400,
                   description:
-                    'Impossible de mettre à jour le mot de passe, le mot de passe actuel ne correspond pas. Veuillez réessayer.',
+                    'Unable to update password, current password does not match. Please try again.',
                 },
               },
             },
@@ -802,7 +468,7 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`,
+            `User: 123 attempted to update their password, however they did not enter the current password correctly.`,
           ])
         })
       })
@@ -837,21 +503,18 @@ describe('authenticate user account', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                bcrypt,
+                bcrypt: {
+                  compareSync: jest.fn().mockReturnValue(true),
+                },
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
                 }),
               },
               validators: {
                 cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -862,7 +525,7 @@ describe('authenticate user account', () => {
                 result: {
                   code: 400,
                   description:
-                    'Impossible de mettre à jour le mot de passe, les nouveaux mots de passe ne correspondent pas. Veuillez réessayer.',
+                    'Unable to update password, new passwords do not match. Please try again.',
                 },
               },
             },
@@ -870,7 +533,7 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
+            `User: 123 attempted to update their password, however the new passwords do not match.`,
           ])
         })
       })
@@ -905,21 +568,358 @@ describe('authenticate user account', () => {
               query,
               collections,
               transaction,
-              userKey: user._key,
+              userKey: 123,
               auth: {
-                bcrypt,
+                bcrypt: {
+                  compareSync: jest.fn().mockReturnValue(true),
+                },
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
                 }),
               },
               validators: {
                 cleanseInput,
               },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+            },
+          )
+
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to update password, passwords do not match requirements. Please try again.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to update their password, however the new password does not meet GoC requirements.`,
+          ])
+        })
+      })
+      describe('transaction step error occurs', () => {
+        describe('when updating password', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserPassword(
+                    input: {
+                      currentPassword: "testpassword123"
+                      updatedPassword: "newtestpassword123"
+                      updatedPasswordConfirm: "newtestpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserPasswordResultType {
+                        status
+                      }
+                      ... on UpdateUserPasswordError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
+                }),
+                userKey: 123,
+                auth: {
+                  bcrypt: {
+                    compareSync: jest.fn().mockReturnValue(true),
+                    hashSync: jest.fn().mockReturnValue('password'),
+                  },
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update password. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: 123 attempted to update their password: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when updating password', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserPassword(
+                    input: {
+                      currentPassword: "testpassword123"
+                      updatedPassword: "newtestpassword123"
+                      updatedPasswordConfirm: "newtestpassword123"
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserPasswordResultType {
+                        status
+                      }
+                      ... on UpdateUserPasswordError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
+                }),
+                userKey: 123,
+                auth: {
+                  bcrypt: {
+                    compareSync: jest.fn().mockReturnValue(true),
+                    hashSync: jest.fn().mockReturnValue('password'),
+                  },
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update password. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error ocurred when user: 123 attempted to update their password: Error: Transaction commit error`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('the current password does not match the password in the database', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "randompassword"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                bcrypt: {
+                  compareSync: jest.fn().mockReturnValue(false),
+                },
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                }),
+              },
+              validators: {
+                cleanseInput,
+              },
+            },
+          )
+
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Impossible de mettre à jour le mot de passe, le mot de passe actuel ne correspond pas. Veuillez réessayer.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to update their password, however they did not enter the current password correctly.`,
+          ])
+        })
+      })
+      describe('the new password does not match the new password confirmation', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "oldtestpassword123"
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                bcrypt: {
+                  compareSync: jest.fn().mockReturnValue(true),
+                },
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                }),
+              },
+              validators: {
+                cleanseInput,
+              },
+            },
+          )
+
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Impossible de mettre à jour le mot de passe, les nouveaux mots de passe ne correspondent pas. Veuillez réessayer.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to update their password, however the new passwords do not match.`,
+          ])
+        })
+      })
+      describe('the new password does not meet GoC requirements', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "testpassword123"
+                    updatedPassword: "password"
+                    updatedPasswordConfirm: "password"
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: 123,
+              auth: {
+                bcrypt: {
+                  compareSync: jest.fn().mockReturnValue(true),
+                },
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                }),
+              },
+              validators: {
+                cleanseInput,
               },
             },
           )
@@ -938,22 +938,13 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`,
+            `User: 123 attempted to update their password, however the new password does not meet GoC requirements.`,
           ])
         })
       })
       describe('transaction step error occurs', () => {
         describe('when updating password', () => {
           it('returns an error message', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
-            })
-
             const response = await graphql(
               schema,
               `
@@ -982,22 +973,24 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
+                }),
+                userKey: 123,
                 auth: {
-                  bcrypt,
+                  bcrypt: {
+                    compareSync: jest.fn().mockReturnValue(true),
+                    hashSync: jest.fn().mockReturnValue('password'),
+                  },
                   tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
                   }),
                 },
                 validators: {
                   cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
                 },
               },
             )
@@ -1010,7 +1003,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: ${user._key} attempted to update their password: Error: Transaction step error`,
+              `Trx step error ocurred when user: 123 attempted to update their password: Error: Transaction step error`,
             ])
           })
         })
@@ -1018,16 +1011,6 @@ describe('authenticate user account', () => {
       describe('transaction commit error occurs', () => {
         describe('when updating password', () => {
           it('returns an error message', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
-            })
-
             const response = await graphql(
               schema,
               `
@@ -1056,22 +1039,25 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
+                }),
+                userKey: 123,
                 auth: {
-                  bcrypt,
+                  bcrypt: {
+                    compareSync: jest.fn().mockReturnValue(true),
+                    hashSync: jest.fn().mockReturnValue('password'),
+                  },
                   tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
                   }),
                 },
                 validators: {
                   cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
                 },
               },
             )
@@ -1084,7 +1070,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error ocurred when user: ${user._key} attempted to update their password: Error: Transaction commit error`,
+              `Trx commit error ocurred when user: 123 attempted to update their password: Error: Transaction commit error`,
             ])
           })
         })

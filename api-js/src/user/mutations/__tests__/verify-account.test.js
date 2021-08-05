@@ -14,19 +14,16 @@ import { loadUserByKey } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('user send password reset email', () => {
-  const originalInfo = console.info
-  afterEach(() => (console.info = originalInfo))
-
   let query, drop, truncate, collections, transaction, schema, request, i18n
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
 
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  beforeAll(() => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
@@ -36,42 +33,41 @@ describe('user send password reset email', () => {
       get: (text) => text,
     }
   })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(() => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
-  afterEach(async () => {
-    await truncate()
-    consoleOutput = []
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
+  describe('given a successful validation', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-    describe('given successful validation', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       beforeEach(async () => {
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
@@ -208,479 +204,21 @@ describe('user send password reset email', () => {
         expect(user.emailValidated).toEqual(true)
       })
     })
-    describe('given an unsuccessful validation', () => {
-      describe('user cannot be found in db', () => {
-        it('returns an error message', async () => {
-          const token = tokenize({
-            parameters: { userKey: 1 },
-          })
-          const response = await graphql(
-            schema,
-            `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: 1,
-              query,
-              collections,
-              transaction,
-              auth: {
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyAccount: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to verify account. Please request a new email.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to verify account, however no account is associated with this id.`,
-          ])
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('userKey cannot be found in token parameters', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
-        it('returns an error message', async () => {
-          const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-          const user = await cursor.next()
-
-          const token = tokenize({
-            parameters: {},
-          })
-
-          const response = await graphql(
-            schema,
-            `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: user._key,
-              query,
-              collections,
-              transaction,
-              auth: {
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyAccount: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to verify account. Please request a new email.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
-          ])
-        })
-      })
-      describe('userKey in token is undefined', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
-        it('returns an error message', async () => {
-          const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-          const user = await cursor.next()
-
-          const token = tokenize({
-            parameters: { userKey: undefined },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: user._key,
-              query,
-              collections,
-              transaction,
-              auth: {
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyAccount: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to verify account. Please request a new email.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
-          ])
-        })
-      })
-      describe('userKey in token does not match users key in db', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
-        it('returns an error message', async () => {
-          const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-          const user = await cursor.next()
-
-          const token = tokenize({
-            parameters: { userKey: 1 },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-            null,
-            {
-              i18n,
-              request,
-              userKey: user._key,
-              query,
-              collections,
-              transaction,
-              auth: {
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyAccount: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to verify account. Please request a new email.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to verify account, however no account is associated with this id.`,
-          ])
-        })
-      })
-      describe('transaction step error occurs', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
-        describe('when upserting validation', () => {
-          it('throws an error', async () => {
-            const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-            const user = await cursor.next()
-
-            const token = tokenize({
-              parameters: { userKey: user._key },
-            })
-
-            const loader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction step error occurred.'),
-                ),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                request,
-                userKey: user._key,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                auth: {
-                  verifyToken: verifyToken({}),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: loader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to verify account. Please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
-        describe('when upserting validation', () => {
-          it('throws an error', async () => {
-            const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-            const user = await cursor.next()
-
-            const token = tokenize({
-              parameters: { userKey: user._key },
-            })
-
-            const loader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction step error occurred.'),
-                ),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    result {
-                      ... on VerifyAccountResult {
-                        status
-                      }
-                      ... on VerifyAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                request,
-                userKey: user._key,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                auth: {
-                  verifyToken: verifyToken({}),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByKey: loader,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to verify account. Please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
-            ])
-          })
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given successful validation', () => {
       beforeEach(async () => {
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
@@ -818,7 +356,161 @@ describe('user send password reset email', () => {
         expect(user.emailValidated).toEqual(true)
       })
     })
-    describe('given an unsuccessful validation', () => {
+  })
+  describe('given an unsuccessful validation', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('userKey cannot be found in token parameters', () => {
+        it('returns an error message', async () => {
+          const token = tokenize({
+            parameters: {},
+          })
+
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  verifyAccount(input: { verifyTokenString: "${token}" }) {
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request,
+              userKey: 123,
+              query,
+              collections,
+              transaction,
+              auth: {
+                verifyToken: verifyToken({}),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                    displayName: 'Test Account',
+                    preferredLang: 'english',
+                    tfaValidated: false,
+                    emailValidated: false,
+                  }),
+                },
+              },
+            },
+          )
+
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to verify account. Please request a new email.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
+          ])
+        })
+      })
+      describe('userKey in token is undefined', () => {
+        it('returns an error message', async () => {
+          const token = tokenize({
+            parameters: { userKey: undefined },
+          })
+
+          const response = await graphql(
+            schema,
+            `
+                mutation {
+                  verifyAccount(input: { verifyTokenString: "${token}" }) {
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+            null,
+            {
+              i18n,
+              request,
+              userKey: 123,
+              query,
+              collections,
+              transaction,
+              auth: {
+                verifyToken: verifyToken({}),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                    displayName: 'Test Account',
+                    preferredLang: 'english',
+                    tfaValidated: false,
+                    emailValidated: false,
+                  }),
+                },
+              },
+            },
+          )
+
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to verify account. Please request a new email.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `When validating account, user attempted to verify account, but userKey is not located in the token parameters.`,
+          ])
+        })
+      })
       describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
           const token = tokenize({
@@ -856,7 +548,9 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -867,7 +561,7 @@ describe('user send password reset email', () => {
                 result: {
                   code: 400,
                   description:
-                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
+                    'Unable to verify account. Please request a new email.',
                 },
               },
             },
@@ -879,24 +573,165 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('userKey cannot be found in token parameters', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
+      describe('transaction step error occurs', () => {
+        describe('when upserting validation', () => {
+          it('throws an error', async () => {
+            const token = tokenize({
+              parameters: { userKey: 123 },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyAccount(input: { verifyTokenString: "${token}" }) {
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                userKey: 123,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(
+                      new Error('Transaction step error occurred.'),
+                    ),
+                }),
+                auth: {
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      preferredLang: 'english',
+                      tfaValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to verify account. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when upserting email validation for user: 123: Error: Transaction step error occurred.`,
+            ])
           })
         })
-        it('returns an error message', async () => {
-          const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-          const user = await cursor.next()
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when upserting validation', () => {
+          it('throws an error', async () => {
+            const token = tokenize({
+              parameters: { userKey: 123 },
+            })
 
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyAccount(input: { verifyTokenString: "${token}" }) {
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                userKey: 123,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(
+                      new Error('Transaction commit error occurred.'),
+                    ),
+                }),
+                auth: {
+                  verifyToken: verifyToken({}),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      preferredLang: 'english',
+                      tfaValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to verify account. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred when upserting email validation for user: 123: Error: Transaction commit error occurred.`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('userKey cannot be found in token parameters', () => {
+        it('returns an error message', async () => {
           const token = tokenize({
             parameters: {},
           })
@@ -922,7 +757,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userKey: user._key,
+              userKey: 123,
               query,
               collections,
               transaction,
@@ -933,7 +768,15 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                    displayName: 'Test Account',
+                    preferredLang: 'english',
+                    tfaValidated: false,
+                    emailValidated: false,
+                  }),
+                },
               },
             },
           )
@@ -957,23 +800,7 @@ describe('user send password reset email', () => {
         })
       })
       describe('userKey in token is undefined', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
         it('returns an error message', async () => {
-          const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-          const user = await cursor.next()
-
           const token = tokenize({
             parameters: { userKey: undefined },
           })
@@ -999,7 +826,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userKey: user._key,
+              userKey: 123,
               query,
               collections,
               transaction,
@@ -1010,7 +837,15 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                    displayName: 'Test Account',
+                    preferredLang: 'english',
+                    tfaValidated: false,
+                    emailValidated: false,
+                  }),
+                },
               },
             },
           )
@@ -1033,28 +868,11 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('userKey in token does not match users key in db', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
+      describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-          const user = await cursor.next()
-
           const token = tokenize({
             parameters: { userKey: 1 },
           })
-
           const response = await graphql(
             schema,
             `
@@ -1076,7 +894,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userKey: user._key,
+              userKey: 1,
               query,
               collections,
               transaction,
@@ -1087,7 +905,9 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -1111,36 +931,10 @@ describe('user send password reset email', () => {
         })
       })
       describe('transaction step error occurs', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
         describe('when upserting validation', () => {
           it('throws an error', async () => {
-            const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-            const user = await cursor.next()
-
             const token = tokenize({
-              parameters: { userKey: user._key },
-            })
-
-            const loader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction step error occurred.'),
-                ),
+              parameters: { userKey: 123 },
             })
 
             const response = await graphql(
@@ -1164,10 +958,16 @@ describe('user send password reset email', () => {
               {
                 i18n,
                 request,
-                userKey: user._key,
+                userKey: 123,
                 query,
                 collections,
-                transaction: mockedTransaction,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(
+                      new Error('Transaction step error occurred.'),
+                    ),
+                }),
                 auth: {
                   verifyToken: verifyToken({}),
                 },
@@ -1175,7 +975,16 @@ describe('user send password reset email', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loader,
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      preferredLang: 'english',
+                      tfaValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
                 },
               },
             )
@@ -1188,43 +997,16 @@ describe('user send password reset email', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
+              `Trx step error occurred when upserting email validation for user: 123: Error: Transaction step error occurred.`,
             ])
           })
         })
       })
       describe('transaction commit error occurs', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
         describe('when upserting validation', () => {
           it('throws an error', async () => {
-            const cursor = await query`
-                FOR user IN users
-                    FILTER user.userName == "test.account@istio.actually.exists"
-                    RETURN user
-              `
-            const user = await cursor.next()
-
             const token = tokenize({
-              parameters: { userKey: user._key },
-            })
-
-            const loader = loadUserByKey({ query })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('Transaction step error occurred.'),
-                ),
+              parameters: { userKey: 123 },
             })
 
             const response = await graphql(
@@ -1248,10 +1030,17 @@ describe('user send password reset email', () => {
               {
                 i18n,
                 request,
-                userKey: user._key,
+                userKey: 123,
                 query,
                 collections,
-                transaction: mockedTransaction,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(
+                      new Error('Transaction commit error occurred.'),
+                    ),
+                }),
                 auth: {
                   verifyToken: verifyToken({}),
                 },
@@ -1259,7 +1048,16 @@ describe('user send password reset email', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loader,
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      userName: 'test.account@istio.actually.exists',
+                      displayName: 'Test Account',
+                      preferredLang: 'english',
+                      tfaValidated: false,
+                      emailValidated: false,
+                    }),
+                  },
                 },
               },
             )
@@ -1272,7 +1070,7 @@ describe('user send password reset email', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error occurred when upserting email validation for user: ${user._key}: Error: Transaction step error occurred.`,
+              `Trx commit error occurred when upserting email validation for user: 123: Error: Transaction commit error occurred.`,
             ])
           })
         })

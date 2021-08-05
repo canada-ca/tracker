@@ -44,7 +44,7 @@ msgid "Incorrect token value. Please request a new email."
 msgstr "Incorrect token value. Please request a new email."
 
 #: src/user/mutations/sign-in.js:70
-#: src/user/mutations/sign-in.js:291
+#: src/user/mutations/sign-in.js:295
 msgid "Incorrect username or password. Please try again."
 msgstr "Incorrect username or password. Please try again."
 
@@ -364,7 +364,7 @@ msgstr "Successfully closed account."
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
 
-#: src/user/mutations/verify-account.js:121
+#: src/user/mutations/verify-account.js:118
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
@@ -478,16 +478,18 @@ msgstr "Unable to close account. Please try again."
 msgid "Unable to create domain in unknown organization."
 msgstr "Unable to create domain in unknown organization."
 
-#: src/domain/mutations/create-domain.js:143
+#: src/domain/mutations/create-domain.js:151
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Unable to create domain, organization has already claimed it."
 
 #: src/domain/mutations/create-domain.js:130
-#: src/domain/mutations/create-domain.js:181
-#: src/domain/mutations/create-domain.js:201
-#: src/domain/mutations/create-domain.js:231
-#: src/domain/mutations/create-domain.js:249
-#: src/domain/mutations/create-domain.js:259
+#: src/domain/mutations/create-domain.js:140
+#: src/domain/mutations/create-domain.js:189
+#: src/domain/mutations/create-domain.js:199
+#: src/domain/mutations/create-domain.js:217
+#: src/domain/mutations/create-domain.js:247
+#: src/domain/mutations/create-domain.js:265
+#: src/domain/mutations/create-domain.js:275
 msgid "Unable to create domain. Please try again."
 msgstr "Unable to create domain. Please try again."
 
@@ -913,19 +915,20 @@ msgstr "Unable to set phone number, please try again."
 #: src/user/mutations/sign-in.js:158
 #: src/user/mutations/sign-in.js:204
 #: src/user/mutations/sign-in.js:213
-#: src/user/mutations/sign-in.js:272
-#: src/user/mutations/sign-in.js:281
+#: src/user/mutations/sign-in.js:276
+#: src/user/mutations/sign-in.js:285
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
-#: src/user/mutations/sign-up.js:196
-#: src/user/mutations/sign-up.js:210
+#: src/user/mutations/sign-up.js:204
+#: src/user/mutations/sign-up.js:218
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Unable to sign up, please contact org admin for a new invite."
 
 #: src/user/mutations/sign-up.js:172
-#: src/user/mutations/sign-up.js:232
-#: src/user/mutations/sign-up.js:242
+#: src/user/mutations/sign-up.js:182
+#: src/user/mutations/sign-up.js:240
+#: src/user/mutations/sign-up.js:250
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
@@ -1032,13 +1035,13 @@ msgstr "Unable to update user's role. Please try again."
 msgid "Unable to update your own role."
 msgstr "Unable to update your own role."
 
-#: src/user/mutations/verify-account.js:55
-#: src/user/mutations/verify-account.js:73
+#: src/user/mutations/verify-account.js:52
+#: src/user/mutations/verify-account.js:70
 msgid "Unable to verify account. Please request a new email."
 msgstr "Unable to verify account. Please request a new email."
 
-#: src/user/mutations/verify-account.js:102
-#: src/user/mutations/verify-account.js:111
+#: src/user/mutations/verify-account.js:99
+#: src/user/mutations/verify-account.js:108
 msgid "Unable to verify account. Please try again."
 msgstr "Unable to verify account. Please try again."
 

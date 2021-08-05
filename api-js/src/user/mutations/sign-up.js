@@ -172,7 +172,15 @@ export const signUp = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
-    const insertedUser = await insertedUserCursor.next()
+    let insertedUser
+    try {
+      insertedUser = await insertedUserCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to sign up. Please try again.`))
+    }
 
     // Assign user to org
     if (signUpToken !== '') {
