@@ -10,82 +10,81 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check domain permission function', () => {
   let query, drop, truncate, collections, org, domain, i18n
-
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+
+  beforeAll(() => {
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  })
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
-  beforeEach(async () => {
-    await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-      slug: 'test-gc-ca',
-      lastRan: null,
-      selectors: ['selector1', 'selector2'],
-    })
-    await collections.claims.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-    consoleOutput = []
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a successful domain permission check', () => {
+  describe('given a successful domain permission call', () => {
     let user, permitted
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
+      await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+        slug: 'test-gc-ca',
+        lastRan: null,
+        selectors: ['selector1', 'selector2'],
+      })
+      await collections.claims.save({
+        _to: domain._id,
+        _from: org._id,
+      })
       const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
+      FOR user IN users
+        FILTER user.userName == "test.account@istio.actually.exists"
+        RETURN user
+    `
       user = await userCursor.next()
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
     })
     describe('user is a super admin', () => {
       beforeEach(async () => {
@@ -142,24 +141,18 @@ describe('given the check domain permission function', () => {
     })
   })
 
-  describe('given an unsuccessful domain permission check', () => {
-    let user
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-    })
+  describe('given an unsuccessful domain permission call', () => {
     describe('if the user does not belong to an org which has a claim for a given organization', () => {
       let permitted
       it('will return false', async () => {
         const testCheckDomainPermission = checkDomainPermission({
-          query,
-          userKey: user._key,
+          query: jest
+            .fn()
+            .mockReturnValueOnce({ count: 0 })
+            .mockReturnValue({ next: jest.fn().mockReturnValue([]) }),
+          userKey: 123,
         })
-        permitted = await testCheckDomainPermission({ domainId: domain._id })
+        permitted = await testCheckDomainPermission({ domainId: 'domains/123' })
         expect(permitted).toEqual(false)
       })
     })
@@ -188,9 +181,9 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userKey: user._key,
+              userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: domain._id })
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -198,7 +191,7 @@ describe('given the check domain permission function', () => {
               ),
             )
             expect(consoleOutput).toEqual([
-              `Database error when retrieving super admin claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving super admin claims for user: 123 and domain: domains/123: Error: Database error occurred.`,
             ])
           }
         })
@@ -214,9 +207,9 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userKey: user._key,
+              userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: domain._id })
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -224,7 +217,7 @@ describe('given the check domain permission function', () => {
               ),
             )
             expect(consoleOutput).toEqual([
-              `Database error when retrieving affiliated organization claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving affiliated organization claims for user: 123 and domain: domains/123: Error: Database error occurred.`,
             ])
           }
         })
@@ -245,9 +238,9 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userKey: user._key,
+              userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: domain._id })
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -255,7 +248,7 @@ describe('given the check domain permission function', () => {
               ),
             )
             expect(consoleOutput).toEqual([
-              `Cursor error when retrieving affiliated organization claims for user: ${user._id} and domain: ${domain._id}: Error: Cursor error occurred.`,
+              `Cursor error when retrieving affiliated organization claims for user: 123 and domain: domains/123: Error: Cursor error occurred.`,
             ])
           }
         })
@@ -286,9 +279,9 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userKey: user._key,
+              userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: domain._id })
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -296,7 +289,7 @@ describe('given the check domain permission function', () => {
               ),
             )
             expect(consoleOutput).toEqual([
-              `Database error when retrieving super admin claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving super admin claims for user: 123 and domain: domains/123: Error: Database error occurred.`,
             ])
           }
         })
@@ -312,9 +305,9 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userKey: user._key,
+              userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: domain._id })
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -322,7 +315,7 @@ describe('given the check domain permission function', () => {
               ),
             )
             expect(consoleOutput).toEqual([
-              `Database error when retrieving affiliated organization claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving affiliated organization claims for user: 123 and domain: domains/123: Error: Database error occurred.`,
             ])
           }
         })
@@ -343,13 +336,13 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userKey: user._key,
+              userKey: 123,
             })
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
-              `Cursor error when retrieving affiliated organization claims for user: ${user._id} and domain:${domain._id}: Error: Cursor error occurred.`,
+              `Cursor error when retrieving affiliated organization claims for user: 123 and domain: domains/123: Error: Cursor error occurred.`,
             ])
           }
         })

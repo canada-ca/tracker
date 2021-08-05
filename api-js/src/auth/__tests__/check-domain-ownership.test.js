@@ -10,75 +10,76 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check domain ownership function', () => {
   let query, drop, truncate, collections, org, domain, i18n, user
-
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+
+  beforeAll(() => {
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  })
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-      slug: 'test-gc-ca',
-      lastRan: null,
-      selectors: ['selector1', 'selector2'],
-    })
-    await collections.ownership.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-    consoleOutput = []
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a successful domain ownership check', () => {
+  describe('given a successful domain ownership call', () => {
     let permitted
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+        slug: 'test-gc-ca',
+        lastRan: null,
+        selectors: ['selector1', 'selector2'],
+      })
+      await collections.ownership.save({
+        _to: domain._id,
+        _from: org._id,
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('if the user belongs to an org which has a ownership for a given organization', () => {
       afterEach(async () => {
         await query`
@@ -152,61 +153,20 @@ describe('given the check domain ownership function', () => {
       })
     })
   })
-  describe('given an unsuccessful domain ownership check', () => {
+  describe('given an unsuccessful domain ownership call', () => {
     describe('user is a super admin, but domain does not have any dmarc reports', () => {
       describe('domain does not have dmarc reports', () => {
-        beforeEach(async () => {
-          await truncate()
-          user = await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'french',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-          org = await collections.organizations.save({
-            orgDetails: {
-              en: {
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
-            lastRan: null,
-            selectors: ['selector1', 'selector2'],
-          })
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
-        })
         it('will return false', async () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
-            query,
-            userKey: user._key,
+            query: jest.fn().mockReturnValue({
+              next: jest
+                .fn()
+                .mockReturnValue({ superAdmin: true, domainOwnership: false }),
+            }),
+            userKey: 123,
           })
           const permitted = await testCheckDomainOwnerShip({
-            domainId: domain._id,
+            domainId: 'domains/123',
           })
           expect(permitted).toEqual(false)
         })
@@ -216,11 +176,17 @@ describe('given the check domain ownership function', () => {
       let permitted
       it('will return false', async () => {
         const testCheckDomainOwnerShip = checkDomainOwnership({
-          query,
-          userKey: user._key,
+          query: jest
+            .fn()
+            .mockReturnValueOnce({
+              next: jest.fn().mockReturnValue({ superAdmin: false }),
+            }).mockReturnValue({
+              next: jest.fn().mockReturnValue([]),
+            }),
+          userKey: '123',
         })
         permitted = await testCheckDomainOwnerShip({
-          domainId: domain._id,
+          domainId: 'domains/123',
         })
         expect(permitted).toEqual(false)
       })

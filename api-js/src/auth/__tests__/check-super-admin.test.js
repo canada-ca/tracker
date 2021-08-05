@@ -10,64 +10,65 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check super admin function', () => {
   let query, drop, truncate, collections, i18n, user, org
-
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+
+  beforeAll(() => {
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'super-admin',
-          acronym: 'SA',
-          name: 'Super Admin',
-          zone: 'FED',
-          sector: 'SA',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'super-admin',
-          acronym: 'SA',
-          name: 'Super Admin',
-          zone: 'FED',
-          sector: 'SA',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-  })
-
-  afterEach(async () => {
-    await truncate()
+  afterEach(() => {
     consoleOutput.length = 0
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a successful check', () => {
+  describe('given a successful call', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'super-admin',
+            acronym: 'SA',
+            name: 'Super Admin',
+            zone: 'FED',
+            sector: 'SA',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'super-admin',
+            acronym: 'SA',
+            name: 'Super Admin',
+            zone: 'FED',
+            sector: 'SA',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('user has super admin permission', () => {
       beforeEach(async () => {
         await collections.affiliations.save({
@@ -144,7 +145,7 @@ describe('given the check super admin function', () => {
       })
     })
   })
-  describe('given an unsuccessful check', () => {
+  describe('given an unsuccessful call', () => {
     describe('language is set to english', () => {
       beforeAll(() => {
         i18n = setupI18n({
