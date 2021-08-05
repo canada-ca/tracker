@@ -44,7 +44,7 @@ export default extendTheme({
     moderate: '#FF9900',
     moderateAlt: '#e65c00',
     weak: '#D3080C',
-    info: '#3f8cd9',
+    info: '#1476d8',
     strongMuted: '#E0FFE0',
     weakMuted: '#FFE0E0',
     infoMuted: '#d2e7fc',
@@ -99,6 +99,13 @@ export default extendTheme({
       700: '#1E4E8C',
       800: '#153E75',
       900: '#0D467D',
+    },
+    red: {
+      500: '#e50003',
+    },
+    teal: {
+      500: '#007984',
+      600: '#007072',
     },
   },
   shadows: {
