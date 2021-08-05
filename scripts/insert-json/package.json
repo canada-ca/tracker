@@ -1,0 +1,16 @@
+{
+  "name": "insert-json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "arango-tools": "^0.4.1",
+    "dotenv": "^8.2.0",
+    "url-slug": "^3.0.1"
+  }
+}
