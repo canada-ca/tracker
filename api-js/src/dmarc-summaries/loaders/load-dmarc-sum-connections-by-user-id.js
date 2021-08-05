@@ -53,11 +53,9 @@ export const loadDmarcSummaryConnectionsByUserId =
       if (typeof orderBy === 'undefined') {
         afterTemplate = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(${afterId})`
       } else {
-        let afterTemplateDirection = aql``
+        let afterTemplateDirection = aql`<`
         if (orderBy.direction === 'ASC') {
           afterTemplateDirection = aql`>`
-        } else {
-          afterTemplateDirection = aql`<`
         }
 
         afterVar = aql`LET afterVar = DOCUMENT(dmarcSummaries, ${afterId})`
@@ -103,10 +101,10 @@ export const loadDmarcSummaryConnectionsByUserId =
         }
 
         afterTemplate = aql`
-        FILTER ${summaryField} ${afterTemplateDirection} ${documentField}
-        OR (${summaryField} == ${documentField}
-        AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
-      `
+          FILTER ${summaryField} ${afterTemplateDirection} ${documentField}
+          OR (${summaryField} == ${documentField}
+          AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
+        `
       }
     }
 
@@ -117,11 +115,9 @@ export const loadDmarcSummaryConnectionsByUserId =
       if (typeof orderBy === 'undefined') {
         beforeTemplate = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(${beforeId})`
       } else {
-        let beforeTemplateDirection = aql``
+        let beforeTemplateDirection = aql`>`
         if (orderBy.direction === 'ASC') {
           beforeTemplateDirection = aql`<`
-        } else {
-          beforeTemplateDirection = aql`>`
         }
 
         beforeVar = aql`LET beforeVar = DOCUMENT(dmarcSummaries, ${beforeId})`
@@ -158,11 +154,11 @@ export const loadDmarcSummaryConnectionsByUserId =
           summaryField = aql`summary.totalMessages`
         } else if (orderBy.field === 'domain') {
           documentField = aql`
-          FIRST(
-            FOR v, e IN 1..1 ANY beforeVar._id domainsToDmarcSummaries
-            RETURN v.domain
-          )
-        `
+            FIRST(
+              FOR v, e IN 1..1 ANY beforeVar._id domainsToDmarcSummaries
+              RETURN v.domain
+            )
+          `
           summaryField = aql`domain.domain`
         }
 
@@ -235,14 +231,11 @@ export const loadDmarcSummaryConnectionsByUserId =
     let hasNextPageFilter = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key)`
     let hasPreviousPageFilter = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key)`
     if (typeof orderBy !== 'undefined') {
-      let hasNextPageDirection = aql``
-      let hasPreviousPageDirection = aql``
+      let hasNextPageDirection = aql`<`
+      let hasPreviousPageDirection = aql`>`
       if (orderBy.direction === 'ASC') {
         hasNextPageDirection = aql`>`
         hasPreviousPageDirection = aql`<`
-      } else {
-        hasNextPageDirection = aql`<`
-        hasPreviousPageDirection = aql`>`
       }
 
       let hasNextPageDocumentField = aql``
