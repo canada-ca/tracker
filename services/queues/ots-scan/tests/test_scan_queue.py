@@ -30,7 +30,7 @@ def test_enqueue_dns(client):
         "selectors": ["selector1._domainkey", "selector2._domainkey"],
     }
 
-    res = client.post("/dns", json=json.dumps(test_payload))
+    res = client.post("/dns", json=test_payload)
 
     assert res.data.decode("utf-8") == "DNS scan request enqueued."
 
@@ -42,7 +42,7 @@ def test_enqueue_https(client):
         "domain": "cyber.gc.ca",
     }
 
-    res = client.post("/https", json=json.dumps(test_payload))
+    res = client.post("/https", json=test_payload)
 
     assert res.data.decode("utf-8") == "HTTPS scan request enqueued."
 
@@ -54,6 +54,6 @@ def test_enqueue_ssl(client):
         "domain": "cyber.gc.ca",
     }
 
-    res = client.post("/ssl", json=json.dumps(test_payload))
+    res = client.post("/ssl", json=test_payload)
 
     assert res.data.decode("utf-8") == "SSL scan request enqueued."
