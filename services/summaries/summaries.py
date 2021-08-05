@@ -35,10 +35,14 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
         scan_fail = 0
         scan_total = 0
         for domain in db.collection("domains"):
-            scan_total = scan_total + 1
+            # We don't want to count domains not passing or failing 
+            # (i.e unreachable or unscanned) towards the total.
             if domain["status"][scan_type] == "fail":
+                scan_total = scan_total + 1
                 scan_fail = scan_fail + 1
+                
             elif domain["status"][scan_type] == "pass":
+                scan_total = scan_total + 1
                 scan_pass = scan_pass + 1
 
         current_summary = db.collection("scanSummaries").get({"_key": scan_type})
