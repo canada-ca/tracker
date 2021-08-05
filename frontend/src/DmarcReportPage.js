@@ -26,7 +26,6 @@ import { InfoBox, InfoPanel } from './InfoPanel'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
-
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
@@ -742,7 +741,7 @@ export default function DmarcReportPage() {
           {domainSlug.toUpperCase()}
         </Heading>
         <Link
-          color="teal.500"
+          color="teal.600"
           whiteSpace="noWrap"
           my="auto"
           to={`/domains/${domainSlug}`}

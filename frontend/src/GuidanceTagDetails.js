@@ -20,7 +20,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
         {guidanceTag.refLinks.map((node, index) => (
           <Link
             key={index}
-            color="teal.600"
+            color="teal.700"
             href={node.refLink}
             target="_blank"
           >
@@ -45,7 +45,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
         {guidanceTag.refLinksTech.map((node, index) => (
           <Link
             key={index}
-            color="teal.600"
+            color="teal.700"
             href={node.refLink}
             target="_blank"
           >
