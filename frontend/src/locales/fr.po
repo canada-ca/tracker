@@ -713,8 +713,8 @@ msgstr "Le courriel ne peut être vide"
 #~ msgstr "Invitation par courrier électronique envoyée à jim@hotmail.com"
 
 #: src/UserListModal.js:62
-msgid "Email invitation sent to {editingUserName}"
-msgstr "Invitation par courrier électronique envoyée à {editingUserName}"
+msgid "Email invitation sent"
+msgstr "Envoi d'une invitation par courriel"
 
 #: src/SummaryGroup.js:41
 msgid "Email security settings summary"

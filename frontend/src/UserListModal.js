@@ -20,7 +20,7 @@ import {
   InputLeftElement,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import { bool, func, object, string } from 'prop-types'
+import { bool, func, string } from 'prop-types'
 import { Field, Formik } from 'formik'
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
@@ -63,7 +63,7 @@ export function UserListModal({
         if (inviteUserToOrg.result.__typename === 'InviteUserToOrgResult') {
           toast({
             title: t`User invited`,
-            description: t`Email invitation sent to ${editingUserName}`,
+            description: t`Email invitation sent`,
             status: 'success',
             duration: 9000,
             isClosable: true,
@@ -210,22 +210,23 @@ export function UserListModal({
                           form.errors.userName && form.touched.userName
                         }
                       >
-                        <FormLabel htmlFor="userName" fontWeight="bold">
-                          <Trans>User:</Trans>
-                        </FormLabel>
-                        <InputGroup>
-                          <InputLeftElement aria-hidden="true">
-                            <EmailIcon color="gray.300" />
-                          </InputLeftElement>
-                          <Input
-                            mb="2"
-                            {...field}
-                            type="email"
-                            id="userName"
-                            placeholder={i18n._(t`user email`)}
-                            ref={initialFocusRef}
-                          />
-                        </InputGroup>
+                        <Stack isInline align="center">
+                          <FormLabel htmlFor="userName" fontWeight="bold">
+                            <Trans>User:</Trans>
+                          </FormLabel>
+                          <InputGroup>
+                            <InputLeftElement aria-hidden="true">
+                              <EmailIcon color="gray.300" />
+                            </InputLeftElement>
+                            <Input
+                              mb="2"
+                              {...field}
+                              id="userName"
+                              placeholder={i18n._(t`user email`)}
+                              ref={initialFocusRef}
+                            />
+                          </InputGroup>
+                        </Stack>
                         <FormErrorMessage>
                           {form.errors.userName}
                         </FormErrorMessage>
@@ -238,7 +239,7 @@ export function UserListModal({
                     <Trans>Role:</Trans>
                   </FormLabel>
                   <Select
-                    w="35%"
+                    w="auto"
                     id="role"
                     size="sm"
                     name="role"
@@ -284,7 +285,6 @@ export function UserListModal({
 UserListModal.propTypes = {
   isOpen: bool,
   onClose: func,
-  validationSchema: object,
   orgId: string,
   editingUserRole: string,
   editingUserName: string,

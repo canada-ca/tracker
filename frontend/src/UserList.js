@@ -217,7 +217,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             <Input
               id="Search-for-user-field"
               aria-label="new-user-input"
-              type="email"
               placeholder={t`user email`}
               onChange={(e) => setAddedUserName(e.target.value)}
             />
