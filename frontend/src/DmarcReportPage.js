@@ -26,7 +26,6 @@ import { InfoBox, InfoPanel } from './InfoPanel'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
-
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
@@ -148,7 +147,7 @@ export default function DmarcReportPage() {
     )
   }
 
-  if (!graphData?.findDomainByDomain?.hasDMARCReport) {
+  if (!graphLoading && !graphData?.findDomainByDomain?.hasDMARCReport) {
     return (
       <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="3xl" fontWeight="bold">
