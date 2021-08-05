@@ -1,0 +1,28 @@
+{
+  "name": "insert-json",
+  "version": "1.0.0",
+  "description": "This script inserts formatted json into an arango database.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint src",
+    "prettier": "prettier --write \"**/*.js\""
+  },
+  "author": "nsdeschenes",
+  "license": "MIT",
+  "dependencies": {
+    "arango-tools": "^0.4.1",
+    "dotenv": "^8.2.0",
+    "url-slug": "^3.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "prettier": "^2.3.2"
+  }
+}
