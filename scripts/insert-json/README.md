@@ -22,8 +22,8 @@ Below is an example of this structure:
 "CRA-ARC": {
         "acronym_en": "cra",
         "acronym_fr": "arc",
-        "organization_en": " Canada Revenue Agency",
-        "organization_fr": " Agence du revenu du Canada",
+        "organization_en": "Canada Revenue Agency",
+        "organization_fr": "Agence du revenu du Canada",
         "domains": [
             "not-a-real-domain.ca",
             "another-domain-name.ca"
@@ -33,7 +33,7 @@ Below is an example of this structure:
 
 ## NOTE: If you do not already have Node.js/npm installed, you will need to [do so](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to use this program.
 
-First, create a file called .env in this directory with the following contents:
+First, create a file called '.env' in this directory with the following contents:
 
 ```
 DB_PASS=<Database Password>
