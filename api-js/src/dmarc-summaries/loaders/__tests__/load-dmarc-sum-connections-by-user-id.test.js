@@ -41,7 +41,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
   })
 
   describe('given a successful load', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
         type: 'database',
         name: dbNameFromFile(__filename),
@@ -49,8 +49,6 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         rootPassword: rootPass,
         options: databaseOptions({ rootPass }),
       }))
-    })
-    beforeEach(async () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
@@ -160,8 +158,6 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
     })
     afterEach(async () => {
       await truncate()
-    })
-    afterAll(async () => {
       await drop()
     })
     describe('given there are dmarc summary connections to be returned', () => {
