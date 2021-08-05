@@ -2,6 +2,7 @@ import { extendTheme } from '@chakra-ui/react'
 import Accordion from './components/Accordion'
 import Button from './components/Button'
 import Divider from './components/Divider'
+import FormError from './components/FormError'
 import Input from './components/Input'
 import Select from './components/Select'
 import Tabs from './components/Tabs'
@@ -146,6 +147,7 @@ export default extendTheme({
     Accordion,
     Button,
     Divider,
+    FormError,
     Input,
     Select,
     Tabs,
