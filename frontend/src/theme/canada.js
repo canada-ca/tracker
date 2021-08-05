@@ -103,10 +103,6 @@ export default extendTheme({
     red: {
       500: '#e50003',
     },
-    teal: {
-      500: '#007984',
-      600: '#007072',
-    },
   },
   shadows: {
     outline: '0 0 0 4px #FEC04F',
