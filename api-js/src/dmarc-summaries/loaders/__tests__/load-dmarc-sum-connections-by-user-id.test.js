@@ -1021,7 +1021,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               })
             })
           })
-          describe.skip('ordering on PASS_PERCENTAGE', () => {
+          describe('ordering on PASS_PERCENTAGE', () => {
             describe('order direction is ASC', () => {
               it('returns dmarc summaries in order', async () => {
                 const expectedSummaries = await loadDmarcSummaryByKey({
