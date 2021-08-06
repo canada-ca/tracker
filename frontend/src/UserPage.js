@@ -111,7 +111,7 @@ export default function UserPage() {
             disabled={emailSent}
           >
             <EmailIcon mr={2} aria-hidden="true" />
-            <Trans>Verify Email</Trans>
+            <Trans>Verify Account</Trans>
           </Button>
         )}
       </Stack>
