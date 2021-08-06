@@ -32,84 +32,85 @@ describe('given the loadAggregateGuidanceTagByTagId function', () => {
   afterEach(() => {
     consoleErrorOutput.length = 0
   })
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+  
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      await collections.aggregateGuidanceTags.save({
+        _key: 'agg1',
+        en: {
+          tagName: 'Some Cool Tag Name A',
+          guidance: 'Some Cool Guidance A',
+          refLinksGuide: [
+            {
+              description: 'IT PIN A',
+            },
+          ],
+          refLinksTechnical: [''],
         },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
+        fr: {
+          tagName: 'todo a',
+          guidance: 'todo a',
+          refLinksGuide: [
+            {
+              description: 'todo a',
+            },
+          ],
+          refLinksTechnical: [''],
+        },
+      })
+      await collections.aggregateGuidanceTags.save({
+        _key: 'agg2',
+        en: {
+          tagName: 'Some Cool Tag Name B',
+          guidance: 'Some Cool Guidance B',
+          refLinksGuide: [
+            {
+              description: 'IT PIN B',
+            },
+          ],
+          refLinksTechnical: [''],
+        },
+        fr: {
+          tagName: 'todo b',
+          guidance: 'todo b',
+          refLinksGuide: [
+            {
+              description: 'todo b',
+            },
+          ],
+          refLinksTechnical: [''],
         },
       })
     })
-    describe('given a successful load', () => {
-      beforeAll(async () => {
-        ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
-          rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
-      })
-      beforeEach(async () => {
-        await collections.aggregateGuidanceTags.save({
-          _key: 'agg1',
-          en: {
-            tagName: 'Some Cool Tag Name A',
-            guidance: 'Some Cool Guidance A',
-            refLinksGuide: [
-              {
-                description: 'IT PIN A',
-              },
-            ],
-            refLinksTechnical: [''],
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-          fr: {
-            tagName: 'todo a',
-            guidance: 'todo a',
-            refLinksGuide: [
-              {
-                description: 'todo a',
-              },
-            ],
-            refLinksTechnical: [''],
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
         })
-        await collections.aggregateGuidanceTags.save({
-          _key: 'agg2',
-          en: {
-            tagName: 'Some Cool Tag Name B',
-            guidance: 'Some Cool Guidance B',
-            refLinksGuide: [
-              {
-                description: 'IT PIN B',
-              },
-            ],
-            refLinksTechnical: [''],
-          },
-          fr: {
-            tagName: 'todo b',
-            guidance: 'todo b',
-            refLinksGuide: [
-              {
-                description: 'todo b',
-              },
-            ],
-            refLinksTechnical: [''],
-          },
-        })
-      })
-      afterEach(async () => {
-        await truncate()
-      })
-      afterAll(async () => {
-        await drop()
       })
       describe('given a single id', () => {
         it('returns a single aggregate guidance tag', async () => {
@@ -176,138 +177,20 @@ describe('given the loadAggregateGuidanceTagByTagId function', () => {
         })
       })
     })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        const loader = loadAggregateGuidanceTagByTagId({
-          query: jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.')),
-          userKey: '1234',
-          i18n,
-        })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Unable to find Aggregate guidance tag(s). Please try again.',
-            ),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Database error occurred.`,
-        ])
-      })
-    })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const mockedCursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-        }
-        const loader = loadAggregateGuidanceTagByTagId({
-          query: jest.fn().mockReturnValue(mockedCursor),
-          userKey: '1234',
-          i18n,
-        })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Unable to find Aggregate guidance tag(s). Please try again.',
-            ),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Cursor error occurred.`,
-        ])
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a successful load', () => {
-      beforeAll(async () => {
-        ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
-          rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
-      })
-      beforeEach(async () => {
-        await collections.aggregateGuidanceTags.save({
-          _key: 'agg1',
-          en: {
-            tagName: 'Some Cool Tag Name A',
-            guidance: 'Some Cool Guidance A',
-            refLinksGuide: [
-              {
-                description: 'IT PIN A',
-              },
-            ],
-            refLinksTechnical: [''],
-          },
-          fr: {
-            tagName: 'todo a',
-            guidance: 'todo a',
-            refLinksGuide: [
-              {
-                description: 'todo a',
-              },
-            ],
-            refLinksTechnical: [''],
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
         })
-        await collections.aggregateGuidanceTags.save({
-          _key: 'agg2',
-          en: {
-            tagName: 'Some Cool Tag Name B',
-            guidance: 'Some Cool Guidance B',
-            refLinksGuide: [
-              {
-                description: 'IT PIN B',
-              },
-            ],
-            refLinksTechnical: [''],
-          },
-          fr: {
-            tagName: 'todo b',
-            guidance: 'todo b',
-            refLinksGuide: [
-              {
-                description: 'todo b',
-              },
-            ],
-            refLinksTechnical: [''],
-          },
-        })
-      })
-      afterEach(async () => {
-        await truncate()
-      })
-      afterAll(async () => {
-        await drop()
       })
       describe('given a single id', () => {
         it('returns a single aggregate guidance tag', async () => {
@@ -374,58 +257,146 @@ describe('given the loadAggregateGuidanceTagByTagId function', () => {
         })
       })
     })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        const loader = loadAggregateGuidanceTagByTagId({
-          query: jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.')),
-          userKey: '1234',
-          i18n,
+  })
+
+  describe('given an unsuccessful load', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              "Impossible de trouver le(s) tag(s) d'orientation des agrégats. Veuillez réessayer.",
-            ),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Database error occurred.`,
-        ])
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          const loader = loadAggregateGuidanceTagByTagId({
+            query: jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.')),
+            userKey: '1234',
+            i18n,
+          })
+  
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Unable to find Aggregate guidance tag(s). Please try again.',
+              ),
+            )
+          }
+  
+          expect(consoleErrorOutput).toEqual([
+            `Database error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const mockedCursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          const loader = loadAggregateGuidanceTagByTagId({
+            query: jest.fn().mockReturnValue(mockedCursor),
+            userKey: '1234',
+            i18n,
+          })
+  
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Unable to find Aggregate guidance tag(s). Please try again.',
+              ),
+            )
+          }
+  
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Cursor error occurred.`,
+          ])
+        })
       })
     })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const mockedCursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-        }
-
-        const loader = loadAggregateGuidanceTagByTagId({
-          query: jest.fn().mockReturnValue(mockedCursor),
-          userKey: '1234',
-          i18n,
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              "Impossible de trouver le(s) tag(s) d'orientation des agrégats. Veuillez réessayer.",
-            ),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Cursor error occurred.`,
-        ])
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          const loader = loadAggregateGuidanceTagByTagId({
+            query: jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.')),
+            userKey: '1234',
+            i18n,
+          })
+  
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                "Impossible de trouver le(s) tag(s) d'orientation des agrégats. Veuillez réessayer.",
+              ),
+            )
+          }
+  
+          expect(consoleErrorOutput).toEqual([
+            `Database error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const mockedCursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+  
+          const loader = loadAggregateGuidanceTagByTagId({
+            query: jest.fn().mockReturnValue(mockedCursor),
+            userKey: '1234',
+            i18n,
+          })
+  
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                "Impossible de trouver le(s) tag(s) d'orientation des agrégats. Veuillez réessayer.",
+              ),
+            )
+          }
+  
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadAggregateGuidanceTagByTagId: Error: Cursor error occurred.`,
+          ])
+        })
       })
     })
   })
