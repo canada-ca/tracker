@@ -149,13 +149,12 @@ export function AdminDomainModal({
       <ModalOverlay />
       <ModalContent pb={4}>
         <Formik
-          validateOnBlur={false}
           initialValues={{
             domainUrl: editingDomainUrl,
             selectors: selectorInputList,
           }}
           initialTouched={{
-            displayName: true,
+            domainUrl: true,
           }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
@@ -216,6 +215,7 @@ export function AdminDomainModal({
                         </FormErrorMessage>
                       </FormControl>
                     )}
+                    }
                   </Field>
 
                   <FieldArray
