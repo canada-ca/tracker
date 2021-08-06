@@ -144,7 +144,7 @@ export default function DmarcReportPage() {
     )
   }
 
-  if (!graphLoading && !graphData?.findDomainByDomain?.hasDMARCReport) {
+  if (!graphData?.findDomainByDomain?.hasDMARCReport) {
     return (
       <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="3xl" fontWeight="bold">
