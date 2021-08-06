@@ -215,7 +215,6 @@ export function AdminDomainModal({
                         </FormErrorMessage>
                       </FormControl>
                     )}
-                    }
                   </Field>
 
                   <FieldArray
