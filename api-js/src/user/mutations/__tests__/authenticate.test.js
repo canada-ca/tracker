@@ -14,7 +14,12 @@ import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
 
-const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY } = process.env
+const {
+  DB_PASS: rootPass,
+  DB_URL: url,
+  SIGN_IN_KEY,
+  REFRESH_TOKEN_EXPIRY,
+} = process.env
 
 describe('authenticate user account', () => {
   let query, drop, truncate, schema, collections, transaction, mockTokenize
@@ -23,7 +28,7 @@ describe('authenticate user account', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -32,26 +37,28 @@ describe('authenticate user account', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     mockTokenize = jest.fn().mockReturnValue('token')
   })
-  beforeEach(async () => {
+  afterEach(() => {
     consoleOutput.length = 0
   })
-  afterEach(async () => {
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
-  })
   describe('given successful authentication', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('user does not enable rememberMe', () => {
       beforeEach(async () => {
         await collections.users.save({
@@ -518,7 +525,9 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -541,26 +550,9 @@ describe('authenticate user account', () => {
         })
       })
       describe('when tfa codes do not match', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'french',
-            phoneValidated: false,
-            emailValidated: false,
-            tfaCode: 123456,
-          })
-        })
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const token = tokenize({
-            parameters: { userKey: user._key },
+            parameters: { userKey: 123 },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -609,7 +601,11 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue({
+                    _key: 456,
+                  }),
+                },
               },
             },
           )
@@ -620,44 +616,16 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`,
+            `User: 456 attempted to authenticate their account, however the tfaCodes did not match.`,
           ])
         })
       })
       describe('transaction step error occurs', () => {
         describe('when clearing tfa code and setting refresh id', () => {
-          beforeEach(async () => {
-            await collections.users.save({
-              userName: 'test.account@istio.actually.exists',
-              displayName: 'Test Account',
-              preferredLang: 'french',
-              phoneValidated: false,
-              emailValidated: false,
-              tfaCode: 123456,
-              refreshInfo: {
-                refreshId: '123',
-                rememberMe: false,
-                expiresAt: '',
-              },
-            })
-          })
           it('throws an error', async () => {
-            const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-            const user = await cursor.next()
-            const loader = loadUserByKey({ query })
             const token = tokenize({
-              parameters: { userKey: user._key },
+              parameters: { userKey: 123 },
               secret: String(SIGN_IN_KEY),
-            })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
             })
 
             const response = await graphql(
@@ -695,7 +663,11 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
+                }),
                 uuidv4,
                 auth: {
                   bcrypt,
@@ -706,7 +678,15 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loader,
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      tfaCode: 123456,
+                      refreshInfo: {
+                        remember: false,
+                      },
+                    }),
+                  },
                 },
               },
             )
@@ -717,46 +697,17 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: Error: Transaction step error`,
+              `Trx step error ocurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
             ])
           })
         })
       })
       describe('transaction commit error occurs', () => {
         describe('when user attempts to authenticate', () => {
-          beforeEach(async () => {
-            await collections.users.save({
-              userName: 'test.account@istio.actually.exists',
-              displayName: 'Test Account',
-              preferredLang: 'french',
-              phoneValidated: false,
-              emailValidated: false,
-              tfaCode: 123456,
-              refreshInfo: {
-                refreshId: '123',
-                rememberMe: false,
-                expiresAt: '',
-              },
-            })
-          })
           it('throws an error', async () => {
-            const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-            const user = await cursor.next()
-            const loader = loadUserByKey({ query })
             const token = tokenize({
-              parameters: { userKey: user._key },
+              parameters: { userKey: 123 },
               secret: String(SIGN_IN_KEY),
-            })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
             })
 
             const response = await graphql(
@@ -794,7 +745,12 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue(),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
+                }),
                 uuidv4,
                 auth: {
                   bcrypt,
@@ -805,7 +761,15 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loader,
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      tfaCode: 123456,
+                      refreshInfo: {
+                        remember: false,
+                      },
+                    }),
+                  },
                 },
               },
             )
@@ -816,7 +780,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction step error`,
+              `Trx commit error occurred while user: 123 attempted to authenticate: Error: Transaction commit error`,
             ])
           })
         })
@@ -1039,7 +1003,9 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -1063,26 +1029,9 @@ describe('authenticate user account', () => {
         })
       })
       describe('when tfa codes do not match', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'french',
-            phoneValidated: false,
-            emailValidated: false,
-            tfaCode: 123456,
-          })
-        })
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const token = tokenize({
-            parameters: { userKey: user._key },
+            parameters: { userKey: 123 },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -1131,7 +1080,11 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue({
+                    _key: 456,
+                  }),
+                },
               },
             },
           )
@@ -1142,44 +1095,16 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`,
+            `User: 456 attempted to authenticate their account, however the tfaCodes did not match.`,
           ])
         })
       })
       describe('transaction step error occurs', () => {
         describe('when clearing tfa code and setting refresh id', () => {
-          beforeEach(async () => {
-            await collections.users.save({
-              userName: 'test.account@istio.actually.exists',
-              displayName: 'Test Account',
-              preferredLang: 'french',
-              phoneValidated: false,
-              emailValidated: false,
-              tfaCode: 123456,
-              refreshInfo: {
-                refreshId: '123',
-                rememberMe: false,
-                expiresAt: '',
-              },
-            })
-          })
           it('throws an error', async () => {
-            const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-            const user = await cursor.next()
-            const loader = loadUserByKey({ query })
             const token = tokenize({
-              parameters: { userKey: user._key },
+              parameters: { userKey: 123 },
               secret: String(SIGN_IN_KEY),
-            })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
             })
 
             const response = await graphql(
@@ -1217,7 +1142,11 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
+                }),
                 uuidv4,
                 auth: {
                   bcrypt,
@@ -1228,7 +1157,15 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loader,
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      tfaCode: 123456,
+                      refreshInfo: {
+                        remember: false,
+                      },
+                    }),
+                  },
                 },
               },
             )
@@ -1241,46 +1178,17 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: Error: Transaction step error`,
+              `Trx step error ocurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
             ])
           })
         })
       })
       describe('transaction commit error occurs', () => {
         describe('when user attempts to authenticate', () => {
-          beforeEach(async () => {
-            await collections.users.save({
-              userName: 'test.account@istio.actually.exists',
-              displayName: 'Test Account',
-              preferredLang: 'french',
-              phoneValidated: false,
-              emailValidated: false,
-              tfaCode: 123456,
-              refreshInfo: {
-                refreshId: '123',
-                rememberMe: false,
-                expiresAt: '',
-              },
-            })
-          })
           it('throws an error', async () => {
-            const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-            const user = await cursor.next()
-            const loader = loadUserByKey({ query })
             const token = tokenize({
-              parameters: { userKey: user._key },
+              parameters: { userKey: 123 },
               secret: String(SIGN_IN_KEY),
-            })
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
             })
 
             const response = await graphql(
@@ -1318,7 +1226,12 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue(),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
+                }),
                 uuidv4,
                 auth: {
                   bcrypt,
@@ -1329,7 +1242,15 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loader,
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 123,
+                      tfaCode: 123456,
+                      refreshInfo: {
+                        remember: false,
+                      },
+                    }),
+                  },
                 },
               },
             )
@@ -1342,7 +1263,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error occurred while user: ${user._key} attempted to authenticate: Error: Transaction step error`,
+              `Trx commit error occurred while user: 123 attempted to authenticate: Error: Transaction commit error`,
             ])
           })
         })

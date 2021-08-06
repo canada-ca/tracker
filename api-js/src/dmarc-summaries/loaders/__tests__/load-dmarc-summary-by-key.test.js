@@ -20,154 +20,157 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-
-  beforeEach(async () => {
-    domain = await collections.domains.save({
-      domain: 'domain.ca',
-    })
-    dmarcSummary1 = await collections.dmarcSummaries.save({
-      detailTables: {
-        dkimFailure: [],
-        dmarcFailure: [],
-        fullPass: [],
-        spfFailure: [],
-      },
-      categoryTotals: {
-        pass: 0,
-        fail: 0,
-        passDkimOnly: 0,
-        passSpfOnly: 0,
-      },
-      categoryPercentages: {
-        pass: 0,
-        fail: 0,
-        passDkimOnly: 0,
-        passSpfOnly: 0,
-      },
-      totalMessages: 0,
-    })
-    dmarcSummary2 = await collections.dmarcSummaries.save({
-      detailTables: {
-        dkimFailure: [],
-        dmarcFailure: [],
-        fullPass: [],
-        spfFailure: [],
-      },
-      categoryTotals: {
-        pass: 0,
-        fail: 0,
-        passDkimOnly: 0,
-        passSpfOnly: 0,
-      },
-      categoryPercentages: {
-        pass: 0,
-        fail: 0,
-        passDkimOnly: 0,
-        passSpfOnly: 0,
-      },
-      totalMessages: 0,
-    })
-    await collections.domainsToDmarcSummaries.save({
-      _to: dmarcSummary1._id,
-      _from: domain._id,
-      startDate: '2021-01-01',
-    })
-    await collections.domainsToDmarcSummaries.save({
-      _to: dmarcSummary2._id,
-      _from: domain._id,
-      startDate: 'thirtyDays',
-    })
+  afterEach(() => {
     consoleOutput.length = 0
   })
 
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a single key', () => {
-    it('returns a single dmarc summary', async () => {
-      const expectedCursor = await query`
-        FOR summary IN dmarcSummaries
-          SORT summary._key ASC 
-          LIMIT 1
-          LET edge = (
-            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
-              RETURN e
-          )
-
-          RETURN {
-            _id: summary._id,
-            _key: summary._key,
-            _rev: summary._rev,
-            _type: "dmarcSummary",
-            id: summary._key,
-            startDate: FIRST(edge).startDate,
-            domainKey: PARSE_IDENTIFIER(FIRST(edge)._from).key,
-            categoryTotals: summary.categoryTotals,
-            categoryPercentages: summary.categoryPercentages,
-            totalMessages: summary.totalMessages
-          }
-      `
-      const expectedSummary = await expectedCursor.next()
-      expectedSummary.domainKey = domain._key
-
-      const summary = await loadDmarcSummaryByKey({ query }).load(
-        expectedSummary._key,
-      )
-
-      expect(summary).toEqual(expectedSummary)
+  describe('given a successful load', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-  describe('given a list of keys', () => {
-    it('returns a list of dmarc summaries', async () => {
-      const summaryKeys = []
-      const expectedSummaries = []
-      const expectedCursor = await query`
-        FOR summary IN dmarcSummaries
-          LET edge = (
-            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
-              RETURN e
-          )
+    beforeEach(async () => {
+      domain = await collections.domains.save({
+        domain: 'domain.ca',
+      })
+      dmarcSummary1 = await collections.dmarcSummaries.save({
+        detailTables: {
+          dkimFailure: [],
+          dmarcFailure: [],
+          fullPass: [],
+          spfFailure: [],
+        },
+        categoryTotals: {
+          pass: 0,
+          fail: 0,
+          passDkimOnly: 0,
+          passSpfOnly: 0,
+        },
+        categoryPercentages: {
+          pass: 0,
+          fail: 0,
+          passDkimOnly: 0,
+          passSpfOnly: 0,
+        },
+        totalMessages: 0,
+      })
+      dmarcSummary2 = await collections.dmarcSummaries.save({
+        detailTables: {
+          dkimFailure: [],
+          dmarcFailure: [],
+          fullPass: [],
+          spfFailure: [],
+        },
+        categoryTotals: {
+          pass: 0,
+          fail: 0,
+          passDkimOnly: 0,
+          passSpfOnly: 0,
+        },
+        categoryPercentages: {
+          pass: 0,
+          fail: 0,
+          passDkimOnly: 0,
+          passSpfOnly: 0,
+        },
+        totalMessages: 0,
+      })
+      await collections.domainsToDmarcSummaries.save({
+        _to: dmarcSummary1._id,
+        _from: domain._id,
+        startDate: '2021-01-01',
+      })
+      await collections.domainsToDmarcSummaries.save({
+        _to: dmarcSummary2._id,
+        _from: domain._id,
+        startDate: 'thirtyDays',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('given a single key', () => {
+      it('returns a single dmarc summary', async () => {
+        const expectedCursor = await query`
+          FOR summary IN dmarcSummaries
+            SORT summary._key ASC 
+            LIMIT 1
+            LET edge = (
+              FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+                RETURN e
+            )
+  
+            RETURN {
+              _id: summary._id,
+              _key: summary._key,
+              _rev: summary._rev,
+              _type: "dmarcSummary",
+              id: summary._key,
+              startDate: FIRST(edge).startDate,
+              domainKey: PARSE_IDENTIFIER(FIRST(edge)._from).key,
+              categoryTotals: summary.categoryTotals,
+              categoryPercentages: summary.categoryPercentages,
+              totalMessages: summary.totalMessages
+            }
+        `
+        const expectedSummary = await expectedCursor.next()
+        expectedSummary.domainKey = domain._key
 
-          RETURN {
-            _id: summary._id,
-            _key: summary._key,
-            _rev: summary._rev,
-            _type: "dmarcSummary",
-            id: summary._key,
-            startDate: FIRST(edge).startDate,
-            domainKey: PARSE_IDENTIFIER(FIRST(edge)._from).key,
-            categoryTotals: summary.categoryTotals,
-            categoryPercentages: summary.categoryPercentages,
-            totalMessages: summary.totalMessages
-          }
-      `
+        const summary = await loadDmarcSummaryByKey({ query }).load(
+          expectedSummary._key,
+        )
 
-      while (expectedCursor.hasMore) {
-        const temp = await expectedCursor.next()
-        summaryKeys.push(temp._key)
-        expectedSummaries.push(temp)
-      }
+        expect(summary).toEqual(expectedSummary)
+      })
+    })
+    describe('given a list of keys', () => {
+      it('returns a list of dmarc summaries', async () => {
+        const summaryKeys = []
+        const expectedSummaries = []
+        const expectedCursor = await query`
+          FOR summary IN dmarcSummaries
+            LET edge = (
+              FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+                RETURN e
+            )
+  
+            RETURN {
+              _id: summary._id,
+              _key: summary._key,
+              _rev: summary._rev,
+              _type: "dmarcSummary",
+              id: summary._key,
+              startDate: FIRST(edge).startDate,
+              domainKey: PARSE_IDENTIFIER(FIRST(edge)._from).key,
+              categoryTotals: summary.categoryTotals,
+              categoryPercentages: summary.categoryPercentages,
+              totalMessages: summary.totalMessages
+            }
+        `
 
-      const summaries = await loadDmarcSummaryByKey({ query }).loadMany(
-        summaryKeys,
-      )
+        while (expectedCursor.hasMore) {
+          const temp = await expectedCursor.next()
+          summaryKeys.push(temp._key)
+          expectedSummaries.push(temp)
+        }
 
-      expect(summaries).toEqual(expectedSummaries)
+        const summaries = await loadDmarcSummaryByKey({ query }).loadMany(
+          summaryKeys,
+        )
+
+        expect(summaries).toEqual(expectedSummaries)
+      })
     })
   })
   describe('users language is set to english', () => {

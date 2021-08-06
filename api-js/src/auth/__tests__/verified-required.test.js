@@ -17,100 +17,102 @@ describe('given the verifiedRequired function', () => {
     consoleOutput.length = 0
   })
 
-  describe('provided an email validated user', () => {
-    beforeEach(() => {
-      user = {
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        tfaValidated: false,
-        emailValidated: true,
-      }
-    })
-    it('returns true', () => {
-      const verifiedFunc = verifiedRequired({})
-
-      const verifiedUser = verifiedFunc({ user })
-
-      expect(verifiedUser).toBe(true)
-    })
-  })
-  describe('language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('user is not email validated', () => {
+  describe('given a successful call', () => {
+    describe('provided an email validated user', () => {
       beforeEach(() => {
         user = {
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
           preferredLang: 'french',
           tfaValidated: false,
-          emailValidated: false,
+          emailValidated: true,
         }
       })
-      it('throws an error', () => {
-        const verifiedFunc = verifiedRequired({ i18n })
-
-        try {
-          verifiedFunc({ user })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Verification error. Please verify your account via email to access content.',
-            ),
-          )
-        }
+      it('returns true', () => {
+        const verifiedFunc = verifiedRequired({})
+  
+        const verifiedUser = verifiedFunc({ user })
+  
+        expect(verifiedUser).toBe(true)
       })
     })
-  })
-  describe('language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['fr'],
-        messages: {
-          fr: frenchMessages.messages,
-        },
+    describe('language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('user is not email validated', () => {
+        beforeEach(() => {
+          user = {
+            userName: 'test.account@istio.actually.exists',
+            displayName: 'Test Account',
+            preferredLang: 'french',
+            tfaValidated: false,
+            emailValidated: false,
+          }
+        })
+        it('throws an error', () => {
+          const verifiedFunc = verifiedRequired({ i18n })
+  
+          try {
+            verifiedFunc({ user })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Verification error. Please verify your account via email to access content.',
+              ),
+            )
+          }
+        })
       })
     })
-    describe('user is not email validated', () => {
-      beforeEach(() => {
-        user = {
-          userName: 'test.account@istio.actually.exists',
-          displayName: 'Test Account',
-          preferredLang: 'french',
-          tfaValidated: false,
-          emailValidated: false,
-        }
+    describe('language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['fr'],
+          messages: {
+            fr: frenchMessages.messages,
+          },
+        })
       })
-      it('throws an error', () => {
-        const verifiedFunc = verifiedRequired({ i18n })
-
-        try {
-          verifiedFunc({ user })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu.',
-            ),
-          )
-        }
+      describe('user is not email validated', () => {
+        beforeEach(() => {
+          user = {
+            userName: 'test.account@istio.actually.exists',
+            displayName: 'Test Account',
+            preferredLang: 'french',
+            tfaValidated: false,
+            emailValidated: false,
+          }
+        })
+        it('throws an error', () => {
+          const verifiedFunc = verifiedRequired({ i18n })
+  
+          try {
+            verifiedFunc({ user })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Erreur de vérification. Veuillez vérifier votre compte par e-mail pour accéder au contenu.',
+              ),
+            )
+          }
+        })
       })
     })
   })

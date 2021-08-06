@@ -166,9 +166,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
         console.error(
           `Transaction step error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
         )
-        throw new Error(
-          i18n._(t`Unable to add user to organization. Please try again.`),
-        )
+        throw new Error(i18n._(t`Unable to invite user. Please try again.`))
       }
 
       await sendOrgInviteEmail({

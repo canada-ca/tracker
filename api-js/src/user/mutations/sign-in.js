@@ -254,6 +254,10 @@ export const signIn = new mutationWithClientMutationId({
           }
         }
       } else {
+
+        // increment failed login attempts
+        user.failedLoginAttempts += 1
+
         try {
           // Increase users failed login attempts
           await trx.step(
@@ -261,7 +265,7 @@ export const signIn = new mutationWithClientMutationId({
               WITH users
               FOR u IN users
                 UPDATE ${user._key} WITH { 
-                  failedLoginAttempts: ${user.failedLoginAttempts + 1} 
+                  failedLoginAttempts: ${user.failedLoginAttempts} 
                 } IN users
             `,
           )

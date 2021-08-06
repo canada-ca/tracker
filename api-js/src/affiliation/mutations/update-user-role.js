@@ -145,7 +145,17 @@ given organization.`,
       }
     }
 
-    const affiliation = await affiliationCursor.next()
+    let affiliation
+    try {
+      affiliation = await affiliationCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to update user's role. Please try again.`),
+      )
+    }
 
     // Generate list of collections names
     const collectionStrings = []

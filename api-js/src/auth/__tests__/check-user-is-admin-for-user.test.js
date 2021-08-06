@@ -10,19 +10,11 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the checkUserIsAdminForUser', () => {
   let query, drop, truncate, collections, i18n, user1, user2, org
-
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
-    console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
 
+  beforeAll(() => {
+    console.error = mockedError
     i18n = setupI18n({
       locale: 'fr',
       localeData: {
@@ -36,60 +28,71 @@ describe('given the checkUserIsAdminForUser', () => {
       },
     })
   })
-
-  beforeEach(async () => {
-    await truncate()
-    user1 = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    user2 = await collections.users.save({
-      userName: 'test.account2@istio.actually.exists',
-      displayName: 'Test Account2',
-      preferredLang: 'english',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user2._id,
-      permission: 'user',
-    })
-    consoleOutput = []
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a successful check', () => {
+  describe('given a successful call', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user1 = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      user2 = await collections.users.save({
+        userName: 'test.account2@istio.actually.exists',
+        displayName: 'Test Account2',
+        preferredLang: 'english',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+      await collections.affiliations.save({
+        _from: org._id,
+        _to: user2._id,
+        permission: 'user',
+      })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('user is a super admin', () => {
       beforeEach(async () => {
         await collections.affiliations.save({
@@ -132,8 +135,6 @@ describe('given the checkUserIsAdminForUser', () => {
         expect(check).toEqual(true)
       })
     })
-  })
-  describe('given an unsuccessful check', () => {
     describe('requesting user is an admin in a different org', () => {
       let org2
       beforeEach(async () => {
@@ -202,282 +203,284 @@ describe('given the checkUserIsAdminForUser', () => {
       })
     })
   })
-  describe('user language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('database error occurs', () => {
-      describe('when checking for super admin permission', () => {
-        it('throws an error', async () => {
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.')),
-          })
-
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
-            })
-          } catch (err) {
-            expect(err).toEqual(
-              Error('Permission error, not an admin for this user.'),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Database error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
-          ])
+  describe('given an unsuccessful call', () => {
+    describe('user language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('when checking for matching org admin permission', () => {
-        it('throws an error', async () => {
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest
-              .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'test'
-                },
+      describe('database error occurs', () => {
+        describe('when checking for super admin permission', () => {
+          it('throws an error', async () => {
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest
+                .fn()
+                .mockRejectedValue(new Error('Database error occurred.')),
+            })
+
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
               })
-              .mockRejectedValue(new Error('Database error occurred.')),
+            } catch (err) {
+              expect(err).toEqual(
+                Error('Permission error, not an admin for this user.'),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Database error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
+            ])
           })
-
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
-            })
-          } catch (err) {
-            expect(err).toEqual(
-              Error('Permission error, not an admin for this user.'),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Database error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
-          ])
         })
-      })
-    })
-    describe('cursor error occurs', () => {
-      describe('when checking for super admin permission', () => {
-        it('throws an error', async () => {
-          const cursor = {
-            next() {
-              throw new Error('Cursor error occurred.')
-            },
-          }
-
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest.fn().mockReturnValue(cursor),
-          })
-
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
+        describe('when checking for matching org admin permission', () => {
+          it('throws an error', async () => {
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest
+                .fn()
+                .mockReturnValueOnce({
+                  next() {
+                    return 'test'
+                  },
+                })
+                .mockRejectedValue(new Error('Database error occurred.')),
             })
-          } catch (err) {
-            expect(err).toEqual(
-              Error('Permission error, not an admin for this user.'),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Cursor error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
-          ])
-        })
-      })
-      describe('when checking for matching org admin permission', () => {
-        it('throws an error', async () => {
-          const cursor = {
-            next() {
-              throw new Error('Cursor error occurred.')
-            },
-          }
 
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest
-              .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
               })
-              .mockReturnValue(cursor),
+            } catch (err) {
+              expect(err).toEqual(
+                Error('Permission error, not an admin for this user.'),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Database error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
+            ])
           })
-
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
-            })
-          } catch (err) {
-            expect(err).toEqual(
-              Error('Permission error, not an admin for this user.'),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Cursor error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
-          ])
         })
       })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('database error occurs', () => {
-      describe('when checking for super admin permission', () => {
-        it('throws an error', async () => {
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.')),
-          })
+      describe('cursor error occurs', () => {
+        describe('when checking for super admin permission', () => {
+          it('throws an error', async () => {
+            const cursor = {
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            }
 
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest.fn().mockReturnValue(cursor),
             })
-          } catch (err) {
-            expect(err).toEqual(
-              Error(
-                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-              ),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Database error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('when checking for matching org admin permission', () => {
-        it('throws an error', async () => {
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest
-              .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'test'
-                },
+
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
               })
-              .mockRejectedValue(new Error('Database error occurred.')),
+            } catch (err) {
+              expect(err).toEqual(
+                Error('Permission error, not an admin for this user.'),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Cursor error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
+            ])
           })
+        })
+        describe('when checking for matching org admin permission', () => {
+          it('throws an error', async () => {
+            const cursor = {
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            }
 
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest
+                .fn()
+                .mockReturnValueOnce({
+                  next() {
+                    return 'user'
+                  },
+                })
+                .mockReturnValue(cursor),
             })
-          } catch (err) {
-            expect(err).toEqual(
-              Error(
-                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-              ),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Database error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
-          ])
+
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                Error('Permission error, not an admin for this user.'),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Cursor error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
+            ])
+          })
         })
       })
     })
-    describe('cursor error occurs', () => {
-      describe('when checking for super admin permission', () => {
-        it('throws an error', async () => {
-          const cursor = {
-            next() {
-              throw new Error('Cursor error occurred.')
-            },
-          }
-
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest.fn().mockReturnValue(cursor),
-          })
-
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
-            })
-          } catch (err) {
-            expect(err).toEqual(
-              Error(
-                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-              ),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Cursor error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
-          ])
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('when checking for matching org admin permission', () => {
-        it('throws an error', async () => {
-          const cursor = {
-            next() {
-              throw new Error('Cursor error occurred.')
-            },
-          }
-
-          const testCheck = checkUserIsAdminForUser({
-            i18n,
-            userKey: user1._key,
-            query: jest
-              .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
-              .mockReturnValue(cursor),
-          })
-
-          try {
-            await testCheck({
-              userName: 'test.account2@istio.actually.exists',
+      describe('database error occurs', () => {
+        describe('when checking for super admin permission', () => {
+          it('throws an error', async () => {
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest
+                .fn()
+                .mockRejectedValue(new Error('Database error occurred.')),
             })
-          } catch (err) {
-            expect(err).toEqual(
-              Error(
-                "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-              ),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Cursor error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
-          ])
+
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                Error(
+                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Database error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when checking for matching org admin permission', () => {
+          it('throws an error', async () => {
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest
+                .fn()
+                .mockReturnValueOnce({
+                  next() {
+                    return 'test'
+                  },
+                })
+                .mockRejectedValue(new Error('Database error occurred.')),
+            })
+
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                Error(
+                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Database error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('cursor error occurs', () => {
+        describe('when checking for super admin permission', () => {
+          it('throws an error', async () => {
+            const cursor = {
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            }
+
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest.fn().mockReturnValue(cursor),
+            })
+
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                Error(
+                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Cursor error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
+            ])
+          })
+        })
+        describe('when checking for matching org admin permission', () => {
+          it('throws an error', async () => {
+            const cursor = {
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            }
+
+            const testCheck = checkUserIsAdminForUser({
+              i18n,
+              userKey: user1._key,
+              query: jest
+                .fn()
+                .mockReturnValueOnce({
+                  next() {
+                    return 'user'
+                  },
+                })
+                .mockReturnValue(cursor),
+            })
+
+            try {
+              await testCheck({
+                userName: 'test.account2@istio.actually.exists',
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                Error(
+                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `Cursor error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
+            ])
+          })
         })
       })
     })

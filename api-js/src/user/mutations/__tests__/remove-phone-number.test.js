@@ -28,44 +28,44 @@ describe('testing the removePhoneNumber mutation', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
 
-  beforeEach(async () => {
+  afterEach(() => {
     consoleOutput.length = 0
   })
 
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
+  describe('given a successful removal', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-    describe('given a successful removal', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('user is email validated', () => {
         beforeEach(async () => {
           user = await collections.users.save({
@@ -427,151 +427,21 @@ describe('testing the removePhoneNumber mutation', () => {
         })
       })
     })
-    describe('given a transaction error', () => {
-      beforeEach(async () => {
-        user = await collections.users.save({
-          userName: 'john.doe@test.email.ca',
-          emailValidated: false,
-          phoneValidated: true,
-          phoneDetails: {
-            iv: '',
-            cipher: '',
-            phoneNumber: '',
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-          tfaSendMethod: 'phone',
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('step error occurs', () => {
-        describe('when running upsert', () => {
-          it('throws an error', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('transaction step error occurred.'),
-                ),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removePhoneNumber(input: {}) {
-                    result {
-                      ... on RemovePhoneNumberResult {
-                        status
-                      }
-                      ... on RemovePhoneNumberError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                collections,
-                query,
-                transaction: mockedTransaction,
-                auth: {
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
-                  }),
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Unable to remove phone number. Please try again.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred well removing phone number for user: ${user._key}: Error: transaction step error occurred.`,
-            ])
-          })
-        })
-      })
-      describe('commit error occurs', () => {
-        describe('when committing upsert', () => {
-          it('throws an error', async () => {
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn(),
-              commit: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('transaction step error occurred.'),
-                ),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removePhoneNumber(input: {}) {
-                    result {
-                      ... on RemovePhoneNumberResult {
-                        status
-                      }
-                      ... on RemovePhoneNumberError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                collections,
-                query,
-                transaction: mockedTransaction,
-                auth: {
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
-                  }),
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Unable to remove phone number. Please try again.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred well removing phone number for user: ${user._key}: Error: transaction step error occurred.`,
-            ])
-          })
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a successful removal', () => {
       describe('user is email validated', () => {
         beforeEach(async () => {
           user = await collections.users.save({
@@ -933,18 +803,22 @@ describe('testing the removePhoneNumber mutation', () => {
         })
       })
     })
-    describe('given a transaction error', () => {
-      beforeEach(async () => {
-        user = await collections.users.save({
-          userName: 'john.doe@test.email.ca',
-          emailValidated: false,
-          phoneValidated: true,
-          phoneDetails: {
-            iv: '',
-            cipher: '',
-            phoneNumber: '',
+  })
+
+  describe('given an unsuccessful removal', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-          tfaSendMethod: 'phone',
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
       describe('step error occurs', () => {
@@ -982,23 +856,20 @@ describe('testing the removePhoneNumber mutation', () => {
                 query,
                 transaction: mockedTransaction,
                 auth: {
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
-                  }),
+                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
             )
 
             const error = [
               new GraphQLError(
-                'Impossible de supprimer le numéro de téléphone. Veuillez réessayer.',
+                'Unable to remove phone number. Please try again.',
               ),
             ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred well removing phone number for user: ${user._key}: Error: transaction step error occurred.`,
+              `Trx step error occurred well removing phone number for user: 123: Error: transaction step error occurred.`,
             ])
           })
         })
@@ -1039,10 +910,76 @@ describe('testing the removePhoneNumber mutation', () => {
                 query,
                 transaction: mockedTransaction,
                 auth: {
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
-                  }),
+                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to remove phone number. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred well removing phone number for user: 123: Error: transaction step error occurred.`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('step error occurs', () => {
+        describe('when running upsert', () => {
+          it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('transaction step error occurred.'),
+                ),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removePhoneNumber(input: {}) {
+                    result {
+                      ... on RemovePhoneNumberResult {
+                        status
+                      }
+                      ... on RemovePhoneNumberError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                collections,
+                query,
+                transaction: mockedTransaction,
+                auth: {
+                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
             )
@@ -1055,7 +992,61 @@ describe('testing the removePhoneNumber mutation', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error occurred well removing phone number for user: ${user._key}: Error: transaction step error occurred.`,
+              `Trx step error occurred well removing phone number for user: 123: Error: transaction step error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('commit error occurs', () => {
+        describe('when committing upsert', () => {
+          it('throws an error', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn(),
+              commit: jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('transaction step error occurred.'),
+                ),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removePhoneNumber(input: {}) {
+                    result {
+                      ... on RemovePhoneNumberResult {
+                        status
+                      }
+                      ... on RemovePhoneNumberError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                collections,
+                query,
+                transaction: mockedTransaction,
+                auth: {
+                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de supprimer le numéro de téléphone. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred well removing phone number for user: 123: Error: transaction step error occurred.`,
             ])
           })
         })
