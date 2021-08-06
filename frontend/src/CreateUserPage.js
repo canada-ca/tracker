@@ -64,6 +64,7 @@ export default function CreateUserPage() {
           jwt: signUp.result.authToken,
           tfaSendMethod: signUp.result.user.tfaSendMethod,
           userName: signUp.result.user.userName,
+          emailValidated: signUp.result.user.emailValidated,
         })
         if (signUp.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signUp.result.user.preferredLang === 'FRENCH') activate('fr')
