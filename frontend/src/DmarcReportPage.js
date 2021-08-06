@@ -135,14 +135,11 @@ export default function DmarcReportPage() {
     )
   }
 
-  // DMARC bar graph setup
-  let graphDisplay
-
   // Set DMARC bar graph Loading
-  if (graphLoading) {
-    graphDisplay = (
+  if (graphLoading || tableLoading) {
+    return (
       <LoadingMessage>
-        <Trans>Yearly DMARC Graph</Trans>
+        <Trans>DMARC Report</Trans>
       </LoadingMessage>
     )
   }
@@ -158,8 +155,11 @@ export default function DmarcReportPage() {
     )
   }
 
+  // DMARC bar graph setup
+  let graphDisplay
+
   // Display graph query error if found
-  else if (graphError) {
+  if (graphError) {
     graphDisplay = <ErrorFallbackMessage error={graphError} />
   }
   // Set graph display using data if data exists
