@@ -284,7 +284,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
             userKey: '1234',
             i18n,
           })
-  
+
           try {
             await loader.load('1')
           } catch (err) {
@@ -294,7 +294,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
               ),
             )
           }
-  
+
           expect(consoleErrorOutput).toEqual([
             `Database error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Database error occurred.`,
           ])
@@ -312,7 +312,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
             userKey: '1234',
             i18n,
           })
-  
+
           try {
             await loader.load('1')
           } catch (err) {
@@ -322,7 +322,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
               ),
             )
           }
-  
+
           expect(consoleErrorOutput).toEqual([
             `Cursor error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Cursor error occurred.`,
           ])
@@ -353,7 +353,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
             userKey: '1234',
             i18n,
           })
-  
+
           try {
             await loader.load('1')
           } catch (err) {
@@ -363,7 +363,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
               ),
             )
           }
-  
+
           expect(consoleErrorOutput).toEqual([
             `Database error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Database error occurred.`,
           ])
@@ -381,7 +381,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
             userKey: '1234',
             i18n,
           })
-  
+
           try {
             await loader.load('1')
           } catch (err) {
@@ -391,7 +391,7 @@ describe('given the loadDmarcGuidanceTagByTagId function', () => {
               ),
             )
           }
-  
+
           expect(consoleErrorOutput).toEqual([
             `Cursor error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Cursor error occurred.`,
           ])
