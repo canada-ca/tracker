@@ -21,7 +21,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { MinusIcon, SmallAddIcon, WarningIcon } from '@chakra-ui/icons'
+import { MinusIcon, SmallAddIcon } from '@chakra-ui/icons'
 import { array, bool, func, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from './graphql/mutations'
@@ -149,13 +149,12 @@ export function AdminDomainModal({
       <ModalOverlay />
       <ModalContent pb={4}>
         <Formik
-          validateOnBlur={false}
           initialValues={{
             domainUrl: editingDomainUrl,
             selectors: selectorInputList,
           }}
           initialTouched={{
-            displayName: true,
+            domainUrl: true,
           }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
@@ -181,7 +180,7 @@ export function AdminDomainModal({
             }
           }}
         >
-          {({ handleSubmit, isSubmitting, values, errors }) => (
+          {({ handleSubmit, isSubmitting, values, errors, touched }) => (
             <form id="form" onSubmit={handleSubmit}>
               <ModalHeader>
                 {mutation === 'update' ? (
@@ -225,14 +224,22 @@ export function AdminDomainModal({
                         <Text fontWeight="bold">
                           <Trans>DKIM Selectors:</Trans>
                         </Text>
-                        <Grid
-                          gridTemplateColumns="auto 1fr"
-                          gap="0.5em"
-                          alignItems="center"
-                          mb="0.5em"
-                        >
-                          {values.selectors.map((_selector, index) => (
-                            <React.Fragment key={index}>
+                        {values.selectors.map((_selector, index) => (
+                          <FormControl
+                            key={index}
+                            isInvalid={
+                              errors.selectors &&
+                              errors.selectors[index] &&
+                              touched.selectors &&
+                              touched.selectors[index]
+                            }
+                          >
+                            <Grid
+                              gridTemplateColumns="auto 1fr"
+                              gap="0.5em"
+                              alignItems="center"
+                              mb="0.5em"
+                            >
                               <IconButton
                                 variant="danger"
                                 icon={<MinusIcon size="icons.xs" />}
@@ -247,41 +254,25 @@ export function AdminDomainModal({
                                 name={`selectors.${index}`}
                                 h="1.5rem"
                               >
-                                {({ field, form }) => (
-                                  <FormControl
-                                    isInvalid={
-                                      form.errors.selectors &&
-                                      form.errors.selectors[index] &&
-                                      form.touched.selectors &&
-                                      form.touched.selectors[index]
-                                    }
-                                  >
-                                    <Input
-                                      {...field}
-                                      id={`selectors.${index}`}
-                                      name={`selectors.${index}`}
-                                      placeholder={i18n._(t`DKIM Selector`)}
-                                      ref={initialFocusRef}
-                                    />
-                                  </FormControl>
+                                {({ field }) => (
+                                  <Input
+                                    {...field}
+                                    id={`selectors.${index}`}
+                                    name={`selectors.${index}`}
+                                    placeholder={i18n._(t`DKIM Selector`)}
+                                    ref={initialFocusRef}
+                                  />
                                 )}
                               </Field>
-                              <Stack
-                                isInline
-                                align="center"
-                                gridColumn="2 / 3"
-                                color="red.500"
-                              >
-                                {errors.selectors && errors.selectors[index] && (
-                                  <>
-                                    <WarningIcon mr="0.5em" />
-                                    <Text>{errors.selectors[index]}</Text>
-                                  </>
-                                )}
-                              </Stack>
-                            </React.Fragment>
-                          ))}
-                        </Grid>
+
+                              <FormErrorMessage gridColumn="2 / 3" mt={0}>
+                                {errors &&
+                                  errors.selectors &&
+                                  errors.selectors[index]}
+                              </FormErrorMessage>
+                            </Grid>
+                          </FormControl>
+                        ))}
                         <IconButton
                           variant="primary"
                           icon={<SmallAddIcon size="icons.md" />}

@@ -56,7 +56,7 @@ export default function DmarcGuidancePage() {
         </Heading>
         {data.findDomainByDomain.hasDMARCReport && (
           <Link
-            color="teal.500"
+            color="teal.600"
             whiteSpace="noWrap"
             my="auto"
             ml="auto"

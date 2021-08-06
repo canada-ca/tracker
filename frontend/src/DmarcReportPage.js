@@ -741,7 +741,7 @@ export default function DmarcReportPage() {
           {domainSlug.toUpperCase()}
         </Heading>
         <Link
-          color="teal.500"
+          color="teal.600"
           whiteSpace="noWrap"
           my="auto"
           to={`/domains/${domainSlug}`}
