@@ -235,7 +235,7 @@ export function UserListModal({
                   </Field>
                 )}
                 <Stack isInline align="center">
-                  <FormLabel htmlFor="role" fontWeight="bold">
+                  <FormLabel htmlFor="role" fontWeight="bold" mt="2">
                     <Trans>Role:</Trans>
                   </FormLabel>
                   <Select

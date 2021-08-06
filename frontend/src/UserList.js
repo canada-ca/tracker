@@ -184,16 +184,18 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     <Flex mb="6" w="100%" flexDirection="column">
       <form
         onSubmit={(e) => {
-          // Manually handle submit
-          // if error exist, show toast. Only submit if no errors
-          e.preventDefault()
+          e.preventDefault() // prevents page from refreshing
           setMutation('create')
           setEditingUserRole('USER')
           setEditingUserName(addedUserName)
           updateOnOpen()
         }}
       >
-        <Flex align="center" flexDirection={{ base: 'column', md: 'row' }}>
+        <Flex
+          align="center"
+          flexDirection={{ base: 'column', md: 'row' }}
+          mb="2"
+        >
           <Text
             as="label"
             htmlFor="Search-for-user-field"
