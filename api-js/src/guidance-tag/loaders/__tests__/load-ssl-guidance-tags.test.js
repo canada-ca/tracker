@@ -44,8 +44,52 @@ describe('given the loadSslGuidanceTagByTagId function', () => {
       }))
     })
     beforeEach(async () => {
-      await collections.sslGuidanceTags.save({})
-      await collections.sslGuidanceTags.save({})
+      await collections.sslGuidanceTags.save({
+        _key: 'ssl1',
+        en: {
+          tagName: 'Some Cool Tag Name A',
+          guidance: 'Some Cool Guidance A',
+          refLinksGuide: [
+            {
+              description: 'IT PIN A',
+            },
+          ],
+          refLinksTechnical: [''],
+        },
+        fr: {
+          tagName: 'todo a',
+          guidance: 'todo a',
+          refLinksGuide: [
+            {
+              description: 'todo a',
+            },
+          ],
+          refLinksTechnical: [''],
+        },
+      })
+      await collections.sslGuidanceTags.save({
+        _key: 'ssl2',
+        en: {
+          tagName: 'Some Cool Tag Name B',
+          guidance: 'Some Cool Guidance B',
+          refLinksGuide: [
+            {
+              description: 'IT PIN B',
+            },
+          ],
+          refLinksTechnical: [''],
+        },
+        fr: {
+          tagName: 'todo b',
+          guidance: 'todo b',
+          refLinksGuide: [
+            {
+              description: 'todo b',
+            },
+          ],
+          refLinksTechnical: [''],
+        },
+      })
     })
     afterEach(async () => {
       await truncate()
@@ -53,178 +97,305 @@ describe('given the loadSslGuidanceTagByTagId function', () => {
     afterAll(async () => {
       await drop()
     })
-    describe('given a single id', () => {
-      it('returns a single dkim guidance tag', async () => {
-        // Get ssl tag from db
-        const expectedCursor = await query`
-          FOR tag IN sslGuidanceTags
-            SORT tag._key ASC LIMIT 1
-            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-        `
-        const expectedSslTag = await expectedCursor.next()
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('given a single id', () => {
+        it('returns a single dkim guidance tag', async () => {
+          // Get ssl tag from db
+          const expectedCursor = await query`
+            FOR tag IN sslGuidanceTags
+              SORT tag._key ASC LIMIT 1
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("en", tag)
+              )
+          `
+          const expectedSslTag = await expectedCursor.next()
 
-        const loader = loadSslGuidanceTagByTagId({ query, i18n })
-        const sslTag = await loader.load(expectedSslTag._key)
+          const loader = loadSslGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'en',
+          })
+          const sslTag = await loader.load(expectedSslTag._key)
 
-        expect(sslTag).toEqual(expectedSslTag)
+          expect(sslTag).toEqual(expectedSslTag)
+        })
+      })
+      describe('given multiple ids', () => {
+        it('returns multiple dkim guidance tags', async () => {
+          const sslTagKeys = []
+          const expectedSslTags = []
+          const expectedCursor = await query`
+            FOR tag IN sslGuidanceTags
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("en", tag)
+              )
+          `
+
+          while (expectedCursor.hasMore) {
+            const tempSsl = await expectedCursor.next()
+            sslTagKeys.push(tempSsl._key)
+            expectedSslTags.push(tempSsl)
+          }
+
+          const loader = loadSslGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'en',
+          })
+          const sslTags = await loader.loadMany(sslTagKeys)
+          expect(sslTags).toEqual(expectedSslTags)
+        })
       })
     })
-    describe('given multiple ids', () => {
-      it('returns multiple dkim guidance tags', async () => {
-        const sslTagKeys = []
-        const expectedSslTags = []
-        const expectedCursor = await query`
-          FOR tag IN sslGuidanceTags
-            RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
-        `
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('given a single id', () => {
+        it('returns a single dkim guidance tag', async () => {
+          // Get ssl tag from db
+          const expectedCursor = await query`
+            FOR tag IN sslGuidanceTags
+              SORT tag._key ASC LIMIT 1
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("fr", tag)
+              )
+          `
+          const expectedSslTag = await expectedCursor.next()
 
-        while (expectedCursor.hasMore) {
-          const tempSsl = await expectedCursor.next()
-          sslTagKeys.push(tempSsl._key)
-          expectedSslTags.push(tempSsl)
-        }
+          const loader = loadSslGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'fr',
+          })
+          const sslTag = await loader.load(expectedSslTag._key)
 
-        const loader = loadSslGuidanceTagByTagId({ query, i18n })
-        const sslTags = await loader.loadMany(sslTagKeys)
-        expect(sslTags).toEqual(expectedSslTags)
+          expect(sslTag).toEqual(expectedSslTag)
+        })
+      })
+      describe('given multiple ids', () => {
+        it('returns multiple dkim guidance tags', async () => {
+          const sslTagKeys = []
+          const expectedSslTags = []
+          const expectedCursor = await query`
+            FOR tag IN sslGuidanceTags
+              RETURN MERGE(
+                {
+                  _id: tag._id,
+                  _key: tag._key,
+                  _rev: tag._rev,
+                  _type: "guidanceTag",
+                  id: tag._key,
+                  tagId: tag._key
+                },
+                TRANSLATE("fr", tag)
+              )
+          `
+
+          while (expectedCursor.hasMore) {
+            const tempSsl = await expectedCursor.next()
+            sslTagKeys.push(tempSsl._key)
+            expectedSslTags.push(tempSsl)
+          }
+
+          const loader = loadSslGuidanceTagByTagId({
+            query,
+            i18n,
+            language: 'fr',
+          })
+          const sslTags = await loader.loadMany(sslTagKeys)
+          expect(sslTags).toEqual(expectedSslTags)
+        })
       })
     })
   })
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = loadSslGuidanceTagByTagId({
-          query,
-          userKey: '1234',
-          i18n,
-        })
 
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find SSL guidance tag(s). Please try again.'),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Database error occurred.`,
-        ])
-      })
-    })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const cursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
+  describe('given an unsuccessful load', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
-        }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = loadSslGuidanceTagByTagId({
-          query,
-          userKey: '1234',
-          i18n,
-        })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find SSL guidance tag(s). Please try again.'),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Cursor error occurred.`,
-        ])
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a database error', () => {
-      it('raises an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = loadSslGuidanceTagByTagId({
-          query,
-          userKey: '1234',
-          i18n,
-        })
-
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              "Impossible de trouver le(s) tag(s) d'orientation SSL. Veuillez réessayer.",
-            ),
-          )
-        }
-
-        expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Database error occurred.`,
-        ])
-      })
-    })
-    describe('given a cursor error', () => {
-      it('raises an error', async () => {
-        const cursor = {
-          forEach() {
-            throw new Error('Cursor error occurred.')
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
-        }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = loadSslGuidanceTagByTagId({
-          query,
-          userKey: '1234',
-          i18n,
         })
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          const loader = loadSslGuidanceTagByTagId({
+            query: jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.')),
+            userKey: '1234',
+            i18n,
+          })
 
-        try {
-          await loader.load('1')
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              "Impossible de trouver le(s) tag(s) d'orientation SSL. Veuillez réessayer.",
-            ),
-          )
-        }
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Unable to find SSL guidance tag(s). Please try again.',
+              ),
+            )
+          }
 
-        expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Cursor error occurred.`,
-        ])
+          expect(consoleErrorOutput).toEqual([
+            `Database error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const mockedCursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          const loader = loadSslGuidanceTagByTagId({
+            query: jest.fn().mockReturnValue(mockedCursor),
+            userKey: '1234',
+            i18n,
+          })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Unable to find SSL guidance tag(s). Please try again.',
+              ),
+            )
+          }
+
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Cursor error occurred.`,
+          ])
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('given a database error', () => {
+        it('raises an error', async () => {
+          const loader = loadSslGuidanceTagByTagId({
+            query: jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.')),
+            userKey: '1234',
+            i18n,
+          })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                "Impossible de trouver le(s) tag(s) d'orientation SSL. Veuillez réessayer.",
+              ),
+            )
+          }
+
+          expect(consoleErrorOutput).toEqual([
+            `Database error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('given a cursor error', () => {
+        it('raises an error', async () => {
+          const mockedCursor = {
+            forEach() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          const loader = loadSslGuidanceTagByTagId({
+            query: jest.fn().mockReturnValue(mockedCursor),
+            userKey: '1234',
+            i18n,
+          })
+
+          try {
+            await loader.load('1')
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                "Impossible de trouver le(s) tag(s) d'orientation SSL. Veuillez réessayer.",
+              ),
+            )
+          }
+
+          expect(consoleErrorOutput).toEqual([
+            `Cursor error occurred when user: 1234 running loadSslGuidanceTagByTagId: Error: Cursor error occurred.`,
+          ])
+        })
       })
     })
   })

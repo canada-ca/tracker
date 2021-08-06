@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const loadSpfGuidanceTagByTagId = ({ query, userKey, i18n }) =>
+export const loadSpfGuidanceTagByTagId = ({ query, userKey, i18n, language }) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -9,7 +9,17 @@ export const loadSpfGuidanceTagByTagId = ({ query, userKey, i18n }) =>
         WITH spfGuidanceTags
         FOR tag IN spfGuidanceTags
           FILTER tag._key IN ${tags}
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+          RETURN MERGE(
+            {
+              _id: tag._id,
+              _key: tag._key,
+              _rev: tag._rev,
+              _type: "guidanceTag",
+              id: tag._key,
+              tagId: tag._key
+            },
+            TRANSLATE(${language}, tag)
+          )
       `
     } catch (err) {
       console.error(

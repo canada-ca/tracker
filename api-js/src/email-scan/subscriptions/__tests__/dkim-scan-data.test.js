@@ -15,7 +15,7 @@ import { toGlobalId } from 'graphql-relay'
 import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
-import { loadDkimGuidanceTagById } from '../../../guidance-tag/loaders'
+import { loadDkimGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { loadDomainByKey } from '../../../domain/loaders'
 
 const {
@@ -86,20 +86,22 @@ describe('given the dkimScanData subscription', () => {
     })
     await collections.dkimGuidanceTags.save({
       _key: 'dkim1',
-      tagName: 'DKIM-TAG',
-      guidance: 'Some Interesting Guidance',
-      refLinksGuide: [
-        {
-          description: 'refLinksGuide Description',
-          ref_link: 'www.refLinksGuide.ca',
-        },
-      ],
-      refLinksTechnical: [
-        {
-          description: 'refLinksTechnical Description',
-          ref_link: 'www.refLinksTechnical.ca',
-        },
-      ],
+      en: {
+        tagName: 'DKIM-TAG',
+        guidance: 'Some Interesting Guidance',
+        refLinksGuide: [
+          {
+            description: 'refLinksGuide Description',
+            ref_link: 'www.refLinksGuide.ca',
+          },
+        ],
+        refLinksTechnical: [
+          {
+            description: 'refLinksTechnical Description',
+            ref_link: 'www.refLinksTechnical.ca',
+          },
+        ],
+      },
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
@@ -245,10 +247,11 @@ describe('given the dkimScanData subscription', () => {
         userKey: 'uuid-1234',
         loaders: {
           loadDomainByKey: loadDomainByKey({ query, userKey: '1', i18n: {} }),
-          loadDkimGuidanceTagById: loadDkimGuidanceTagById({
+          loadDkimGuidanceTagByTagId: loadDkimGuidanceTagByTagId({
             query,
             userKey: '1',
             i18n: {},
+            language: 'en',
           }),
         },
       },

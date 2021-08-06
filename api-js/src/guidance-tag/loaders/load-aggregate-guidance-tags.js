@@ -1,7 +1,12 @@
 import { t } from '@lingui/macro'
 import DataLoader from 'dataloader'
 
-export const loadAggregateGuidanceTagById = ({ query, userKey, i18n }) =>
+export const loadAggregateGuidanceTagByTagId = ({
+  query,
+  userKey,
+  i18n,
+  language,
+}) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -9,11 +14,21 @@ export const loadAggregateGuidanceTagById = ({ query, userKey, i18n }) =>
         WITH aggregateGuidanceTags
         FOR tag IN aggregateGuidanceTags
           FILTER tag._key IN ${tags}
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag"})
+          RETURN MERGE(
+            {
+              _id: tag._id,
+              _key: tag._key,
+              _rev: tag._rev,
+              _type: "guidanceTag",
+              id: tag._key,
+              tagId: tag._key
+            },
+            TRANSLATE(${language}, tag)
+          )
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running loadAggregateGuidanceTagById: ${err}`,
+        `Database error occurred when user: ${userKey} running loadAggregateGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find Aggregate guidance tag(s). Please try again.`),
@@ -27,7 +42,7 @@ export const loadAggregateGuidanceTagById = ({ query, userKey, i18n }) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running loadAggregateGuidanceTagById: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadAggregateGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find Aggregate guidance tag(s). Please try again.`),

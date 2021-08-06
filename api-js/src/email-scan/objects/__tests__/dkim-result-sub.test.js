@@ -3,7 +3,7 @@ import { GraphQLString, GraphQLList } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
-import { loadDkimGuidanceTagById } from '../../../guidance-tag/loaders'
+import { loadDkimGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { dkimResultSubType } from '../index'
 
@@ -114,20 +114,22 @@ describe('Given The dkimResultSubType object', () => {
         await truncate()
         dkimGT = await collections.dkimGuidanceTags.save({
           _key: 'dkim1',
-          tagName: 'DKIM-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DKIM-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -136,10 +138,11 @@ describe('Given The dkimResultSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = dkimResultSubType.getFields()
 
-        const loader = loadDkimGuidanceTagById({
+        const loader = loadDkimGuidanceTagByTagId({
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const negativeTags = ['dkim1']
 
@@ -147,7 +150,7 @@ describe('Given The dkimResultSubType object', () => {
           await demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             {},
-            { loaders: { loadDkimGuidanceTagById: loader } },
+            { loaders: { loadDkimGuidanceTagByTagId: loader } },
           ),
         ).toEqual([
           {
@@ -190,20 +193,22 @@ describe('Given The dkimResultSubType object', () => {
         await truncate()
         dkimGT = await collections.dkimGuidanceTags.save({
           _key: 'dkim1',
-          tagName: 'DKIM-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DKIM-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -212,10 +217,11 @@ describe('Given The dkimResultSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = dkimResultSubType.getFields()
 
-        const loader = loadDkimGuidanceTagById({
+        const loader = loadDkimGuidanceTagByTagId({
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const neutralTags = ['dkim1']
 
@@ -223,7 +229,7 @@ describe('Given The dkimResultSubType object', () => {
           await demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             {},
-            { loaders: { loadDkimGuidanceTagById: loader } },
+            { loaders: { loadDkimGuidanceTagByTagId: loader } },
           ),
         ).toEqual([
           {
@@ -266,20 +272,22 @@ describe('Given The dkimResultSubType object', () => {
         await truncate()
         dkimGT = await collections.dkimGuidanceTags.save({
           _key: 'dkim1',
-          tagName: 'DKIM-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'DKIM-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -288,10 +296,11 @@ describe('Given The dkimResultSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = dkimResultSubType.getFields()
 
-        const loader = loadDkimGuidanceTagById({
+        const loader = loadDkimGuidanceTagByTagId({
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const positiveTags = ['dkim1']
 
@@ -299,7 +308,7 @@ describe('Given The dkimResultSubType object', () => {
           await demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             {},
-            { loaders: { loadDkimGuidanceTagById: loader } },
+            { loaders: { loadDkimGuidanceTagByTagId: loader } },
           ),
         ).toEqual([
           {

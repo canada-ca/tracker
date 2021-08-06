@@ -177,20 +177,22 @@ describe('given the spfSubType object', () => {
         await truncate()
         spfGT = await collections.spfGuidanceTags.save({
           _key: 'spf1',
-          tagName: 'SPF-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'SPF-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -203,6 +205,7 @@ describe('given the spfSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const negativeTags = ['spf1']
 
@@ -253,20 +256,22 @@ describe('given the spfSubType object', () => {
         await truncate()
         spfGT = await collections.spfGuidanceTags.save({
           _key: 'spf1',
-          tagName: 'SPF-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'SPF-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -279,6 +284,7 @@ describe('given the spfSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const neutralTags = ['spf1']
 
@@ -329,20 +335,22 @@ describe('given the spfSubType object', () => {
         await truncate()
         spfGT = await collections.spfGuidanceTags.save({
           _key: 'spf1',
-          tagName: 'SPF-TAG',
-          guidance: 'Some Interesting Guidance',
-          refLinksGuide: [
-            {
-              description: 'refLinksGuide Description',
-              ref_link: 'www.refLinksGuide.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'refLinksTechnical Description',
-              ref_link: 'www.refLinksTechnical.ca',
-            },
-          ],
+          en: {
+            tagName: 'SPF-TAG',
+            guidance: 'Some Interesting Guidance',
+            refLinksGuide: [
+              {
+                description: 'refLinksGuide Description',
+                ref_link: 'www.refLinksGuide.ca',
+              },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'refLinksTechnical Description',
+                ref_link: 'www.refLinksTechnical.ca',
+              },
+            ],
+          },
         })
       })
       afterAll(async () => {
@@ -355,6 +363,7 @@ describe('given the spfSubType object', () => {
           query,
           userKey: '1',
           i18n: {},
+          language: 'en',
         })
         const positiveTags = ['spf1']
 

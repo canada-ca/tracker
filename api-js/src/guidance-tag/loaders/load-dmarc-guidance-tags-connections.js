@@ -3,7 +3,7 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDmarcGuidanceTagConnectionsByTagId =
-  ({ query, userKey, cleanseInput, i18n }) =>
+  ({ query, userKey, cleanseInput, i18n, language }) =>
   async ({ dmarcGuidanceTags, after, before, first, last, orderBy }) => {
     let afterTemplate = aql``
     let afterVar = aql``
@@ -27,11 +27,11 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
           tagField = aql`tag._key`
           documentField = aql`afterVar._key`
         } else if (orderBy.field === 'tag-name') {
-          tagField = aql`tag.tagName`
-          documentField = aql`afterVar.tagName`
+          tagField = aql`TRANSLATE(${language}, tag).tagName`
+          documentField = aql`TRANSLATE(${language}, afterVar).tagName`
         } else if (orderBy.field === 'guidance') {
-          tagField = aql`tag.guidance`
-          documentField = aql`afterVar.guidance`
+          tagField = aql`TRANSLATE(${language}, tag).guidance`
+          documentField = aql`TRANSLATE(${language}, afterVar).guidance`
         }
 
         afterTemplate = aql`
@@ -64,11 +64,11 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
           tagField = aql`tag._key`
           documentField = aql`beforeVar._key`
         } else if (orderBy.field === 'tag-name') {
-          tagField = aql`tag.tagName`
-          documentField = aql`beforeVar.tagName`
+          tagField = aql`TRANSLATE(${language}, tag).tagName`
+          documentField = aql`TRANSLATE(${language}, beforeVar).tagName`
         } else if (orderBy.field === 'guidance') {
-          tagField = aql`tag.guidance`
-          documentField = aql`beforeVar.guidance`
+          tagField = aql`TRANSLATE(${language}, tag).guidance`
+          documentField = aql`TRANSLATE(${language}, beforeVar).guidance`
         }
 
         beforeTemplate = aql`
@@ -157,11 +157,11 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
         hasNextPageDocument = aql`LAST(retrievedDmarcGuidanceTags)._key`
         hasPreviousPageDocument = aql`FIRST(retrievedDmarcGuidanceTags)._key`
       } else if (orderBy.field === 'tag-name') {
-        tagField = aql`tag.tagName`
+        tagField = aql`TRANSLATE(${language}, tag).tagName`
         hasNextPageDocument = aql`LAST(retrievedDmarcGuidanceTags).tagName`
         hasPreviousPageDocument = aql`FIRST(retrievedDmarcGuidanceTags).tagName`
       } else if (orderBy.field === 'guidance') {
-        tagField = aql`tag.guidance`
+        tagField = aql`TRANSLATE(${language}, tag).guidance`
         hasNextPageDocument = aql`LAST(retrievedDmarcGuidanceTags).guidance`
         hasPreviousPageDocument = aql`FIRST(retrievedDmarcGuidanceTags).guidance`
       }
@@ -185,9 +185,9 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
       if (orderBy.field === 'tag-id') {
         sortByField = aql`tag._key ${orderBy.direction},`
       } else if (orderBy.field === 'tag-name') {
-        sortByField = aql`tag.tagName ${orderBy.direction},`
+        sortByField = aql`TRANSLATE(${language}, tag).tagName ${orderBy.direction},`
       } else if (orderBy.field === 'guidance') {
-        sortByField = aql`tag.guidance ${orderBy.direction},`
+        sortByField = aql`TRANSLATE(${language}, tag).guidance ${orderBy.direction},`
       }
     }
 
@@ -214,7 +214,17 @@ export const loadDmarcGuidanceTagConnectionsByTagId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
+          RETURN MERGE(
+            {
+              _id: tag._id,
+              _key: tag._key,
+              _rev: tag._rev,
+              _type: "guidanceTag",
+              id: tag._key,
+              tagId: tag._key
+            },
+            TRANSLATE(${language}, tag)
+          )
       )
 
       LET hasNextPage = (LENGTH(

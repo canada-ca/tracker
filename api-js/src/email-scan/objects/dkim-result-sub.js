@@ -33,9 +33,9 @@ export const dkimResultSubType = new GraphQLObjectType({
       resolve: async (
         { negativeTags },
         _args,
-        { loaders: { loadDkimGuidanceTagById } },
+        { loaders: { loadDkimGuidanceTagByTagId } },
       ) => {
-        const dkimTags = await loadDkimGuidanceTagById.loadMany(negativeTags)
+        const dkimTags = await loadDkimGuidanceTagByTagId.loadMany(negativeTags)
         return dkimTags
       },
     },
@@ -45,9 +45,9 @@ export const dkimResultSubType = new GraphQLObjectType({
       resolve: async (
         { neutralTags },
         _args,
-        { loaders: { loadDkimGuidanceTagById } },
+        { loaders: { loadDkimGuidanceTagByTagId } },
       ) => {
-        const dkimTags = await loadDkimGuidanceTagById.loadMany(neutralTags)
+        const dkimTags = await loadDkimGuidanceTagByTagId.loadMany(neutralTags)
         return dkimTags
       },
     },
@@ -57,9 +57,9 @@ export const dkimResultSubType = new GraphQLObjectType({
       resolve: async (
         { positiveTags },
         _args,
-        { loaders: { loadDkimGuidanceTagById } },
+        { loaders: { loadDkimGuidanceTagByTagId } },
       ) => {
-        const dkimTags = await loadDkimGuidanceTagById.loadMany(positiveTags)
+        const dkimTags = await loadDkimGuidanceTagByTagId.loadMany(positiveTags)
         return dkimTags
       },
     },

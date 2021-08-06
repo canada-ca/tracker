@@ -11,5 +11,5 @@ module.exports = {
     'index.js',
     'env.js',
   ],
-  testTimeout: 50000,
+  testTimeout: 120000,
 }
