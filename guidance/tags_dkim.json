@@ -27,7 +27,7 @@
     },
     "dkim2": {
         "en": {
-            "tagName": "DKIM-missing",
+            "tagName": "Missing",
             "guidance": "Follow implementation guide",
             "refLinksGuide": [
                 {
@@ -43,7 +43,7 @@
             ]
         },
         "fr": {
-            "tagName": "DKIM-missing",
+            "tagName": "Missing",
             "guidance": "Suivre le guide de mise en œuvre",
             "refLinksGuide": [
                 {
@@ -61,7 +61,7 @@
     },
     "dkim3": {
         "en": {
-            "tagName": "DKIM-missing-mx-O365",
+            "tagName": "Missing-mx-O365",
             "guidance": "DKIM record missing but MX uses O365. Follow cloud-specific guidance.",
             "refLinksGuide": [
                 {
@@ -77,7 +77,7 @@
             ]
         },
         "fr": {
-            "tagName": "DKIM-missing-mx-O365",
+            "tagName": "Missing-mx-O365",
             "guidance": "L'enregistrement DKIM est manquant mais MX utilise O365. Suivez les conseils spécifiques au cloud.",
             "refLinksGuide": [
                 {
@@ -95,7 +95,7 @@
     },
     "dkim4": {
         "en": {
-            "tagName": "DKIM-missing-O365-misconfigured",
+            "tagName": "Missing-O365-misconfigured",
             "guidance": "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365",
             "refLinksGuide": [
                 {
@@ -111,7 +111,7 @@
             ]
         },
         "fr": {
-            "tagName": "DKIM-missing-O365-misconfigured",
+            "tagName": "Missing-O365-misconfigured",
             "guidance": "Les CNAME DKIM n'existent pas, mais le MX pointe vers *.onmicrosoft.com et l'enregistrement SPF inclut O365.",
             "refLinksGuide": [
                 {
@@ -327,7 +327,7 @@
     },
     "dkim11": {
         "en": {
-            "tagName": "DKIM-invalid-crypto",
+            "tagName": "Invalid-crypto",
             "guidance": "DKIM key does not use RSA",
             "refLinksGuide": [
                 {
@@ -343,7 +343,7 @@
             ]
         },
         "fr": {
-            "tagName": "DKIM-invalid-crypto",
+            "tagName": "Invalid-crypto",
             "guidance": "La clé DKIM n'utilise pas le RSA",
             "refLinksGuide": [
                 {
@@ -361,7 +361,7 @@
     },
     "dkim12": {
         "en": {
-            "tagName": "DKIM-value-invalid",
+            "tagName": "Value-invalid",
             "guidance": "DKIM TXT record invalid",
             "refLinksGuide": [
                 {
@@ -377,7 +377,7 @@
             ]
         },
         "fr": {
-            "tagName": "DKIM-value-invalid",
+            "tagName": "Value-invalid",
             "guidance": "Enregistrement DKIM TXT invalide",
             "refLinksGuide": [
                 {

@@ -41,7 +41,7 @@ def process_https(results, domain_key, user_key, db, shared_id):
     if results.get("error") == "missing":
         negative_tags.append("https2")
     elif results.get("error") == "unreachable":
-        neutral_tags.append("https15")
+        neutral_tags.append("https17")
     else:
         # Certificate does not match host name
         if results.get("cert_bad_hostname"):
@@ -146,7 +146,9 @@ def process_https(results, domain_key, user_key, db, shared_id):
         }
 
     # get https status
-    if len(negative_tags) > 0:
+    if "https17" in neutral_tags:
+        https_status= "info"
+    elif len(negative_tags) > 0:
         https_status = "fail"
     else:
         https_status = "pass"
@@ -267,7 +269,9 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
     }
 
     # get ssl status
-    if len(negative_tags) > 0 or "ssl5" not in positive_tags:
+    if "ssl9" in neutral_tags:
+        ssl_status = "info"
+    elif len(negative_tags) > 0 or "ssl5" not in positive_tags:
         ssl_status = "fail"
     else:
         ssl_status = "pass"

@@ -28,7 +28,7 @@
     },
     "spf2": {
         "en": {
-            "tagName": "SPF-missing",
+            "tagName": "Missing",
             "guidance": "Follow implementation guide",
             "refLinksGuide": [
                 {
@@ -44,7 +44,7 @@
             ]
         },
         "fr": {
-            "tagName": "SPF-missing",
+            "tagName": "Missing",
             "guidance": "Suivre le guide de mise en œuvre",
             "refLinksGuide": [
                 {
@@ -62,7 +62,7 @@
     },
     "spf3": {
         "en": {
-            "tagName": "SPF-bad-path",
+            "tagName": "Bad-path",
             "guidance": "SPF implemented in incorrect subdomain",
             "refLinksGuide": [
                 {
@@ -78,7 +78,7 @@
             ]
         },
         "fr": {
-            "tagName": "SPF-bad-path",
+            "tagName": "Bad-path",
             "guidance": "SPF implémenté dans un sous-domaine incorrect",
             "refLinksGuide": [
                 {
@@ -368,7 +368,7 @@
     },
     "spf12": {
         "en": {
-            "tagName": "SPF-valid",
+            "tagName": "Valid",
             "guidance": "SPF record is properly formed",
             "refLinksGuide": [
                 {
@@ -384,7 +384,7 @@
             ]
         },
         "fr": {
-            "tagName": "SPF-valid",
+            "tagName": "Valid",
             "guidance": "L'enregistrement SPF est correctement formé",
             "refLinksGuide": [
                 {

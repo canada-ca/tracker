@@ -29,7 +29,7 @@
     },
     "https2": {
         "en": {
-            "tagName": "HTTPS-missing",
+            "tagName": "Missing",
             "guidance": "Follow implementation guide",
             "refLinksGuide": [
                 {
@@ -42,7 +42,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-missing",
+            "tagName": "Missing",
             "guidance": "Suivre le guide de mise en œuvre",
             "refLinksGuide": [
                 {
@@ -57,7 +57,7 @@
     },
     "https3": {
         "en": {
-            "tagName": "HTTPS-downgraded",
+            "tagName": "Downgraded",
             "guidance": "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.",
             "refLinksGuide": [
                 {
@@ -70,7 +70,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-downgraded",
+            "tagName": "Downgraded",
             "guidance": "Le point de terminaison HTTPS canonique redirige en interne vers HTTP. Suivez les instructions.",
             "refLinksGuide": [
                 {
@@ -85,7 +85,7 @@
     },
     "https4": {
         "en": {
-            "tagName": "HTTPS-bad-chain",
+            "tagName": "Bad-chain",
             "guidance": "HTTPS certificate chain is invalid",
             "refLinksGuide": [
                 {
@@ -98,7 +98,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-bad-chain",
+            "tagName": "Bad-chain",
             "guidance": "La chaîne de certificats HTTPS n'est pas valide",
             "refLinksGuide": [
                 {
@@ -113,7 +113,7 @@
     },
     "https5": {
         "en": {
-            "tagName": "HTTPS-bad-hostname",
+            "tagName": "Bad-hostname",
             "guidance": "HTTPS endpoint failed hostname validation",
             "refLinksGuide": [
                 {
@@ -126,7 +126,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-bad-hostname",
+            "tagName": "Bad-hostname",
             "guidance": "La validation du nom d'hôte du point de terminaison HTTPS a échoué",
             "refLinksGuide": [
                 {
@@ -141,7 +141,7 @@
     },
     "https6": {
         "en": {
-            "tagName": "HTTPS-not-enforced",
+            "tagName": "Not-enforced",
             "guidance": "Domain does not enforce HTTPS",
             "refLinksGuide": [
                 {
@@ -154,7 +154,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-not-enforced",
+            "tagName": "Not-enforced",
             "guidance": "Le domaine n'applique pas le protocole HTTPS",
             "refLinksGuide": [
                 {
@@ -169,7 +169,7 @@
     },
     "https7": {
         "en": {
-            "tagName": "HTTPS-weakly-enforced",
+            "tagName": "Weakly-enforced",
             "guidance": "Domain does not default to HTTPS",
             "refLinksGuide": [
                 {
@@ -182,7 +182,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-weakly-enforced",
+            "tagName": "Weakly-enforced",
             "guidance": "Le domaine ne fonctionne pas par défaut en HTTPS",
             "refLinksGuide": [
                 {
@@ -197,7 +197,7 @@
     },
     "https8": {
         "en": {
-            "tagName": "HTTPS-moderately-enforced",
+            "tagName": "Moderately-enforced",
             "guidance": "Domain defaults to HTTPS, but eventually redirects to HTTP",
             "refLinksGuide": [
                 {
@@ -210,7 +210,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-moderately-enforced",
+            "tagName": "Moderately-enforced",
             "guidance": "Le domaine passe par défaut en HTTPS, mais finit par être redirigé en HTTP",
             "refLinksGuide": [
                 {
@@ -337,7 +337,7 @@
     },
     "https13": {
         "en": {
-            "tagName": "HTTPS-certificate-expired",
+            "tagName": "Certificate-expired",
             "guidance": "HTTPS certificate is expired",
             "refLinksGuide": [
                 {
@@ -350,7 +350,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-certificate-expired",
+            "tagName": "Certificate-expired",
             "guidance": "Le certificat HTTPS a expiré",
             "refLinksGuide": [
                 {
@@ -365,7 +365,7 @@
     },
     "https14": {
         "en": {
-            "tagName": "HTTPS-certificate-self-signed",
+            "tagName": "Certificate-self-signed",
             "guidance": "HTTPS certificate is self-signed",
             "refLinksGuide": [
                 {
@@ -378,7 +378,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-certificate-self-signed",
+            "tagName": "Certificate-self-signed",
             "guidance": "Le certificat HTTPS est auto-signé",
             "refLinksGuide": [
                 {
@@ -393,7 +393,7 @@
     },
     "https15": {
         "en": {
-            "tagName": "HTTPS-certificate-revoked",
+            "tagName": "Certificate-revoked",
             "guidance": "HTTPS certificate has been revoked",
             "refLinksGuide": [
                 {
@@ -406,7 +406,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-certificate-revoked",
+            "tagName": "Certificate-revoked",
             "guidance": "Le certificat HTTPS a été révoqué",
             "refLinksGuide": [
                 {
@@ -421,7 +421,7 @@
     },
     "https16": {
         "en": {
-            "tagName": "HTTPS-certificate-revocation-unknown",
+            "tagName": "Certificate-revocation-unknown",
             "guidance": "Revocation status of HTTPS certificate could not be checked",
             "refLinksGuide": [
                 {
@@ -434,7 +434,7 @@
             ]
         },
         "fr": {
-            "tagName": "HTTPS-certificate-revocation-unknown",
+            "tagName": "Certificate-revocation-unknown",
             "guidance": "L'état de révocation du certificat HTTPS n'a pas pu être vérifié",
             "refLinksGuide": [
                 {
@@ -445,6 +445,30 @@
             "refLinksTechnical": [
                 ""
             ]
+        }
+    },
+    "https17": {
+        "en": {
+            "tagName": "Unreachable",
+            "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
+            "refLinksGuide": [
+                {
+                    "description": "6.1.1 Direction",
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                }
+            ],
+            "refLinksTechnical": [""]
+        },
+        "fr": {
+            "tagName": "Unreachable",
+            "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
+            "refLinksGuide": [
+                {
+                    "description": "6.1.1 Direction",
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                }
+            ],
+            "refLinksTechnical": [""]
         }
     }
 }
