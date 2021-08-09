@@ -1944,7 +1944,7 @@ msgstr "Ce champ ne peut pas être vide"
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
-#: src/TwoFactorNotificationBar.js:17
+#: src/VerifyAccountNotificationBar.js:17
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "Pour permettre la fonctionnalité complète de l'application et maximiser la sécurité de votre compte, <0>veuillez vérifier votre compte</0>."
 

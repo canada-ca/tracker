@@ -20,7 +20,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
 import RequestScanNotificationHandler from './RequestScanNotificationHandler'
 import { wsClient } from './client'
-import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
+import { VerifyAccountNotificationBar } from './VerifyAccountNotificationBar'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
@@ -108,7 +108,9 @@ export default function App() {
           )}
         </Navigation>
 
-        {isLoggedIn() && !isEmailValidated() && <TwoFactorNotificationBar />}
+        {isLoggedIn() && !isEmailValidated() && (
+          <VerifyAccountNotificationBar />
+        )}
 
         <Main marginBottom={{ base: '40px', md: 'none' }}>
           <Suspense fallback={<LoadingMessage />}>

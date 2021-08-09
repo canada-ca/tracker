@@ -3,7 +3,7 @@ import { Flex, Text, Box, Link } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
 
-export function TwoFactorNotificationBar() {
+export function VerifyAccountNotificationBar() {
   return (
     <Box bg="yellow.250" p="2">
       <Flex
