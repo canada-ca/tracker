@@ -115,6 +115,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     if (typeof requestedUser === 'undefined') {
       const token = tokenize({
         parameters: { userName, orgKey: org._key, requestedRole },
+        expPeriod: 24,
       })
       const createAccountLink = `https://${request.get(
         'host',
