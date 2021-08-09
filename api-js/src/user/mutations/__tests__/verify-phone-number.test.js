@@ -13,65 +13,66 @@ import { userRequired } from '../../../auth'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('user send password reset email', () => {
-  const originalInfo = console.info
-  afterEach(() => (console.info = originalInfo))
-
   let query, drop, truncate, collections, transaction, schema, i18n, user
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+
+  beforeAll(() => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
   })
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-      tfaCode: 123456,
-    })
-  })
-  afterEach(async () => {
+  afterEach(() => {
     consoleOutput.length = 0
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
   })
 
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
+  describe('given a successful phone number verification', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+        tfaCode: 123456,
       })
     })
-    describe('successfully verify phone number', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       it('returns a successful status message', async () => {
         const response = await graphql(
           schema,
@@ -184,266 +185,21 @@ describe('user send password reset email', () => {
         ])
       })
     })
-    describe('unsuccessful verifying of phone number', () => {
-      describe('the two factor code is not 6 digits long', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                      user {
-                        displayName
-                      }
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query,
-              collections,
-              transaction,
-              auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyPhoneNumber: {
-                result: {
-                  code: 400,
-                  description:
-                    'Two factor code length is incorrect. Please try again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to two factor authenticate, however the code they submitted does not have 6 digits.`,
-          ])
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('tfa codes do not match', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 654321 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                      user {
-                        displayName
-                      }
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query,
-              collections,
-              transaction,
-              auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyPhoneNumber: {
-                result: {
-                  code: 400,
-                  description:
-                    'Two factor code is incorrect. Please try again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to two factor authenticate, however the tfa codes do not match.`,
-          ])
-        })
-      })
-    })
-    describe('given a transaction step error', () => {
-      describe('when upserting users phone validation status', () => {
-        it('throws an error', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest
-              .fn()
-              .mockRejectedValue(new Error('Transaction step error')),
-          })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                      user {
-                        displayName
-                      }
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              'Unable to two factor authenticate. Please try again.',
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx step error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction step error`,
-          ])
-        })
-      })
-    })
-    describe('given a transaction commit error', () => {
-      describe('when committing changes', () => {
-        it('throws an error', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest.fn().mockReturnValue({}),
-            commit: jest
-              .fn()
-              .mockRejectedValue(new Error('Transaction commit error')),
-          })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                      user {
-                        displayName
-                      }
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              'Unable to two factor authenticate. Please try again.',
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx commit error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction commit error`,
-          ])
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('successfully verify phone number', () => {
       it('returns a successful status message', async () => {
         const response = await graphql(
           schema,
@@ -556,7 +312,23 @@ describe('user send password reset email', () => {
         ])
       })
     })
-    describe('unsuccessful verifying of phone number', () => {
+  })
+  describe('given an unsuccessful phone number verification', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('the two factor code is not 6 digits long', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -582,18 +354,19 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userKey: user._key,
+              userKey: 123,
               query,
               collections,
               transaction,
               auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
             },
           )
@@ -604,7 +377,7 @@ describe('user send password reset email', () => {
                 result: {
                   code: 400,
                   description:
-                    'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
+                    'Two factor code length is incorrect. Please try again.',
                 },
               },
             },
@@ -612,7 +385,7 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to two factor authenticate, however the code they submitted does not have 6 digits.`,
+            `User: 123 attempted to two factor authenticate, however the code they submitted does not have 6 digits.`,
           ])
         })
       })
@@ -641,18 +414,280 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userKey: user._key,
+              userKey: 123,
               query,
               collections,
               transaction,
               auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                  tfaCode: 123456,
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+              },
+            },
+          )
+
+          const error = {
+            data: {
+              verifyPhoneNumber: {
+                result: {
+                  code: 400,
+                  description:
+                    'Two factor code is incorrect. Please try again.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to two factor authenticate, however the tfa codes do not match.`,
+          ])
+        })
+      })
+      describe('given a transaction step error', () => {
+        describe('when upserting users phone validation status', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
+                    result {
+                      ... on VerifyPhoneNumberResult {
+                        status
+                        user {
+                          displayName
+                        }
+                      }
+                      ... on VerifyPhoneNumberError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                userKey: 123,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
+                }),
+                auth: {
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
+                    tfaCode: 123456,
+                  }),
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to two factor authenticate. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when upserting the tfaValidate field for 123: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('given a transaction commit error', () => {
+        describe('when committing changes', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
+                    result {
+                      ... on VerifyPhoneNumberResult {
+                        status
+                        user {
+                          displayName
+                        }
+                      }
+                      ... on VerifyPhoneNumberError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                userKey: 123,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
+                }),
+                auth: {
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
+                    tfaCode: 123456,
+                  }),
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to two factor authenticate. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred when upserting the tfaValidate field for 123: Error: Transaction commit error`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('the two factor code is not 6 digits long', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                verifyPhoneNumber(input: { twoFactorCode: 123 }) {
+                  result {
+                    ... on VerifyPhoneNumberResult {
+                      status
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on VerifyPhoneNumberError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userKey: 123,
+              query,
+              collections,
+              transaction,
+              auth: {
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                }),
+              },
+              loaders: {
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
+              },
+            },
+          )
+
+          const error = {
+            data: {
+              verifyPhoneNumber: {
+                result: {
+                  code: 400,
+                  description:
+                    'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to two factor authenticate, however the code they submitted does not have 6 digits.`,
+          ])
+        })
+      })
+      describe('tfa codes do not match', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                verifyPhoneNumber(input: { twoFactorCode: 654321 }) {
+                  result {
+                    ... on VerifyPhoneNumberResult {
+                      status
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on VerifyPhoneNumberError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userKey: 123,
+              query,
+              collections,
+              transaction,
+              auth: {
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                  tfaCode: 123456,
+                }),
+              },
+              loaders: {
+                loadUserByKey: {
+                  load: jest.fn(),
+                },
               },
             },
           )
@@ -671,131 +706,131 @@ describe('user send password reset email', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to two factor authenticate, however the tfa codes do not match.`,
+            `User: 123 attempted to two factor authenticate, however the tfa codes do not match.`,
           ])
         })
       })
-    })
-    describe('given a transaction step error', () => {
-      describe('when upserting users phone validation status', () => {
-        it('throws an error', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest
-              .fn()
-              .mockRejectedValue(new Error('Transaction step error')),
-          })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                      user {
-                        displayName
+      describe('given a transaction step error', () => {
+        describe('when upserting users phone validation status', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
+                    result {
+                      ... on VerifyPhoneNumberResult {
+                        status
+                        user {
+                          displayName
+                        }
                       }
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
+                      ... on VerifyPhoneNumberError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+              `,
+              null,
+              {
+                i18n,
+                userKey: 123,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
                 }),
+                auth: {
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
+                    tfaCode: 123456,
+                  }),
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx step error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction step error`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when upserting the tfaValidate field for 123: Error: Transaction step error`,
+            ])
+          })
         })
       })
-    })
-    describe('given a transaction commit error', () => {
-      describe('when committing changes', () => {
-        it('throws an error', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest.fn().mockReturnValue({}),
-            commit: jest
-              .fn()
-              .mockRejectedValue(new Error('Transaction commit error')),
-          })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                      user {
-                        displayName
+      describe('given a transaction commit error', () => {
+        describe('when committing changes', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
+                    result {
+                      ... on VerifyPhoneNumberResult {
+                        status
+                        user {
+                          displayName
+                        }
                       }
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
+                      ... on VerifyPhoneNumberError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              auth: {
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+              `,
+              null,
+              {
+                i18n,
+                userKey: 123,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
                 }),
+                auth: {
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
+                    tfaCode: 123456,
+                  }),
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
               },
-              loaders: {
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx commit error occurred when upserting the tfaValidate field for ${user._key}: Error: Transaction commit error`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred when upserting the tfaValidate field for 123: Error: Transaction commit error`,
+            ])
+          })
         })
       })
     })

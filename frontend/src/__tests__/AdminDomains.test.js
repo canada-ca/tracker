@@ -43,9 +43,6 @@ const mocks = [
 ]
 
 describe('<AdminDomains />', () => {
-  beforeEach(() => {
-    jest.setTimeout(30000)
-  })
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
@@ -402,12 +399,12 @@ describe('<AdminDomains />', () => {
 
       const {
         getByText,
-        getByLabelText,
         getByTestId,
         getByPlaceholderText,
         queryAllByText,
         findByText,
         queryByText,
+        getByRole,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -439,17 +436,20 @@ describe('<AdminDomains />', () => {
         expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
       )
 
-      const domainInput = getByLabelText(/Domain URL:/)
-      fireEvent.change(domainInput, { target: { value: 'test.domain.gc.ca' } })
+      const domainInput = getByRole('textbox', { name: /New Domain URL/ })
+      expect(domainInput).toBeInTheDocument()
+      userEvent.type(domainInput, 'test.domain.gc.ca')
 
       const addSelectorBtn = getByTestId(/add-dkim-selector/)
       fireEvent.click(addSelectorBtn)
+
+      const selectorInput = getByPlaceholderText(/DKIM Selector/)
+      fireEvent.blur(selectorInput)
 
       await waitFor(() =>
         expect(getByText(/Selector cannot be empty/)).toBeInTheDocument(),
       )
 
-      const selectorInput = getByPlaceholderText(/DKIM Selector/)
       fireEvent.change(selectorInput, { target: { value: 'selector1' } })
 
       await waitFor(() =>

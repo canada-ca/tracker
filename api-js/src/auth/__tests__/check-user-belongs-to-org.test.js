@@ -9,7 +9,7 @@ import frenchMessages from '../../locale/fr/messages'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the checkUserBelongsToOrg function', () => {
-  describe('given a successful check', () => {
+  describe('given a successful call', () => {
     let query, drop, truncate, collections, user, org
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
@@ -92,7 +92,7 @@ describe('given the checkUserBelongsToOrg function', () => {
       })
     })
   })
-  describe('given an unsuccessful check', () => {
+  describe('given an unsuccessful call', () => {
     let i18n
     const consoleOutput = []
     const mockedError = (output) => consoleOutput.push(output)

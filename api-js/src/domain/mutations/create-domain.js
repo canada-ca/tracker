@@ -130,7 +130,15 @@ export const createDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
-    const checkOrgDomain = await checkDomainCursor.next()
+    let checkOrgDomain
+    try {
+      checkOrgDomain = await checkDomainCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred while running check to see if domain already exists in an org: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+    }
 
     if (typeof checkOrgDomain !== 'undefined') {
       console.warn(
@@ -181,7 +189,15 @@ export const createDomain = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
 
-      const insertedDomain = await insertedDomainCursor.next()
+      let insertedDomain
+      try {
+        insertedDomain = await insertedDomainCursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error occurred for user: ${userKey} after inserting new domain and gathering its domain info: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+      }
 
       try {
         await trx.step(

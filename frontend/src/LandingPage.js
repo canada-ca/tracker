@@ -3,11 +3,8 @@ import trackerLogo from './images/trackerlogo.svg'
 import { Box, Divider, Grid, Image, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
-import { useUserVar } from './UserState'
 
 export function LandingPage() {
-  const { isLoggedIn } = useUserVar()
-
   return (
     <Stack>
       <Grid
@@ -51,11 +48,9 @@ export function LandingPage() {
           />
         </Box>
       </Grid>
-      {isLoggedIn() && (
-        <Box pt={7}>
-          <LandingPageSummaries />
-        </Box>
-      )}
+      <Box pt={7}>
+        <LandingPageSummaries />
+      </Box>
     </Stack>
   )
 }

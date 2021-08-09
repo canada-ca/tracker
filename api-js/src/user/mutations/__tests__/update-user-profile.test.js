@@ -18,62 +18,65 @@ const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 describe('authenticate user account', () => {
   let query, drop, truncate, collections, transaction, schema, i18n
 
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
 
-  beforeAll(async () => {
+  beforeAll(() => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
+  afterEach(() => {
+    consoleOutput.length = 0
+  })
 
-    await collections.users.save({
-      displayName: 'Test Account',
-      userName: 'test.account@istio.actually.exists',
-      preferredLang: 'french',
-      tfaSendMethod: 'none',
+  describe('given a successful update', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-    consoleOutput = []
-  })
-  afterEach(async () => {
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
+    beforeEach(async () => {
+      await collections.users.save({
+        displayName: 'Test Account',
+        userName: 'test.account@istio.actually.exists',
+        preferredLang: 'french',
+        tfaSendMethod: 'none',
       })
     })
-    describe('given successful update of users profile', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('user updates their display name', () => {
         it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
@@ -983,261 +986,21 @@ describe('authenticate user account', () => {
         })
       })
     })
-    describe('given unsuccessful update of users profile', () => {
-      describe('user attempts to set email to one that is already in use', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'john.doe@istio.actually.works',
-          })
-        })
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        id
-                      }
-                    }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-              notify: { sendVerificationEmail: jest.fn() },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserProfile: {
-                result: {
-                  code: 400,
-                  description: 'Username not available, please try another.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their username, but the username is already in use.`,
-          ])
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('given a transaction step error', () => {
-        describe('when updating profile', () => {
-          it('throws an error', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-            const user = await userNameLoader.load(
-              'test.account@istio.actually.exists',
-            )
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  updateUserProfile(
-                    input: {
-                      displayName: "John Smith"
-                      userName: "john.smith@istio.actually.works"
-                      preferredLang: ENGLISH
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          id
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
-                },
-                notify: { sendVerificationEmail: jest.fn() },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to update profile. Please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('given a transaction step error', () => {
-        describe('when updating profile', () => {
-          it('throws an error', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-            const user = await userNameLoader.load(
-              'test.account@istio.actually.exists',
-            )
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  updateUserProfile(
-                    input: {
-                      displayName: "John Smith"
-                      userName: "john.smith@istio.actually.works"
-                      preferredLang: ENGLISH
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserProfileResult {
-                        status
-                        user {
-                          id
-                        }
-                      }
-                      ... on UpdateUserProfileError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
-                },
-                notify: { sendVerificationEmail: jest.fn() },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to update profile. Please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction commit error`,
-            ])
-          })
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given successful update of users profile', () => {
       describe('user updates their display name', () => {
         it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
@@ -1398,9 +1161,9 @@ describe('authenticate user account', () => {
                 RETURN user
             `
             const user = await cursor.next()
-  
+
             const mockNotify = jest.fn()
-  
+
             await graphql(
               schema,
               `
@@ -1451,14 +1214,14 @@ describe('authenticate user account', () => {
                 notify: { sendVerificationEmail: mockNotify },
               },
             )
-  
+
             const updatedCursor = await query`
               FOR user IN users
                 FILTER user.userName == "john.doe@istio.actually.works"
                 RETURN user
             `
             const updatedUser = await updatedCursor.next()
-  
+
             expect(mockNotify).toBeCalledWith({
               verifyUrl: 'https://domain.ca/validate/token',
               user: {
@@ -2149,21 +1912,25 @@ describe('authenticate user account', () => {
         })
       })
     })
-    describe('given unsuccessful update of users profile', () => {
-      describe('user attempts to set email to one that is already in use', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'john.doe@istio.actually.works',
-          })
+  })
+  describe('given an unsuccessful update', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
+      })
+      describe('user attempts to set email to one that is already in use', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -2191,22 +1958,258 @@ describe('authenticate user account', () => {
               i18n,
               query,
               collections,
-              transaction,
-              userKey: user._key,
+              transaction: jest.fn(),
+              userKey: 123,
               auth: {
                 bcrypt,
                 tokenize,
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                userRequired: jest.fn().mockReturnValue({
+                  tfaSendMethod: 'none',
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByUserName: {
+                  load: jest.fn().mockReturnValue({}),
+                },
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
+              },
+              notify: { sendVerificationEmail: jest.fn() },
+            },
+          )
+
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'Username not available, please try another.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: 123 attempted to update their username, but the username is already in use.`,
+          ])
+        })
+      })
+      describe('given a transaction step error', () => {
+        describe('when updating profile', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: {
+                      displayName: "John Smith"
+                      userName: "john.smith@istio.actually.works"
+                      preferredLang: ENGLISH
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          id
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
+                }),
+                userKey: 123,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    tfaSendMethod: 'none',
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                },
+                notify: { sendVerificationEmail: jest.fn() },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update profile. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error ocurred when user: 123 attempted to update their profile: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('given a transaction step error', () => {
+        describe('when updating profile', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(
+                    input: {
+                      displayName: "John Smith"
+                      userName: "john.smith@istio.actually.works"
+                      preferredLang: ENGLISH
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          id
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
+                }),
+                userKey: 123,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    tfaSendMethod: 'none',
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                },
+                notify: { sendVerificationEmail: jest.fn() },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update profile. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error ocurred when user: 123 attempted to update their profile: Error: Transaction commit error`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('user attempts to set email to one that is already in use', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(
+                  input: { userName: "john.doe@istio.actually.works" }
+                ) {
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction: jest.fn(),
+              userKey: 123,
+              auth: {
+                bcrypt,
+                tokenize,
+                userRequired: jest.fn().mockReturnValue({
+                  tfaSendMethod: 'none',
+                }),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: {
+                  load: jest.fn().mockReturnValue({}),
+                },
+                loadUserByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
               notify: { sendVerificationEmail: jest.fn() },
             },
@@ -2226,25 +2229,13 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their username, but the username is already in use.`,
+            `User: 123 attempted to update their username, but the username is already in use.`,
           ])
         })
       })
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-            const user = await userNameLoader.load(
-              'test.account@istio.actually.exists',
-            )
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
-            })
-
             const response = await graphql(
               schema,
               `
@@ -2276,22 +2267,29 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction step error')),
+                }),
+                userKey: 123,
                 auth: {
                   bcrypt,
                   tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  userRequired: jest.fn().mockReturnValue({
+                    tfaSendMethod: 'none',
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
                 notify: { sendVerificationEmail: jest.fn() },
               },
@@ -2305,7 +2303,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction step error`,
+              `Trx step error ocurred when user: 123 attempted to update their profile: Error: Transaction step error`,
             ])
           })
         })
@@ -2313,19 +2311,6 @@ describe('authenticate user account', () => {
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
-            const userNameLoader = loadUserByUserName({ query })
-            const idLoader = loadUserByKey({ query })
-            const user = await userNameLoader.load(
-              'test.account@istio.actually.exists',
-            )
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
-            })
-
             const response = await graphql(
               schema,
               `
@@ -2357,22 +2342,30 @@ describe('authenticate user account', () => {
                 i18n,
                 query,
                 collections,
-                transaction: mockedTransaction,
-                userKey: user._key,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockReturnValue({}),
+                  commit: jest
+                    .fn()
+                    .mockRejectedValue(new Error('Transaction commit error')),
+                }),
+                userKey: 123,
                 auth: {
                   bcrypt,
                   tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  userRequired: jest.fn().mockReturnValue({
+                    tfaSendMethod: 'none',
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: userNameLoader,
-                  loadUserByKey: idLoader,
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
                 },
                 notify: { sendVerificationEmail: jest.fn() },
               },
@@ -2386,7 +2379,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error ocurred when user: ${user._key} attempted to update their profile: Error: Transaction commit error`,
+              `Trx commit error ocurred when user: 123 attempted to update their profile: Error: Transaction commit error`,
             ])
           })
         })

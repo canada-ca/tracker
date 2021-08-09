@@ -1,7 +1,7 @@
 import pytest
 from pretend import stub
 from starlette.testclient import TestClient
-from https_scanner import Server
+from server import Server
 
 
 def test_scan():

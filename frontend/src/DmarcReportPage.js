@@ -26,7 +26,6 @@ import { InfoBox, InfoPanel } from './InfoPanel'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 import { TrackerAccordionItem as AccordionItem } from './TrackerAccordionItem'
 
-
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
@@ -136,14 +135,11 @@ export default function DmarcReportPage() {
     )
   }
 
-  // DMARC bar graph setup
-  let graphDisplay
-
   // Set DMARC bar graph Loading
-  if (graphLoading) {
-    graphDisplay = (
+  if (graphLoading || tableLoading) {
+    return (
       <LoadingMessage>
-        <Trans>Yearly DMARC Graph</Trans>
+        <Trans>DMARC Report</Trans>
       </LoadingMessage>
     )
   }
@@ -159,8 +155,11 @@ export default function DmarcReportPage() {
     )
   }
 
+  // DMARC bar graph setup
+  let graphDisplay
+
   // Display graph query error if found
-  else if (graphError) {
+  if (graphError) {
     graphDisplay = <ErrorFallbackMessage error={graphError} />
   }
   // Set graph display using data if data exists
@@ -742,7 +741,7 @@ export default function DmarcReportPage() {
           {domainSlug.toUpperCase()}
         </Heading>
         <Link
-          color="teal.500"
+          color="teal.600"
           whiteSpace="noWrap"
           my="auto"
           to={`/domains/${domainSlug}`}

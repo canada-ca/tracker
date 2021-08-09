@@ -16,12 +16,15 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
 
 describe('user sets a new phone number', () => {
-  const originalInfo = console.info
-  afterEach(() => (console.info = originalInfo))
-
   let query, drop, truncate, collections, transaction, schema, request, i18n
-
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
@@ -30,51 +33,43 @@ describe('user sets a new phone number', () => {
       protocol: 'https',
       get: (text) => text,
     }
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-
-  const consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
+  afterEach(() => {
     consoleOutput.length = 0
   })
 
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
+  describe('given a successful phone number set', () => {
+    let user
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-    describe('successfully set a phone number', () => {
-      let user
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('user is setting number for first time', () => {
         beforeEach(async () => {
           user = await collections.users.save({
@@ -803,181 +798,21 @@ describe('user sets a new phone number', () => {
         })
       })
     })
-    describe('unsuccessful setting of phone number', () => {
-      let user
-      beforeEach(async () => {
-        user = await collections.users.save({
-          userName: 'test.account@istio.actually.exists',
-          displayName: 'Test Account',
-          preferredLang: 'english',
-          tfaValidated: false,
-          emailValidated: false,
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('transaction step error occurs', () => {
-        describe('when setting phone number', () => {
-          it('throws an error', async () => {
-            const loaderById = loadUserByKey({ query })
-            const newPhoneNumber = '+12345678901'
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
-                  result {
-                    ... on SetPhoneNumberResult {
-                      status
-                      user {
-                        phoneNumber
-                      }
-                    }
-                    ... on SetPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                request,
-                userKey: user._key,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                  decryptPhoneNumber,
-                },
-                loaders: {
-                  loadUserByKey: loaderById,
-                },
-                notify: {
-                  sendTfaTextMsg: mockNotify,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to set phone number, please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: ${user._key} when upserting phone number information: Error: Transaction step error`,
-            ])
-          })
-        })
-      })
-      describe('transaction commit error occurs', () => {
-        describe('when setting phone number', () => {
-          it('throws an error', async () => {
-            const loaderById = loadUserByKey({ query })
-            const newPhoneNumber = '+12345678901'
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
-                  result {
-                    ... on SetPhoneNumberResult {
-                      status
-                      user {
-                        phoneNumber
-                      }
-                    }
-                    ... on SetPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                request,
-                userKey: user._key,
-                query,
-                collections,
-                transaction: mockedTransaction,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                },
-                validators: {
-                  cleanseInput,
-                  decryptPhoneNumber,
-                },
-                loaders: {
-                  loadUserByKey: loaderById,
-                },
-                notify: {
-                  sendTfaTextMsg: mockNotify,
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError('Unable to set phone number, please try again.'),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx commit error occurred for user: ${user._key} when upserting phone number information: Error: Transaction commit error`,
-            ])
-          })
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('successfully set a phone number', () => {
-      let user
       describe('user is setting number for first time', () => {
         beforeEach(async () => {
           user = await collections.users.save({
@@ -1706,21 +1541,26 @@ describe('user sets a new phone number', () => {
         })
       })
     })
-    describe('unsuccessful setting of phone number', () => {
-      let user
-      beforeEach(async () => {
-        user = await collections.users.save({
-          userName: 'test.account@istio.actually.exists',
-          displayName: 'Test Account',
-          preferredLang: 'french',
-          tfaValidated: false,
-          emailValidated: false,
+  })
+  describe('given an unsuccessful phone number set', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
       describe('transaction step error occurs', () => {
         describe('when setting phone number', () => {
           it('throws an error', async () => {
-            const loaderById = loadUserByKey({ query })
             const newPhoneNumber = '+12345678901'
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -1753,16 +1593,15 @@ describe('user sets a new phone number', () => {
               {
                 i18n,
                 request,
-                userKey: user._key,
+                userKey: 123,
                 query,
                 collections,
                 transaction: mockedTransaction,
                 auth: {
                   bcrypt,
                   tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
                   }),
                 },
                 validators: {
@@ -1770,7 +1609,9 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loaderById,
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1779,14 +1620,12 @@ describe('user sets a new phone number', () => {
             )
 
             const error = [
-              new GraphQLError(
-                'Impossible de définir le numéro de téléphone, veuillez réessayer.',
-              ),
+              new GraphQLError('Unable to set phone number, please try again.'),
             ]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: ${user._key} when upserting phone number information: Error: Transaction step error`,
+              `Trx step error occurred for user: 123 when upserting phone number information: Error: Transaction step error`,
             ])
           })
         })
@@ -1794,7 +1633,6 @@ describe('user sets a new phone number', () => {
       describe('transaction commit error occurs', () => {
         describe('when setting phone number', () => {
           it('throws an error', async () => {
-            const loaderById = loadUserByKey({ query })
             const newPhoneNumber = '+12345678901'
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -1828,16 +1666,101 @@ describe('user sets a new phone number', () => {
               {
                 i18n,
                 request,
-                userKey: user._key,
+                userKey: 123,
                 query,
                 collections,
                 transaction: mockedTransaction,
                 auth: {
                   bcrypt,
                   tokenize,
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                validators: {
+                  cleanseInput,
+                  decryptPhoneNumber,
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+                notify: {
+                  sendTfaTextMsg: mockNotify,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to set phone number, please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred for user: 123 when upserting phone number information: Error: Transaction commit error`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('transaction step error occurs', () => {
+        describe('when setting phone number', () => {
+          it('throws an error', async () => {
+            const newPhoneNumber = '+12345678901'
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction step error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
+                  result {
+                    ... on SetPhoneNumberResult {
+                      status
+                      user {
+                        phoneNumber
+                      }
+                    }
+                    ... on SetPhoneNumberError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+              null,
+              {
+                i18n,
+                request,
+                userKey: 123,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({
+                    _key: 123,
                   }),
                 },
                 validators: {
@@ -1845,7 +1768,9 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loaderById,
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1861,7 +1786,80 @@ describe('user sets a new phone number', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error occurred for user: ${user._key} when upserting phone number information: Error: Transaction commit error`,
+              `Trx step error occurred for user: 123 when upserting phone number information: Error: Transaction step error`,
+            ])
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when setting phone number', () => {
+          it('throws an error', async () => {
+            const newPhoneNumber = '+12345678901'
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest.fn().mockReturnValue({}),
+              commit: jest
+                .fn()
+                .mockRejectedValue(new Error('Transaction commit error')),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
+                  result {
+                    ... on SetPhoneNumberResult {
+                      status
+                      user {
+                        phoneNumber
+                      }
+                    }
+                    ... on SetPhoneNumberError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+            `,
+              null,
+              {
+                i18n,
+                request,
+                userKey: 123,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                },
+                validators: {
+                  cleanseInput,
+                  decryptPhoneNumber,
+                },
+                loaders: {
+                  loadUserByKey: {
+                    load: jest.fn(),
+                  },
+                },
+                notify: {
+                  sendTfaTextMsg: mockNotify,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de définir le numéro de téléphone, veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx commit error occurred for user: 123 when upserting phone number information: Error: Transaction commit error`,
             ])
           })
         })

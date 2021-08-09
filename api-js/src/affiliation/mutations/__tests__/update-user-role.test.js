@@ -18,63 +18,64 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 describe('update a users role', () => {
   let query, drop, truncate, schema, collections, transaction, i18n, user
 
-  beforeAll(async () => {
-    // Create GQL Schema
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
-    })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-  })
-
   let consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
+    // Create GQL Schema
+    schema = new GraphQLSchema({
+      query: createQuerySchema(),
+      mutation: createMutationSchema(),
+    })
+  })
+  afterEach(() => {
     consoleOutput = []
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      emailValidated: true,
+  })
+
+  describe('given a successful role update', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-  })
-
-  afterEach(async () => {
-    await truncate()
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
       })
     })
-    describe('given a successful role update', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
       let org, secondaryUser
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -503,1154 +504,21 @@ describe('update a users role', () => {
         })
       })
     })
-    describe('given an unsuccessful role update', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
         })
-
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'english',
-        })
       })
-      describe('user attempts to update their own role', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test.account@istio.actually.exists"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description: 'Unable to update your own role.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their own role in org: ${org._key}.`,
-          ])
-        })
-      })
-      describe('user attempts to update a user that does not exist', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "random@email.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description: 'Unable to update role: user unknown.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: random@email.ca role in org: ${org._key}, however there is no user associated with that user name.`,
-          ])
-        })
-      })
-      describe('user attempts to update a users role in an org that does not exist', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', 1)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description: 'Unable to update role: organization unknown.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: 1, however there is no org associated with that id.`,
-          ])
-        })
-      })
-      describe('requesting user permission is user', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-        })
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    'Permission Denied: Please contact organization admin for help with user role changes.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
-          ])
-        })
-      })
-      describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
-        let secondaryOrg
-        beforeEach(async () => {
-          secondaryOrg = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'communications-security-establishment',
-                acronym: 'CSE',
-                name: 'Communications Security Establishment',
-                zone: 'FED',
-                sector: 'DND',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'centre-de-la-securite-des-telecommunications',
-                acronym: 'CST',
-                name: 'Centre de la Securite des Telecommunications',
-                zone: 'FED',
-                sector: 'DND',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: secondaryOrg._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    'Permission Denied: Please contact organization admin for help with user role changes.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
-          ])
-        })
-      })
-      describe('user attempts to update a user that does not belong to the requested org', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to update role: user does not belong to organization.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
-          ])
-        })
-      })
-      describe('requesting users role is super admin', () => {
-        describe('user attempts to update users role to admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'super_admin',
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: secondaryUser._id,
-              permission: 'super_admin',
-            })
-          })
-          describe('requested users current role is super admin', () => {
-            it('returns an error message', async () => {
-              const response = await graphql(
-                schema,
-                `
-                mutation {
-                  updateUserRole (
-                    input: {
-                      userName: "test@email.gc.ca"
-                      orgId: "${toGlobalId('organizations', org._key)}"
-                      role: ADMIN
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserRoleResult {
-                        status
-                      }
-                      ... on AffiliationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  collections,
-                  transaction,
-                  userKey: user._key,
-                  auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                  },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                },
-              )
-
-              const error = {
-                data: {
-                  updateUserRole: {
-                    result: {
-                      code: 400,
-                      description:
-                        'Permission Denied: Please contact organization admin for help with updating user roles.',
-                    },
-                  },
-                },
-              }
-
-              expect(response).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: admin.`,
-              ])
-            })
-          })
-        })
-        describe('user attempts to update users role to user', () => {
-          describe('requested users current role is super admin', () => {
-            beforeEach(async () => {
-              await collections.affiliations.save({
-                _from: org._id,
-                _to: user._id,
-                permission: 'super_admin',
-              })
-              await collections.affiliations.save({
-                _from: org._id,
-                _to: secondaryUser._id,
-                permission: 'super_admin',
-              })
-            })
-            it('returns an error message', async () => {
-              const response = await graphql(
-                schema,
-                `
-                mutation {
-                  updateUserRole (
-                    input: {
-                      userName: "test@email.gc.ca"
-                      orgId: "${toGlobalId('organizations', org._key)}"
-                      role: USER
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserRoleResult {
-                        status
-                      }
-                      ... on AffiliationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  collections,
-                  transaction,
-                  userKey: user._key,
-                  auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                  },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                },
-              )
-
-              const error = {
-                data: {
-                  updateUserRole: {
-                    result: {
-                      code: 400,
-                      description:
-                        'Permission Denied: Please contact organization admin for help with updating user roles.',
-                    },
-                  },
-                },
-              }
-
-              expect(response).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
-              ])
-            })
-          })
-        })
-      })
-      describe('requesting users role is admin', () => {
-        describe('requested users role is super admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: secondaryUser._id,
-              permission: 'super_admin',
-            })
-          })
-          it('returns an error message', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                updateUserRole (
-                  input: {
-                    userName: "test@email.gc.ca"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    role: USER
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserRoleResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                  loadUserByUserName: loadUserByUserName({ query }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-              },
-            )
-
-            const error = {
-              data: {
-                updateUserRole: {
-                  result: {
-                    code: 400,
-                    description:
-                      'Permission Denied: Please contact organization admin for help with updating user roles.',
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
-            ])
-          })
-        })
-        describe('requested users current role is admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: secondaryUser._id,
-              permission: 'admin',
-            })
-          })
-          it('returns an error message', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                updateUserRole (
-                  input: {
-                    userName: "test@email.gc.ca"
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                    role: USER
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserRoleResult {
-                      status
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                  loadUserByUserName: loadUserByUserName({ query }),
-                },
-                validators: {
-                  cleanseInput,
-                },
-              },
-            )
-
-            const error = {
-              data: {
-                updateUserRole: {
-                  result: {
-                    code: 400,
-                    description:
-                      'Permission Denied: Please contact organization admin for help with updating user roles.',
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to lower user: ${secondaryUser._key} from admin to: user.`,
-            ])
-          })
-        })
-      })
-    })
-    describe('database error occurs', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'english',
-        })
-
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: secondaryUser._id,
-          permission: 'user',
-        })
-      })
-      describe('when getting current affiliation', () => {
-        it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: USER
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(`Unable to update user's role. Please try again.`),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Database error occurred.`,
-          ])
-        })
-      })
-    })
-    describe('transaction error occurs', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'english',
-        })
-
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: secondaryUser._id,
-          permission: 'user',
-        })
-      })
-      describe('when running transaction', () => {
-        it('returns an error message', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              throw new Error('Transaction error occurred.')
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(`Unable to update user's role. Please try again.`),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction step error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
-          ])
-        })
-      })
-      describe('when committing transaction', () => {
-        it('returns an error message', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              return undefined
-            },
-            commit() {
-              throw new Error('Transaction error occurred.')
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(`Unable to update user's role. Please try again.`),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction commit error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
-          ])
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given a successful role update', () => {
       let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
@@ -2084,601 +952,629 @@ describe('update a users role', () => {
         })
       })
     })
-    describe('given an unsuccessful role update', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
+  })
+  describe('given an unsuccessful update', () => {
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
         })
-
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'english',
-        })
       })
-      describe('user attempts to update their own role', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test.account@istio.actually.exists"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
+      describe('given an unsuccessful role update', () => {
+        describe('user attempts to update their own role', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
                   }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description: 'Impossible de mettre à jour votre propre rôle.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update their own role in org: ${org._key}.`,
-          ])
-        })
-      })
-      describe('user attempts to update a user that does not exist', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "random@email.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    'Impossible de mettre à jour le rôle : utilisateur inconnu.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: random@email.ca role in org: ${org._key}, however there is no user associated with that user name.`,
-          ])
-        })
-      })
-      describe('user attempts to update a users role in an org that does not exist', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', 1)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    'Impossible de mettre à jour le rôle : organisation inconnue.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: 1, however there is no org associated with that id.`,
-          ])
-        })
-      })
-      describe('requesting user permission is user', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-        })
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs.",
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
-          ])
-        })
-      })
-      describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
-        let secondaryOrg
-        beforeEach(async () => {
-          secondaryOrg = await collections.organizations.save({
-            verified: false,
-            orgDetails: {
-              en: {
-                slug: 'communications-security-establishment',
-                acronym: 'CSE',
-                name: 'Communications Security Establishment',
-                zone: 'FED',
-                sector: 'DND',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-              fr: {
-                slug: 'centre-de-la-securite-des-telecommunications',
-                acronym: 'CST',
-                name: 'Centre de la Securite des Telecommunications',
-                zone: 'FED',
-                sector: 'DND',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-              },
-            },
-          })
-          await collections.affiliations.save({
-            _from: secondaryOrg._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs.",
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
-          ])
-        })
-      })
-      describe('user attempts to update a user that does not belong to the requested org', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserRole: {
-                result: {
-                  code: 400,
-                  description:
-                    "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas à l'organisation.",
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
-          ])
-        })
-      })
-      describe('requesting users role is super admin', () => {
-        describe('user attempts to update users role to admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'super_admin',
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: secondaryUser._id,
-              permission: 'super_admin',
-            })
-          })
-          describe('requested users current role is super admin', () => {
-            it('returns an error message', async () => {
-              const response = await graphql(
-                schema,
-                `
-                mutation {
-                  updateUserRole (
-                    input: {
-                      userName: "test@email.gc.ca"
-                      orgId: "${toGlobalId('organizations', org._key)}"
-                      role: ADMIN
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
                     }
-                  ) {
-                    result {
-                      ... on UpdateUserRoleResult {
-                        status
-                      }
-                      ... on AffiliationError {
-                        code
-                        description
-                      }
+                    ... on AffiliationError {
+                      code
+                      description
                     }
                   }
                 }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  collections,
-                  transaction,
-                  userKey: user._key,
-                  auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
-                    }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn(),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn(),
                   },
-                  loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
-                  },
-                  validators: {
-                    cleanseInput,
+                  loadUserByUserName: {
+                    load: jest.fn(),
                   },
                 },
-              )
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
 
-              const error = {
-                data: {
-                  updateUserRole: {
-                    result: {
-                      code: 400,
-                      description:
-                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description: 'Unable to update your own role.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update their own role in org: 123.`,
+            ])
+          })
+        })
+        describe('user attempts to update a user that does not exist', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "random@email.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn(),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn(),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description: 'Unable to update role: user unknown.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: random@email.ca role in org: 123, however there is no user associated with that user name.`,
+            ])
+          })
+        })
+        describe('user attempts to update a users role in an org that does not exist', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 1)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn(),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description: 'Unable to update role: organization unknown.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: 1, however there is no org associated with that id.`,
+            ])
+          })
+        })
+        describe('requesting user permission is user', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('user'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      'Permission Denied: Please contact organization admin for help with user role changes.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
+            ])
+          })
+        })
+        describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({ count: 0 }),
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue(undefined),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      'Permission Denied: Please contact organization admin for help with user role changes.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
+            ])
+          })
+        })
+        describe('user attempts to update a user that does not belong to the requested org', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({ count: 0 }),
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      'Unable to update role: user does not belong to organization.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
+            ])
+          })
+        })
+        describe('requesting users role is super admin', () => {
+          describe('user attempts to update users role to admin', () => {
+            describe('requested users current role is super admin', () => {
+              it('returns an error message', async () => {
+                const response = await graphql(
+                  schema,
+                  `
+                  mutation {
+                    updateUserRole (
+                      input: {
+                        userName: "test@email.gc.ca"
+                        orgId: "${toGlobalId('organizations', 123)}"
+                        role: ADMIN
+                      }
+                    ) {
+                      result {
+                        ... on UpdateUserRoleResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                  `,
+                  null,
+                  {
+                    i18n,
+                    query: jest.fn().mockReturnValue({
+                      count: 1,
+                      next: jest
+                        .fn()
+                        .mockReturnValue({ permission: 'super_admin' }),
+                    }),
+                    collections,
+                    transaction: jest.fn(),
+                    userKey: 123,
+                    auth: {
+                      checkPermission: jest.fn().mockReturnValue('super_admin'),
+                      userRequired: jest.fn().mockReturnValue({
+                        userName: 'test.account@istio.actually.exists',
+                      }),
+                      verifiedRequired: jest.fn(),
+                    },
+                    loaders: {
+                      loadOrgByKey: {
+                        load: jest.fn().mockReturnValue({
+                          slug: 'treasury-board-secretariat',
+                        }),
+                      },
+                      loadUserByUserName: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 456,
+                        }),
+                      },
+                    },
+                    validators: {
+                      cleanseInput,
                     },
                   },
-                },
-              }
+                )
 
-              expect(response).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: admin.`,
-              ])
+                const error = {
+                  data: {
+                    updateUserRole: {
+                      result: {
+                        code: 400,
+                        description:
+                          'Permission Denied: Please contact organization admin for help with updating user roles.',
+                      },
+                    },
+                  },
+                }
+
+                expect(response).toEqual(error)
+                expect(consoleOutput).toEqual([
+                  `User: 123 attempted to lower user: 456 from super_admin to: admin.`,
+                ])
+              })
+            })
+          })
+          describe('user attempts to update users role to user', () => {
+            describe('requested users current role is super admin', () => {
+              it('returns an error message', async () => {
+                const response = await graphql(
+                  schema,
+                  `
+                  mutation {
+                    updateUserRole (
+                      input: {
+                        userName: "test@email.gc.ca"
+                        orgId: "${toGlobalId('organizations', 123)}"
+                        role: USER
+                      }
+                    ) {
+                      result {
+                        ... on UpdateUserRoleResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                  `,
+                  null,
+                  {
+                    i18n,
+                    query: jest.fn().mockReturnValue({
+                      count: 1,
+                      next: jest
+                        .fn()
+                        .mockReturnValue({ permission: 'super_admin' }),
+                    }),
+                    collections,
+                    transaction: jest.fn(),
+                    userKey: 123,
+                    auth: {
+                      checkPermission: jest.fn().mockReturnValue('super_admin'),
+                      userRequired: jest.fn().mockReturnValue({
+                        userName: 'test.account@istio.actually.exists',
+                      }),
+                      verifiedRequired: jest.fn(),
+                    },
+                    loaders: {
+                      loadOrgByKey: {
+                        load: jest.fn().mockReturnValue({
+                          slug: 'treasury-board-secretariat',
+                        }),
+                      },
+                      loadUserByUserName: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 456,
+                        }),
+                      },
+                    },
+                    validators: {
+                      cleanseInput,
+                    },
+                  },
+                )
+
+                const error = {
+                  data: {
+                    updateUserRole: {
+                      result: {
+                        code: 400,
+                        description:
+                          'Permission Denied: Please contact organization admin for help with updating user roles.',
+                      },
+                    },
+                  },
+                }
+
+                expect(response).toEqual(error)
+                expect(consoleOutput).toEqual([
+                  `User: 123 attempted to lower user: 456 from super_admin to: user.`,
+                ])
+              })
             })
           })
         })
-        describe('user attempts to update users role to user', () => {
-          describe('requested users current role is super admin', () => {
-            beforeEach(async () => {
-              await collections.affiliations.save({
-                _from: org._id,
-                _to: user._id,
-                permission: 'super_admin',
-              })
-              await collections.affiliations.save({
-                _from: org._id,
-                _to: secondaryUser._id,
-                permission: 'super_admin',
-              })
-            })
+        describe('requesting users role is admin', () => {
+          describe('requested users role is super admin', () => {
             it('returns an error message', async () => {
               const response = await graphql(
                 schema,
@@ -2687,7 +1583,7 @@ describe('update a users role', () => {
                   updateUserRole (
                     input: {
                       userName: "test@email.gc.ca"
-                      orgId: "${toGlobalId('organizations', org._key)}"
+                      orgId: "${toGlobalId('organizations', 123)}"
                       role: USER
                     }
                   ) {
@@ -2706,25 +1602,1113 @@ describe('update a users role', () => {
                 null,
                 {
                   i18n,
-                  query,
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    next: jest
+                      .fn()
+                      .mockReturnValue({ permission: 'super_admin' }),
+                  }),
                   collections,
-                  transaction,
-                  userKey: user._key,
+                  transaction: jest.fn(),
+                  userKey: 123,
                   auth: {
-                    checkPermission: checkPermission({
-                      userKey: user._key,
-                      query,
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
                     }),
-                    userRequired: userRequired({
-                      userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
-                    }),
-                    verifiedRequired: verifiedRequired({ i18n }),
+                    verifiedRequired: jest.fn(),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadUserByUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                },
+              )
+
+              const error = {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      code: 400,
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating user roles.',
+                    },
+                  },
+                },
+              }
+
+              expect(response).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `User: 123 attempted to lower user: 456 from super_admin to: user.`,
+              ])
+            })
+          })
+          describe('requested users current role is admin', () => {
+            it('returns an error message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  updateUserRole (
+                    input: {
+                      userName: "test@email.gc.ca"
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      role: USER
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+                `,
+                null,
+                {
+                  i18n,
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    next: jest.fn().mockReturnValue({ permission: 'admin' }),
+                  }),
+                  collections,
+                  transaction: jest.fn(),
+                  userKey: 123,
+                  auth: {
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
+                    }),
+                    verifiedRequired: jest.fn(),
+                  },
+                  loaders: {
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadUserByUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                },
+              )
+
+              const error = {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      code: 400,
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating user roles.',
+                    },
+                  },
+                },
+              }
+
+              expect(response).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `User: 123 attempted to lower user: 456 from admin to: user.`,
+              ])
+            })
+          })
+        })
+      })
+      describe('database error occurs', () => {
+        describe('when getting current affiliation', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: USER
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockRejectedValue(new Error('database error')),
+                collections,
+                transaction: jest.fn(),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                `Unable to update user's role. Please try again.`,
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred when user: 123 attempted to update a user's: 456 role, error: Error: database error`,
+            ])
+          })
+        })
+      })
+      describe('cursor error occur', () => {
+        describe('when gathering affiliation info', () => {
+          it('throws an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: USER
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockRejectedValue(new Error('cursor error')),
+                }),
+                collections,
+                transaction: jest.fn(),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                `Unable to update user's role. Please try again.`,
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred when user: 123 attempted to update a user's: 456 role, error: Error: cursor error`,
+            ])
+          })
+        })
+      })
+      describe('transaction error occurs', () => {
+        describe('when running transaction', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
+                }),
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockRejectedValue('trx step error'),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                `Unable to update user's role. Please try again.`,
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction step error occurred when user: 123 attempted to update a user's: 456 role, error: trx step error`,
+            ])
+          })
+        })
+        describe('when committing transaction', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
+                }),
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn(),
+                  commit: jest.fn().mockRejectedValue('trx commit error'),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                `Unable to update user's role. Please try again.`,
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction commit error occurred when user: 123 attempted to update a user's: 456 role, error: trx commit error`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('given an unsuccessful role update', () => {
+        describe('user attempts to update their own role', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn(),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn(),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn(),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      'Impossible de mettre à jour votre propre rôle.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update their own role in org: 123.`,
+            ])
+          })
+        })
+        describe('user attempts to update a user that does not exist', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "random@email.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn(),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn(),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      'Impossible de mettre à jour le rôle : utilisateur inconnu.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: random@email.ca role in org: 123, however there is no user associated with that user name.`,
+            ])
+          })
+        })
+        describe('user attempts to update a users role in an org that does not exist', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 1)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn(),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue(undefined),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      'Impossible de mettre à jour le rôle : organisation inconnue.',
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: 1, however there is no org associated with that id.`,
+            ])
+          })
+        })
+        describe('requesting user permission is user', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('user'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs.",
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
+            ])
+          })
+        })
+        describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({ count: 0 }),
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue(undefined),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs.",
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
+            ])
+          })
+        })
+        describe('user attempts to update a user that does not belong to the requested org', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
+                  }
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({ count: 0 }),
+                collections,
+                transaction,
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
+              },
+            )
+
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description:
+                      "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas à l'organisation.",
+                  },
+                },
+              },
+            }
+
+            expect(response).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
+            ])
+          })
+        })
+        describe('requesting users role is super admin', () => {
+          describe('user attempts to update users role to admin', () => {
+            describe('requested users current role is super admin', () => {
+              it('returns an error message', async () => {
+                const response = await graphql(
+                  schema,
+                  `
+                  mutation {
+                    updateUserRole (
+                      input: {
+                        userName: "test@email.gc.ca"
+                        orgId: "${toGlobalId('organizations', 123)}"
+                        role: ADMIN
+                      }
+                    ) {
+                      result {
+                        ... on UpdateUserRoleResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                  `,
+                  null,
+                  {
+                    i18n,
+                    query: jest.fn().mockReturnValue({
+                      count: 1,
+                      next: jest
+                        .fn()
+                        .mockReturnValue({ permission: 'super_admin' }),
+                    }),
+                    collections,
+                    transaction: jest.fn(),
+                    userKey: 123,
+                    auth: {
+                      checkPermission: jest.fn().mockReturnValue('super_admin'),
+                      userRequired: jest.fn().mockReturnValue({
+                        userName: 'test.account@istio.actually.exists',
+                      }),
+                      verifiedRequired: jest.fn(),
+                    },
+                    loaders: {
+                      loadOrgByKey: {
+                        load: jest.fn().mockReturnValue({
+                          slug: 'treasury-board-secretariat',
+                        }),
+                      },
+                      loadUserByUserName: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 456,
+                        }),
+                      },
+                    },
+                    validators: {
+                      cleanseInput,
+                    },
+                  },
+                )
+
+                const error = {
+                  data: {
+                    updateUserRole: {
+                      result: {
+                        code: 400,
+                        description:
+                          "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
+                      },
+                    },
+                  },
+                }
+
+                expect(response).toEqual(error)
+                expect(consoleOutput).toEqual([
+                  `User: 123 attempted to lower user: 456 from super_admin to: admin.`,
+                ])
+              })
+            })
+          })
+          describe('user attempts to update users role to user', () => {
+            describe('requested users current role is super admin', () => {
+              it('returns an error message', async () => {
+                const response = await graphql(
+                  schema,
+                  `
+                  mutation {
+                    updateUserRole (
+                      input: {
+                        userName: "test@email.gc.ca"
+                        orgId: "${toGlobalId('organizations', 123)}"
+                        role: USER
+                      }
+                    ) {
+                      result {
+                        ... on UpdateUserRoleResult {
+                          status
+                        }
+                        ... on AffiliationError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                  `,
+                  null,
+                  {
+                    i18n,
+                    query: jest.fn().mockReturnValue({
+                      count: 1,
+                      next: jest
+                        .fn()
+                        .mockReturnValue({ permission: 'super_admin' }),
+                    }),
+                    collections,
+                    transaction: jest.fn(),
+                    userKey: 123,
+                    auth: {
+                      checkPermission: jest.fn().mockReturnValue('super_admin'),
+                      userRequired: jest.fn().mockReturnValue({
+                        userName: 'test.account@istio.actually.exists',
+                      }),
+                      verifiedRequired: jest.fn(),
+                    },
+                    loaders: {
+                      loadOrgByKey: {
+                        load: jest.fn().mockReturnValue({
+                          slug: 'treasury-board-secretariat',
+                        }),
+                      },
+                      loadUserByUserName: {
+                        load: jest.fn().mockReturnValue({
+                          _key: 456,
+                        }),
+                      },
+                    },
+                    validators: {
+                      cleanseInput,
+                    },
+                  },
+                )
+
+                const error = {
+                  data: {
+                    updateUserRole: {
+                      result: {
+                        code: 400,
+                        description:
+                          "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
+                      },
+                    },
+                  },
+                }
+
+                expect(response).toEqual(error)
+                expect(consoleOutput).toEqual([
+                  `User: 123 attempted to lower user: 456 from super_admin to: user.`,
+                ])
+              })
+            })
+          })
+        })
+        describe('requesting users role is admin', () => {
+          describe('requested users role is super admin', () => {
+            it('returns an error message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  updateUserRole (
+                    input: {
+                      userName: "test@email.gc.ca"
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      role: USER
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+                `,
+                null,
+                {
+                  i18n,
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    next: jest
+                      .fn()
+                      .mockReturnValue({ permission: 'super_admin' }),
+                  }),
+                  collections,
+                  transaction: jest.fn(),
+                  userKey: 123,
+                  auth: {
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
+                    }),
+                    verifiedRequired: jest.fn(),
+                  },
+                  loaders: {
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadUserByUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
                   },
                   validators: {
                     cleanseInput,
@@ -2746,26 +2730,92 @@ describe('update a users role', () => {
 
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
+                `User: 123 attempted to lower user: 456 from super_admin to: user.`,
+              ])
+            })
+          })
+          describe('requested users current role is admin', () => {
+            it('returns an error message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  updateUserRole (
+                    input: {
+                      userName: "test@email.gc.ca"
+                      orgId: "${toGlobalId('organizations', 123)}"
+                      role: USER
+                    }
+                  ) {
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+                `,
+                null,
+                {
+                  i18n,
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    next: jest.fn().mockReturnValue({ permission: 'admin' }),
+                  }),
+                  collections,
+                  transaction: jest.fn(),
+                  userKey: 123,
+                  auth: {
+                    checkPermission: jest.fn().mockReturnValue('admin'),
+                    userRequired: jest.fn().mockReturnValue({
+                      userName: 'test.account@istio.actually.exists',
+                    }),
+                    verifiedRequired: jest.fn(),
+                  },
+                  loaders: {
+                    loadOrgByKey: {
+                      load: jest.fn().mockReturnValue({
+                        slug: 'treasury-board-secretariat',
+                      }),
+                    },
+                    loadUserByUserName: {
+                      load: jest.fn().mockReturnValue({
+                        _key: 456,
+                      }),
+                    },
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                },
+              )
+
+              const error = {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      code: 400,
+                      description:
+                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
+                    },
+                  },
+                },
+              }
+
+              expect(response).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `User: 123 attempted to lower user: 456 from admin to: user.`,
               ])
             })
           })
         })
       })
-      describe('requesting users role is admin', () => {
-        describe('requested users role is super admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: secondaryUser._id,
-              permission: 'super_admin',
-            })
-          })
+      describe('database error occurs', () => {
+        describe('when getting current affiliation', () => {
           it('returns an error message', async () => {
             const response = await graphql(
               schema,
@@ -2774,7 +2824,7 @@ describe('update a users role', () => {
                 updateUserRole (
                   input: {
                     userName: "test@email.gc.ca"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organizations', 123)}"
                     role: USER
                   }
                 ) {
@@ -2793,25 +2843,28 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query,
+                query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections,
-                transaction,
-                userKey: user._key,
+                transaction: jest.fn(),
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
                   }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: jest.fn(),
                 },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
                 validators: {
                   cleanseInput,
@@ -2819,38 +2872,22 @@ describe('update a users role', () => {
               },
             )
 
-            const error = {
-              data: {
-                updateUserRole: {
-                  result: {
-                    code: 400,
-                    description:
-                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
-                  },
-                },
-              },
-            }
+            const error = [
+              new GraphQLError(
+                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
+              ),
+            ]
 
-            expect(response).toEqual(error)
+            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
+              `Database error occurred when user: 123 attempted to update a user's: 456 role, error: Error: database error`,
             ])
           })
         })
-        describe('requested users current role is admin', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: secondaryUser._id,
-              permission: 'admin',
-            })
-          })
-          it('returns an error message', async () => {
+      })
+      describe('cursor error occur', () => {
+        describe('when gathering affiliation info', () => {
+          it('throws an error', async () => {
             const response = await graphql(
               schema,
               `
@@ -2858,7 +2895,7 @@ describe('update a users role', () => {
                 updateUserRole (
                   input: {
                     userName: "test@email.gc.ca"
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organizations', 123)}"
                     role: USER
                   }
                 ) {
@@ -2877,25 +2914,31 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query,
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockRejectedValue(new Error('cursor error')),
+                }),
                 collections,
-                transaction,
-                userKey: user._key,
+                transaction: jest.fn(),
+                userKey: 123,
                 auth: {
-                  checkPermission: checkPermission({
-                    userKey: user._key,
-                    query,
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
                   }),
-                  userRequired: userRequired({
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
-                  }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: jest.fn(),
                 },
                 loaders: {
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
-                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
                 },
                 validators: {
                   cleanseInput,
@@ -2903,322 +2946,168 @@ describe('update a users role', () => {
               },
             )
 
-            const error = {
-              data: {
-                updateUserRole: {
-                  result: {
-                    code: 400,
-                    description:
-                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
-                  },
-                },
-              },
-            }
+            const error = [
+              new GraphQLError(
+                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
+              ),
+            ]
 
-            expect(response).toEqual(error)
+            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to lower user: ${secondaryUser._key} from admin to: user.`,
+              `Cursor error occurred when user: 123 attempted to update a user's: 456 role, error: Error: cursor error`,
             ])
           })
         })
       })
-    })
-    describe('database error occurs', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'english',
-        })
-
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: secondaryUser._id,
-          permission: 'user',
-        })
-      })
-      describe('when getting current affiliation', () => {
-        it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: USER
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
+      describe('transaction error occurs', () => {
+        describe('when running transaction', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
                   }
-                  ... on AffiliationError {
-                    code
-                    description
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn().mockRejectedValue('trx step error'),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.",
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Database error occurred.`,
-          ])
-        })
-      })
-    })
-    describe('transaction error occurs', () => {
-      let org, secondaryUser
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        secondaryUser = await collections.users.save({
-          displayName: 'Test Account',
-          userName: 'test@email.gc.ca',
-          preferredLang: 'english',
-        })
-
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: secondaryUser._id,
-          permission: 'user',
-        })
-      })
-      describe('when running transaction', () => {
-        it('returns an error message', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              throw new Error('Transaction error occurred.')
-            },
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction step error occurred when user: 123 attempted to update a user's: 456 role, error: trx step error`,
+            ])
           })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
-                  }
-                  ... on AffiliationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({ i18n }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.",
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction step error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
-          ])
         })
-      })
-      describe('when committing transaction', () => {
-        it('returns an error message', async () => {
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step() {
-              return undefined
-            },
-            commit() {
-              throw new Error('Transaction error occurred.')
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateUserRole (
-                input: {
-                  userName: "test@email.gc.ca"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  role: ADMIN
-                }
-              ) {
-                result {
-                  ... on UpdateUserRoleResult {
-                    status
+        describe('when committing transaction', () => {
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateUserRole (
+                  input: {
+                    userName: "test@email.gc.ca"
+                    orgId: "${toGlobalId('organizations', 123)}"
+                    role: ADMIN
                   }
-                  ... on AffiliationError {
-                    code
-                    description
+                ) {
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction: mockedTransaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+              `,
+              null,
+              {
+                i18n,
+                query: jest.fn().mockReturnValue({
+                  count: 1,
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                collections,
+                transaction: jest.fn().mockReturnValue({
+                  step: jest.fn(),
+                  commit: jest.fn().mockRejectedValue('trx commit error'),
+                }),
+                userKey: 123,
+                auth: {
+                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  userRequired: jest.fn().mockReturnValue({
+                    userName: 'test.account@istio.actually.exists',
+                  }),
+                  verifiedRequired: jest.fn(),
+                },
+                loaders: {
+                  loadOrgByKey: {
+                    load: jest.fn().mockReturnValue({
+                      slug: 'treasury-board-secretariat',
+                    }),
+                  },
+                  loadUserByUserName: {
+                    load: jest.fn().mockReturnValue({
+                      _key: 456,
+                    }),
+                  },
+                },
+                validators: {
+                  cleanseInput,
+                },
               },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-                loadUserByUserName: loadUserByUserName({ query }),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.",
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction commit error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction commit error occurred when user: 123 attempted to update a user's: 456 role, error: trx commit error`,
+            ])
+          })
         })
       })
     })

@@ -10,61 +10,65 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check permission function', () => {
   let query, drop, truncate, collections, i18n
-
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+
+  beforeAll(() => {
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+  })
+  afterEach(() => {
+    consoleOutput.length = 0
   })
 
-  beforeEach(async () => {
-    await truncate()
-    await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
+  describe('given a successful permission call', () => {
+    beforeAll(async () => {
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
-    await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
+    beforeEach(async () => {
+      await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
         },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
+      })
     })
-    consoleOutput = []
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('given a successful permission check', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
     describe('if the user is a super admin for a given organization', () => {
       let user, org
       beforeEach(async () => {
@@ -164,8 +168,6 @@ describe('given the check permission function', () => {
         expect(permission).toEqual('user')
       })
     })
-  })
-  describe('given an unsuccessful permission check', () => {
     describe('user does not belong to that organization', () => {
       let user, org
       beforeEach(async () => {
@@ -191,6 +193,8 @@ describe('given the check permission function', () => {
         expect(permission).toEqual(undefined)
       })
     })
+  })
+  describe('given an unsuccessful permission call', () => {
     describe('language is set to english', () => {
       beforeAll(() => {
         i18n = setupI18n({

@@ -38,22 +38,27 @@ const successMocks = [
   },
   {
     request: {
+      query: FORWARD,
+      variables: { first: 10, orgSlug: 'test-org.slug' },
+    },
+    result: { data: rawOrgUserListData },
+  },
+  {
+    request: {
       query: UPDATE_USER_ROLE,
       variables: {
         userName:
           rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
             .user.userName,
         orgId: rawOrgUserListData.findOrganizationBySlug.id,
-        role:
-          rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
-            .permission,
+        role: 'ADMIN',
       },
     },
     result: {
       data: {
         updateUserRole: {
           result: {
-            status: 'string',
+            status: 'Hello World',
             __typename: 'UpdateUserRoleResult',
           },
           __typename: 'UpdateUserRolePayload',
@@ -178,12 +183,13 @@ describe('<UserList />', () => {
         </MockedProvider>,
       )
 
+      // default `button` property for click events is set to `0` which is a left click.
       const leftClick = { button: 0 }
 
       const editUserButtons = await findAllByLabelText('Edit User')
       fireEvent.click(editUserButtons[0], leftClick)
       await waitFor(() => {
-        expect(getByText(/Edit Role/i)).toBeInTheDocument()
+        expect(getByText(/Confirm/i)).toBeInTheDocument()
       })
 
       const userRole = await findByLabelText(/Role:/i)
@@ -203,7 +209,6 @@ describe('<UserList />', () => {
       const updateButton = await waitFor(() => getAllByText(/Confirm/i))
 
       fireEvent.click(updateButton[0], leftClick)
-      // default `button` property for click events is set to `0` which is a left click.
 
       // await changes
       await waitFor(() => {

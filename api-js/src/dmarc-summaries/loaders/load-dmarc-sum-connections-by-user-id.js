@@ -250,40 +250,40 @@ export const loadDmarcSummaryConnectionsByUserId =
       let hasPreviousPageDocumentField = aql``
       /* istanbul ignore else */
       if (orderBy.field === 'fail-count') {
-        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryTotals.fail`
         summaryField = aql`summary.categoryTotals.fail`
+        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryTotals.fail`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).categoryTotals.fail`
       } else if (orderBy.field === 'pass-count') {
-        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryTotals.pass`
         summaryField = aql`summary.categoryTotals.pass`
+        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryTotals.pass`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).categoryTotals.pass`
       } else if (orderBy.field === 'pass-dkim-count') {
-        hasNextPageDocumentField = aql` LAST(retrievedSummaries).categoryTotals.passDkimOnly`
         summaryField = aql`summary.categoryTotals.passDkimOnly`
+        hasNextPageDocumentField = aql` LAST(retrievedSummaries).categoryTotals.passDkimOnly`
         hasPreviousPageDocumentField = aql` FIRST(retrievedSummaries).categoryTotals.passDkimOnly`
       } else if (orderBy.field === 'pass-spf-count') {
-        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryTotals.passSpfOnly`
         summaryField = aql`summary.categoryTotals.passSpfOnly`
+        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryTotals.passSpfOnly`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).categoryTotals.passSpfOnly`
       } else if (orderBy.field === 'fail-percentage') {
-        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryPercentages.fail`
         summaryField = aql`summary.categoryPercentages.fail`
+        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryPercentages.fail`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).categoryPercentages.fail`
       } else if (orderBy.field === 'pass-percentage') {
+        summaryField = aql`summary.categoryPercentages.pass`
         hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryPercentages.pass`
-        summaryField = aql`summary.categoryTotals.pass`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).categoryPercentages.pass`
       } else if (orderBy.field === 'pass-dkim-percentage') {
-        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryPercentages.passDkimOnly`
         summaryField = aql`summary.categoryPercentages.passDkimOnly`
+        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryPercentages.passDkimOnly`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).categoryPercentages.passDkimOnly`
       } else if (orderBy.field === 'pass-spf-percentage') {
-        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryPercentages.passSpfOnly`
         summaryField = aql`summary.categoryPercentages.passSpfOnly`
+        hasNextPageDocumentField = aql`LAST(retrievedSummaries).categoryPercentages.passSpfOnly`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).categoryPercentages.passSpfOnly`
       } else if (orderBy.field === 'total-messages') {
-        hasNextPageDocumentField = aql`LAST(retrievedSummaries).totalMessages`
         summaryField = aql`summary.totalMessages`
+        hasNextPageDocumentField = aql`LAST(retrievedSummaries).totalMessages`
         hasPreviousPageDocumentField = aql`FIRST(retrievedSummaries).totalMessages`
       } else if (orderBy.field === 'domain') {
         summaryField = aql`domain.domain`

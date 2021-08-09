@@ -5,8 +5,6 @@ ENV HOME /queue
 WORKDIR $HOME
 COPY . ./
 
-RUN chmod +x docker-entrypoint.sh && touch redis-server.log
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
     python3 \
@@ -15,10 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-wheel \
     build-essential \
     python3-dev \
-    redis-server \
-    systemd
+    redis-server 
 
 RUN pip3 install -r requirements.txt
-RUN sed -i 's/\/var\/log\/redis\/redis-server\.log/\"\"/g' /etc/redis/redis.conf
 
-CMD exec ~/./docker-entrypoint.sh
+CMD ["/usr/local/bin/supervisord", "-c", "supervisord.conf"]

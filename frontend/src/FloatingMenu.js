@@ -22,11 +22,37 @@ import { t, Trans } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
 import { useLingui } from '@lingui/react'
 import { useUserVar } from './UserState'
+import { useMutation } from '@apollo/client'
+import { SIGN_OUT } from './graphql/mutations'
 
 export const FloatingMenu = () => {
   const { i18n } = useLingui()
   const { _currentUser, isLoggedIn, logout } = useUserVar()
   const toast = useToast()
+
+  const [signOut] = useMutation(SIGN_OUT, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`An error occured when you attempted to sign out`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted() {
+      logout()
+      toast({
+        title: t`Sign Out.`,
+        description: t`You have successfully been signed out.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   const {
     isOpen: drawerIsOpen,
@@ -163,17 +189,7 @@ export const FloatingMenu = () => {
                     <FloatingMenuLink
                       to="/"
                       text={t`Sign Out`}
-                      onClick={() => {
-                        logout()
-                        toast({
-                          title: t`Sign Out.`,
-                          description: t`You have successfully been signed out.`,
-                          status: 'success',
-                          duration: 9000,
-                          isClosable: true,
-                          position: 'top-left',
-                        })
-                      }}
+                      onClick={signOut}
                     />
                   ) : (
                     <FloatingMenuLink to="/sign-in" text={t`Sign In`} />

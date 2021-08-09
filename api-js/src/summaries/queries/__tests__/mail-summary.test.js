@@ -14,20 +14,19 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 describe('given mailSummary query', () => {
   let query, drop, truncate, schema, collections, i18n
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -42,24 +41,21 @@ describe('given mailSummary query', () => {
     })
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    await truncate()
-    consoleOutput = []
-  })
-
-  afterAll(async () => {
-    await drop()
+  beforeEach(() => {
+    consoleOutput.length = 0
   })
 
   describe('given successful mail summary retrieval', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
     beforeEach(async () => {
       await collections.chartSummaries.save({
         _key: 'mail',
@@ -67,6 +63,12 @@ describe('given mailSummary query', () => {
         fail: 500,
         pass: 500,
       })
+    })
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
     })
     it('returns mail summary', async () => {
       const response = await graphql(
@@ -133,8 +135,6 @@ describe('given mailSummary query', () => {
     describe('given unsuccessful mail summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          await truncate()
-
           const response = await graphql(
             schema,
             `
@@ -153,11 +153,9 @@ describe('given mailSummary query', () => {
             {
               i18n,
               loaders: {
-                loadChartSummaryByKey: loadChartSummaryByKey({
-                  query,
-                  userKey: '1234',
-                  i18n,
-                }),
+                loadChartSummaryByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )
@@ -192,8 +190,6 @@ describe('given mailSummary query', () => {
     describe('given unsuccessful mail summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          await truncate()
-
           const response = await graphql(
             schema,
             `
@@ -212,11 +208,9 @@ describe('given mailSummary query', () => {
             {
               i18n,
               loaders: {
-                loadChartSummaryByKey: loadChartSummaryByKey({
-                  query,
-                  userKey: '1234',
-                  i18n,
-                }),
+                loadChartSummaryByKey: {
+                  load: jest.fn().mockReturnValue(undefined),
+                },
               },
             },
           )

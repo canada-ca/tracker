@@ -146,7 +146,7 @@ describe('given spfFailureTable gql object', () => {
             {},
             {
               loaders: {
-                loadAggregateGuidanceTagById: {
+                loadAggregateGuidanceTagByTagId: {
                   load: jest.fn().mockReturnValue(expectedResult),
                 },
               },

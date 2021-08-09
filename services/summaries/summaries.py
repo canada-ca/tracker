@@ -35,10 +35,14 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
         scan_fail = 0
         scan_total = 0
         for domain in db.collection("domains"):
-            scan_total = scan_total + 1
+            # We don't want to count domains not passing or failing 
+            # (i.e unreachable or unscanned) towards the total.
             if domain["status"][scan_type] == "fail":
+                scan_total = scan_total + 1
                 scan_fail = scan_fail + 1
+                
             elif domain["status"][scan_type] == "pass":
+                scan_total = scan_total + 1
                 scan_pass = scan_pass + 1
 
         current_summary = db.collection("scanSummaries").get({"_key": scan_type})
@@ -78,17 +82,17 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
         fail_count = 0
         domain_total = 0
         for domain in db.collection("domains"):
-            domain_total = domain_total + 1
-            chart_fail = False
+            category_status = []
             for scan_type in scan_types:
-                if domain["status"][scan_type] == "fail":
-                    chart_fail = True
+                category_status.append(domain["status"][scan_type])
 
-            if chart_fail:
+            if "fail" in category_status:
                 fail_count = fail_count + 1
-            else:
+            elif "info" not in category_status:
                 pass_count = pass_count + 1
 
+
+        domain_total = pass_count + fail_count
         current_summary = db.collection("chartSummaries").get({"_key": chart_type})
 
         summary_exists = current_summary is not None
@@ -137,7 +141,10 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
                 and domain["status"]["https"] == "pass"
             ):
                 web_pass = web_pass + 1
-            else:
+            elif(
+                domain["status"]["ssl"] == "fail"
+                or domain["status"]["https"] == "fail"
+            ):
                 web_fail = web_fail + 1
 
             if (
@@ -154,7 +161,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
                 "web": {
                     "pass": web_pass,
                     "fail": web_fail,
-                    "total": domain_total,
+                    "total": web_pass + web_fail, # Don't count non web-hosting domains
                 },
                 "mail": {
                     "pass": mail_pass,

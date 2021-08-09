@@ -262,6 +262,22 @@ export const REMOVE_USER_FROM_ORG = gql`
   }
 `
 
+export const LEAVE_ORG = gql`
+  mutation LeaveOrganization($orgId: ID!) {
+    leaveOrganization(input: { orgId: $orgId }) {
+      result {
+        ... on AffiliationError {
+          code
+          description
+        }
+        ... on LeaveOrganizationResult {
+          status
+        }
+      }
+    }
+  }
+`
+
 export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
     $domainId: ID!

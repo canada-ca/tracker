@@ -30,7 +30,7 @@ export function OrganizationSummary({
           </Text>
         </Stack>
 
-        {userCount && (
+        {!isNaN(userCount) && (
           <Stack isInline align="center">
             <Text fontWeight="semibold">{userCount}</Text>
             <Text>

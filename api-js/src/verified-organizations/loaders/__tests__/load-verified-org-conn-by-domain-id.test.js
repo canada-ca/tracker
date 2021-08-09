@@ -272,7 +272,6 @@ describe('given the load organizations connection function', () => {
           expect(orgs).toEqual(expectedStructure)
         })
       })
-
       describe('using before cursor', () => {
         let consoleOutput = []
         const mockedError = (output) => consoleOutput.push(output)
@@ -387,7 +386,6 @@ describe('given the load organizations connection function', () => {
           expect(orgs).toEqual(expectedStructure)
         })
       })
-
       describe('using first limit', () => {
         let consoleOutput = []
         const mockedError = (output) => consoleOutput.push(output)
@@ -501,7 +499,6 @@ describe('given the load organizations connection function', () => {
           expect(orgs).toEqual(expectedStructure)
         })
       })
-
       describe('using last limit', () => {
         let consoleOutput = []
         const mockedError = (output) => consoleOutput.push(output)
@@ -615,7 +612,6 @@ describe('given the load organizations connection function', () => {
           expect(orgs).toEqual(expectedStructure)
         })
       })
-
       describe('using the orderBy field', () => {
         let consoleOutput = []
         const mockedError = (output) => consoleOutput.push(output)
@@ -2156,7 +2152,6 @@ describe('given the load organizations connection function', () => {
           })
         })
       })
-
       describe('no organizations are found', () => {
         let query, drop
 
@@ -2203,35 +2198,38 @@ describe('given the load organizations connection function', () => {
       })
     })
   })
-
   describe('given an unsuccessful load', () => {
+    let i18n
     describe('users language is english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       describe('limits are not set', () => {
-        let warn, query, drop, connectionLoader
+        let warn, connectionLoader
 
-        beforeAll(async () => {
+        beforeAll(() => {
           warn = console.warn
-          ;({ query, drop } = await ensure({
-            type: 'database',
-            name: 'limits_' + dbNameFromFile('loadOrgByDomainId'),
-            url,
-            rootPassword: rootPass,
-            options: databaseOptions({ rootPass }),
-          }))
-
           connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
+            query: jest.fn(),
             language: 'en',
             cleanseInput,
             i18n,
           })
         })
-
-        afterAll(async () => {
+        afterAll(() => {
           console.warn = warn
-          await drop()
         })
-
         it('returns an error message', async () => {
           console.warn = jest.fn()
 
@@ -2254,39 +2252,21 @@ describe('given the load organizations connection function', () => {
           ])
         })
       })
-    })
-  })
-
-  describe('given an unsuccessful load', () => {
-    describe('users language is english', () => {
       describe('user has first and last arguments set at the same time', () => {
-        let query, warn, drop, truncate, connectionLoader
+        let warn, connectionLoader
 
-        beforeEach(async () => {
+        beforeEach(() => {
           warn = console.warn
-          ;({ query, drop, truncate } = await ensure({
-            type: 'database',
-            name: 'firstlast_' + dbNameFromFile('loadOrgByDomainId'),
-            url,
-            rootPassword: rootPass,
-            options: databaseOptions({ rootPass }),
-          }))
 
           connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
+            query: jest.fn(),
             language: 'en',
             cleanseInput,
             i18n,
           })
         })
-
-        afterEach(async () => {
-          await truncate()
-        })
-
-        afterAll(async () => {
+        afterAll(() => {
           console.warn = warn
-          await drop()
         })
 
         it('returns an error message', async () => {
@@ -2312,37 +2292,22 @@ describe('given the load organizations connection function', () => {
           ])
         })
       })
-    })
-  })
-
-  describe('given an unsuccessful load', () => {
-    describe('users language is english', () => {
       describe('limits are set below minimum', () => {
-        let query, warn, drop, connectionLoader
+        let warn, connectionLoader
 
-        beforeEach(async () => {
+        beforeEach(() => {
           warn = console.warn
-          ;({ query, drop } = await ensure({
-            type: 'database',
-            name: 'badMinFirst_' + dbNameFromFile('loadOrgByDomainId'),
-            url,
-            rootPassword: rootPass,
-            options: databaseOptions({ rootPass }),
-          }))
 
           connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
+            query: jest.fn(),
             language: 'en',
             cleanseInput,
             i18n,
           })
         })
-
-        afterAll(async () => {
+        afterAll(() => {
           console.warn = warn
-          await drop()
         })
-
         it('rejects values for first below zero', async () => {
           console.warn = jest.fn()
 
@@ -2366,35 +2331,20 @@ describe('given the load organizations connection function', () => {
           ])
         })
       })
-    })
-  })
-
-  describe('given an unsuccessful load', () => {
-    describe('users language is english', () => {
       describe('limits are set below minimum', () => {
-        let query, warn, drop, connectionLoader
+        let warn, connectionLoader
 
-        beforeEach(async () => {
+        beforeEach(() => {
           warn = console.warn
-          ;({ query, drop } = await ensure({
-            type: 'database',
-            name: 'badMinLast_' + dbNameFromFile('loadOrgByDomainId'),
-            url,
-            rootPassword: rootPass,
-            options: databaseOptions({ rootPass }),
-          }))
-
           connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
+            query: jest.fn(),
             language: 'en',
             cleanseInput,
             i18n,
           })
         })
-
-        afterAll(async () => {
+        afterAll(() => {
           console.warn = warn
-          await drop()
         })
 
         it('rejects values for last below zero', async () => {
@@ -2419,45 +2369,24 @@ describe('given the load organizations connection function', () => {
           ])
         })
       })
-    })
-  })
-
-  describe('given an unsuccessful load', () => {
-    describe('users language is english', () => {
       describe('limits are set above maximum', () => {
-        let query, warn, drop, connectionLoader
+        let warn, connectionLoader
 
         beforeEach(async () => {
           warn = console.warn
-          ;({ query, drop } = await ensure({
-            type: 'database',
-            name: 'maxFirst_' + dbNameFromFile('loadOrgByDomainId'),
-            url,
-            rootPassword: rootPass,
-            options: databaseOptions({ rootPass }),
-          }))
 
           connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
+            query: jest.fn(),
             language: 'en',
             cleanseInput,
             i18n,
           })
         })
-
-        afterAll(async () => {
+        afterAll(() => {
           console.warn = warn
-          await drop()
         })
-
         it('returns an error message', async () => {
           console.warn = jest.fn()
-          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
-            language: 'en',
-            cleanseInput,
-            i18n,
-          })
 
           try {
             await connectionLoader({
@@ -2479,46 +2408,24 @@ describe('given the load organizations connection function', () => {
           ])
         })
       })
-    })
-  })
-
-  describe('given an unsuccessful load', () => {
-    describe('users language is english', () => {
       describe('last is set', () => {
-        let query, warn, drop, connectionLoader
+        let warn, connectionLoader
 
-        beforeEach(async () => {
+        beforeEach(() => {
           warn = console.warn
-          ;({ query, drop } = await ensure({
-            type: 'database',
-            name: 'maxFirst_' + dbNameFromFile('loadOrgByDomainId'),
-            url,
-            rootPassword: rootPass,
-            options: databaseOptions({ rootPass }),
-          }))
 
           connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
+            query: jest.fn(),
             language: 'en',
             cleanseInput,
             i18n,
           })
         })
-
-        afterAll(async () => {
+        afterAll(() => {
           console.warn = warn
-          await drop()
         })
-
         it('returns an error message', async () => {
           console.warn = jest.fn()
-
-          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-            query,
-            language: 'en',
-            cleanseInput,
-            i18n,
-          })
 
           try {
             await connectionLoader({
@@ -2540,46 +2447,28 @@ describe('given the load organizations connection function', () => {
           ])
         })
       })
-    })
-  })
-
-  describe('given an unsuccessful load', () => {
-    describe('users language is english', () => {
       describe('limits are not set to numbers', () => {
         describe('first limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            let query, warn, drop, connectionLoader
+            let warn, connectionLoader
 
             beforeAll(async () => {
-              ;({ query, drop } = await ensure({
-                type: 'database',
-                name: 'firstlimit_' + dbNameFromFile('loadOrgByDomainId'),
-                url,
-                rootPassword: rootPass,
-                options: databaseOptions({ rootPass }),
-              }))
-
               connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-                query,
+                query: jest.fn(),
                 language: 'en',
                 cleanseInput,
                 i18n,
               })
             })
-
-            beforeEach(async () => {
+            beforeEach(() => {
               console.warn = jest.fn()
             })
-
-            afterEach(async () => {
+            afterEach(() => {
               console.warn = warn
             })
-
-            afterAll(async () => {
+            afterAll(() => {
               console.warn = warn
-              await drop()
             })
-
             it(`returns an error when first set is to ${stringify(
               invalidInput,
             )}`, async () => {
@@ -2602,47 +2491,27 @@ describe('given the load organizations connection function', () => {
             })
           })
         })
-      })
-    })
-  })
-
-  describe('given an unsuccessful load', () => {
-    describe('users language is english', () => {
-      describe('limits are not set to numbers', () => {
         describe('last limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            let query, warn, drop, connectionLoader
+            let warn, connectionLoader
 
-            beforeAll(async () => {
-              ;({ query, drop } = await ensure({
-                type: 'database',
-                name: 'lastlimit_' + dbNameFromFile('loadOrgByDomainId'),
-                url,
-                rootPassword: rootPass,
-                options: databaseOptions({ rootPass }),
-              }))
-
+            beforeAll(() => {
               connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-                query,
+                query: jest.fn(),
                 language: 'en',
                 cleanseInput,
                 i18n,
               })
             })
-
-            beforeEach(async () => {
+            beforeEach(() => {
               console.warn = jest.fn()
             })
-
-            afterEach(async () => {
+            afterEach(() => {
               console.warn = warn
             })
-
-            afterAll(async () => {
+            afterAll(() => {
               console.warn = warn
-              await drop()
             })
-
             it(`returns an error when last is set to ${stringify(
               invalidInput,
             )}`, async () => {
@@ -2666,75 +2535,477 @@ describe('given the load organizations connection function', () => {
           })
         })
       })
-    })
-  })
+      describe('given a database error', () => {
+        describe('when gathering organizations', () => {
+          it('returns an error message', async () => {
+            const error = console.error
+            console.error = jest.fn()
 
-  describe('given a database error', () => {
-    describe('when gathering organizations', () => {
-      it('returns an error message', async () => {
-        const error = console.error
-        console.error = jest.fn()
+            const connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+              query: jest
+                .fn()
+                .mockRejectedValue(new Error('Database error occurred.')),
+              language: 'en',
+              cleanseInput,
+              i18n,
+            })
 
-        const connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-          query: jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.')),
-          language: 'en',
-          cleanseInput,
-          i18n,
+            await expect(() =>
+              connectionLoader({
+                domainId: '1234',
+                first: 5,
+              }),
+            ).rejects.toThrow(
+              'Unable to load verified organization(s). Please try again.',
+            )
+
+            expect(console.error.mock.calls).toEqual([
+              [
+                `Database error occurred while user was trying to gather orgs in loadVerifiedOrgConnectionsByDomainId, error: Error: Database error occurred.`,
+              ],
+            ])
+            console.error = error
+          })
         })
+      })
+      describe('given a cursor error', () => {
+        describe('when gathering organizations', () => {
+          it('returns an error message', async () => {
+            const error = console.error
+            console.error = jest.fn()
 
-        await expect(() =>
-          connectionLoader({
-            domainId: '1234',
-            first: 5,
-          }),
-        ).rejects.toThrow(
-          'Unable to load verified organization(s). Please try again.',
-        )
+            const connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+              query: jest.fn().mockReturnValueOnce({
+                next() {
+                  throw new Error('Cursor error occurred.')
+                },
+              }),
+              language: 'en',
+              cleanseInput,
+              i18n,
+            })
 
-        expect(console.error.mock.calls).toEqual([
-          [
-            `Database error occurred while user was trying to gather orgs in loadVerifiedOrgConnectionsByDomainId, error: Error: Database error occurred.`,
-          ],
-        ])
-        console.error = error
+            await expect(() =>
+              connectionLoader({
+                domainId: '1234',
+                first: 5,
+              }),
+            ).rejects.toThrow(
+              'Unable to load verified organization(s). Please try again.',
+            )
+
+            expect(console.error.mock.calls).toEqual([
+              [
+                `Cursor error occurred while user was trying to gather orgs in loadVerifiedOrgConnectionsByDomainId, error: Error: Cursor error occurred.`,
+              ],
+            ])
+            console.error = error
+          })
+        })
       })
     })
-  })
+    describe('users language is french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
+      describe('limits are not set', () => {
+        let warn, connectionLoader
 
-  describe('given a cursor error', () => {
-    describe('when gathering organizations', () => {
-      it('returns an error message', async () => {
-        const error = console.error
-        console.error = jest.fn()
+        beforeAll(() => {
+          warn = console.warn
+          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+            query: jest.fn(),
+            language: 'en',
+            cleanseInput,
+            i18n,
+          })
+        })
+        afterAll(() => {
+          console.warn = warn
+        })
+        it('returns an error message', async () => {
+          console.warn = jest.fn()
 
-        const connectionLoader = loadVerifiedOrgConnectionsByDomainId({
-          query: jest.fn().mockReturnValueOnce({
-            next() {
-              throw new Error('Cursor error occurred.')
-            },
-          }),
-          language: 'en',
-          cleanseInput,
-          i18n,
+          try {
+            await connectionLoader({
+              domainId: '1234',
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedOrganization`.',
+              ),
+            )
+          }
+
+          expect(console.warn.mock.calls).toEqual([
+            [
+              'User did not have either `first` or `last` arguments set for: loadVerifiedOrgConnectionsByDomainId.',
+            ],
+          ])
+        })
+      })
+      describe('user has first and last arguments set at the same time', () => {
+        let warn, connectionLoader
+
+        beforeEach(() => {
+          warn = console.warn
+
+          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+            query: jest.fn(),
+            language: 'en',
+            cleanseInput,
+            i18n,
+          })
+        })
+        afterAll(() => {
+          console.warn = warn
         })
 
-        await expect(() =>
-          connectionLoader({
-            domainId: '1234',
-            first: 5,
-          }),
-        ).rejects.toThrow(
-          'Unable to load verified organization(s). Please try again.',
-        )
+        it('returns an error message', async () => {
+          console.warn = jest.fn()
+          try {
+            await connectionLoader({
+              domainId: '1234',
+              first: 1,
+              last: 1,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                "Passer à la fois `first` et `last` pour paginer la connexion `VerifiedOrganization` n'est pas supporté.",
+              ),
+            )
+          }
 
-        expect(console.error.mock.calls).toEqual([
-          [
-            `Cursor error occurred while user was trying to gather orgs in loadVerifiedOrgConnectionsByDomainId, error: Error: Cursor error occurred.`,
-          ],
-        ])
-        console.error = error
+          expect(console.warn.mock.calls).toEqual([
+            [
+              'User attempted to have `first` and `last` arguments set for: loadVerifiedOrgConnectionsByDomainId.',
+            ],
+          ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        let warn, connectionLoader
+
+        beforeEach(() => {
+          warn = console.warn
+
+          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+            query: jest.fn(),
+            language: 'en',
+            cleanseInput,
+            i18n,
+          })
+        })
+        afterAll(() => {
+          console.warn = warn
+        })
+        it('rejects values for first below zero', async () => {
+          console.warn = jest.fn()
+
+          try {
+            await connectionLoader({
+              domainId: '1234',
+              first: -1,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                '`first` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro.',
+              ),
+            )
+          }
+
+          expect(console.warn.mock.calls).toEqual([
+            [
+              'User attempted to have `first` set below zero for: loadVerifiedOrgConnectionsByDomainId.',
+            ],
+          ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        let warn, connectionLoader
+
+        beforeEach(() => {
+          warn = console.warn
+          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+            query: jest.fn(),
+            language: 'en',
+            cleanseInput,
+            i18n,
+          })
+        })
+        afterAll(() => {
+          console.warn = warn
+        })
+
+        it('rejects values for last below zero', async () => {
+          console.warn = jest.fn()
+          try {
+            await connectionLoader({
+              domainId: '1234',
+              last: -1,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                '`last` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro.',
+              ),
+            )
+          }
+
+          expect(console.warn.mock.calls).toEqual([
+            [
+              'User attempted to have `last` set below zero for: loadVerifiedOrgConnectionsByDomainId.',
+            ],
+          ])
+        })
+      })
+      describe('limits are set above maximum', () => {
+        let warn, connectionLoader
+
+        beforeEach(async () => {
+          warn = console.warn
+
+          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+            query: jest.fn(),
+            language: 'en',
+            cleanseInput,
+            i18n,
+          })
+        })
+        afterAll(() => {
+          console.warn = warn
+        })
+        it('returns an error message', async () => {
+          console.warn = jest.fn()
+
+          try {
+            await connectionLoader({
+              domainId: '1234',
+              first: 101,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                "La demande d'enregistrements `101` sur la connexion `VerifiedOrganization` dépasse la limite `first` de 100 enregistrements.",
+              ),
+            )
+          }
+
+          expect(console.warn.mock.calls).toEqual([
+            [
+              'User attempted to have `first` to 101 for: loadVerifiedOrgConnectionsByDomainId.',
+            ],
+          ])
+        })
+      })
+      describe('last is set', () => {
+        let warn, connectionLoader
+
+        beforeEach(() => {
+          warn = console.warn
+
+          connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+            query: jest.fn(),
+            language: 'en',
+            cleanseInput,
+            i18n,
+          })
+        })
+        afterAll(() => {
+          console.warn = warn
+        })
+        it('returns an error message', async () => {
+          console.warn = jest.fn()
+
+          try {
+            await connectionLoader({
+              domainId: '1234',
+              last: 101,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                "La demande d'enregistrements `101` sur la connexion `VerifiedOrganization` dépasse la limite `last` de 100 enregistrements.",
+              ),
+            )
+          }
+
+          expect(console.warn.mock.calls).toEqual([
+            [
+              'User attempted to have `last` to 101 for: loadVerifiedOrgConnectionsByDomainId.',
+            ],
+          ])
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            let warn, connectionLoader
+
+            beforeAll(async () => {
+              connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+                query: jest.fn(),
+                language: 'en',
+                cleanseInput,
+                i18n,
+              })
+            })
+            beforeEach(() => {
+              console.warn = jest.fn()
+            })
+            afterEach(() => {
+              console.warn = warn
+            })
+            afterAll(() => {
+              console.warn = warn
+            })
+            it(`returns an error when first set is to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              try {
+                await connectionLoader({
+                  first: invalidInput,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(console.warn.mock.calls).toEqual([
+                [
+                  `User attempted to have \`first\` set as a ${typeof invalidInput} for: loadVerifiedOrgConnectionsByDomainId.`,
+                ],
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            let warn, connectionLoader
+
+            beforeAll(() => {
+              connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+                query: jest.fn(),
+                language: 'en',
+                cleanseInput,
+                i18n,
+              })
+            })
+            beforeEach(() => {
+              console.warn = jest.fn()
+            })
+            afterEach(() => {
+              console.warn = warn
+            })
+            afterAll(() => {
+              console.warn = warn
+            })
+            it(`returns an error when last is set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              try {
+                await connectionLoader({
+                  last: invalidInput,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(console.warn.mock.calls).toEqual([
+                [
+                  `User attempted to have \`last\` set as a ${typeof invalidInput} for: loadVerifiedOrgConnectionsByDomainId.`,
+                ],
+              ])
+            })
+          })
+        })
+      })
+      describe('given a database error', () => {
+        describe('when gathering organizations', () => {
+          it('returns an error message', async () => {
+            const error = console.error
+            console.error = jest.fn()
+
+            const connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+              query: jest
+                .fn()
+                .mockRejectedValue(new Error('Database error occurred.')),
+              language: 'en',
+              cleanseInput,
+              i18n,
+            })
+
+            await expect(() =>
+              connectionLoader({
+                domainId: '1234',
+                first: 5,
+              }),
+            ).rejects.toThrow(
+              'Impossible de charger le(s) organisme(s) vérifié(s). Veuillez réessayer.',
+            )
+
+            expect(console.error.mock.calls).toEqual([
+              [
+                `Database error occurred while user was trying to gather orgs in loadVerifiedOrgConnectionsByDomainId, error: Error: Database error occurred.`,
+              ],
+            ])
+            console.error = error
+          })
+        })
+      })
+      describe('given a cursor error', () => {
+        describe('when gathering organizations', () => {
+          it('returns an error message', async () => {
+            const error = console.error
+            console.error = jest.fn()
+
+            const connectionLoader = loadVerifiedOrgConnectionsByDomainId({
+              query: jest.fn().mockReturnValueOnce({
+                next() {
+                  throw new Error('Cursor error occurred.')
+                },
+              }),
+              language: 'en',
+              cleanseInput,
+              i18n,
+            })
+
+            await expect(() =>
+              connectionLoader({
+                domainId: '1234',
+                first: 5,
+              }),
+            ).rejects.toThrow(
+              'Impossible de charger le(s) organisme(s) vérifié(s). Veuillez réessayer.',
+            )
+
+            expect(console.error.mock.calls).toEqual([
+              [
+                `Cursor error occurred while user was trying to gather orgs in loadVerifiedOrgConnectionsByDomainId, error: Error: Cursor error occurred.`,
+              ],
+            ])
+            console.error = error
+          })
+        })
       })
     })
   })

@@ -97,20 +97,22 @@ describe('given the spfScanData subscription', () => {
     })
     await collections.sslGuidanceTags.save({
       _key: 'ssl1',
-      tagName: 'SSL-TAG',
-      guidance: 'Some Interesting Guidance',
-      refLinksGuide: [
-        {
-          description: 'refLinksGuide Description',
-          ref_link: 'www.refLinksGuide.ca',
-        },
-      ],
-      refLinksTechnical: [
-        {
-          description: 'refLinksTechnical Description',
-          ref_link: 'www.refLinksTechnical.ca',
-        },
-      ],
+      en: {
+        tagName: 'SSL-TAG',
+        guidance: 'Some Interesting Guidance',
+        refLinksGuide: [
+          {
+            description: 'refLinksGuide Description',
+            ref_link: 'www.refLinksGuide.ca',
+          },
+        ],
+        refLinksTechnical: [
+          {
+            description: 'refLinksTechnical Description',
+            ref_link: 'www.refLinksTechnical.ca',
+          },
+        ],
+      },
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
@@ -264,6 +266,7 @@ describe('given the spfScanData subscription', () => {
             query,
             userKey: '1',
             i18n: {},
+            language: 'en',
           }),
         },
       },

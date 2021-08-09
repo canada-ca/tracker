@@ -1,12 +1,7 @@
 import React, { Suspense, useEffect } from 'react'
 import { lazyWithRetry } from './LazyWithRetry'
-import {
-  Switch,
-  useHistory,
-  useLocation,
-  Link as RouteLink,
-} from 'react-router-dom'
-import { useLingui } from '@lingui/react'
+import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
+import { i18n } from '@lingui/core'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
 import { t, Trans } from '@lingui/macro'
@@ -23,9 +18,6 @@ import PrivatePage from './PrivatePage'
 import { Page } from './Page'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
-import { useMutation } from '@apollo/client'
-import { REFRESH_TOKENS } from './graphql/mutations'
-import { activate } from './i18n.config'
 import RequestScanNotificationHandler from './RequestScanNotificationHandler'
 import { wsClient } from './client'
 
@@ -53,59 +45,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 
 export default function App() {
   // Hooks to be used with this functional component
-  const { i18n } = useLingui()
-  const history = useHistory()
-  const location = useLocation()
-  const { currentUser, isLoggedIn, login } = useUserVar()
-  const { from } = location.state || { from: { pathname: '/' } }
-
-  const [refreshTokens] = useMutation(REFRESH_TOKENS, {
-    onError(error) {
-      console.error(error.message)
-    },
-    onCompleted({ refreshTokens }) {
-      if (refreshTokens.result.__typename === 'AuthResult') {
-        if (!currentUser.jwt) {
-          // User not logged in yet, set up environment (redirect and lang)
-          history.replace(from)
-          if (refreshTokens.result.user.preferredLang === 'ENGLISH')
-            activate('en')
-          else if (refreshTokens.result.user.preferredLang === 'FRENCH')
-            activate('fr')
-        }
-        login({
-          jwt: refreshTokens.result.authToken,
-          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
-          userName: refreshTokens.result.user.userName,
-        })
-      }
-      // Non server error occurs
-      else if (refreshTokens.result.__typename === 'AuthenticateError') {
-        // Could not authenticate
-      } else {
-        console.warn('Incorrect authenticate.result typename.')
-      }
-    },
-  })
-
-  useEffect(() => {
-    if (currentUser?.jwt) {
-      const jwtPayload = currentUser.jwt.split('.')[1]
-      const payloadDecoded = window.atob(jwtPayload)
-      const jwtExpiryTimeSeconds = JSON.parse(payloadDecoded).exp
-      // using seconds as that's what the api uses
-      const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
-      const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
-      const timeoutID = setTimeout(() => {
-        refreshTokens()
-      }, (jwtExpiresAfterSeconds - 60) * 1000)
-      return () => {
-        clearTimeout(timeoutID)
-      }
-    } else {
-      refreshTokens()
-    }
-  }, [currentUser, refreshTokens])
+  const { currentUser, isLoggedIn } = useUserVar()
 
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
@@ -181,7 +121,21 @@ export default function App() {
                 <CreateUserPage />
               </Page>
 
-              <Page path="/sign-in" component={SignInPage} title={t`Sign In`} />
+              <Page
+                path="/sign-in"
+                title={t`Sign In`}
+                render={() => {
+                  return isLoggedIn() ? (
+                    <Redirect
+                      to={{
+                        pathname: '/',
+                      }}
+                    />
+                  ) : (
+                    <SignInPage />
+                  )
+                }}
+              />
 
               <Page
                 path="/authenticate/:sendMethod/:authenticateToken"

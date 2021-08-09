@@ -63,9 +63,9 @@ import {
   loadSpfConnectionsByDomainId,
 } from './email-scan/loaders'
 import {
-  loadAggregateGuidanceTagById,
+  loadAggregateGuidanceTagByTagId,
   loadAggregateGuidanceTagConnectionsByTagId,
-  loadDkimGuidanceTagById,
+  loadDkimGuidanceTagByTagId,
   loadDkimGuidanceTagConnectionsByTagId,
   loadDmarcGuidanceTagByTagId,
   loadDmarcGuidanceTagConnectionsByTagId,
@@ -184,10 +184,11 @@ const createContextObject = ({ context, req: request, res: response }) => {
     },
     loaders: {
       loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
-      loadAggregateGuidanceTagById: loadAggregateGuidanceTagById({
+      loadAggregateGuidanceTagByTagId: loadAggregateGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadAggregateGuidanceTagConnectionsByTagId:
         loadAggregateGuidanceTagConnectionsByTagId({
@@ -195,6 +196,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           i18n,
           cleanseInput,
+          language: request.language,
         }),
       loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
@@ -298,10 +300,11 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
       }),
-      loadDkimGuidanceTagById: loadDkimGuidanceTagById({
+      loadDkimGuidanceTagByTagId: loadDkimGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadDkimGuidanceTagConnectionsByTagId:
         loadDkimGuidanceTagConnectionsByTagId({
@@ -309,11 +312,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadDmarcGuidanceTagConnectionsByTagId:
         loadDmarcGuidanceTagConnectionsByTagId({
@@ -321,11 +326,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadHttpsGuidanceTagConnectionsByTagId:
         loadHttpsGuidanceTagConnectionsByTagId({
@@ -333,11 +340,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadSpfGuidanceTagConnectionsByTagId:
         loadSpfGuidanceTagConnectionsByTagId({
@@ -345,11 +354,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
         query,
         userKey,
         i18n,
+        language: request.language,
       }),
       loadSslGuidanceTagConnectionsByTagId:
         loadSslGuidanceTagConnectionsByTagId({
@@ -357,6 +368,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
           userKey,
           cleanseInput,
           i18n,
+          language: request.language,
         }),
       loadOrgByKey: loadOrgByKey({
         query,

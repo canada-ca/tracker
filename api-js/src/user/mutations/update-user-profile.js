@@ -129,7 +129,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Trx step error ocurred when user: ${user._key} attempted to update their profile: ${err}`,
+        `Trx step error ocurred when user: ${userKey} attempted to update their profile: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
@@ -138,7 +138,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Trx commit error ocurred when user: ${user._key} attempted to update their profile: ${err}`,
+        `Trx commit error ocurred when user: ${userKey} attempted to update their profile: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
@@ -154,7 +154,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       await sendVerificationEmail({ user: returnUser, verifyUrl })
     }
 
-    console.info(`User: ${user._key} successfully updated their profile.`)
+    console.info(`User: ${userKey} successfully updated their profile.`)
     return {
       _type: 'success',
       status: i18n._(t`Profile successfully updated.`),

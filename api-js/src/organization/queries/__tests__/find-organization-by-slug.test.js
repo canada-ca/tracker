@@ -24,7 +24,7 @@ describe('given findOrganizationBySlugQuery', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
+  beforeAll(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -33,75 +33,79 @@ describe('given findOrganizationBySlugQuery', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
   })
-  beforeEach(async () => {
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      emailValidated: true,
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domain._id,
-    })
+  afterEach(() => {
     consoleOutput.length = 0
   })
-  afterEach(async () => {
-    await truncate()
-  })
-  afterAll(async () => {
-    await drop()
-  })
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'en',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
+  describe('given successful organization retrieval', () => {
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
+    })
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        emailValidated: true,
+      })
+      org = await collections.organizations.save({
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
         },
       })
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+      })
+      await collections.claims.save({
+        _from: org._id,
+        _to: domain._id,
+      })
     })
-    describe('given successful organization retrieval', () => {
+    afterEach(async () => {
+      await truncate()
+    })
+    afterAll(async () => {
+      await drop()
+    })
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
+        })
+      })
       beforeEach(async () => {
         await collections.affiliations.save({
           _from: org._id,
@@ -192,135 +196,21 @@ describe('given findOrganizationBySlugQuery', () => {
         })
       })
     })
-    describe('given unsuccessful organization retrieval', () => {
-      describe('user does not belong to organization', () => {
-        it('returns an appropriate error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              query {
-                findOrganizationBySlug(orgSlug: "treasury-board-secretariat") {
-                  id
-                  acronym
-                  name
-                  slug
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query: query,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              `Permission Denied: Could not retrieve specified organization.`,
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User ${user._key} could not retrieve organization.`,
-          ])
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
-      describe('organization can not be found', () => {
-        it('returns an appropriate error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              query {
-                findOrganizationBySlug(
-                  orgSlug: "not-treasury-board-secretariat"
-                ) {
-                  id
-                  acronym
-                  name
-                  slug
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: user._key,
-              query: query,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              `No organization with the provided slug could be found.`,
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User ${user._key} could not retrieve organization.`,
-          ])
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        locale: 'fr',
-        localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
-        },
-        locales: ['en', 'fr'],
-        messages: {
-          en: englishMessages.messages,
-          fr: frenchMessages.messages,
-        },
-      })
-    })
-    describe('given successful organization retrieval', () => {
       beforeEach(async () => {
         await collections.affiliations.save({
           _from: org._id,
@@ -411,10 +301,12 @@ describe('given findOrganizationBySlugQuery', () => {
         })
       })
     })
-    describe('given unsuccessful organization retrieval', () => {
+  })
+  describe('given unsuccessful organization retrieval', () => {
+    describe('users language is set to english', () => {
       beforeAll(() => {
         i18n = setupI18n({
-          locale: 'fr',
+          locale: 'en',
           localeData: {
             en: { plurals: {} },
             fr: { plurals: {} },
@@ -426,13 +318,15 @@ describe('given findOrganizationBySlugQuery', () => {
           },
         })
       })
-      describe('user does not belong to organization', () => {
+      describe('organization can not be found', () => {
         it('returns an appropriate error message', async () => {
           const response = await graphql(
             schema,
             `
               query {
-                findOrganizationBySlug(orgSlug: "secretariat-conseil-tresor") {
+                findOrganizationBySlug(
+                  orgSlug: "not-treasury-board-secretariat"
+                ) {
                   id
                   acronym
                   name
@@ -448,36 +342,106 @@ describe('given findOrganizationBySlugQuery', () => {
             null,
             {
               i18n,
-              userKey: user._key,
-              query: query,
+              userKey: 123,
+              query,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
                 }),
-                verifiedRequired: verifiedRequired({}),
+                verifiedRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadOrgBySlug: {
+                  load: jest.fn().mockReturnValue(),
+                },
               },
             },
           )
 
           const error = [
             new GraphQLError(
-              "Permission refusée : Impossible de récupérer l'organisation spécifiée.",
+              `No organization with the provided slug could be found.`,
             ),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User ${user._key} could not retrieve organization.`,
+            `User 123 could not retrieve organization.`,
           ])
+        })
+      })
+      describe('user does not belong to organization', () => {
+        it('returns an appropriate error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findOrganizationBySlug(orgSlug: "treasury-board-secretariat") {
+                  id
+                  acronym
+                  name
+                  slug
+                  zone
+                  sector
+                  country
+                  province
+                  city
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userKey: 123,
+              query,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadOrgBySlug: {
+                  load: jest.fn().mockReturnValue({}),
+                },
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              `Permission Denied: Could not retrieve specified organization.`,
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User 123 could not retrieve organization.`,
+          ])
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
+          locales: ['en', 'fr'],
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
+          },
         })
       })
       describe('organization can not be found', () => {
@@ -504,22 +468,22 @@ describe('given findOrganizationBySlugQuery', () => {
             null,
             {
               i18n,
-              userKey: user._key,
-              query: query,
+              userKey: 123,
+              query,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
                 }),
-                verifiedRequired: verifiedRequired({}),
+                verifiedRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadOrgBySlug: {
+                  load: jest.fn().mockReturnValue(),
+                },
               },
             },
           )
@@ -532,7 +496,61 @@ describe('given findOrganizationBySlugQuery', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User ${user._key} could not retrieve organization.`,
+            `User 123 could not retrieve organization.`,
+          ])
+        })
+      })
+      describe('user does not belong to organization', () => {
+        it('returns an appropriate error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findOrganizationBySlug(orgSlug: "secretariat-conseil-tresor") {
+                  id
+                  acronym
+                  name
+                  slug
+                  zone
+                  sector
+                  country
+                  province
+                  city
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userKey: 123,
+              query,
+              auth: {
+                checkPermission: jest.fn().mockReturnValue(undefined),
+                userRequired: jest.fn().mockReturnValue({
+                  _key: 123,
+                }),
+                verifiedRequired: jest.fn(),
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadOrgBySlug: {
+                  load: jest.fn().mockReturnValue({}),
+                },
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              "Permission refusée : Impossible de récupérer l'organisation spécifiée.",
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User 123 could not retrieve organization.`,
           ])
         })
       })

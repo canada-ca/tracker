@@ -44,7 +44,7 @@ msgid "Incorrect token value. Please request a new email."
 msgstr "La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail."
 
 #: src/user/mutations/sign-in.js:70
-#: src/user/mutations/sign-in.js:291
+#: src/user/mutations/sign-in.js:295
 msgid "Incorrect username or password. Please try again."
 msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer."
 
@@ -207,9 +207,9 @@ msgstr "Autorisation refusée : Veuillez contacter l'administrateur de l'organis
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs."
 
-#: src/affiliation/mutations/update-user-role.js:180
-#: src/affiliation/mutations/update-user-role.js:203
-#: src/affiliation/mutations/update-user-role.js:221
+#: src/affiliation/mutations/update-user-role.js:190
+#: src/affiliation/mutations/update-user-role.js:213
+#: src/affiliation/mutations/update-user-role.js:231
 msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs."
 
@@ -364,11 +364,11 @@ msgstr "Le compte a été fermé avec succès."
 msgid "Successfully dispatched one time scan."
 msgstr "Un seul balayage a été effectué avec succès."
 
-#: src/user/mutations/verify-account.js:121
+#: src/user/mutations/verify-account.js:118
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:196
+#: src/affiliation/mutations/invite-user-to-org.js:194
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé."
 
@@ -439,10 +439,6 @@ msgstr "La longueur du code à deux facteurs est incorrecte. Veuillez réessayer
 msgid "Unable leave organization. Please try again."
 msgstr "Impossible de quitter l'organisation. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:170
-msgid "Unable to add user to organization. Please try again."
-msgstr "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer."
-
 #: src/user/mutations/authenticate.js:77
 #: src/user/mutations/authenticate.js:125
 #: src/user/mutations/authenticate.js:134
@@ -482,16 +478,18 @@ msgstr "Impossible de fermer le compte. Veuillez réessayer."
 msgid "Unable to create domain in unknown organization."
 msgstr "Impossible de créer un domaine dans une organisation inconnue."
 
-#: src/domain/mutations/create-domain.js:143
+#: src/domain/mutations/create-domain.js:151
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Impossible de créer le domaine, l'organisation l'a déjà réclamé."
 
 #: src/domain/mutations/create-domain.js:130
-#: src/domain/mutations/create-domain.js:181
-#: src/domain/mutations/create-domain.js:201
-#: src/domain/mutations/create-domain.js:231
-#: src/domain/mutations/create-domain.js:249
-#: src/domain/mutations/create-domain.js:259
+#: src/domain/mutations/create-domain.js:140
+#: src/domain/mutations/create-domain.js:189
+#: src/domain/mutations/create-domain.js:199
+#: src/domain/mutations/create-domain.js:217
+#: src/domain/mutations/create-domain.js:247
+#: src/domain/mutations/create-domain.js:265
+#: src/domain/mutations/create-domain.js:275
 msgid "Unable to create domain. Please try again."
 msgstr "Impossible de créer un domaine. Veuillez réessayer."
 
@@ -591,7 +589,8 @@ msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuill
 msgid "Unable to invite user to unknown organization."
 msgstr "Impossible d'inviter un utilisateur à une organisation inconnue."
 
-#: src/affiliation/mutations/invite-user-to-org.js:186
+#: src/affiliation/mutations/invite-user-to-org.js:169
+#: src/affiliation/mutations/invite-user-to-org.js:184
 msgid "Unable to invite user. Please try again."
 msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 
@@ -916,19 +915,20 @@ msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 #: src/user/mutations/sign-in.js:158
 #: src/user/mutations/sign-in.js:204
 #: src/user/mutations/sign-in.js:213
-#: src/user/mutations/sign-in.js:272
-#: src/user/mutations/sign-in.js:281
+#: src/user/mutations/sign-in.js:276
+#: src/user/mutations/sign-in.js:285
 msgid "Unable to sign in, please try again."
 msgstr "Impossible de se connecter, veuillez réessayer."
 
-#: src/user/mutations/sign-up.js:196
-#: src/user/mutations/sign-up.js:210
+#: src/user/mutations/sign-up.js:204
+#: src/user/mutations/sign-up.js:218
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Impossible de s'inscrire, veuillez contacter l'administrateur de l'organisation pour obtenir une nouvelle invitation."
 
 #: src/user/mutations/sign-up.js:172
-#: src/user/mutations/sign-up.js:232
-#: src/user/mutations/sign-up.js:242
+#: src/user/mutations/sign-up.js:182
+#: src/user/mutations/sign-up.js:240
+#: src/user/mutations/sign-up.js:250
 msgid "Unable to sign up. Please try again."
 msgstr "Impossible de s'inscrire. Veuillez réessayer."
 
@@ -1025,8 +1025,9 @@ msgid "Unable to update unknown organization."
 msgstr "Impossible de mettre à jour une organisation inconnue."
 
 #: src/affiliation/mutations/update-user-role.js:131
-#: src/affiliation/mutations/update-user-role.js:241
-#: src/affiliation/mutations/update-user-role.js:252
+#: src/affiliation/mutations/update-user-role.js:156
+#: src/affiliation/mutations/update-user-role.js:251
+#: src/affiliation/mutations/update-user-role.js:262
 msgid "Unable to update user's role. Please try again."
 msgstr "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer."
 
@@ -1034,13 +1035,13 @@ msgstr "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessa
 msgid "Unable to update your own role."
 msgstr "Impossible de mettre à jour votre propre rôle."
 
-#: src/user/mutations/verify-account.js:55
-#: src/user/mutations/verify-account.js:73
+#: src/user/mutations/verify-account.js:52
+#: src/user/mutations/verify-account.js:70
 msgid "Unable to verify account. Please request a new email."
 msgstr "Impossible de vérifier le compte. Veuillez demander un nouvel e-mail."
 
-#: src/user/mutations/verify-account.js:102
-#: src/user/mutations/verify-account.js:111
+#: src/user/mutations/verify-account.js:99
+#: src/user/mutations/verify-account.js:108
 msgid "Unable to verify account. Please try again."
 msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 
@@ -1066,7 +1067,7 @@ msgstr "Impossible de vérifier une organisation inconnue."
 msgid "User could not be queried."
 msgstr "L'utilisateur n'a pas pu être interrogé."
 
-#: src/affiliation/mutations/update-user-role.js:262
+#: src/affiliation/mutations/update-user-role.js:272
 msgid "User role was updated successfully."
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès."
 

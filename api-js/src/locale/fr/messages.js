@@ -301,8 +301,6 @@
       'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
     'Unable leave organization. Please try again.':
       "Impossible de quitter l'organisation. Veuillez réessayer.",
-    'Unable to add user to organization. Please try again.':
-      "Impossible d'ajouter un utilisateur à l'organisation. Veuillez réessayer.",
     'Unable to authenticate. Please try again.':
       "Impossible de s'authentifier. Veuillez réessayer.",
     'Unable to check permission. Please try again.':

@@ -17,7 +17,7 @@ export const checkDomainPermission =
     `
     } catch (err) {
       console.error(
-        `Database error when retrieving super admin claims for user: ${userKeyString} and domain: ${domainId}: ${err}`,
+        `Database error when retrieving super admin claims for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
       throw new Error(
         i18n._(
@@ -41,7 +41,7 @@ export const checkDomainPermission =
     `
     } catch (err) {
       console.error(
-        `Database error when retrieving affiliated organization claims for user: ${userKeyString} and domain: ${domainId}: ${err}`,
+        `Database error when retrieving affiliated organization claims for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
       throw new Error(
         i18n._(
@@ -54,7 +54,7 @@ export const checkDomainPermission =
       claim = await userAffiliatedClaims.next()
     } catch (err) {
       console.error(
-        `Cursor error when retrieving affiliated organization claims for user: ${userKeyString} and domain: ${domainId}: ${err}`,
+        `Cursor error when retrieving affiliated organization claims for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
       throw new Error(
         i18n._(
