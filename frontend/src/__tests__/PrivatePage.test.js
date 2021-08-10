@@ -28,6 +28,7 @@ describe('<PrivatePage />', () => {
             <UserVarProvider
               userVar={makeVar({
                 userName: 'asdf',
+                emailValidated: true,
               })}
             >
               <MemoryRouter initialEntries={['/']}>
@@ -52,6 +53,7 @@ describe('<PrivatePage />', () => {
             <UserVarProvider
               userVar={makeVar({
                 userName: undefined,
+                emailValidated: undefined,
               })}
             >
               <MemoryRouter initialEntries={['/organizations/foo']}>
@@ -78,6 +80,7 @@ describe('<PrivatePage />', () => {
             <UserVarProvider
               userVar={makeVar({
                 userName: 'asdf',
+                emailValidated: true,
               })}
             >
               <MemoryRouter initialEntries={['/organizations/foo']}>
