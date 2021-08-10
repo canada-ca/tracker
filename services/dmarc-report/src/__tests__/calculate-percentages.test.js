@@ -3,44 +3,44 @@ const { calculatePercentages } = require('../calculate-percentages')
 describe('given the calculatePercentages', () => {
   describe('values are greater then zero', () => {
     const categoryTotals = {
-      pass: 2,
+      pass: 1,
       fail: 3,
-      passDkimOnly: 4,
-      passSpfOnly: 5,
+      passDkimOnly: 100,
+      passSpfOnly: 50,
     }
     describe('pass is greater then zero', () => {
       it('returns percentage', () => {
         const { percentages } = calculatePercentages(categoryTotals)
 
-        expect(percentages.pass).toEqual(14)
+        expect(percentages.pass).toEqual(0.6)
       })
     })
     describe('fail is greater then zero', () => {
       it('returns percentage', () => {
         const { percentages } = calculatePercentages(categoryTotals)
 
-        expect(percentages.fail).toEqual(21)
+        expect(percentages.fail).toEqual(1.9)
       })
     })
     describe('passDkimOnly is greater then zero', () => {
       it('returns percentage', () => {
         const { percentages } = calculatePercentages(categoryTotals)
 
-        expect(percentages.passDkimOnly).toEqual(29)
+        expect(percentages.passDkimOnly).toEqual(64.9)
       })
     })
     describe('passSpfOnly is greater then zero', () => {
       it('returns percentage', () => {
         const { percentages } = calculatePercentages(categoryTotals)
 
-        expect(percentages.passSpfOnly).toEqual(36)
+        expect(percentages.passSpfOnly).toEqual(32.5)
       })
     })
     describe('total messages add up to totalMessages', () => {
       it('returns total messages', () => {
         const { totalMessages } = calculatePercentages(categoryTotals)
 
-        expect(totalMessages).toEqual(14)
+        expect(totalMessages).toEqual(154)
       })
     })
   })

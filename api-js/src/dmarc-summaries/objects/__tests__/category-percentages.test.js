@@ -1,4 +1,4 @@
-import { GraphQLInt } from 'graphql'
+import { GraphQLFloat, GraphQLInt } from 'graphql'
 import { categoryPercentagesType } from '../category-percentages'
 
 describe('given the category percentages gql object', () => {
@@ -7,25 +7,25 @@ describe('given the category percentages gql object', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('failPercentage')
-      expect(demoType.failPercentage.type).toMatchObject(GraphQLInt)
+      expect(demoType.failPercentage.type).toMatchObject(GraphQLFloat)
     })
     it('has a fullPassPercentage field', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('fullPassPercentage')
-      expect(demoType.fullPassPercentage.type).toMatchObject(GraphQLInt)
+      expect(demoType.fullPassPercentage.type).toMatchObject(GraphQLFloat)
     })
     it('has a passDkimOnlyPercentage field', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('passDkimOnlyPercentage')
-      expect(demoType.passDkimOnlyPercentage.type).toMatchObject(GraphQLInt)
+      expect(demoType.passDkimOnlyPercentage.type).toMatchObject(GraphQLFloat)
     })
     it('has a passSpfOnlyPercentage field', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('passSpfOnlyPercentage')
-      expect(demoType.passSpfOnlyPercentage.type).toMatchObject(GraphQLInt)
+      expect(demoType.passSpfOnlyPercentage.type).toMatchObject(GraphQLFloat)
     })
     it('has a totalMessages field', () => {
       const demoType = categoryPercentagesType.getFields()

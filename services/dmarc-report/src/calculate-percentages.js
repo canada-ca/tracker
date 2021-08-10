@@ -4,17 +4,25 @@ const calculatePercentages = ({ fail, pass, passDkimOnly, passSpfOnly }) => {
     0,
   )
 
+  // calculate base percentages
+  const failPercentage = Number(fail <= 0 ? 0 : Number((fail / total) * 100).toFixed(1))
+
+  const passPercentage = Number(pass <= 0 ? 0 : Number((pass / total) * 100).toFixed(1))
+
+  const passDkimOnlyPercentage =
+    Number(passDkimOnly <= 0 ? 0 : Number((passDkimOnly / total) * 100).toFixed(1))
+
+  const passSpfOnlyPercentage =
+    Number(passSpfOnly <= 0 ? 0 : Number((passSpfOnly / total) * 100).toFixed(1))
+
+
   return {
     totalMessages: total,
     percentages: {
-      fail: fail <= 0 ? 0 : Number(((fail / total) * 100).toFixed(0)),
-      pass: pass <= 0 ? 0 : Number(((pass / total) * 100).toFixed(0)),
-      passDkimOnly:
-        passDkimOnly <= 0
-          ? 0
-          : Number(((passDkimOnly / total) * 100).toFixed(0)),
-      passSpfOnly:
-        passSpfOnly <= 0 ? 0 : Number(((passSpfOnly / total) * 100).toFixed(0)),
+      fail: failPercentage,
+      pass: passPercentage,
+      passDkimOnly: passDkimOnlyPercentage,
+      passSpfOnly: passSpfOnlyPercentage,
     },
   }
 }
