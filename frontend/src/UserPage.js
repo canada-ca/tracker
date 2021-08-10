@@ -46,7 +46,7 @@ export default function UserPage() {
   const history = useHistory()
   const { i18n } = useLingui()
   const [emailSent, setEmailSent] = useState(false)
-  const { _isLoggedIn, logout } = useUserVar()
+  const { logout } = useUserVar()
   const [sendEmailVerification, { error }] = useMutation(
     SEND_EMAIL_VERIFICATION,
     {
