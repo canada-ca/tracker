@@ -1400,7 +1400,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when resetting failed login attempts for user: 123: Error: Transaction Step Error`,
+              `Trx step error occurred when resetting failed login attempts for user: 123: Error: Transaction Step Error`,
             ])
           })
         })
@@ -1628,7 +1628,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when incrementing failed login attempts for user: 123: Error: Transaction Step Error`,
+              `Trx step error occurred when incrementing failed login attempts for user: 123: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2246,7 +2246,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when resetting failed login attempts for user: 123: Error: Transaction Step Error`,
+              `Trx step error occurred when resetting failed login attempts for user: 123: Error: Transaction Step Error`,
             ])
           })
         })
@@ -2480,7 +2480,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when incrementing failed login attempts for user: 123: Error: Transaction Step Error`,
+              `Trx step error occurred when incrementing failed login attempts for user: 123: Error: Transaction Step Error`,
             ])
           })
         })

@@ -4,8 +4,10 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendPasswordResetEmail } from '../index'
 
-const { NOTIFICATION_PASSWORD_RESET_EN, NOTIFICATION_PASSWORD_RESET_FR } =
-  process.env
+const {
+  NOTIFICATION_PASSWORD_RESET_EN,
+  NOTIFICATION_PASSWORD_RESET_FR,
+} = process.env
 
 describe('given the sendPasswordResetEmail function', () => {
   let i18n
@@ -112,7 +114,7 @@ describe('given the sendPasswordResetEmail function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -199,7 +201,7 @@ describe('given the sendPasswordResetEmail function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

@@ -97,7 +97,7 @@ describe('given the sendAuthEmail function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -143,7 +143,7 @@ describe('given the sendAuthEmail function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

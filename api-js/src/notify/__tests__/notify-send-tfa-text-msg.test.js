@@ -4,8 +4,10 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendTfaTextMsg } from '../index'
 
-const { NOTIFICATION_TWO_FACTOR_CODE_EN, NOTIFICATION_TWO_FACTOR_CODE_FR } =
-  process.env
+const {
+  NOTIFICATION_TWO_FACTOR_CODE_EN,
+  NOTIFICATION_TWO_FACTOR_CODE_FR,
+} = process.env
 
 describe('given the sendTfaTextMsg function', () => {
   let i18n
@@ -104,7 +106,7 @@ describe('given the sendTfaTextMsg function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending two factor authentication message for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending two factor authentication message for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -182,7 +184,7 @@ describe('given the sendTfaTextMsg function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending two factor authentication message for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending two factor authentication message for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

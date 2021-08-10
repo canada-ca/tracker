@@ -116,7 +116,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -204,7 +204,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

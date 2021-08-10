@@ -697,7 +697,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
+              `Trx step error occurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
             ])
           })
         })
@@ -1178,7 +1178,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
+              `Trx step error occurred when clearing tfa code and setting refresh id for user: 123 during authentication: Error: Transaction step error`,
             ])
           })
         })
