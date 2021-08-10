@@ -91,7 +91,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = user.tfaSendMethod
     }
 
-    
     let emailValidated = user.emailValidated
     let changedUserName = false
     if (userName !== user.userName && userName !== '') {
@@ -123,13 +122,13 @@ export const updateUserProfile = new mutationWithClientMutationId({
           WITH users
           UPSERT { _key: ${user._key} }
             INSERT ${updatedUser}
-            UPDATE ${updatedUser} 
+            UPDATE ${updatedUser}
             IN users
         `,
       )
     } catch (err) {
       console.error(
-        `Trx step error ocurred when user: ${userKey} attempted to update their profile: ${err}`,
+        `Trx step error occurred when user: ${userKey} attempted to update their profile: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
@@ -138,7 +137,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Trx commit error ocurred when user: ${userKey} attempted to update their profile: ${err}`,
+        `Trx commit error occurred when user: ${userKey} attempted to update their profile: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
@@ -148,9 +147,9 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     if (changedUserName) {
       const token = tokenize({ parameters: { userKey: returnUser._key } })
-  
+
       const verifyUrl = `https://${request.get('host')}/validate/${token}`
-  
+
       await sendVerificationEmail({ user: returnUser, verifyUrl })
     }
 

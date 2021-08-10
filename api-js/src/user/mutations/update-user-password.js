@@ -114,7 +114,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Trx step error ocurred when user: ${user._key} attempted to update their password: ${err}`,
+        `Trx step error occurred when user: ${user._key} attempted to update their password: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update password. Please try again.`))
     }
@@ -123,7 +123,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Trx commit error ocurred when user: ${user._key} attempted to update their password: ${err}`,
+        `Trx commit error occurred when user: ${user._key} attempted to update their password: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update password. Please try again.`))
     }

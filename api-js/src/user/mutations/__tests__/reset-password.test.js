@@ -1050,7 +1050,7 @@ describe('reset users password', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: 123 attempted to reset their password: Error: Transaction step error`,
+              `Trx step error occurred when user: 123 attempted to reset their password: Error: Transaction step error`,
             ])
           })
         })
@@ -1640,7 +1640,7 @@ describe('reset users password', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: 123 attempted to reset their password: Error: Transaction step error`,
+              `Trx step error occurred when user: 123 attempted to reset their password: Error: Transaction step error`,
             ])
           })
         })

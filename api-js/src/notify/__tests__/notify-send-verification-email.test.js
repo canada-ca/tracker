@@ -111,7 +111,7 @@ describe('given the sendVerificationEmail function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -196,7 +196,7 @@ describe('given the sendVerificationEmail function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

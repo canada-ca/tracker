@@ -661,7 +661,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: 123 attempted to update their password: Error: Transaction step error`,
+              `Trx step error occurred when user: 123 attempted to update their password: Error: Transaction step error`,
             ])
           })
         })
@@ -726,7 +726,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error ocurred when user: 123 attempted to update their password: Error: Transaction commit error`,
+              `Trx commit error occurred when user: 123 attempted to update their password: Error: Transaction commit error`,
             ])
           })
         })
@@ -1003,7 +1003,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error ocurred when user: 123 attempted to update their password: Error: Transaction step error`,
+              `Trx step error occurred when user: 123 attempted to update their password: Error: Transaction step error`,
             ])
           })
         })
@@ -1070,7 +1070,7 @@ describe('authenticate user account', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx commit error ocurred when user: 123 attempted to update their password: Error: Transaction commit error`,
+              `Trx commit error occurred when user: 123 attempted to update their password: Error: Transaction commit error`,
             ])
           })
         })

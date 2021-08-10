@@ -107,7 +107,7 @@ export const signIn = new mutationWithClientMutationId({
           )
         } catch (err) {
           console.error(
-            `Trx step error ocurred when resetting failed login attempts for user: ${user._key}: ${err}`,
+            `Trx step error occurred when resetting failed login attempts for user: ${user._key}: ${err}`,
           )
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
@@ -131,11 +131,11 @@ export const signIn = new mutationWithClientMutationId({
               () => query`
                 WITH users
                 UPSERT { _key: ${user._key} }
-                  INSERT { 
+                  INSERT {
                     tfaCode: ${tfaCode},
                     refreshInfo: ${refreshInfo}
                   }
-                  UPDATE { 
+                  UPDATE {
                     tfaCode: ${tfaCode},
                     refreshInfo: ${refreshInfo}
                   }
@@ -254,7 +254,6 @@ export const signIn = new mutationWithClientMutationId({
           }
         }
       } else {
-
         // increment failed login attempts
         user.failedLoginAttempts += 1
 
@@ -264,14 +263,14 @@ export const signIn = new mutationWithClientMutationId({
             () => query`
               WITH users
               FOR u IN users
-                UPDATE ${user._key} WITH { 
-                  failedLoginAttempts: ${user.failedLoginAttempts} 
+                UPDATE ${user._key} WITH {
+                  failedLoginAttempts: ${user.failedLoginAttempts}
                 } IN users
             `,
           )
         } catch (err) {
           console.error(
-            `Trx step error ocurred when incrementing failed login attempts for user: ${user._key}: ${err}`,
+            `Trx step error occurred when incrementing failed login attempts for user: ${user._key}: ${err}`,
           )
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }

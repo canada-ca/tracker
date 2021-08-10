@@ -129,7 +129,7 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -190,7 +190,7 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
+          `Error occurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
