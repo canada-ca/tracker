@@ -11,6 +11,12 @@ describe('given a domain scalar', () => {
           expect(Domain.serialize(testDomain)).toEqual(testDomain)
         })
       })
+      describe('given a domain with uppercase letters', () => {
+        it('sends it to lower', () => {
+          const testDomain = 'test.DOMAIN.ca'
+          expect(Domain.serialize(testDomain)).toEqual('test.domain.ca')
+        })
+      })
       describe('given an invalid domain', () => {
         it('throws type error', () => {
           const testDomain = 'not an domain'
@@ -37,6 +43,12 @@ describe('given a domain scalar', () => {
       describe('given a valid domain', () => {
         const testDomain = 'test.domain.ca'
         expect(Domain.parseValue(testDomain)).toEqual(testDomain)
+      })
+      describe('given a domain with uppercase letters', () => {
+        it('sends it to lower', () => {
+          const testDomain = 'test.DOMAIN.ca'
+          expect(Domain.parseValue(testDomain)).toEqual('test.domain.ca')
+        })
       })
       describe('given an invalid domain', () => {
         const testDomain = 'not an domain'
@@ -66,6 +78,16 @@ describe('given a domain scalar', () => {
           value: testDomain,
         }
         expect(Domain.parseLiteral(testLiteral, {})).toEqual(testDomain)
+      })
+      describe('given a domain with uppercase letters', () => {
+        it('sends it to lower', () => {
+          const testDomain = 'test.DOMAIN.ca'
+          const testLiteral = {
+            kind: Kind.STRING,
+            value: testDomain,
+          }
+          expect(Domain.parseLiteral(testLiteral, {})).toEqual('test.domain.ca')
+        })
       })
       describe('given an invalid domain', () => {
         const testDomain = 'not an domain'
