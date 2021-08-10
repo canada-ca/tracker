@@ -2518,6 +2518,9 @@ export const getTypeNames = () => gql`
     # This mutation allows users to leave a given organization.
     leaveOrganization(input: LeaveOrganizationInput!): LeaveOrganizationPayload
 
+    # This mutation allows users to close their account.
+    closeAccount(input: CloseAccountInput!): CloseAccountPayload
+
     # This mutation allows admins or higher to remove users from any organizations they belong to.
     removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
 
@@ -2655,7 +2658,7 @@ export const getTypeNames = () => gql`
   # This union is used with the \`leaveOrganization\` mutation, allowing for users to leave a given organization, and support any errors that may occur.
   union LeaveOrganizationUnion = AffiliationError | LeaveOrganizationResult
 
-  # This object is used to inform the user that they successful left a given organization.
+  # This object is used to inform the user that they successfully left a given organization.
   type LeaveOrganizationResult {
     # Status message confirming the user left the org.
     status: String
@@ -2665,6 +2668,35 @@ export const getTypeNames = () => gql`
     # Id of the organization the user is looking to leave.
     orgId: ID!
     clientMutationId: String
+  }
+
+  type CloseAccountPayload {
+    # \`CloseAccountUnion\` resolving to either a \`CloseAccountResult\` or \`CloseAccountError\`.
+    result: CloseAccountUnion
+    clientMutationId: String
+  }
+
+  # This union is used with the \`CloseAccount\` mutation, allowing for users to close their account, and support any errors that may occur.
+  union CloseAccountUnion = CloseAccountError | CloseAccountResult
+
+  # This object is used to inform the user if any errors occurred during closure of an account.
+  type CloseAccountError {
+    # Error code to inform user what the issue is related to.
+    code: Int
+
+    # Description of the issue that was encountered.
+    description: String
+  }
+
+  # This object is used to inform the user that they successfully closed their account.
+  type CloseAccountResult {
+    # Status message confirming the user has closed their account.
+    status: String
+  }
+
+  input CloseAccountInput {
+    # Id of the user who is closing their account.
+    userId: ID!
   }
 
   type RemoveUserFromOrgPayload {
