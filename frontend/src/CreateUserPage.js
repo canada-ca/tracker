@@ -1,8 +1,16 @@
-import React from 'react'
-import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import {
+  Box,
+  Button,
+  Divider,
+  Heading,
+  Stack,
+  Text,
+  useToast,
+} from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { object, string } from 'yup'
-import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
+import { Link as RouteLink, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { SIGN_UP } from './graphql/mutations'
 import { useUserVar } from './UserState'
@@ -16,12 +24,13 @@ import { fieldRequirements } from './fieldRequirements'
 import { LoadingMessage } from './LoadingMessage'
 import { activate } from './i18n.config'
 import { TermsConditionsPage } from './TermsConditionsPage'
+import { ArrowForwardIcon, CheckCircleIcon } from '@chakra-ui/icons'
 
 export default function CreateUserPage() {
   const { login } = useUserVar()
-  const history = useHistory()
   const toast = useToast()
   const userOrgToken = useParams().userOrgToken || ''
+  const [showVerifyMessage, setShowVerifyMessage] = useState(false)
 
   const validationSchema = object().shape({
     email: string()
@@ -68,8 +77,7 @@ export default function CreateUserPage() {
         })
         if (signUp.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signUp.result.user.preferredLang === 'FRENCH') activate('fr')
-        // redirect to the home page.
-        history.push('/')
+        setShowVerifyMessage(true)
         // Display a welcome message
         toast({
           title: t`Account created.`,
@@ -103,6 +111,39 @@ export default function CreateUserPage() {
   })
 
   if (loading) return <LoadingMessage />
+
+  if (showVerifyMessage)
+    return (
+      <Stack px="8" mx="auto" overflow="hidden" align="center">
+        <Stack isInline align="center">
+          <CheckCircleIcon color="strong" />
+          <Text fontWeight="bold" fontSize="2xl" textAlign="center">
+            <Trans>
+              A verification link has been sent to your email account
+            </Trans>
+          </Text>
+        </Stack>
+        <Divider />
+        <Text fontSize="lg">
+          <Trans>
+            Please follow the link in the email that was just sent in order to
+            verify your account and start using Tracker.
+          </Trans>
+        </Text>
+        <Divider />
+        <Button
+          as={RouteLink}
+          to="/"
+          color="primary"
+          bg="transparent"
+          borderColor="primary"
+          borderWidth="1px"
+          rightIcon={<ArrowForwardIcon />}
+        >
+          <Trans>Continue</Trans>
+        </Button>
+      </Stack>
+    )
 
   const addUserToOrgText = userOrgToken ? (
     <Text fontSize="md">
