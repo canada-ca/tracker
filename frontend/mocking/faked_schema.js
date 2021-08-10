@@ -2696,7 +2696,7 @@ export const getTypeNames = () => gql`
 
   input CloseAccountInput {
     # Id of the user who is closing their account.
-    userId: ID!
+    userId: ID
   }
 
   type RemoveUserFromOrgPayload {
