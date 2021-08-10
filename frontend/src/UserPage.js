@@ -144,7 +144,6 @@ export default function UserPage() {
   }
 
   const {
-    id,
     displayName,
     userName,
     preferredLang,
@@ -233,11 +232,7 @@ export default function UserPage() {
           }}
           validationSchema={closeAccountValidationSchema}
           onSubmit={async () => {
-            await closeAccount({
-              variables: {
-                userId: id,
-              },
-            })
+            await closeAccount({})
           }}
         >
           {({ handleSubmit }) => (
