@@ -34,7 +34,7 @@ const calculatePercentages = ({ fail, pass, passDkimOnly, passSpfOnly }) => {
   // get the current error rate based off of the expected total and calculated total
   const errorRate = 100 - afterRoundSum
 
-  // calculate the amount needed to subtract from the rounded percentages
+  // calculate the amount needed to add to the rounded percentages
   const deductPortion = Math.ceil(errorRate / countMutableItems)
 
   // sort the rounded percentages in desc order
@@ -53,7 +53,7 @@ const calculatePercentages = ({ fail, pass, passDkimOnly, passSpfOnly }) => {
     const indexOfX = biggest.indexOf(x)
     // if its not the largest index
     if (indexOfX >= 0) {
-      // subtract (adding a negative) the calculated amount based off of error rate
+      // add the calculated amount based off of error rate
       x += deductPortion
       // remove modified value from array
       biggest.splice(indexOfX, 1)
