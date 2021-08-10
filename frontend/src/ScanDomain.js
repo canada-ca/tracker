@@ -166,7 +166,7 @@ export function ScanDomain() {
         onSubmit={async (values) =>
           requestScan({
             variables: {
-              domainUrl: values.domain,
+              domainUrl: values.domain.toLowerCase(),
             },
           })
         }
