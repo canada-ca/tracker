@@ -394,7 +394,7 @@ export const VERIFY_ACCOUNT = gql`
 `
 
 export const CLOSE_ACCOUNT = gql`
-  mutation CloseAccount($userId: ID!) {
+  mutation CloseAccount($userId: ID) {
     closeAccount(input: { userId: $userId }) {
       result {
         ... on CloseAccountError {
