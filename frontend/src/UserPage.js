@@ -30,17 +30,23 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import EditableUserTFAMethod from './EditableUserTFAMethod'
 import EditableUserPhoneNumber from './EditableUserPhoneNumber'
-import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT } from './graphql/mutations'
+import {
+  SEND_EMAIL_VERIFICATION,
+  CLOSE_ACCOUNT,
+  SIGN_OUT,
+} from './graphql/mutations'
 import { Formik } from 'formik'
 import FormField from './FormField'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
+import { useUserVar } from './UserState'
 
 export default function UserPage() {
   const toast = useToast()
   const history = useHistory()
   const { i18n } = useLingui()
   const [emailSent, setEmailSent] = useState(false)
+  const { _isLoggedIn, logout } = useUserVar()
   const [sendEmailVerification, { error }] = useMutation(
     SEND_EMAIL_VERIFICATION,
     {
@@ -118,6 +124,12 @@ export default function UserPage() {
       },
     },
   )
+
+  const [signOut] = useMutation(SIGN_OUT, {
+    onCompleted() {
+      logout()
+    },
+  })
 
   const {
     isOpen: closeAccountIsOpen,
@@ -233,6 +245,7 @@ export default function UserPage() {
           validationSchema={closeAccountValidationSchema}
           onSubmit={async () => {
             await closeAccount({})
+            signOut()
           }}
         >
           {({ handleSubmit }) => (
