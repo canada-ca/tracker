@@ -164,7 +164,7 @@ describe('given a loadUserByKey dataloader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred when user: 1234 funning loadUserByKey: Error: Cursor error occurred.`,
+            `Cursor error occurred when user: 1234 running loadUserByKey: Error: Cursor error occurred.`,
           ])
         })
       })
@@ -235,7 +235,7 @@ describe('given a loadUserByKey dataloader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred when user: 1234 funning loadUserByKey: Error: Cursor error occurred.`,
+            `Cursor error occurred when user: 1234 running loadUserByKey: Error: Cursor error occurred.`,
           ])
         })
       })
