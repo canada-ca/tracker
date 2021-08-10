@@ -24,7 +24,7 @@ export const Domain = new GraphQLScalarType({
         `Can only validate strings as domains but got a: ${ast.kind}`,
       )
     }
-    return validate(ast.value.toLowerCase())
+    return validate(ast.value)
   },
 })
 
