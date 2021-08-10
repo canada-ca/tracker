@@ -9,7 +9,7 @@ const validate = (value) => {
     throw new TypeError(`Value is not a valid domain: ${value}`)
   }
 
-  return value
+  return value.toLowerCase()
 }
 
 export const Domain = new GraphQLScalarType({
