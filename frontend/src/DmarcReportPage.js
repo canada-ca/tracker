@@ -305,6 +305,9 @@ export default function DmarcReportPage() {
       (edge) => {
         const node = { ...edge.node }
         node.dkimAligned = node.dkimAligned.toString()
+        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+        node.dkimResults = node.dkimResults.replace(/,/g, ', ')
         return node
       },
     )
@@ -426,7 +429,11 @@ export default function DmarcReportPage() {
     // Convert boolean values to string and properly format
     const fullPassNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
       (edge) => {
-        return { ...edge.node }
+        const node = { ...edge.node }
+        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+        return node
       },
     )
 
@@ -531,6 +538,7 @@ export default function DmarcReportPage() {
       (edge) => {
         const node = { ...edge.node }
         node.spfAligned = node.spfAligned.toString()
+        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
         return node
       },
     )
@@ -646,7 +654,11 @@ export default function DmarcReportPage() {
     // Convert boolean values to string and properly format
     const dmarcFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
       (edge) => {
-        return { ...edge.node }
+        const node = { ...edge.node }
+        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+        return node
       },
     )
 

@@ -246,27 +246,33 @@ const mocks = {
     // generate an object matching DmarcSummary
     const generateFakeSummary = (currentDate, month, year) => {
       const totalMessageCount = faker.datatype.number({ min: 0, max: 10000 })
+      let maxNumber = totalMessageCount
       const fullPassCount = faker.datatype.number({
         min: 0,
-        max: totalMessageCount,
+        max: maxNumber,
       })
+      maxNumber -= fullPassCount
       const passSpfOnlyCount = faker.datatype.number({
         min: 0,
-        max: fullPassCount,
+        max: maxNumber,
       })
+      maxNumber -= passSpfOnlyCount
       const passDkimOnlyCount = faker.datatype.number({
         min: 0,
-        max: passSpfOnlyCount,
+        max: maxNumber,
       })
-      const failCount = faker.datatype.number({
-        min: 0,
-        max: passDkimOnlyCount,
-      })
+      const failCount = maxNumber - passDkimOnlyCount
 
-      const fullPassPercent = fullPassCount / totalMessageCount
-      const passSpfOnlyPercent = passSpfOnlyCount / totalMessageCount
-      const passDkimOnlyPercent = passDkimOnlyCount / totalMessageCount
-      const failPercent = failCount / totalMessageCount
+      const fullPassPercent = Math.round(
+        (100 * fullPassCount) / totalMessageCount,
+      )
+      const passSpfOnlyPercent = Math.round(
+        (100 * passSpfOnlyCount) / totalMessageCount,
+      )
+      const passDkimOnlyPercent = Math.round(
+        (100 * passDkimOnlyCount) / totalMessageCount,
+      )
+      const failPercent = Math.round((100 * failCount) / totalMessageCount)
 
       return {
         month:
