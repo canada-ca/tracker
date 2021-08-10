@@ -356,7 +356,7 @@ msgstr "La demande de {amount} enregistrements sur la connexion `SPF` dépasse l
 msgid "Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande de {amount} enregistrements sur la connexion `SSL` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/user/mutations/close-account.js:493
+#: src/user/mutations/close-account.js:508
 msgid "Successfully closed account."
 msgstr "Le compte a été fermé avec succès."
 
@@ -368,7 +368,7 @@ msgstr "Un seul balayage a été effectué avec succès."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:194
+#: src/affiliation/mutations/invite-user-to-org.js:195
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé."
 
@@ -388,7 +388,7 @@ msgstr "A réussi à supprimer l'organisation : {0}."
 msgid "Successfully removed user from organization."
 msgstr "L'utilisateur a été retiré de l'organisation avec succès."
 
-#: src/affiliation/mutations/invite-user-to-org.js:136
+#: src/affiliation/mutations/invite-user-to-org.js:137
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisation."
 
@@ -470,7 +470,8 @@ msgstr "Impossible de fermer le compte d'un utilisateur non défini."
 #: src/user/mutations/close-account.js:422
 #: src/user/mutations/close-account.js:458
 #: src/user/mutations/close-account.js:475
-#: src/user/mutations/close-account.js:484
+#: src/user/mutations/close-account.js:490
+#: src/user/mutations/close-account.js:499
 msgid "Unable to close account. Please try again."
 msgstr "Impossible de fermer le compte. Veuillez réessayer."
 
@@ -505,13 +506,13 @@ msgstr "Impossible de créer une organisation. Veuillez réessayer."
 msgid "Unable to dispatch one time scan. Please try again."
 msgstr "Impossible d'envoyer un scan unique. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:19
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:33
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:34
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:48
 msgid "Unable to find Aggregate guidance tag(s). Please try again."
 msgstr "Impossible de trouver le(s) tag(s) d'orientation des agrégats. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-dkim-guidance-tags.js:19
-#: src/guidance-tag/loaders/load-dkim-guidance-tags.js:33
+#: src/guidance-tag/loaders/load-dkim-guidance-tags.js:34
+#: src/guidance-tag/loaders/load-dkim-guidance-tags.js:48
 msgid "Unable to find DKIM guidance tag(s). Please try again."
 msgstr "Impossible de trouver le(s) tag(s) d'orientation DKIM. Veuillez réessayer."
 
@@ -525,8 +526,8 @@ msgstr "Impossible de trouver le(s) résultat(s) DKIM. Veuillez réessayer."
 msgid "Unable to find DKIM scan(s). Please try again."
 msgstr "Impossible de trouver le(s) scan(s) DKIM. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:19
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:33
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:34
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:48
 msgid "Unable to find DMARC guidance tag(s). Please try again."
 msgstr "Impossible de trouver le(s) tag(s) d'orientation DMARC. Veuillez réessayer."
 
@@ -540,8 +541,8 @@ msgstr "Impossible de trouver le(s) scan(s) DMARC. Veuillez réessayer."
 msgid "Unable to find DMARC summary data. Please try again."
 msgstr "Impossible de trouver les données de synthèse DMARC. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-https-guidance-tags.js:19
-#: src/guidance-tag/loaders/load-https-guidance-tags.js:33
+#: src/guidance-tag/loaders/load-https-guidance-tags.js:34
+#: src/guidance-tag/loaders/load-https-guidance-tags.js:48
 msgid "Unable to find HTTPS guidance tag(s). Please try again."
 msgstr "Impossible de trouver la ou les balises d'orientation HTTPS. Veuillez réessayer."
 
@@ -549,8 +550,8 @@ msgstr "Impossible de trouver la ou les balises d'orientation HTTPS. Veuillez r�
 msgid "Unable to find HTTPS scan(s). Please try again."
 msgstr "Impossible de trouver le(s) scan(s) HTTPS. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-spf-guidance-tags.js:19
-#: src/guidance-tag/loaders/load-spf-guidance-tags.js:33
+#: src/guidance-tag/loaders/load-spf-guidance-tags.js:29
+#: src/guidance-tag/loaders/load-spf-guidance-tags.js:43
 msgid "Unable to find SPF guidance tag(s). Please try again."
 msgstr "Impossible de trouver le(s) tag(s) d'orientation SPF. Veuillez réessayer."
 
@@ -559,8 +560,8 @@ msgstr "Impossible de trouver le(s) tag(s) d'orientation SPF. Veuillez réessaye
 msgid "Unable to find SPF scan(s). Please try again."
 msgstr "Impossible de trouver le(s) scan(s) SPF. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-ssl-guidance-tags.js:19
-#: src/guidance-tag/loaders/load-ssl-guidance-tags.js:33
+#: src/guidance-tag/loaders/load-ssl-guidance-tags.js:29
+#: src/guidance-tag/loaders/load-ssl-guidance-tags.js:43
 msgid "Unable to find SSL guidance tag(s). Please try again."
 msgstr "Impossible de trouver le(s) tag(s) d'orientation SSL. Veuillez réessayer."
 
@@ -589,8 +590,8 @@ msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuill
 msgid "Unable to invite user to unknown organization."
 msgstr "Impossible d'inviter un utilisateur à une organisation inconnue."
 
-#: src/affiliation/mutations/invite-user-to-org.js:169
-#: src/affiliation/mutations/invite-user-to-org.js:184
+#: src/affiliation/mutations/invite-user-to-org.js:170
+#: src/affiliation/mutations/invite-user-to-org.js:185
 msgid "Unable to invite user. Please try again."
 msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 
@@ -602,8 +603,8 @@ msgstr "Impossible de s'inviter à un org."
 msgid "Unable to leave undefined organization."
 msgstr "Impossible de quitter une organisation non définie."
 
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
-#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:254
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:266
 msgid "Unable to load Aggregate guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez réessayer."
 
@@ -613,8 +614,8 @@ msgstr "Impossible de charger le(s) tag(s) d'orientation des agrégats. Veuillez
 msgid "Unable to load DKIM failure data. Please try again."
 msgstr "Impossible de charger les données d'échec DKIM. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:250
-#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:262
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:260
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:272
 msgid "Unable to load DKIM guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation DKIM. Veuillez réessayer."
 
@@ -634,8 +635,8 @@ msgstr "Impossible de charger le(s) scan(s) DKIM. Veuillez réessayer."
 msgid "Unable to load DMARC failure data. Please try again."
 msgstr "Impossible de charger les données d'échec DMARC. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:250
-#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:262
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:260
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:272
 msgid "Unable to load DMARC guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer."
 
@@ -653,8 +654,8 @@ msgstr "Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer."
 msgid "Unable to load DMARC summary data. Please try again."
 msgstr "Impossible de charger les données de synthèse DMARC. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:250
-#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:262
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:260
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:272
 msgid "Unable to load HTTPS guidance tag(s). Please try again."
 msgstr "Impossible de charger la ou les balises d'orientation HTTPS. Veuillez réessayer."
 
@@ -670,8 +671,8 @@ msgstr "Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer."
 msgid "Unable to load SPF failure data. Please try again."
 msgstr "Impossible de charger les données d'échec SPF. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:250
-#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:262
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:260
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:272
 msgid "Unable to load SPF guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation SPF. Veuillez réessayer."
 
@@ -680,8 +681,8 @@ msgstr "Impossible de charger le(s) tag(s) d'orientation SPF. Veuillez réessaye
 msgid "Unable to load SPF scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) SPF. Veuillez réessayer."
 
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:250
-#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:262
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:260
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:272
 msgid "Unable to load SSL guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation SSL. Veuillez réessayer."
 
@@ -1272,13 +1273,3 @@ msgstr "`{argSet}` sur la connexion `VerifiedDomain` ne peut être inférieur à
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:186
 msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro."
-
-#: src/summaries/queries/mail-summary.js:22
-#: src/summaries/queries/web-summary.js:23
-msgid "fail"
-msgstr "échouer"
-
-#: src/summaries/queries/mail-summary.js:17
-#: src/summaries/queries/web-summary.js:18
-msgid "pass"
-msgstr "passer"

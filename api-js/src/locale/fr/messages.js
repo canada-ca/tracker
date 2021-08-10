@@ -673,7 +673,5 @@
         ['argSet'],
         '` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro.',
       ],
-    fail: 'échouer',
-    pass: 'passer',
   },
 }

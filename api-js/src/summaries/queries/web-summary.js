@@ -15,12 +15,12 @@ export const webSummary = {
 
     const categories = [
       {
-        name: i18n._(t`pass`),
+        name: 'pass',
         count: summary.pass,
         percentage: Number(((summary.pass / summary.total) * 100).toFixed(1)),
       },
       {
-        name: i18n._(t`fail`),
+        name: 'fail',
         count: summary.fail,
         percentage: Number(((summary.fail / summary.total) * 100).toFixed(1)),
       },
