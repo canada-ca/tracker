@@ -234,9 +234,9 @@ export default function App() {
                 )}
               </PrivatePage>
 
-              <PrivatePage path="/user" title={t`Your Account`}>
-                {() => <UserPage username={currentUser.userName} />}
-              </PrivatePage>
+              <Page path="/user" title={t`Your Account`}>
+                {isLoggedIn() && <UserPage username={currentUser.userName} />}
+              </Page>
 
               <Page path="/validate/:verifyToken" title={t`Email Verification`}>
                 {() => <EmailValidationPage />}

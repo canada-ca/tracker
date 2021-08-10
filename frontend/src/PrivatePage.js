@@ -7,13 +7,13 @@ import { Page } from './Page'
 // A wrapper for <Page> that redirects to the login
 // screen if you're not yet authenticated.
 export default function PrivatePage({ children, ...rest }) {
-  const { isLoggedIn } = useUserVar()
+  const { isLoggedIn, isEmailValidated } = useUserVar()
   const location = useLocation()
   return (
     <Page
       {...rest}
       render={(props) =>
-        isLoggedIn() ? (
+        isLoggedIn() && isEmailValidated() ? (
           children(props)
         ) : (
           <Redirect
