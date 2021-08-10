@@ -476,6 +476,21 @@ export const closeAccount = new mutationWithClientMutationId({
     }
 
     try {
+      await trx.step(
+        () => query`
+          WITH users
+          REMOVE PARSE_IDENTIFIER(${userId}).key
+          IN users OPTIONS { waitForSync: true }
+        `,
+      )
+    } catch (err) {
+      console.error(
+        `Trx step error occurred when removing user: ${user._key} attempted to close account: ${userId}: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to close account. Please try again.`))
+    }
+
+    try {
       await trx.commit()
     } catch (err) {
       console.error(

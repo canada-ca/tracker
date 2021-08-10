@@ -1018,174 +1018,6 @@ describe('given the closeAccount mutation', () => {
             expect(testAffiliation).toEqual(undefined)
           })
         })
-        describe('users language is set to english', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'en',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: user._key,
-                  }),
-                },
-                validators: { cleanseInput },
-              },
-            )
-
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Successfully closed account.',
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
-          })
-        })
-        describe('users language is set to french', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'fr',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: user._key,
-                  }),
-                },
-                validators: { cleanseInput },
-              },
-            )
-
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Le compte a été fermé avec succès.',
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
-          })
-        })
       })
       describe('user is not an org owner', () => {
         beforeEach(async () => {
@@ -1259,174 +1091,234 @@ describe('given the closeAccount mutation', () => {
           const testAffiliation = await testAffiliationCursor.next()
           expect(testAffiliation).toEqual(undefined)
         })
-        describe('users language is set to english', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'en',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
+      })
+      describe('users language is set to english', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'en',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
           })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
+        })
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                closeAccount(input: {}) {
+                  result {
+                    ... on CloseAccountResult {
+                      status
+                    }
+                    ... on CloseAccountError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkSuperAdmin: checkSuperAdmin({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
                     query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
                     i18n,
-                    userKey: user._key,
                   }),
-                },
-                validators: { cleanseInput },
+                }),
               },
-            )
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
 
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Successfully closed account.',
-                  },
+          const expectedResponse = {
+            data: {
+              closeAccount: {
+                result: {
+                  status: 'Successfully closed account.',
                 },
               },
-            }
+            },
+          }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully closed user: ${user._id} account.`,
+          ])
+        })
+      })
+      describe('users language is set to french', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'fr',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
           })
         })
-        describe('users language is set to french', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'fr',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                closeAccount(input: {}) {
+                  result {
+                    ... on CloseAccountResult {
+                      status
+                    }
+                    ... on CloseAccountError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkSuperAdmin: checkSuperAdmin({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  loadUserByKey: loadUserByKey({
                     query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
                     i18n,
-                    userKey: user._key,
                   }),
-                },
-                validators: { cleanseInput },
+                }),
               },
-            )
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
 
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Le compte a été fermé avec succès.',
-                  },
+          const expectedResponse = {
+            data: {
+              closeAccount: {
+                result: {
+                  status: 'Le compte a été fermé avec succès.',
                 },
               },
-            }
+            },
+          }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
-          })
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully closed user: ${user._id} account.`,
+          ])
         })
+      })
+      it('closes the users account', async () => {
+        await graphql(
+          schema,
+          `
+            mutation {
+              closeAccount(input: {}) {
+                result {
+                  ... on CloseAccountResult {
+                    status
+                  }
+                  ... on CloseAccountError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            i18n,
+            query,
+            collections,
+            transaction,
+            userKey: user._key,
+            auth: {
+              checkSuperAdmin: checkSuperAdmin({
+                i18n,
+                userKey: user._key,
+                query,
+              }),
+              userRequired: userRequired({
+                i18n,
+                userKey: user._key,
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
+              }),
+            },
+            loaders: {
+              loadOrgByKey: loadOrgByKey({
+                query,
+                language: 'en',
+                i18n,
+                userKey: user._key,
+              }),
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        await query`FOR user IN users OPTIONS { waitForSync: true } RETURN user`
+
+        const testUserCursor =
+          await query`FOR user IN users OPTIONS { waitForSync: true } RETURN user`
+        const testUser = await testUserCursor.next()
+        expect(testUser).toEqual(undefined)
       })
     })
     describe('super admin is closing another users account', () => {
@@ -2308,85 +2200,6 @@ describe('given the closeAccount mutation', () => {
             expect(testClaim).toEqual(undefined)
           })
         })
-        it('removes affiliated users and org', async () => {
-          await graphql(
-            schema,
-            `
-              mutation {
-                closeAccount(input: {}) {
-                  result {
-                    ... on CloseAccountResult {
-                      status
-                    }
-                    ... on CloseAccountError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkSuperAdmin: checkSuperAdmin({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                userRequired: userRequired({
-                  i18n,
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                }),
-              },
-              loaders: {
-                loadOrgByKey: loadOrgByKey({
-                  query,
-                  language: 'en',
-                  i18n,
-                  userKey: user._key,
-                }),
-                loadUserByKey: loadUserByKey({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
-              },
-              validators: { cleanseInput },
-            },
-          )
-
-          await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
-          await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
-
-          const testAffiliationCursor = await query`
-              FOR aff IN affiliations
-                OPTIONS { waitForSync: true }
-                FILTER aff._from != ${superAdminOrg._id}
-                RETURN aff
-            `
-          const testAffiliation = await testAffiliationCursor.next()
-          expect(testAffiliation).toEqual(undefined)
-
-          const testOrgCursor = await query`
-            FOR org IN organizations
-              OPTIONS { waitForSync: true }
-              FILTER org._key != ${superAdminOrg._key}
-              RETURN org
-          `
-          const testOrg = await testOrgCursor.next()
-          expect(testOrg).toEqual(undefined)
-        })
         describe('user belongs to multiple orgs', () => {
           let org2
           beforeEach(async () => {
@@ -2491,183 +2304,84 @@ describe('given the closeAccount mutation', () => {
             expect(testAffiliation).toEqual(undefined)
           })
         })
-        describe('users language is set to english', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'en',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
+        it('removes affiliated users and org', async () => {
+          await graphql(
+            schema,
+            `
+              mutation {
+                closeAccount(input: {}) {
+                  result {
+                    ... on CloseAccountResult {
+                      status
+                    }
+                    ... on CloseAccountError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: user._key,
-                  }),
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkSuperAdmin: checkSuperAdmin({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
                   loadUserByKey: loadUserByKey({
                     query,
                     userKey: user._key,
                     i18n,
                   }),
-                },
-                validators: { cleanseInput },
+                }),
               },
-            )
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
 
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Successfully closed account.',
-                  },
-                },
-              },
-            }
+          await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+          await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
-          })
-        })
-        describe('users language is set to french', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'fr',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: user._key,
-                  }),
-                  loadUserByKey: loadUserByKey({
-                    query,
-                    userKey: user._key,
-                    i18n,
-                  }),
-                },
-                validators: { cleanseInput },
-              },
-            )
+          const testAffiliationCursor = await query`
+              FOR aff IN affiliations
+                OPTIONS { waitForSync: true }
+                FILTER aff._from != ${superAdminOrg._id}
+                RETURN aff
+            `
+          const testAffiliation = await testAffiliationCursor.next()
+          expect(testAffiliation).toEqual(undefined)
 
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Le compte a été fermé avec succès.',
-                  },
-                },
-              },
-            }
-
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
-          })
+          const testOrgCursor = await query`
+            FOR org IN organizations
+              OPTIONS { waitForSync: true }
+              FILTER org._key != ${superAdminOrg._key}
+              RETURN org
+          `
+          const testOrg = await testOrgCursor.next()
+          expect(testOrg).toEqual(undefined)
         })
       })
       describe('user is not an org owner', () => {
@@ -2748,187 +2462,253 @@ describe('given the closeAccount mutation', () => {
           const testAffiliation = await testAffiliationCursor.next()
           expect(testAffiliation).toEqual(undefined)
         })
-        describe('users language is set to english', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'en',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
+      })
+      describe('users language is set to english', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'en',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
           })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
+        })
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                closeAccount(input: {}) {
+                  result {
+                    ... on CloseAccountResult {
+                      status
+                    }
+                    ... on CloseAccountError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: user._key,
-                  }),
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkSuperAdmin: checkSuperAdmin({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
                   loadUserByKey: loadUserByKey({
                     query,
                     userKey: user._key,
                     i18n,
                   }),
-                },
-                validators: { cleanseInput },
+                }),
               },
-            )
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
 
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Successfully closed account.',
-                  },
+          const expectedResponse = {
+            data: {
+              closeAccount: {
+                result: {
+                  status: 'Successfully closed account.',
                 },
               },
-            }
+            },
+          }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully closed user: ${user._id} account.`,
+          ])
+        })
+      })
+      describe('users language is set to french', () => {
+        beforeAll(() => {
+          i18n = setupI18n({
+            locale: 'fr',
+            localeData: {
+              en: { plurals: {} },
+              fr: { plurals: {} },
+            },
+            locales: ['en', 'fr'],
+            messages: {
+              en: englishMessages.messages,
+              fr: frenchMessages.messages,
+            },
           })
         })
-        describe('users language is set to french', () => {
-          beforeAll(() => {
-            i18n = setupI18n({
-              locale: 'fr',
-              localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
-              },
-              locales: ['en', 'fr'],
-              messages: {
-                en: englishMessages.messages,
-                fr: frenchMessages.messages,
-              },
-            })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  closeAccount(input: {}) {
-                    result {
-                      ... on CloseAccountResult {
-                        status
-                      }
-                      ... on CloseAccountError {
-                        code
-                        description
-                      }
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                closeAccount(input: {}) {
+                  result {
+                    ... on CloseAccountResult {
+                      status
+                    }
+                    ... on CloseAccountError {
+                      code
+                      description
                     }
                   }
                 }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                collections,
-                transaction,
-                userKey: user._key,
-                auth: {
-                  checkSuperAdmin: checkSuperAdmin({
-                    i18n,
-                    userKey: user._key,
-                    query,
-                  }),
-                  userRequired: userRequired({
-                    i18n,
-                    userKey: user._key,
-                    loadUserByKey: loadUserByKey({
-                      query,
-                      userKey: user._key,
-                      i18n,
-                    }),
-                  }),
-                },
-                loaders: {
-                  loadOrgByKey: loadOrgByKey({
-                    query,
-                    language: 'en',
-                    i18n,
-                    userKey: user._key,
-                  }),
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkSuperAdmin: checkSuperAdmin({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
                   loadUserByKey: loadUserByKey({
                     query,
                     userKey: user._key,
                     i18n,
                   }),
-                },
-                validators: { cleanseInput },
+                }),
               },
-            )
+              loaders: {
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  i18n,
+                  userKey: user._key,
+                }),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
+              },
+              validators: { cleanseInput },
+            },
+          )
 
-            const expectedResponse = {
-              data: {
-                closeAccount: {
-                  result: {
-                    status: 'Le compte a été fermé avec succès.',
-                  },
+          const expectedResponse = {
+            data: {
+              closeAccount: {
+                result: {
+                  status: 'Le compte a été fermé avec succès.',
                 },
               },
-            }
+            },
+          }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully closed user: ${user._id} account.`,
-            ])
-          })
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully closed user: ${user._id} account.`,
+          ])
         })
+      })
+      it('closes the users account', async () => {
+        await graphql(
+          schema,
+          `
+            mutation {
+              closeAccount(input: {
+                userId: "${toGlobalId('user', user._key)}"
+              }) {
+                result {
+                  ... on CloseAccountResult {
+                    status
+                  }
+                  ... on CloseAccountError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            i18n,
+            query,
+            collections,
+            transaction,
+            userKey: superAdmin._key,
+            auth: {
+              checkSuperAdmin: checkSuperAdmin({
+                i18n,
+                userKey: superAdmin._key,
+                query,
+              }),
+              userRequired: userRequired({
+                i18n,
+                userKey: superAdmin._key,
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: superAdmin._key,
+                  i18n,
+                }),
+              }),
+            },
+            loaders: {
+              loadUserByKey: loadUserByKey({
+                query,
+                userKey: superAdmin._key,
+                i18n,
+              }),
+            },
+            validators: { cleanseInput },
+          },
+        )
+
+        await query`FOR user IN users OPTIONS { waitForSync: true } RETURN user`
+
+        const testUserCursor = await query`
+          FOR user IN users 
+            OPTIONS { waitForSync: true } 
+            FILTER user.userName != "super.admin@istio.actually.exists"
+            RETURN user
+        `
+        const testUser = await testUserCursor.next()
+        expect(testUser).toEqual(undefined)
       })
     })
   })
+
   describe('given an unsuccessful closing of an account', () => {
     describe('language is set to english', () => {
       beforeAll(() => {
@@ -4149,6 +3929,82 @@ describe('given the closeAccount mutation', () => {
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Trx step error occurred when removing users remaining affiliations when user: 123 attempted to close account: users/123: Error: trx step error`,
+            ])
+          })
+        })
+        describe('when removing the user', () => {
+          it('throws an error', async () => {
+            const mockedCursor = {
+              all: jest.fn().mockReturnValue([{ count: 2 }]),
+            }
+
+            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('trx step error')),
+              commit: jest.fn(),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  closeAccount(input: {}) {
+                    result {
+                      ... on CloseAccountResult {
+                        status
+                      }
+                      ... on CloseAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections,
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkSuperAdmin: jest.fn().mockReturnValue(true),
+                  userRequired: jest
+                    .fn()
+                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: '123',
+                  }),
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to close account. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when removing user: 123 attempted to close account: users/123: Error: trx step error`,
             ])
           })
         })
@@ -5471,6 +5327,84 @@ describe('given the closeAccount mutation', () => {
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Trx step error occurred when removing users remaining affiliations when user: 123 attempted to close account: users/123: Error: trx step error`,
+            ])
+          })
+        })
+        describe('when removing the user', () => {
+          it('throws an error', async () => {
+            const mockedCursor = {
+              all: jest.fn().mockReturnValue([{ count: 2 }]),
+            }
+
+            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
+
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step: jest
+                .fn()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockReturnValueOnce()
+                .mockRejectedValue(new Error('trx step error')),
+              commit: jest.fn(),
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  closeAccount(input: {}) {
+                    result {
+                      ... on CloseAccountResult {
+                        status
+                      }
+                      ... on CloseAccountError {
+                        code
+                        description
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections,
+                transaction: mockedTransaction,
+                userKey: '123',
+                auth: {
+                  checkSuperAdmin: jest.fn().mockReturnValue(true),
+                  userRequired: jest
+                    .fn()
+                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                },
+                loaders: {
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    i18n,
+                    userKey: '123',
+                  }),
+                  loadUserByKey: {
+                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                  },
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Impossible de fermer le compte. Veuillez réessayer.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Trx step error occurred when removing user: 123 attempted to close account: users/123: Error: trx step error`,
             ])
           })
         })
