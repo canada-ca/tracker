@@ -13,7 +13,7 @@ export const tfaSignInResult = new GraphQLObjectType({
     sendMethod: {
       type: GraphQLString,
       description:
-        'Wether the authentication code was sent through text, or email.',
+        'Whether the authentication code was sent through text, or email.',
       resolve: ({ sendMethod }) => sendMethod,
     },
   }),

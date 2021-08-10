@@ -142,7 +142,7 @@ export const spfType = new GraphQLObjectType({
 particular, existing protocols place no restriction on what a sending
 host can use as the "MAIL FROM" of a message or the domain given on
 the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
-protocol is where ADministrative Management Domains (ADMDs) can explicitly
+protocol is where Administrative Management Domains (ADMDs) can explicitly
 authorize the hosts that are allowed to use their domain names, and a
 receiving host can check such authorization.`,
 })

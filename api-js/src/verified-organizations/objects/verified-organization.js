@@ -58,7 +58,7 @@ export const verifiedOrganizationType = new GraphQLObjectType({
     },
     verified: {
       type: GraphQLBoolean,
-      description: 'Wether the organization is a verified organization.',
+      description: 'Whether the organization is a verified organization.',
       resolve: ({ verified }) => verified,
     },
     summaries: {

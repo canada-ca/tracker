@@ -16,7 +16,7 @@ const validate = (value) => {
 export const Slug = new GraphQLScalarType({
   name: 'Slug',
   description:
-    'A field whos values contain numbers, letters, dashes, and underscores.',
+    'A field whose values contain numbers, letters, dashes, and underscores.',
   serialize: validate,
   parseValue: validate,
 

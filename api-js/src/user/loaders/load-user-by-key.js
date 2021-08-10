@@ -26,7 +26,7 @@ export const loadUserByKey = ({ query, userKey, i18n }) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} funning loadUserByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadUserByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load user(s). Please try again.`))
     }

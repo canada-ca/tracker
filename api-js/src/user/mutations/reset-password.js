@@ -138,7 +138,7 @@ export const resetPassword = new mutationWithClientMutationId({
         () => query`
           WITH users
           FOR user IN users
-            UPDATE ${user._key} 
+            UPDATE ${user._key}
             WITH {
               password: ${hashedPassword},
               failedLoginAttempts: 0
@@ -147,7 +147,7 @@ export const resetPassword = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Trx step error ocurred when user: ${user._key} attempted to reset their password: ${err}`,
+        `Trx step error occurred when user: ${user._key} attempted to reset their password: ${err}`,
       )
       throw new Error(i18n._(t`Unable to reset password. Please try again.`))
     }
