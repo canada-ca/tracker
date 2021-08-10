@@ -53,7 +53,7 @@ const calculatePercentages = ({ fail, pass, passDkimOnly, passSpfOnly }) => {
     const indexOfX = biggest.indexOf(x)
     // if its not the largest index
     if (indexOfX >= 0) {
-      // subtract the calculated amount based off of error rate
+      // subtract (adding a negative) the calculated amount based off of error rate
       x += deductPortion
       // remove modified value from array
       biggest.splice(indexOfX, 1)
