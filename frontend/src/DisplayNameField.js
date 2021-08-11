@@ -27,7 +27,6 @@ function DisplayNameField({ name, label, forwardedRef, ...props }) {
           <PersonIcon color="gray.300" size="icons.lg" />
         </InputLeftElement>
         <Input
-          aria-label="input-display-name"
           {...field}
           {...props}
           ref={forwardedRef}
