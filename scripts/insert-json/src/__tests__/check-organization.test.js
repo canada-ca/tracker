@@ -1,4 +1,3 @@
-require('dotenv').config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
