@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Trans } from '@lingui/macro'
-import { Button, Divider, Heading, Stack, Text } from '@chakra-ui/react'
+import { Button, Divider, Stack, Text } from '@chakra-ui/react'
 import {
   ArrowForwardIcon,
   CheckCircleIcon,
@@ -36,10 +36,17 @@ export default function EmailValidationPage() {
   const verifyMessage = () => {
     if (success) {
       return (
-        <Stack isInline align="center">
-          <CheckCircleIcon color="strong" />
+        <Stack>
+          <Stack isInline align="center">
+            <CheckCircleIcon color="strong" />
+            <Text fontSize="2xl" textAlign="center" fontWeight="bold">
+              <Trans>Your account email was successfully verified</Trans>
+            </Text>
+          </Stack>
           <Text fontSize="xl" textAlign="center">
-            <Trans>Your account email was successfully verified</Trans>
+            <Trans>
+              Your account will be fully activated the next time you log in
+            </Trans>
           </Text>
         </Stack>
       )
@@ -48,7 +55,7 @@ export default function EmailValidationPage() {
         <Stack>
           <Stack isInline align="center">
             <WarningIcon color="weak" />
-            <Text fontSize="xl" textAlign="center">
+            <Text fontSize="2xl" textAlign="center" fontWeight="bold">
               <Trans>
                 Your account email could not be verified at this time. Please
                 try again.
@@ -65,10 +72,6 @@ export default function EmailValidationPage() {
 
   return (
     <Stack px="8" mx="auto" overflow="hidden" align="center">
-      <Heading>
-        <Trans>Email Validation Page</Trans>
-      </Heading>
-      <Divider />
       {loading ? <LoadingMessage /> : verifyMessage()}
       <Divider />
       {!loading && (

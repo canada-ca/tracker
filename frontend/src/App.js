@@ -20,6 +20,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { useUserVar } from './UserState'
 import RequestScanNotificationHandler from './RequestScanNotificationHandler'
 import { wsClient } from './client'
+import { VerifyAccountNotificationBar } from './VerifyAccountNotificationBar'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('./CreateUserPage'))
@@ -45,7 +46,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 
 export default function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn } = useUserVar()
+  const { currentUser, isLoggedIn, isEmailValidated } = useUserVar()
 
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
@@ -76,19 +77,19 @@ export default function App() {
             <Trans>Home</Trans>
           </Link>
 
-          {isLoggedIn() && (
+          {isLoggedIn() && isEmailValidated() && (
             <Link to="/organizations">
               <Trans>Organizations</Trans>
             </Link>
           )}
 
-          {isLoggedIn() && (
+          {isLoggedIn() && isEmailValidated() && (
             <Link to="/domains">
               <Trans>Domains</Trans>
             </Link>
           )}
 
-          {isLoggedIn() && (
+          {isLoggedIn() && isEmailValidated() && (
             <Link to="/dmarc-summaries">
               <Trans>DMARC Summaries</Trans>
             </Link>
@@ -100,12 +101,16 @@ export default function App() {
             </Link>
           )}
 
-          {isLoggedIn() && (
+          {isLoggedIn() && isEmailValidated() && (
             <Link to="/admin">
               <Trans>Admin Profile</Trans>
             </Link>
           )}
         </Navigation>
+
+        {isLoggedIn() && !isEmailValidated() && (
+          <VerifyAccountNotificationBar />
+        )}
 
         <Main marginBottom={{ base: '40px', md: 'none' }}>
           <Suspense fallback={<LoadingMessage />}>
@@ -229,9 +234,9 @@ export default function App() {
                 )}
               </PrivatePage>
 
-              <PrivatePage path="/user" title={t`Your Account`}>
-                {() => <UserPage username={currentUser.userName} />}
-              </PrivatePage>
+              <Page path="/user" title={t`Your Account`}>
+                {isLoggedIn() && <UserPage username={currentUser.userName} />}
+              </Page>
 
               <Page path="/validate/:verifyToken" title={t`Email Verification`}>
                 {() => <EmailValidationPage />}

@@ -40,6 +40,7 @@ const I18nApp = () => {
           jwt: refreshTokens.result.authToken,
           tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
           userName: refreshTokens.result.user.userName,
+          emailValidated: refreshTokens.result.user.emailValidated,
         })
         if (from.pathname !== '/') history.replace(from)
       }

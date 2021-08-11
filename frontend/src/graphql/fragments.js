@@ -10,6 +10,7 @@ export const Authorization = {
           userName
           tfaSendMethod
           preferredLang
+          emailValidated
         }
       }
     `,
