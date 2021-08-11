@@ -64,6 +64,7 @@ const mockOverrides = {
         edges: [...new Array(affiliationCount)],
         totalCount: affiliationCount,
       },
+      emailValidated: true,
       preferredLang: 'ENGLISH',
     }
   },
