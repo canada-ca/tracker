@@ -8,22 +8,12 @@ export const customOnConnect =
     loadUserByKey,
     verifiedRequired,
   }) =>
-  async (connectionParams, webSocket, context) => {
+  async (connectionParams, _webSocket, context) => {
     const expandedContext = { ...serverContext, ...context }
 
     const factoryFunc = createContext(expandedContext)
 
-    const enLangPos = String(
-      webSocket.upgradeReq.headers['accept-language'],
-    ).indexOf('en')
-    const frLangPos = String(
-      webSocket.upgradeReq.headers['accept-language'],
-    ).indexOf('fr')
-
-    let language = 'en'
-    if (frLangPos > enLangPos) {
-      language = 'fr'
-    }
+    const language = connectionParams?.AcceptLanguage
 
     const authorization = connectionParams?.authorization
 

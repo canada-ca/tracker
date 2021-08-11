@@ -28,17 +28,14 @@ describe('given the customOnConnect function', () => {
     describe('language is set to english', () => {
       it('is set in the returned object', async () => {
         const token = tokenize({ parameters: { userKey: '1234' } })
-        const headers = {}
-        headers['accept-language'] = 'en'
 
         const webSocket = {
-          upgradeReq: {
-            headers,
-          },
+          upgradeReq: {},
         }
 
         const connectionParams = {
           authorization: token,
+          AcceptLanguage: 'en',
         }
 
         const onConnect = await customOnConnect({
@@ -60,17 +57,14 @@ describe('given the customOnConnect function', () => {
     describe('language is set to french', () => {
       it('is set in the returned object', async () => {
         const token = tokenize({ parameters: { userKey: '1234' } })
-        const headers = {}
-        headers['accept-language'] = 'fr'
 
         const webSocket = {
-          upgradeReq: {
-            headers,
-          },
+          upgradeReq: {},
         }
 
         const connectionParams = {
           authorization: token,
+          AcceptLanguage: 'fr',
         }
 
         const onConnect = await customOnConnect({
@@ -93,17 +87,14 @@ describe('given the customOnConnect function', () => {
   describe('authorization token is set', () => {
     it('has authorization set in the returned object', async () => {
       const token = tokenize({ parameters: { userKey: '1234' } })
-      const headers = {}
-      headers['accept-language'] = 'en'
 
       const webSocket = {
-        upgradeReq: {
-          headers,
-        },
+        upgradeReq: {},
       }
 
       const connectionParams = {
         authorization: token,
+        AcceptLanguage: 'en',
       }
 
       const onConnect = await customOnConnect({
@@ -143,16 +134,11 @@ describe('given the customOnConnect function', () => {
 
     describe('language is set to english', () => {
       it('throws an error', async () => {
-        const headers = {}
-        headers['accept-language'] = 'en'
-
         const webSocket = {
-          upgradeReq: {
-            headers,
-          },
+          upgradeReq: {},
         }
 
-        const connectionParams = {}
+        const connectionParams = { AcceptLanguage: 'en' }
 
         try {
           await customOnConnect({
@@ -175,16 +161,11 @@ describe('given the customOnConnect function', () => {
     })
     describe('language is set to french', () => {
       it('throws an error', async () => {
-        const headers = {}
-        headers['accept-language'] = 'fr'
-
         const webSocket = {
-          upgradeReq: {
-            headers,
-          },
+          upgradeReq: {},
         }
 
-        const connectionParams = {}
+        const connectionParams = { AcceptLanguage: 'fr' }
 
         try {
           await customOnConnect({
