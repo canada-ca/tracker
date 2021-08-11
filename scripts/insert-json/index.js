@@ -1,9 +1,11 @@
-require('dotenv-safe').config()
+require('dotenv-safe').config({
+  example: './.env.example',
+  path: './.env',
+})
 const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 
 const { ensure } = require('arango-tools')
 
-const data = require('./dmarc-domains.json')
 const { databaseOptions } = require('./database-options')
 const {
   checkClaimCount,
@@ -16,6 +18,14 @@ const {
 } = require('./src')
 
 ;(async () => {
+  let data
+  try {
+    data = require('./organization-domains.json')
+  } catch (err) {
+    console.error(err)
+    return
+  }
+
   const { query, collections, transaction } = await ensure({
     type: 'database',
     name: databaseName,
