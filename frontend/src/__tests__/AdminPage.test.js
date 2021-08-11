@@ -6,10 +6,11 @@ import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../graphql/queries'
 import AdminPage from '../AdminPage'
-import { waitFor, render, fireEvent } from '@testing-library/react'
+import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+import userEvent from '@testing-library/user-event'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -167,7 +168,12 @@ describe('<AdminPage />', () => {
 
   describe('Organization select', () => {
     it('displays info for admin', async () => {
-      const { getByText, getByPlaceholderText } = render(
+      const {
+        getByText,
+        getByPlaceholderText,
+        findByRole,
+        findByText,
+      } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
@@ -187,17 +193,15 @@ describe('<AdminPage />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => {
-        const selectMessage = getByText(
-          /Select an organization to view admin options/i,
-        )
-        expect(selectMessage).toBeInTheDocument()
+      const organizationInput = await findByRole('textbox', {
+        name: /Organization/,
       })
+      userEvent.click(organizationInput)
 
-      await waitFor(() => {
-        const orgSelect = getByPlaceholderText('Select an organization')
-        fireEvent.change(orgSelect, { value: 'Wolf Group' })
-      })
+      const orgEntry = getByText(/Wolf Group/)
+      userEvent.click(orgEntry)
+
+      await findByText(/Slug: Wolf-Group/)
     })
   })
 })
