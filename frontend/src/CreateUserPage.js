@@ -126,8 +126,8 @@ export default function CreateUserPage() {
         <Divider />
         <Text fontSize="lg">
           <Trans>
-            Please follow the link in the email that was just sent in order to
-            verify your account and start using Tracker.
+            Please follow the link in order to verify your account and start
+            using Tracker.
           </Trans>
         </Text>
         <Divider />
