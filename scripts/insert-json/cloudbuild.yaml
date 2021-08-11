@@ -25,7 +25,7 @@ steps:
   args: ['run', lint]
 
 - name: node:alpine
-  id: test-subscriptions
+  id: test
   dir: api-js
   entrypoint: npm
   args: ['run', 'test']
