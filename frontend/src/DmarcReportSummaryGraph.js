@@ -266,6 +266,7 @@ function VerticalGraph({
         display="flex"
         justifyContent="center"
         fontSize="14px"
+        fontWeight="bold"
       >
         <LegendOrdinal
           scale={ordinalColorScale}
@@ -380,6 +381,7 @@ function HorizontalGraph({
         justifyContent="center"
         left={margin.left / 2 - 25}
         fontSize="14px"
+        fontWeight="bold"
       >
         <LegendOrdinal
           scale={ordinalColorScale}
