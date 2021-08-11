@@ -15,7 +15,7 @@ import { UserVarProvider, useUserVar } from './UserState'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
 import { REFRESH_TOKENS } from './graphql/mutations'
-import { activate } from './i18n.config'
+import { activate, defaultLocale } from './i18n.config'
 
 const I18nApp = () => {
   const { currentUser, login } = useUserVar()
@@ -79,20 +79,26 @@ const I18nApp = () => {
   )
 }
 
-ReactDOM.render(
-  <ApolloProvider client={client}>
-    <UserVarProvider userVar={currentUserVar}>
-      <ChakraProvider theme={canada}>
-        <Router>
-          <I18nApp />
-        </Router>
-      </ChakraProvider>
-    </UserVarProvider>
-  </ApolloProvider>,
-  document.getElementById('root'),
-)
+const setUpApp = async () => {
+  await activate(defaultLocale)
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister()
+  ReactDOM.render(
+    <ApolloProvider client={client}>
+      <UserVarProvider userVar={currentUserVar}>
+        <ChakraProvider theme={canada}>
+          <Router>
+            <I18nApp />
+          </Router>
+        </ChakraProvider>
+      </UserVarProvider>
+    </ApolloProvider>,
+    document.getElementById('root'),
+  )
+
+  // If you want your app to work offline and load faster, you can change
+  // unregister() to register() below. Note this comes with some pitfalls.
+  // Learn more about service workers: https://bit.ly/CRA-PWA
+  serviceWorker.unregister()
+}
+
+setUpApp()
