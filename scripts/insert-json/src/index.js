@@ -1,4 +1,4 @@
-const { checkClaimCount } = require('./check-claims')
+const { checkClaimCount } = require('./check-claim-count')
 const { checkDomain } = require('./check-domain')
 const { checkOrganization } = require('./check-organization')
 const { createClaim } = require('./create-claim')
