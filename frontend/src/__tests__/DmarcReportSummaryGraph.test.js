@@ -36,7 +36,7 @@ const i18n = setupI18n({
   },
 })
 
-describe('<DmarcReportTimeGraph />', () => {
+describe('<DmarcReportSummaryGraph />', () => {
   it('renders correctly', async () => {
     const { getByText } = render(
       <ChakraProvider theme={theme}>
@@ -45,7 +45,7 @@ describe('<DmarcReportTimeGraph />', () => {
         </I18nProvider>
       </ChakraProvider>,
     )
-    getByText(/Aug-20/i, { selector: 'text' })
+    getByText(/Aug-21/i, { selector: 'text' })
   })
 
   describe('is vertical', () => {
