@@ -14,19 +14,19 @@ steps:
 
 - name: node:alpine
   id: install
-  dir: api-js
+  dir: scripts/insert-json
   entrypoint: npm
   args: ['ci', '--no-optional']
 
 - name: node:alpine
   id: lint
-  dir: api-js
+  dir: scripts/insert-json
   entrypoint: npm
   args: ['run', lint]
 
 - name: node:alpine
   id: test
-  dir: api-js
+  dir: scripts/insert-json
   entrypoint: npm
   args: ['run', 'test']
   env:
