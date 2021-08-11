@@ -206,7 +206,7 @@ export default function TrackerTable({ ...props }) {
                   gotoPage(parseInt(event) - 1)
                 }}
               >
-                <NumberInputField aria-label="Go to input page" />
+                <NumberInputField />
               </NumberInput>
             </Stack>
             <Text>
@@ -232,7 +232,6 @@ export default function TrackerTable({ ...props }) {
                 // wrapperRef.current.scrollIntoView(true)
               }}
               width="fit-content"
-              aria-label="Items per page"
             >
               {[5, 10, 20].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
