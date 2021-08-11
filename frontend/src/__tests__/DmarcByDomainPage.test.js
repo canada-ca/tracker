@@ -105,7 +105,9 @@ describe('<DmarcByDomainPage />', () => {
         >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DmarcByDomainPage />
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <DmarcByDomainPage />
+              </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
@@ -122,7 +124,9 @@ describe('<DmarcByDomainPage />', () => {
         >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DmarcByDomainPage />
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <DmarcByDomainPage />
+              </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
