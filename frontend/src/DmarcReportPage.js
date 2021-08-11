@@ -148,8 +148,7 @@ export default function DmarcReportPage() {
     return (
       <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="3xl" fontWeight="bold">
-          <span>{domainSlug} </span>
-          <Trans>does not support aggregate data</Trans>
+          <Trans>{domainSlug} does not support aggregate data</Trans>
         </Text>
       </Box>
     )
@@ -781,7 +780,6 @@ export default function DmarcReportPage() {
         </Text>
         <Select
           id="data-date-range"
-          aria-label="date range for table data"
           width="fit-content"
           onChange={(e) => handleChange(e)}
           value={selectedDate}

@@ -16,7 +16,7 @@ export const rawDmarcReportData = {
                 node: {
                   sourceIpAddress: '123.123.123.123',
                   envelopeFrom: null,
-                  dkimDomains: 'test.dkim.ca',
+                  dkimDomains: 'full-pass-dkim-domains-L30D.domain',
                   dkimSelectors: 'selectortest',
                   dnsHost: 'test.dns',
                   headerFrom: 'test.header.ca',
@@ -41,7 +41,7 @@ export const rawDmarcReportData = {
               {
                 node: {
                   dkimAligned: false,
-                  dkimDomains: '',
+                  dkimDomains: 'dkim-failure-dkim-domains-L30D.domain',
                   dkimResults: '',
                   dkimSelectors: '',
                   dnsHost: 'testhost',
@@ -74,7 +74,7 @@ export const rawDmarcReportData = {
                   headerFrom: 'test.header',
                   sourceIpAddress: '123.123.123.123',
                   spfAligned: false,
-                  spfDomains: 'test.spf.ca',
+                  spfDomains: 'spf-failure-spf-domains-L30D.domain',
                   spfResults: 'pass',
                   totalMessages: 112,
                   __typename: 'SpfFailureTable',
@@ -95,7 +95,7 @@ export const rawDmarcReportData = {
             edges: [
               {
                 node: {
-                  dkimDomains: '',
+                  dkimDomains: 'dmarc-failure-dkim-domains-L30D.domain',
                   dkimSelectors: '',
                   disposition: 'none',
                   dnsHost: 'test.dns.ca',
