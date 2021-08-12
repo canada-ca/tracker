@@ -117,42 +117,65 @@ describe('given spfFailureTable gql object', () => {
       })
     })
     describe('testing the guidanceTag resolver', () => {
-      it('returns resolved value', async () => {
-        const demoType = spfFailureTableType.getFields()
-
-        const expectedResult = {
-          _id: 'aggregateGuidanceTags/agg1',
-          _key: 'agg1',
-          _rev: 'rev',
-          _type: 'guidanceTag',
-          guidance: 'cool guidance for issue',
-          id: 'agg1',
-          refLinksGuide: [
-            { description: 'Link Description', ref_link: 'www.link.ca' },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'Tech link description',
-              tech_link: 'www.tech.link.ca',
-            },
-          ],
-          tagId: 'agg1',
-          tagName: 'cool-tag-name',
-        }
-
-        expect(
-          await demoType.guidanceTag.resolve(
-            { guidance: 'agg1' },
-            {},
-            {
-              loaders: {
-                loadAggregateGuidanceTagByTagId: {
-                  load: jest.fn().mockReturnValue(expectedResult),
+      describe('guidance is not null', () => {
+        it('returns resolved value', async () => {
+          const demoType = spfFailureTableType.getFields()
+  
+          const expectedResult = {
+            _id: 'aggregateGuidanceTags/agg1',
+            _key: 'agg1',
+            _rev: 'rev',
+            _type: 'guidanceTag',
+            guidance: 'cool guidance for issue',
+            id: 'agg1',
+            refLinksGuide: [
+              { description: 'Link Description', ref_link: 'www.link.ca' },
+            ],
+            refLinksTechnical: [
+              {
+                description: 'Tech link description',
+                tech_link: 'www.tech.link.ca',
+              },
+            ],
+            tagId: 'agg1',
+            tagName: 'cool-tag-name',
+          }
+  
+          expect(
+            await demoType.guidanceTag.resolve(
+              { guidance: 'agg1' },
+              {},
+              {
+                loaders: {
+                  loadAggregateGuidanceTagByTagId: {
+                    load: jest.fn().mockReturnValue(expectedResult),
+                  },
                 },
               },
-            },
-          ),
-        ).toEqual(expectedResult)
+            ),
+          ).toEqual(expectedResult)
+        })
+      })
+      describe('guidance is null', () => {
+        it('returns an empty obj', async () => {
+          const demoType = spfFailureTableType.getFields()
+  
+          const expectedResult = {}
+  
+          expect(
+            await demoType.guidanceTag.resolve(
+              { guidance: null },
+              {},
+              {
+                loaders: {
+                  loadAggregateGuidanceTagByTagId: {
+                    load: jest.fn().mockReturnValue(expectedResult),
+                  },
+                },
+              },
+            ),
+          ).toEqual(expectedResult)
+        })
       })
     })
     describe('testing the headerFrom resolver', () => {

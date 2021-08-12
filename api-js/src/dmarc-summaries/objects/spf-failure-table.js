@@ -38,7 +38,12 @@ export const spfFailureTableType = new GraphQLObjectType({
         { guidance },
         _args,
         { loaders: { loadAggregateGuidanceTagByTagId } },
-      ) => await loadAggregateGuidanceTagByTagId.load(guidance),
+      ) => {
+        if (guidance) {
+          return await loadAggregateGuidanceTagByTagId.load(guidance)
+        }
+        return {}
+      },
     },
     headerFrom: {
       type: GraphQLString,
