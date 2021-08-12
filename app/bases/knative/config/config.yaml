@@ -24,7 +24,7 @@ spec:
         image: gcr.io/track-compliance/services/scanners/https:master-5a9d385-1628773110 # {"$imagepolicy": "flux-system:https-scanner"}
         env:
         - name: SCAN_TIMEOUT
-          value: 20
+          value: "20"
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
@@ -122,7 +122,7 @@ spec:
         image: gcr.io/track-compliance/services/scanners/ssl:master-5a9d385-1628773096 # {"$imagepolicy": "flux-system:ssl-scanner"}
         env:
         - name: SCAN_TIMEOUT
-          value: 20
+          value: "20"
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
@@ -150,7 +150,7 @@ spec:
         image: gcr.io/track-compliance/services/scanners/dns:master-5a9d385-1628773095 # {"$imagepolicy": "flux-system:dns-scanner"}
         env:
         - name: SCAN_TIMEOUT
-          value: 20
+          value: "20"
 ---
 # K8s Service Account that runs `src`'s container.
 
