@@ -177,15 +177,13 @@ def Server(server_client=requests):
             scan_results = future.result()
         except TimeoutError:
             logging.error(f"Timeout while scanning {domain} (Aborted after {round(time.time()-start, 2)} seconds)")
-            outbound_payload = json.dumps(
-                {
+            outbound_payload = {
                     "results": {"error": "unreachable"},
                     "scan_type": "https",
                     "user_key": user_key,
                     "domain_key": domain_key,
                     "shared_id": shared_id
-                }
-            )
+            }
             dispatch_results(outbound_payload, server_client, (user_key is not None))
             return Response("Timeout occurred while scanning", status_code=500)
 
