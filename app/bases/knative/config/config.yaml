@@ -21,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/services/scanners/https:master-2cf17ff-1628180961 # {"$imagepolicy": "flux-system:https-scanner"}
+        image: gcr.io/track-compliance/services/scanners/https:master-5a9d385-1628773110 # {"$imagepolicy": "flux-system:https-scanner"}
         env:
         - name: SCAN_TIMEOUT
           value: 20
