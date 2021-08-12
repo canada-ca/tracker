@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Divider, Flex, Stack, Text, useToast } from '@chakra-ui/react'
+import React, { useState, useCallback } from 'react'
+import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import AdminPanel from './AdminPanel'
@@ -11,12 +11,21 @@ import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
 import { Dropdown } from './Dropdown'
 import { useLingui } from '@lingui/react'
+import { useDebouncedFunction } from './useDebouncedFunction'
 
 export default function AdminPage() {
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const toast = useToast()
   const { i18n } = useLingui()
+
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
+  }, [searchTerm])
+
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const { loading, error, data } = useQuery(ADMIN_AFFILIATIONS, {
     fetchPolicy: 'cache-and-network',
@@ -26,6 +35,7 @@ export default function AdminPage() {
       orderBy: { field: 'NAME', direction: 'ASC' },
       isAdmin: true,
       includeSuperAdminOrg: true,
+      search: debouncedSearchTerm,
     },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
@@ -68,76 +78,58 @@ export default function AdminPage() {
     options.push({ label: name, value: { slug: slug, id: id } })
   })
 
-  if (options.length > 0) {
-    return (
-      <Stack spacing={10} w="100%" px={4}>
-        <Flex
-          direction={{ base: 'column', md: 'row' }}
-          align="center"
-          justifyContent="space-between"
-        >
-          <Dropdown
-            label={i18n._(t`Organization: `)}
-            labelDirection="row"
-            options={options}
-            placeholder={i18n._(t`Select an organization`)}
-            onChange={(opt) => {
-              setOrgDetails(opt.value)
-              setSelectedOrg(opt.label)
-            }}
-          />
-          <Button
-            variant="primary"
-            ml={{ base: '0', md: 'auto' }}
-            w={{ base: '100%', md: 'auto' }}
-            mt={{ base: 2, md: 0 }}
-            as={RouteLink}
-            to="/create-organization"
-          >
-            <AddIcon mr={2} aria-hidden="true" />
-            <Trans>Create Organization</Trans>
-          </Button>
-        </Flex>
-        {options.length > 0 && selectedOrg !== 'none' ? (
-          <>
-            <OrganizationInformation
-              orgSlug={orgDetails.slug}
-              mb="1rem"
-              removeOrgCallback={setSelectedOrg}
-              // set key, this resets state when switching orgs (closes editing box)
-              key={orgDetails.slug}
-            />
-            <AdminPanel
-              orgSlug={orgDetails.slug}
-              orgId={orgDetails.id}
-              permission={isSA?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
-              mr="4"
-            />
-          </>
-        ) : (
-          <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-            <Trans>Select an organization to view admin options</Trans>
-          </Text>
-        )}
-      </Stack>
-    )
-  } else {
-    return (
-      <Stack align="center" w="100%" px={4}>
-        <Text fontSize="3xl" fontWeight="bold" textAlign="center">
-          <Trans>You do not have admin permissions in any organization</Trans>
-        </Text>
-        <Divider />
+  return (
+    <Stack spacing={10} w="100%" px={4}>
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        align="center"
+        justifyContent="space-between"
+      >
+        <Dropdown
+          label={i18n._(t`Organization: `)}
+          labelDirection="row"
+          options={options}
+          placeholder={i18n._(t`Select an organization`)}
+          onSearch={(val) => setSearchTerm(val)}
+          searchValue={searchTerm}
+          onChange={(opt) => {
+            setOrgDetails(opt.value)
+            setSelectedOrg(opt.label)
+          }}
+        />
         <Button
           variant="primary"
+          ml={{ base: '0', md: 'auto' }}
           w={{ base: '100%', md: 'auto' }}
+          mt={{ base: 2, md: 0 }}
           as={RouteLink}
           to="/create-organization"
         >
-          <AddIcon mr={2} />
+          <AddIcon mr={2} aria-hidden="true" />
           <Trans>Create Organization</Trans>
         </Button>
-      </Stack>
-    )
-  }
+      </Flex>
+      {options.length > 0 && selectedOrg !== 'none' ? (
+        <>
+          <OrganizationInformation
+            orgSlug={orgDetails.slug}
+            mb="1rem"
+            removeOrgCallback={setSelectedOrg}
+            // set key, this resets state when switching orgs (closes editing box)
+            key={orgDetails.slug}
+          />
+          <AdminPanel
+            orgSlug={orgDetails.slug}
+            orgId={orgDetails.id}
+            permission={isSA?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
+            mr="4"
+          />
+        </>
+      ) : (
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+          <Trans>Select an organization to view admin options</Trans>
+        </Text>
+      )}
+    </Stack>
+  )
 }
