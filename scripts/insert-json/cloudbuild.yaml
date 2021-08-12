@@ -1,0 +1,39 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: start_arango
+  entrypoint: /bin/sh
+  args:
+    [
+      '-c',
+      'docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arangodb arangodb',
+    ]
+
+- name: mikewilliamson/wait-for
+  id: wait_arango
+  args: ['arangodb:8529']
+
+- name: node:alpine
+  id: install
+  dir: scripts/insert-json
+  entrypoint: npm
+  args: ['ci', '--no-optional']
+
+- name: node:alpine
+  id: lint
+  dir: scripts/insert-json
+  entrypoint: npm
+  args: ['run', lint]
+
+- name: node:alpine
+  id: test
+  dir: scripts/insert-json
+  entrypoint: npm
+  args: ['run', 'test']
+  env:
+  - DB_PASS=$_DB_PASS
+  - DB_URL=$_DB_URL
+  - DB_NAME=$_DB_NAME
+
+timeout: 1200s
+options:
+  machineType: 'E2_HIGHCPU_8'

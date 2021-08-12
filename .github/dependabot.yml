@@ -181,3 +181,10 @@ updates:
     interval: daily
     time: "11:00"
   open-pull-requests-limit: 5
+
+- package-ecosystem: npm
+  directory: "/scripts/insert-json"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 5

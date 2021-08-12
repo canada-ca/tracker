@@ -7,6 +7,7 @@ import Input from './components/Input'
 import Select from './components/Select'
 import Tabs from './components/Tabs'
 import Table from './components/Table'
+import Text from './components/Text'
 
 export default extendTheme({
   borders: {
@@ -152,5 +153,6 @@ export default extendTheme({
     Select,
     Tabs,
     Table,
+    Text,
   },
 })

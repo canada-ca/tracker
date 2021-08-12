@@ -141,7 +141,7 @@ export default function ScanCategoryDetails({ categoryName, categoryData }) {
       <Stack>
         <Box bg="strongMuted">
           <Box bg="strong" color="white" px="2">
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" variant="shadow">
               <Trans>Strong Ciphers:</Trans>
             </Text>
           </Box>
@@ -150,7 +150,7 @@ export default function ScanCategoryDetails({ categoryName, categoryData }) {
         <Divider />
         <Box bg="moderateMuted">
           <Box bg="moderate" color="white" px="2">
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" variant="shadow">
               <Trans>Acceptable Ciphers:</Trans>
             </Text>
           </Box>
@@ -159,7 +159,7 @@ export default function ScanCategoryDetails({ categoryName, categoryData }) {
         <Divider />
         <Box bg="weakMuted">
           <Box bg="weak" color="white" px="2">
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" variant="shadow">
               <Trans>Weak Ciphers:</Trans>
             </Text>
           </Box>
@@ -174,7 +174,7 @@ export default function ScanCategoryDetails({ categoryName, categoryData }) {
       <Stack>
         <Box bg="strongMuted">
           <Box bg="strong" color="white" px="2">
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" variant="shadow">
               <Trans>Strong Curves:</Trans>
             </Text>
           </Box>
@@ -183,7 +183,7 @@ export default function ScanCategoryDetails({ categoryName, categoryData }) {
         <Divider />
         <Box bg="moderateMuted">
           <Box bg="moderate" color="white" px="2">
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" variant="shadow">
               <Trans>Acceptable Curves:</Trans>
             </Text>
           </Box>
@@ -192,7 +192,7 @@ export default function ScanCategoryDetails({ categoryName, categoryData }) {
         <Divider />
         <Box bg="weakMuted">
           <Box bg="weak" color="white" px="2">
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" variant="shadow">
               <Trans>Weak Curves:</Trans>
             </Text>
           </Box>

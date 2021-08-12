@@ -37,7 +37,7 @@ import { UserListModal } from './UserListModal'
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
   const [mutation, setMutation] = useState()
-  const [addedUserName, setAddedUserName] = useState()
+  const [addedUserName, setAddedUserName] = useState('')
   const [selectedRemoveUser, setSelectedRemoveUser] = useState({
     id: null,
     userName: null,

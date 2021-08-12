@@ -108,7 +108,7 @@ export const wsClient = new SubscriptionClient(
     reconnect: true,
     connectionParams: () => {
       return {
-        'Accept-Language': i18n.locale,
+        AcceptLanguage: i18n.locale,
         authorization: currentUserVar().jwt,
       }
     },

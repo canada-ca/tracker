@@ -6,7 +6,7 @@ from pebble import concurrent
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-TIMEOUT = os.getenv("SCAN_TIMEOUT", 80)
+TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
 
 
 class HTTPSScanner():

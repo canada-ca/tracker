@@ -92,10 +92,6 @@ describe('<EmailValidationPage />', () => {
       )
 
       await waitFor(() =>
-        expect(queryByText(/Email Validation Page/)).toBeInTheDocument(),
-      )
-
-      await waitFor(() =>
         expect(
           queryByText(
             /Your account email could not be verified at this time. Please try again./,
@@ -130,10 +126,6 @@ describe('<EmailValidationPage />', () => {
             </ChakraProvider>
           </UserVarProvider>
         </MockedProvider>,
-      )
-
-      await waitFor(() =>
-        expect(queryByText(/Email Validation Page/)).toBeInTheDocument(),
       )
 
       await waitFor(() =>

@@ -274,6 +274,7 @@ function VerticalGraph({
         display="flex"
         justifyContent="center"
         fontSize="14px"
+        fontWeight="bold"
       >
         <LegendOrdinal
           scale={ordinalColorScale}
@@ -300,12 +301,17 @@ function VerticalGraph({
                 isInline
                 align="center"
                 justifyContent="space-between"
+                bg={colorScale(label)}
+                px="2"
+                py="1"
               >
-                <Box color={colorScale(label)}>
-                  <Text fontWeight="bold">{strengths[label]}:</Text>
+                <Box color="white">
+                  <Text fontWeight="bold" variant="shadow">
+                    {strengths[label]}:
+                  </Text>
                 </Box>
-                <Box color={colorScale(label)}>
-                  <Text>
+                <Box color="white">
+                  <Text variant="shadow">
                     {formatLargeInt(tooltipData.bar.data[label])}
                     {keys[0] === percentageKeys[0] && <>%</>}
                   </Text>
@@ -383,6 +389,7 @@ function HorizontalGraph({
         justifyContent="center"
         left={margin.left / 2 - 25}
         fontSize="14px"
+        fontWeight="bold"
       >
         <LegendOrdinal
           scale={ordinalColorScale}

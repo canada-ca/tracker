@@ -1,8 +1,8 @@
 # Data population script
 
-This directory contains a program to facilitate the insertion of organization and domain data from a .json file.
+This directory contains a program to facilitate the insertion of organization and domain data from a `organization-domains.json` file.
 
-The .json file used for input must adhere to the following structure:
+The `organization-domains.json` file used for input must adhere to the following structure:
 
 ```
 "<English Acronym-French Acronym>": {

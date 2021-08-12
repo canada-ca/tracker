@@ -59,6 +59,7 @@ export default function SignInPage() {
           jwt: signIn.result.authToken,
           tfaSendMethod: signIn.result.user.tfaSendMethod,
           userName: signIn.result.user.userName,
+          emailValidated: signIn.result.user.emailValidated,
         })
         if (signIn.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signIn.result.user.preferredLang === 'FRENCH') activate('fr')

@@ -6,7 +6,12 @@ const UserVarContext = React.createContext({})
 const { Provider } = UserVarContext
 
 export function UserVarProvider({
-  userVar = makeVar({ jwt: null, tfaSendMethod: null, userName: null }),
+  userVar = makeVar({
+    jwt: null,
+    tfaSendMethod: null,
+    userName: null,
+    emailValidated: null,
+  }),
   children,
 }) {
   const client = useApolloClient()
@@ -16,8 +21,13 @@ export function UserVarProvider({
     return !!(
       currentUser?.jwt ||
       currentUser?.userName ||
-      currentUser?.tfaSendMethod
+      currentUser?.tfaSendMethod ||
+      currentUser?.emailValidated
     )
+  }
+
+  const isEmailValidated = () => {
+    return currentUser?.emailValidated
   }
 
   const login = (newUserState) => {
@@ -25,13 +35,19 @@ export function UserVarProvider({
   }
 
   const logout = async () => {
-    userVar({ jwt: null, userName: null, tfaSendMethod: null })
+    userVar({
+      jwt: null,
+      userName: null,
+      tfaSendMethod: null,
+      emailValidated: null,
+    })
     await client.resetStore()
   }
 
   const userState = {
     currentUser,
     isLoggedIn,
+    isEmailValidated,
     login,
     logout,
   }
