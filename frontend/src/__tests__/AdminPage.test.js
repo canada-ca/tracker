@@ -12,7 +12,7 @@ import {
   PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
 } from '../graphql/queries'
 import AdminPage from '../AdminPage'
-import { waitFor, render, screen } from '@testing-library/react'
+import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
@@ -300,12 +300,7 @@ describe('<AdminPage />', () => {
 
   describe('Organization select', () => {
     it('displays info for admin', async () => {
-      const {
-        getByText,
-        getByPlaceholderText,
-        findByRole,
-        findByText,
-      } = render(
+      const { getByText, findByRole } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
