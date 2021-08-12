@@ -60,9 +60,6 @@ const {
       id: SUMMARIES_CONTAINER,
     })
 
-  // Load ownership assignments from github
-  const ownerships = await loadDomainOwnership({ fetch })
-
   const summaryCreateFunc = createSummaries(
     loadDates(moment),
     loadSummaryCountByDomain(query),
@@ -93,34 +90,48 @@ const {
       ),
     ),
   )
-  const keys = Object.keys(ownerships)
 
-  for (const orgAcronymEn of keys) {
+  // Load ownership assignments from github
+  const ownerships = await loadDomainOwnership({ fetch })
+
+  // get org acronyms
+  const orgAcronyms = Object.keys(ownerships)
+
+  // loop through orgs
+  for (const orgAcronymEn of orgAcronyms) {
+    console.log(`Updating DMARC summary info for org: ${String(orgAcronymEn)}`)
+    // loop through the domains
     for (const domain of ownerships[orgAcronymEn]) {
+      console.info(`\tWorking on domain: ${domain}`)
+
+      // get the current owner of the domain
       const orgOwner = await loadOrgOwner({
         query,
         domain,
       })
 
-      console.log(orgOwner)
-
+      // if the domain is not owned create ownership
       if (!orgOwner) {
-        console.info(`Assigning domain ownership to: ${String(orgAcronymEn)}`)
+        console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronymEn)}`)
         await upsertOwnership({
           ownership: ownerships[orgAcronymEn],
-          orgAcronymEn,
+          key: orgAcronymEn,
           query,
         })
-      } else if (orgOwner === orgAcronymEn) {
-        console.info(`Removing domain ownership to: ${domain}`)
+      } 
+      // if the domain is owned by another org, remove ownership and assign a new one
+      else if (orgOwner !== orgAcronymEn) {
+        console.info(`\t\tRemoving ${domain} ownership to: ${domain}`)
         await removeOwnerships({ query, domain })
-  
-        console.info(`Assigning domain ownership to: ${String(orgAcronymEn)}`)
+
+        console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronymEn)}`)
         await upsertOwnership({
           ownership: ownerships[orgAcronymEn],
           orgAcronymEn,
           query,
         })
+      } else {
+        console.info(`\t\t${domain} is already assigned to ${String(orgAcronymEn)}`)
       }
 
       await summaryCreateFunc({ domain })
