@@ -26,6 +26,7 @@ const {
   createSummary,
   loadCurrentDates,
   loadDates,
+  loadOrgOwner,
   loadDomainOwnership,
   loadSummaryByDate,
   loadSummaryCountByDomain,
@@ -54,13 +55,10 @@ const {
     id: DATABASE,
   })
 
-  const {
-    container: summariesContainer,
-  } = await database.containers.createIfNotExists({
-    id: SUMMARIES_CONTAINER,
-  })
-
-  await removeOwnerships({ query })
+  const { container: summariesContainer } =
+    await database.containers.createIfNotExists({
+      id: SUMMARIES_CONTAINER,
+    })
 
   // Load ownership assignments from github
   const ownerships = await loadDomainOwnership({ fetch })
@@ -95,17 +93,39 @@ const {
       ),
     ),
   )
-
-  console.info('Assigning ownerships ...')
   const keys = Object.keys(ownerships)
 
-  for (const key of keys) {
-    console.info(`Assigning domain ownership to: ${String(key)}`)
-    await upsertOwnership({ ownership: ownerships[key], key, query })
+  for (const orgAcronymEn of keys) {
+    for (const domain of ownerships[orgAcronymEn]) {
+      const orgOwner = await loadOrgOwner({
+        query,
+        domain,
+      })
 
-    for (const domain of ownerships[key]) {
+      console.log(orgOwner)
+
+      if (!orgOwner) {
+        console.info(`Assigning domain ownership to: ${String(orgAcronymEn)}`)
+        await upsertOwnership({
+          ownership: ownerships[orgAcronymEn],
+          orgAcronymEn,
+          query,
+        })
+      } else if (orgOwner === orgAcronymEn) {
+        console.info(`Removing domain ownership to: ${domain}`)
+        await removeOwnerships({ query, domain })
+  
+        console.info(`Assigning domain ownership to: ${String(orgAcronymEn)}`)
+        await upsertOwnership({
+          ownership: ownerships[orgAcronymEn],
+          orgAcronymEn,
+          query,
+        })
+      }
+
       await summaryCreateFunc({ domain })
     }
+    break
   }
 
   console.info('Completed assigning ownerships.')
