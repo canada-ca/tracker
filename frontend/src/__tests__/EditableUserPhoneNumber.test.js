@@ -151,22 +151,22 @@ describe('<EditableUserPhoneNumber />', () => {
             {
               request: {
                 query: VERIFY_PHONE_NUMBER,
-                variables: { twoFactorCode: '1234' },
+                variables: { twoFactorCode: 1234 },
               },
               result: {
                 data: {
-                  updateUserProfile: {
+                  verifyPhoneNumber: {
                     result: {
                       status:
                         'You have successfully verified your phone number.',
-                      __typename: 'VerifyPhoneNumberResult',
                       user: {
                         phoneNumber: '+19025555555',
                         phoneValidated: true,
                         __typename: 'PersonalUser',
                       },
+                      __typename: 'VerifyPhoneNumberResult',
                     },
-                    __typename: 'VerifyPhoneNumberResultPayload',
+                    __typename: 'VerifyPhoneNumberPayload',
                   },
                 },
               },
@@ -235,8 +235,8 @@ describe('<EditableUserPhoneNumber />', () => {
 
           await waitFor(() =>
             expect(
-              queryByText(/You have successfully verified your phone number\./),
-            ),
+              queryByText(/You have successfully updated your phone number\./),
+            ).toBeInTheDocument(),
           )
         })
       })
