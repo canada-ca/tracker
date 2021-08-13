@@ -59,6 +59,7 @@ function AuthenticateField({ name, forwardedRef, sendMethod, ...props }) {
             autoFocus
             autoComplete="off"
             inputMode="numeric"
+            aria-label={t`Enter your two factor code`}
           />
         </InputGroup>
 
