@@ -15,10 +15,11 @@ export function Dropdown({
   options,
   placeholder,
   onChange,
+  searchValue,
+  onSearch,
   ...props
 }) {
   const [open, setOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
   const inputRef = useRef(null)
   const optionRefs = []
 
@@ -29,13 +30,6 @@ export function Dropdown({
 
   function close(e) {
     setOpen(e && e.target === inputRef.current)
-  }
-
-  function filter(options) {
-    return options.filter(
-      (option) =>
-        option.label.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1,
-    )
   }
 
   const setOptRef = (element) => {
@@ -68,7 +62,7 @@ export function Dropdown({
     switch (e.key) {
       case 'Enter':
         onChange(option)
-        setSearchTerm('')
+        onSearch('')
         setOpen(false)
         inputRef.current.focus()
         break
@@ -128,9 +122,9 @@ export function Dropdown({
                 ref={inputRef}
                 type="text"
                 placeholder={placeholder}
-                value={searchTerm}
+                value={searchValue}
                 onChange={(e) => {
-                  setSearchTerm(e.target.value)
+                  onSearch(e.target.value)
                 }}
                 onClick={close}
                 onKeyDown={handleInputOnKeyDown}
@@ -171,7 +165,7 @@ export function Dropdown({
         width="100%"
         zIndex={1000}
       >
-        {filter(options).map((option, idx) => (
+        {options.map((option, idx) => (
           <Box
             // Box containing individual options
             tabIndex={0}
@@ -189,7 +183,7 @@ export function Dropdown({
             }}
             onClick={() => {
               onChange(option)
-              setSearchTerm('')
+              onSearch('')
               setOpen(false)
             }}
             onKeyDown={(e) => handleOptionOnKeyDown(e, option, idx)}
@@ -209,5 +203,6 @@ Dropdown.propTypes = {
   options: array,
   placeholder: string,
   onChange: func,
-  value: string,
+  searchValue: string,
+  onSearch: func,
 }
