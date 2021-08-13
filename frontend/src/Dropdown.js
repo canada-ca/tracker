@@ -20,7 +20,6 @@ export function Dropdown({
   ...props
 }) {
   const [open, setOpen] = useState(false)
-  // const [searchTerm, setSearchTerm] = useState('')
   const inputRef = useRef(null)
   const optionRefs = []
 
@@ -32,13 +31,6 @@ export function Dropdown({
   function close(e) {
     setOpen(e && e.target === inputRef.current)
   }
-
-  // function filter(options) {
-  //   return options.filter(
-  //     (option) =>
-  //       option.label.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1,
-  //   )
-  // }
 
   const setOptRef = (element) => {
     if (element !== null) {
@@ -70,7 +62,7 @@ export function Dropdown({
     switch (e.key) {
       case 'Enter':
         onChange(option)
-        onSearch('') // || setSearchTerm('')
+        onSearch('')
         setOpen(false)
         inputRef.current.focus()
         break
@@ -132,7 +124,7 @@ export function Dropdown({
                 placeholder={placeholder}
                 value={searchValue}
                 onChange={(e) => {
-                  onSearch(e.target.value) // || setSearchTerm(e.target.value)
+                  onSearch(e.target.value)
                 }}
                 onClick={close}
                 onKeyDown={handleInputOnKeyDown}
@@ -191,7 +183,7 @@ export function Dropdown({
             }}
             onClick={() => {
               onChange(option)
-              onSearch('') // || setSearchTerm('')
+              onSearch('')
               setOpen(false)
             }}
             onKeyDown={(e) => handleOptionOnKeyDown(e, option, idx)}
