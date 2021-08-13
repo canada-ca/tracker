@@ -49,4 +49,4 @@ const matchMediaSize = (size = undefined) => {
   defineMatches(mediaQueryStrings[size])
 }
 
-export default matchMediaSize
+export { matchMediaSize }
