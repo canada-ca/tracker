@@ -6,7 +6,6 @@ import AdminPanel from './AdminPanel'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
-import { LoadingMessage } from './LoadingMessage'
 import { Link as RouteLink } from 'react-router-dom'
 import OrganizationInformation from './OrganizationInformation'
 import { Dropdown } from './Dropdown'
@@ -64,19 +63,45 @@ export default function AdminPage() {
     },
   })
 
-  if (loading) {
-    return <LoadingMessage />
-  }
-
   if (error) {
     return <ErrorFallbackMessage error={error} />
   }
 
-  const options = []
-  data.findMyOrganizations?.edges.forEach((edge) => {
-    const { slug, name, id } = edge.node
-    options.push({ label: name, value: { slug: slug, id: id } })
-  })
+  let dropdown
+  let options = []
+
+  if (loading) {
+    dropdown = (
+      <Dropdown
+        label={i18n._(t`Organization: `)}
+        labelDirection="row"
+        options={[]}
+        placeholder={i18n._(t`Select an organization`)}
+        onSearch={(val) => setSearchTerm(val)}
+        searchValue={searchTerm}
+      />
+    )
+  } else {
+    options = []
+    data.findMyOrganizations?.edges.forEach((edge) => {
+      const { slug, name, id } = edge.node
+      options.push({ label: name, value: { slug: slug, id: id } })
+    })
+    dropdown = (
+      <Dropdown
+        label={i18n._(t`Organization: `)}
+        labelDirection="row"
+        options={options}
+        placeholder={i18n._(t`Select an organization`)}
+        onSearch={(val) => setSearchTerm(val)}
+        searchValue={searchTerm}
+        onChange={(opt) => {
+          setOrgDetails(opt.value)
+          setSelectedOrg(opt.label)
+        }}
+      />
+    )
+  }
 
   return (
     <Stack spacing={10} w="100%" px={4}>
@@ -85,18 +110,7 @@ export default function AdminPage() {
         align="center"
         justifyContent="space-between"
       >
-        <Dropdown
-          label={i18n._(t`Organization: `)}
-          labelDirection="row"
-          options={options}
-          placeholder={i18n._(t`Select an organization`)}
-          onSearch={(val) => setSearchTerm(val)}
-          searchValue={searchTerm}
-          onChange={(opt) => {
-            setOrgDetails(opt.value)
-            setSelectedOrg(opt.label)
-          }}
-        />
+        {dropdown}
         <Button
           variant="primary"
           ml={{ base: '0', md: 'auto' }}
@@ -109,7 +123,7 @@ export default function AdminPage() {
           <Trans>Create Organization</Trans>
         </Button>
       </Flex>
-      {options.length > 0 && selectedOrg !== 'none' ? (
+      {selectedOrg !== 'none' ? (
         <>
           <OrganizationInformation
             orgSlug={orgDetails.slug}
