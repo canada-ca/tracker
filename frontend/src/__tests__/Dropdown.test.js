@@ -20,6 +20,7 @@ const i18n = setupI18n({
 })
 
 const handleChange = () => {}
+const handleSearch = () => {}
 
 describe('<Dropdown />', () => {
   const mocks = [
@@ -65,6 +66,7 @@ describe('<Dropdown />', () => {
                   options={mocks}
                   placeholder="Select an option"
                   onChange={handleChange}
+                  onSearch={handleSearch}
                 />
               </MemoryRouter>
             </I18nProvider>
@@ -99,6 +101,7 @@ describe('<Dropdown />', () => {
                     options={mocks}
                     placeholder="Select an option"
                     onChange={handleChange}
+                    onSearch={handleSearch}
                   />
                 </MemoryRouter>
               </I18nProvider>
@@ -138,6 +141,7 @@ describe('<Dropdown />', () => {
                     options={mocks}
                     placeholder="Select an option"
                     onChange={handleChange}
+                    onSearch={handleSearch}
                   />
                 </MemoryRouter>
               </I18nProvider>
@@ -179,6 +183,7 @@ describe('<Dropdown />', () => {
                     options={mocks}
                     placeholder="Select an option"
                     onChange={handleChange}
+                    onSearch={handleSearch}
                   />
                 </MemoryRouter>
               </I18nProvider>
@@ -227,6 +232,7 @@ describe('<Dropdown />', () => {
                     options={mocks}
                     placeholder="Select an option"
                     onChange={handleChange}
+                    onSearch={handleSearch}
                   />
                 </MemoryRouter>
               </I18nProvider>
