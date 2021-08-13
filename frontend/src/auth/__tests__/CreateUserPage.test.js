@@ -8,7 +8,8 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import CreateUserPage from '../../auth/CreateUserPage'
+import CreateUserPage from '../CreateUserPage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { SIGN_UP } from '../../graphql/mutations'
 

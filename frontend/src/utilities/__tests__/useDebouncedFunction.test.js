@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
 
-import { useDebouncedFunction } from '../../utilities/useDebouncedFunction'
+import { useDebouncedFunction } from '../useDebouncedFunction'
 
 const UseDebouncedFunctionExample = () => {
   const [count, setCount] = useState(0)

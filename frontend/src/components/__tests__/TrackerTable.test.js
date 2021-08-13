@@ -5,7 +5,8 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural/plurals'
 
-import { TrackerTable } from '../../components/TrackerTable'
+import { TrackerTable } from '../TrackerTable'
+
 import {
   rawDmarcReportSummaryTableColumns,
   rawDmarcReportSummaryTableData,

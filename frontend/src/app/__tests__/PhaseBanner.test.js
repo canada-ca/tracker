@@ -4,7 +4,7 @@ import { render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-import { PhaseBanner } from '../../app/PhaseBanner'
+import { PhaseBanner } from '../PhaseBanner'
 
 const i18n = setupI18n({
   locale: 'en',

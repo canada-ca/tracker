@@ -9,7 +9,8 @@ import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 import { en } from 'make-plural/plurals'
 
-import { AdminDomains } from '../../admin/AdminDomains'
+import { AdminDomains } from '../AdminDomains'
+
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import {

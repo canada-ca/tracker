@@ -8,7 +8,8 @@ import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
-import { FloatingMenuLink } from '../../app/FloatingMenuLink'
+import { FloatingMenuLink } from '../FloatingMenuLink'
+
 import { UserVarProvider } from '../../utilities/userState'
 
 const i18n = setupI18n({

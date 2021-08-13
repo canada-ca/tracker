@@ -8,7 +8,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { ScanCard } from '../../guidance/ScanCard'
+import { ScanCard } from '../ScanCard'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
 

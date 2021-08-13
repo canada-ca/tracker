@@ -10,6 +10,7 @@ import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
 import ForgotPasswordPage from '../../auth/ForgotPasswordPage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { SEND_PASSWORD_RESET_LINK } from '../../graphql/mutations'
 

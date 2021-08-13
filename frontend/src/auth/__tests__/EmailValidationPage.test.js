@@ -8,7 +8,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import EmailValidationPage from '../../auth/EmailValidationPage'
+import EmailValidationPage from '../EmailValidationPage'
 import { UserVarProvider } from '../../utilities/userState'
 import { VERIFY_ACCOUNT } from '../../graphql/mutations'
 

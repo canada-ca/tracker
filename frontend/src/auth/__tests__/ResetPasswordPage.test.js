@@ -8,7 +8,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import ResetPasswordPage from '../../auth/ResetPasswordPage'
+import ResetPasswordPage from '../ResetPasswordPage'
 import { UserVarProvider } from '../../utilities/userState'
 import { RESET_PASSWORD } from '../../graphql/mutations'
 

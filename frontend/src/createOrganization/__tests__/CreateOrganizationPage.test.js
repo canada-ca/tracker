@@ -8,7 +8,8 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import CreateOrganizationPage from '../../createOrganization/CreateOrganizationPage'
+import CreateOrganizationPage from '../CreateOrganizationPage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { CREATE_ORGANIZATION } from '../../graphql/mutations'
 

@@ -9,7 +9,8 @@ import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import DmarcGuidancePage from '../../guidance/DmarcGuidancePage'
+import DmarcGuidancePage from '../DmarcGuidancePage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../../graphql/queries'

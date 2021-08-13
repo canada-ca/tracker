@@ -8,7 +8,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { GuidanceTagList } from '../../guidance/GuidanceTagList'
+import { GuidanceTagList } from '../GuidanceTagList'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
 

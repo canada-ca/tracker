@@ -8,7 +8,8 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { ScanDomain } from '../../domains/ScanDomain'
+import { ScanDomain } from '../ScanDomain'
+
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { REQUEST_SCAN } from '../../graphql/mutations'

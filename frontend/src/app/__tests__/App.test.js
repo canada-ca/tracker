@@ -8,7 +8,8 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { App } from '../../app/App'
+import { App } from '../App'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { REFRESH_TOKENS } from '../../graphql/mutations'
 

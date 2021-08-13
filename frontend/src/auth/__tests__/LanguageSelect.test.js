@@ -5,7 +5,7 @@ import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-import { LanguageSelect } from '../../auth/LanguageSelect'
+import { LanguageSelect } from '../LanguageSelect'
 
 const i18n = setupI18n({
   locale: 'en',

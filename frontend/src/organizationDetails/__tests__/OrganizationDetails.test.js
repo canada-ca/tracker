@@ -9,7 +9,8 @@ import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import OrganizationDetails from '../../organizationDetails/OrganizationDetails'
+import OrganizationDetails from '../OrganizationDetails'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from '../../graphql/queries'
 

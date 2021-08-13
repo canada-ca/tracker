@@ -6,7 +6,7 @@ import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-import { PasswordField } from '../../components/PasswordField'
+import { PasswordField } from '../PasswordField'
 
 const i18n = setupI18n({
   locale: 'en',

@@ -8,7 +8,8 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import DmarcReportPage from '../../dmarc/DmarcReportPage'
+import DmarcReportPage from '../DmarcReportPage'
+
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcReportGraphData } from '../../fixtures/dmarcReportGraphData'

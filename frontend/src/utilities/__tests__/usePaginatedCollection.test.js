@@ -5,7 +5,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { renderHook } from '@testing-library/react-hooks'
 import { relayStylePagination } from '@apollo/client/utilities'
 
-import { usePaginatedCollection } from '../../utilities/usePaginatedCollection'
+import { usePaginatedCollection } from '../usePaginatedCollection'
+
 import { createCache } from '../../client'
 
 describe('usePaginatedCollection', () => {

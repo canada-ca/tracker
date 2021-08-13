@@ -8,7 +8,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 import { makeVar } from '@apollo/client'
 
-import { EditableUserDisplayName } from '../../user/EditableUserDisplayName'
+import { EditableUserDisplayName } from '../EditableUserDisplayName'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { UPDATE_USER_PROFILE } from '../../graphql/mutations'
 

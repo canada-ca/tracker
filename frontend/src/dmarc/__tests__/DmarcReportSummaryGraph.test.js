@@ -4,7 +4,8 @@ import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-import { DmarcReportSummaryGraph } from '../../dmarc/DmarcReportSummaryGraph'
+import { DmarcReportSummaryGraph } from '../DmarcReportSummaryGraph'
+
 import { formattedBarData } from '../../fixtures/summaryListData'
 
 // ** need to mock the ResizeObserver and polute the window object to avoid errors

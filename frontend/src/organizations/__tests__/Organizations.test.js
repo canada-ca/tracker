@@ -10,7 +10,8 @@ import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 import { en } from 'make-plural/plurals'
 
-import Organizations from '../../organizations/Organizations'
+import Organizations from '../Organizations'
+
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { matchMediaSize } from '../../helpers/matchMedia'

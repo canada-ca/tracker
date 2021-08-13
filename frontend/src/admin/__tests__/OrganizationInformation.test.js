@@ -9,7 +9,8 @@ import userEvent from '@testing-library/user-event'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { OrganizationInformation } from '../../admin/OrganizationInformation'
+import { OrganizationInformation } from '../OrganizationInformation'
+
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { ORGANIZATION_INFORMATION } from '../../graphql/queries'

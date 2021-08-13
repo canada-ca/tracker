@@ -6,7 +6,7 @@ import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-import { DisplayNameField } from '../../components/DisplayNameField'
+import { DisplayNameField } from '../DisplayNameField'
 
 const i18n = setupI18n({
   locale: 'en',

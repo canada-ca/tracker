@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 
-import { UserVarProvider, useUserVar } from '../../utilities/userState'
+import { UserVarProvider, useUserVar } from '../userState'
 
 const UserStateExample = () => {
   const { login, logout, currentUser, isLoggedIn } = useUserVar()

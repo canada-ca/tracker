@@ -7,7 +7,8 @@ import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
-import { GuidanceTagDetails } from '../../guidance/GuidanceTagDetails'
+import { GuidanceTagDetails } from '../GuidanceTagDetails'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
 

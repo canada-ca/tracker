@@ -4,7 +4,7 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-import { SummaryCard } from '../../summaries/SummaryCard'
+import { SummaryCard } from '../SummaryCard'
 
 const i18n = setupI18n({
   locale: 'en',

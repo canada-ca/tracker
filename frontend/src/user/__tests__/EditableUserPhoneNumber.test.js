@@ -8,7 +8,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 import { makeVar } from '@apollo/client'
 
-import { EditableUserPhoneNumber } from '../../user/EditableUserPhoneNumber'
+import { EditableUserPhoneNumber } from '../EditableUserPhoneNumber'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { VERIFY_PHONE_NUMBER, SET_PHONE_NUMBER } from '../../graphql/mutations'
 

@@ -7,7 +7,8 @@ import { makeVar } from '@apollo/client'
 import { MockedProvider } from '@apollo/client/testing'
 import { en } from 'make-plural/plurals'
 
-import { PrivatePage } from '../../app/PrivatePage'
+import { PrivatePage } from '../PrivatePage'
+
 import { UserVarProvider } from '../../utilities/userState'
 
 const i18n = setupI18n({

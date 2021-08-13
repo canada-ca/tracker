@@ -9,7 +9,8 @@ import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import DomainsPage from '../../domains/DomainsPage'
+import DomainsPage from '../DomainsPage'
+
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { PAGINATED_DOMAINS } from '../../graphql/queries'

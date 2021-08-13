@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 
-import { useArcs } from '../../utilities/useArcs'
+import { useArcs } from '../useArcs'
 
 describe('useArcs', () => {
   describe('with an array of objects', () => {

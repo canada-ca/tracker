@@ -8,7 +8,8 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { UserList } from '../../admin/UserList'
+import { UserList } from '../UserList'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../../graphql/queries'

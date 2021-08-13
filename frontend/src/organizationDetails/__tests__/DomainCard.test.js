@@ -6,7 +6,7 @@ import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 
-import { DomainCard } from '../../organizationDetails/DomainCard'
+import { DomainCard } from '../DomainCard'
 
 const i18n = setupI18n({
   locale: 'en',

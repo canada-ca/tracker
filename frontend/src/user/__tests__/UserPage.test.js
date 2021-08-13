@@ -8,7 +8,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import UserPage from '../../user/UserPage'
+import UserPage from '../UserPage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { QUERY_CURRENT_USER } from '../../graphql/queries'
 

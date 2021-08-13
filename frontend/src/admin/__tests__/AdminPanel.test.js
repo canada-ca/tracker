@@ -8,7 +8,8 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { AdminPanel } from '../../admin/AdminPanel'
+import { AdminPanel } from '../AdminPanel'
+
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { rawOrgDomainListData } from '../../fixtures/orgDomainListData'

@@ -7,7 +7,8 @@ import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 
-import { EditableUserTFAMethod } from '../../user/EditableUserTFAMethod'
+import { EditableUserTFAMethod } from '../EditableUserTFAMethod'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { UPDATE_USER_PROFILE } from '../../graphql/mutations'
 

@@ -6,7 +6,7 @@ import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-import { PasswordConfirmation } from '../../components/PasswordConfirmation'
+import { PasswordConfirmation } from '../PasswordConfirmation'
 
 const i18n = setupI18n({
   locale: 'en',

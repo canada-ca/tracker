@@ -7,7 +7,8 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import DmarcByDomainPage from '../../dmarc/DmarcByDomainPage'
+import DmarcByDomainPage from '../DmarcByDomainPage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcReportSummaryTableData } from '../../fixtures/dmarcReportSummaryTable'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../../graphql/queries'

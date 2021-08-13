@@ -7,7 +7,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural/plurals'
 
-import { OrganizationCard } from '../../organizations/OrganizationCard'
+import { OrganizationCard } from '../OrganizationCard'
+
 import { matchMediaSize } from '../../helpers/matchMedia'
 
 matchMediaSize()

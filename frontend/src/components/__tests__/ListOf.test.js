@@ -2,7 +2,7 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 
-import { ListOf } from '../../components/ListOf'
+import { ListOf } from '../ListOf'
 
 describe('<ListOf />', () => {
   describe('when passed a null value', () => {

@@ -7,7 +7,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 
-import { TopBanner } from '../../app/TopBanner'
+import { TopBanner } from '../TopBanner'
+
 import { UserVarProvider } from '../../utilities/userState'
 
 const i18n = setupI18n({

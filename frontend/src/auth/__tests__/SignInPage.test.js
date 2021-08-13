@@ -9,7 +9,7 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import SignInPage from '../../auth/SignInPage'
+import SignInPage from '../SignInPage'
 import { UserVarProvider } from '../../utilities/userState'
 import { SIGN_IN } from '../../graphql/mutations'
 

@@ -8,7 +8,8 @@ import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import AdminPage from '../../admin/AdminPage'
+import AdminPage from '../AdminPage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../../graphql/queries'
 

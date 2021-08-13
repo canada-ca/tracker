@@ -8,7 +8,7 @@ import { waitFor, render, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 
-import { Dropdown } from '../../components/Dropdown'
+import { Dropdown } from '../Dropdown'
 
 const i18n = setupI18n({
   locale: 'en',

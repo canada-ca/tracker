@@ -9,7 +9,8 @@ import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import TwoFactorAuthenticatePage from '../../auth/TwoFactorAuthenticatePage'
+import TwoFactorAuthenticatePage from '../TwoFactorAuthenticatePage'
+
 import { UserVarProvider } from '../../utilities/userState'
 import { AUTHENTICATE } from '../../graphql/mutations'
 
