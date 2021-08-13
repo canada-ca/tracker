@@ -2,14 +2,15 @@ import React from 'react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import DmarcByDomainPage from '../DmarcByDomainPage'
-import { rawDmarcReportSummaryTableData } from '../fixtures/dmarcReportSummaryTable'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import DmarcByDomainPage from '../dmarc/DmarcByDomainPage'
+import { UserVarProvider } from '../utilities/userState'
+import { rawDmarcReportSummaryTableData } from '../fixtures/dmarcReportSummaryTable'
+import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

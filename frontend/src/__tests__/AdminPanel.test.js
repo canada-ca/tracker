@@ -3,19 +3,20 @@ import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
-import AdminPanel from '../AdminPanel'
 import { MemoryRouter, Route } from 'react-router-dom'
+import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
+
+import { AdminPanel } from '../admin/AdminPanel'
+import { createCache } from '../client'
+import { UserVarProvider } from '../utilities/userState'
 import { rawOrgDomainListData } from '../fixtures/orgDomainListData'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
 import {
   PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
   PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
 } from '../graphql/queries'
-import { createCache } from '../client'
-import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
 
 const i18n = setupI18n({
   locale: 'en',

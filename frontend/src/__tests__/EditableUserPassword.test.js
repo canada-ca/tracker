@@ -1,15 +1,16 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import EditableUserPassword from '../EditableUserPassword'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
-import { UPDATE_USER_PASSWORD } from '../graphql/mutations'
 import { makeVar } from '@apollo/client'
+
+import { EditableUserPassword } from '../user/EditableUserPassword'
+import { UserVarProvider } from '../utilities/userState'
+import { UPDATE_USER_PASSWORD } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

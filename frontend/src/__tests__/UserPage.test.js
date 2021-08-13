@@ -1,15 +1,16 @@
 import React from 'react'
-import UserPage from '../UserPage'
 import { setupI18n } from '@lingui/core'
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserVarProvider } from '../UserState'
-import { QUERY_CURRENT_USER } from '../graphql/queries'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import UserPage from '../user/UserPage'
+import { UserVarProvider } from '../utilities/userState'
+import { QUERY_CURRENT_USER } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

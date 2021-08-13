@@ -5,11 +5,12 @@ import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserVarProvider } from '../UserState'
-import EmailValidationPage from '../EmailValidationPage'
-import { VERIFY_ACCOUNT } from '../graphql/mutations'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import EmailValidationPage from '../auth/EmailValidationPage'
+import { UserVarProvider } from '../utilities/userState'
+import { VERIFY_ACCOUNT } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

@@ -2,14 +2,15 @@ import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
-import ScanCard from '../ScanCard'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import { ScanCard } from '../guidance/ScanCard'
+import { UserVarProvider } from '../utilities/userState'
+import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
 const i18n = setupI18n({
   locale: 'en',

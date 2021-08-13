@@ -3,11 +3,12 @@ import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import PrivatePage from '../PrivatePage'
-import { UserVarProvider } from '../UserState'
 import { makeVar } from '@apollo/client'
 import { MockedProvider } from '@apollo/client/testing'
 import { en } from 'make-plural/plurals'
+
+import { PrivatePage } from '../app/PrivatePage'
+import { UserVarProvider } from '../utilities/userState'
 
 const i18n = setupI18n({
   locale: 'en',

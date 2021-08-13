@@ -3,15 +3,16 @@ import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { PAGINATED_DOMAINS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { createCache } from '../client'
-import DomainsPage from '../DomainsPage'
 import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import DomainsPage from '../domains/DomainsPage'
+import { createCache } from '../client'
+import { UserVarProvider } from '../utilities/userState'
+import { PAGINATED_DOMAINS } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

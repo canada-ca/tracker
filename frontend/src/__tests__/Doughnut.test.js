@@ -1,8 +1,9 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { Doughnut, Segment } from '../Doughnut'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+
+import { Doughnut, Segment } from '../summaries/Doughnut'
 
 const i18n = setupI18n({
   locale: 'en',

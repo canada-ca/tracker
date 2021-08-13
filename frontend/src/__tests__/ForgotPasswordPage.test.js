@@ -4,13 +4,14 @@ import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
-import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
-import ForgotPasswordPage from '../ForgotPasswordPage'
 import { createMemoryHistory } from 'history'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import ForgotPasswordPage from '../auth/ForgotPasswordPage'
+import { UserVarProvider } from '../utilities/userState'
+import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 
 const mocks = [
   {

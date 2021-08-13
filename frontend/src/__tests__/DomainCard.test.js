@@ -5,7 +5,8 @@ import { List, theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
-import { DomainCard } from '../DomainCard'
+
+import { DomainCard } from '../organizationDetails/DomainCard'
 
 const i18n = setupI18n({
   locale: 'en',

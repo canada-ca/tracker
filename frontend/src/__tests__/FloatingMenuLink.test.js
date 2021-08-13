@@ -1,14 +1,15 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { FloatingMenuLink } from '../FloatingMenuLink'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
+
+import { FloatingMenuLink } from '../app/FloatingMenuLink'
+import { UserVarProvider } from '../utilities/userState'
 
 const i18n = setupI18n({
   locale: 'en',

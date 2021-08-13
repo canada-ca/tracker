@@ -1,13 +1,10 @@
-/*
- * @jest-environment jsdom
- */
-
 import React from 'react'
-import { useDocumentTitle } from '../useDocumentTitle'
 import { render } from '@testing-library/react'
 import { setupI18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { en } from 'make-plural/plurals'
+
+import { useDocumentTitle } from '../utilities/useDocumentTitle'
 
 const i18n = setupI18n({
   locale: 'en',

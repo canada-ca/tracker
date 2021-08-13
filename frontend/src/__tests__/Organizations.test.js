@@ -4,16 +4,17 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route, Router, Switch } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import Organizations from '../Organizations'
-import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
-import matchMediaSize from '../helpers/matchMedia'
 import { en } from 'make-plural/plurals'
+
+import Organizations from '../organizations/Organizations'
+import { createCache } from '../client'
+import { UserVarProvider } from '../utilities/userState'
+import { matchMediaSize } from '../helpers/matchMedia'
+import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

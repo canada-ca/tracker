@@ -3,14 +3,15 @@ import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { UserVarProvider } from '../UserState'
-import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import OrganizationDetails from '../OrganizationDetails'
 import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import OrganizationDetails from '../organizationDetails/OrganizationDetails'
+import { UserVarProvider } from '../utilities/userState'
+import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

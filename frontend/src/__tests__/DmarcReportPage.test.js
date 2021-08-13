@@ -3,16 +3,17 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import DmarcReportPage from '../DmarcReportPage'
-import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { rawDmarcReportGraphData } from '../fixtures/dmarcReportGraphData'
-import { rawDmarcReportData } from '../fixtures/dmarcReportData.js'
-import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import DmarcReportPage from '../dmarc/DmarcReportPage'
+import { createCache } from '../client'
+import { UserVarProvider } from '../utilities/userState'
+import { rawDmarcReportGraphData } from '../fixtures/dmarcReportGraphData'
+import { rawDmarcReportData } from '../fixtures/dmarcReportData.js'
+import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 
 // ** need to mock the ResizeObserver and polute the window object to avoid errors
 class ResizeObserver {

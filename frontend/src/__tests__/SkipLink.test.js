@@ -1,7 +1,8 @@
 import React from 'react'
 import { cleanup, render } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { SkipLink } from '../SkipLink'
+
+import { SkipLink } from '../app/SkipLink'
 
 describe('SkipLinks', () => {
   afterEach(cleanup)

@@ -1,15 +1,16 @@
 import React from 'react'
-import { UserVarProvider } from '../UserState'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../graphql/queries'
-import AdminPage from '../AdminPage'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import AdminPage from '../admin/AdminPage'
+import { UserVarProvider } from '../utilities/userState'
+import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

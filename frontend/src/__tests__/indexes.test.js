@@ -1,4 +1,4 @@
-import { indexes } from '../indexes'
+import { indexes } from '../utilities/indexes'
 
 describe('indexes', () => {
   describe('with 1 record per page', () => {

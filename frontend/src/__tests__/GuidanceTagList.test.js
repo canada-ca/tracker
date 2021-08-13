@@ -4,12 +4,13 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
-import { GuidanceTagList } from '../GuidanceTagList'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import { GuidanceTagList } from '../guidance/GuidanceTagList'
+import { UserVarProvider } from '../utilities/userState'
+import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
 const i18n = setupI18n({
   locale: 'en',

@@ -1,22 +1,23 @@
 import React from 'react'
-import UserList from '../UserList'
-import {
-  UPDATE_USER_ROLE,
-  INVITE_USER_TO_ORG,
-  REMOVE_USER_FROM_ORG,
-} from '../graphql/mutations'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserVarProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
-import { rawOrgUserListData } from '../fixtures/orgUserListData'
-import { createCache } from '../client'
-import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import { UserList } from '../admin/UserList'
+import { UserVarProvider } from '../utilities/userState'
+import { createCache } from '../client'
+import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
+import {
+  UPDATE_USER_ROLE,
+  INVITE_USER_TO_ORG,
+  REMOVE_USER_FROM_ORG,
+} from '../graphql/mutations'
+import { rawOrgUserListData } from '../fixtures/orgUserListData'
 
 const i18n = setupI18n({
   locale: 'en',

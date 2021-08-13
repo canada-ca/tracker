@@ -3,13 +3,14 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import CreateUserPage from '../CreateUserPage'
-import { SIGN_UP } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import CreateUserPage from '../auth/CreateUserPage'
+import { UserVarProvider } from '../utilities/userState'
+import { SIGN_UP } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

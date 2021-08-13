@@ -1,9 +1,10 @@
 import React from 'react'
 import { I18nProvider } from '@lingui/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { Footer } from '../Footer'
 import { render } from '@testing-library/react'
 import { setupI18n } from '@lingui/core'
+
+import { Footer } from '../app/Footer'
 
 const i18n = setupI18n({
   locale: 'en',

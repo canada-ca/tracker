@@ -5,11 +5,12 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserVarProvider } from '../UserState'
-import ResetPasswordPage from '../ResetPasswordPage'
-import { RESET_PASSWORD } from '../graphql/mutations'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import ResetPasswordPage from '../auth/ResetPasswordPage'
+import { UserVarProvider } from '../utilities/userState'
+import { RESET_PASSWORD } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

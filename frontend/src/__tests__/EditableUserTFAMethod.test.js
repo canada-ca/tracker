@@ -1,14 +1,15 @@
 import React from 'react'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
-import EditableUserTFAMethod from '../EditableUserTFAMethod'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
-import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { makeVar } from '@apollo/client'
+
+import { EditableUserTFAMethod } from '../user/EditableUserTFAMethod'
+import { UserVarProvider } from '../utilities/userState'
+import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

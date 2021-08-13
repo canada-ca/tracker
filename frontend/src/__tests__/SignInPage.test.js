@@ -1,16 +1,17 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import SignInPage from '../SignInPage'
-import { SIGN_IN } from '../graphql/mutations'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserVarProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import SignInPage from '../auth/SignInPage'
+import { UserVarProvider } from '../utilities/userState'
+import { SIGN_IN } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

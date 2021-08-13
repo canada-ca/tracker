@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserVarProvider } from '../UserState'
+import { UserVarProvider } from '../utilities/userState'
 import { theme, ThemeProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -7,7 +7,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
-import { Dropdown } from '../Dropdown'
+
+import { Dropdown } from '../components/Dropdown'
 
 const i18n = setupI18n({
   locale: 'en',

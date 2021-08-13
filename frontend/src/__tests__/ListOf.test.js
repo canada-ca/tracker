@@ -1,7 +1,8 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { ListOf } from '../ListOf'
+
+import { ListOf } from '../components/ListOf'
 
 describe('<ListOf />', () => {
   describe('when passed a null value', () => {

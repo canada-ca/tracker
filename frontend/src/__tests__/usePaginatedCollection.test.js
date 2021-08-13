@@ -2,10 +2,11 @@ import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { gql, InMemoryCache } from '@apollo/client'
 import { MockedProvider } from '@apollo/client/testing'
-import { createCache } from '../client'
-import { usePaginatedCollection } from '../usePaginatedCollection'
 import { renderHook } from '@testing-library/react-hooks'
 import { relayStylePagination } from '@apollo/client/utilities'
+
+import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
+import { createCache } from '../client'
 
 describe('usePaginatedCollection', () => {
   describe('given forward/backward queries', () => {

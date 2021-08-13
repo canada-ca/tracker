@@ -1,13 +1,14 @@
 import React from 'react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import { TopBanner } from '../TopBanner'
 import { cleanup, render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
-import { UserVarProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
+
+import { TopBanner } from '../app/TopBanner'
+import { UserVarProvider } from '../utilities/userState'
 
 const i18n = setupI18n({
   locale: 'en',

@@ -3,16 +3,17 @@ import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import OrganizationInformation from '../OrganizationInformation'
-import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { ORGANIZATION_INFORMATION } from '../graphql/queries'
 import userEvent from '@testing-library/user-event'
-import { createCache } from '../client'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import { OrganizationInformation } from '../admin/OrganizationInformation'
+import { createCache } from '../client'
+import { UserVarProvider } from '../utilities/userState'
+import { ORGANIZATION_INFORMATION } from '../graphql/queries'
+import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

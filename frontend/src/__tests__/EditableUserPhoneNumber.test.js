@@ -1,15 +1,16 @@
 import React, { Suspense } from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import EditableUserPhoneNumber from '../EditableUserPhoneNumber'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
-import { VERIFY_PHONE_NUMBER, SET_PHONE_NUMBER } from '../graphql/mutations'
 import { makeVar } from '@apollo/client'
+
+import { EditableUserPhoneNumber } from '../user/EditableUserPhoneNumber'
+import { UserVarProvider } from '../utilities/userState'
+import { VERIFY_PHONE_NUMBER, SET_PHONE_NUMBER } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

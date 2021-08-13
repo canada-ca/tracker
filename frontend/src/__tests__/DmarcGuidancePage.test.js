@@ -3,15 +3,16 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import DmarcGuidancePage from '../DmarcGuidancePage'
-import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import DmarcGuidancePage from '../guidance/DmarcGuidancePage'
+import { UserVarProvider } from '../utilities/userState'
+import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
+import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

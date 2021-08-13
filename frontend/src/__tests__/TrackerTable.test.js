@@ -4,7 +4,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural/plurals'
-import TrackerTable from '../TrackerTable'
+
+import { TrackerTable } from '../components/TrackerTable'
 import {
   rawDmarcReportSummaryTableColumns,
   rawDmarcReportSummaryTableData,

@@ -2,10 +2,11 @@ import React from 'react'
 import { object, string } from 'yup'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import PasswordField from '../PasswordField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+
+import { PasswordField } from '../components/PasswordField'
 
 const i18n = setupI18n({
   locale: 'en',

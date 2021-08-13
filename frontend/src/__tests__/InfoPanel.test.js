@@ -1,10 +1,11 @@
 import React from 'react'
-import { InfoButton, InfoBox, InfoPanel } from '../InfoPanel'
 import { render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural/plurals'
+
+import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -12,7 +13,7 @@ const i18n = setupI18n({
     en: {},
   },
   localeData: {
-    en: {plurals: en},
+    en: { plurals: en },
   },
 })
 

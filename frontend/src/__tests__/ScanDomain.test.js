@@ -5,12 +5,13 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { UserVarProvider } from '../UserState'
-import { createCache } from '../client'
-import { ScanDomain } from '../ScanDomain'
-import { REQUEST_SCAN } from '../graphql/mutations'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+
+import { ScanDomain } from '../domains/ScanDomain'
+import { createCache } from '../client'
+import { UserVarProvider } from '../utilities/userState'
+import { REQUEST_SCAN } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',

@@ -2,10 +2,11 @@ import React from 'react'
 import { object, string } from 'yup'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
-import DisplayNameField from '../DisplayNameField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+
+import { DisplayNameField } from '../components/DisplayNameField'
 
 const i18n = setupI18n({
   locale: 'en',
