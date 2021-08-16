@@ -22,9 +22,9 @@ import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { ScanDomain } from './ScanDomain'
+import { DomainCard } from './DomainCard'
 
 import { ListOf } from '../components/ListOf'
-import { DomainCard } from '../organizationDetails/DomainCard'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'

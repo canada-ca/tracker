@@ -4,8 +4,7 @@ import { Box, Divider, Text } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { number, string } from 'prop-types'
 
-import { DomainCard } from './DomainCard'
-
+import { DomainCard } from '../domains/DomainCard'
 import { ListOf } from '../components/ListOf'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
