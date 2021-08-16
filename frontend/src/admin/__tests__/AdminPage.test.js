@@ -36,6 +36,7 @@ describe('<AdminPage />', () => {
           },
           isAdmin: true,
           includeSuperAdminOrg: true,
+          search: '',
         },
       },
       result: {
@@ -83,66 +84,6 @@ describe('<AdminPage />', () => {
       },
     },
   ]
-
-  const empty = [
-    {
-      request: {
-        query: ADMIN_AFFILIATIONS,
-        variables: {
-          first: 100,
-          orderBy: {
-            field: 'NAME',
-            direction: 'ASC',
-          },
-          isAdmin: true,
-          includeSuperAdminOrg: true,
-        },
-      },
-      result: {
-        data: {
-          findMyOrganizations: {
-            edges: [],
-          },
-        },
-      },
-    },
-    {
-      request: {
-        query: IS_USER_SUPER_ADMIN,
-        variables: {},
-      },
-      result: {
-        data: {
-          isUserSuperAdmin: false,
-        },
-      },
-    },
-  ]
-
-  it('renders if user not an admin', async () => {
-    const { getByText } = render(
-      <MockedProvider mocks={empty} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
-          <I18nProvider i18n={i18n}>
-            <ChakraProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-                <AdminPage />
-              </MemoryRouter>
-            </ChakraProvider>
-          </I18nProvider>
-        </UserVarProvider>
-      </MockedProvider>,
-    )
-
-    await waitFor(() => {
-      const welcome = getByText(
-        /You do not have admin permissions in any organization/i,
-      )
-      expect(welcome).toBeInTheDocument()
-    })
-  })
 
   it('renders correctly', async () => {
     const { getByText } = render(
