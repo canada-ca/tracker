@@ -17,14 +17,13 @@ function DomainField({ name, label, forwardedRef, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <FormLabel htmlFor="email" fontWeight="bold">
+      <FormLabel htmlFor="domain" fontWeight="bold">
         {labelText}
       </FormLabel>
       <InputGroup>
         <Input
           {...field}
           id="domain"
-          type="domain"
           ref={forwardedRef}
           placeholder={t`Domain URL`}
         />
