@@ -25,7 +25,7 @@ describe('<DisplayNameField />', () => {
         displayName: string().required('sadness'),
       })
 
-      const { getByTestId, getByText } = render(
+      const { getByRole, getByText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -37,8 +37,8 @@ describe('<DisplayNameField />', () => {
             >
               {() => (
                 <DisplayNameField
-                  data-testid="displayNameField"
                   name="displayName"
+                  label="Display Name Field"
                 />
               )}
             </Formik>
@@ -46,7 +46,7 @@ describe('<DisplayNameField />', () => {
         </I18nProvider>,
       )
 
-      const input = getByTestId('displayNameField')
+      const input = getByRole('textbox', { name: /Display Name Field/ })
       fireEvent.blur(input)
 
       await waitFor(() => {

@@ -25,7 +25,7 @@ describe('<CreateOrganizationField />', () => {
         acronym: string().required('sadness'),
       })
 
-      const { getByTestId, getByText } = render(
+      const { getByText, getByRole } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -39,6 +39,7 @@ describe('<CreateOrganizationField />', () => {
                 <CreateOrganizationField
                   data-testid="CreateOrganizationField"
                   name="acronym"
+                  label="Create Org Field:"
                 />
               )}
             </Formik>
@@ -46,8 +47,8 @@ describe('<CreateOrganizationField />', () => {
         </I18nProvider>,
       )
 
-      const input = getByTestId('CreateOrganizationField')
-      fireEvent.blur(input)
+      const createOrgInput = getByRole('textbox', { name: /Create Org Field/ })
+      fireEvent.blur(createOrgInput)
 
       await waitFor(() => {
         expect(getByText(/sadness/)).toBeInTheDocument()

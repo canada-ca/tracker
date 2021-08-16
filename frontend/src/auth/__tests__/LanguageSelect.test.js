@@ -20,7 +20,7 @@ const i18n = setupI18n({
 describe('<LanguageSelect />', () => {
   describe('by default', () => {
     it('renders language selection', async () => {
-      const { getByTestId } = render(
+      const { getByRole } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -28,18 +28,18 @@ describe('<LanguageSelect />', () => {
                 lang: '',
               }}
             >
-              {() => (
-                <LanguageSelect data-testid="languageselect" name="lang" />
-              )}
+              {() => <LanguageSelect name="lang" />}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
       )
 
-      const input = getByTestId('languageselect')
+      const languageSelect = getByRole('combobox', {
+        name: /Language:/,
+      })
 
       await waitFor(() => {
-        expect(input.type).toEqual('select-one')
+        expect(languageSelect.type).toEqual('select-one')
       })
     })
   })

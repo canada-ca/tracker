@@ -25,7 +25,7 @@ describe('<EmailField />', () => {
         email: string().required('sadness'),
       })
 
-      const { getByTestId, getByText } = render(
+      const { getByRole, getByText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -35,13 +35,13 @@ describe('<EmailField />', () => {
                 email: '',
               }}
             >
-              {() => <EmailField data-testid="emailfield" name="email" />}
+              {() => <EmailField label="Test Email Field" name="email" />}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
       )
 
-      const input = getByTestId('emailfield')
+      const input = getByRole('textbox', { name: /Test Email Field/i })
       fireEvent.blur(input)
 
       await waitFor(() => {

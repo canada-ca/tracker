@@ -25,7 +25,7 @@ describe('<DomainField />', () => {
         domain: string().required('sadness'),
       })
 
-      const { getByTestId, getByText } = render(
+      const { getByRole, getByText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -35,13 +35,13 @@ describe('<DomainField />', () => {
                 domain: '',
               }}
             >
-              {() => <DomainField data-testid="domainField" name="domain" />}
+              {() => <DomainField label="Domain Field" name="domain" />}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
       )
 
-      const input = getByTestId('domainField')
+      const input = getByRole('textbox', { name: /Domain Field/ })
       fireEvent.blur(input)
 
       await waitFor(() => {

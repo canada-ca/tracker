@@ -5,6 +5,7 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import userEvent from '@testing-library/user-event'
 
 import { PasswordField } from '../PasswordField'
 
@@ -24,7 +25,7 @@ describe('<PasswordField />', () => {
       const validationSchema = object().shape({
         password: string().required('sadness'),
       })
-      const { getByTestId, getByText } = render(
+      const { getByText, getByLabelText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -34,13 +35,17 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => <PasswordField data-testid="pwfield" name="password" />}
+              {() => (
+                <PasswordField name="password" label="Test Password Input" />
+              )}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
       )
-      const input = getByTestId('pwfield')
-      fireEvent.blur(input)
+
+      const passwordInput = getByLabelText(/Test Password Input/)
+      userEvent.click(passwordInput)
+      userEvent.click(document.body)
 
       await waitFor(() => {
         expect(getByText('sadness')).toBeInTheDocument()
@@ -50,7 +55,7 @@ describe('<PasswordField />', () => {
 
   describe('by default', () => {
     it('renders a password field', async () => {
-      const { getByTestId } = render(
+      const { getByLabelText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -58,17 +63,17 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => <PasswordField data-testid="pwfield" name="password" />}
+              {() => (
+                <PasswordField name="password" label="Test Password Input" />
+              )}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
       )
 
-      const input = getByTestId('pwfield')
+      const passwordInput = getByLabelText(/Test Password Input/)
 
-      await waitFor(() => {
-        expect(input.type).toEqual('password')
-      })
+      expect(passwordInput.type).toEqual('password')
     })
   })
 

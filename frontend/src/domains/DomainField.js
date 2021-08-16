@@ -16,16 +16,14 @@ function DomainField({ name, label, forwardedRef, ...props }) {
   const labelText = label === undefined ? <Trans>Domain URL:</Trans> : label
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor="email" fontWeight="bold">
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
+      <FormLabel htmlFor="domain" fontWeight="bold">
         {labelText}
       </FormLabel>
       <InputGroup>
         <Input
           {...field}
-          {...props}
           id="domain"
-          type="domain"
           ref={forwardedRef}
           placeholder={t`Domain URL`}
         />
