@@ -67,9 +67,7 @@ export function ScanDomain() {
     },
   })
 
-  const { data: oneTimeScansData, loading: oneTimeScansLoading } = useQuery(
-    GET_ONE_TIME_SCANS,
-  )
+  const { data: oneTimeScansData } = useQuery(GET_ONE_TIME_SCANS)
 
   if (loading) return <LoadingMessage />
 
@@ -319,28 +317,30 @@ export function ScanDomain() {
                         <Box>
                           <Stack spacing="30px" px="1" mt="1">
                             <Box pb="1">
-                              {oneTimeScansLoading ? (
-                                <LoadingMessage>One Time Scan</LoadingMessage>
-                              ) : mergedScan.scan.https.status === 'PASS' &&
+                              {mergedScan.scan.https && mergedScan.scan.ssl ? (
+                                mergedScan.scan.https.status === 'PASS' &&
                                 mergedScan.scan.ssl.status === 'PASS' ? (
-                                <Stack isInline align="center" px="2">
-                                  <StatusIcon status="PASS" />
-                                  <Text fontWeight="bold" fontSize="2xl">
-                                    <Trans>ITPIN Compliant</Trans>
-                                  </Text>
-                                </Stack>
+                                  <Stack isInline align="center" px="2">
+                                    <StatusIcon status="PASS" />
+                                    <Text fontWeight="bold" fontSize="2xl">
+                                      <Trans>ITPIN Compliant</Trans>
+                                    </Text>
+                                  </Stack>
+                                ) : (
+                                  <Stack isInline align="center" px="2">
+                                    <WarningTwoIcon
+                                      color="moderate"
+                                      size="icons.md"
+                                    />
+                                    <Text fontWeight="bold" fontSize="2xl">
+                                      <Trans>
+                                        Changes Required for ITPIN Compliance
+                                      </Trans>
+                                    </Text>
+                                  </Stack>
+                                )
                               ) : (
-                                <Stack isInline align="center" px="2">
-                                  <WarningTwoIcon
-                                    color="moderate"
-                                    size="icons.md"
-                                  />
-                                  <Text fontWeight="bold" fontSize="2xl">
-                                    <Trans>
-                                      Changes Required for ITPIN Compliance
-                                    </Trans>
-                                  </Text>
-                                </Stack>
+                                <LoadingMessage>One Time Scan</LoadingMessage>
                               )}
                             </Box>
                             <Accordion allowMultiple defaultIndex={[0, 1]}>
