@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "jest --runInBand",
-    "test-coverage": "jest --runInBand --coverage",
+    "test": "jest ",
+    "test-coverage": "jest --coverage",
     "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
     "lint": "eslint src",
     "prettier": "prettier --write \"**/*.js\""
