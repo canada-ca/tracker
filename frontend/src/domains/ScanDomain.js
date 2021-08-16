@@ -23,12 +23,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import {
-  CheckCircleIcon,
-  WarningIcon,
-  WarningTwoIcon,
-  InfoIcon,
-} from '@chakra-ui/icons'
+import { WarningTwoIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { object, string } from 'yup'
 
@@ -36,6 +31,7 @@ import { DomainField } from './DomainField'
 
 import { ScanCategoryDetails } from '../guidance/ScanCategoryDetails'
 import { LoadingMessage } from '../components/LoadingMessage'
+import { StatusIcon } from '../components/StatusIcon'
 import { fieldRequirements } from '../utilities/fieldRequirements'
 import { GET_ONE_TIME_SCANS } from '../graphql/queries'
 import { REQUEST_SCAN } from '../graphql/mutations'
@@ -147,18 +143,6 @@ export function ScanDomain() {
     ],
   }
 
-  const generateStatusIcon = (status) => {
-    let statusIcon
-    if (status === 'PASS') {
-      statusIcon = <CheckCircleIcon color="strong" size="icons.sm" />
-    } else if (status === 'FAIL') {
-      statusIcon = <WarningIcon color="weak" size="icons.sm" />
-    } else {
-      statusIcon = <InfoIcon color="info" size="icons.sm" />
-    }
-    return statusIcon
-  }
-
   return (
     <Box px="2" mx="auto" overflow="hidden">
       <Formik
@@ -253,7 +237,7 @@ export function ScanDomain() {
                           HTTPS:
                         </Text>
                         {mergedScan.scan.https ? (
-                          generateStatusIcon(mergedScan.scan.https.status)
+                          <StatusIcon status={mergedScan.scan.https.status} />
                         ) : (
                           <Spinner color="accent" size="sm" />
                         )}
@@ -275,7 +259,7 @@ export function ScanDomain() {
                           SSL:
                         </Text>
                         {mergedScan.scan.ssl ? (
-                          generateStatusIcon(mergedScan.scan.ssl.status)
+                          <StatusIcon status={mergedScan.scan.ssl.status} />
                         ) : (
                           <Spinner color="accent" size="sm" />
                         )}
@@ -297,7 +281,7 @@ export function ScanDomain() {
                           SPF:
                         </Text>
                         {mergedScan.scan.spf ? (
-                          generateStatusIcon(mergedScan.scan.spf.status)
+                          <StatusIcon status={mergedScan.scan.spf.status} />
                         ) : (
                           <Spinner color="accent" size="sm" />
                         )}
@@ -319,7 +303,7 @@ export function ScanDomain() {
                           DKIM:
                         </Text>
                         {mergedScan.scan.dkim ? (
-                          generateStatusIcon(mergedScan.scan.dkim.status)
+                          <StatusIcon status={mergedScan.scan.dkim.status} />
                         ) : (
                           <Spinner color="accent" size="sm" />
                         )}
@@ -341,7 +325,7 @@ export function ScanDomain() {
                           DMARC:
                         </Text>
                         {mergedScan.scan.dmarc ? (
-                          generateStatusIcon(mergedScan.scan.dmarc.status)
+                          <StatusIcon status={mergedScan.scan.dmarc.status} />
                         ) : (
                           <Spinner color="accent" size="sm" />
                         )}
