@@ -13,7 +13,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Spinner,
   Stack,
   Tab,
   TabList,
@@ -28,6 +27,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { object, string } from 'yup'
 
 import { DomainField } from './DomainField'
+import { StatusBadge } from './StatusBadge'
 
 import { ScanCategoryDetails } from '../guidance/ScanCategoryDetails'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -118,8 +118,6 @@ export function ScanDomain() {
     })
   }
 
-  // TODO: Create list of collapsable scan detail cards
-
   const dmarcSteps = {
     assess: [
       t`Identify all domains and subdomains used to send mail;`,
@@ -143,6 +141,18 @@ export function ScanDomain() {
       t`Correct misconfigurations and update records as required; and`,
       t`Rotate DKIM keys annually.`,
     ],
+  }
+
+  const statusGroupingProps = {
+    flexDirection: { base: 'column', md: 'row' },
+    border: '1px solid',
+    borderColor: 'gray.300',
+    borderRadius: 'md',
+    px: { base: 2, md: 0 },
+    py: { base: 1, md: 2 },
+    mx: { base: 0, md: 1 },
+    my: { base: 2, md: 0 },
+    bg: 'gray.100',
   }
 
   return (
@@ -223,116 +233,50 @@ export function ScanDomain() {
                     flexDirection={{ base: 'column', md: 'row' }}
                     flexGrow={{ base: 0, md: '1' }}
                   >
-                    <Box mx={{ md: 2 }}>
-                      <Stack
-                        align="center"
-                        flexDirection={{ base: 'row', md: 'column' }}
-                        justifyContent="space-between"
-                        spacing={0}
-                      >
-                        <Text
-                          fontWeight="bold"
-                          fontSize="sm"
-                          mb={{ base: 0, md: '2' }}
-                          mr={{ base: '2', md: 0 }}
-                        >
-                          HTTPS:
-                        </Text>
-                        {mergedScan.scan.https ? (
-                          <StatusIcon status={mergedScan.scan.https.status} />
-                        ) : (
-                          <Spinner color="accent" size="sm" />
-                        )}
-                      </Stack>
-                    </Box>
-                    <Box mx={{ md: 2 }}>
-                      <Stack
-                        align="center"
-                        flexDirection={{ base: 'row', md: 'column' }}
-                        justifyContent="space-between"
-                        spacing={0}
-                      >
-                        <Text
-                          fontWeight="bold"
-                          fontSize="sm"
-                          mb={{ base: 0, md: '2' }}
-                          mr={{ base: '2', md: 0 }}
-                        >
-                          SSL:
-                        </Text>
-                        {mergedScan.scan.ssl ? (
-                          <StatusIcon status={mergedScan.scan.ssl.status} />
-                        ) : (
-                          <Spinner color="accent" size="sm" />
-                        )}
-                      </Stack>
-                    </Box>
-                    <Box mx={{ md: 2 }}>
-                      <Stack
-                        align="center"
-                        flexDirection={{ base: 'row', md: 'column' }}
-                        justifyContent="space-between"
-                        spacing={0}
-                      >
-                        <Text
-                          fontWeight="bold"
-                          fontSize="sm"
-                          mb={{ base: 0, md: '2' }}
-                          mr={{ base: '2', md: 0 }}
-                        >
-                          SPF:
-                        </Text>
-                        {mergedScan.scan.spf ? (
-                          <StatusIcon status={mergedScan.scan.spf.status} />
-                        ) : (
-                          <Spinner color="accent" size="sm" />
-                        )}
-                      </Stack>
-                    </Box>
-                    <Box mx={{ md: 2 }}>
-                      <Stack
-                        align="center"
-                        flexDirection={{ base: 'row', md: 'column' }}
-                        justifyContent="space-between"
-                        spacing={0}
-                      >
-                        <Text
-                          fontWeight="bold"
-                          fontSize="sm"
-                          mb={{ base: 0, md: '2' }}
-                          mr={{ base: '2', md: 0 }}
-                        >
-                          DKIM:
-                        </Text>
-                        {mergedScan.scan.dkim ? (
-                          <StatusIcon status={mergedScan.scan.dkim.status} />
-                        ) : (
-                          <Spinner color="accent" size="sm" />
-                        )}
-                      </Stack>
-                    </Box>
-                    <Box mx={{ md: 2 }}>
-                      <Stack
-                        align="center"
-                        flexDirection={{ base: 'row', md: 'column' }}
-                        justifyContent="space-between"
-                        spacing={0}
-                      >
-                        <Text
-                          fontWeight="bold"
-                          fontSize="sm"
-                          mb={{ base: 0, md: '2' }}
-                          mr={{ base: '2', md: '0' }}
-                        >
-                          DMARC:
-                        </Text>
-                        {mergedScan.scan.dmarc ? (
-                          <StatusIcon status={mergedScan.scan.dmarc.status} />
-                        ) : (
-                          <Spinner color="accent" size="sm" />
-                        )}
-                      </Stack>
-                    </Box>
+                    <Flex {...statusGroupingProps}>
+                      <StatusBadge
+                        test="HTTPS:"
+                        status={
+                          mergedScan.scan.https
+                            ? mergedScan.scan.https.status
+                            : 'LOADING'
+                        }
+                      />
+                      <StatusBadge
+                        test="SSL:"
+                        status={
+                          mergedScan.scan.ssl
+                            ? mergedScan.scan.ssl.status
+                            : 'LOADING'
+                        }
+                      />
+                    </Flex>
+                    <Flex {...statusGroupingProps}>
+                      <StatusBadge
+                        test="SPF:"
+                        status={
+                          mergedScan.scan.spf
+                            ? mergedScan.scan.spf.status
+                            : 'LOADING'
+                        }
+                      />
+                      <StatusBadge
+                        test="DKIM:"
+                        status={
+                          mergedScan.scan.dkim
+                            ? mergedScan.scan.dkim.status
+                            : 'LOADING'
+                        }
+                      />
+                      <StatusBadge
+                        test="DMARC:"
+                        status={
+                          mergedScan.scan.dmarc
+                            ? mergedScan.scan.dmarc.status
+                            : 'LOADING'
+                        }
+                      />
+                    </Flex>
                     <Divider
                       orientation={{ base: 'horizontal', md: 'vertical' }}
                       alignSelf="stretch"
