@@ -237,7 +237,7 @@ export function ScanDomain() {
                       <StatusBadge
                         text="HTTPS:"
                         status={
-                          mergedScan.scan.https
+                          mergedScan.scan?.https
                             ? mergedScan.scan.https.status
                             : 'LOADING'
                         }
@@ -245,7 +245,7 @@ export function ScanDomain() {
                       <StatusBadge
                         text="SSL:"
                         status={
-                          mergedScan.scan.ssl
+                          mergedScan.scan?.ssl
                             ? mergedScan.scan.ssl.status
                             : 'LOADING'
                         }
@@ -255,7 +255,7 @@ export function ScanDomain() {
                       <StatusBadge
                         text="SPF:"
                         status={
-                          mergedScan.scan.spf
+                          mergedScan.scan?.spf
                             ? mergedScan.scan.spf.status
                             : 'LOADING'
                         }
@@ -263,7 +263,7 @@ export function ScanDomain() {
                       <StatusBadge
                         text="DKIM:"
                         status={
-                          mergedScan.scan.dkim
+                          mergedScan.scan?.dkim
                             ? mergedScan.scan.dkim.status
                             : 'LOADING'
                         }
@@ -271,7 +271,7 @@ export function ScanDomain() {
                       <StatusBadge
                         text="DMARC:"
                         status={
-                          mergedScan.scan.dmarc
+                          mergedScan.scan?.dmarc
                             ? mergedScan.scan.dmarc.status
                             : 'LOADING'
                         }
