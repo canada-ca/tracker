@@ -147,7 +147,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/services/scanners/dns:master-a71fc95-1628778358 # {"$imagepolicy": "flux-system:dns-scanner"}
+        image: gcr.io/track-compliance/services/scanners/dns:master-f7096fd-1629118913 # {"$imagepolicy": "flux-system:dns-scanner"}
         env:
         - name: SCAN_TIMEOUT
           value: "20"
