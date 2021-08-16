@@ -13,11 +13,11 @@ export function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <FormLabel htmlFor="lang" fontWeight="bold">
         <Trans>Language:</Trans>
       </FormLabel>
-      <Select {...field} {...props} id="lang">
+      <Select {...field} id="lang">
         <option hidden value="">
           {t`Select Preferred Language`}
         </option>

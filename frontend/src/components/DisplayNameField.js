@@ -18,7 +18,7 @@ function DisplayNameField({ name, label, forwardedRef, ...props }) {
   const formLabel = label === undefined ? <Trans>Display Name:</Trans> : label
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <FormLabel htmlFor="displayName" fontWeight="bold">
         {formLabel}
       </FormLabel>
@@ -29,7 +29,6 @@ function DisplayNameField({ name, label, forwardedRef, ...props }) {
         <Input
           aria-label="input-display-name"
           {...field}
-          {...props}
           ref={forwardedRef}
           id="displayName"
           placeholder={t`Display Name`}

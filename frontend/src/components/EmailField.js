@@ -20,7 +20,7 @@ function EmailField({ name, label, forwardedRef, ...props }) {
   const labelText = label === undefined ? <Trans>Email:</Trans> : label
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <FormLabel htmlFor="email" fontWeight="bold">
         {labelText}
       </FormLabel>
@@ -30,7 +30,6 @@ function EmailField({ name, label, forwardedRef, ...props }) {
         </InputLeftElement>
         <Input
           {...field}
-          {...props}
           id="email"
           type="email"
           ref={forwardedRef}

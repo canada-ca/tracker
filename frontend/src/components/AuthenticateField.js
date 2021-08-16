@@ -40,7 +40,7 @@ function AuthenticateField({ name, forwardedRef, sendMethod, ...props }) {
     )
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <Stack align="center">
         <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
           {codeSendMessage}
@@ -53,7 +53,6 @@ function AuthenticateField({ name, forwardedRef, sendMethod, ...props }) {
           </InputLeftElement>
           <Input
             {...field}
-            {...props}
             id="twoFactorCode"
             ref={forwardedRef}
             placeholder={i18n._(t`Enter two factor code`)}

@@ -25,7 +25,7 @@ function FormField({
   const labelText = label || ''
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <FormLabel htmlFor={name} fontWeight="bold">
         {labelText}
       </FormLabel>
@@ -35,7 +35,6 @@ function FormField({
         )}
         <Input
           {...field}
-          {...props}
           id={id || name}
           type={type}
           ref={forwardedRef}

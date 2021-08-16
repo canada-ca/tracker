@@ -18,13 +18,12 @@ function OrganizationCreateField({
   const [field, meta] = useField(name)
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <FormLabel htmlFor={name} fontWeight="bold">
         {label} ({language})
       </FormLabel>
       <Input
         {...field}
-        {...props}
         id={name}
         name={name}
         ref={forwardedRef}

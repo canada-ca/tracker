@@ -22,7 +22,7 @@ function PasswordField({ name, label, forwardedRef, ...props }) {
   const labelText = label === undefined ? <Trans>Password:</Trans> : label
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <FormLabel htmlFor={name} fontWeight="bold">
         {labelText}
       </FormLabel>
@@ -38,7 +38,6 @@ function PasswordField({ name, label, forwardedRef, ...props }) {
           id={name}
           ref={forwardedRef}
           {...field}
-          {...props}
         />
         <InputRightElement width="width.4">
           <IconButton
