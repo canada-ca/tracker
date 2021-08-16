@@ -49,6 +49,8 @@ def Server(server_client=requests):
             logging.error(f"Invalid scan request format received: {str(inbound_payload)}")
             return Response("Invalid Format", status_code=400)
 
+        logging.info(f"Performing scan on {inbound_payload['domain']}...")
+
         try:
             scanner = DMARCScanner(domain)
             start = time.time()
