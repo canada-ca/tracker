@@ -25,7 +25,7 @@ describe('<AuthenticateField />', () => {
         twoFactorCode: string().required('sadness'),
       })
 
-      const { getByTestId, getByText } = render(
+      const { getByRole, getByText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik
@@ -37,19 +37,17 @@ describe('<AuthenticateField />', () => {
               onSubmit={() => {}}
             >
               {() => (
-                <AuthenticateField
-                  data-testid="authenticatefield"
-                  name="twoFactorCode"
-                  sendMethod="phone"
-                />
+                <AuthenticateField name="twoFactorCode" sendMethod="phone" />
               )}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
       )
 
-      const input = getByTestId('authenticatefield')
-      fireEvent.blur(input)
+      const authenticateInput = getByRole('textbox', {
+        name: /We've sent an SMS to your registered phone number/,
+      })
+      fireEvent.blur(authenticateInput)
 
       await waitFor(() => {
         expect(getByText(/sadness/)).toBeInTheDocument()
