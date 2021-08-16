@@ -235,7 +235,7 @@ export function ScanDomain() {
                   >
                     <Flex {...statusGroupingProps}>
                       <StatusBadge
-                        test="HTTPS:"
+                        text="HTTPS:"
                         status={
                           mergedScan.scan.https
                             ? mergedScan.scan.https.status
@@ -243,7 +243,7 @@ export function ScanDomain() {
                         }
                       />
                       <StatusBadge
-                        test="SSL:"
+                        text="SSL:"
                         status={
                           mergedScan.scan.ssl
                             ? mergedScan.scan.ssl.status
@@ -253,7 +253,7 @@ export function ScanDomain() {
                     </Flex>
                     <Flex {...statusGroupingProps}>
                       <StatusBadge
-                        test="SPF:"
+                        text="SPF:"
                         status={
                           mergedScan.scan.spf
                             ? mergedScan.scan.spf.status
@@ -261,7 +261,7 @@ export function ScanDomain() {
                         }
                       />
                       <StatusBadge
-                        test="DKIM:"
+                        text="DKIM:"
                         status={
                           mergedScan.scan.dkim
                             ? mergedScan.scan.dkim.status
@@ -269,7 +269,7 @@ export function ScanDomain() {
                         }
                       />
                       <StatusBadge
-                        test="DMARC:"
+                        text="DMARC:"
                         status={
                           mergedScan.scan.dmarc
                             ? mergedScan.scan.dmarc.status
