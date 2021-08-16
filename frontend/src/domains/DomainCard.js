@@ -9,31 +9,22 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
 import { Link as RouteLink } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
 
+import { StatusBadge } from './StatusBadge'
+
 export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
-  const generateStatusIcon = (status) => {
-    let statusIcon
-    if (status === 'PASS') {
-      statusIcon = (
-        <CheckCircleIcon color="strong" size="icons.sm" aria-label="passes" />
-      )
-    } else if (status === 'FAIL') {
-      statusIcon = (
-        <WarningIcon color="weak" size="icons.sm" aria-label="fails" />
-      )
-    } else {
-      statusIcon = (
-        <InfoIcon
-          color="info"
-          size="icons.sm"
-          aria-label="Information not sufficient, please view guidance"
-        />
-      )
-    }
-    return statusIcon
+  const statusGroupingProps = {
+    flexDirection: { base: 'column', md: 'row' },
+    border: '1px solid',
+    borderColor: 'gray.300',
+    borderRadius: 'md',
+    px: { base: 2, md: 0 },
+    py: { base: 1, md: 2 },
+    mx: { base: 0, md: 1 },
+    my: { base: 2, md: 0 },
+    bg: 'gray.100',
   }
 
   return (
@@ -80,114 +71,14 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
         <Divider variant="card" display={{ md: 'none' }} />
         {lastRan && (
           <>
-            <Flex
-              flexDirection={{ base: 'column', md: 'row' }}
-              border="1px solid"
-              borderColor="gray.300"
-              borderRadius="md"
-              px={{ base: 2, md: 0 }}
-              py={{ base: 1, md: 2 }}
-              mx={{ base: 0, md: 1 }}
-              my={{ base: 2, md: 0 }}
-              bg="gray.100"
-            >
-              <Stack
-                align="center"
-                flexDirection={{ base: 'row', md: 'column' }}
-                justifyContent="space-between"
-                spacing={0}
-                mx={{ md: 2 }}
-              >
-                <Text
-                  fontWeight="bold"
-                  fontSize="sm"
-                  mb={{ base: 0, md: '2' }}
-                  mr={{ base: '2', md: 0 }}
-                >
-                  HTTPS:
-                </Text>
-                {generateStatusIcon(status.https)}
-              </Stack>
-              <Stack
-                align="center"
-                flexDirection={{ base: 'row', md: 'column' }}
-                justifyContent="space-between"
-                spacing={0}
-                mx={{ md: 2 }}
-              >
-                <Text
-                  fontWeight="bold"
-                  fontSize="sm"
-                  mb={{ base: 0, md: '2' }}
-                  mr={{ base: '2', md: 0 }}
-                >
-                  SSL:
-                </Text>
-                {generateStatusIcon(status.ssl)}
-              </Stack>
+            <Flex {...statusGroupingProps}>
+              <StatusBadge text="HTTPS:" status={status.https} />
+              <StatusBadge text="SSL:" status={status.ssl} />
             </Flex>
-            <Flex
-              flexDirection={{ base: 'column', md: 'row' }}
-              border="1px solid"
-              borderColor="gray.300"
-              borderRadius="md"
-              px={{ base: 2, md: 0 }}
-              py={{ base: 1, md: 2 }}
-              mx={{ base: 0, md: 1 }}
-              my={{ base: 2, md: 0 }}
-              bg="gray.100"
-            >
-              <Stack
-                align="center"
-                flexDirection={{ base: 'row', md: 'column' }}
-                justifyContent="space-between"
-                spacing={0}
-                mx={{ md: 2 }}
-              >
-                <Text
-                  fontWeight="bold"
-                  fontSize="sm"
-                  mb={{ base: 0, md: '2' }}
-                  mr={{ base: '2', md: 0 }}
-                >
-                  SPF:
-                </Text>
-                {generateStatusIcon(status.spf)}
-              </Stack>
-              <Stack
-                align="center"
-                flexDirection={{ base: 'row', md: 'column' }}
-                justifyContent="space-between"
-                spacing={0}
-                mx={{ md: 2 }}
-              >
-                <Text
-                  fontWeight="bold"
-                  fontSize="sm"
-                  mb={{ base: 0, md: '2' }}
-                  mr={{ base: '2', md: 0 }}
-                >
-                  DKIM:
-                </Text>
-                {generateStatusIcon(status.dkim)}
-              </Stack>
-              <Stack
-                align="center"
-                flexDirection={{ base: 'row', md: 'column' }}
-                justifyContent="space-between"
-                spacing={0}
-                mx={{ md: 2 }}
-              >
-                <Text
-                  fontWeight="bold"
-                  fontSize="sm"
-                  mb={{ base: 0, md: '2' }}
-                  mr={{ base: '2', md: '0' }}
-                >
-                  DMARC:
-                </Text>
-                {generateStatusIcon(status.dmarc)}
-              </Stack>
+            <Flex {...statusGroupingProps}>
+              <StatusBadge text="SPF:" status={status.spf} />
+              <StatusBadge text="DKIM:" status={status.dkim} />
+              <StatusBadge text="DMARC:" status={status.dmarc} />
             </Flex>
             <Divider variant="card" display={{ md: 'none' }} />
           </>
