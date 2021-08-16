@@ -1,5 +1,7 @@
-const loadOrgOwner = async ({ query, domain }) => {
-  const cursor = await query`
+const loadOrgOwner =
+  ({ query }) =>
+  async ({ domain }) => {
+    const cursor = await query`
       WITH domains, organizations, ownership
       LET domainId = FIRST(
         FOR domain IN domains
@@ -16,10 +18,10 @@ const loadOrgOwner = async ({ query, domain }) => {
         RETURN org.orgDetails.en.acronym
     `
 
-  const data = await cursor.next()
+    const data = await cursor.next()
 
-  return data
-}
+    return data
+  }
 
 module.exports = {
   loadOrgOwner,
