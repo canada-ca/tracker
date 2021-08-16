@@ -114,7 +114,7 @@ def Server(server_client=requests):
             "domain_key": domain_key,
             "shared_id": shared_id
         }
-        logging.info(f"Scan results: {str(scan_results)}")
+        logging.info(f"Processed scan results: {str(scan_results)}")
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
