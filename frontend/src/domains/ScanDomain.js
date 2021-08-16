@@ -67,7 +67,9 @@ export function ScanDomain() {
     },
   })
 
-  const { data: oneTimeScansData } = useQuery(GET_ONE_TIME_SCANS)
+  const { data: oneTimeScansData, loading: oneTimeScansLoading } = useQuery(
+    GET_ONE_TIME_SCANS,
+  )
 
   if (loading) return <LoadingMessage />
 
@@ -373,36 +375,26 @@ export function ScanDomain() {
                         <Box>
                           <Stack spacing="30px" px="1" mt="1">
                             <Box pb="1">
-                              {mergedScan.scan.https && mergedScan.scan.ssl ? (
-                                mergedScan.scan.https.status === 'PASS' &&
+                              {oneTimeScansLoading ? (
+                                <LoadingMessage>One Time Scan</LoadingMessage>
+                              ) : mergedScan.scan.https.status === 'PASS' &&
                                 mergedScan.scan.ssl.status === 'PASS' ? (
-                                  <Stack isInline align="center" px="2">
-                                    <CheckCircleIcon
-                                      color="strong"
-                                      size="icons.sm"
-                                    />
-                                    <Text fontWeight="bold" fontSize="2xl">
-                                      <Trans>ITPIN Compliant</Trans>
-                                    </Text>
-                                  </Stack>
-                                ) : (
-                                  <Stack isInline align="center" px="2">
-                                    <WarningTwoIcon
-                                      color="moderate"
-                                      size="icons.md"
-                                    />
-                                    <Text fontWeight="bold" fontSize="2xl">
-                                      <Trans>
-                                        Changes Required for ITPIN Compliance
-                                      </Trans>
-                                    </Text>
-                                  </Stack>
-                                )
+                                <Stack isInline align="center" px="2">
+                                  <StatusIcon status="PASS" />
+                                  <Text fontWeight="bold" fontSize="2xl">
+                                    <Trans>ITPIN Compliant</Trans>
+                                  </Text>
+                                </Stack>
                               ) : (
                                 <Stack isInline align="center" px="2">
-                                  <Spinner color="accent" size="md" />
+                                  <WarningTwoIcon
+                                    color="moderate"
+                                    size="icons.md"
+                                  />
                                   <Text fontWeight="bold" fontSize="2xl">
-                                    <Trans>Loading Compliance Status</Trans>
+                                    <Trans>
+                                      Changes Required for ITPIN Compliance
+                                    </Trans>
                                   </Text>
                                 </Stack>
                               )}
@@ -477,12 +469,7 @@ export function ScanDomain() {
                                     )}
                                 </Box>
                               ) : (
-                                <Stack isInline align="center" px="2">
-                                  <Spinner color="accent" size="md" />
-                                  <Text fontWeight="bold" fontSize="2xl">
-                                    <Trans>Loading DMARC Phase</Trans>
-                                  </Text>
-                                </Stack>
+                                <LoadingMessage>DMARC Phase</LoadingMessage>
                               )}
                             </Box>
                             <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
