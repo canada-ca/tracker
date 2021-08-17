@@ -1,5 +1,5 @@
 import React from 'react'
-import { elementType, func, object, oneOfType, shape, string } from 'prop-types'
+import { element, func, object, oneOfType, shape, string } from 'prop-types'
 import {
   FormControl,
   FormErrorMessage,
@@ -7,54 +7,73 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
+  Stack,
 } from '@chakra-ui/react'
 import { useField } from 'formik'
 
 function FormField({
   name,
-  id,
   label,
   forwardedRef,
   type,
+  align,
   placeholder,
   leftElement,
+  rightElement,
+  useFieldInput,
+  formProps,
   ...props
 }) {
-  const [field, meta] = useField(name)
-
-  const labelText = label || ''
+  const [field, meta] = useField(useFieldInput || name)
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <FormLabel htmlFor={name} fontWeight="bold">
-        {labelText}
-      </FormLabel>
-      <InputGroup>
-        {leftElement && (
-          <InputLeftElement aria-hidden="true">{leftElement}</InputLeftElement>
-        )}
-        <Input
-          {...field}
-          id={id || name}
-          type={type}
-          ref={forwardedRef}
-          placeholder={placeholder || ''}
-        />
-      </InputGroup>
+    <FormControl isInvalid={meta.error && meta.touched} {...formProps}>
+      <Stack align={align}>
+        <FormLabel htmlFor={name} fontWeight="bold">
+          {label || ''}
+        </FormLabel>
+        <InputGroup width={align === 'center' ? 'fit-content' : '100%'}>
+          {leftElement && (
+            <InputLeftElement aria-hidden="true">
+              {leftElement}
+            </InputLeftElement>
+          )}
+          <Input
+            name={name}
+            id={name}
+            type={type || 'text'}
+            ref={forwardedRef}
+            placeholder={placeholder || ''}
+            {...field}
+            {...props}
+          />
+          {rightElement && (
+            <InputRightElement>{rightElement}</InputRightElement>
+          )}
+        </InputGroup>
 
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
+        <FormErrorMessage>{meta.error}</FormErrorMessage>
+      </Stack>
     </FormControl>
   )
 }
 
 FormField.propTypes = {
   name: string.isRequired,
-  id: string,
   label: string,
   type: string,
+  align: string,
   placeholder: string,
-  leftElement: elementType,
+  leftElement: element,
+  rightElement: element,
+  formProps: object,
+  useFieldInput: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
+}
+
+FormField.defaultProps = {
+  align: 'left',
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {
