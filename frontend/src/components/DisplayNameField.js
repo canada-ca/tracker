@@ -1,47 +1,26 @@
 import React from 'react'
-import { func, object, oneOfType, shape, string } from 'prop-types'
-import { t, Trans } from '@lingui/macro'
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftElement,
-} from '@chakra-ui/react'
+import { func, object, oneOfType, shape } from 'prop-types'
+import { t } from '@lingui/macro'
 import { PersonIcon } from '../theme/Icons'
-import { useField } from 'formik'
 
-function DisplayNameField({ name, label, forwardedRef, ...props }) {
-  const [field, meta] = useField(name)
+import { FormField } from './FormField'
 
-  const formLabel = label === undefined ? <Trans>Display Name:</Trans> : label
-
+function DisplayNameField({ forwardedRef, formProps, ...props }) {
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <FormLabel htmlFor="displayName" fontWeight="bold">
-        {formLabel}
-      </FormLabel>
-      <InputGroup>
-        <InputLeftElement aria-hidden="true">
-          <PersonIcon color="gray.300" size="icons.lg" />
-        </InputLeftElement>
-        <Input
-          {...field}
-          ref={forwardedRef}
-          id="displayName"
-          placeholder={t`Display Name`}
-        />
-      </InputGroup>
-
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    </FormControl>
+    <FormField
+      name="displayName"
+      label={t`Display Name:`}
+      leftElement={<PersonIcon color="gray.300" size="icons.lg" />}
+      placeholder={t`Display Name`}
+      ref={forwardedRef}
+      formProps={formProps}
+      {...props}
+    />
   )
 }
 
 DisplayNameField.propTypes = {
-  name: string.isRequired,
-  label: string,
+  formProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
