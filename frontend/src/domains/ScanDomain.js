@@ -413,7 +413,7 @@ export function ScanDomain() {
                                     )}
                                 </Box>
                               ) : (
-                                <LoadingMessage>DMARC Phase</LoadingMessage>
+                                <LoadingMessage>One Time Scan</LoadingMessage>
                               )}
                             </Box>
                             <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
