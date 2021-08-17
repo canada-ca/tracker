@@ -809,31 +809,41 @@ const schemaWithMocks = addMocksToSchema({
       dkimScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_DKIM_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_DKIM_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       dmarcScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_DMARC_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_DMARC_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       spfScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_SPF_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_SPF_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       httpsScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_HTTPS_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_HTTPS_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       sslScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_SSL_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_SSL_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
     },
