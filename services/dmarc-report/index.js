@@ -3,11 +3,35 @@ require('dotenv-safe').config({
   example: '.env.example',
 })
 
-const { ensure } = require('arango-tools')
-const { databaseOptions } = require('./database-options')
-const fetch = require('isomorphic-fetch')
 const { CosmosClient } = require('@azure/cosmos')
+const { ensure } = require('arango-tools')
+const fetch = require('isomorphic-fetch')
 const moment = require('moment')
+
+const { databaseOptions } = require('./database-options')
+const {
+  createOwnership,
+  createSummary,
+  removeOwnership,
+  removeSummary,
+  upsertSummary,
+} = require('./src/database')
+const {
+  loadArangoDates,
+  loadArangoThirtyDaysCount,
+  loadCategoryTotals,
+  loadCheckDomain,
+  loadCheckOrg,
+  loadCosmosDates,
+  loadDkimFailureTable,
+  loadDmarcFailureTable,
+  loadFullPassTable,
+  loadOrgOwner,
+  loadDomainOwnership,
+  loadSpfFailureTable,
+} = require('./src/loaders')
+const { calculatePercentages, mapGuidance } = require('./src/utils')
+const { dmarcReport } = require('./src')
 
 const {
   DB_PASS: rootPass,
@@ -18,31 +42,9 @@ const {
   SUMMARIES_CONTAINER,
 } = process.env
 
-const {
-  arrayEquals,
-  calculatePercentages,
-  createSummaries,
-  createSummaryEdge,
-  createSummary,
-  loadCurrentDates,
-  loadDates,
-  loadOrgOwner,
-  loadDomainOwnership,
-  loadSummaryByDate,
-  loadSummaryCountByDomain,
-  initializeSummaries,
-  updateCurrentSummaries,
-  updateMonthSummary,
-  updateThirtyDays,
-  upsertOwnership,
-  removeOwnerships,
-  removeSummary,
-  removeSummaryEdge,
-} = require('./src')
-
 ;(async () => {
   // Generate Database information
-  const { query, collections } = await ensure({
+  const { query, collections, transaction } = await ensure({
     type: 'database',
     name: databaseName,
     url,
@@ -60,84 +62,88 @@ const {
       id: SUMMARIES_CONTAINER,
     })
 
-  const summaryCreateFunc = createSummaries(
-    loadDates(moment),
-    loadSummaryCountByDomain(query),
-    initializeSummaries(
-      calculatePercentages,
-      createSummaryEdge(collections),
-      createSummary(query),
-      loadSummaryByDate(summariesContainer),
-    ),
-    updateCurrentSummaries(
-      arrayEquals,
-      loadCurrentDates(query),
-      updateThirtyDays(
-        calculatePercentages,
-        createSummary(query),
-        createSummaryEdge(collections),
-        loadSummaryByDate(summariesContainer),
-        removeSummaryEdge(query),
-        removeSummary(query),
-      ),
-      updateMonthSummary(
-        calculatePercentages,
-        createSummary(query),
-        createSummaryEdge(collections),
-        loadSummaryByDate(summariesContainer),
-        removeSummaryEdge(query),
-        removeSummary(query),
-      ),
-    ),
-  )
+  const currentDate = moment().startOf('month').format('YYYY-MM-DD')
+  const cosmosDates = await loadCosmosDates({
+    container: summariesContainer,
+  })()
 
-  // Load ownership assignments from github
-  const ownerships = await loadDomainOwnership({ fetch })
+  // setup factory functions
+  const setupCreateSummary = createSummary({
+    transaction,
+    collections,
+    query,
+    loadCategoryTotals: loadCategoryTotals({
+      container: summariesContainer,
+    }),
+    loadDkimFailureTable: loadDkimFailureTable({
+      container: summariesContainer,
+      mapGuidance,
+    }),
+    loadDmarcFailureTable: loadDmarcFailureTable({
+      container: summariesContainer,
+    }),
+    loadFullPassTable: loadFullPassTable({
+      container: summariesContainer,
+    }),
+    loadSpfFailureTable: loadSpfFailureTable({
+      container: summariesContainer,
+    }),
+    calculatePercentages,
+  })
 
-  // get org acronyms
-  const orgAcronyms = Object.keys(ownerships)
+  const setupUpsertSummary = upsertSummary({
+    transaction,
+    collections,
+    query,
+    loadCategoryTotals: loadCategoryTotals({
+      container: summariesContainer,
+    }),
+    loadDkimFailureTable: loadDkimFailureTable({
+      container: summariesContainer,
+      mapGuidance,
+    }),
+    loadDmarcFailureTable: loadDmarcFailureTable({
+      container: summariesContainer,
+    }),
+    loadFullPassTable: loadFullPassTable({
+      container: summariesContainer,
+    }),
+    loadSpfFailureTable: loadSpfFailureTable({
+      container: summariesContainer,
+    }),
+    calculatePercentages,
+  })
 
-  // loop through orgs
-  for (const orgAcronymEn of orgAcronyms) {
-    console.log(`Updating DMARC summary info for org: ${String(orgAcronymEn)}`)
-    // loop through the domains
-    for (const domain of ownerships[orgAcronymEn]) {
-      console.info(`\tWorking on domain: ${domain}`)
+  const setupCreateOwnership = createOwnership({
+    transaction,
+    collections,
+    query,
+  })
 
-      // get the current owner of the domain
-      const orgOwner = await loadOrgOwner({
-        query,
-        domain,
-      })
+  const setupRemoveOwnership = removeOwnership({
+    transaction,
+    collections,
+    query,
+  })
 
-      // if the domain is not owned create ownership
-      if (!orgOwner) {
-        console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronymEn)}`)
-        await upsertOwnership({
-          ownership: ownerships[orgAcronymEn],
-          key: orgAcronymEn,
-          query,
-        })
-      } 
-      // if the domain is owned by another org, remove ownership and assign a new one
-      else if (orgOwner !== orgAcronymEn) {
-        console.info(`\t\tRemoving ${domain} ownership to: ${domain}`)
-        await removeOwnerships({ query, domain })
+  const setupRemoveSummary = removeSummary({ transaction, collections, query })
 
-        console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronymEn)}`)
-        await upsertOwnership({
-          ownership: ownerships[orgAcronymEn],
-          orgAcronymEn,
-          query,
-        })
-      } else {
-        console.info(`\t\t${domain} is already assigned to ${String(orgAcronymEn)}`)
-      }
+  const ownerships = await loadDomainOwnership({ fetch })()
 
-      await summaryCreateFunc({ domain })
-    }
-    break
-  }
-
-  console.info('Completed assigning ownerships.')
+  await dmarcReport({
+    ownerships,
+    loadArangoDates: loadArangoDates({ query }),
+    loadArangoThirtyDaysCount: loadArangoThirtyDaysCount({ query }),
+    loadCheckOrg: loadCheckOrg({ query }),
+    loadCheckDomain: loadCheckDomain({ query }),
+    loadOrgOwner: loadOrgOwner({ query }),
+    createOwnership: setupCreateOwnership,
+    removeOwnership: setupRemoveOwnership,
+    removeSummary: setupRemoveSummary,
+    createSummary: setupCreateSummary,
+    upsertSummary: setupUpsertSummary,
+    cosmosDates,
+    currentDate,
+  })
+  
 })()
