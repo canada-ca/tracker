@@ -167,7 +167,7 @@ def Server(server_client=requests):
             logging.error(f"Invalid scan request format received: {str(inbound_payload)}")
             return Response("Invalid Format", status_code=400)
 
-        logging.info("Performing scan...")
+        logging.info(f"Performing scan on {inbound_payload['domain']}...")
 
         try:
             scanner = HTTPSScanner(domain)
@@ -187,6 +187,8 @@ def Server(server_client=requests):
             dispatch_results(outbound_payload, server_client, (user_key is not None))
             return Response("Timeout occurred while scanning", status_code=500)
 
+        logging.info(f"Unprocessed scan results: {str(scan_results)}")
+
         processed_results = process_results(scan_results)
 
         outbound_payload = {
@@ -196,7 +198,8 @@ def Server(server_client=requests):
             "domain_key": domain_key,
             "shared_id": shared_id
         }
-        logging.info(f"Scan results: {str(processed_results)}")
+
+        logging.info(f"Processed scan results: {str(processed_results)}")
 
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time

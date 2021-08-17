@@ -1,4 +1,5 @@
 import request from 'supertest'
+
 import { Server } from '../Server'
 
 describe('Server', () => {

@@ -1,21 +1,22 @@
 import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import ReactDOM from 'react-dom'
-import App from './App'
-import * as serviceWorker from './serviceWorker'
 import {
   BrowserRouter as Router,
   useHistory,
   useLocation,
 } from 'react-router-dom'
-import canada from './theme/canada'
-import { client, currentUserVar } from './client'
 import { ApolloProvider, useMutation } from '@apollo/client'
-import { UserVarProvider, useUserVar } from './UserState'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
+
+import { App } from './app/App'
+import * as serviceWorker from './serviceWorker'
+import { client, currentUserVar } from './client'
+import canada from './theme/canada'
+import { UserVarProvider, useUserVar } from './utilities/userState'
 import { REFRESH_TOKENS } from './graphql/mutations'
-import { activate, defaultLocale } from './i18n.config'
+import { activate, defaultLocale } from './utilities/i18n.config'
 
 const I18nApp = () => {
   const { currentUser, login } = useUserVar()

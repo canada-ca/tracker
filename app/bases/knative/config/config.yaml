@@ -21,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/services/scanners/https:master-a71fc95-1628778377 # {"$imagepolicy": "flux-system:https-scanner"}
+        image: gcr.io/track-compliance/services/scanners/https:master-f7096fd-1629118942 # {"$imagepolicy": "flux-system:https-scanner"}
         env:
         - name: SCAN_TIMEOUT
           value: "20"
@@ -119,7 +119,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: ssl-scanner
-        image: gcr.io/track-compliance/services/scanners/ssl:master-a71fc95-1628778359 # {"$imagepolicy": "flux-system:ssl-scanner"}
+        image: gcr.io/track-compliance/services/scanners/ssl:master-f7096fd-1629118929 # {"$imagepolicy": "flux-system:ssl-scanner"}
         env:
         - name: SCAN_TIMEOUT
           value: "20"
@@ -147,7 +147,7 @@ spec:
       containerConcurrency: 8
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/services/scanners/dns:master-a71fc95-1628778358 # {"$imagepolicy": "flux-system:dns-scanner"}
+        image: gcr.io/track-compliance/services/scanners/dns:master-f7096fd-1629118913 # {"$imagepolicy": "flux-system:dns-scanner"}
         env:
         - name: SCAN_TIMEOUT
           value: "20"

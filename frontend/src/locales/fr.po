@@ -29,6 +29,10 @@ msgstr "404 - Page non trouvée"
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "Une ventilation plus détaillée de chaque domaine peut être trouvée en cliquant sur son adresse dans la première colonne."
 
+#: src/CreateUserPage.js:121
+msgid "A verification link has been sent to your email account"
+msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
+
 #: src/UserListModal.js:256
 msgid "ADMIN"
 msgstr "ADMIN"
@@ -55,15 +59,15 @@ msgstr "Compte"
 
 #: src/UserPage.js:93
 msgid "Account Closed Successfully"
-msgstr ""
+msgstr "Compte clôturé avec succès"
 
-#: src/App.js:99
+#: src/App.js:100
 #: src/FloatingMenu.js:176
 #: src/UserPage.js:149
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
-#: src/CreateUserPage.js:74
+#: src/CreateUserPage.js:83
 msgid "Account created."
 msgstr "Compte créé"
 
@@ -105,7 +109,7 @@ msgstr "Ajouter les détails du domaine"
 msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
-#: src/App.js:184
+#: src/App.js:189
 msgid "Admin"
 msgstr "Administrateur"
 
@@ -113,7 +117,7 @@ msgstr "Administrateur"
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/App.js:105
+#: src/App.js:106
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
@@ -196,7 +200,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer définitivement l'organisation \"{0
 
 #: src/OrganizationDetails.js:217
 msgid "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir quitter {orgName}? Vous devrez être réinvité pour y accéder."
 
 #: src/ScanCard.js:25
 #: src/ScanDomain.js:127
@@ -207,12 +211,12 @@ msgstr "Évaluer l’état actuel."
 msgid "August"
 msgstr "Août"
 
-#: src/App.js:143
+#: src/App.js:148
 msgid "Authenticate"
 msgstr "Authentifier"
 
 #: src/CreateOrganizationPage.js:253
-#: src/CreateUserPage.js:170
+#: src/CreateUserPage.js:212
 #: src/ForgotPasswordPage.js:89
 msgid "Back"
 msgstr "Retour"
@@ -240,7 +244,7 @@ msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des se
 #: src/OrganizationDetails.js:225
 #: src/UserPage.js:285
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: src/EditableUserPassword.js:158
 #: src/ResetPasswordPage.js:111
@@ -316,7 +320,7 @@ msgstr "Fermer"
 #: src/UserPage.js:228
 #: src/UserPage.js:256
 msgid "Close Account"
-msgstr ""
+msgstr "Fermer le compte"
 
 #: src/fieldRequirements.js:27
 msgid "Code field must not be empty"
@@ -367,7 +371,8 @@ msgstr "Confirmer la suppression du domaine:"
 msgid "Confirm removal of user:"
 msgstr "Confirmer le retrait de l'utilisateur:"
 
-#: src/EmailValidationPage.js:84
+#: src/CreateUserPage.js:143
+#: src/EmailValidationPage.js:87
 msgid "Continue"
 msgstr "Continuer"
 
@@ -397,7 +402,7 @@ msgstr "Pays (FR)"
 msgid "Country:"
 msgstr "Pays:"
 
-#: src/CreateUserPage.js:179
+#: src/CreateUserPage.js:221
 #: src/FloatingMenu.js:201
 #: src/TopBanner.js:92
 msgid "Create Account"
@@ -405,16 +410,16 @@ msgstr "Créer un compte"
 
 #: src/AdminPage.js:98
 #: src/AdminPage.js:138
-#: src/App.js:242
+#: src/App.js:247
 #: src/CreateOrganizationPage.js:262
 msgid "Create Organization"
 msgstr "Créer une organisation"
 
-#: src/App.js:119
+#: src/App.js:124
 msgid "Create an Account"
 msgstr "Créer un compte"
 
-#: src/CreateUserPage.js:142
+#: src/CreateUserPage.js:184
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
@@ -447,24 +452,24 @@ msgstr "Courbes"
 msgid "DKIM"
 msgstr "DKIM"
 
-#: src/DmarcReportPage.js:252
+#: src/DmarcReportPage.js:253
 msgid "DKIM Aligned"
 msgstr "DKIM Aligné"
 
-#: src/DmarcReportPage.js:219
+#: src/DmarcReportPage.js:220
 msgid "DKIM Domains"
 msgstr "Domaines DKIM"
 
-#: src/DmarcReportPage.js:274
+#: src/DmarcReportPage.js:275
 msgid "DKIM Failure Table"
 msgstr "Tableau des échecs DKIM"
 
-#: src/DmarcReportPage.js:285
-#: src/DmarcReportPage.js:371
+#: src/DmarcReportPage.js:286
+#: src/DmarcReportPage.js:372
 msgid "DKIM Failures by IP Address"
 msgstr "Défaillances DKIM par adresse IP"
 
-#: src/DmarcReportPage.js:256
+#: src/DmarcReportPage.js:257
 msgid "DKIM Results"
 msgstr "Résultats DKIM"
 
@@ -472,7 +477,7 @@ msgstr "Résultats DKIM"
 msgid "DKIM Selector"
 msgstr "Sélecteur DKIM"
 
-#: src/DmarcReportPage.js:223
+#: src/DmarcReportPage.js:224
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
@@ -489,12 +494,12 @@ msgstr "Statut DKIM"
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/DmarcReportPage.js:626
+#: src/DmarcReportPage.js:627
 msgid "DMARC Failure Table"
 msgstr "Tableau des échecs de la DMARC"
 
-#: src/DmarcReportPage.js:637
-#: src/DmarcReportPage.js:704
+#: src/DmarcReportPage.js:638
+#: src/DmarcReportPage.js:705
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
@@ -517,8 +522,8 @@ msgstr "Rapport DMARC pour {domainSlug}"
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/App.js:93
-#: src/App.js:222
+#: src/App.js:94
+#: src/App.js:227
 #: src/DmarcByDomainPage.js:136
 #: src/DmarcByDomainPage.js:233
 #: src/FloatingMenu.js:130
@@ -533,7 +538,7 @@ msgstr "DMARC échoue"
 msgid "DMARC pass"
 msgstr "Passe DMARC"
 
-#: src/DmarcReportPage.js:232
+#: src/DmarcReportPage.js:233
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
@@ -576,7 +581,7 @@ msgstr "Déployer les enregistrements SPF pour tous les domaines."
 msgid "Deploy initial DMARC records with policy of none; and"
 msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie Aucune (None)"
 
-#: src/DisplayNameField.js:34
+#: src/DisplayNameField.js:35
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
@@ -593,7 +598,7 @@ msgstr "Le nom d'affichage ne peut pas être vide"
 msgid "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 msgstr "Affiche le nom de l'organisation, son acronyme et une coche bleue s'il s'agit d'une organisation vérifiée."
 
-#: src/DmarcReportPage.js:260
+#: src/DmarcReportPage.js:261
 msgid "Disposition"
 msgstr "Disposition"
 
@@ -645,8 +650,8 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/AdminPanel.js:23
-#: src/App.js:87
-#: src/App.js:192
+#: src/App.js:88
+#: src/App.js:197
 #: src/DomainsPage.js:80
 #: src/DomainsPage.js:115
 #: src/FloatingMenu.js:115
@@ -720,10 +725,10 @@ msgid "Email Validated"
 msgstr "Courriel validé"
 
 #: src/EmailValidationPage.js:69
-msgid "Email Validation Page"
-msgstr "Page de validation des e-mails"
+#~ msgid "Email Validation Page"
+#~ msgstr "Page de validation des e-mails"
 
-#: src/App.js:236
+#: src/App.js:241
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
@@ -771,7 +776,7 @@ msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est se
 
 #: src/UserPage.js:266
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
-msgstr ""
+msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
 #: src/EditableUserPassword.js:170
 msgid "Enter and confirm your new password below:"
@@ -789,22 +794,22 @@ msgstr "Entrez le code à deux facteurs"
 msgid "Enter your user account's verified email address and we will send you a password reset link."
 msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
 
-#: src/DmarcReportPage.js:214
+#: src/DmarcReportPage.js:215
 msgid "Envelope From"
 msgstr "Enveloppe De"
 
-#: src/DmarcReportPage.js:176
 #: src/DmarcReportPage.js:177
+#: src/DmarcReportPage.js:178
 #: src/DmarcReportSummaryGraph.js:171
-#: src/DmarcReportSummaryGraph.js:362
+#: src/DmarcReportSummaryGraph.js:368
 #: src/fixtures/summaryListData.js:171
 msgid "Fail"
 msgstr "Échec"
 
-#: src/DmarcReportPage.js:170
 #: src/DmarcReportPage.js:171
+#: src/DmarcReportPage.js:172
 #: src/DmarcReportSummaryGraph.js:171
-#: src/DmarcReportSummaryGraph.js:362
+#: src/DmarcReportSummaryGraph.js:368
 #: src/fixtures/summaryListData.js:161
 msgid "Fail DKIM"
 msgstr "Échec DKIM"
@@ -814,10 +819,10 @@ msgstr "Échec DKIM"
 msgid "Fail DKIM %"
 msgstr "Échec DKIM %"
 
-#: src/DmarcReportPage.js:173
 #: src/DmarcReportPage.js:174
+#: src/DmarcReportPage.js:175
 #: src/DmarcReportSummaryGraph.js:171
-#: src/DmarcReportSummaryGraph.js:362
+#: src/DmarcReportSummaryGraph.js:368
 #: src/fixtures/summaryListData.js:165
 msgid "Fail SPF"
 msgstr "Échec du SPF"
@@ -843,11 +848,11 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS:"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique:"
 
-#: src/App.js:149
+#: src/App.js:154
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
-#: src/SignInPage.js:163
+#: src/SignInPage.js:164
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -869,12 +874,12 @@ msgstr "Échec total %"
 msgid "Full Pass %"
 msgstr "Passage complet %"
 
-#: src/DmarcReportPage.js:402
+#: src/DmarcReportPage.js:403
 msgid "Fully Aligned Table"
 msgstr "Tableau entièrement aligné"
 
-#: src/DmarcReportPage.js:413
-#: src/DmarcReportPage.js:478
+#: src/DmarcReportPage.js:414
+#: src/DmarcReportPage.js:479
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
@@ -896,8 +901,8 @@ msgstr "Aller à la page"
 msgid "Graph:"
 msgstr "Graphique:"
 
-#: src/DmarcReportPage.js:242
-#: src/DmarcReportPage.js:764
+#: src/DmarcReportPage.js:243
+#: src/DmarcReportPage.js:765
 #: src/DomainCard.js:209
 msgid "Guidance"
 msgstr "Conseils"
@@ -936,7 +941,7 @@ msgstr "Statut HTTPS"
 msgid "HTTPS scan for domain \"{0}\" has completed."
 msgstr "L'analyse HTTPS du domaine \"{0}\" est terminée."
 
-#: src/DmarcReportPage.js:238
+#: src/DmarcReportPage.js:239
 msgid "Header From"
 msgstr "En-tête De"
 
@@ -944,8 +949,8 @@ msgstr "En-tête De"
 msgid "Heartbleed Vulnerability:"
 msgstr "Vulnérabilité Heartbleed:"
 
-#: src/App.js:76
-#: src/App.js:113
+#: src/App.js:77
+#: src/App.js:118
 #: src/FloatingMenu.js:174
 msgid "Home"
 msgstr "Accueil"
@@ -980,13 +985,13 @@ msgstr "Si vous pensez que cela est dû à un problème avec Tracker, veuillez u
 msgid "Implementation:"
 msgstr "Mise en œuvre:"
 
-#: src/TwoFactorAuthenticatePage.js:83
+#: src/TwoFactorAuthenticatePage.js:84
 msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
 #: src/UserPage.js:116
 msgid "Incorrect closeAccount.result typename."
-msgstr ""
+msgstr "Incorrect closeAccount.result typename."
 
 #: src/AdminDomainModal.js:82
 msgid "Incorrect createDomain.result typename."
@@ -1002,7 +1007,7 @@ msgstr "Incorrect inviteUserToOrg.result typename."
 
 #: src/OrganizationDetails.js:89
 msgid "Incorrect leaveOrganization.result typename."
-msgstr ""
+msgstr "Incorrect leaveOrganization.result typename."
 
 #: src/AdminDomains.js:130
 msgid "Incorrect removeDomain.result typename."
@@ -1020,7 +1025,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/AdminDomainModal.js:130
 #: src/AdminDomains.js:129
 #: src/CreateOrganizationPage.js:104
-#: src/CreateUserPage.js:92
+#: src/CreateUserPage.js:101
 #: src/EditableUserDisplayName.js:71
 #: src/EditableUserEmail.js:71
 #: src/EditableUserLanguage.js:51
@@ -1030,8 +1035,8 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/EditableUserTFAMethod.js:61
 #: src/OrganizationDetails.js:87
 #: src/ResetPasswordPage.js:59
-#: src/SignInPage.js:99
-#: src/TwoFactorAuthenticatePage.js:82
+#: src/SignInPage.js:100
+#: src/TwoFactorAuthenticatePage.js:83
 #: src/UserListModal.js:84
 #: src/UserListModal.js:133
 #: src/UserPage.js:115
@@ -1042,11 +1047,11 @@ msgstr "Méthode d'envoi incorrecte reçue."
 msgid "Incorrect setPhoneNumber.result typename."
 msgstr "Incorrect setPhoneNumber.result typename."
 
-#: src/SignInPage.js:100
+#: src/SignInPage.js:101
 msgid "Incorrect signIn.result typename."
 msgstr "Nom d'utilisateur incorrect signIn.result."
 
-#: src/CreateUserPage.js:93
+#: src/CreateUserPage.js:102
 msgid "Incorrect signUp.result typename."
 msgstr "Incorrect signUp.result typename."
 
@@ -1159,7 +1164,7 @@ msgstr "Dernier scan:"
 #: src/OrganizationDetails.js:160
 #: src/OrganizationDetails.js:213
 msgid "Leave Organization"
-msgstr ""
+msgstr "Organisation des congés"
 
 #: src/TermsConditionsPage.js:281
 msgid "Limitation of Liability"
@@ -1282,23 +1287,23 @@ msgstr "Pas d'utilisateurs"
 msgid "No current phone number"
 msgstr "Pas de numéro de téléphone actuel"
 
-#: src/DmarcReportPage.js:390
+#: src/DmarcReportPage.js:391
 msgid "No data for the DKIM Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances DKIM par adresse IP"
 
-#: src/DmarcReportPage.js:723
+#: src/DmarcReportPage.js:724
 msgid "No data for the DMARC Failures by IP Address table"
 msgstr "Pas de données pour le tableau des défaillances DMARC par adresse IP"
 
-#: src/DmarcReportPage.js:203
+#: src/DmarcReportPage.js:204
 msgid "No data for the DMARC yearly report graph"
 msgstr "Pas de données pour le graphique du rapport annuel de la DMARC"
 
-#: src/DmarcReportPage.js:497
+#: src/DmarcReportPage.js:498
 msgid "No data for the Fully Aligned by IP Address table"
 msgstr "Pas de données pour le tableau Entièrement aligné par adresse IP"
 
-#: src/DmarcReportPage.js:614
+#: src/DmarcReportPage.js:615
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 
@@ -1379,7 +1384,7 @@ msgstr "Organisation créée"
 
 #: src/OrganizationDetails.js:67
 msgid "Organization left successfully"
-msgstr ""
+msgstr "L'organisation est partie avec succès"
 
 #: src/OrganizationInformation.js:209
 msgid "Organization name does not match."
@@ -1393,8 +1398,8 @@ msgstr "Organisation non mise à jour"
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/App.js:81
-#: src/App.js:164
+#: src/App.js:82
+#: src/App.js:169
 #: src/FloatingMenu.js:102
 #: src/Organizations.js:80
 #: src/Organizations.js:120
@@ -1405,10 +1410,10 @@ msgstr "Organisations"
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
-#: src/DmarcReportPage.js:167
 #: src/DmarcReportPage.js:168
+#: src/DmarcReportPage.js:169
 #: src/DmarcReportSummaryGraph.js:171
-#: src/DmarcReportSummaryGraph.js:362
+#: src/DmarcReportSummaryGraph.js:368
 #: src/fixtures/summaryListData.js:155
 msgid "Pass"
 msgstr "Passez"
@@ -1485,11 +1490,15 @@ msgstr "Veuillez entrer votre mot de passe actuel."
 msgid "Please enter your two factor code below."
 msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 
+#: src/CreateUserPage.js:128
+msgid "Please follow the link in order to verify your account and start using Tracker."
+msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à utiliser Tracker."
+
 #: src/GuidanceTagList.js:105
 msgid "Positive Tags"
 msgstr "Étiquettes positives"
 
-#: src/App.js:68
+#: src/App.js:69
 msgid "Pre-Alpha"
 msgstr "Pré-alpha"
 
@@ -1501,7 +1510,7 @@ msgstr "Statut préchargé:"
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/App.js:262
+#: src/App.js:267
 #: src/FloatingMenu.js:219
 #: src/TermsConditionsPage.js:40
 msgid "Privacy"
@@ -1537,7 +1546,7 @@ msgstr "Province:"
 msgid "Reject all messages from non-mail domains."
 msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
 
-#: src/SignInPage.js:152
+#: src/SignInPage.js:153
 msgid "Remember me"
 msgstr "Rappelle-toi de moi"
 
@@ -1558,7 +1567,7 @@ msgstr "Supprimer l'utilisateur"
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
-#: src/App.js:274
+#: src/App.js:279
 #: src/FloatingMenu.js:230
 msgid "Report an Issue"
 msgstr "Signaler un problème"
@@ -1567,7 +1576,7 @@ msgstr "Signaler un problème"
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
-#: src/App.js:155
+#: src/App.js:160
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -1604,24 +1613,24 @@ msgstr "Effectuer la rotation des clés DKIM annuellement."
 msgid "SPF"
 msgstr "SPF"
 
-#: src/DmarcReportPage.js:244
+#: src/DmarcReportPage.js:245
 msgid "SPF Aligned"
 msgstr "Alignement du SPF"
 
-#: src/DmarcReportPage.js:234
+#: src/DmarcReportPage.js:235
 msgid "SPF Domains"
 msgstr "Domaine SPF"
 
-#: src/DmarcReportPage.js:509
+#: src/DmarcReportPage.js:510
 msgid "SPF Failure Table"
 msgstr "Tableau des échecs du SPF"
 
-#: src/DmarcReportPage.js:520
-#: src/DmarcReportPage.js:595
+#: src/DmarcReportPage.js:521
+#: src/DmarcReportPage.js:596
 msgid "SPF Failures by IP Address"
 msgstr "Défaillances du SPF par adresse IP"
 
-#: src/DmarcReportPage.js:248
+#: src/DmarcReportPage.js:249
 msgid "SPF Results"
 msgstr "Résultats du SPF"
 
@@ -1678,19 +1687,19 @@ msgstr "Scan du domaine demandé avec succès"
 msgid "Search"
 msgstr "Recherchez"
 
-#: src/DmarcReportPage.js:377
+#: src/DmarcReportPage.js:378
 msgid "Search DKIM Failing Items"
 msgstr "Rechercher les éléments en échec de DKIM"
 
-#: src/DmarcReportPage.js:710
+#: src/DmarcReportPage.js:711
 msgid "Search DMARC Failing Items"
 msgstr "Recherche d'éléments défaillants DMARC"
 
-#: src/DmarcReportPage.js:484
+#: src/DmarcReportPage.js:485
 msgid "Search Fully Aligned Items"
 msgstr "Recherche d'éléments entièrement alignés"
 
-#: src/DmarcReportPage.js:601
+#: src/DmarcReportPage.js:602
 msgid "Search SPF Failing Items"
 msgstr "Rechercher les éléments défaillants du SPF"
 
@@ -1752,12 +1761,12 @@ msgstr "Services"
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
-#: src/TrackerTable.js:238
+#: src/TrackerTable.js:239
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/DmarcByDomainPage.js:281
-#: src/DmarcReportPage.js:779
+#: src/DmarcReportPage.js:780
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période:"
 
@@ -1818,15 +1827,15 @@ msgstr "Indique le pourcentage d'e-mails du domaine qui ont passé les exigences
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine pendant la période sélectionnée."
 
-#: src/App.js:126
+#: src/App.js:131
 #: src/FloatingMenu.js:195
-#: src/SignInPage.js:175
+#: src/SignInPage.js:176
 #: src/TopBanner.js:79
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:69
-#: src/TwoFactorAuthenticatePage.js:60
+#: src/SignInPage.js:70
+#: src/TwoFactorAuthenticatePage.js:61
 msgid "Sign In."
 msgstr "Se connecter."
 
@@ -1840,11 +1849,11 @@ msgstr "Déconnexion"
 msgid "Sign Out."
 msgstr "Déconnexion."
 
-#: src/SignInPage.js:137
+#: src/SignInPage.js:138
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/App.js:66
+#: src/App.js:67
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -1857,7 +1866,7 @@ msgstr "Slug:"
 msgid "Sort by:"
 msgstr "Trier par:"
 
-#: src/DmarcReportPage.js:209
+#: src/DmarcReportPage.js:210
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
@@ -1870,7 +1879,7 @@ msgid "Strong Curves:"
 msgstr "Courbes fortes:"
 
 #: src/ForgotPasswordPage.js:85
-#: src/TwoFactorAuthenticatePage.js:133
+#: src/TwoFactorAuthenticatePage.js:134
 msgid "Submit"
 msgstr "Soumettre"
 
@@ -1902,11 +1911,11 @@ msgstr "TBS se réserve le droit de refuser le service, de rejeter votre demande
 msgid "Termination"
 msgstr "Terminaison"
 
-#: src/App.js:161
+#: src/App.js:166
 msgid "Terms & Conditions"
 msgstr "Termes et conditions"
 
-#: src/App.js:266
+#: src/App.js:271
 #: src/FloatingMenu.js:225
 msgid "Terms & conditions"
 msgstr "Avis"
@@ -1960,7 +1969,7 @@ msgstr "Les présentes conditions générales sont régies et interprétées en 
 
 #: src/UserPage.js:260
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
-msgstr ""
+msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
 #: src/ErrorFallbackMessage.js:21
 msgid "This component is currently unavailable. Try reloading the page."
@@ -1974,13 +1983,17 @@ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'ana
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/App.js:69
+#: src/App.js:70
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
+#: src/VerifyAccountNotificationBar.js:17
+msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
+msgstr "Pour activer toutes les fonctionnalités de l'application et maximiser la sécurité de votre compte, <0>vous devez vérifier votre compte</0>."
+
 #: src/DmarcByDomainPage.js:97
 #: src/DmarcByDomainPage.js:247
-#: src/DmarcReportPage.js:227
+#: src/DmarcReportPage.js:228
 #: src/DmarcReportSummaryGraph.js:109
 msgid "Total Messages"
 msgstr "Total des messages"
@@ -1995,13 +2008,13 @@ msgstr "Suivre la sécurité numérique"
 
 #: src/UserPage.js:95
 msgid "Tracker account has been successfully closed."
-msgstr ""
+msgstr "Le compte du traqueur a été fermé avec succès."
 
 #: src/TermsConditionsPage.js:180
 msgid "Trademarks Act"
 msgstr "Loi sur les marques de commerce"
 
-#: src/TwoFactorAuthenticatePage.js:122
+#: src/TwoFactorAuthenticatePage.js:123
 msgid "Two Factor Authentication"
 msgstr "Authentification à deux facteurs"
 
@@ -2019,9 +2032,9 @@ msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/UserPage.js:106
 msgid "Unable to close the account."
-msgstr ""
+msgstr "Impossible de fermer le compte."
 
-#: src/CreateUserPage.js:83
+#: src/CreateUserPage.js:92
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
@@ -2033,7 +2046,7 @@ msgstr "Impossible de créer un nouveau domaine."
 msgid "Unable to create new organization."
 msgstr "Impossible de créer une nouvelle organisation."
 
-#: src/CreateUserPage.js:54
+#: src/CreateUserPage.js:63
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
@@ -2043,7 +2056,7 @@ msgstr "Impossible d'inviter un utilisateur."
 
 #: src/OrganizationDetails.js:78
 msgid "Unable to leave organization."
-msgstr ""
+msgstr "Impossible de quitter l'organisation."
 
 #: src/AdminDomains.js:120
 msgid "Unable to remove domain."
@@ -2074,9 +2087,9 @@ msgid "Unable to send verification email"
 msgstr "Impossible d'envoyer l'e-mail de vérification"
 
 #: src/SignInPage.js:48
-#: src/SignInPage.js:90
+#: src/SignInPage.js:91
 #: src/TwoFactorAuthenticatePage.js:37
-#: src/TwoFactorAuthenticatePage.js:72
+#: src/TwoFactorAuthenticatePage.js:73
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
@@ -2153,7 +2166,7 @@ msgstr "Affiliations des utilisateurs"
 
 #: src/UserPage.js:274
 msgid "User Email"
-msgstr ""
+msgstr "Courriel de l'utilisateur"
 
 #: src/UserList.js:131
 msgid "User List"
@@ -2161,7 +2174,7 @@ msgstr "Liste des utilisateurs"
 
 #: src/UserPage.js:171
 msgid "User email does not match."
-msgstr ""
+msgstr "L'email de l'utilisateur ne correspond pas."
 
 #: src/UserListModal.js:65
 msgid "User invited"
@@ -2198,8 +2211,12 @@ msgid "Verify"
 msgstr "Vérifier"
 
 #: src/UserPage.js:212
-msgid "Verify Email"
-msgstr "Vérifier l'e-mail"
+msgid "Verify Account"
+msgstr "Vérifier le compte"
+
+#: src/UserPage.js:114
+#~ msgid "Verify Email"
+#~ msgstr "Vérifier l'e-mail"
 
 #: src/DmarcReportSummaryGraph.js:97
 msgid "Vertical View"
@@ -2261,12 +2278,12 @@ msgstr "Gestion des sites et services Web - Exigences de configuration conformes
 msgid "Web encryption settings summary"
 msgstr "Résumé des paramètres de cryptage du Web"
 
-#: src/CreateUserPage.js:75
+#: src/CreateUserPage.js:84
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
-#: src/SignInPage.js:70
-#: src/TwoFactorAuthenticatePage.js:61
+#: src/SignInPage.js:71
+#: src/TwoFactorAuthenticatePage.js:62
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
@@ -2307,7 +2324,7 @@ msgstr "Vous avez été déconnecté avec succès."
 
 #: src/OrganizationDetails.js:68
 msgid "You have successfully left {orgSlug}"
-msgstr ""
+msgstr "Vous avez quitté {orgSlug} avec succès."
 
 #: src/OrganizationInformation.js:113
 msgid "You have successfully removed {0}."
@@ -2349,17 +2366,21 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "Vous aurez besoin d'un compte Tracker pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
-#: src/App.js:232
+#: src/App.js:237
 msgid "Your Account"
 msgstr "Votre compte"
 
-#: src/EmailValidationPage.js:52
+#: src/EmailValidationPage.js:59
 msgid "Your account email could not be verified at this time. Please try again."
 msgstr "L'email de votre compte n'a pas pu être vérifié pour le moment. Veuillez réessayer."
 
-#: src/EmailValidationPage.js:42
+#: src/EmailValidationPage.js:43
 msgid "Your account email was successfully verified"
 msgstr "L'email de votre compte a été vérifié avec succès"
+
+#: src/EmailValidationPage.js:47
+msgid "Your account will be fully activated the next time you log in"
+msgstr "Votre compte sera entièrement activé lors de votre prochaine connexion."
 
 #: src/OrganizationInformation.js:425
 msgid "Zone:"
@@ -2369,9 +2390,9 @@ msgstr "Zone:"
 msgid "and by applicable laws, policies, regulations and international agreements."
 msgstr "et par les lois, politiques, règlements et accords internationaux applicables."
 
-#: src/DmarcReportPage.js:156
-#~ msgid "does not support aggregate data"
-#~ msgstr "ne prend pas en charge les données agrégées"
+#: src/DmarcReportPage.js:152
+msgid "does not support aggregate data"
+msgstr "ne prend pas en charge les données agrégées"
 
 #: src/TermsConditionsPage.js:405
 msgid "https://https-everywhere.canada.ca/en/help/"
@@ -2401,10 +2422,6 @@ msgstr "{buttonLabel}"
 #: src/ReactTableGlobalFilter.js:50
 msgid "{count} records..."
 msgstr "{count} enregistrements..."
-
-#: src/DmarcReportPage.js:151
-msgid "{domainSlug} does not support aggregate data"
-msgstr "{domainSlug} ne supporte pas les données agrégées"
 
 #: src/AdminDomainModal.js:111
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
