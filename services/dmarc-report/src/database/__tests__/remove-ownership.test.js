@@ -1,11 +1,11 @@
 const { ensure, dbNameFromFile } = require('arango-tools')
 
-const { removeSummary } = require('../remove-summary')
+const { removeOwnership } = require('../remove-ownership')
 const { databaseOptions } = require('../../../database-options')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the removeSummary function', () => {
+describe('given the removeOwnership function', () => {
   let query, drop, truncate, collections, transaction, domain, org, summary
 
   beforeAll(async () => {
@@ -69,23 +69,22 @@ describe('given the removeSummary function', () => {
     await drop()
   })
 
-  it('removes the summary', async () => {
-    await removeSummary({ transaction, collections, query })({
+  it('removes the ownership', async () => {
+    await removeOwnership({ transaction, collections, query })({
       domain: 'domain.ca',
-      date: 'thirtyDays',
+      orgAcronymEn: 'ACR',
     })
 
-    const dmarcSummariesCursor =
-      await query`FOR item IN dmarcSummaries RETURN item`
+    const ownershipCursor = await query`FOR item IN ownership RETURN item`
 
-    const dmarcSummaries = await dmarcSummariesCursor.next()
+    const ownership = await ownershipCursor.next()
 
-    expect(dmarcSummaries).toBeUndefined()
+    expect(ownership).toBeUndefined()
   })
-  it('removes the domainsToDmarcSummaries edge', async () => {
-    await removeSummary({ transaction, collections, query })({
+  it('removes domainsToDmarcSummaries', async () => {
+    await removeOwnership({ transaction, collections, query })({
       domain: 'domain.ca',
-      date: 'thirtyDays',
+      orgAcronymEn: 'ACR',
     })
 
     const domainsToDmarcSummariesCursor =
@@ -94,5 +93,18 @@ describe('given the removeSummary function', () => {
     const domainsToDmarcSummaries = await domainsToDmarcSummariesCursor.next()
 
     expect(domainsToDmarcSummaries).toBeUndefined()
+  })
+  it('removes dmarc summary', async () => {
+    await removeOwnership({ transaction, collections, query })({
+      domain: 'domain.ca',
+      orgAcronymEn: 'ACR',
+    })
+
+    const dmarcSummariesCursor =
+      await query`FOR item IN dmarcSummaries RETURN item`
+
+    const dmarcSummaries = await dmarcSummariesCursor.next()
+
+    expect(dmarcSummaries).toBeUndefined()
   })
 })

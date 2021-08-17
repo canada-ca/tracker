@@ -1,6 +1,6 @@
-const removeSummary =
+const removeOwnership =
   ({ transaction, collections, query }) =>
-  async ({ domain, date }) => {
+  async ({ domain, orgAcronymEn }) => {
     // Generate list of collections names
     const collectionStrings = []
     for (const property in collections) {
@@ -11,6 +11,26 @@ const removeSummary =
 
     await trx.step(
       () => query`
+      WITH domains, organizations, ownership
+      LET domainId = FIRST(
+        FOR domain IN domains
+          FILTER domain.domain == ${domain}
+          RETURN domain._id
+      )
+      LET orgId = FIRST(
+        FOR org IN organizations
+          FILTER org.orgDetails.en.acronym == ${orgAcronymEn}
+          RETURN org._id
+      )
+      FOR owner IN ownership
+        FILTER owner._from == orgId
+        FILTER owner._to == domainId
+        REMOVE { _key: owner._key } IN ownership
+    `,
+    )
+
+    // remove dmarcSummaries and dmarcSummaryEdges
+    await trx.step(() => query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -19,7 +39,6 @@ const removeSummary =
       )
       LET dmarcSummaryEdges = (
         FOR v, e IN 1..1 OUTBOUND domainId domainsToDmarcSummaries
-          FILTER e.startDate == ${date}
           RETURN { edgeKey: e._key, dmarcSummaryId: e._to }
       )
       LET removeDmarcSummaryEdges = (
@@ -32,12 +51,11 @@ const removeSummary =
           REMOVE key IN dmarcSummaries
       )
       RETURN true
-    `,
-    )
+    `)
 
     await trx.commit()
   }
 
 module.exports = {
-  removeSummary,
+  removeOwnership,
 }
