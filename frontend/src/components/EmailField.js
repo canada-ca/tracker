@@ -1,51 +1,27 @@
 import React from 'react'
-import { func, object, oneOfType, shape, string } from 'prop-types'
-import { useLingui } from '@lingui/react'
-import { t, Trans } from '@lingui/macro'
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftElement,
-} from '@chakra-ui/react'
+import { func, object, oneOfType, shape } from 'prop-types'
+import { t } from '@lingui/macro'
 import { EmailIcon } from '@chakra-ui/icons'
-import { useField } from 'formik'
 
-function EmailField({ name, label, forwardedRef, ...props }) {
-  const [field, meta] = useField(name)
-  const { i18n } = useLingui()
+import { FormField } from './FormField'
 
-  const labelText = label === undefined ? <Trans>Email:</Trans> : label
-
+function EmailField({ forwardedRef, formProps, ...props }) {
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <FormLabel htmlFor="email" fontWeight="bold">
-        {labelText}
-      </FormLabel>
-      <InputGroup>
-        <InputLeftElement aria-hidden="true">
-          <EmailIcon color="gray.300" />
-        </InputLeftElement>
-        <Input
-          {...field}
-          id="email"
-          type="email"
-          ref={forwardedRef}
-          placeholder={i18n._(t`Email`)}
-          variant="outline"
-        />
-      </InputGroup>
-
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    </FormControl>
+    <FormField
+      name="email"
+      label={t`Email:`}
+      leftElement={<EmailIcon color="gray.300" />}
+      type="email"
+      placeholder={t`Email`}
+      ref={forwardedRef}
+      formProps={formProps}
+      {...props}
+    />
   )
 }
 
 EmailField.propTypes = {
-  name: string.isRequired,
-  label: string,
+  formProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
