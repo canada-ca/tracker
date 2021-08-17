@@ -190,11 +190,11 @@ export default function CreateUserPage() {
 
             {addUserToOrgText}
 
-            <EmailField name="email" width="100%" mb="4" />
+            <EmailField formProps={{ w: '100%', mb: '4' }} />
 
-            <DisplayNameField name="displayName" width="100%" mb="4" />
+            <DisplayNameField formProps={{ w: '100%', mb: '4' }} />
 
-            <PasswordConfirmation spacing="4" width="100%" mb="4" />
+            <PasswordConfirmation formProps={{ w: '100%', mb: '4' }} />
 
             <LanguageSelect name="lang" width="100%" mb="4" />
 
