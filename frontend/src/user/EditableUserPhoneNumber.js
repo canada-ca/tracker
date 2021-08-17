@@ -246,7 +246,6 @@ export function EditableUserPhoneNumber({ detailValue }) {
               <ModalBody>
                 <Stack spacing="4" p="6">
                   <AuthenticateField
-                    name="twoFactorCode"
                     mb="4"
                     sendMethod={'verifyPhone'}
                     ref={verifyRef}

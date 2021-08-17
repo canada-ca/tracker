@@ -36,9 +36,7 @@ describe('<AuthenticateField />', () => {
               }}
               onSubmit={() => {}}
             >
-              {() => (
-                <AuthenticateField name="twoFactorCode" sendMethod="phone" />
-              )}
+              {() => <AuthenticateField sendMethod="phone" />}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,

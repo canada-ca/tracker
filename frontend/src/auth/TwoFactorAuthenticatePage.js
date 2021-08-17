@@ -125,9 +125,8 @@ export default function TwoFactorAuthenticatePage() {
             </Heading>
 
             <AuthenticateField
-              name="twoFactorCode"
-              mb="4"
               sendMethod={sendMethod}
+              formProps={{ mb: '4' }}
             />
 
             <Stack align="center">
