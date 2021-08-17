@@ -31,7 +31,7 @@ const {
   loadSpfFailureTable,
 } = require('./src/loaders')
 const { calculatePercentages, mapGuidance } = require('./src/utils')
-const { dmarcReport } = require('./src')
+const { dmarcReport } = require('./src/dmarc-report')
 
 const {
   DB_PASS: rootPass,
