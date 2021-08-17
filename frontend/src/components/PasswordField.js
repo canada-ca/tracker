@@ -1,63 +1,47 @@
 import React from 'react'
-import { func, oneOfType, shape, string, object } from 'prop-types'
-import { t, Trans } from '@lingui/macro'
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-} from '@chakra-ui/react'
+import { func, object, oneOfType, shape, string } from 'prop-types'
+import { t } from '@lingui/macro'
+import { IconButton } from '@chakra-ui/react'
 import { LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { useField } from 'formik'
 
-function PasswordField({ name, label, forwardedRef, ...props }) {
-  const [field, meta] = useField(name)
+import { FormField } from './FormField'
+
+function PasswordField({ forwardedRef, name, label, formProps, ...props }) {
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
 
-  const labelText = label === undefined ? <Trans>Password:</Trans> : label
-
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <FormLabel htmlFor={name} fontWeight="bold">
-        {labelText}
-      </FormLabel>
-      <InputGroup size="md">
-        <InputLeftElement aria-hidden="true">
-          <LockIcon color="gray.300" />
-        </InputLeftElement>
-
-        <Input
-          pr="4.5rem"
-          type={show ? 'text' : 'password'}
-          placeholder={t`Password`}
-          id={name}
-          ref={forwardedRef}
-          {...field}
+    <FormField
+      name={name}
+      label={label}
+      leftElement={<LockIcon color="gray.300" />}
+      rightElement={
+        <IconButton
+          id={'show' + name.charAt(0).toUpperCase() + name.slice(1)}
+          aria-label={show ? 'hide password' : 'show password'}
+          onClick={handleClick}
+          icon={show ? <ViewOffIcon size="lg" /> : <ViewIcon size="lg" />}
         />
-        <InputRightElement width="width.4">
-          <IconButton
-            id="showPassword"
-            aria-label={show ? 'hide password' : 'show password'}
-            h="buttons.lg"
-            onClick={handleClick}
-            icon={show ? <ViewOffIcon /> : <ViewIcon />}
-          />
-        </InputRightElement>
-      </InputGroup>
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    </FormControl>
+      }
+      type={show ? 'text' : 'password'}
+      placeholder={t`Password`}
+      ref={forwardedRef}
+      formProps={formProps}
+      {...props}
+    />
   )
 }
 
 PasswordField.propTypes = {
-  name: string.isRequired,
+  name: string,
   label: string,
+  formProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
+}
+
+PasswordField.defaultProps = {
+  name: 'password',
+  label: t`Password:`,
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {
