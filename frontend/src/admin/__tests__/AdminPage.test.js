@@ -3,25 +3,21 @@ import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
+import AdminPage from '../AdminPage'
+import { waitFor, render } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import { makeVar } from '@apollo/client'
+import { en } from 'make-plural/plurals'
+import userEvent from '@testing-library/user-event'
+
+import { UserVarProvider } from '../../utilities/userState'
 import {
   ADMIN_AFFILIATIONS,
   IS_USER_SUPER_ADMIN,
   ORGANIZATION_INFORMATION,
   PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
   PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
-} from '../graphql/queries'
-import AdminPage from '../AdminPage'
-import { waitFor, render } from '@testing-library/react'
-import { waitFor, render, fireEvent } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { makeVar } from '@apollo/client'
-import { en } from 'make-plural/plurals'
-import userEvent from '@testing-library/user-event'
-
-import AdminPage from '../AdminPage'
-
-import { UserVarProvider } from '../../utilities/userState'
-import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../../graphql/queries'
+} from '../../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

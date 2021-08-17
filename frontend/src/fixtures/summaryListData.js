@@ -1,5 +1,3 @@
-import { t } from '@lingui/macro'
-
 export const rawSummaryListData = {
   dmarcReportSummaryList: [
     {

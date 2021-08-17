@@ -8,7 +8,7 @@ import { DmarcReportSummaryGraph } from '../DmarcReportSummaryGraph'
 
 import { formattedBarData } from '../../fixtures/summaryListData'
 import userEvent from '@testing-library/user-event'
-import canada from '../theme/canada'
+import canada from '../../theme/canada'
 
 // ** need to mock the ResizeObserver and polute the window object to avoid errors
 class ResizeObserver {

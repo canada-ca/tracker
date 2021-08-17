@@ -21,6 +21,8 @@ const i18n = setupI18n({
   },
 })
 
+const handleSearch = jest.fn()
+
 describe('<Dropdown />', () => {
   const mocks = [
     {
@@ -242,12 +244,12 @@ describe('<Dropdown />', () => {
     })
   })
 
-  // filter options with input
   describe('search input', () => {
-    it('filters selectable options', async () => {
+    it('calls search callback', async () => {
       const handleChange = jest.fn()
+      const handleSearch = jest.fn()
 
-      const { getByPlaceholderText, queryByText, getByRole } = render(
+      const { getByPlaceholderText, getByRole } = render(
         <MockedProvider>
           <UserVarProvider
             userVar={makeVar({
@@ -280,13 +282,9 @@ describe('<Dropdown />', () => {
       const dropdownInput = getByRole('textbox', { name: /Dropdown Label/i })
       userEvent.click(dropdownInput)
 
-      userEvent.type(dropdownInput, 'zxcv')
+      userEvent.type(dropdownInput, 'search text')
 
-      expect(queryByText(/Anderson and Sons/)).not.toBeInTheDocument()
-
-      userEvent.clear(dropdownInput)
-
-      expect(queryByText(/Anderson and Sons/)).toBeInTheDocument()
+      expect(handleSearch).toHaveBeenLastCalledWith('search text')
     })
   })
 })

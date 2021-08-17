@@ -428,7 +428,7 @@ describe('<DmarcReportPage />', () => {
         initialEntries: ['/domains/test-domain/dmarc-report/LAST30DAYS/2020'],
         initialIndex: 0,
       })
-      const { getByRole, findByRole, queryByText, findByText } = render(
+      const { getByRole, findByRole, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({

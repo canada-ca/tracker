@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserVarProvider } from '../UserState'
+import { UserVarProvider } from '../utilities/userState'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
@@ -8,8 +8,8 @@ import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
-import { LocaleSwitcher } from '../LocaleSwitcher'
-import { activate, defaultLocale } from '../i18n.config'
+import { LocaleSwitcher } from '../app/LocaleSwitcher'
+import { activate, defaultLocale } from '../utilities/i18n.config'
 
 describe('<LocaleSwitcher />', () => {
   it('switches the locale with clicked', async () => {
