@@ -80,6 +80,37 @@ describe('<AdminPage />', () => {
     },
     {
       request: {
+        query: ADMIN_AFFILIATIONS,
+        variables: {
+          first: 100,
+          orderBy: {
+            field: 'NAME',
+            direction: 'ASC',
+          },
+          isAdmin: true,
+          includeSuperAdminOrg: true,
+          search: 'Wolf Group',
+        },
+      },
+      result: {
+        data: {
+          findMyOrganizations: {
+            edges: [
+              {
+                node: {
+                  id: '9ceb4c07-8034-4588-824c-f71313cd9e08',
+                  acronym: 'HC',
+                  slug: 'Wolf-Group',
+                  name: 'Wolf Group',
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+    {
+      request: {
         query: IS_USER_SUPER_ADMIN,
         variables: {},
       },
@@ -272,6 +303,46 @@ describe('<AdminPage />', () => {
 
       await waitFor(() => {
         expect(getByText(/Slug:/i)).toHaveTextContent(/Slug: Wolf-Group/i)
+      })
+    })
+
+    it('filters organization list', async () => {
+      const { getByText, queryByText, findByRole } = render(
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <I18nProvider i18n={i18n}>
+              <ChakraProvider theme={theme}>
+                <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                  <AdminPage />
+                </MemoryRouter>
+              </ChakraProvider>
+            </I18nProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+
+      const organizationInput = await findByRole('textbox', {
+        name: /Organization/,
+      })
+
+      userEvent.click(organizationInput)
+
+      await waitFor(() => {
+        expect(getByText(/Wolf Group/)).toBeInTheDocument()
+        expect(getByText(/Hane - Pollich/)).toBeInTheDocument()
+      })
+
+      userEvent.type(organizationInput, 'Wolf Group')
+
+      await waitFor(() => {
+        expect(getByText(/Wolf Group/)).toBeInTheDocument()
+        expect(queryByText(/Hane - Pollich/)).not.toBeInTheDocument()
       })
     })
   })
