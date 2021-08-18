@@ -2,14 +2,12 @@ import React from 'react'
 
 import { Button, Heading, Select, Stack, useToast } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
-import { object, string as yupString } from 'yup'
 import { string } from 'prop-types'
 
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 
 export function EditableUserLanguage({ currentLang }) {
   const toast = useToast()
@@ -63,12 +61,6 @@ export function EditableUserLanguage({ currentLang }) {
     },
   )
 
-  const validationSchema = object().shape({
-    lang: yupString()
-      .required(i18n._(fieldRequirements.lang.required.message))
-      .oneOf(fieldRequirements.lang.oneOf.types),
-  })
-
   return (
     <Stack spacing="4">
       <Heading as="h3" size="md">
@@ -78,7 +70,7 @@ export function EditableUserLanguage({ currentLang }) {
       <Formik
         validateOnBlur={false}
         initialValues={{ lang: currentLang }}
-        validationSchema={validationSchema}
+        validationSchema={createValidationSchema(['lang'])}
         onSubmit={async (values) => {
           // Submit update detail mutation
           await updateUserProfile({

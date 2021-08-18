@@ -23,8 +23,6 @@ import { CheckCircleIcon, MinusIcon, EditIcon } from '@chakra-ui/icons'
 import { func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { t, Trans } from '@lingui/macro'
-import { object, string as yupString } from 'yup'
-import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
 
 import { ORGANIZATION_INFORMATION } from '../graphql/queries'
@@ -32,7 +30,10 @@ import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
 import { FormField } from '../components/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import {
+  getRequirment,
+  schemaToValidation,
+} from '../utilities/fieldRequirements'
 
 export function OrganizationInformation({
   orgSlug,
@@ -46,7 +47,6 @@ export function OrganizationInformation({
     onClose: onRemovalClose,
   } = useDisclosure()
   const removeOrgBtnRef = useRef()
-  const { i18n } = useLingui()
   const [isEditingOrg, setIsEditingOrg] = useState(false)
 
   const { loading, error, data } = useQuery(ORGANIZATION_INFORMATION, {
@@ -193,21 +193,16 @@ export function OrganizationInformation({
 
   const org = data.findOrganizationBySlug
 
-  const updateOrgValidationSchema = object().shape({
-    acronymEN: yupString().matches(
-      fieldRequirements.acronym.matches.regex,
-      i18n._(fieldRequirements.acronym.matches.message),
-    ),
-    acronymFR: yupString().matches(
-      fieldRequirements.acronym.matches.regex,
-      i18n._(fieldRequirements.acronym.matches.message),
-    ),
+  const updateOrgValidationSchema = schemaToValidation({
+    acronymEN: getRequirment('acronym'),
+    acronymFR: getRequirment('acronym'),
   })
 
-  const removeOrgValidationSchema = object().shape({
-    orgName: yupString()
-      .required(i18n._(fieldRequirements.field.required.message))
-      .matches(org.name, t`Organization name does not match.`),
+  const removeOrgValidationSchema = schemaToValidation({
+    orgName: getRequirment('field').matches(
+      org.name,
+      t`Organization name does not match.`,
+    ),
   })
 
   return (

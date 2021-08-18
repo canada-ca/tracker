@@ -18,13 +18,11 @@ import {
 import { LockIcon } from '@chakra-ui/icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import { useMutation } from '@apollo/client'
-import { object, string as yupString } from 'yup'
 
 import { PasswordField } from '../components/PasswordField'
 import { PasswordConfirmation } from '../components/PasswordConfirmation'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PASSWORD } from '../graphql/mutations'
 
 export function EditableUserPassword() {
@@ -85,24 +83,6 @@ export function EditableUserPassword() {
     },
   )
 
-  const validationSchema = object().shape({
-    password: yupString()
-      .required(i18n._(fieldRequirements.password.required.message))
-      .min(
-        fieldRequirements.password.min.minLength,
-        i18n._(fieldRequirements.password.min.message),
-      ),
-    confirmPassword: yupString()
-      .required(i18n._(fieldRequirements.confirmPassword.required.message))
-      .oneOf(
-        fieldRequirements.confirmPassword.oneOf.types,
-        i18n._(fieldRequirements.confirmPassword.oneOf.message),
-      ),
-    currentPassword: yupString().required(
-      t`Please enter your current password.`,
-    ),
-  })
-
   return (
     <Stack>
       <Heading as="h3" size="md">
@@ -141,7 +121,11 @@ export function EditableUserPassword() {
             initialTouched={{
               currentPassword: true,
             }}
-            validationSchema={validationSchema}
+            validationSchema={createValidationSchema([
+              'password',
+              'confirmPassword',
+              'currentPassword',
+            ])}
             onSubmit={async (values) => {
               // Submit update detail mutation
               await updateUserPassword({

@@ -9,11 +9,9 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { object, string } from 'yup'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import { ArrowForwardIcon, CheckCircleIcon } from '@chakra-ui/icons'
 
 import { LanguageSelect } from './LanguageSelect'
@@ -22,7 +20,7 @@ import { EmailField } from '../components/EmailField'
 import { DisplayNameField } from '../components/DisplayNameField'
 import { PasswordConfirmation } from '../components/PasswordConfirmation'
 import { LoadingMessage } from '../components/LoadingMessage'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { useUserVar } from '../utilities/userState'
 import { activate } from '../utilities/i18n.config'
 import TermsConditionsPage from '../termsConditions/TermsConditionsPage'
@@ -33,30 +31,6 @@ export default function CreateUserPage() {
   const toast = useToast()
   const userOrgToken = useParams().userOrgToken || ''
   const [showVerifyMessage, setShowVerifyMessage] = useState(false)
-
-  const validationSchema = object().shape({
-    email: string()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
-    displayName: string().required(
-      i18n._(fieldRequirements.displayName.required.message),
-    ),
-    password: string()
-      .required(i18n._(fieldRequirements.password.required.message))
-      .min(
-        fieldRequirements.password.min.minLength,
-        i18n._(fieldRequirements.password.min.message),
-      ),
-    confirmPassword: string()
-      .required(i18n._(fieldRequirements.confirmPassword.required.message))
-      .oneOf(
-        fieldRequirements.confirmPassword.oneOf.types,
-        i18n._(fieldRequirements.confirmPassword.oneOf.message),
-      ),
-    lang: string()
-      .required(i18n._(fieldRequirements.lang.required.message))
-      .oneOf(fieldRequirements.lang.oneOf.types),
-  })
 
   const [signUp, { loading }] = useMutation(SIGN_UP, {
     onError(error) {
@@ -159,7 +133,13 @@ export default function CreateUserPage() {
   return (
     <Box px="4" mx="auto" overflow="hidden">
       <Formik
-        validationSchema={validationSchema}
+        validationSchema={createValidationSchema([
+          'email',
+          'displayName',
+          'password',
+          'confirmPassword',
+          'lang',
+        ])}
         initialValues={{
           email: '',
           displayName: '',

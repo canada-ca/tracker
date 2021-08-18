@@ -25,10 +25,9 @@ import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
 import { EmailIcon } from '@chakra-ui/icons'
 import { bool, func, string } from 'prop-types'
-import { object as yupObject, string as yupString } from 'yup'
 
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../graphql/mutations'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 
 export function UserListModal({
   isOpen,
@@ -156,13 +155,9 @@ export function UserListModal({
           validateOnBlur={false}
           initialValues={{
             role: editingUserRole,
-            userName: editingUserName,
+            email: editingUserName,
           }}
-          validationSchema={yupObject().shape({
-            userName: yupString()
-              .required(i18n._(fieldRequirements.email.required.message))
-              .email(i18n._(fieldRequirements.email.email.message)),
-          })}
+          validationSchema={createValidationSchema(['email'])}
           onSubmit={async (values) => {
             // Submit update role mutation
             if (mutation === 'update') {
@@ -170,7 +165,7 @@ export function UserListModal({
                 variables: {
                   orgId: orgId,
                   role: values.role,
-                  userName: values.userName,
+                  userName: values.email,
                 },
               })
             } else if (mutation === 'create') {
@@ -178,7 +173,7 @@ export function UserListModal({
                 variables: {
                   orgId: orgId,
                   requestedRole: values.role,
-                  userName: values.userName,
+                  userName: values.email,
                   preferredLang: 'ENGLISH',
                 },
               })
@@ -204,15 +199,13 @@ export function UserListModal({
                     <Text>{editingUserName}</Text>
                   </Stack>
                 ) : (
-                  <Field id="userName" name="userName">
+                  <Field id="email" name="email">
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={
-                          form.errors.userName && form.touched.userName
-                        }
+                        isInvalid={form.errors.email && form.touched.email}
                       >
                         <Stack isInline align="center">
-                          <FormLabel htmlFor="userName" fontWeight="bold">
+                          <FormLabel htmlFor="email" fontWeight="bold">
                             <Trans>User:</Trans>
                           </FormLabel>
                           <InputGroup>
@@ -222,15 +215,13 @@ export function UserListModal({
                             <Input
                               mb="2"
                               {...field}
-                              id="userName"
+                              id="email"
                               placeholder={i18n._(t`user email`)}
                               ref={initialFocusRef}
                             />
                           </InputGroup>
                         </Stack>
-                        <FormErrorMessage>
-                          {form.errors.userName}
-                        </FormErrorMessage>
+                        <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>

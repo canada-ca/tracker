@@ -12,14 +12,16 @@ import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { object, string } from 'yup'
 import { useLingui } from '@lingui/react'
 
 import { CreateOrganizationField } from './CreateOrganizationField'
 
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import {
+  getRequirment,
+  schemaToValidation,
+} from '../utilities/fieldRequirements'
 import { CREATE_ORGANIZATION } from '../graphql/mutations'
 
 export default function CreateOrganizationPage() {
@@ -31,43 +33,22 @@ export default function CreateOrganizationPage() {
     isVisible: false,
   })
 
-  const validationSchema = object().shape({
-    nameEN: string().required(i18n._(fieldRequirements.field.required.message)),
-    nameFR: string().required(i18n._(fieldRequirements.field.required.message)),
-    acronymEN: string()
-      .matches(
-        fieldRequirements.acronym.matches.regex,
-        i18n._(fieldRequirements.acronym.matches.message),
-      )
-      .max(
-        fieldRequirements.acronym.max.maxLength,
-        i18n._(fieldRequirements.acronym.max.message),
-      )
-      .required(i18n._(fieldRequirements.field.required.message)),
-    acronymFR: string()
-      .matches(
-        fieldRequirements.acronym.matches.regex,
-        i18n._(fieldRequirements.acronym.matches.message),
-      )
-      .max(
-        fieldRequirements.acronym.max.maxLength,
-        i18n._(fieldRequirements.acronym.max.message),
-      )
-      .required(i18n._(fieldRequirements.field.required.message)),
-    cityEN: string().required(i18n._(fieldRequirements.field.required.message)),
-    cityFR: string().required(i18n._(fieldRequirements.field.required.message)),
-    provinceEN: string().required(
-      i18n._(fieldRequirements.field.required.message),
-    ),
-    provinceFR: string().required(
-      i18n._(fieldRequirements.field.required.message),
-    ),
-    countryEN: string().required(
-      i18n._(fieldRequirements.field.required.message),
-    ),
-    countryFR: string().required(
-      i18n._(fieldRequirements.field.required.message),
-    ),
+  const fieldRequirement = getRequirment('field')
+  const acronymRequirement = getRequirment('acronym').required(
+    i18n._(t`This field cannot be empty`),
+  )
+
+  const validationSchema = schemaToValidation({
+    nameEN: fieldRequirement,
+    nameFR: fieldRequirement,
+    acronymEN: acronymRequirement,
+    acronymFR: acronymRequirement,
+    cityEN: fieldRequirement,
+    cityFR: fieldRequirement,
+    provinceEN: fieldRequirement,
+    provinceFR: fieldRequirement,
+    countryEN: fieldRequirement,
+    countryFR: fieldRequirement,
   })
 
   const [createOrganization, { loading }] = useMutation(CREATE_ORGANIZATION, {

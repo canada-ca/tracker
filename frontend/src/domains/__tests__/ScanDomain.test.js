@@ -70,7 +70,7 @@ describe('<ScanDomain />', () => {
         </MockedProvider>,
       )
 
-      const submit = getByRole('button')
+      const submit = getByRole('button', { name: /Scan Domain/i })
       clickOn(submit)
 
       await waitFor(() => {
@@ -103,10 +103,10 @@ describe('<ScanDomain />', () => {
         </MockedProvider>,
       )
 
-      const domain = container.querySelector('#domain')
-      const submit = getByRole('button')
+      const domainURL = container.querySelector('#domainURL')
+      const submit = getByRole('button', { name: /Scan Domain/i })
 
-      fillIn(domain, {
+      fillIn(domainURL, {
         with: values.domain,
       })
 
