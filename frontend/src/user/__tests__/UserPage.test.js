@@ -72,4 +72,20 @@ describe('<UserPage />', () => {
     )
     await waitFor(() => expect(queryByText(userName)).toBeInTheDocument())
   })
+
+  it.skip('can update display name', async () => {})
+
+  it.skip('can update email', async () => {})
+
+  it.skip('can update password', async () => {})
+
+  it.skip('can update preferred language', async () => {})
+
+  it.skip('can update phone number', async () => {})
+
+  it.skip('can update 2FA method', async () => {})
+
+  it.skip('can verify email', async () => {})
+
+  it.skip('can close account', async () => {})
 })
