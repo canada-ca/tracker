@@ -73,6 +73,11 @@ describe('given the upsertSummary function', () => {
       _to: summary._id,
       startDate: 'thirtyDays',
     })
+    await collections.domainsToDmarcSummaries.save({
+      _from: domain._id,
+      _to: summary._id,
+      startDate: '2021-01-01',
+    })
     loadCategoryTotals = jest
       .fn()
       .mockReturnValue({ pass: 1, fail: 1, passDkimOnly: 1, passSpfOnly: 1 })
@@ -90,47 +95,94 @@ describe('given the upsertSummary function', () => {
     await drop()
   })
 
-  it('upserts the given summary', async () => {
-    await upsertSummary({
-      transaction,
-      collections,
-      query,
-      loadCategoryTotals,
-      loadDkimFailureTable,
-      loadDmarcFailureTable,
-      loadFullPassTable,
-      loadSpfFailureTable,
-      calculatePercentages,
-    })({ date: 'thirtyDays', domain: 'domain.ca' })
-
-    const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
-    const checkSummary = await summaryCursor.next()
-
-    const expectedResult = {
-      _id: checkSummary._id,
-      _key: checkSummary._key,
-      _rev: checkSummary._rev,
-      categoryPercentages: {
-        fail: 25,
-        pass: 25,
-        passDkimOnly: 25,
-        passSpfOnly: 25,
-      },
-      categoryTotals: {
-        fail: 1,
-        pass: 1,
-        passDkimOnly: 1,
-        passSpfOnly: 1,
-      },
-      detailTables: {
-        dkimFailure: [{ key: 'value' }],
-        dmarcFailure: [{ key: 'value' }],
-        fullPass: [{ key: 'value' }],
-        spfFailure: [{ key: 'value' }],
-      },
-      totalMessages: 4,
-    }
-
-    expect(checkSummary).toEqual(expectedResult)
+  describe('date is thirtyDays', () => {
+    it('upserts the given summary', async () => {
+      await upsertSummary({
+        transaction,
+        collections,
+        query,
+        loadCategoryTotals,
+        loadDkimFailureTable,
+        loadDmarcFailureTable,
+        loadFullPassTable,
+        loadSpfFailureTable,
+        calculatePercentages,
+      })({ date: 'thirtyDays', domain: 'domain.ca' })
+  
+      const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
+      const checkSummary = await summaryCursor.next()
+  
+      const expectedResult = {
+        _id: checkSummary._id,
+        _key: checkSummary._key,
+        _rev: checkSummary._rev,
+        categoryPercentages: {
+          fail: 25,
+          pass: 25,
+          passDkimOnly: 25,
+          passSpfOnly: 25,
+        },
+        categoryTotals: {
+          fail: 1,
+          pass: 1,
+          passDkimOnly: 1,
+          passSpfOnly: 1,
+        },
+        detailTables: {
+          dkimFailure: [{ key: 'value' }],
+          dmarcFailure: [{ key: 'value' }],
+          fullPass: [{ key: 'value' }],
+          spfFailure: [{ key: 'value' }],
+        },
+        totalMessages: 4,
+      }
+  
+      expect(checkSummary).toEqual(expectedResult)
+    })
+  })
+  describe('date is not thirtyDays', () => {
+    it('upserts the given summary', async () => {
+      await upsertSummary({
+        transaction,
+        collections,
+        query,
+        loadCategoryTotals,
+        loadDkimFailureTable,
+        loadDmarcFailureTable,
+        loadFullPassTable,
+        loadSpfFailureTable,
+        calculatePercentages,
+      })({ date: '2021-01-01', domain: 'domain.ca' })
+  
+      const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
+      const checkSummary = await summaryCursor.next()
+  
+      const expectedResult = {
+        _id: checkSummary._id,
+        _key: checkSummary._key,
+        _rev: checkSummary._rev,
+        categoryPercentages: {
+          fail: 25,
+          pass: 25,
+          passDkimOnly: 25,
+          passSpfOnly: 25,
+        },
+        categoryTotals: {
+          fail: 1,
+          pass: 1,
+          passDkimOnly: 1,
+          passSpfOnly: 1,
+        },
+        detailTables: {
+          dkimFailure: [{ key: 'value' }],
+          dmarcFailure: [{ key: 'value' }],
+          fullPass: [{ key: 'value' }],
+          spfFailure: [{ key: 'value' }],
+        },
+        totalMessages: 4,
+      }
+  
+      expect(checkSummary).toEqual(expectedResult)
+    })
   })
 })

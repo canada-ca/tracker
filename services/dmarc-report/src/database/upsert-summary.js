@@ -11,11 +11,34 @@ const upsertSummary =
     calculatePercentages,
   }) =>
   async ({ date, domain }) => {
-    const categoryTotals = await loadCategoryTotals({ domain, date })
-    const dkimFailureTable = await loadDkimFailureTable({ domain, date })
-    const dmarcFailureTable = await loadDmarcFailureTable({ domain, date })
-    const fullPassTable = await loadFullPassTable({ domain, date })
-    const spfFailureTable = await loadSpfFailureTable({ domain, date })
+    let categoryTotals
+    let dkimFailureTable
+    let dmarcFailureTable
+    let fullPassTable
+    let spfFailureTable
+
+    if (date === 'thirtyDays') {
+      categoryTotals = await loadCategoryTotals({ domain, date: 'thirty_days' })
+      dkimFailureTable = await loadDkimFailureTable({
+        domain,
+        date: 'thirty_days',
+      })
+      dmarcFailureTable = await loadDmarcFailureTable({
+        domain,
+        date: 'thirty_days',
+      })
+      fullPassTable = await loadFullPassTable({ domain, date: 'thirty_days' })
+      spfFailureTable = await loadSpfFailureTable({
+        domain,
+        date: 'thirty_days',
+      })
+    } else {
+      categoryTotals = await loadCategoryTotals({ domain, date })
+      dkimFailureTable = await loadDkimFailureTable({ domain, date })
+      dmarcFailureTable = await loadDmarcFailureTable({ domain, date })
+      fullPassTable = await loadFullPassTable({ domain, date })
+      spfFailureTable = await loadSpfFailureTable({ domain, date })
+    }
 
     const categoryPercentages = calculatePercentages({ ...categoryTotals })
 
