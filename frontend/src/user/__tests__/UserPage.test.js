@@ -73,7 +73,23 @@ describe('<UserPage />', () => {
     await waitFor(() => expect(queryByText(userName)).toBeInTheDocument())
   })
 
-  it.skip('can update display name', async () => {})
+  it.skip('can update display name', async () => {
+    const { queryByText, getByRole } = render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+        >
+          <MemoryRouter initialEntries={['/']}>
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <UserPage />
+              </I18nProvider>
+            </ChakraProvider>
+          </MemoryRouter>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+  })
 
   it.skip('can update email', async () => {})
 
@@ -85,7 +101,9 @@ describe('<UserPage />', () => {
 
   it.skip('can update 2FA method', async () => {})
 
-  it.skip('can verify email', async () => {})
+  it.skip('can validate email', async () => {})
+
+  it.skip('can validate phone', async () => {})
 
   it.skip('can close account', async () => {})
 })
