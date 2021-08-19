@@ -31,7 +31,7 @@ export function AdminDomianCard({ url, lastRan, ...rest }) {
             <ExternalLinkIcon mx="2px" aria-hidden="true" />
           </Link>
         </Stack>
-        {lastRan && (
+        {lastRan ? (
           <Stack isInline>
             <Text fontWeight="bold">
               <Trans>Last scanned:</Trans>
@@ -41,8 +41,7 @@ export function AdminDomianCard({ url, lastRan, ...rest }) {
               <LinkIcon mx="2px" aria-hidden="true" />
             </Link>
           </Stack>
-        )}
-        {!lastRan && (
+        ) : (
           <Box>
             <Text fontWeight="bold">
               <Trans>Not scanned yet.</Trans>

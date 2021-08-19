@@ -96,21 +96,17 @@ export function App() {
           </Link>
 
           {isLoggedIn() && isEmailValidated() && (
-            <Link to="/organizations">
-              <Trans>Organizations</Trans>
-            </Link>
-          )}
-
-          {isLoggedIn() && isEmailValidated() && (
-            <Link to="/domains">
-              <Trans>Domains</Trans>
-            </Link>
-          )}
-
-          {isLoggedIn() && isEmailValidated() && (
-            <Link to="/dmarc-summaries">
-              <Trans>DMARC Summaries</Trans>
-            </Link>
+            <>
+              <Link to="/organizations">
+                <Trans>Organizations</Trans>
+              </Link>
+              <Link to="/domains">
+                <Trans>Domains</Trans>
+              </Link>
+              <Link to="/dmarc-summaries">
+                <Trans>DMARC Summaries</Trans>
+              </Link>
+            </>
           )}
 
           {isLoggedIn() && (
