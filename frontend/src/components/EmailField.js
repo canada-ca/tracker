@@ -5,7 +5,7 @@ import { EmailIcon } from '@chakra-ui/icons'
 
 import { FormField } from './FormField'
 
-function EmailField({ forwardedRef, formProps, ...props }) {
+function EmailField({ forwardedRef, inputProps, ...props }) {
   return (
     <FormField
       name="email"
@@ -14,14 +14,14 @@ function EmailField({ forwardedRef, formProps, ...props }) {
       type="email"
       placeholder={t`Email`}
       ref={forwardedRef}
-      formProps={formProps}
+      inputProps={inputProps}
       {...props}
     />
   )
 }
 
 EmailField.propTypes = {
-  formProps: object,
+  inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 

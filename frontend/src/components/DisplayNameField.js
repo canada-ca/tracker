@@ -5,7 +5,7 @@ import { PersonIcon } from '../theme/Icons'
 
 import { FormField } from './FormField'
 
-function DisplayNameField({ forwardedRef, formProps, ...props }) {
+function DisplayNameField({ forwardedRef, inputProps, ...props }) {
   return (
     <FormField
       name="displayName"
@@ -13,14 +13,14 @@ function DisplayNameField({ forwardedRef, formProps, ...props }) {
       leftElement={<PersonIcon color="gray.300" size="icons.lg" />}
       placeholder={t`Display Name`}
       ref={forwardedRef}
-      formProps={formProps}
+      inputProps={inputProps}
       {...props}
     />
   )
 }
 
 DisplayNameField.propTypes = {
-  formProps: object,
+  inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 

@@ -10,7 +10,7 @@ function AuthenticateField({
   name,
   forwardedRef,
   sendMethod,
-  formProps,
+  inputProps,
   ...props
 }) {
   const codeSendMessage =
@@ -42,7 +42,7 @@ function AuthenticateField({
       inputMode="numeric"
       w="auto"
       align="center"
-      formProps={formProps}
+      inputProps={inputProps}
       {...props}
     />
   )
@@ -50,7 +50,7 @@ function AuthenticateField({
 
 AuthenticateField.propTypes = {
   name: string,
-  formProps: object,
+  inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
   sendMethod: string.isRequired,
 }

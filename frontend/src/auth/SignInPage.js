@@ -139,9 +139,9 @@ export default function SignInPage() {
               <Trans>Sign in with your username and password.</Trans>
             </Heading>
 
-            <EmailField name="email" formProps={{ mb: 4 }} />
+            <EmailField name="email" mb={4} />
 
-            <PasswordField name="password" formProps={{ mb: 2 }} />
+            <PasswordField name="password" mb={2} />
 
             <Flex align="center" mb="4">
               <Checkbox

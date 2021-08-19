@@ -100,7 +100,7 @@ export default function ResetPasswordPage() {
               <Trans>Enter and confirm your new password.</Trans>
             </Heading>
 
-            <PasswordConfirmation formProps={{ mb: 4 }} />
+            <PasswordConfirmation mb={4} />
 
             <Button
               type="submit"

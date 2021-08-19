@@ -22,13 +22,13 @@ function FormField({
   leftElement,
   rightElement,
   useFieldInput,
-  formProps,
+  inputProps,
   ...props
 }) {
   const [field, meta] = useField(useFieldInput || name)
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...formProps}>
+    <FormControl isInvalid={meta.error && meta.touched} {...props}>
       <Stack align={align}>
         <FormLabel htmlFor={name} fontWeight="bold">
           {label || ''}
@@ -46,7 +46,7 @@ function FormField({
             ref={forwardedRef}
             placeholder={placeholder || ''}
             {...field}
-            {...props}
+            {...inputProps}
           />
           {rightElement && (
             <InputRightElement>{rightElement}</InputRightElement>
@@ -67,7 +67,7 @@ FormField.propTypes = {
   placeholder: string,
   leftElement: element,
   rightElement: element,
-  formProps: object,
+  inputProps: object,
   useFieldInput: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
 }

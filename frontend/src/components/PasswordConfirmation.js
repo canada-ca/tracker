@@ -15,7 +15,7 @@ import { FormField } from './FormField'
 export function PasswordConfirmation({
   passwordLabel,
   confirmPasswordLabel,
-  formProps,
+  inputProps,
   ...props
 }) {
   const [icon, setIcon] = React.useState('lock')
@@ -88,7 +88,7 @@ export function PasswordConfirmation({
             name: 'password',
             validate: validatePassword,
           }}
-          formProps={formProps}
+          inputProps={inputProps}
           {...props}
         />
       </Box>
@@ -126,7 +126,7 @@ export function PasswordConfirmation({
             name: 'confirmPassword',
             validate: validateConfirmPassword,
           }}
-          formProps={formProps}
+          inputProps={inputProps}
           {...props}
         />
       </Box>
@@ -137,7 +137,7 @@ export function PasswordConfirmation({
 PasswordConfirmation.propTypes = {
   passwordLabel: string,
   confirmPasswordLabel: string,
-  formProps: object,
+  inputProps: object,
 }
 
 PasswordConfirmation.defaultProps = {

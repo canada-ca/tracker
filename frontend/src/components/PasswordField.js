@@ -6,7 +6,7 @@ import { LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 import { FormField } from './FormField'
 
-function PasswordField({ forwardedRef, name, label, formProps, ...props }) {
+function PasswordField({ forwardedRef, name, label, inputProps, ...props }) {
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
 
@@ -26,7 +26,7 @@ function PasswordField({ forwardedRef, name, label, formProps, ...props }) {
       type={show ? 'text' : 'password'}
       placeholder={t`Password`}
       ref={forwardedRef}
-      formProps={formProps}
+      inputProps={inputProps}
       {...props}
     />
   )
@@ -35,7 +35,7 @@ function PasswordField({ forwardedRef, name, label, formProps, ...props }) {
 PasswordField.propTypes = {
   name: string,
   label: string,
-  formProps: object,
+  inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 
