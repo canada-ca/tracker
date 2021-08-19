@@ -648,9 +648,9 @@ const schemaWithMocks = addMocksToSchema({
         const dkimScanData = store.get('DkimSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(
-            `${NEW_DKIM_DATA_STREAM}/$.parameters.userKey{
+            `${NEW_DKIM_DATA_STREAM}/${
               jwt.decode(context.token, 'secret').parameters.userKey
-            }`.parameters.userKey,
+            }`,
             {
               dkimScanData: dkimScanData,
             },
@@ -661,9 +661,9 @@ const schemaWithMocks = addMocksToSchema({
         const dmarcScanData = store.get('DmarcSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(
-            `${NEW_DMARC_DATA_STREAM}/$.parameters.userKey{
+            `${NEW_DMARC_DATA_STREAM}/${
               jwt.decode(context.token, 'secret').parameters.userKey
-            }`.parameters.userKey,
+            }`,
             {
               dmarcScanData: dmarcScanData,
             },
@@ -674,9 +674,9 @@ const schemaWithMocks = addMocksToSchema({
         const spfScanData = store.get('SpfSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(
-            `${NEW_SPF_DATA_STREAM}/$.parameters.userKey{
+            `${NEW_SPF_DATA_STREAM}/${
               jwt.decode(context.token, 'secret').parameters.userKey
-            }`.parameters.userKey,
+            }`,
             {
               spfScanData: spfScanData,
             },
@@ -687,9 +687,9 @@ const schemaWithMocks = addMocksToSchema({
         const httpsScanData = store.get('HttpsSub', scanUuid)
         setTimeout(() => {
           pubsub.publish(
-            `${NEW_HTTPS_DATA_STREAM}/$.parameters.userKey{
+            `${NEW_HTTPS_DATA_STREAM}/${
               jwt.decode(context.token, 'secret').parameters.userKey
-            }`.parameters.userKey,
+            }`,
             {
               httpsScanData: httpsScanData,
             },
@@ -809,31 +809,41 @@ const schemaWithMocks = addMocksToSchema({
       dkimScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_DKIM_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_DKIM_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       dmarcScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_DMARC_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_DMARC_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       spfScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_SPF_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_SPF_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       httpsScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_HTTPS_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_HTTPS_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
       sslScanData: {
         subscribe: (_, _args, context) =>
           pubsub.asyncIterator(
-            `${NEW_SSL_DATA_STREAM}/${jwt.decode(context.token, 'secret')}`,
+            `${NEW_SSL_DATA_STREAM}/${
+              jwt.decode(context.token, 'secret').parameters.userKey
+            }`,
           ),
       },
     },

@@ -140,6 +140,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -183,6 +186,9 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       status: 'User role was updated successfully.',
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -210,6 +216,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -253,6 +262,9 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       status: 'User role was updated successfully.',
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -289,6 +301,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -332,6 +347,9 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       status: 'User role was updated successfully.',
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -359,6 +377,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -402,6 +423,9 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       status: 'User role was updated successfully.',
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -447,6 +471,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -490,6 +517,9 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       status: 'User role was updated successfully.',
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -583,6 +613,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -627,6 +660,9 @@ describe('update a users role', () => {
                     result: {
                       status:
                         "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -654,6 +690,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -698,6 +737,9 @@ describe('update a users role', () => {
                     result: {
                       status:
                         "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -734,6 +776,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -778,6 +823,9 @@ describe('update a users role', () => {
                     result: {
                       status:
                         "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -805,6 +853,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -849,6 +900,9 @@ describe('update a users role', () => {
                     result: {
                       status:
                         "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
@@ -894,6 +948,9 @@ describe('update a users role', () => {
                     result {
                       ... on UpdateUserRoleResult {
                         status
+                        user {
+                          displayName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -938,6 +995,9 @@ describe('update a users role', () => {
                     result: {
                       status:
                         "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      user: {
+                        displayName: 'Test Account',
+                      },
                     },
                   },
                 },
