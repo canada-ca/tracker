@@ -89,6 +89,14 @@ describe('<UserPage />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
+
+    await waitFor(() => {
+      expect(queryByText(/testuser@testemail.gc.ca/)).toBeInTheDocument()
+    })
+
+    // TODO: Add proper labels to the buttons on account
+    //  page for better accessibility and testing
+    // const editDisplayNameButton = getByRole('button', (name: {}))
   })
 
   it.skip('can update email', async () => {})
