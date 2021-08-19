@@ -170,11 +170,15 @@ describe('<UserListModal />', () => {
           })
           userEvent.click(confirmUserUpdateButton)
 
-          // check for "success" toast and modal to close
+          // check for "success" toast
           await waitFor(() => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
             ).toBeVisible()
+          })
+
+          // wait for modal to close
+          await waitFor(() => {
             expect(
               queryByRole('combobox', { name: /Role:/ }),
             ).not.toBeInTheDocument()
@@ -349,11 +353,15 @@ describe('<UserListModal />', () => {
 
           userEvent.click(confirmUserUpdateButton)
 
-          // check for "success" toast and modal to close
+          // check for "success" toast
           await waitFor(() => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
             ).toBeVisible()
+          })
+
+          // wait for modal to close
+          await waitFor(() => {
             expect(
               queryByRole('combobox', { name: /Role:/ }),
             ).not.toBeInTheDocument()
@@ -487,6 +495,10 @@ describe('<UserListModal />', () => {
         // check for "success" toast and modal to close
         await waitFor(() => {
           expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+        })
+
+        // wait for modal to close
+        await waitFor(() => {
           expect(
             queryByRole('combobox', { name: /Role:/ }),
           ).not.toBeInTheDocument()
@@ -569,9 +581,13 @@ describe('<UserListModal />', () => {
       })
       userEvent.click(confirmUserInviteButton)
 
-      // check for "success" toast and modal to close
+      // check for "success" toast
       await waitFor(() => {
         expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+      })
+
+      // wait for modal to close
+      await waitFor(() => {
         expect(
           queryByRole('combobox', { name: /Role:/ }),
         ).not.toBeInTheDocument()
