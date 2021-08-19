@@ -124,11 +124,7 @@ export default function TwoFactorAuthenticatePage() {
               <Trans>Two Factor Authentication</Trans>
             </Heading>
 
-            <AuthenticateField
-              name="twoFactorCode"
-              mb="4"
-              sendMethod={sendMethod}
-            />
+            <AuthenticateField sendMethod={sendMethod} mb="4" />
 
             <Stack align="center">
               <Button variant="primary" isLoading={isSubmitting} type="submit">
