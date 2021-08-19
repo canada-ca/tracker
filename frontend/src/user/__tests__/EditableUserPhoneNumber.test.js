@@ -217,14 +217,14 @@ describe('<EditableUserPhoneNumber />', () => {
 
           // ensure verify phone number modal is not open
           expect(
-            queryByText(/Please enter your two factor code below/),
+            queryByText(/Please enter your two factor code below/i),
           ).not.toBeInTheDocument()
 
           const confirmButton = getByRole('button', { name: 'Confirm' })
           fireEvent.click(confirmButton)
 
           const twoFactorCodeInput = await findByRole('textbox', {
-            name: /Enter your two factor code/,
+            name: /Please enter your two factor code below/i,
           })
 
           userEvent.type(twoFactorCodeInput, '1234')

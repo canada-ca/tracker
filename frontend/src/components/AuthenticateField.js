@@ -43,7 +43,6 @@ function AuthenticateField({
       w="auto"
       align="center"
       inputProps={inputProps}
-      aria-label={t`Enter your two factor code`}
       {...props}
     />
   )
