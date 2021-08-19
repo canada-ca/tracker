@@ -253,7 +253,15 @@ export function App() {
               </PrivatePage>
 
               <Page path="/user" title={t`Your Account`}>
-                {isLoggedIn() && <UserPage username={currentUser.userName} />}
+                {isLoggedIn() ? (
+                  <UserPage username={currentUser.userName} />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                    }}
+                  />
+                )}
               </Page>
 
               <Page path="/validate/:verifyToken" title={t`Email Verification`}>

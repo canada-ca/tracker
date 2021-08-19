@@ -1,18 +1,7 @@
 import React from 'react'
-import { t, Trans } from '@lingui/macro'
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  Spinner,
-  Stack,
-} from '@chakra-ui/react'
+import { object, string } from 'prop-types'
+import { t } from '@lingui/macro'
+import { Box, IconButton, Spinner, Stack } from '@chakra-ui/react'
 import {
   CheckIcon,
   CloseIcon,
@@ -20,12 +9,13 @@ import {
   ViewIcon,
   ViewOffIcon,
 } from '@chakra-ui/icons'
-import { useField } from 'formik'
-import { string } from 'prop-types'
+
+import { FormField } from './FormField'
 
 export function PasswordConfirmation({
   passwordLabel,
   confirmPasswordLabel,
+  inputProps,
   ...props
 }) {
   const [icon, setIcon] = React.useState('lock')
@@ -47,10 +37,6 @@ export function PasswordConfirmation({
       setIcon('check')
     }
   }
-  const [passwordField, passwordMeta] = useField({
-    name: 'password',
-    validate: validatePassword,
-  })
 
   function validateConfirmPassword(value) {
     setConfirmIcon('spinner')
@@ -62,100 +48,95 @@ export function PasswordConfirmation({
       setConfirmIcon('check')
     }
   }
-  const [confirmPasswordField, confirmPasswordMeta] = useField({
-    name: 'confirmPassword',
-    validate: validateConfirmPassword,
-  })
-
-  const passwordLabelText =
-    passwordLabel === undefined ? <Trans>Password:</Trans> : passwordLabel
-  const confirmPasswordLabelText =
-    confirmPasswordLabel === undefined ? (
-      <Trans>Confirm Password:</Trans>
-    ) : (
-      confirmPasswordLabel
-    )
 
   return (
     <Stack {...props}>
       <Box>
-        <FormControl isInvalid={passwordMeta.error && passwordMeta.touched}>
-          <FormLabel htmlFor="password" fontWeight="bold">
-            {passwordLabelText}
-          </FormLabel>
-          <InputGroup>
-            <InputLeftElement aria-hidden="true">
-              {icon === 'spinner' && <Spinner size="sm" color="gray.300" />}
-              {icon === 'lock' && (
-                <LockIcon color="gray.300" aria-label="initial icon" />
-              )}
-              {icon === 'check' && <CheckIcon color="green.500" />}
-              {icon === 'close' && (
-                <CloseIcon color="red.500" aria-label="invalid password" />
-              )}
-            </InputLeftElement>
-            <Input
-              {...passwordField}
-              id="password"
-              placeholder={t`Password`}
-              type={passwordShow ? 'text' : 'password'}
+        <FormField
+          name="password"
+          label={passwordLabel}
+          leftElement={
+            icon === 'spinner' ? (
+              <Spinner size="sm" color="gray.300" />
+            ) : icon === 'lock' ? (
+              <LockIcon color="gray.300" aria-label="initial icon" />
+            ) : icon === 'check' ? (
+              <CheckIcon color="green.500" />
+            ) : icon === 'close' ? (
+              <CloseIcon color="red.500" aria-label="invalid password" />
+            ) : (
+              <></>
+            )
+          }
+          rightElement={
+            <IconButton
+              id="showPassword"
+              aria-label={passwordShow ? 'hide password' : 'show password'}
+              onClick={handlePasswordShow}
+              h="buttons.lg"
+              mr={8}
+              icon={passwordShow ? <ViewOffIcon /> : <ViewIcon />}
             />
-            <InputRightElement width="width.4">
-              <IconButton
-                id="showPassword"
-                aria-label={passwordShow ? 'hide password' : 'show password'}
-                h="buttons.lg"
-                onClick={handlePasswordShow}
-                icon={passwordShow ? <ViewOffIcon /> : <ViewIcon />}
-              />
-            </InputRightElement>
-          </InputGroup>
-          <FormErrorMessage>{passwordMeta.error}</FormErrorMessage>
-        </FormControl>
+          }
+          type={passwordShow ? 'text' : 'password'}
+          placeholder={t`Password`}
+          useFieldInput={{
+            name: 'password',
+            validate: validatePassword,
+          }}
+          inputProps={inputProps}
+          {...props}
+        />
       </Box>
 
       <Box>
-        <FormControl
-          isInvalid={confirmPasswordMeta.error && confirmPasswordMeta.touched}
-        >
-          <FormLabel htmlFor="confirmPassword" fontWeight="bold">
-            {confirmPasswordLabelText}
-          </FormLabel>
-          <InputGroup>
-            <InputLeftElement aria-hidden="true">
-              {confirmIcon === 'spinner' && (
-                <Spinner size="sm" color="gray.300" />
-              )}
-              {confirmIcon === 'lock' && <LockIcon color="gray.300" />}
-              {confirmIcon === 'check' && <CheckIcon color="green.500" />}
-              {confirmIcon === 'close' && <CloseIcon color="red.500" />}
-            </InputLeftElement>
-            <Input
-              {...confirmPasswordField}
-              id="confirmPassword"
-              placeholder={t`Confirm password`}
-              type={confirmShow ? 'text' : 'password'}
+        <FormField
+          name="confirmPassword"
+          label={confirmPasswordLabel}
+          leftElement={
+            confirmIcon === 'spinner' ? (
+              <Spinner size="sm" color="gray.300" />
+            ) : confirmIcon === 'lock' ? (
+              <LockIcon color="gray.300" />
+            ) : confirmIcon === 'check' ? (
+              <CheckIcon color="green.500" />
+            ) : confirmIcon === 'close' ? (
+              <CloseIcon color="red.500" />
+            ) : (
+              <></>
+            )
+          }
+          rightElement={
+            <IconButton
+              id="showPasswordConfirm"
+              aria-label={confirmShow ? 'hide password' : 'show password'}
+              onClick={handleConfirmShow}
+              h="buttons.lg"
+              mr={8}
+              icon={confirmShow ? <ViewOffIcon /> : <ViewIcon />}
             />
-            <InputRightElement width="width.4">
-              <IconButton
-                id="showPasswordConfirm"
-                aria-label={confirmShow ? 'hide password' : 'show password'}
-                h="buttons.lg"
-                onClick={handleConfirmShow}
-                icon={confirmShow ? <ViewOffIcon /> : <ViewIcon />}
-              />
-            </InputRightElement>
-          </InputGroup>
-
-          <FormErrorMessage>{confirmPasswordMeta.error}</FormErrorMessage>
-        </FormControl>
+          }
+          type={confirmShow ? 'text' : 'password'}
+          placeholder={t`Password`}
+          useFieldInput={{
+            name: 'confirmPassword',
+            validate: validateConfirmPassword,
+          }}
+          inputProps={inputProps}
+          {...props}
+        />
       </Box>
     </Stack>
   )
 }
 
 PasswordConfirmation.propTypes = {
-  spacing: string,
   passwordLabel: string,
   confirmPasswordLabel: string,
+  inputProps: object,
+}
+
+PasswordConfirmation.defaultProps = {
+  passwordLabel: t`Password:`,
+  confirmPasswordLabel: t`Confirm Password:`,
 }

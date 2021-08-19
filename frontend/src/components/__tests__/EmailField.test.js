@@ -35,13 +35,13 @@ describe('<EmailField />', () => {
                 email: '',
               }}
             >
-              {() => <EmailField label="Test Email Field" name="email" />}
+              {() => <EmailField name="email" />}
             </Formik>
           </ChakraProvider>
         </I18nProvider>,
       )
 
-      const input = getByRole('textbox', { name: /Test Email Field/i })
+      const input = getByRole('textbox', { name: /Email/i })
       fireEvent.blur(input)
 
       await waitFor(() => {

@@ -1,78 +1,63 @@
 import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
-import { useLingui } from '@lingui/react'
-import { t, Trans } from '@lingui/macro'
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-} from '@chakra-ui/react'
-import { useField } from 'formik'
+import { t } from '@lingui/macro'
+
+import { FormField } from './FormField'
 
 import { TwoFactorIcon } from '../theme/Icons'
 
-function AuthenticateField({ name, forwardedRef, sendMethod, ...props }) {
-  const [field, meta] = useField(name)
-  const { i18n } = useLingui()
-
+function AuthenticateField({
+  name,
+  forwardedRef,
+  sendMethod,
+  inputProps,
+  ...props
+}) {
   const codeSendMessage =
-    sendMethod.toLowerCase() === 'email' ? (
-      <Trans>
+    sendMethod.toLowerCase() === 'email'
+      ? t`
         We've sent you an email with an authentication code to sign into
-        Tracker.
-      </Trans>
-    ) : sendMethod.toLowerCase() === 'phone' ? (
-      <Trans>
+        Tracker.`
+      : sendMethod.toLowerCase() === 'phone'
+      ? t`
         We've sent an SMS to your registered phone number with an authentication
-        code to sign into Tracker.
-      </Trans>
-    ) : sendMethod.toLowerCase() === 'verifyphone' ? (
-      <Trans>
+        code to sign into Tracker.`
+      : sendMethod.toLowerCase() === 'verifyphone'
+      ? t`
         We've sent an SMS to your new phone number with an authentication code
-        to confirm this change.
-      </Trans>
-    ) : (
-      ''
-    )
+        to confirm this change.`
+      : ''
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <Stack align="center">
-        <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
-          {codeSendMessage}
-          <span> </span>
-          <Trans>Please enter your two factor code below.</Trans>
-        </FormLabel>
-        <InputGroup width="fit-content">
-          <InputLeftElement aria-hidden="true">
-            <TwoFactorIcon color="gray.300" size="1.25rem" />
-          </InputLeftElement>
-          <Input
-            {...field}
-            id="twoFactorCode"
-            ref={forwardedRef}
-            placeholder={i18n._(t`Enter two factor code`)}
-            autoFocus
-            autoComplete="off"
-            inputMode="numeric"
-            aria-label={t`Enter your two factor code`}
-          />
-        </InputGroup>
-
-        <FormErrorMessage>{meta.error}</FormErrorMessage>
-      </Stack>
-    </FormControl>
+    <FormField
+      name={name}
+      label={
+        codeSendMessage + ' ' + t`Please enter your two factor code below.`
+      }
+      leftElement={<TwoFactorIcon color="gray.300" size="1.25rem" />}
+      placeholder={t`Enter two factor code`}
+      ref={forwardedRef}
+      autoFocus
+      autoComplete="off"
+      inputMode="numeric"
+      w="auto"
+      align="center"
+      inputProps={inputProps}
+      aria-label={t`Enter your two factor code`}
+      {...props}
+    />
   )
 }
 
 AuthenticateField.propTypes = {
-  name: string.isRequired,
+  name: string,
+  inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
   sendMethod: string.isRequired,
+}
+
+AuthenticateField.defaultProps = {
+  name: 'twoFactorCode',
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {
