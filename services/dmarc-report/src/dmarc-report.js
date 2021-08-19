@@ -93,7 +93,7 @@ module.exports.dmarcReport = async ({
         } else if (date === currentDate) {
           // update current month
           console.info(`\t\tUpdating ${date} for ${domain}`)
-          upsertSummary({ date, domain })
+          await upsertSummary({ date, domain })
         }
       }
 
@@ -113,7 +113,7 @@ module.exports.dmarcReport = async ({
       } else {
         // update thirty day summary
         console.info(`\t\tUpdating Thirty Days for ${domain}`)
-        upsertSummary({ date: 'thirtyDays', domain })
+        await upsertSummary({ date: 'thirtyDays', domain })
       }
     }
   }
