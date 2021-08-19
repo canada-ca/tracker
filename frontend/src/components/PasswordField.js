@@ -20,7 +20,9 @@ function PasswordField({ forwardedRef, name, label, inputProps, ...props }) {
           id={'show' + name.charAt(0).toUpperCase() + name.slice(1)}
           aria-label={show ? 'hide password' : 'show password'}
           onClick={handleClick}
-          icon={show ? <ViewOffIcon size="lg" /> : <ViewIcon size="lg" />}
+          h="buttons.lg"
+          mr={8}
+          icon={show ? <ViewOffIcon /> : <ViewIcon />}
         />
       }
       type={show ? 'text' : 'password'}

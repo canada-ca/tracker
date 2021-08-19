@@ -73,13 +73,9 @@ export function PasswordConfirmation({
               id="showPassword"
               aria-label={passwordShow ? 'hide password' : 'show password'}
               onClick={handlePasswordShow}
-              icon={
-                passwordShow ? (
-                  <ViewOffIcon size="lg" />
-                ) : (
-                  <ViewIcon size="lg" />
-                )
-              }
+              h="buttons.lg"
+              mr={8}
+              icon={passwordShow ? <ViewOffIcon /> : <ViewIcon />}
             />
           }
           type={passwordShow ? 'text' : 'password'}
@@ -115,9 +111,9 @@ export function PasswordConfirmation({
               id="showPasswordConfirm"
               aria-label={confirmShow ? 'hide password' : 'show password'}
               onClick={handleConfirmShow}
-              icon={
-                confirmShow ? <ViewOffIcon size="lg" /> : <ViewIcon size="lg" />
-              }
+              h="buttons.lg"
+              mr={8}
+              icon={confirmShow ? <ViewOffIcon /> : <ViewIcon />}
             />
           }
           type={confirmShow ? 'text' : 'password'}
