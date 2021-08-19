@@ -74,7 +74,7 @@ describe('<UserPage />', () => {
   })
 
   it.skip('can update display name', async () => {
-    const { queryByText, getByRole } = render(
+    const { queryByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
