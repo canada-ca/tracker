@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { theme, ChakraProvider, useDisclosure } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
@@ -8,17 +8,9 @@ import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { UserList } from '../UserList'
-
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
-import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../../graphql/queries'
-import {
-  UPDATE_USER_ROLE,
-  INVITE_USER_TO_ORG,
-  REMOVE_USER_FROM_ORG,
-} from '../../graphql/mutations'
-import { rawOrgUserListData } from '../../fixtures/orgUserListData'
+import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../../graphql/mutations'
 import { UserListModal } from '../UserListModal'
 import userEvent from '@testing-library/user-event'
 import canada from '../../theme/canada'
@@ -128,7 +120,7 @@ describe('<UserListModal />', () => {
             },
           ]
 
-          const { getByText, getByRole, queryByText } = render(
+          const { getAllByText, queryByRole, getByRole, queryByText } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
               <UserVarProvider
                 userVar={makeVar({
@@ -178,11 +170,14 @@ describe('<UserListModal />', () => {
           })
           userEvent.click(confirmUserUpdateButton)
 
-          // check for "success" toast
+          // check for "success" toast and modal to close
           await waitFor(() => {
             expect(
-              getByText(/The user's role has been successfully updated/),
+              getAllByText(/The user's role has been successfully updated/)[0],
             ).toBeVisible()
+            expect(
+              queryByRole('combobox', { name: /Role:/ }),
+            ).not.toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
@@ -303,7 +298,7 @@ describe('<UserListModal />', () => {
             },
           ]
 
-          const { getByText, getByRole, queryByText } = render(
+          const { getAllByText, queryByRole, getByRole, queryByText } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
               <UserVarProvider
                 userVar={makeVar({
@@ -351,13 +346,17 @@ describe('<UserListModal />', () => {
           const confirmUserUpdateButton = getByRole('button', {
             name: /Confirm/i,
           })
+
           userEvent.click(confirmUserUpdateButton)
 
-          // check for "success" toast
+          // check for "success" toast and modal to close
           await waitFor(() => {
             expect(
-              getByText(/The user's role has been successfully updated/),
+              getAllByText(/The user's role has been successfully updated/)[0],
             ).toBeVisible()
+            expect(
+              queryByRole('combobox', { name: /Role:/ }),
+            ).not.toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
@@ -436,7 +435,7 @@ describe('<UserListModal />', () => {
           },
         ]
 
-        const { getByText, getByRole, queryByText } = render(
+        const { getAllByText, queryByRole, getByRole, queryByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
               userVar={makeVar({
@@ -485,9 +484,12 @@ describe('<UserListModal />', () => {
         })
         userEvent.click(confirmUserInviteButton)
 
-        // check for "success" toast
+        // check for "success" toast and modal to close
         await waitFor(() => {
-          expect(getByText(/Email invitation sent/)).toBeVisible()
+          expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+          expect(
+            queryByRole('combobox', { name: /Role:/ }),
+          ).not.toBeInTheDocument()
         })
       })
     })
@@ -517,7 +519,7 @@ describe('<UserListModal />', () => {
         },
       ]
 
-      const { getByText, getByRole, queryByText } = render(
+      const { getAllByText, queryByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -567,9 +569,12 @@ describe('<UserListModal />', () => {
       })
       userEvent.click(confirmUserInviteButton)
 
-      // check for "success" toast
+      // check for "success" toast and modal to close
       await waitFor(() => {
-        expect(getByText(/Email invitation sent/)).toBeVisible()
+        expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+        expect(
+          queryByRole('combobox', { name: /Role:/ }),
+        ).not.toBeInTheDocument()
       })
     })
   })
