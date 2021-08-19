@@ -270,6 +270,7 @@ given organization.`,
     return {
       _type: 'regular',
       status: i18n._(t`User role was updated successfully.`),
+      user: requestedUser,
     }
   },
 })
