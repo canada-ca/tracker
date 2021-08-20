@@ -16,9 +16,9 @@ import { ArrowForwardIcon, CheckCircleIcon } from '@chakra-ui/icons'
 
 import { LanguageSelect } from './LanguageSelect'
 
-import { EmailField } from '../components/EmailField'
-import { DisplayNameField } from '../components/DisplayNameField'
-import { PasswordConfirmation } from '../components/PasswordConfirmation'
+import { EmailField } from '../components/fields/EmailField'
+import { DisplayNameField } from '../components/fields/DisplayNameField'
+import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { useUserVar } from '../utilities/userState'

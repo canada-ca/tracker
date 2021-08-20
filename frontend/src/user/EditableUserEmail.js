@@ -22,7 +22,7 @@ import { useMutation } from '@apollo/client'
 import { string } from 'prop-types'
 
 import { createValidationSchema } from '../utilities/fieldRequirements'
-import { EmailField } from '../components/EmailField'
+import { EmailField } from '../components/fields/EmailField'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 
 export function EditableUserEmail({ detailValue }) {

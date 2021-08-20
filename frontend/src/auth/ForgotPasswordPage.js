@@ -6,7 +6,7 @@ import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
-import { EmailField } from '../components/EmailField'
+import { EmailField } from '../components/fields/EmailField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 

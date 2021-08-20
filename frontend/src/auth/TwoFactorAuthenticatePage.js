@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 
 import { LoadingMessage } from '../components/LoadingMessage'
-import { AuthenticateField } from '../components/AuthenticateField'
+import { AuthenticateField } from '../components/fields/AuthenticateField'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { activate } from '../utilities/i18n.config'
 import { useUserVar } from '../utilities/userState'

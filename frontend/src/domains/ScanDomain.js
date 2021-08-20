@@ -24,7 +24,7 @@ import {
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 
-import { DomainField } from './DomainField'
+import { DomainField } from '../components/fields/DomainField'
 import { StatusBadge } from './StatusBadge'
 
 import { ScanCategoryDetails } from '../guidance/ScanCategoryDetails'

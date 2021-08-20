@@ -19,7 +19,7 @@ import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { bool, func, string } from 'prop-types'
 
-import { EmailField } from '../components/EmailField'
+import { EmailField } from '../components/fields/EmailField'
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../graphql/mutations'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 

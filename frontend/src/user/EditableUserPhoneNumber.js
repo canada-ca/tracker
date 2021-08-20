@@ -21,9 +21,9 @@ import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
 import { string } from 'prop-types'
 
-import { PhoneNumberField } from './PhoneNumberField'
+import { PhoneNumberField } from '../components/fields/PhoneNumberField'
 
-import { AuthenticateField } from '../components/AuthenticateField'
+import { AuthenticateField } from '../components/fields/AuthenticateField'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from '../graphql/mutations'
 
