@@ -1,4 +1,4 @@
-const createSummary =
+const upsertSummary =
   ({
     transaction,
     collections,
@@ -42,6 +42,22 @@ const createSummary =
 
     const categoryPercentages = calculatePercentages({ ...categoryTotals })
 
+    // get current summary info
+    const edgeCursor = await query`
+      WITH domains, dmarcSummaries, domainsToDmarcSummaries
+      LET domainId = FIRST(
+        FOR domain IN domains
+          FILTER domain.domain == ${domain}
+          RETURN domain._id
+      )
+      FOR item IN domainsToDmarcSummaries
+        FILTER item._from == domainId
+        FILTER item.startDate == ${date}
+        RETURN item._to
+    `
+
+    const summaryId = await edgeCursor.next()
+
     const summary = {
       ...categoryPercentages,
       categoryTotals,
@@ -62,36 +78,44 @@ const createSummary =
     const trx = await transaction(collectionStrings)
 
     // create summary
-    const summaryCursor = await trx.step(
-      () => query`
-      WITH dmarcSummaries
-      INSERT ${summary} INTO dmarcSummaries
-      RETURN NEW
-    `,
-    )
-
-    const summaryDBInfo = await summaryCursor.next()
-
-    // create edge
     await trx.step(
       () => query`
-      WITH domains, dmarcSummaries, domainsToDmarcSummaries
-      LET domainId = FIRST(
-        FOR domain IN domains
-          FILTER domain.domain == ${domain}
-          RETURN domain._id
-      )
-      INSERT {
-        _from: domainId,
-        _to: ${summaryDBInfo._id},
-        startDate: ${date}
-      } INTO domainsToDmarcSummaries
-    `,
+        WITH dmarcSummaries
+        FOR summary IN dmarcSummaries
+          FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
+          UPSERT { _key: summary._key }
+            INSERT ${summary} 
+            UPDATE {
+              categoryPercentages: ${summary.categoryPercentages},
+              categoryTotals: ${summary.categoryTotals},
+              detailTables: {
+                dkimFailure: UNION_DISTINCT(
+                  summary.detailTables.dkimFailure,
+                  ${summary.detailTables.dkimFailure}
+                ),
+                dmarcFailure: UNION_DISTINCT(
+                  summary.detailTables.dmarcFailure,
+                  ${summary.detailTables.dmarcFailure}
+                ),
+                fullPass: UNION_DISTINCT(
+                  summary.detailTables.fullPass,
+                  ${summary.detailTables.fullPass}
+                ),
+                spfFailure: UNION_DISTINCT(
+                  summary.detailTables.spfFailure,
+                  ${summary.detailTables.spfFailure}
+                ),
+              },
+              totalMessages: ${summary.totalMessages},
+            }
+            IN dmarcSummaries
+          RETURN NEW
+      `,
     )
 
     await trx.commit()
   }
 
 module.exports = {
-  createSummary,
+  upsertSummary,
 }

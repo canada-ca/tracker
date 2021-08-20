@@ -27,7 +27,7 @@ describe('given the loadDomainOwnership function', () => {
       }
       fetch.mockResponseOnce(JSON.stringify(gqlReturnObj))
 
-      const data = await loadDomainOwnership({ fetch })
+      const data = await loadDomainOwnership({ fetch })()
 
       expect(data).toEqual({
         TEST1: ['test.gc.ca', 'test-domain.gc.ca'],
@@ -40,7 +40,7 @@ describe('given the loadDomainOwnership function', () => {
       it('throws error', async () => {
         fetch.mockReject(Error('Fetch Error occurred.'))
 
-        await loadDomainOwnership({ fetch })
+        await loadDomainOwnership({ fetch })()
         expect(consoleOutput[0]).toEqual(
           'Error occurred while fetching domain ownership information: Error: Fetch Error occurred.',
         )
