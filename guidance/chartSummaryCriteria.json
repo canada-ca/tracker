@@ -1,7 +1,6 @@
 {
     "mailSummaryCriteria": {
-        "pass": [
-            "dmarc6"]
+        "pass": ["dmarc4"]
     },
     "webSummaryCriteria": {
             "pass": ["ssl5"],
