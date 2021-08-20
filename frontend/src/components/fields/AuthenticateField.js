@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 
 import { FormField } from './FormField'
 
-import { TwoFactorIcon } from '../theme/Icons'
+import { TwoFactorIcon } from '../../theme/Icons'
 
 function AuthenticateField({
   name,

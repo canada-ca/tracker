@@ -1,7 +1,7 @@
 import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
 
-import { FormField } from '../components/FormField'
+import { FormField } from './FormField'
 
 function OrganizationCreateField({
   name,
