@@ -16,7 +16,6 @@ function DomainField({
     <FormField
       name={name}
       label={label}
-      type="string"
       placeholder={placeholder}
       ref={forwardedRef}
       inputProps={inputProps}

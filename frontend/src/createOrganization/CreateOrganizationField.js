@@ -15,7 +15,6 @@ function OrganizationCreateField({
     <FormField
       name={name}
       label={`${label} (${language})`}
-      type="string"
       placeholder={`${label} (${language})`}
       ref={forwardedRef}
       inputProps={inputProps}

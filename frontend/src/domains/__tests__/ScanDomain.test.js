@@ -83,7 +83,7 @@ describe('<ScanDomain />', () => {
 
   describe('given a domain as input', () => {
     it('submits a domain for scan', async () => {
-      const { getByRole, queryByText, getByLabelText } = render(
+      const { getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -103,7 +103,7 @@ describe('<ScanDomain />', () => {
         </MockedProvider>,
       )
 
-      const domainURL = getByLabelText(/Domain URL/)
+      const domainURL = getByRole('textbox', { name: /Domain URL/ })
       const submit = getByRole('button', { name: /Scan Domain/i })
 
       fillIn(domainURL, {
