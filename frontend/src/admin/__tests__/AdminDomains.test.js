@@ -253,7 +253,7 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      const domainUrlInput = await getByRole('textbox', {
+      const domainUrlInput = getByRole('textbox', {
         name: 'Search by Domain URL',
       })
 
