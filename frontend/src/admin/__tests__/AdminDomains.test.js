@@ -229,7 +229,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByRole, findByRole } = render(
+      const { getByText, getByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -253,7 +253,7 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      const domainUrlInput = await findByRole('textbox', {
+      const domainUrlInput = getByRole('textbox', {
         name: 'Search by Domain URL',
       })
 

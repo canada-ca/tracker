@@ -25,11 +25,6 @@ import { AddIcon, EditIcon, MinusIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { useLingui } from '@lingui/react'
 import { number, string } from 'prop-types'
-import {
-  array as yupArray,
-  object as yupObject,
-  string as yupString,
-} from 'yup'
 
 import { AdminDomainModal } from './AdminDomainModal'
 import { AdminDomianCard } from './AdminDomianCard'
@@ -39,7 +34,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
@@ -140,20 +135,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       },
     },
   )
-
-  const updatedDomainValidationSchema = yupObject().shape({
-    domainUrl: yupString().required(
-      i18n._(fieldRequirements.domainUrl.required.message),
-    ),
-    selectors: yupArray().of(
-      yupString()
-        .required(i18n._(fieldRequirements.selector.required.message))
-        .matches(
-          fieldRequirements.selector.matches.regex,
-          i18n._(fieldRequirements.selector.matches.message),
-        ),
-    ),
-  })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -279,7 +260,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       <AdminDomainModal
         isOpen={updateIsOpen}
         onClose={updateOnClose}
-        validationSchema={updatedDomainValidationSchema}
+        validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
         orgId={orgId}
         orgSlug={orgSlug}
         selectorInputList={selectorInputList}

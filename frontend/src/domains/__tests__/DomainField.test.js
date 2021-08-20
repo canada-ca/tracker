@@ -25,7 +25,7 @@ describe('<DomainField />', () => {
         domain: string().required('sadness'),
       })
 
-      const { getByRole, getByText } = render(
+      const { getByText, getByRole } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <Formik

@@ -1,6 +1,5 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { object, string } from 'yup'
 import {
   Box,
   Button,
@@ -21,7 +20,10 @@ import { PasswordField } from '../components/PasswordField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useUserVar } from '../utilities/userState'
 import { activate } from '../utilities/i18n.config'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import {
+  getRequirment,
+  schemaToValidation,
+} from '../utilities/fieldRequirements'
 import { SIGN_IN } from '../graphql/mutations'
 
 export default function SignInPage() {
@@ -33,13 +35,9 @@ export default function SignInPage() {
 
   const { from } = location.state || { from: { pathname: '/' } }
 
-  const validationSchema = object().shape({
-    password: string().required(
-      i18n._(fieldRequirements.password.required.message),
-    ),
-    email: string()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+  const validationSchema = schemaToValidation({
+    email: getRequirment('email'),
+    password: getRequirment('passwordSignIn'),
   })
 
   const [signIn, { loading }] = useMutation(SIGN_IN, {

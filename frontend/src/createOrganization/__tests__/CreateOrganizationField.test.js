@@ -47,8 +47,8 @@ describe('<CreateOrganizationField />', () => {
         </I18nProvider>,
       )
 
-      const createOrgInput = getByRole('textbox', { name: /Create Org Field/ })
-      fireEvent.blur(createOrgInput)
+      const input = getByRole('textbox', { name: /Create Org Field/ })
+      fireEvent.blur(input)
 
       await waitFor(() => {
         expect(getByText(/sadness/)).toBeInTheDocument()

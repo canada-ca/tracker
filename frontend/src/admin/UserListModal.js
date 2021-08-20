@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import {
   Button,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,22 +12,16 @@ import {
   Stack,
   useToast,
   Select,
-  FormControl,
-  FormErrorMessage,
   Text,
-  InputGroup,
-  InputLeftElement,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import { Field, Formik } from 'formik'
+import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
-import { useLingui } from '@lingui/react'
-import { EmailIcon } from '@chakra-ui/icons'
 import { bool, func, string } from 'prop-types'
-import { object as yupObject, string as yupString } from 'yup'
 
+import { EmailField } from '../components/EmailField'
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../graphql/mutations'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 
 export function UserListModal({
   isOpen,
@@ -42,7 +35,6 @@ export function UserListModal({
 }) {
   const toast = useToast()
   const initialFocusRef = useRef()
-  const { i18n } = useLingui()
 
   const [addUser, { loading: _addUserLoading }] = useMutation(
     INVITE_USER_TO_ORG,
@@ -156,13 +148,9 @@ export function UserListModal({
           validateOnBlur={false}
           initialValues={{
             role: editingUserRole,
-            userName: editingUserName,
+            email: editingUserName,
           }}
-          validationSchema={yupObject().shape({
-            userName: yupString()
-              .required(i18n._(fieldRequirements.email.required.message))
-              .email(i18n._(fieldRequirements.email.email.message)),
-          })}
+          validationSchema={createValidationSchema(['email'])}
           onSubmit={async (values) => {
             // Submit update role mutation
             if (mutation === 'update') {
@@ -170,7 +158,7 @@ export function UserListModal({
                 variables: {
                   orgId: orgId,
                   role: values.role,
-                  userName: values.userName,
+                  userName: values.email,
                 },
               })
             } else if (mutation === 'create') {
@@ -178,7 +166,7 @@ export function UserListModal({
                 variables: {
                   orgId: orgId,
                   requestedRole: values.role,
-                  userName: values.userName,
+                  userName: values.email,
                   preferredLang: 'ENGLISH',
                 },
               })
@@ -204,36 +192,7 @@ export function UserListModal({
                     <Text>{editingUserName}</Text>
                   </Stack>
                 ) : (
-                  <Field id="userName" name="userName">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.userName && form.touched.userName
-                        }
-                      >
-                        <Stack isInline align="center">
-                          <FormLabel htmlFor="userName" fontWeight="bold">
-                            <Trans>User:</Trans>
-                          </FormLabel>
-                          <InputGroup>
-                            <InputLeftElement aria-hidden="true">
-                              <EmailIcon color="gray.300" />
-                            </InputLeftElement>
-                            <Input
-                              mb="2"
-                              {...field}
-                              id="userName"
-                              placeholder={i18n._(t`user email`)}
-                              ref={initialFocusRef}
-                            />
-                          </InputGroup>
-                        </Stack>
-                        <FormErrorMessage>
-                          {form.errors.userName}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
+                  <EmailField />
                 )}
                 <Stack isInline align="center">
                   <FormLabel htmlFor="role" fontWeight="bold" mt="2">

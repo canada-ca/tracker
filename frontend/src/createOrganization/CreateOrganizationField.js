@@ -1,36 +1,25 @@
 import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-} from '@chakra-ui/react'
-import { useField } from 'formik'
+
+import { FormField } from '../components/FormField'
 
 function OrganizationCreateField({
   name,
   label,
   language,
   forwardedRef,
+  inputProps,
   ...props
 }) {
-  const [field, meta] = useField(name)
-
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <FormLabel htmlFor={name} fontWeight="bold">
-        {label} ({language})
-      </FormLabel>
-      <Input
-        {...field}
-        id={name}
-        name={name}
-        ref={forwardedRef}
-        placeholder={`${label} (${language})`}
-      />
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    </FormControl>
+    <FormField
+      name={name}
+      label={`${label} (${language})`}
+      placeholder={`${label} (${language})`}
+      ref={forwardedRef}
+      inputProps={inputProps}
+      {...props}
+    />
   )
 }
 
@@ -38,6 +27,7 @@ OrganizationCreateField.propTypes = {
   name: string.isRequired,
   label: string,
   language: string,
+  inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
 }
 

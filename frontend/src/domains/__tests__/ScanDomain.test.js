@@ -70,7 +70,7 @@ describe('<ScanDomain />', () => {
         </MockedProvider>,
       )
 
-      const submit = getByRole('button')
+      const submit = getByRole('button', { name: /Scan Domain/i })
       clickOn(submit)
 
       await waitFor(() => {
@@ -83,7 +83,7 @@ describe('<ScanDomain />', () => {
 
   describe('given a domain as input', () => {
     it('submits a domain for scan', async () => {
-      const { container, getByRole, queryByText } = render(
+      const { getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -103,10 +103,10 @@ describe('<ScanDomain />', () => {
         </MockedProvider>,
       )
 
-      const domain = container.querySelector('#domain')
-      const submit = getByRole('button')
+      const domainURL = getByRole('textbox', { name: /Domain URL/ })
+      const submit = getByRole('button', { name: /Scan Domain/i })
 
-      fillIn(domain, {
+      fillIn(domainURL, {
         with: values.domain,
       })
 

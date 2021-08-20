@@ -1,26 +1,16 @@
 import React from 'react'
 import { lazyWithRetry } from '../utilities/lazyWithRetry'
 import { string } from 'prop-types'
-import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
 import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react'
 import { useField, useFormikContext } from 'formik'
-import { fieldRequirements } from '../utilities/fieldRequirements'
 const PhoneInput = lazyWithRetry(() => import('react-phone-input-2'))
 
 export function PhoneNumberField({ name, label }) {
   const [, meta] = useField(name)
   const { values, setFieldValue } = useFormikContext()
-  const { i18n } = useLingui()
 
   const labelText = label === undefined ? <Trans>Phone Number:</Trans> : label
-
-  const errorText =
-    meta.error !== i18n._(fieldRequirements.phoneNumber.matches.message) ? (
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    ) : (
-      ''
-    )
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
@@ -47,7 +37,7 @@ export function PhoneNumberField({ name, label }) {
         />
       </Box>
 
-      {errorText}
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
 }
