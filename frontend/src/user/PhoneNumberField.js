@@ -36,7 +36,7 @@ export function PhoneNumberField({ name, label }) {
             style: {
               width: '100%',
               padding: '8px',
-              'padding-inline-start': '20px',
+              paddingInlineStart: '20px',
             },
           }}
           value={values[name]}
