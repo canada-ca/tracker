@@ -70,29 +70,28 @@ export const TopBanner = (props) => {
             <Trans>Sign Out</Trans>
           </Button>
         ) : (
-          <Button
-            variant="primaryWhite"
-            as={RouteLink}
-            to="/sign-in"
-            mr={2}
-            px={3}
-            display={{ base: 'none', md: 'inline' }}
-          >
-            <Trans>Sign In</Trans>
-          </Button>
-        )}
-
-        {!isLoggedIn() && (
-          <Button
-            variant="primaryHover"
-            as={RouteLink}
-            to="/create-user"
-            mr={2}
-            px={3}
-            display={{ base: 'none', md: 'inline' }}
-          >
-            <Trans>Create Account</Trans>
-          </Button>
+          <>
+            <Button
+              variant="primaryWhite"
+              as={RouteLink}
+              to="/sign-in"
+              mr={2}
+              px={3}
+              display={{ base: 'none', md: 'inline' }}
+            >
+              <Trans>Sign In</Trans>
+            </Button>
+            <Button
+              variant="primaryHover"
+              as={RouteLink}
+              to="/create-user"
+              mr={2}
+              px={3}
+              display={{ base: 'none', md: 'inline' }}
+            >
+              <Trans>Create Account</Trans>
+            </Button>
+          </>
         )}
 
         <Box py={4}>
