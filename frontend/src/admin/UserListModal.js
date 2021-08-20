@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import {
   Button,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,19 +12,14 @@ import {
   Stack,
   useToast,
   Select,
-  FormControl,
-  FormErrorMessage,
   Text,
-  InputGroup,
-  InputLeftElement,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import { Field, Formik } from 'formik'
+import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
-import { useLingui } from '@lingui/react'
-import { EmailIcon } from '@chakra-ui/icons'
 import { bool, func, string } from 'prop-types'
 
+import { EmailField } from '../components/EmailField'
 import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../graphql/mutations'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 
@@ -41,7 +35,6 @@ export function UserListModal({
 }) {
   const toast = useToast()
   const initialFocusRef = useRef()
-  const { i18n } = useLingui()
 
   const [addUser, { loading: _addUserLoading }] = useMutation(
     INVITE_USER_TO_ORG,
@@ -199,32 +192,7 @@ export function UserListModal({
                     <Text>{editingUserName}</Text>
                   </Stack>
                 ) : (
-                  <Field id="email" name="email">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={form.errors.email && form.touched.email}
-                      >
-                        <Stack isInline align="center">
-                          <FormLabel htmlFor="email" fontWeight="bold">
-                            <Trans>User:</Trans>
-                          </FormLabel>
-                          <InputGroup>
-                            <InputLeftElement aria-hidden="true">
-                              <EmailIcon color="gray.300" />
-                            </InputLeftElement>
-                            <Input
-                              mb="2"
-                              {...field}
-                              id="email"
-                              placeholder={i18n._(t`user email`)}
-                              ref={initialFocusRef}
-                            />
-                          </InputGroup>
-                        </Stack>
-                        <FormErrorMessage>{form.errors.email}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
+                  <EmailField />
                 )}
                 <Stack isInline align="center">
                   <FormLabel htmlFor="role" fontWeight="bold" mt="2">

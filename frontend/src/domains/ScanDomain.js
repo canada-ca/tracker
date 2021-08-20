@@ -149,12 +149,12 @@ export function ScanDomain() {
   return (
     <Box px="2" mx="auto" overflow="hidden">
       <Formik
-        validationSchema={createValidationSchema(['domainURL'])}
-        initialValues={{ domainURL: '' }}
+        validationSchema={createValidationSchema(['domainUrl'])}
+        initialValues={{ domainUrl: '' }}
         onSubmit={async (values) =>
           requestScan({
             variables: {
-              domainUrl: values.domainURL.toLowerCase(),
+              domainUrl: values.domainUrl.toLowerCase(),
             },
           })
         }
@@ -175,7 +175,7 @@ export function ScanDomain() {
                 >
                   <Trans>Request a domain to be scanned:</Trans>
                 </Text>
-                <DomainField name="domainURL" mb="4" />
+                <DomainField name="domainUrl" mb="4" />
 
                 <Button
                   w={{ base: '100%', md: '25%' }}

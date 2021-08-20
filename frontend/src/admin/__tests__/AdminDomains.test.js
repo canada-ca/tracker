@@ -229,7 +229,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByRole, findByRole } = render(
+      const { getByText, getByRole, getByLabelText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -253,9 +253,7 @@ describe('<AdminDomains />', () => {
         </MockedProvider>,
       )
 
-      const domainUrlInput = await findByRole('textbox', {
-        name: 'Search by Domain URL',
-      })
+      const domainUrlInput = getByLabelText(/Search by Domain URL/)
 
       userEvent.type(domainUrlInput, 'test-domain.gc.ca')
 
@@ -406,7 +404,7 @@ describe('<AdminDomains />', () => {
         queryAllByText,
         findByText,
         queryByText,
-        getByRole,
+        getByLabelText,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
@@ -438,7 +436,7 @@ describe('<AdminDomains />', () => {
         expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
       )
 
-      const domainInput = getByRole('textbox', { name: /New Domain URL/ })
+      const domainInput = getByLabelText(/New Domain URL/)
       expect(domainInput).toBeInTheDocument()
       userEvent.type(domainInput, 'test.domain.gc.ca')
 

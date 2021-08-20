@@ -1,42 +1,42 @@
 import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
-import { t, Trans } from '@lingui/macro'
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputGroup,
-} from '@chakra-ui/react'
-import { useField } from 'formik'
+import { t } from '@lingui/macro'
 
-function DomainField({ name, label, forwardedRef, ...props }) {
-  const [field, meta] = useField(name)
+import { FormField } from '../components/FormField'
 
-  const labelText = label === undefined ? <Trans>Domain URL:</Trans> : label
-
+function DomainField({
+  name,
+  label,
+  placeholder,
+  forwardedRef,
+  inputProps,
+  ...props
+}) {
   return (
-    <FormControl isInvalid={meta.error && meta.touched} {...props}>
-      <FormLabel htmlFor="domain" fontWeight="bold">
-        {labelText}
-      </FormLabel>
-      <InputGroup>
-        <Input
-          {...field}
-          id="domain"
-          ref={forwardedRef}
-          placeholder={t`Domain URL`}
-        />
-      </InputGroup>
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    </FormControl>
+    <FormField
+      name={name}
+      label={label}
+      type="string"
+      placeholder={placeholder}
+      ref={forwardedRef}
+      inputProps={inputProps}
+      {...props}
+    />
   )
 }
 
 DomainField.propTypes = {
-  name: string.isRequired,
+  name: string,
   label: string,
+  placeholder: string,
+  inputProps: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
+}
+
+DomainField.defaultProps = {
+  name: 'domainURL',
+  label: t`Domain URL:`,
+  placeholder: t`Domain URL`,
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {

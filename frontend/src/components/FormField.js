@@ -53,7 +53,7 @@ function FormField({
           )}
         </InputGroup>
 
-        <FormErrorMessage>{meta.error}</FormErrorMessage>
+        <FormErrorMessage mt={0}>{meta.error}</FormErrorMessage>
       </Stack>
     </FormControl>
   )

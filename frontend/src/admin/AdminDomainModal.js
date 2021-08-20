@@ -6,7 +6,6 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
-  FormLabel,
   Grid,
   IconButton,
   Input,
@@ -26,6 +25,7 @@ import { array, bool, func, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
+import { DomainField } from '../domains/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 
 export function AdminDomainModal({
@@ -193,30 +193,11 @@ export function AdminDomainModal({
               <ModalCloseButton />
               <ModalBody>
                 <Stack spacing={4} p={25}>
-                  <Field id="domainUrl" name="domainUrl">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.domainUrl && form.touched.domainUrl
-                        }
-                      >
-                        <FormLabel htmlFor="domainUrl" fontWeight="bold">
-                          <Trans>New Domain URL:</Trans>
-                        </FormLabel>
-
-                        <Input
-                          mb="2"
-                          {...field}
-                          id="domainUrl"
-                          placeholder={i18n._(t`New Domain URL`)}
-                          ref={initialFocusRef}
-                        />
-                        <FormErrorMessage>
-                          {form.errors.domainUrl}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
+                  <DomainField
+                    name="domainUrl"
+                    label={t`New Domain URL:`}
+                    placeholder={i18n._(t`New Domain URL`)}
+                  />
 
                   <FieldArray
                     name="selectors"
