@@ -31,7 +31,7 @@ import { EditableUserPassword } from './EditableUserPassword'
 import { EditableUserTFAMethod } from './EditableUserTFAMethod'
 import { EditableUserPhoneNumber } from './EditableUserPhoneNumber'
 
-import { FormField } from '../components/FormField'
+import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { createValidationSchema } from '../utilities/fieldRequirements'

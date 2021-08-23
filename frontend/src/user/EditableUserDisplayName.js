@@ -21,7 +21,7 @@ import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
 import { string } from 'prop-types'
 
-import { DisplayNameField } from '../components/DisplayNameField'
+import { DisplayNameField } from '../components/fields/DisplayNameField'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 

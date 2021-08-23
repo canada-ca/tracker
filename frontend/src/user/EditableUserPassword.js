@@ -20,8 +20,8 @@ import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
 
-import { PasswordField } from '../components/PasswordField'
-import { PasswordConfirmation } from '../components/PasswordConfirmation'
+import { PasswordField } from '../components/fields/PasswordField'
+import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PASSWORD } from '../graphql/mutations'
 

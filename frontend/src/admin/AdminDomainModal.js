@@ -25,7 +25,7 @@ import { array, bool, func, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
-import { DomainField } from '../domains/DomainField'
+import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 
 export function AdminDomainModal({

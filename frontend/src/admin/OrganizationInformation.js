@@ -27,7 +27,7 @@ import { Formik } from 'formik'
 
 import { ORGANIZATION_INFORMATION } from '../graphql/queries'
 import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
-import { FormField } from '../components/FormField'
+import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import {

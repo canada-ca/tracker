@@ -1,5 +1,5 @@
 import React from 'react'
-import { lazyWithRetry } from '../utilities/lazyWithRetry'
+import { lazyWithRetry } from '../../utilities/lazyWithRetry'
 import { string } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react'

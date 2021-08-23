@@ -2,7 +2,7 @@ import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
 import { t } from '@lingui/macro'
 
-import { FormField } from '../components/FormField'
+import { FormField } from './FormField'
 
 function DomainField({
   name,

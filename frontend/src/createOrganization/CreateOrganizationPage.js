@@ -14,7 +14,7 @@ import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 
-import { CreateOrganizationField } from './CreateOrganizationField'
+import { CreateOrganizationField } from '../components/fields/CreateOrganizationField'
 
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'

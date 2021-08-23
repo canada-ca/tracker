@@ -6,7 +6,7 @@ import { Formik } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
-import { PasswordConfirmation } from '../components/PasswordConfirmation'
+import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { RESET_PASSWORD } from '../graphql/mutations'
 
