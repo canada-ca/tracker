@@ -82,7 +82,7 @@ const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? `https://${window.location.host}/graphql`
-      : 'https://tracker.alpha.canada.ca/graphql',
+      : '/graphql',
 })
 
 const headersLink = setContext((_, { headers }) => {
@@ -102,7 +102,7 @@ const httpLinkWithHeaders = headersLink.concat(httpLink)
 export const wsClient = new SubscriptionClient(
   process.env.NODE_ENV === 'production'
     ? `wss://${window.location.host}/graphql`
-    : 'wss://tracker.alpha.canada.ca/graphql',
+    : 'ws://localhost:3000/graphql',
   {
     lazy: true,
     reconnect: true,
