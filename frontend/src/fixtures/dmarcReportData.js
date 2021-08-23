@@ -50,6 +50,16 @@ export const rawDmarcReportData = {
                   headerFrom: 'test.domain.ca',
                   sourceIpAddress: '123.123.123.123',
                   totalMessages: 112,
+                  guidanceTag: {
+                    __typename: 'GuidanceTag',
+                    guidance: '',
+                    refLinks: [
+                      {
+                        __typename: 'RefLinks',
+                        refLink: '',
+                      },
+                    ],
+                  },
                   __typename: 'DkimFailureTable',
                 },
                 __typename: 'DkimFailureTableEdge',
@@ -77,6 +87,16 @@ export const rawDmarcReportData = {
                   spfDomains: 'spf-failure-spf-domains-L30D.domain',
                   spfResults: 'pass',
                   totalMessages: 112,
+                  guidanceTag: {
+                    __typename: 'GuidanceTag',
+                    guidance: '',
+                    refLinks: [
+                      {
+                        __typename: 'RefLinks',
+                        refLink: '',
+                      },
+                    ],
+                  },
                   __typename: 'SpfFailureTable',
                 },
                 __typename: 'SpfFailureTableEdge',
