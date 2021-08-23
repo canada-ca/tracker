@@ -22,6 +22,7 @@ import {
   Td,
   Text,
   chakra,
+  Link,
 } from '@chakra-ui/react'
 import {
   ArrowLeftIcon,
@@ -30,6 +31,7 @@ import {
   ChevronLeftIcon,
   ChevronUpIcon,
   ChevronRightIcon,
+  ExternalLinkIcon,
 } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -146,7 +148,20 @@ export function TrackerTable({ ...props }) {
                     {...cell.getCellProps()}
                     isNumeric={cell.column.isNumeric}
                   >
-                    {cell.render('Cell')}
+                    {cell.column.id === 'guidanceTag' ? (
+                      cell?.value?.refLinks ? (
+                        <Link
+                          href={cell.value?.refLinks[0]?.refLink}
+                          isExternal
+                        >
+                          {cell.value.guidance} <ExternalLinkIcon />
+                        </Link>
+                      ) : (
+                        <Text>null</Text>
+                      )
+                    ) : (
+                      cell.render('Cell')
+                    )}
                   </Td>
                 ))}
               </Tr>

@@ -193,14 +193,13 @@ export const FloatingMenu = () => {
                       onClick={signOut}
                     />
                   ) : (
-                    <FloatingMenuLink to="/sign-in" text={t`Sign In`} />
-                  )}
-
-                  {!isLoggedIn() && (
-                    <FloatingMenuLink
-                      to="/create-user"
-                      text={t`Create Account`}
-                    />
+                    <>
+                      <FloatingMenuLink to="/sign-in" text={t`Sign In`} />
+                      <FloatingMenuLink
+                        to="/create-user"
+                        text={t`Create Account`}
+                      />
+                    </>
                   )}
 
                   <Divider

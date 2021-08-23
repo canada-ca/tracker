@@ -1,6 +1,5 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import { Formik } from 'formik'
 import {
   Accordion,
@@ -24,25 +23,19 @@ import {
 } from '@chakra-ui/react'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
-import { object, string } from 'yup'
 
-import { DomainField } from './DomainField'
+import { DomainField } from '../components/fields/DomainField'
 import { StatusBadge } from './StatusBadge'
 
 import { ScanCategoryDetails } from '../guidance/ScanCategoryDetails'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { StatusIcon } from '../components/StatusIcon'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { GET_ONE_TIME_SCANS } from '../graphql/queries'
 import { REQUEST_SCAN } from '../graphql/mutations'
 
 export function ScanDomain() {
   const toast = useToast()
-  const validationSchema = object().shape({
-    domain: string().required(
-      i18n._(fieldRequirements.domainUrl.required.message),
-    ),
-  })
 
   const [requestScan, { loading }] = useMutation(REQUEST_SCAN, {
     onError(error) {
@@ -156,12 +149,12 @@ export function ScanDomain() {
   return (
     <Box px="2" mx="auto" overflow="hidden">
       <Formik
-        validationSchema={validationSchema}
-        initialValues={{ domain: '' }}
+        validationSchema={createValidationSchema(['domainUrl'])}
+        initialValues={{ domainUrl: '' }}
         onSubmit={async (values) =>
           requestScan({
             variables: {
-              domainUrl: values.domain.toLowerCase(),
+              domainUrl: values.domainUrl.toLowerCase(),
             },
           })
         }
@@ -182,13 +175,14 @@ export function ScanDomain() {
                 >
                   <Trans>Request a domain to be scanned:</Trans>
                 </Text>
-                <DomainField name="domain" mb="4" />
+                <DomainField name="domainUrl" mb="4" />
 
                 <Button
                   w={{ base: '100%', md: '25%' }}
                   variant="primary"
                   isLoading={isSubmitting}
                   type="submit"
+                  name="submitBtn"
                   id="submitBtn"
                   fontSize="lg"
                 >

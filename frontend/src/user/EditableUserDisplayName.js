@@ -18,13 +18,11 @@ import {
 import { PersonIcon } from '../theme/Icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import { useMutation } from '@apollo/client'
-import { object, string as yupString } from 'yup'
 import { string } from 'prop-types'
 
-import { DisplayNameField } from '../components/DisplayNameField'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { DisplayNameField } from '../components/fields/DisplayNameField'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 
 export function EditableUserDisplayName({ detailValue }) {
@@ -82,12 +80,6 @@ export function EditableUserDisplayName({ detailValue }) {
     },
   )
 
-  const validationSchema = object().shape({
-    displayName: yupString().required(
-      i18n._(fieldRequirements.displayName.required.message),
-    ),
-  })
-
   return (
     <Stack>
       <Heading as="h3" size="md">
@@ -129,7 +121,7 @@ export function EditableUserDisplayName({ detailValue }) {
             initialTouched={{
               displayName: true,
             }}
-            validationSchema={validationSchema}
+            validationSchema={createValidationSchema(['displayName'])}
             onSubmit={async (values) => {
               // Submit update detail mutation
               await updateUserProfile({

@@ -1,18 +1,17 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { number, object } from 'yup'
 import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 
 import { LoadingMessage } from '../components/LoadingMessage'
-import { AuthenticateField } from '../components/AuthenticateField'
+import { AuthenticateField } from '../components/fields/AuthenticateField'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { activate } from '../utilities/i18n.config'
 import { useUserVar } from '../utilities/userState'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { AUTHENTICATE } from '../graphql/mutations'
 
 export default function TwoFactorAuthenticatePage() {
@@ -23,12 +22,6 @@ export default function TwoFactorAuthenticatePage() {
   const { i18n } = useLingui()
   const { sendMethod, authenticateToken } = useParams()
   const { from } = location.state || { from: { pathname: '/' } }
-
-  const validationSchema = object().shape({
-    twoFactorCode: number()
-      .typeError(i18n._(fieldRequirements.twoFactorCode.typeError))
-      .required(i18n._(fieldRequirements.twoFactorCode.required)),
-  })
 
   const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
     onError() {
@@ -99,7 +92,7 @@ export default function TwoFactorAuthenticatePage() {
   return (
     <Box w="100%">
       <Formik
-        validationSchema={validationSchema}
+        validationSchema={createValidationSchema(['twoFactorCode'])}
         initialValues={{
           twoFactorCode: '',
           authenticateToken: authenticateToken,

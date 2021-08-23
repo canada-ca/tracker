@@ -952,6 +952,12 @@ export const PAGINATED_DMARC_REPORT = gql`
                 headerFrom
                 sourceIpAddress
                 totalMessages
+                guidanceTag {
+                  guidance
+                  refLinks {
+                    refLink
+                  }
+                }
               }
             }
             pageInfo {
@@ -973,6 +979,12 @@ export const PAGINATED_DMARC_REPORT = gql`
                 spfDomains
                 spfResults
                 totalMessages
+                guidanceTag {
+                  guidance
+                  refLinks {
+                    refLink
+                  }
+                }
               }
             }
             pageInfo {

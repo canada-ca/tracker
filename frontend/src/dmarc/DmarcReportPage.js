@@ -241,7 +241,10 @@ export default function DmarcReportPage() {
     accessor: 'headerFrom',
     style: { whiteSpace: 'nowrap' },
   }
-  const guidance = { Header: i18n._(t`Guidance`), accessor: 'guidance' }
+  const guidance = {
+    Header: i18n._(t`Guidance`),
+    accessor: 'guidanceTag',
+  }
   const spfAligned = {
     Header: i18n._(t`SPF Aligned`),
     accessor: 'spfAligned',

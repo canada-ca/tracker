@@ -18,15 +18,13 @@ import {
 import { PhoneIcon } from '@chakra-ui/icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import { useMutation } from '@apollo/client'
-import { number, object, string as yupString } from 'yup'
 import { string } from 'prop-types'
 
-import { PhoneNumberField } from './PhoneNumberField'
+import { PhoneNumberField } from '../components/fields/PhoneNumberField'
 
-import { AuthenticateField } from '../components/AuthenticateField'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { AuthenticateField } from '../components/fields/AuthenticateField'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from '../graphql/mutations'
 
 export function EditableUserPhoneNumber({ detailValue }) {
@@ -128,23 +126,6 @@ export function EditableUserPhoneNumber({ detailValue }) {
     },
   )
 
-  const PHONE_NUMBER_REGEX = /^[1-9]\d{9,14}$/
-
-  const phoneValidationSchema = object().shape({
-    phoneNumber: yupString()
-      .required(i18n._(fieldRequirements.phoneNumber.required.message))
-      .matches(
-        PHONE_NUMBER_REGEX,
-        i18n._(fieldRequirements.phoneNumber.matches.message),
-      ),
-  })
-
-  const tfaValidationSchema = object().shape({
-    twoFactorCode: number()
-      .typeError(i18n._(fieldRequirements.twoFactorCode.typeError))
-      .required(i18n._(fieldRequirements.twoFactorCode.required)),
-  })
-
   const setPhoneModal = (
     <Modal
       isOpen={isOpen}
@@ -160,7 +141,7 @@ export function EditableUserPhoneNumber({ detailValue }) {
           initialValues={{
             phoneNumber: '',
           }}
-          validationSchema={phoneValidationSchema}
+          validationSchema={createValidationSchema(['phoneNumber'])}
           onSubmit={async (values) => {
             // Submit update detail mutation
             await setPhoneNumber({
@@ -227,7 +208,7 @@ export function EditableUserPhoneNumber({ detailValue }) {
           initialValues={{
             twoFactorCode: '',
           }}
-          validationSchema={tfaValidationSchema}
+          validationSchema={createValidationSchema(['twoFactorCode'])}
           onSubmit={async (values) => {
             // Submit update detail mutation
             await verifyPhoneNumber({

@@ -23,7 +23,6 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
 import { string } from 'prop-types'
-import { object, string as yupString } from 'yup'
 
 import { EditableUserLanguage } from './EditableUserLanguage'
 import { EditableUserDisplayName } from './EditableUserDisplayName'
@@ -32,10 +31,10 @@ import { EditableUserPassword } from './EditableUserPassword'
 import { EditableUserTFAMethod } from './EditableUserTFAMethod'
 import { EditableUserPhoneNumber } from './EditableUserPhoneNumber'
 
-import { FormField } from '../components/FormField'
+import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { fieldRequirements } from '../utilities/fieldRequirements'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 import { useUserVar } from '../utilities/userState'
 import {
   SEND_EMAIL_VERIFICATION,
@@ -167,12 +166,6 @@ export default function UserPage() {
     phoneValidated,
   } = queryUserData?.userPage
 
-  const closeAccountValidationSchema = object().shape({
-    userNameConfirm: yupString()
-      .required(i18n._(fieldRequirements.field.required.message))
-      .matches(userName, t`User email does not match.`),
-  })
-
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} width="100%">
       <Stack py={25} px="4">
@@ -239,12 +232,12 @@ export default function UserPage() {
         <Formik
           validateOnBlur={false}
           initialValues={{
-            userNameConfirm: '',
+            confirmEmail: '',
           }}
           initialTouched={{
-            userNameConfirm: true,
+            confirmEmail: true,
           }}
-          validationSchema={closeAccountValidationSchema}
+          validationSchema={createValidationSchema(['confirmEmail'])}
           onSubmit={async () => {
             await closeAccount({})
             signOut()
@@ -272,7 +265,7 @@ export default function UserPage() {
                   </Text>
 
                   <FormField
-                    name="userNameConfirm"
+                    name="confirmEmail"
                     label={t`User Email`}
                     placeholder={userName}
                   />

@@ -18,13 +18,11 @@ import {
 import { EmailIcon } from '@chakra-ui/icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { i18n } from '@lingui/core'
 import { useMutation } from '@apollo/client'
-import { object, string as yupString } from 'yup'
 import { string } from 'prop-types'
 
-import { fieldRequirements } from '../utilities/fieldRequirements'
-import { EmailField } from '../components/EmailField'
+import { createValidationSchema } from '../utilities/fieldRequirements'
+import { EmailField } from '../components/fields/EmailField'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 
 export function EditableUserEmail({ detailValue }) {
@@ -82,12 +80,6 @@ export function EditableUserEmail({ detailValue }) {
     },
   )
 
-  const validationSchema = object().shape({
-    email: yupString()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
-  })
-
   return (
     <Stack>
       <Heading as="h3" size="md">
@@ -124,7 +116,7 @@ export function EditableUserEmail({ detailValue }) {
             initialTouched={{
               email: true,
             }}
-            validationSchema={validationSchema}
+            validationSchema={createValidationSchema(['email'])}
             onSubmit={async (values) => {
               // Submit update detail mutation
               await updateUserProfile({
