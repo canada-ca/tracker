@@ -91,34 +91,34 @@ export function App() {
         </header>
 
         <Navigation>
-          <Link to="/">
+          <RouteLink to="/">
             <Trans>Home</Trans>
-          </Link>
+          </RouteLink>
 
           {isLoggedIn() && isEmailValidated() && (
             <>
-              <Link to="/organizations">
+              <RouteLink to="/organizations">
                 <Trans>Organizations</Trans>
-              </Link>
-              <Link to="/domains">
+              </RouteLink>
+              <RouteLink to="/domains">
                 <Trans>Domains</Trans>
-              </Link>
-              <Link to="/dmarc-summaries">
+              </RouteLink>
+              <RouteLink to="/dmarc-summaries">
                 <Trans>DMARC Summaries</Trans>
-              </Link>
+              </RouteLink>
             </>
           )}
 
           {isLoggedIn() && (
-            <Link to="/user">
+            <RouteLink to="/user">
               <Trans>Account Settings</Trans>
-            </Link>
+            </RouteLink>
           )}
 
           {isLoggedIn() && isEmailValidated() && (
-            <Link to="/admin">
+            <RouteLink to="/admin">
               <Trans>Admin Profile</Trans>
-            </Link>
+            </RouteLink>
           )}
         </Navigation>
 
