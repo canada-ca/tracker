@@ -72,4 +72,46 @@ describe('<UserPage />', () => {
     )
     await waitFor(() => expect(queryByText(userName)).toBeInTheDocument())
   })
+
+  it.skip('can update display name', async () => {
+    const { queryByText } = render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+        >
+          <MemoryRouter initialEntries={['/']}>
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <UserPage />
+              </I18nProvider>
+            </ChakraProvider>
+          </MemoryRouter>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    await waitFor(() => {
+      expect(queryByText(/testuser@testemail.gc.ca/)).toBeInTheDocument()
+    })
+
+    // TODO: Add proper labels to the buttons on account
+    //  page for better accessibility and testing
+    // const editDisplayNameButton = getByRole('button', (name: {}))
+  })
+
+  it.skip('can update email', async () => {})
+
+  it.skip('can update password', async () => {})
+
+  it.skip('can update preferred language', async () => {})
+
+  it.skip('can update phone number', async () => {})
+
+  it.skip('can update 2FA method', async () => {})
+
+  it.skip('can validate email', async () => {})
+
+  it.skip('can validate phone', async () => {})
+
+  it.skip('can close account', async () => {})
 })

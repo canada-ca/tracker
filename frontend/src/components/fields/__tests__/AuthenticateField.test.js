@@ -43,7 +43,7 @@ describe('<AuthenticateField />', () => {
       )
 
       const authenticateInput = getByRole('textbox', {
-        name: /We've sent an SMS to your registered phone number/,
+        name: /Please enter your two factor code below/i,
       })
       fireEvent.blur(authenticateInput)
 

@@ -9,6 +9,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 
 import { Dropdown } from '../Dropdown'
+import userEvent from '@testing-library/user-event'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -20,8 +21,7 @@ const i18n = setupI18n({
   },
 })
 
-const handleChange = () => {}
-const handleSearch = () => {}
+const handleSearch = jest.fn()
 
 describe('<Dropdown />', () => {
   const mocks = [
@@ -49,6 +49,8 @@ describe('<Dropdown />', () => {
   ]
 
   it('renders without error', async () => {
+    const handleChange = jest.fn()
+
     const { getByText, getByPlaceholderText } = render(
       <MockedProvider>
         <UserVarProvider
@@ -84,6 +86,8 @@ describe('<Dropdown />', () => {
   // open and close select
   describe('options list', () => {
     it('can be opened and closed', async () => {
+      const handleChange = jest.fn()
+
       const { getByText, getByPlaceholderText, queryByText } = render(
         <MockedProvider>
           <UserVarProvider
@@ -124,6 +128,8 @@ describe('<Dropdown />', () => {
 
     // make selection via mouse
     it('executes change on selection', async () => {
+      const handleChange = jest.fn()
+
       const { getByText, getByPlaceholderText, queryByText } = render(
         <MockedProvider>
           <UserVarProvider
@@ -166,7 +172,14 @@ describe('<Dropdown />', () => {
 
     // make selection via keyboard
     it('executes change on selection', async () => {
-      const { getByText, getByPlaceholderText, queryByText } = render(
+      const handleChange = jest.fn()
+
+      const {
+        queryByText,
+        getByPlaceholderText,
+        getByRole,
+        findByText,
+      } = render(
         <MockedProvider>
           <UserVarProvider
             userVar={makeVar({
@@ -196,26 +209,47 @@ describe('<Dropdown />', () => {
         getByPlaceholderText(/Select an option/)
       })
 
-      const dropdown = getByText(/Dropdown label/i)
-      fireEvent.keyDown(dropdown, { key: 'Enter', code: 'Enter' })
-      await waitFor(() => {
-        expect(queryByText(/Anderson and Sons/)).toBeInTheDocument()
+      const dropdownInput = getByRole('textbox', { name: /Dropdown Label/i })
+      userEvent.click(dropdownInput)
+
+      const andersonOption = await findByText(/Anderson and Sons/)
+      expect(andersonOption).toBeVisible()
+
+      expect(handleChange).toHaveBeenCalledTimes(0)
+
+      userEvent.keyboard('[ArrowDown]')
+
+      expect(handleChange).toHaveBeenCalledTimes(0)
+
+      expect(andersonOption).toHaveFocus()
+
+      userEvent.keyboard('[Enter]')
+
+      expect(handleChange).toHaveBeenCalledTimes(1)
+      expect(handleChange).toHaveBeenLastCalledWith({
+        label: 'Anderson and Sons',
+        value: {
+          id: 'b4a524f0-0337-47c2-84ff-fcb7f8640f1f',
+          slug: 'Anderson-and-Sons',
+        },
       })
 
-      const opt1 = getByText(/Anderson and Sons/)
-      const opt2 = getByText(/Tremblay, Conroy and Breitenberg/)
+      userEvent.keyboard('[Escape]')
 
-      fireEvent.keyDown(dropdown, { key: 'ArrowDown', code: 'ArrowDown' })
-      fireEvent.keyDown(opt1, { key: 'ArrowDown', code: 'ArrowDown' })
-      fireEvent.keyDown(opt2, { key: 'ArrowUp', code: 'ArrowUp' })
-      fireEvent.keyDown(opt1, { key: 'Enter', code: 'Enter' })
+      expect(queryByText(/Anderson and Sons/)).not.toBeVisible()
+
+      userEvent.keyboard('[ArrowUp]')
+
+      expect(andersonOption).not.toHaveFocus()
     })
   })
 
-  // filter options with input
   describe('search input', () => {
-    it('filters selectable options', async () => {
-      const { getByText, getByPlaceholderText, queryByText } = render(
+    it('calls search callback', async () => {
+      const handleChange = jest.fn()
+      const handleSearch = jest.fn()
+
+      const { getByPlaceholderText, getByRole } = render(
         <MockedProvider>
           <UserVarProvider
             userVar={makeVar({
@@ -242,16 +276,15 @@ describe('<Dropdown />', () => {
         </MockedProvider>,
       )
       await waitFor(() => {
-        getByText(/Dropdown label/i)
-        expect(queryByText(/Anderson and Sons/)).toBeInTheDocument()
+        getByPlaceholderText(/Select an option/)
       })
 
-      const input = getByPlaceholderText(/Select an option/)
-      fireEvent.change(input, { value: 'Tre' })
+      const dropdownInput = getByRole('textbox', { name: /Dropdown Label/i })
+      userEvent.click(dropdownInput)
 
-      // await waitFor(() => {
-      //   expect(queryByText('Tre')).toBeInTheDocument()
-      // })
+      userEvent.type(dropdownInput, 'search text')
+
+      expect(handleSearch).toHaveBeenLastCalledWith('search text')
     })
   })
 })

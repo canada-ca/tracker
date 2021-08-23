@@ -7,6 +7,7 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
+import userEvent from '@testing-library/user-event'
 
 import CreateUserPage from '../CreateUserPage'
 
@@ -34,7 +35,7 @@ const mocks = [
           result: {
             __typename: 'SignUpError',
             code: 98,
-            description: 'Hello World',
+            description: 'Your account could not be created',
           },
           __typename: 'SignUpPayload',
         },
@@ -408,9 +409,115 @@ describe('<CreateUserPage />', () => {
   })
 
   describe('given correct input in all fields', () => {
+    it('successfully creates the user account', async () => {
+      const successfulMocks = [
+        {
+          request: {
+            query: SIGN_UP,
+            variables: {
+              userName: 'user@test.email.ca',
+              displayName: 'Test User',
+              password: 'SuperSecretPassword',
+              confirmPassword: 'SuperSecretPassword',
+              preferredLang: 'ENGLISH',
+              signUpToken: '',
+            },
+          },
+          result: {
+            data: {
+              signUp: {
+                result: {
+                  user: {
+                    jwt: 'user-jwt',
+                    tfaSendMethod: 'NONE',
+                    userName: 'UserName',
+                    preferredLang: 'ENGLISH',
+                  },
+                  authToken: 'some-auth-token',
+                  __typename: 'AuthResult',
+                },
+                __typename: 'SignUpPayload',
+              },
+            },
+          },
+        },
+      ]
+      const { getByRole, findByText, getByLabelText } = render(
+        <MockedProvider mocks={successfulMocks}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <CreateUserPage />
+                </MemoryRouter>
+              </I18nProvider>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+      // fill in each field
+      const emailInput = getByRole('textbox', { name: /Email:/ })
+      const displayNameInput = getByRole('textbox', { name: /Display Name:/ })
+      // password fields don't have an aria role, so we can just get by label instead
+      const passwordInput = getByLabelText('Password:')
+      const confirmPasswordInput = getByLabelText('Confirm Password:')
+
+      const langSelect = getByRole('combobox', { name: /Language:/ })
+
+      userEvent.type(emailInput, 'user@test.email.ca')
+      userEvent.type(displayNameInput, 'Test User')
+      userEvent.type(passwordInput, 'SuperSecretPassword')
+      userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
+      userEvent.selectOptions(langSelect, 'ENGLISH')
+
+      // fire mutation
+      const createAccountButton = getByRole('button', {
+        name: /Create Account/,
+      })
+      userEvent.click(createAccountButton)
+
+      // expect successful message
+      const orgCreationToast = await findByText(/Account Created/i)
+      await waitFor(() => expect(orgCreationToast).toBeVisible())
+    })
+
     it('fails to create account', async () => {
-      const { container, getByText } = render(
-        <MockedProvider mocks={mocks}>
+      const unsuccessfulMocks = [
+        {
+          request: {
+            query: SIGN_UP,
+            variables: {
+              userName: 'user@test.email.ca',
+              displayName: 'Test User',
+              password: 'SuperSecretPassword',
+              confirmPassword: 'SuperSecretPassword',
+              preferredLang: 'ENGLISH',
+              signUpToken: '',
+            },
+          },
+          result: {
+            data: {
+              signUp: {
+                result: {
+                  __typename: 'SignUpError',
+                  code: 98,
+                  description: 'Your account could not be created',
+                },
+                __typename: 'SignUpPayload',
+              },
+            },
+          },
+        },
+      ]
+
+      const { getByRole, findByText, getByLabelText } = render(
+        <MockedProvider mocks={unsuccessfulMocks}>
           <UserVarProvider
             userVar={makeVar({
               jwt: null,
@@ -430,34 +537,31 @@ describe('<CreateUserPage />', () => {
       )
 
       // fill in each field
-      const email = container.querySelector('#email')
-      const displayName = container.querySelector('#displayName')
-      const password = container.querySelector('#password')
-      const confirmPassword = container.querySelector('#confirmPassword')
-      const lang = container.querySelector('#lang')
+      const emailInput = getByRole('textbox', { name: /Email:/ })
+      const displayNameInput = getByRole('textbox', { name: /Display Name:/ })
+      // password fields don't have an aria role, so we can just get by label instead
+      const passwordInput = getByLabelText('Password:')
+      const confirmPasswordInput = getByLabelText('Confirm Password:')
 
-      await waitFor(() => {
-        fireEvent.change(email, { target: { value: 'user@test.email.ca' } })
-        fireEvent.change(displayName, { target: { value: 'Test User' } })
-        fireEvent.change(password, { target: { value: 'SuperSecretPassword' } })
-        fireEvent.change(confirmPassword, {
-          target: { value: 'SuperSecretPassword' },
-        })
-        fireEvent.change(lang, { target: { value: 'ENGLISH' } })
-      })
+      const langSelect = getByRole('combobox', { name: /Language:/ })
+
+      userEvent.type(emailInput, 'user@test.email.ca')
+      userEvent.type(displayNameInput, 'Test User')
+      userEvent.type(passwordInput, 'SuperSecretPassword')
+      userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
+      userEvent.selectOptions(langSelect, 'ENGLISH')
 
       // fire mutation
-      const createAccount = getByText(/Create Account/i)
-      await waitFor(() => {
-        fireEvent.click(createAccount)
+      const createAccountButton = getByRole('button', {
+        name: /Create Account/,
       })
+      userEvent.click(createAccountButton)
 
-      // expect success
-      await waitFor(() => {
-        expect(
-          getByText(/Unable to create your account, please try again./i),
-        ).toBeInTheDocument()
-      })
+      // expect error message
+      const orgCreationToast = await findByText(
+        /Your account could not be created/,
+      )
+      await waitFor(() => expect(orgCreationToast).toBeVisible())
     })
   })
 })

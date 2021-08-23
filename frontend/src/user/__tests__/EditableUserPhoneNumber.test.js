@@ -7,6 +7,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 import { makeVar } from '@apollo/client'
+import userEvent from '@testing-library/user-event'
 
 import { EditableUserPhoneNumber } from '../EditableUserPhoneNumber'
 
@@ -123,27 +124,28 @@ describe('<EditableUserPhoneNumber />', () => {
       })
     })
 
-    describe('the New Display Name field has input', () => {
-      describe('and the form is submitted', () => {
-        it('displays success message', async () => {
+    describe('new phone number is submitted', () => {
+      describe('verification is submitted', () => {
+        it('displays success messages', async () => {
           const mocks = [
             {
               request: {
                 query: SET_PHONE_NUMBER,
-                variables: { phoneNumber: '+17895551234' },
+                variables: { phoneNumber: '+19025555555' },
               },
               result: {
                 data: {
-                  updateUserProfile: {
+                  setPhoneNumber: {
                     result: {
-                      status: 'Hello World',
-                      __typename: 'UpdateUserProfileResult',
+                      status:
+                        'Phone number has been successfully set, you will receive a verification text message shortly.',
                       user: {
                         phoneNumber: '+17895551234',
                         __typename: 'PersonalUser',
                       },
+                      __typename: 'SetPhoneNumberResult',
                     },
-                    __typename: 'UpdateUserProfilePayload',
+                    __typename: 'SetPhoneNumberPayload',
                   },
                 },
               },
@@ -151,27 +153,28 @@ describe('<EditableUserPhoneNumber />', () => {
             {
               request: {
                 query: VERIFY_PHONE_NUMBER,
-                variables: { phoneNumber: '+17895551234' },
+                variables: { twoFactorCode: 1234 },
               },
               result: {
                 data: {
-                  updateUserProfile: {
+                  verifyPhoneNumber: {
                     result: {
-                      status: 'Hello World',
-                      __typename: 'UpdateUserProfileResult',
+                      status:
+                        'You have successfully verified your phone number.',
                       user: {
-                        phoneNumber: '+17895551234',
+                        phoneNumber: '+19025555555',
+                        phoneValidated: true,
                         __typename: 'PersonalUser',
                       },
+                      __typename: 'VerifyPhoneNumberResult',
                     },
-                    __typename: 'UpdateUserProfilePayload',
+                    __typename: 'VerifyPhoneNumberPayload',
                   },
                 },
               },
             },
           ]
-
-          const { queryByText, getByText, getByLabelText } = render(
+          const { queryByText, getByText, getByRole, findByRole } = render(
             <Suspense fallback="test loading">
               <MockedProvider addTypename={false} mocks={mocks}>
                 <UserVarProvider
@@ -192,20 +195,51 @@ describe('<EditableUserPhoneNumber />', () => {
               </MockedProvider>
             </Suspense>,
           )
+          // ensure suspense is not active
+          await waitFor(() => {
+            expect(queryByText(/test loading/)).not.toBeInTheDocument()
+          })
+
           const editButton = getByText(/Edit/i)
           fireEvent.click(editButton)
 
+          // ensure editing phone number modal is open
           await waitFor(() => {
             expect(queryByText(/Edit Phone Number/)).toBeInTheDocument()
           })
 
-          const displayName = getByLabelText(/New Phone Number:/)
-          fireEvent.change(displayName, {
-            target: { value: '+17895551234' },
+          const displayNameInput = getByRole('textbox', {
+            name: /New Phone Number:/,
           })
 
-          const confirmButton = getByText('Confirm')
+          userEvent.clear(displayNameInput)
+          userEvent.type(displayNameInput, '19025555555')
+
+          // ensure verify phone number modal is not open
+          expect(
+            queryByText(/Please enter your two factor code below/i),
+          ).not.toBeInTheDocument()
+
+          const confirmButton = getByRole('button', { name: 'Confirm' })
           fireEvent.click(confirmButton)
+
+          const twoFactorCodeInput = await findByRole('textbox', {
+            name: /Please enter your two factor code below/i,
+          })
+
+          userEvent.type(twoFactorCodeInput, '1234')
+
+          const confirmVerifyPhoneNumberButton = getByRole('button', {
+            name: 'Confirm',
+          })
+
+          userEvent.click(confirmVerifyPhoneNumberButton)
+
+          await waitFor(() =>
+            expect(
+              queryByText(/You have successfully updated your phone number\./),
+            ).toBeInTheDocument(),
+          )
         })
       })
     })

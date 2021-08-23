@@ -102,4 +102,89 @@ describe('<App/>', () => {
       })
     })
   })
+
+  describe('user is logged in', () => {
+    it('does not render <VerifyAccountNotificationBar />', () => {
+      const { queryByText } = render(
+        <MockedProvider>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['/']}>
+                <I18nProvider i18n={i18n}>
+                  <App />
+                </I18nProvider>
+              </MemoryRouter>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+
+      expect(
+        queryByText(
+          /To enable full app functionality and maximize your account's security/,
+        ),
+      ).not.toBeInTheDocument()
+    })
+  })
+
+  describe('user is logged in', () => {
+    it('renders <VerifyAccountNotificationBar /> when user not verified', () => {
+      const { getByText } = render(
+        <MockedProvider>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: 'test-jwt',
+              tfaSendMethod: 'NONE',
+              userName: 'test@email.com',
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['/']}>
+                <I18nProvider i18n={i18n}>
+                  <App />
+                </I18nProvider>
+              </MemoryRouter>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+      expect(
+        getByText(
+          /To enable full app functionality and maximize your account's security/,
+        ),
+      ).toBeInTheDocument()
+    })
+    it('does not render <VerifyAccountNotificationBar /> if user is verified', () => {
+      const { queryByText } = render(
+        <MockedProvider>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['/']}>
+                <I18nProvider i18n={i18n}>
+                  <App />
+                </I18nProvider>
+              </MemoryRouter>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+      expect(
+        queryByText(
+          /To enable full app functionality and maximize your account's security/,
+        ),
+      ).not.toBeInTheDocument()
+    })
+  })
 })

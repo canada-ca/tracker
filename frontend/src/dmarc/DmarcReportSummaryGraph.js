@@ -88,12 +88,20 @@ export function DmarcReportSummaryGraph({ ...props }) {
           mr={{ base: '0', md: '4' }}
           mb={{ base: '2', md: '0' }}
         >
-          <Text fontSize="lg" fontWeight="bold" textAlign="center">
-            <Trans>Graph:</Trans>
+          <Text
+            as="label"
+            htmlFor="graphDirection"
+            fontSize="lg"
+            fontWeight="bold"
+            textAlign="center"
+            flexShrink={0}
+          >
+            <Trans>Graph direction:</Trans>
           </Text>
           <Select
             variant="filled"
             onChange={() => setIsHorizontal(!isHorizontal)}
+            id="graphDirection"
           >
             <option>{t`Vertical View`}</option>
             <option>{t`Horizontal View`}</option>
