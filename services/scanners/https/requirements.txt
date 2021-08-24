@@ -18,4 +18,4 @@ uvloop
 httptools
 moz_crlite_query
 cryptography
-Pebble==4.6.1
+Pebble==4.6.2
