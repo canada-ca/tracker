@@ -398,11 +398,11 @@ export default function TermsConditionsPage() {
               isExternal={true}
               href={
                 i18n.locale === 'en'
-                  ? 'https://https-everywhere.canada.ca/en/help/'
-                  : 'https://https-everywhere.canada.ca/fr/aide/'
+                  ? 'https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html'
+                  : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html'
               }
             >
-              <Trans>https://https-everywhere.canada.ca/en/help/</Trans>
+              <Trans>https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html</Trans>
               {linkIcon}
             </Link>
           </ListItem>
