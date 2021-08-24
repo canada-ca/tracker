@@ -14,7 +14,7 @@ import { bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 
-export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
+export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
     border: '1px solid',
@@ -49,40 +49,17 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           <Text isTruncated>{url}</Text>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
-        <Box
-          flexShrink="0"
-          textAlign="left"
-          mr={{ base: 0, md: '4' }}
-          flexGrow="1"
-        >
-          {lastRan ? (
-            <Box>
-              <Text fontWeight="bold">
-                <Trans>Last scanned:</Trans>
-              </Text>
-              {lastRan.substring(0, 16)}
-            </Box>
-          ) : (
-            <Text fontWeight="bold" fontSize="sm">
-              <Trans>Not scanned yet.</Trans>
-            </Text>
-          )}
-        </Box>
         <Divider variant="card" display={{ md: 'none' }} />
-        {lastRan && (
-          <>
-            <Flex {...statusGroupingProps}>
-              <StatusBadge text="HTTPS:" status={status.https} />
-              <StatusBadge text="SSL:" status={status.ssl} />
-            </Flex>
-            <Flex {...statusGroupingProps}>
-              <StatusBadge text="SPF:" status={status.spf} />
-              <StatusBadge text="DKIM:" status={status.dkim} />
-              <StatusBadge text="DMARC:" status={status.dmarc} />
-            </Flex>
-            <Divider variant="card" display={{ md: 'none' }} />
-          </>
-        )}
+        <Flex {...statusGroupingProps}>
+          <StatusBadge text="HTTPS:" status={status.https} />
+          <StatusBadge text="SSL:" status={status.ssl} />
+        </Flex>
+        <Flex {...statusGroupingProps}>
+          <StatusBadge text="SPF:" status={status.spf} />
+          <StatusBadge text="DKIM:" status={status.dkim} />
+          <StatusBadge text="DMARC:" status={status.dmarc} />
+        </Flex>
+        <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"
           justifySelf="flex-end"
@@ -120,7 +97,6 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
 
 DomainCard.propTypes = {
   url: string.isRequired,
-  lastRan: string,
   status: object,
   hasDMARCReport: bool,
 }
