@@ -52,7 +52,7 @@ export default function TermsConditionsPage() {
               isExternal={true}
               href={
                 i18n.locale === 'en'
-                  ? 'https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp'
+                  ? 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=24227'
                   : 'https://www.canada.ca/fr/transparence/avis.html'
               }
             >
@@ -232,8 +232,8 @@ export default function TermsConditionsPage() {
               isExternal={true}
               href={
                 i18n.locale === 'en'
-                  ? 'https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp'
-                  : 'https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-fra.asp'
+                  ? 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=24227'
+                  : 'https://www.tbs-sct.gc.ca/pol/doc-fra.aspx?id=24227'
               }
             >
               <Trans>Privacy Notice Statement</Trans>
