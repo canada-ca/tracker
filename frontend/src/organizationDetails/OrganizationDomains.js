@@ -63,8 +63,8 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.`}
         />
         <InfoBox
-          title={t`SSL`}
-          info={t`Shows if the domain meets the Secure Sockets Layer (SSL) requirements.`}
+          title={t`Protocols & Ciphers`}
+          info={t`Shows if the domain is free of known weak protocols and ciphers`}
         />
         <InfoBox
           title={t`SPF`}

@@ -235,7 +235,7 @@ export function ScanDomain() {
                         }
                       />
                       <StatusBadge
-                        text="SSL:"
+                        text="Protocols & Ciphers:"
                         status={
                           mergedScan.scan?.ssl
                             ? mergedScan.scan.ssl.status

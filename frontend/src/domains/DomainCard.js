@@ -73,7 +73,7 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           <>
             <Flex {...statusGroupingProps}>
               <StatusBadge text="HTTPS:" status={status.https} />
-              <StatusBadge text="SSL:" status={status.ssl} />
+              <StatusBadge text="Protocols & Ciphers:" status={status.ssl} />
             </Flex>
             <Flex {...statusGroupingProps}>
               <StatusBadge text="SPF:" status={status.spf} />

@@ -69,7 +69,7 @@ export function RequestScanNotificationHandler({ children, ...props }) {
         data: { getOneTimeScans: subscriptionData.data.sslScanData },
       })
       toast({
-        title: t`SSL Scan Complete`,
+        title: t`Protocol and Cipher Scan Complete`,
         description: t`SSL scan for domain "${subscriptionData.data.sslScanData.domain.domain}" has completed.`,
         status: 'info',
         duration: 9000,

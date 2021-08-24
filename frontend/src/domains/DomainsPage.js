@@ -135,8 +135,8 @@ export default function DomainsPage() {
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.`}
         />
         <InfoBox
-          title={t`SSL`}
-          info={t`Shows if the domain meets the Secure Sockets Layer (SSL) requirements.`}
+          title={t`Protocols & Ciphers`}
+          info={t`Shows if the domain meets the Protocol & Cipher requirements.`}
         />
         <InfoBox
           title={t`SPF`}
@@ -228,7 +228,7 @@ export default function DomainsPage() {
                     <option value="DOMAIN">{t`Domain`}</option>
                     <option value="LAST_RAN">{t`Last Scanned`}</option>
                     <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
-                    <option value="SSL_STATUS">{t`SSL Status`}</option>
+                    <option value="SSL_STATUS">{t`Protocol & Cipher Status`}</option>
                     <option value="SPF_STATUS">{t`SPF Status`}</option>
                     <option value="DKIM_STATUS">{t`DKIM Status`}</option>
                     <option value="DMARC_STATUS">{t`DMARC Status`}</option>
