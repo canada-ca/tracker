@@ -1,13 +1,12 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
-import { Box, Grid, Link, ListItem, Stack, Text } from '@chakra-ui/react'
-import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
-import { Link as RouteLink } from 'react-router-dom'
+import { Grid, Link, ListItem, Stack, Text } from '@chakra-ui/react'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
 
-export function AdminDomianCard({ url, lastRan, ...rest }) {
+export function AdminDomianCard({ url, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -31,25 +30,8 @@ export function AdminDomianCard({ url, lastRan, ...rest }) {
             <ExternalLinkIcon mx="2px" aria-hidden="true" />
           </Link>
         </Stack>
-        {lastRan ? (
-          <Stack isInline>
-            <Text fontWeight="bold">
-              <Trans>Last scanned:</Trans>
-            </Text>
-            <Link ml="auto" as={RouteLink} to={`domains/${url}`}>
-              {lastRan}
-              <LinkIcon mx="2px" aria-hidden="true" />
-            </Link>
-          </Stack>
-        ) : (
-          <Box>
-            <Text fontWeight="bold">
-              <Trans>Not scanned yet.</Trans>
-            </Text>
-          </Box>
-        )}
       </Grid>
     </ListItem>
   )
 }
-AdminDomianCard.propTypes = { url: string, lastRan: string }
+AdminDomianCard.propTypes = { url: string }

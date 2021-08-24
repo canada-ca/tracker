@@ -24,11 +24,7 @@ describe('<Domain />', () => {
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <List>
-              <AdminDomianCard
-                lastRan={null}
-                url="canada.ca"
-                data-testid="domain"
-              />
+              <AdminDomianCard url="canada.ca" data-testid="domain" />
             </List>
           </MemoryRouter>
         </I18nProvider>

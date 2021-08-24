@@ -151,7 +151,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </Text>
       )}
     >
-      {({ id: domainId, domain, lastRan, selectors }, index) => (
+      {({ id: domainId, domain, selectors }, index) => (
         <Box key={'admindomain' + index}>
           <Stack isInline align="center">
             <Stack direction="row" flexGrow="0">
@@ -184,7 +184,6 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             </Stack>
             <AdminDomianCard
               url={domain}
-              lastRan={lastRan}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
             />

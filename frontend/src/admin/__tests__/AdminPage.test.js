@@ -159,7 +159,6 @@ describe('<AdminPage />', () => {
                   node: {
                     id: 'e86770be-b13e-4bee-b833-6a2e31add85c',
                     domain: 'antonia.name',
-                    lastRan: null,
                     selectors: ['selector9._domainkey', 'selector7._domainkey'],
                     __typename: 'Domain',
                   },
@@ -169,7 +168,6 @@ describe('<AdminPage />', () => {
                   node: {
                     id: '11494bbf-1ed6-4edb-b96f-3fed6f36a226',
                     domain: 'blaise.biz',
-                    lastRan: null,
                     selectors: ['selector3._domainkey', 'selector5._domainkey'],
                     __typename: 'Domain',
                   },
