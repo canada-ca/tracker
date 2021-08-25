@@ -145,13 +145,25 @@ def process_https(results, domain_key, user_key, db, shared_id):
         "negativeTags": negative_tags,
         }
 
+    hsts_tags = ["https9", "https10"]
+
     # get https status
     if "https17" in neutral_tags:
         https_status= "info"
-    elif len(negative_tags) > 0:
+    elif len([tag for tag in negative_tags if tag not in hsts_tags]) > 0:
         https_status = "fail"
     else:
         https_status = "pass"
+
+    # get hsts status
+    if "https17" in neutral_tags:
+        hsts_status= "info"
+    elif len([tag for tag in negative_tags if tag in hsts_tags]) > 0:
+        hsts_status = "fail"
+    else:
+        hsts_status = "pass"
+
+
 
     if user_key is None:
         try:
@@ -165,15 +177,22 @@ def process_https(results, domain_key, user_key, db, shared_id):
                 domain.update(
                     {
                         "status": {
-                            "https": "unknown",
-                            "ssl": "unknown",
-                            "dmarc": "unknown",
+                            "certificates": "unknown",
+                            "ciphers": "unknown",
+                            "curves": "unknown",
                             "dkim": "unknown",
+                            "dmarc": "unknown",
+                            "hsts": "unknown",
+                            "https": "unknown",
+                            "policy": "unknown",
+                            "protocols": "unknown",
                             "spf": "unknown",
+                            "ssl": "unknown",
                         }
                     }
                 )
             domain["status"]["https"] = https_status
+            domain["status"]["hsts"] = hsts_status
             db.collection("domains").update(domain)
 
         except Exception as e:
@@ -268,6 +287,9 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
         "negativeTags": negative_tags,
     }
 
+    # will add curve tag if added to negative_tags
+    cipher_tags = ["ssl6"]
+
     # get ssl status
     if "ssl9" in neutral_tags:
         ssl_status = "info"
@@ -275,6 +297,20 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
         ssl_status = "fail"
     else:
         ssl_status = "pass"
+
+    # get protocol status
+    if "ssl9" in neutral_tags:
+        protocol_status = "info"
+    elif len([tag for tag in negative_tags if not in cipher_tags]) > 0 or "ssl5" not in positive_tags:
+        protocol_status = "fail"
+    else:
+        protocol_status = "pass"
+
+    # get cipher status
+    cipher_status = "fail" if len(weak_ciphers) > 0 else "pass"
+
+    # get curve status
+    curve_status = "fail" if len(weak_curves) > 0 else "pass"
 
     if user_key is None:
         try:
@@ -288,15 +324,24 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
                 domain.update(
                     {
                         "status": {
-                            "https": "unknown",
-                            "ssl": "unknown",
-                            "dmarc": "unknown",
+                            "certificates": "unknown",
+                            "ciphers": "unknown",
+                            "curves": "unknown",
                             "dkim": "unknown",
+                            "dmarc": "unknown",
+                            "hsts": "unknown",
+                            "https": "unknown",
+                            "policy": "unknown",
+                            "protocols": "unknown",
                             "spf": "unknown",
+                            "ssl": "unknown",
                         }
                     }
                 )
             domain["status"]["ssl"] = ssl_status
+            domain["status"]["protocols"] = protocol_status
+            domain["status"]["ciphers"] = cipher_status
+            domain["status"]["curves"] = curve_status
             db.collection("domains").update(domain)
 
         except Exception as e:
@@ -873,11 +918,17 @@ def process_dns(results, domain_key, user_key, db, shared_id):
                 domain.update(
                     {
                         "status": {
-                            "https": "unknown",
-                            "ssl": "unknown",
-                            "dmarc": "unknown",
+                            "certificates": "unknown",
+                            "ciphers": "unknown",
+                            "curves": "unknown",
                             "dkim": "unknown",
+                            "dmarc": "unknown",
+                            "hsts": "unknown",
+                            "https": "unknown",
+                            "policy": "unknown",
+                            "protocols": "unknown",
                             "spf": "unknown",
+                            "ssl": "unknown",
                         }
                     }
                 )

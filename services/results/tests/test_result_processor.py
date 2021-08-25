@@ -19,7 +19,13 @@ graph.create_vertex_collection("dmarc")
 graph.create_vertex_collection("spf")
 graph.create_vertex_collection("dkim")
 graph.create_vertex_collection("dkimResults")
+graph.create_vertex_collection("certificates")
+graph.create_vertex_collection("ciphers")
+graph.create_vertex_collection("curves")
+graph.create_vertex_collection("hsts")
 graph.create_vertex_collection("https")
+graph.create_vertex_collection("policy")
+graph.create_vertex_collection("protocols")
 graph.create_vertex_collection("ssl")
 
 graph.create_edge_definition(
@@ -63,9 +69,15 @@ test_db.collection("domains").insert(
         "domain": "cyber.gc.ca",
         "selectors": ["selector1"],
         "status": {
+            "certificates": "pass",
+            "ciphers": "pass",
+            "curves": "pass",
             "dkim": "pass",
             "dmarc": "pass",
+            "hsts": "pass",
             "https": "pass",
+            "policy": "pass",
+            "protocols": "pass",
             "spf": "pass",
             "ssl": "pass",
         },
