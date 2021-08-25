@@ -1,0 +1,29 @@
+steps:
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-if-master
+    entrypoint: 'bash'
+    dir: ci
+    args:
+    - '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/track-compliance/ci .
+      else
+        exit 0
+      fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-if-master
+    entrypoint: 'bash'
+    dir: ci
+    args:
+    - '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker push gcr.io/track-compliance/ci
+      else
+        exit 0
+      fi
