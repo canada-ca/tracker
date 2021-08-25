@@ -1,10 +1,17 @@
 steps:
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: generate-requirements-txt
+    dir: services/queues/scan
+    entrypoint: /bin/sh
+    args: ["-c", "pipenv lock --dev -r > requirements.txt"]
+
   - name: 'gcr.io/track-compliance/ci'
     id: test-scan-queue
     dir: services/queues/scan
     entrypoint: /bin/sh
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
-  
+
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
@@ -13,6 +20,7 @@ steps:
       - '-c'
       - |
         echo "gcr.io/$PROJECT_ID/services/queues/scan:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
   - name: 'gcr.io/cloud-builders/docker'
     id: build-scan-if-master
     entrypoint: 'bash'
