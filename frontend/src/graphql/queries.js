@@ -736,9 +736,15 @@ export const PAGINATED_DOMAINS = gql`
           domain
           lastRan
           status {
+            certificates
+            ciphers
+            curves
             dkim
             dmarc
+            hsts
             https
+            policy
+            protocols
             spf
             ssl
           }
