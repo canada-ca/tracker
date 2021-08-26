@@ -80,7 +80,7 @@ npm test
 #### Running the linter
 
 The linter performs a code analysis that flags programming errors, bugs, stylistic errors, and suspicious constructs.
-Style errors are determined by the prettier configuration in `.prettierrc`, and plugins exist for automatically formatting code on file saves.
+Style errors are determined by the prettier configuration in `.prettierrc`, and plugins exist for automatically formatting code on file save.
 
 ```sh
 npm run lint
@@ -99,9 +99,16 @@ These elements support the use of variables and any other Javascript inside them
 
 The frontend user interface is styled using [Chakra](https://chakra-ui.com/).
 Chakra contains many React components that are used for designing page layouts.
-Chakra also allows the use of ['style props'](https://chakra-ui.com/docs/features/style-props), which apply css properties to components.
+Chakra also allows for the use of ['style props'](https://chakra-ui.com/docs/features/style-props), which apply css properties to components.
 Chakra comes with a default theme, that Tracker extends in [/frontend/src/theme/canada.js](https://github.com/canada-ca/tracker/blob/master/frontend/src/theme/canada.js).
+The theme contains colour, size, and spacing definitions, along with default component styles and custom component variants.
 
 The frontend communicates to the database API using [GraphQL](https://graphql.org/).
 The primary interactions are queries, used for requesting data from the database, and mutations, used for manipulating data in the database.
 The faked_schema.js is used to define the inputs and returns, and their corresponding types when running a local copy of Tracker.
+
+The /src/ folder is organized into folders for each page, along with:
+an app folder for the overall structure of the page;
+an auth folder for all the login and account creation pages;
+a components folder for any shared components;
+and a utilities folder for functions.
