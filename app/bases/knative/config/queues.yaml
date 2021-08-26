@@ -20,7 +20,7 @@ spec:
       timeoutSeconds: 500
       containers:
       - name: scan-queue
-        image: gcr.io/track-compliance/services/queues/scan:master-8e16478-1629921746 # {"$imagepolicy": "flux-system:scan-queue"}
+        image: gcr.io/track-compliance/services/queues/scan:master-d9d92a4-1629987874 # {"$imagepolicy": "flux-system:scan-queue"}
 ---
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
