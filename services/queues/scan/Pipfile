@@ -17,4 +17,4 @@ pytest = "*"
 pretend = "*"
 
 [scripts]
-test = "pytest"
+test = "pytest -s"
