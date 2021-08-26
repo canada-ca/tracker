@@ -21,6 +21,7 @@ def client(app):
         yield cli
 
 
+@pytest.mark.usefixtures("app", "client")
 def test_enqueue_dns(client):
     test_payload = {
         "scan_id": 1,
@@ -33,6 +34,7 @@ def test_enqueue_dns(client):
     assert res.data.decode("utf-8") == "DNS scan request enqueued."
 
 
+@pytest.mark.usefixtures("app", "client")
 def test_enqueue_https(client):
     test_payload = {
         "scan_id": 1,
@@ -44,6 +46,7 @@ def test_enqueue_https(client):
     assert res.data.decode("utf-8") == "HTTPS scan request enqueued."
 
 
+@pytest.mark.usefixtures("app", "client")
 def test_enqueue_ssl(client):
     test_payload = {
         "scan_id": 1,
