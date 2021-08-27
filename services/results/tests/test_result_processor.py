@@ -3,8 +3,8 @@ import datetime
 from starlette.testclient import TestClient
 from arango import ArangoClient
 from pretend import stub
-from result_processor import *
-from test_data import *
+from results.result_processor import *
+from tests.test_data import *
 
 arango_client = ArangoClient(hosts="http://testdb:8529")
 # Connect to arango system DB and create test DB

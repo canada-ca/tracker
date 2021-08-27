@@ -15,7 +15,7 @@ from arango import ArangoClient
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
-from utils import retrieve_tls_guidance
+from results.utils import retrieve_tls_guidance
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -301,7 +301,7 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
     # get protocol status
     if "ssl9" in neutral_tags:
         protocol_status = "info"
-    elif len([tag for tag in negative_tags if not in cipher_tags]) > 0 or "ssl5" not in positive_tags:
+    elif len([tag for tag in negative_tags if tag not in cipher_tags]) > 0 or "ssl5" not in positive_tags:
         protocol_status = "fail"
     else:
         protocol_status = "pass"
