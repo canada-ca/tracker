@@ -49,31 +49,20 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           <Text isTruncated>{url}</Text>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
-        <Box
-          flexShrink="0"
-          textAlign="left"
-          mr={{ base: 0, md: '4' }}
-          flexGrow="1"
-        >
-          {lastRan ? (
-            <Box>
-              <Text fontWeight="bold">
-                <Trans>Last scanned:</Trans>
-              </Text>
-              {lastRan.substring(0, 16)}
-            </Box>
-          ) : (
-            <Text fontWeight="bold" fontSize="sm">
-              <Trans>Not scanned yet.</Trans>
-            </Text>
-          )}
-        </Box>
-        <Divider variant="card" display={{ md: 'none' }} />
-        {lastRan && (
-          <>
+        {lastRan ? (
+          <Stack
+            alignItems="center"
+            mx={{ base: 0, md: 'auto' }}
+            flexGrow={{ md: '2' }}
+          >
             <Flex {...statusGroupingProps}>
+              <StatusBadge text="Certificates:" status={status.certificates} />
+              <StatusBadge text="Ciphers:" status={status.ciphers} />
+              <StatusBadge text="Curves:" status={status.curves} />
+              <StatusBadge text="HSTS:" status={status.hsts} />
               <StatusBadge text="HTTPS:" status={status.https} />
-              <StatusBadge text="SSL:" status={status.ssl} />
+              <StatusBadge text="Policy:" status={status.policy} />
+              <StatusBadge text="Protocols:" status={status.protocols} />
             </Flex>
             <Flex {...statusGroupingProps}>
               <StatusBadge text="SPF:" status={status.spf} />
@@ -81,7 +70,11 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
               <StatusBadge text="DMARC:" status={status.dmarc} />
             </Flex>
             <Divider variant="card" display={{ md: 'none' }} />
-          </>
+          </Stack>
+        ) : (
+          <Text fontWeight="bold" fontSize="sm" flexGrow={{ md: '2' }}>
+            <Trans>Not scanned yet.</Trans>
+          </Text>
         )}
         <Stack
           fontSize="sm"

@@ -11,13 +11,13 @@ export function StatusBadge({ text, status }) {
       flexDirection={{ base: 'row', md: 'column' }}
       justifyContent="space-between"
       spacing={0}
-      mx={{ md: 2 }}
+      mx={{ md: 1 }}
     >
       <Text
         fontWeight="bold"
-        fontSize="sm"
-        mb={{ base: 0, md: '2' }}
-        mr={{ base: '2', md: 0 }}
+        fontSize="xs"
+        mb={{ base: 0, md: 2 }}
+        mr={{ base: 2, md: 0 }}
       >
         {text}
       </Text>

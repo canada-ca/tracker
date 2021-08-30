@@ -18,11 +18,17 @@ const i18n = setupI18n({
   },
 })
 const status = {
-  dkim: 'PASS',
-  dmarc: 'PASS',
-  https: 'PASS',
-  spf: 'PASS',
-  ssl: 'PASS',
+  certificates: 'pass',
+  ciphers: 'pass',
+  curves: 'pass',
+  dkim: 'pass',
+  dmarc: 'pass',
+  hsts: 'pass',
+  https: 'pass',
+  policy: 'pass',
+  protocols: 'pass',
+  spf: 'pass',
+  ssl: 'pass',
 }
 
 describe('<OrganizationsCard />', () => {
@@ -48,8 +54,6 @@ describe('<OrganizationsCard />', () => {
 
     const domain = getByText(/tbs-sct.gc.ca/i)
     expect(domain).toBeDefined()
-    const lastRan = getByText(/2020-09-10T00:34/i)
-    expect(lastRan).toBeDefined()
   })
 
   it('presents appropriate message when no scan date is found', async () => {
