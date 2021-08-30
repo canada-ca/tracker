@@ -6,13 +6,15 @@ from pretend import stub
 from results.result_processor import *
 from tests.test_data import *
 
-arango_client = ArangoClient(hosts="http://testdb:8529")
+arango_client = ArangoClient(hosts="http://localhost:8529")
 # Connect to arango system DB and create test DB
-sys_db = arango_client.db("_system", username="", password="")
-sys_db.create_database("test")
+sys_db = arango_client.db("_system", username="root", password="test")
+if sys_db.has_database('test'):
+    sys_db.delete_database('test')
+sys_db.create_database('test')
 
 # Establish DB connection
-test_db = arango_client.db("test", username="", password="")
+test_db = arango_client.db("test", username="root", password="test")
 graph = test_db.create_graph("compliance")
 graph.create_vertex_collection("domains")
 graph.create_vertex_collection("dmarc")
@@ -87,11 +89,11 @@ test_db.collection("domains").insert(
 
 
 def test_https():
-    db = arango_client.db("test", username="", password="")
+    db = arango_client.db("test", username="root", password="test")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
     test_app = Server(
-        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529
+        db_host="localhost", db_name="test", db_user="root", db_pass="test", db_port=8529
     )
     test_client = TestClient(test_app)
 
@@ -117,16 +119,16 @@ def test_https():
 
 
 def test_ssl():
-    db = arango_client.db("test", username="", password="")
+    db = arango_client.db("test", username="root", password="test")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
 
     mock_retrieve_guidance = stub(retrieve=lambda: tls_guidance_data)
     test_app = Server(
-        db_host="testdb",
+        db_host="localhost",
         db_name="test",
-        db_user="",
-        db_pass="",
+        db_user="root",
+        db_pass="test",
         db_port=8529,
         tls_guidance=mock_retrieve_guidance.retrieve,
     )
@@ -154,11 +156,11 @@ def test_ssl():
 
 
 def test_dns():
-    db = arango_client.db("test", username="", password="")
+    db = arango_client.db("test", username="root", password="test")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
     test_app = Server(
-        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529
+        db_host="localhost", db_name="test", db_user="root", db_pass="test", db_port=8529
     )
     test_client = TestClient(test_app)
 
