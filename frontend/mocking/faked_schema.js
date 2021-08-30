@@ -320,14 +320,32 @@ export const getTypeNames = () => gql`
 
   # This object contains how the domain is doing on the various scans we preform, based on the latest scan data.
   type DomainStatus {
+    # Certificates Status
+    certificates: StatusEnum
+
+    # Ciphers Status
+    ciphers: StatusEnum
+
+    # Curves Status
+    curves: StatusEnum
+
     # DKIM Status
     dkim: StatusEnum
 
     # DMARC Status
     dmarc: StatusEnum
 
+    # HSTS Status
+    hsts: StatusEnum
+
     # HTTPS Status
     https: StatusEnum
+
+    # Policy Status
+    policy: StatusEnum
+
+    # Protocols Status
+    protocols: StatusEnum
 
     # SPF Status
     spf: StatusEnum
