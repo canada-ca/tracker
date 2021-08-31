@@ -61,7 +61,7 @@ def Server(process_name, queues=default_queues):
             designated_queue.enqueue(
                 dispatch_https,
                 payload,
-                retry=Retry(max=3),
+                retry=Retry(max=3, interval=[10, 30, 60]),
                 job_timeout=86400,
                 result_ttl=86400,
             )
@@ -87,7 +87,7 @@ def Server(process_name, queues=default_queues):
             designated_queue.enqueue(
                 dispatch_ssl,
                 payload,
-                retry=Retry(max=3),
+                retry=Retry(max=3, interval=[10, 30, 60]),
                 job_timeout=86400,
                 result_ttl=86400,
             )
@@ -113,7 +113,7 @@ def Server(process_name, queues=default_queues):
             designated_queue.enqueue(
                 dispatch_dns,
                 payload,
-                retry=Retry(max=3),
+                retry=Retry(max=3, interval=[10, 30, 60]),
                 job_timeout=86400,
                 result_ttl=86400,
             )
