@@ -140,7 +140,7 @@ export default function Organizations() {
         />
         <InfoBox
           title={t`Web Configuration`}
-          info={t`Shows the percentage of Domains that have passed both HTTPS, and protocol and cipher requiremnts.`}
+          info={t`Shows the percentage of Domains that have passed both HTTPS, and protocol and cipher requirements.`}
         />
         <InfoBox
           title={t`Email Configuration`}
