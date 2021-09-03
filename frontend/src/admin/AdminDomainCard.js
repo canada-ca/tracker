@@ -7,7 +7,7 @@ import { Link as RouteLink } from 'react-router-dom'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
 
-export function AdminDomianCard({ url, lastRan, ...rest }) {
+export function AdminDomainCard({ url, lastRan, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -52,4 +52,4 @@ export function AdminDomianCard({ url, lastRan, ...rest }) {
     </ListItem>
   )
 }
-AdminDomianCard.propTypes = { url: string, lastRan: string }
+AdminDomainCard.propTypes = { url: string, lastRan: string }
