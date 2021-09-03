@@ -76,7 +76,7 @@ const mocks = [
       variables: {
         domain: 'test-domain',
         month: 'LAST30DAYS',
-        year: '2020',
+        year: '2021',
         first: 50,
         after: '',
       },
@@ -89,7 +89,7 @@ const mocks = [
       variables: {
         domain: 'test-domain',
         month: 'AUGUST',
-        year: '2020',
+        year: '2021',
         first: 50,
         after: '',
       },
@@ -109,7 +109,7 @@ describe('<DmarcReportPage />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
-                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2021',
                 ]}
                 initialIndex={0}
               >
@@ -135,7 +135,7 @@ describe('<DmarcReportPage />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
-                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2021',
                 ]}
                 initialIndex={0}
               >
@@ -161,7 +161,7 @@ describe('<DmarcReportPage />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
-                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2021',
                 ]}
                 initialIndex={0}
               >
@@ -187,7 +187,7 @@ describe('<DmarcReportPage />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
-                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2021',
                 ]}
                 initialIndex={0}
               >
@@ -223,7 +223,7 @@ describe('<DmarcReportPage />', () => {
           variables: {
             domain: 'test-domain',
             month: 'LAST30DAYS',
-            year: '2020',
+            year: '2021',
             first: 50,
             after: '',
           },
@@ -241,7 +241,7 @@ describe('<DmarcReportPage />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={[
-                  '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+                  '/domains/test-domain/dmarc-report/LAST30DAYS/2021',
                 ]}
                 initialIndex={0}
               >
@@ -261,7 +261,7 @@ describe('<DmarcReportPage />', () => {
   describe('changes period tables', () => {
     it('the url changes', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['/domains/test-domain/dmarc-report/LAST30DAYS/2020'],
+        initialEntries: ['/domains/test-domain/dmarc-report/LAST30DAYS/2021'],
         initialIndex: 0,
       })
       const { getByRole, findByRole } = render(
@@ -292,18 +292,18 @@ describe('<DmarcReportPage />', () => {
       })
 
       expect(history.location.pathname).toEqual(
-        '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+        '/domains/test-domain/dmarc-report/LAST30DAYS/2021',
       )
 
-      userEvent.selectOptions(periodSelector, 'AUGUST, 2020')
+      userEvent.selectOptions(periodSelector, 'AUGUST, 2021')
 
       expect(history.location.pathname).toEqual(
-        '/domains/test-domain/dmarc-report/AUGUST/2020',
+        '/domains/test-domain/dmarc-report/AUGUST/2021',
       )
     })
     it('the data changes', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['/domains/test-domain/dmarc-report/LAST30DAYS/2020'],
+        initialEntries: ['/domains/test-domain/dmarc-report/LAST30DAYS/2021'],
         initialIndex: 0,
       })
       const { getByRole, findByRole, queryByText } = render(
@@ -335,7 +335,7 @@ describe('<DmarcReportPage />', () => {
       })
 
       expect(history.location.pathname).toEqual(
-        '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+        '/domains/test-domain/dmarc-report/LAST30DAYS/2021',
       )
 
       // check current state of data
@@ -366,10 +366,10 @@ describe('<DmarcReportPage />', () => {
       ).not.toBeInTheDocument()
 
       // change date
-      userEvent.selectOptions(periodSelector, 'AUGUST, 2020')
+      userEvent.selectOptions(periodSelector, 'AUGUST, 2021')
 
       expect(history.location.pathname).toEqual(
-        '/domains/test-domain/dmarc-report/AUGUST/2020',
+        '/domains/test-domain/dmarc-report/AUGUST/2021',
       )
 
       // page is loaded
