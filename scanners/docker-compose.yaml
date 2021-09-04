@@ -1,0 +1,76 @@
+version: "3.7"
+services:
+  arangodb:
+    environment:
+      # - ARANGO_ROOT_PASSWORD=test
+      - ARANGO_NO_AUTH=1
+    image: arangodb
+    expose:
+      - "8529"
+    network_mode: "host"
+  nats:
+    image: nats
+    command: ["-js", "--debug"]
+    expose:
+      - "4222"
+    network_mode: host
+  https-scanner:
+    image: gcr.io/track-compliance/https-scanner
+    working_dir: /https
+    build:
+      context: ./https-scanner
+    restart: always
+    deploy:
+      replicas: 10
+    depends_on:
+    - nats
+    environment:
+      - PYTHONWARNINGS=ignore
+      - PUBLISH_TO=domains
+      - SUBSCRIBE_TO=domains.*
+      - SERVERS=nats://0.0.0.0:4222
+    volumes:
+      - ./https-scanner/:/https
+    network_mode: "host"
+  https-processor:
+    image: gcr.io/track-compliance/https-processor
+    build:
+      context: ./https-processor
+    restart: always
+    deploy:
+      replicas: 2
+    depends_on:
+    - nats
+    environment:
+      - DB_USER=root
+      - DB_PASS=test
+      - DB_NAME=track_dmarc
+      - DB_URL=http://localhost:8529
+      - SUBSCRIBE_TO=domains.*.https
+      - SERVERS=nats://localhost:4222
+    volumes:
+      - ./https-processor/:/results
+    network_mode: "host"
+  domain-dispatcher:
+    image: gcr.io/track-compliance/domain-dispatcher
+    build:
+      context: ./domain-dispatcher
+    command: npm start
+    environment:
+      - DB_USER=root
+      - DB_PASS=test
+      - DB_NAME=track_dmarc
+      - DB_URL=http://arangodb:8529
+      - PUBLISH_TO=domains
+      - SERVERS=nats://nats:4222
+    depends_on:
+    - https-scanner
+    - nats
+    - arangodb
+    volumes:
+      - type: bind
+        source: ./domain-dispatcher
+        target: /app
+    network_mode: "host"
+volumes:
+  driver: {}
