@@ -42,19 +42,8 @@ Please specify a password:
 
 The scanner and result process do what the names suggest, and [Nats](https://nats.io/) is the pub/sub service that ties everything together:
 ```sh
-$ docker-compose up -d nats https-scanner https-processor 
-Creating scanners_nats_1 ... done
-Creating scanners_https-scanner_1   ... done
-Creating scanners_https-scanner_2   ... done
-Creating scanners_https-scanner_3   ... done
-Creating scanners_https-scanner_4   ... done
-Creating scanners_https-scanner_5   ... done
-Creating scanners_https-scanner_6   ... done
-Creating scanners_https-scanner_7   ... done
-Creating scanners_https-scanner_8   ... done
-Creating scanners_https-scanner_9   ... done
-Creating scanners_https-scanner_10  ... done
-Creating scanners_https-processor_1 ... done
+$ docker-compose up -d nats https-scanner https-processor dns-scanner
+...
 ```
 
 ### Running the dispatcher
@@ -75,13 +64,7 @@ domain-dispatcher_1  | {
 domain-dispatcher_1  |   severity: 'INFO',
 domain-dispatcher_1  |   time: '2021-09-03T03:32:10.621Z',
 domain-dispatcher_1  |   message: 'Dispatched 1 domains in 0.008 seconds'
-domain-dispatcher_1  | 
-}
-domain-dispatcher_1  | npm notice 
-domain-dispatcher_1  | npm notice New minor version of npm available! 7.15.1 -> 7.22.0
-domain-dispatcher_1  | npm notice Changelog: <https://github.com/npm/cli/releases/tag/v7.22.0>
-domain-dispatcher_1  | npm notice Run `npm install -g npm@7.22.0` to update!
-domain-dispatcher_1  | npm notice 
+domain-dispatcher_1  | }
 scanners_domain-dispatcher_1 exited with code 0
 ```
 

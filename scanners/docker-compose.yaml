@@ -14,6 +14,27 @@ services:
     expose:
       - "4222"
     network_mode: host
+  dns-scanner:
+    image: gcr.io/track-compliance/dns-scanner
+    working_dir: /dns
+    build:
+      context: ./dns-scanner
+    restart: always
+    deploy:
+      replicas: 5
+    depends_on:
+    - nats
+    environment:
+      - PYTHONASYNCIODEBUG=1
+      - PYTHONWARNINGS=ignore
+      - PUBLISH_TO=domains
+      - SUBSCRIBE_TO=domains.*
+      - QUEUE_GROUP=dns
+      - SCAN_TIMEOUT=80
+      - NATS_SERVERS=nats://0.0.0.0:4222
+    volumes:
+      - ./dns-scanner/:/dns
+    network_mode: host
   https-scanner:
     image: gcr.io/track-compliance/https-scanner
     working_dir: /https
@@ -21,17 +42,18 @@ services:
       context: ./https-scanner
     restart: always
     deploy:
-      replicas: 10
+      replicas: 5
     depends_on:
     - nats
     environment:
+      - PYTHONASYNCIODEBUG=1
       - PYTHONWARNINGS=ignore
       - PUBLISH_TO=domains
       - SUBSCRIBE_TO=domains.*
       - SERVERS=nats://0.0.0.0:4222
     volumes:
       - ./https-scanner/:/https
-    network_mode: "host"
+    network_mode: host
   https-processor:
     image: gcr.io/track-compliance/https-processor
     build:
@@ -48,9 +70,10 @@ services:
       - DB_URL=http://localhost:8529
       - SUBSCRIBE_TO=domains.*.https
       - SERVERS=nats://localhost:4222
+      - PYTHONASYNCIODEBUG=1
     volumes:
       - ./https-processor/:/results
-    network_mode: "host"
+    network_mode: host
   domain-dispatcher:
     image: gcr.io/track-compliance/domain-dispatcher
     build:
@@ -71,6 +94,6 @@ services:
       - type: bind
         source: ./domain-dispatcher
         target: /app
-    network_mode: "host"
+    network_mode: host
 volumes:
   driver: {}
