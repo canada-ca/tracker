@@ -79,7 +79,7 @@ describe('domain-dispatcher', () => {
             'http://dns-scanner.scanners.svc.cluster.local',
             'http://https-scanner.scanners.svc.cluster.local',
           ],
-          publish: () => {
+          publish: async () => {
             throw new Error('so bad!')
           },
           info: jest.fn(),

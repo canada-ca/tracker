@@ -1,10 +1,11 @@
 import { config } from 'dotenv-safe'
 import { Database } from 'arangojs'
-import { connect, JSONCodec } from 'nats'
+import { connect } from 'nats'
 import { dispatchDomains } from './src/dispatchDomains.js'
 import { logger } from './src/logger.js'
 import { isListening } from './src/isListening.js'
 import wait from 'async-wait-until'
+// eslint-disable-next-line
 const { waitUntil, TimeoutError } = wait
 
 config()
@@ -52,17 +53,14 @@ let db
   const nc = await connect({ url: NATS_URL })
 
   // TODO: switch to jetstream
-  // const jsm = await nc.jetstreamManager()
-  // await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
+  const jsm = await nc.jetstreamManager()
+  await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
 
   // // create a jetstream client:
-  // const js = nc.jetstream()
+  const js = nc.jetstream()
 
-  const jc = JSONCodec();
-  const publish = ({ channel = topic, msg }) => {
-    console.log({ channel, msg })
-    // js.publish(channel, js.jc.encode(msg))
-    nc.publish(channel, jc.encode(msg))
+  const publish = async ({ channel = topic, msg }) => {
+    await js.publish(channel, js.jc.encode(msg))
   }
 
   const start = new Date()
