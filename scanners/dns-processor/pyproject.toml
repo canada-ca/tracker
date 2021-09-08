@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "dns-processor"
+version = "0.1.0"
+description = ""
+authors = ["Mike Williamson <mike@korora.ca>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+asyncio-nats-client = "^0.11.4"
+python-dotenv = "^0.19.0"
+asyncio = "^3.4.3"
+python-arango = "^7.2.0"
+
+[tool.poetry.dev-dependencies]
+pretend = "^1.0.9"
+black = "^21.8b0"
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+service = "dns_processor:main"

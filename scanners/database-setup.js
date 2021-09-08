@@ -1,0 +1,38 @@
+// Create the database
+db._createDatabase('track_dmarc')
+// switch context to the track_dmarc database
+db._useDatabase('track_dmarc')
+
+// Create our document collections
+db._createDocumentCollection('aggregateGuidanceTags')
+db._createDocumentCollection('chartSummaries')
+db._createDocumentCollection('chartSummaryCriteria')
+db._createDocumentCollection('dkim')
+db._createDocumentCollection('dkimGuidanceTags')
+db._createDocumentCollection('dkimResults')
+db._createDocumentCollection('dkimToDkimResults')
+db._createDocumentCollection('dmarc')
+db._createDocumentCollection('dmarcGuidanceTags')
+db._createDocumentCollection('dmarcSummaries')
+db._createDocumentCollection('domains')
+db._createDocumentCollection('https')
+db._createDocumentCollection('httpsGuidanceTags')
+db._createDocumentCollection('organizations')
+db._createDocumentCollection('scanSummaries')
+db._createDocumentCollection('scanSummaryCriteria')
+db._createDocumentCollection('spf')
+db._createDocumentCollection('spfGuidanceTags')
+db._createDocumentCollection('ssl')
+db._createDocumentCollection('sslGuidanceTags')
+db._createDocumentCollection('users')
+
+// Create edge collections
+db._createEdgeCollection('affiliations')
+db._createEdgeCollection('claims')
+db._createEdgeCollection('domainsDKIM')
+db._createEdgeCollection('domainsDMARC')
+db._createEdgeCollection('domainsHTTPS')
+db._createEdgeCollection('domainsSPF')
+db._createEdgeCollection('domainsSSL')
+db._createEdgeCollection('domainsToDmarcSummaries')
+db._createEdgeCollection('ownership')

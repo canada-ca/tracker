@@ -26,14 +26,35 @@ services:
     - nats
     environment:
       - PYTHONASYNCIODEBUG=1
-      - PYTHONWARNINGS=ignore
       - PUBLISH_TO=domains
       - SUBSCRIBE_TO=domains.*
       - QUEUE_GROUP=dns
       - SCAN_TIMEOUT=80
-      - NATS_SERVERS=nats://0.0.0.0:4222
+      - NATS_SERVERS=nats://localhost:4222
     volumes:
       - ./dns-scanner/:/dns
+    network_mode: host
+  dns-processor:
+    image: gcr.io/track-compliance/dns-processor
+    build:
+      context: ./dns-processor
+    restart: always
+    deploy:
+      replicas: 2
+    depends_on:
+    - nats
+    - arangodb
+    environment:
+      - PYTHONASYNCIODEBUG=1
+      - DB_USER=root
+      - DB_PASS=test
+      - DB_NAME=track_dmarc
+      - DB_URL=http://localhost:8529
+      - SUBSCRIBE_TO=domains.*.dns
+      - PUBLISH_TO=domains
+      - NATS_SERVERS=nats://localhost:4222
+    volumes:
+      - ./dns-processor/:/dns
     network_mode: host
   https-scanner:
     image: gcr.io/track-compliance/https-scanner
@@ -63,6 +84,7 @@ services:
       replicas: 2
     depends_on:
     - nats
+    - arangodb
     environment:
       - DB_USER=root
       - DB_PASS=test
@@ -87,7 +109,6 @@ services:
       - PUBLISH_TO=domains
       - SERVERS=nats://nats:4222
     depends_on:
-    - https-scanner
     - nats
     - arangodb
     volumes:

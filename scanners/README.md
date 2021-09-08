@@ -20,36 +20,39 @@ The `https-processor` does the equivalent of `nats sub domains.*.https`, receive
 
 ## Running it
 
-### Starting the database
+### Starting the database and the message broker
 
 We need to start ArangoDB and create a `track_dmarc` database collections for `domains` and `https`.
-We'll also insert the following test data in the domains collection:
-
-```json
-{"_key":"8017518","_id":"domains/8017518","_rev":"_cPBc_9W--A","domain":"pensezcybersecurite.gc.ca","lastRan":"2021-04-27 01:00:28.674415","phase":"maintain","selectors":"","status":{"dkim":"pass","dmarc":"pass","https":"fail","spf":"pass","ssl":"fail"}}
-```
+We'll also insert test data in the domains collection.
 We can do this with [arangosh](https://www.arangodb.com/docs/stable/programs-arangosh.html).
 
 ```sh
-$ docker-compose up -d arangodb 
+docker-compose up -d arangodb nats
+Creating scanners_nats_1     ... done
 Creating scanners_arangodb_1 ... done
-$ arangosh --javascript.execute-string 'db._createDatabase("track_dmarc"); db._useDatabase("track_dmarc"); db._createDocumentCollection("domains"); db._createDocumentCollection("https")'
-$ arangosh --server.database track_dmarc --javascript.execute-string 'db._collection("domains").save({"_key":"8017518","_id":"domains/8017518","_rev":"_cPBc_9W--A","domain":"pensezcybersecurite.gc.ca","lastRan":"2021-04-27 01:00:28.674415","phase":"maintain","selectors":"","status":{"dkim":"pass","dmarc":"pass","https":"fail","spf":"pass","ssl":"fail"}})'
+```
+
+### A little setup
+
+With the `domain-dispatcher` publishing items from a collection, and processors writing results back to collections, we need to create those collections, and make sure there is a domain in there to publish.
+
+```
+$ arangosh --javascript.execute database-setup.js
+$ arangosh --server.database track_dmarc --javascript.execute-string 'db._collection("domains").save({ "_key": "55433876", "_id": "domains/55433876", "_rev": "_c6MGi8S--A", "domain": "cyber.gc.ca", "lastRan": "2021-09-08 00:00:22.676884", "selectors": [], "status": { "dkim": "fail", "dmarc": "pass", "https": "fail", "spf": "pass", "ssl": "fail"  }, "phase": "maintain" })'
 Please specify a password: 
 ```
 
-### Starting the scanners, processor and Nats
+### Scanners and processors
 
-The scanner and result process do what the names suggest, and [Nats](https://nats.io/) is the pub/sub service that ties everything together:
+The scanners and processors do what the names suggest: Scanners connect to the domains and publish what they find, the processors do some interpretation and save it to the database.
 ```sh
-$ docker-compose up -d nats https-scanner https-processor dns-scanner
+$ docker-compose up -d https* dns*
 ...
 ```
 
 ### Running the dispatcher
 
-Finally we run the service that pulls our domain from the db and publishes it.
-That to kick of the scan/process/update chain.
+Finally we run the service that pulls that test domain from the db and publishes it, kicking off the chain.
 
 ```sh
 $ docker-compose up domain-dispatcher
@@ -70,13 +73,12 @@ scanners_domain-dispatcher_1 exited with code 0
 
 ### Knowing that it worked
 
-The purpose of this exercise is to pull a domain, scan it and put the results in the https collection. If that worked you'll be able to see a result in the collection:
+The purpose of this exercise is to pull a domain, scan it and put the results in the https collection. If that worked you'll be able to see lots of JSON output from the following query.
 
+```sh
+arangosh --quiet --server.database track_dmarc --javascript.execute query-results.js
+```
 
 ## Watching events
 
 You can subscript to all the events for debugging purposes with `nats sub domains.>`
-```sh
-$ arangosh --server.database track_dmarc --javascript.execute-string 'console.log(JSON.stringify(db._query("RETURN https").toArray()))'
-2021-09-03T23:16:35Z [1799769] INFO [99d80] [[{"_key":"556","_id":"https/556","_rev":"_c41kNme---","timestamp":"2021-09-03 23:02:32.838233","implementation":"Valid HTTPS","enforced":"Strict","hsts":"HSTS Fully Implemented","hstsAge":31536000,"preloaded":"HSTS Not Preloaded","rawJson":{"implementation":"Valid HTTPS","enforced":"Strict","hsts":"HSTS Fully Implemented","hsts_age":31536000,"preload_status":"HSTS Not Preloaded","expired_cert":false,"self_signed_cert":false,"cert_revocation_status":"Valid","cert_bad_hostname":false},"neutralTags":["https12"],"positiveTags":[],"negativeTags":[]}]]
-```
