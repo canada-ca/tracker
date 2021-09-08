@@ -194,7 +194,7 @@ async def run(loop):
 
     async def closed_cb():
         print("Connection to NATS is closed.")
-        await asyncio.sleep(0.1, loop=loop)
+        await asyncio.sleep(0.1)
         loop.stop()
 
     # It is very likely that the demo server will see traffic from clients other than yours.

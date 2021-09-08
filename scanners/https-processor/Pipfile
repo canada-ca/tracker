@@ -4,21 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-starlette = "*"
-gunicorn = "*"
-uvicorn = "*"
 emoji = "*"
-pytest = "*"
 requests = ">=2.18.4"
 python-arango = "*"
 pretend = "*"
-uvloop = "*"
 httptools = "*"
-gql = "*"
-redis = "*"
 asyncio-nats-client = "*"
+gql = "*"
 
 [dev-packages]
+pytest = "*"
 
 [scripts]
 service = "python https_processor.py"
