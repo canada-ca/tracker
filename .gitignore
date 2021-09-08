@@ -12,7 +12,6 @@ api/api.current.graphql
 **/identity.pub
 **/known_hosts
 
-
 *.log
 
 # virtualenv
@@ -21,13 +20,14 @@ api/api.current.graphql
 **/include
 **/lib
 **/*.env
+**/.venv
 venv
 
 # Linting
 **/.mypy_cache/
 **/.pytest_cache
 
-**/__pycache__/
+**/__pycache__
 **/.py[cod]
 **/pip-log.txt
 **/pip-delete-this-directory.txt
@@ -43,9 +43,6 @@ scanner/logs
 # IDE Files
 .idea/
 .vscode/
-
-# jupyter File
-api/.ipynb
 
 # all dist directories
 **/dist
