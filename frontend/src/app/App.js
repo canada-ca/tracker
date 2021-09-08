@@ -84,8 +84,8 @@ export function App() {
           <SkipLink invisible href="#main">
             <Trans>Skip to main content</Trans>
           </SkipLink>
-          <PhaseBanner phase={<Trans>Pre-Alpha</Trans>}>
-            <Trans>This service is being developed in the open</Trans>
+          <PhaseBanner phase={<Trans>BETA</Trans>}>
+            <Trans>This is a new service, we are constantly improving.</Trans>
           </PhaseBanner>
           <TopBanner />
         </header>
