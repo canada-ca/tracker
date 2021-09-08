@@ -7,24 +7,18 @@ import { Layout } from '../components/Layout'
 export function PhaseBanner({ phase, children }) {
   return (
     <Layout bg="gray.100">
-      <Flex align="center" py={4}>
+      <Flex align="center" py={2}>
         <Tag
-          fontFamily="body"
-          letterSpacing={2}
-          rounded="none"
-          color="black"
-          colorScheme="gray"
-          borderWidth="2px"
-          borderColor="gray.900"
-          minW="inherit"
-          minH="inherit"
           mr={4}
-          py={1}
-          size="lg"
+          variant="solid"
+          colorScheme="green"
+          letterSpacing={2}
+          fontWeight="bold"
+          size="sm"
         >
           {phase}
         </Tag>
-        <Text fontSize={{ base: 'xs', sm: 'sm', md: 'md' }}>{children}</Text>
+        <Text fontSize={{ base: 'xs', sm: 'xs', md: 'sm' }}>{children}</Text>
       </Flex>
     </Layout>
   )
