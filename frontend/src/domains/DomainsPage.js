@@ -126,10 +126,6 @@ export default function DomainsPage() {
       <InfoPanel state={infoState}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
-          title={t`Last scanned`}
-          info={t`The time the domain was last scanned by the system.`}
-        />
-        <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.`}
         />
