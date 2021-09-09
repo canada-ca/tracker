@@ -65,7 +65,7 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           justifySelf="flex-end"
           alignSelf="stretch"
           justifyContent="center"
-          ml={2}
+          ml={4}
         >
           <Button
             variant="primary"
