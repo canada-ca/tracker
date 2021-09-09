@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dispatcher
+  namespace: scanners
+spec:
+  template:
+    metadata:
+      labels:
+        app: scanners
+        role: scan-job
+    spec:
+      containers:
+      - name: scan
+        image: gcr.io/track-compliance/domain-dispatcher:test-0006
+        imagePullPolicy: Always
+        env:
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "test"
+        - name: DB_URL
+          value: "http://arangodb.db"
+        - name: DB_NAME
+          value: track_dmarc
+        - name: DB_COLLECTION
+          value: domains
+        - name: ENDPOINTS
+          value: http://https-scanner.scanners,http://ssl-scanner.scanners.svc,http://dns-scanner.scanners
+      restartPolicy: Never
+  backoffLimit: 4

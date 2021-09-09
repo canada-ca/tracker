@@ -6,7 +6,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
 
-export function AdminDomianCard({ url, ...rest }) {
+export function AdminDomainCard({ url, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -34,4 +34,4 @@ export function AdminDomianCard({ url, ...rest }) {
     </ListItem>
   )
 }
-AdminDomianCard.propTypes = { url: string }
+AdminDomainCard.propTypes = { url: string }

@@ -27,7 +27,7 @@ import { useLingui } from '@lingui/react'
 import { number, string } from 'prop-types'
 
 import { AdminDomainModal } from './AdminDomainModal'
-import { AdminDomianCard } from './AdminDomianCard'
+import { AdminDomainCard } from './AdminDomainCard'
 
 import { ListOf } from '../components/ListOf'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -182,7 +182,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 aria-label={'Edit ' + domain}
               />
             </Stack>
-            <AdminDomianCard
+            <AdminDomainCard
               url={domain}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
