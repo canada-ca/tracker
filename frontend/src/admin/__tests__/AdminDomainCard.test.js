@@ -25,7 +25,6 @@ describe('<Domain />', () => {
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <List>
               <AdminDomainCard
-                lastRan={null}
                 url="canada.ca"
                 data-testid="domain"
               />

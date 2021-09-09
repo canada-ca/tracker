@@ -26,7 +26,7 @@ const status = {
 }
 
 describe('<OrganizationsCard />', () => {
-  it('successfully renders card with domain name and date of last scan', async () => {
+  it('successfully renders card with domain name', async () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
@@ -35,7 +35,6 @@ describe('<OrganizationsCard />', () => {
               <List>
                 <DomainCard
                   url="tbs-sct.gc.ca"
-                  lastRan="2020-09-10T00:34:26.429Z"
                   status={status}
                   hasDMARCReport={true}
                 />
@@ -48,33 +47,5 @@ describe('<OrganizationsCard />', () => {
 
     const domain = getByText(/tbs-sct.gc.ca/i)
     expect(domain).toBeDefined()
-    const lastRan = getByText(/2020-09-10T00:34/i)
-    expect(lastRan).toBeDefined()
-  })
-
-  it('presents appropriate message when no scan date is found', async () => {
-    const { getByText } = render(
-      <MockedProvider>
-        <MemoryRouter initialEntries={['/']}>
-          <ChakraProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <List>
-                <DomainCard
-                  url="tbs-sct.gc.ca"
-                  lastRan={null}
-                  status={status}
-                  hasDMARCReport={true}
-                />
-              </List>
-            </I18nProvider>
-          </ChakraProvider>
-        </MemoryRouter>
-      </MockedProvider>,
-    )
-
-    const domain = getByText(/tbs-sct.gc.ca/i)
-    expect(domain).toBeDefined()
-    const lastRan = getByText(/Not scanned yet./i)
-    expect(lastRan).toBeDefined()
   })
 })

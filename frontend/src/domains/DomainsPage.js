@@ -91,7 +91,7 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, lastRan, status, hasDMARCReport }, index) => (
+      {({ id, domain, status, hasDMARCReport }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
@@ -99,7 +99,6 @@ export default function DomainsPage() {
           <Box>
             <DomainCard
               url={domain}
-              lastRan={lastRan}
               status={status}
               hasDMARCReport={hasDMARCReport}
             />
@@ -126,10 +125,6 @@ export default function DomainsPage() {
 
       <InfoPanel state={infoState}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Last scanned`}
-          info={t`The time the domain was last scanned by the system.`}
-        />
         <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.`}
