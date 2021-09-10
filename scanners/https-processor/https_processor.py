@@ -19,6 +19,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 NATS_URL = os.getenv("NATS_URL", "nats://127.0.0.1:4222")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.https")
+PUBLISH_TO = os.getenv("PUBLISH_TO")
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -176,12 +177,12 @@ def process_https(results, domain_key, user_key, shared_id):
 
         except Exception as e:
             logging.error(
-                f"(HTTPS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                f"HTTPS insertion error: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
             )
             return
 
         logging.info("HTTPS Scan inserted into database")
-
+        return {"sharedId": shared_id, "domainKey": domain_key, "status": https_status, "results": httpsResults}
     else:
         publish_results({"sharedId": shared_id, "domainKey": domain_key, "status": https_status, "results": httpsResults}, "https", user_key)
 
@@ -219,7 +220,10 @@ async def run(loop):
         domain_key = payload["domain_key"]
         user_key = payload["user_key"]
         shared_id = payload["shared_id"]
-        process_https(results, domain_key, user_key, shared_id)
+        processed = process_https(results, domain_key, user_key, shared_id)
+        await nc.publish(f"{PUBLISH_TO}.{domain_key}.https.processed", json.dumps(processed).encode())
+
+
 
     # Subscription on queue named 'workers' so that
     # one subscriber handles message a request at a time.
@@ -230,7 +234,6 @@ async def run(loop):
             return
         print("Disconnecting...")
         loop.create_task(nc.close())
-
     for sig in ('SIGINT', 'SIGTERM'):
         loop.add_signal_handler(getattr(signal, sig), signal_handler)
 
