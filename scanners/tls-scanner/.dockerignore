@@ -1,0 +1,5 @@
+**/*.env
+.venv
+Dockerfile
+cloudbuild.yaml
+tests
