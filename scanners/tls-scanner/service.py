@@ -109,7 +109,7 @@ async def run(loop):
             scan_results = future.result()
         except TimeoutError:
             await nc.publish(
-                f"{PUBLISH_TO}.{domain_key}.tls",
+                f"{PUBLISH_TO}.{domain_key}.tls.processed",
                 json.dumps(
                     {
                         "results": {"error": "unreachable"},
@@ -124,7 +124,7 @@ async def run(loop):
         processed_results = process_results(scan_results)
 
         await nc.publish(
-            f"{PUBLISH_TO}.{domain_key}.tls",
+            f"{PUBLISH_TO}.{domain_key}.tls.processed",
             json.dumps(
                 {
                     "results": processed_results,

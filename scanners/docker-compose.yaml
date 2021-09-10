@@ -14,6 +14,28 @@ services:
     expose:
       - "4222"
     network_mode: host
+  tls-processor:
+    image: gcr.io/track-compliance/tls-processor
+    build:
+      context: ./tls-processor
+    restart: always
+    deploy:
+      replicas: 2
+    depends_on:
+    - nats
+    - arangodb
+    environment:
+      - PYTHONASYNCIODEBUG=1
+      - DB_USER=root
+      - DB_PASS=test
+      - DB_NAME=track_dmarc
+      - DB_URL=http://localhost:8529
+      - SUBSCRIBE_TO=domains.*.tls
+      - PUBLISH_TO=domains
+      - NATS_SERVERS=nats://localhost:4222
+    volumes:
+      - ./tls-processor/:/tls
+    network_mode: host
   tls-scanner:
     image: gcr.io/track-compliance/tls-scanner
     working_dir: /tls
@@ -110,6 +132,7 @@ services:
       - DB_NAME=track_dmarc
       - DB_URL=http://localhost:8529
       - SUBSCRIBE_TO=domains.*.https
+      - PUBLISH_TO=domains
       - SERVERS=nats://localhost:4222
       - PYTHONASYNCIODEBUG=1
     volumes:
