@@ -23,9 +23,13 @@ cryptography = "*"
 pyOpenSSL = ">=17.5.0"
 Pebble = "==4.6.1"
 asyncio-nats-client = "*"
+python-dotenv = "*"
 
 [dev-packages]
 pytest = "*"
+black = {editable = true, ref = "21.8b0", git = "https://github.com/psf/black.git"}
+
 
 [scripts]
 service = "python3 tls.py"
+black = "black -q -"
