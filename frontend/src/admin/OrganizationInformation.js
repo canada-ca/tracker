@@ -31,7 +31,7 @@ import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import {
-  getRequirment,
+  getRequirement,
   schemaToValidation,
 } from '../utilities/fieldRequirements'
 
@@ -194,12 +194,12 @@ export function OrganizationInformation({
   const org = data.findOrganizationBySlug
 
   const updateOrgValidationSchema = schemaToValidation({
-    acronymEN: getRequirment('acronym'),
-    acronymFR: getRequirment('acronym'),
+    acronymEN: getRequirement('acronym'),
+    acronymFR: getRequirement('acronym'),
   })
 
   const removeOrgValidationSchema = schemaToValidation({
-    orgName: getRequirment('field').matches(
+    orgName: getRequirement('field').matches(
       org.name,
       t`Organization name does not match.`,
     ),

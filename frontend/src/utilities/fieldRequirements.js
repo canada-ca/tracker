@@ -7,14 +7,14 @@ import {
   string as stringProp,
 } from 'prop-types'
 
-const getSchema = () => {
+const getSchema = (options) => {
   return {
     email: string()
       .required(i18n._(t`Email cannot be empty`))
       .email(i18n._(t`Invalid email`)),
-    confirmEmail: string()
+    matchEmail: string()
       .required(i18n._(t`Email cannot be empty`))
-      .oneOf([ref('userName')], t`User email does not match`),
+      .matches(options?.matches, t`User email does not match`),
     displayName: string().required(i18n._(t`Display name cannot be empty`)),
     password: string()
       .required(i18n._(t`Password cannot be empty`))
@@ -59,8 +59,8 @@ const getSchema = () => {
   }
 }
 
-const filterSchema = (keyArray) => {
-  const schema = getSchema()
+const filterSchema = (keyArray, options) => {
+  const schema = getSchema(options)
 
   return keyArray.reduce((selectedSchema, currentKey) => {
     selectedSchema[currentKey] = schema[currentKey]
@@ -68,19 +68,19 @@ const filterSchema = (keyArray) => {
   }, {})
 }
 
-export const getRequirment = (key) => {
-  return getSchema()[key]
+export const getRequirement = (key, options) => {
+  return getSchema(options)[key]
 }
 
 export const schemaToValidation = (schema) => {
   return object().shape(schema)
 }
 
-export const createValidationSchema = (keyArray) => {
-  return schemaToValidation(filterSchema(keyArray))
+export const createValidationSchema = (keyArray, options) => {
+  return schemaToValidation(filterSchema(keyArray, options))
 }
 
-getRequirment.propTypes = {
+getRequirement.propTypes = {
   keyArray: stringProp.isRequired,
 }
 
