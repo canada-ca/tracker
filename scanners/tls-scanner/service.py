@@ -7,6 +7,7 @@ import os
 import signal
 import traceback
 import datetime as dt
+from concurrent.futures import ThreadPoolExecutor
 from operator import itemgetter
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
@@ -103,13 +104,15 @@ async def run(loop):
 
         try:
             scanner = TLSScanner(domain)
-            start = time.time()
 
-            future = scanner.run()
-            scan_results = future.result()
+            loop = asyncio.get_event_loop()
+            executor = ThreadPoolExecutor()
+            scan_results = await loop.run_in_executor(
+                    executor, scanner.run
+            )
         except TimeoutError:
             await nc.publish(
-                f"{PUBLISH_TO}.{domain_key}.tls.processed",
+                f"{PUBLISH_TO}.{domain_key}.tls",
                 json.dumps(
                     {
                         "results": {"error": "unreachable"},
@@ -124,7 +127,7 @@ async def run(loop):
         processed_results = process_results(scan_results)
 
         await nc.publish(
-            f"{PUBLISH_TO}.{domain_key}.tls.processed",
+            f"{PUBLISH_TO}.{domain_key}.tls",
             json.dumps(
                 {
                     "results": processed_results,

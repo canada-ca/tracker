@@ -14,7 +14,6 @@ from sslyze.server_setting import (
     ServerNetworkLocationViaDirectConnection,
     ServerNetworkConfiguration,
 )
-from pebble import concurrent
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -90,7 +89,6 @@ class TLSScanner:
 
         return supported
 
-    @concurrent.process(timeout=TIMEOUT)
     def run(self):
         try:
             server_info = self.get_server_info()
