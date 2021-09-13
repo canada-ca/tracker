@@ -7,6 +7,7 @@ import logging
 import traceback
 import random
 import datetime
+from concurrent.futures import ThreadPoolExecutor
 from arango import ArangoClient
 from utils import retrieve_tls_guidance
 import asyncio
@@ -28,8 +29,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
+
 def publish_results(results, scan_type, user_key):
     print(json.dumps(results, indent=2))
+
 
 def process_https(results, domain_key, user_key, shared_id):
     timestamp = str(datetime.datetime.utcnow())
@@ -142,11 +145,11 @@ def process_https(results, domain_key, user_key, shared_id):
         "neutralTags": neutral_tags,
         "positiveTags": positive_tags,
         "negativeTags": negative_tags,
-        }
+    }
 
     # get https status
     if "https17" in neutral_tags:
-        https_status= "info"
+        https_status = "info"
     elif len(negative_tags) > 0:
         https_status = "fail"
     else:
@@ -182,12 +185,30 @@ def process_https(results, domain_key, user_key, shared_id):
             return
 
         logging.info("HTTPS Scan inserted into database")
-        return {"sharedId": shared_id, "domainKey": domain_key, "status": https_status, "results": httpsResults}
+        return {
+            "sharedId": shared_id,
+            "domainKey": domain_key,
+            "status": https_status,
+            "results": httpsResults,
+        }
     else:
-        publish_results({"sharedId": shared_id, "domainKey": domain_key, "status": https_status, "results": httpsResults}, "https", user_key)
-
-
-
+        # One time scan publish to redis
+        publish_results(
+            {
+                "sharedId": shared_id,
+                "domainKey": domain_key,
+                "status": https_status,
+                "results": httpsResults,
+            },
+            "https",
+            user_key,
+        )
+        return {
+            "sharedId": shared_id,
+            "domainKey": domain_key,
+            "status": https_status,
+            "results": httpsResults,
+        }
 
 
 async def run(loop):
@@ -200,11 +221,7 @@ async def run(loop):
 
     # It is very likely that the demo server will see traffic from clients other than yours.
     # To avoid this, start your own locally and modify the example to use it.
-    options = {
-        "servers": [NATS_URL],
-        "loop": loop,
-        "closed_cb": closed_cb
-    }
+    options = {"servers": [NATS_URL], "loop": loop, "closed_cb": closed_cb}
 
     await nc.connect(**options)
     print(f"Connected to NATS at {nc.connected_url.netloc}...")
@@ -213,17 +230,25 @@ async def run(loop):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
-        print("Received a message on '{subject} {reply}': {data}".format(
-            subject=subject, reply=reply, data=data))
+        print(
+            "Received a message on'{subject} {reply}': {data}".format(
+                subject=subject, reply=reply, data=data
+            )
+        )
         payload = json.loads(msg.data)
         results = payload["results"]
         domain_key = payload["domain_key"]
         user_key = payload["user_key"]
         shared_id = payload["shared_id"]
-        processed = process_https(results, domain_key, user_key, shared_id)
-        await nc.publish(f"{PUBLISH_TO}.{domain_key}.https.processed", json.dumps(processed).encode())
 
-
+        loop = asyncio.get_event_loop()
+        executor = ThreadPoolExecutor()
+        processed = await loop.run_in_executor(
+            executor, lambda: process_https(results, domain_key, user_key, shared_id)
+        )
+        await nc.publish(
+            f"{PUBLISH_TO}.{domain_key}.https.processed", json.dumps(processed).encode()
+        )
 
     # Subscription on queue named 'workers' so that
     # one subscriber handles message a request at a time.
@@ -234,11 +259,12 @@ async def run(loop):
             return
         print("Disconnecting...")
         loop.create_task(nc.close())
-    for sig in ('SIGINT', 'SIGTERM'):
+
+    for sig in ("SIGINT", "SIGTERM"):
         loop.add_signal_handler(getattr(signal, sig), signal_handler)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run(loop))
     try:
