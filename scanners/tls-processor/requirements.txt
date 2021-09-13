@@ -35,9 +35,9 @@ requests-toolbelt==0.9.1; python_version >= "3.6" \
 requests==2.26.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6" \
     --hash=sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24 \
     --hash=sha256:b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7
-setuptools-scm==6.3.1; python_version >= "3.6" \
-    --hash=sha256:868c066ae7d48fb2193495723634ebcf79b458c909869b41a3bc09e2a778b9f9 \
-    --hash=sha256:0f6a263912b13798c028b9a271d91af3bde0e42784091c797deccc3ad3a7f596
+setuptools-scm==6.3.2; python_version >= "3.6" \
+    --hash=sha256:4c64444b1d49c4063ae60bfe1680f611c8b13833d556fd1d6050c0023162a119 \
+    --hash=sha256:a49aa8081eeb3514eb9728fa5040f2eaa962d6c6f4ec9c32f6c1fba88f88a0f2
 tomli==1.2.1; python_version >= "3.6" \
     --hash=sha256:8dd0e9524d6f386271a36b41dbf6c57d8e32fd96fd22b6584679dc569d20899f \
     --hash=sha256:a5b75cb6f3968abb47af1b40c1819dc519ea82bcc065776a866e8d74c5ca9442
