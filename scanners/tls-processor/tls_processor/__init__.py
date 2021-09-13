@@ -23,9 +23,10 @@ SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
-# Opening JSON file
-tags = open(f"{current_directory}/tags.json")
-guidance = json.load(tags)
+# Opening JSON file from:
+# https://raw.githubusercontent.com/CybercentreCanada/ITSP.40.062/main/transport-layer-security/tls-guidance.json
+guidance_file = open(f"{current_directory}/tls-guidance.json")
+guidance = json.load(guidance_file)
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 # Establish DB connection
