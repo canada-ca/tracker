@@ -232,12 +232,14 @@ export default function UserPage() {
         <Formik
           validateOnBlur={false}
           initialValues={{
-            confirmEmail: '',
+            matchEmail: '',
           }}
           initialTouched={{
-            confirmEmail: true,
+            matchEmail: true,
           }}
-          validationSchema={createValidationSchema(['confirmEmail'])}
+          validationSchema={createValidationSchema(['matchEmail'], {
+            matches: userName,
+          })}
           onSubmit={async () => {
             await closeAccount({})
             signOut()
@@ -265,7 +267,7 @@ export default function UserPage() {
                   </Text>
 
                   <FormField
-                    name="confirmEmail"
+                    name="matchEmail"
                     label={t`User Email`}
                     placeholder={userName}
                   />

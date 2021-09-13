@@ -21,7 +21,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { useUserVar } from '../utilities/userState'
 import { activate } from '../utilities/i18n.config'
 import {
-  getRequirment,
+  getRequirement,
   schemaToValidation,
 } from '../utilities/fieldRequirements'
 import { SIGN_IN } from '../graphql/mutations'
@@ -36,8 +36,8 @@ export default function SignInPage() {
   const { from } = location.state || { from: { pathname: '/' } }
 
   const validationSchema = schemaToValidation({
-    email: getRequirment('email'),
-    password: getRequirment('passwordSignIn'),
+    email: getRequirement('email'),
+    password: getRequirement('passwordSignIn'),
   })
 
   const [signIn, { loading }] = useMutation(SIGN_IN, {

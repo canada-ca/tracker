@@ -19,7 +19,7 @@ import { CreateOrganizationField } from '../components/fields/CreateOrganization
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import {
-  getRequirment,
+  getRequirement,
   schemaToValidation,
 } from '../utilities/fieldRequirements'
 import { CREATE_ORGANIZATION } from '../graphql/mutations'
@@ -33,8 +33,8 @@ export default function CreateOrganizationPage() {
     isVisible: false,
   })
 
-  const fieldRequirement = getRequirment('field')
-  const acronymRequirement = getRequirment('acronym').required(
+  const fieldRequirement = getRequirement('field')
+  const acronymRequirement = getRequirement('acronym').required(
     i18n._(t`This field cannot be empty`),
   )
 
