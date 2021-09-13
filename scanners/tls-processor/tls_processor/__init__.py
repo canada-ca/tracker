@@ -6,6 +6,7 @@ import signal
 import datetime
 import traceback
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from arango import ArangoClient
 from nats.aio.client import Client as NATS
@@ -214,7 +215,11 @@ async def run(loop):
         user_key = payload["user_key"]
         shared_id = payload["shared_id"]
 
-        processed = process_results(results, domain_key, user_key, shared_id)
+        loop = asyncio.get_event_loop()
+        executor = ThreadPoolExecutor()
+        processed = await loop.run_in_executor(
+            executor, lambda: process_results(results, domain_key, user_key, shared_id)
+        )
         await nc.publish(
             f"{PUBLISH_TO}.{domain_key}.tls.processed", json.dumps(processed).encode()
         )
