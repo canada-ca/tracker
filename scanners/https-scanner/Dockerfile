@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
 # Copy local code to the container image.
+ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
 WORKDIR /https
 
