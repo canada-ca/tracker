@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor
 import json
 import argparse, sys
 import asyncio
@@ -147,11 +148,11 @@ async def run(loop):
     nc = NATS()
 
     async def error_cb(e):
-        print("Error:", e)
+        print("Nats Error callback invoked:", e)
 
     async def closed_cb():
         print("Connection to NATS is closed.")
-        await asyncio.sleep(0.1, loop=loop)
+        await asyncio.sleep(0.1)
         loop.stop()
 
     async def reconnected_cb():
@@ -161,11 +162,7 @@ async def run(loop):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
-        print(
-            "Received a message on '{subject} {reply}': {data}".format(
-                subject=subject, reply=reply, data=data
-            )
-        )
+        print(f"Received a message on '{subject} {reply}': {data}")
         payload = json.loads(msg.data)
         domain = payload["domain"]
         domain_key = payload["domain_key"]
@@ -173,9 +170,11 @@ async def run(loop):
         shared_id = payload["shared_id"]
 
         scanner = HTTPSScanner(domain)
-        future = scanner.run()
-        scan_results = future.result()
+        loop = asyncio.get_event_loop()
+        executor = ThreadPoolExecutor()
+        scan_results = await loop.run_in_executor(executor, scanner.run)
         processed_results = process_results(scan_results)
+
         await nc.publish(
             f"{PUBLISH_TO}.{domain_key}.https",
             json.dumps(
