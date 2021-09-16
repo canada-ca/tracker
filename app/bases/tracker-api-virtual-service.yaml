@@ -13,6 +13,8 @@ spec:
     match:
     - uri:
         prefix: /graphql
+    - uri:
+        prefix: /voyager
     route:
     - destination:
         host: tracker-api.api.svc.cluster.local
