@@ -136,15 +136,6 @@ def process_results(results):
 
 
 async def run(loop):
-    parser = argparse.ArgumentParser()
-
-    # e.g. nats-sub hello -s nats://127.0.0.1:4222
-    parser.add_argument("subject", default="domains", nargs="?")
-    parser.add_argument("-s", "--servers", default=[], action="append")
-    parser.add_argument("-q", "--queue", default="https")
-    parser.add_argument("--creds", default="")
-    args = parser.parse_args()
-
     nc = NATS()
 
     async def error_cb(e):
@@ -188,24 +179,18 @@ async def run(loop):
             ).encode(),
         )
 
-    options = {
-        "loop": loop,
-        "error_cb": error_cb,
-        "closed_cb": closed_cb,
-        "reconnected_cb": reconnected_cb,
-    }
-
-    if len(args.creds) > 0:
-        options["user_credentials"] = args.creds
+    options = {}
 
     try:
-        if len(args.servers) > 0:
-            options["servers"] = args.servers
-
-        await nc.connect(**options)
+        await nc.connect(
+            loop=loop,
+            error_cb=error_cb,
+            closed_cb=closed_cb,
+            reconnected_cb=reconnected_cb,
+            servers=SERVERS,
+        )
     except Exception as e:
         print(e)
-        show_usage_and_die()
 
     print(f"Connected to NATS at {nc.connected_url.netloc}...")
 
