@@ -25,4 +25,4 @@ black = {editable = true, ref = "21.8b0", git = "https://github.com/psf/black.gi
 
 [scripts]
 service = "python3 service.py"
-black = "black -q"
+black = "black -q -"

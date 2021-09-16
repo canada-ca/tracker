@@ -17,10 +17,10 @@ load_dotenv()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
-PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP", "dns")
-SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
+PUBLISH_TO = os.getenv("PUBLISH_TO")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP")
+SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
 
@@ -29,14 +29,6 @@ def to_json(msg):
 
 
 async def run(loop):
-    parser = argparse.ArgumentParser()
-
-    # e.g. nats-sub hello -s nats://127.0.0.1:4222
-    parser.add_argument("subject", default="domains", nargs="?")
-    parser.add_argument("-s", "--servers", default=[], action="append")
-    parser.add_argument("-q", "--queue", default="https")
-    parser.add_argument("--creds", default="")
-    args = parser.parse_args()
 
     nc = NATS()
 
@@ -108,8 +100,6 @@ async def run(loop):
                 ).encode(),
             )
 
-
-
         await nc.publish(
             f"{PUBLISH_TO}.{domain_key}.dns",
             json.dumps(
@@ -123,24 +113,16 @@ async def run(loop):
             ).encode(),
         )
 
-    options = {
-        "loop": loop,
-        "error_cb": error_cb,
-        "closed_cb": closed_cb,
-        "reconnected_cb": reconnected_cb,
-    }
-
-    if len(args.creds) > 0:
-        options["user_credentials"] = args.creds
-
     try:
-        if len(args.servers) > 0:
-            options["servers"] = [SERVERS]
-
-        await nc.connect(**options)
+        await nc.connect(
+            loop=loop,
+            error_cb=error_cb,
+            closed_cb=closed_cb,
+            reconnected_cb=reconnected_cb,
+            servers=SERVERS,
+        )
     except Exception as e:
-        print(e)
-        show_usage_and_die()
+        print(f"Exception while connecting to Nats: {e}")
 
     print(f"Connected to NATS at {nc.connected_url.netloc}...")
 
