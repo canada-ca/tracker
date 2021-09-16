@@ -9,6 +9,7 @@ import { execute, subscribe, GraphQLSchema } from 'graphql'
 import depthLimit from 'graphql-depth-limit'
 import { createComplexityLimitRule } from 'graphql-validation-complexity'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
 import { createContext } from './create-context'
 import { createQuerySchema } from './query'
@@ -71,6 +72,8 @@ export const Server = async ({
   )
 
   app.use(arangodb(arango))
+
+  app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
 
   app.get('/alive', (_req, res) => {
     res.json({ ok: 'yes' })
