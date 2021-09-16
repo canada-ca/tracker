@@ -3,11 +3,35 @@ import { domainStatus } from '../domain-status'
 
 describe('given the domainStatus object', () => {
   describe('testing its field definitions', () => {
+    it('has a certificates field', () => {
+      const demoType = domainStatus.getFields()
+
+      expect(demoType).toHaveProperty('certificates')
+      expect(demoType.certificates.type).toMatchObject(StatusEnum)
+    })
+    it('has a ciphers field', () => {
+      const demoType = domainStatus.getFields()
+
+      expect(demoType).toHaveProperty('ciphers')
+      expect(demoType.ciphers.type).toMatchObject(StatusEnum)
+    })
+    it('has a curves field', () => {
+      const demoType = domainStatus.getFields()
+
+      expect(demoType).toHaveProperty('curves')
+      expect(demoType.curves.type).toMatchObject(StatusEnum)
+    })
     it('has a dkim field', () => {
       const demoType = domainStatus.getFields()
 
       expect(demoType).toHaveProperty('dkim')
       expect(demoType.dkim.type).toMatchObject(StatusEnum)
+    })
+    it('has a hsts field', () => {
+      const demoType = domainStatus.getFields()
+
+      expect(demoType).toHaveProperty('hsts')
+      expect(demoType.hsts.type).toMatchObject(StatusEnum)
     })
     it('has a dmarc field', () => {
       const demoType = domainStatus.getFields()
@@ -20,6 +44,18 @@ describe('given the domainStatus object', () => {
 
       expect(demoType).toHaveProperty('https')
       expect(demoType.https.type).toMatchObject(StatusEnum)
+    })
+    it('has a policy field', () => {
+      const demoType = domainStatus.getFields()
+
+      expect(demoType).toHaveProperty('policy')
+      expect(demoType.policy.type).toMatchObject(StatusEnum)
+    })
+    it('has a protocols field', () => {
+      const demoType = domainStatus.getFields()
+
+      expect(demoType).toHaveProperty('protocols')
+      expect(demoType.protocols.type).toMatchObject(StatusEnum)
     })
     it('has a spf field', () => {
       const demoType = domainStatus.getFields()
@@ -36,11 +72,39 @@ describe('given the domainStatus object', () => {
   })
 
   describe('testing its field resolvers', () => {
+    describe('testing the certificates resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainStatus.getFields()
+
+        expect(demoType.certificates.resolve({ certificates: 'pass' })).toEqual('pass')
+      })
+    })
+    describe('testing the ciphers resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainStatus.getFields()
+
+        expect(demoType.ciphers.resolve({ ciphers: 'pass' })).toEqual('pass')
+      })
+    })
+    describe('testing the curves resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainStatus.getFields()
+
+        expect(demoType.curves.resolve({ curves: 'pass' })).toEqual('pass')
+      })
+    })
     describe('testing the dkim resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
         expect(demoType.dkim.resolve({ dkim: 'pass' })).toEqual('pass')
+      })
+    })
+    describe('testing the hsts resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainStatus.getFields()
+
+        expect(demoType.hsts.resolve({ hsts: 'pass' })).toEqual('pass')
       })
     })
     describe('testing the dmarc resolver', () => {
@@ -55,6 +119,20 @@ describe('given the domainStatus object', () => {
         const demoType = domainStatus.getFields()
 
         expect(demoType.https.resolve({ https: 'pass' })).toEqual('pass')
+      })
+    })
+    describe('testing the policy resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainStatus.getFields()
+
+        expect(demoType.policy.resolve({ policy: 'pass' })).toEqual('pass')
+      })
+    })
+    describe('testing the protocols resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainStatus.getFields()
+
+        expect(demoType.protocols.resolve({ protocols: 'pass' })).toEqual('pass')
       })
     })
     describe('testing the spf resolver', () => {
