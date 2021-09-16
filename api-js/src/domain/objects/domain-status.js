@@ -6,6 +6,21 @@ export const domainStatus = new GraphQLObjectType({
   description:
     'This object contains how the domain is doing on the various scans we preform, based on the latest scan data.',
   fields: () => ({
+    certificates: {
+      type: StatusEnum,
+      description: 'Certificate Status',
+      resolve: ({ certificates }) => certificates,
+    },
+    ciphers: {
+      type: StatusEnum,
+      description: 'Cipher Status',
+      resolve: ({ ciphers }) => ciphers,
+    },
+    curves: {
+      type: StatusEnum,
+      description: 'Curve Status',
+      resolve: ({ curves }) => curves,
+    },
     dkim: {
       type: StatusEnum,
       description: 'DKIM Status',
@@ -16,10 +31,25 @@ export const domainStatus = new GraphQLObjectType({
       description: 'DMARC Status',
       resolve: ({ dmarc }) => dmarc,
     },
+    hsts: {
+      type: StatusEnum,
+      description: 'HSTS Status',
+      resolve: ({ hsts }) => hsts,
+    },
     https: {
       type: StatusEnum,
       description: 'HTTPS Status',
       resolve: ({ https }) => https,
+    },
+    policy: {
+      type: StatusEnum,
+      description: 'Policy Status',
+      resolve: ({ policy }) => policy,
+    },
+    protocols: {
+      type: StatusEnum,
+      description: 'Protocol Status',
+      resolve: ({ protocols }) => protocols,
     },
     spf: {
       type: StatusEnum,
