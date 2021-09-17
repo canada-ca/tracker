@@ -18,7 +18,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
-NATS_URL = os.getenv("NATS_URL", "nats://127.0.0.1:4222")
+NATS_SERVERS = os.getenv("NATS_SERVERS")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.https")
 PUBLISH_TO = os.getenv("PUBLISH_TO")
 
@@ -219,11 +219,7 @@ async def run(loop):
         await asyncio.sleep(0.1)
         loop.stop()
 
-    # It is very likely that the demo server will see traffic from clients other than yours.
-    # To avoid this, start your own locally and modify the example to use it.
-    options = {"servers": [NATS_URL], "loop": loop, "closed_cb": closed_cb}
-
-    await nc.connect(**options)
+    await nc.connect(servers=NATS_SERVERS.split(','), loop=loop, closed_cb=closed_cb)
     print(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     async def subscribe_handler(msg):

@@ -17,8 +17,8 @@ spec:
         app: https-processor-deployment
     spec:
       containers:
-      - image: gcr.io/track-compliance/https-processor:test-asdfghj-1631904047
-        name: https-processor
+      - name: https-processor
+        image: gcr.io/track-compliance/https-processor:test-asdfghj-1631922124
         env:
         - name: DB_NAME
           value: track_dmarc
