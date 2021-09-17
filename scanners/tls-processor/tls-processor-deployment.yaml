@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tls-processor-deployment
+  name: tls-processor-deployment
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tls-processor-deployment
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tls-processor-deployment
+    spec:
+      containers:
+      - image: gcr.io/track-compliance/tls-processor:test-asdfghj-1631901921
+        name: tls-processor
+        env:
+        - name: DB_NAME
+          value: track_dmarc
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: tlsprocessor
+              key: DB_PASS
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: tlsprocessor
+              key: DB_URL
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: tlsprocessor
+              key: DB_USER
+        - name: PUBLISH_TO
+          value: domains
+        - name: SUBSCRIBE_TO
+          value: domains.*
+        - name: QUEUE_GROUP
+          value: tlsprocessor
+        - name: NATS_SERVERS
+          value: nats://nats.pubsub:4222
+        resources: {}
+status: {}
