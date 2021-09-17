@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tls-scanner-deployment
+  name: tls-scanner-deployment
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tls-scanner-deployment
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tls-scanner-deployment
+    spec:
+      containers:
+      - image: gcr.io/track-compliance/tls-scanner:test-asdfghj-1631835257
+        name: tls-scanner
+        env:
+        - name: PYTHONWARNINGS
+          value: ignore
+        - name: PUBLISH_TO
+          value: domains
+        - name: SUBSCRIBE_TO
+          value: domains.*
+        - name: QUEUE_GROUP
+          value: tlsscanner
+        - name: NATS_SERVERS
+          value: nats://nats.pubsub:4222
+        resources: {}
+status: {}
