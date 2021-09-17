@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: https-scanner-deployment
+  name: https-scanner-deployment
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: https-scanner-deployment
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: https-scanner-deployment
+    spec:
+      containers:
+      - image: gcr.io/track-compliance/https-scanner:test-asdfghj-1631911841
+        name: https-scanner
+        env:
+        # Requests is so loud...
+        - name: PYTHONWARNINGS
+          value: ignore
+        - name: PUBLISH_TO
+          value: domains
+        - name: SUBSCRIBE_TO
+          value: domains.*
+        - name: QUEUE_GROUP
+          value: httpsscanner
+        - name: SERVERS
+          value: nats://nats.pubsub:4222
+        - name: SCAN_TIMEOUT
+          value: "80"
+        resources: {}
+status: {}
