@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dns-processor-deployment
+  name: dns-processor-deployment
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-processor-deployment
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: dns-processor-deployment
+    spec:
+      containers:
+      - image: gcr.io/track-compliance/dns-processor:test-asdfghj-1631907963
+        name: dns-processor
+        env:
+        - name: DB_NAME
+          value: track_dmarc
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: dnsprocessor
+              key: DB_PASS
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: dnsprocessor
+              key: DB_URL
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: dnsprocessor
+              key: DB_USER
+        - name: PUBLISH_TO
+          value: domains
+        - name: SUBSCRIBE_TO
+          value: domains.*
+        - name: QUEUE_GROUP
+          value: dnsprocessor
+        - name: NATS_SERVERS
+          value: nats://nats.pubsub:4222
+        resources: {}
+status: {}
