@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dispatcher
+  namespace: scanners
+spec:
+  template:
+    metadata:
+      labels:
+        app: scanners
+        role: scan-job
+    spec:
+      containers:
+      - name: scan
+        image: gcr.io/track-compliance/domain-dispatcher:test-asdfghj-1631912739
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: domaindispatcher
+              key: DB_PASSWORD
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: domaindispatcher
+              key: DB_USER
+        - name: DB_HOST
+          value: arangodb.db
+        - name: DB_PORT
+          value: "8529"
+        - name: DB_NAME
+          value: track_dmarc
+        - name: DB_COLLECTION
+          value: domains
+        - name: PUBLISH_TO
+          value: domains
+        - name: NATS_URL
+          value: nats://nats.pubsub:4222
+      restartPolicy: Never
+  backoffLimit: 4
