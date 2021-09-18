@@ -1,0 +1,6 @@
+*.yaml
+**/*.env
+events*.json
+README.md
+node_modules
+Dockerfile
