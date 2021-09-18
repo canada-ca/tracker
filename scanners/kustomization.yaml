@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - ./nats
 - ./arangodb
+- ./counter
 - ./dns-scanner
 - ./dns-processor
 - ./tls-scanner
