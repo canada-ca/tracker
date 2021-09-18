@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: arangodb
+  name: arangodb
+  namespace: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: arangodb
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: arangodb
+    spec:
+      containers:
+      - image: arangodb
+        name: arangodb
+        ports:
+        - containerPort: 8529
+        env:
+          - name: ARANGO_ROOT_PASSWORD
+            value: test
+        resources: {}
+status: {}
