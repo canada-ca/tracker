@@ -29,11 +29,14 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 import inspect
 
+
 def line_number():
     return inspect.currentframe().f_back.f_lineno
 
+
 def publish_results(results, scan_type, user_key):
     print(json.dumps(results, indent=2))
+
 
 def process_results(results, domain_key, user_key, shared_id):
     timestamp = str(datetime.datetime.utcnow())
@@ -278,8 +281,8 @@ def process_results(results, domain_key, user_key, shared_id):
                 all_tag = all_tag.lower()
                 record_all_tag = spf_record[-4:].lower()
 
-                 # TODO: where is ?all
-                 # "record": "v=spf1 mx:canada.ca mx:mx.ssan.seg-egs.gc.ca ip4:205.193.86.223 ip4:205.193.117.44 ?all",
+                # TODO: where is ?all
+                # "record": "v=spf1 mx:canada.ca mx:mx.ssan.seg-egs.gc.ca ip4:205.193.86.223 ip4:205.193.117.44 ?all",
                 if record_all_tag != "-all" and record_all_tag != "~all":
                     tags["spf"].append("spf10")
                 elif all_tag == "missing":
@@ -697,7 +700,16 @@ def process_results(results, domain_key, user_key, shared_id):
             return
 
         logging.info("DNS Scans inserted into database")
-        return {"processed": { "domain": domain, "dkim": dkimResults, "dmarc": dmarcResults, "spf": spfResults }, "user_key": user_key, "shared_id": shared_id}
+        return {
+            "processed": {
+                "domain": domain,
+                "dkim": dkimResults,
+                "dmarc": dmarcResults,
+                "spf": spfResults,
+            },
+            "user_key": user_key,
+            "shared_id": shared_id,
+        }
 
     else:
         dmarcResults["phase"] = phase
@@ -751,7 +763,9 @@ async def run(loop):
     nc = NATS()
 
     async def error_cb(e):
-        print(f"Nats error callback: {str(e)} \n\nFull traceback: {traceback.format_exc()}")
+        print(
+            f"Nats error callback: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+        )
 
     async def closed_cb():
         print("Connection to NATS is closed.")
@@ -773,27 +787,20 @@ async def run(loop):
         shared_id = payload["shared_id"]
 
         processed = process_results(results, domain_key, user_key, shared_id)
-        await nc.publish(f"{PUBLISH_TO}.{domain_key}.dns.processed",
-                json.dumps(processed).encode())
-
-    options = {
-        "loop": loop,
-        "error_cb": error_cb,
-        "closed_cb": closed_cb,
-        "reconnected_cb": reconnected_cb,
-    }
-
-    if len(args.creds) > 0:
-        options["user_credentials"] = args.creds
+        await nc.publish(
+            f"{PUBLISH_TO}.{domain_key}.dns.processed", json.dumps(processed).encode()
+        )
 
     try:
-        if len(args.servers) > 0:
-            options["servers"] = SERVERS
-
-        await nc.connect(**options)
+        await nc.connect(
+            loop=loop,
+            error_cb=error_cb,
+            closed_cb=closed_cb,
+            reconnected_cb=reconnected_cb,
+            servers=SERVERS,
+        )
     except Exception as e:
-        print(e)
-        show_usage_and_die()
+        print(f"Error connecting to Nats: {e}")
 
     print(f"Connected to NATS at {nc.connected_url.netloc}...")
 
