@@ -17,7 +17,7 @@ spec:
         app: tls-processor-deployment
     spec:
       containers:
-      - image: gcr.io/track-compliance/tls-processor:test-asdfghj-1631901921
+      - image: gcr.io/track-compliance/tls-processor:test-asdfghj-1631905204
         name: tls-processor
         env:
         - name: DB_NAME
