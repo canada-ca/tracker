@@ -17,8 +17,8 @@ spec:
         app: dns-processor-deployment
     spec:
       containers:
-      - image: gcr.io/track-compliance/dns-processor:test-asdfghj-1631907963
-        name: dns-processor
+      - name: dns-processor
+        image: gcr.io/track-compliance/dns-processor:test-asdfghj-1631923853
         env:
         - name: DB_NAME
           value: track_dmarc
