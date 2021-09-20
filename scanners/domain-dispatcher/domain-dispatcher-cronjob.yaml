@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: scan
-        image: gcr.io/track-compliance/domain-dispatcher:test-asdfghj-1631912739
+        image: gcr.io/track-compliance/domain-dispatcher:test-asdfghj-1632142532
         env:
         - name: DB_PASSWORD
           valueFrom:
