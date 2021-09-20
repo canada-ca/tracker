@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: https-scanner-deployment
-  name: https-scanner-deployment
+    app: https-scanner
+  name: https-scanner
   namespace: scanners
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: https-scanner-deployment
+      app: https-scanner
   strategy: {}
   template:
     metadata:
       labels:
-        app: https-scanner-deployment
+        app: https-scanner
     spec:
       containers:
-      - image: gcr.io/track-compliance/https-scanner:test-asdfghj-1631911841
-        name: https-scanner
+      - name: https-scanner
+        image: gcr.io/track-compliance/https-scanner:test-asdfghj-1631911841
         env:
         # Requests is so loud...
         - name: PYTHONWARNINGS

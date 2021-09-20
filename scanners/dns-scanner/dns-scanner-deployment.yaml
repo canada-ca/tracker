@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: dns-scanner-deployment
-  name: dns-scanner-deployment
+    app: dns-scanner
+  name: dns-scanner
   namespace: scanners
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dns-scanner-deployment
+      app: dns-scanner
   strategy: {}
   template:
     metadata:
       labels:
-        app: dns-scanner-deployment
+        app: dns-scanner
     spec:
       containers:
-      - image: gcr.io/track-compliance/dns-scanner:test-asdfghj-1631831860
-        name: dns-scanner
+      - name: dns-scanner
+        image: gcr.io/track-compliance/dns-scanner:test-asdfghj-1631831860
         env:
         - name: PYTHONWARNINGS
           value: ignore

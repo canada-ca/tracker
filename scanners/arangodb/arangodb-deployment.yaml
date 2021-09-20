@@ -22,7 +22,10 @@ spec:
         ports:
         - containerPort: 8529
         env:
-          - name: ARANGO_ROOT_PASSWORD
-            value: test
+        - name: ARANGO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dbcreds
+              key: DB_PASS
         resources: {}
 status: {}
