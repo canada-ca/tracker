@@ -31,7 +31,7 @@ const exit = () => {
 process.on('SIGTERM', exit)
 process.on('SIGINT', exit)
 ;(async () => {
-  const nc = await connect({ url: NATS_SERVERS.split(',') })
+  const nc = await connect({ servers: NATS_SERVERS.split(',') })
 
   const sub = nc.subscribe(subject)
   for await (const m of sub) {
