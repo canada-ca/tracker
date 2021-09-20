@@ -2,45 +2,42 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: tls-processor-deployment
-  name: tls-processor-deployment
+    app: tls-processor
+  name: tls-processor
   namespace: scanners
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tls-processor-deployment
+      app: tls-processor
   strategy: {}
   template:
     metadata:
       labels:
-        app: tls-processor-deployment
+        app: tls-processor
     spec:
       containers:
-      - image: gcr.io/track-compliance/tls-processor:test-asdfghj-1631905204
-        name: tls-processor
+      - name: tls-processor
+        image: gcr.io/track-compliance/tls-processor:test-asdfghj-1631905204
         env:
         - name: DB_NAME
           value: track_dmarc
+        - name: DB_URL
+          value: http://arangodb.db:8529
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
-              name: tlsprocessor
+              name: scanners
               key: DB_PASS
-        - name: DB_URL
-          valueFrom:
-            secretKeyRef:
-              name: tlsprocessor
-              key: DB_URL
         - name: DB_USER
           valueFrom:
             secretKeyRef:
-              name: tlsprocessor
+              name: scanners
               key: DB_USER
         - name: PUBLISH_TO
           value: domains
         - name: SUBSCRIBE_TO
-          value: domains.*
+          value: domains.*.tls
         - name: QUEUE_GROUP
           value: tlsprocessor
         - name: NATS_SERVERS

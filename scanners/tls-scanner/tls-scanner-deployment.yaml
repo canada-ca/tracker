@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: tls-scanner-deployment
-  name: tls-scanner-deployment
+    app: tls-scanner
+  name: tls-scanner
   namespace: scanners
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tls-scanner-deployment
+      app: tls-scanner
   strategy: {}
   template:
     metadata:
       labels:
-        app: tls-scanner-deployment
+        app: tls-scanner
     spec:
       containers:
       - image: gcr.io/track-compliance/tls-scanner:test-asdfghj-1631835257
