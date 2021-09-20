@@ -18,10 +18,10 @@ spec:
     spec:
       containers:
       - name: counter
-        image: gcr.io/track-compliance/counter:test-asdfghj-1631925672
+        image: gcr.io/track-compliance/counter:test-asdfghj-1632142674
         env:
         - name: SUBSCRIBE_TO
-          value: domains.*
+          value: domains.>
         - name: NATS_SERVERS
           value: nats://nats.pubsub:4222
         resources: {}
