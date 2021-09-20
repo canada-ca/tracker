@@ -50,7 +50,7 @@ let db
     auth: { username, password },
   })
 
-  const nc = await connect({ url: NATS_URL })
+  const nc = await connect({ servers: NATS_URL })
 
   // TODO: switch to jetstream
   const jsm = await nc.jetstreamManager()
