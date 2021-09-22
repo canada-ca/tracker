@@ -170,6 +170,12 @@ def process_https(results, domain_key, user_key, db, shared_id):
                             "dmarc": "unknown",
                             "dkim": "unknown",
                             "spf": "unknown",
+                            "certificates": "fail",
+                            "ciphers": "fail",
+                            "curves": "fail",
+                            "hsts": "fail",
+                            "policy": "fail",
+                            "protocols": "fail",
                         }
                     }
                 )
@@ -293,6 +299,12 @@ def process_ssl(results, guidance, domain_key, user_key, db, shared_id):
                             "dmarc": "unknown",
                             "dkim": "unknown",
                             "spf": "unknown",
+                            "certificates": "fail",
+                            "ciphers": "fail",
+                            "curves": "fail",
+                            "hsts": "fail",
+                            "policy": "fail",
+                            "protocols": "fail",
                         }
                     }
                 )
@@ -878,6 +890,12 @@ def process_dns(results, domain_key, user_key, db, shared_id):
                             "dmarc": "unknown",
                             "dkim": "unknown",
                             "spf": "unknown",
+                            "certificates": "fail",
+                            "ciphers": "fail",
+                            "curves": "fail",
+                            "hsts": "fail",
+                            "policy": "fail",
+                            "protocols": "fail",
                         }
                     }
                 )

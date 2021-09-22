@@ -68,6 +68,12 @@ test_db.collection("domains").insert(
             "https": "pass",
             "spf": "pass",
             "ssl": "pass",
+            "certificates": "fail",
+            "ciphers": "fail",
+            "curves": "fail",
+            "hsts": "fail",
+            "policy": "fail",
+            "protocols": "fail",
         },
         "phase": "",
     }
