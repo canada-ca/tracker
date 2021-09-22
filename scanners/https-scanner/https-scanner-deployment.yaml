@@ -6,7 +6,7 @@ metadata:
   name: https-scanner
   namespace: scanners
 spec:
-  replicas: 1
+  replicas: 20
   selector:
     matchLabels:
       app: https-scanner
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/https-scanner:test-asdfghj-1631911841
+        image: gcr.io/track-compliance/https-scanner:test-asdfghj-1632328728
         env:
         # Requests is so loud...
         - name: PYTHONWARNINGS
@@ -33,5 +33,9 @@ spec:
           value: nats://nats.pubsub:4222
         - name: SCAN_TIMEOUT
           value: "80"
+        - name: NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         resources: {}
 status: {}
