@@ -17,6 +17,7 @@ load_dotenv()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+NAME = os.getenv("NAME", "dns-scanner")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
 PUBLISH_TO = os.getenv("PUBLISH_TO")
 QUEUE_GROUP = os.getenv("QUEUE_GROUP")
@@ -120,6 +121,7 @@ async def run(loop):
             closed_cb=closed_cb,
             reconnected_cb=reconnected_cb,
             servers=SERVERS,
+            name=NAME,
         )
     except Exception as e:
         print(f"Exception while connecting to Nats: {e}")
