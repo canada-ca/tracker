@@ -12,6 +12,7 @@ MIN_HSTS_AGE = 31536000  # one year
 
 load_dotenv()
 
+NAME = os.getenv("NAME", "https-scanner")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
 PUBLISH_TO = os.getenv("PUBLISH_TO")
 QUEUE_GROUP = os.getenv("QUEUE_GROUP")
@@ -188,6 +189,7 @@ async def run(loop):
             closed_cb=closed_cb,
             reconnected_cb=reconnected_cb,
             servers=SERVERS,
+            name=NAME,
         )
     except Exception as e:
         print(e)
