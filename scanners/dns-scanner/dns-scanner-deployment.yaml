@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/dns-scanner:test-asdfghj-1631831860
+        image: gcr.io/track-compliance/dns-scanner:test-asdfghj-1632331527
         env:
         - name: PYTHONWARNINGS
           value: ignore
@@ -32,6 +32,10 @@ spec:
           value: nats://nats.pubsub:4222
         - name: SCAN_TIMEOUT
           value: "80"
+        - name: NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         imagePullPolicy: Always
         resources: {}
 status: {}
