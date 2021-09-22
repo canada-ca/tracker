@@ -6,7 +6,7 @@ metadata:
   name: tls-scanner
   namespace: scanners
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: tls-scanner
@@ -17,8 +17,8 @@ spec:
         app: tls-scanner
     spec:
       containers:
-      - image: gcr.io/track-compliance/tls-scanner:test-asdfghj-1631835257
-        name: tls-scanner
+      - name: tls-scanner
+        image: gcr.io/track-compliance/tls-scanner:test-asdfghj-1632329330
         env:
         - name: PYTHONWARNINGS
           value: ignore
@@ -30,5 +30,9 @@ spec:
           value: tlsscanner
         - name: NATS_SERVERS
           value: nats://nats.pubsub:4222
+        - name: NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         resources: {}
 status: {}
