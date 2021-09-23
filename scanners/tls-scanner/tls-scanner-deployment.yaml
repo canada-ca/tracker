@@ -6,7 +6,6 @@ metadata:
   name: tls-scanner
   namespace: scanners
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app: tls-scanner

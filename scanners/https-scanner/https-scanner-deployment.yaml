@@ -6,7 +6,6 @@ metadata:
   name: https-scanner
   namespace: scanners
 spec:
-  replicas: 20
   selector:
     matchLabels:
       app: https-scanner
