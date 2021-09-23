@@ -756,19 +756,19 @@ export default function DmarcReportPage() {
         <Heading as="h1" textAlign="center">
           {domainSlug.toUpperCase()}
         </Heading>
-        <Link
-          color="teal.600"
-          whiteSpace="noWrap"
-          my="auto"
-          to={`/domains/${domainSlug}`}
-          as={RouteLink}
-          d="block"
-          width="100%"
-          textAlign={{ base: 'center', md: 'right' }}
-        >
-          <Trans>Guidance</Trans>
-          <LinkIcon ml="4px" aria-hidden="true" />
-        </Link>
+        <Flex>
+          <Link
+            ml="auto"
+            my="auto"
+            color="teal.600"
+            whiteSpace="noWrap"
+            to={`/domains/${domainSlug}`}
+            as={RouteLink}
+          >
+            <Trans>Guidance</Trans>
+            <LinkIcon ml="4px" aria-hidden="true" />
+          </Link>
+        </Flex>
       </Box>
 
       {graphDisplay}
