@@ -14,6 +14,7 @@ import asyncio
 import signal
 from nats.aio.client import Client as NATS
 
+NAME = os.getenv("NAME", "https-processor")
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
@@ -28,6 +29,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
+
+
+def to_json(thing):
+    print(json.dumps(thing, indent=2))
 
 
 def publish_results(results, scan_type, user_key):
@@ -219,18 +224,15 @@ async def run(loop):
         await asyncio.sleep(0.1)
         loop.stop()
 
-    await nc.connect(servers=NATS_SERVERS.split(','), loop=loop, closed_cb=closed_cb)
+    await nc.connect(servers=NATS_SERVERS.split(","), loop=loop,
+            closed_cb=closed_cb, name=NAME)
     print(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     async def subscribe_handler(msg):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
-        print(
-            "Received a message on'{subject} {reply}': {data}".format(
-                subject=subject, reply=reply, data=data
-            )
-        )
+        print({"subject": subject, "data": data})
         payload = json.loads(msg.data)
         results = payload["results"]
         domain_key = payload["domain_key"]
@@ -239,8 +241,15 @@ async def run(loop):
 
         loop = asyncio.get_event_loop()
         executor = ThreadPoolExecutor()
+        start_time = time.monotonic()
         processed = await loop.run_in_executor(
             executor, lambda: process_https(results, domain_key, user_key, shared_id)
+        )
+        print(
+            {
+                "processingTime": time.monotonic() - start_time,
+                "processedResults": to_json(processed),
+            }
         )
         await nc.publish(
             f"{PUBLISH_TO}.{domain_key}.https.processed", json.dumps(processed).encode()

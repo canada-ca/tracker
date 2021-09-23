@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: https-processor
-        image: gcr.io/track-compliance/https-processor:test-asdfghj-1631922124
+        image: gcr.io/track-compliance/https-processor:test-asdfghj-1632418519
         env:
         - name: DB_NAME
           value: track_dmarc
@@ -42,5 +42,9 @@ spec:
           value: httpsprocessor
         - name: NATS_SERVERS
           value: nats://nats.pubsub:4222
+        - name: NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         resources: {}
 status: {}
