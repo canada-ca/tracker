@@ -249,7 +249,7 @@ def main():
         loop.run_forever()
     finally:
         loop.close()
-        tags.close()
+        guidance_file.close()
 
 
 if __name__ == "__main__":
