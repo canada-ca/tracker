@@ -14,7 +14,6 @@ import { SkipLink } from './SkipLink'
 import { FloatingMenu } from './FloatingMenu'
 import { PrivatePage } from './PrivatePage'
 import { Page } from './Page'
-import { RequestScanNotificationHandler } from './RequestScanNotificationHandler'
 import { VerifyAccountNotificationBar } from './VerifyAccountNotificationBar'
 
 import { wsClient } from '../client'
@@ -77,7 +76,6 @@ export function App() {
 
   return (
     <>
-      <RequestScanNotificationHandler />
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />

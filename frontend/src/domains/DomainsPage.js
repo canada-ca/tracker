@@ -11,17 +11,11 @@ import {
   InputLeftElement,
   Select,
   Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   Text,
 } from '@chakra-ui/react'
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { ScanDomain } from './ScanDomain'
 import { DomainCard } from './DomainCard'
 
 import { ListOf } from '../components/ListOf'
@@ -147,122 +141,104 @@ export default function DomainsPage() {
         />
       </InfoPanel>
 
-      <Tabs isFitted>
-        <TabList mb="4">
-          <Tab>
-            <Trans>Search</Trans>
-          </Tab>
-          <Tab>
-            <Trans>Scan</Trans>
-          </Tab>
-        </TabList>
-
-        <TabPanels>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <Flex
-                direction={{ base: 'column', md: 'row' }}
-                alignItems={{ base: 'stretch', md: 'center' }}
-                mb={{ base: '4', md: '8' }}
-              >
-                <Flex
-                  direction="row"
-                  minW={{ base: '100%', md: '50%' }}
-                  alignItems="center"
-                  flexGrow={1}
-                  mb={2}
-                >
-                  <Text
-                    as="label"
-                    htmlFor="Search-for-field"
-                    fontSize="md"
-                    fontWeight="bold"
-                    textAlign="center"
-                    mr={2}
-                  >
-                    <Trans>Search: </Trans>
-                  </Text>
-                  <InputGroup flexGrow={1}>
-                    <InputLeftElement aria-hidden="true">
-                      <SearchIcon color="gray.300" />
-                    </InputLeftElement>
-                    <Input
-                      id="Search-for-field"
-                      type="text"
-                      placeholder={t`Search for a domain`}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value)
-                        resetToFirstPage()
-                      }}
-                    />
-                  </InputGroup>
-                </Flex>
-
-                <Stack isInline align="center" ml={{ md: '10%' }}>
-                  <Text
-                    as="label"
-                    htmlFor="Sort-by-field"
-                    fontSize="md"
-                    fontWeight="bold"
-                    textAlign="center"
-                  >
-                    <Trans>Sort by:</Trans>
-                  </Text>
-                  <Select
-                    id="Sort-by-field"
-                    data-testid="sort-select"
-                    width="fit-content"
-                    size="md"
-                    variant="filled"
-                    value={orderField}
-                    onChange={(e) => {
-                      setOrderField(e.target.value)
-                      resetToFirstPage()
-                    }}
-                  >
-                    <option value="DOMAIN">{t`Domain`}</option>
-                    <option value="LAST_RAN">{t`Last Scanned`}</option>
-                    <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
-                    <option value="SSL_STATUS">{t`SSL Status`}</option>
-                    <option value="SPF_STATUS">{t`SPF Status`}</option>
-                    <option value="DKIM_STATUS">{t`DKIM Status`}</option>
-                    <option value="DMARC_STATUS">{t`DMARC Status`}</option>
-                  </Select>
-                  <IconButton
-                    aria-label="Toggle sort direction"
-                    icon={orderIconName}
-                    color="primary"
-                    onClick={() => {
-                      const newOrderDirection =
-                        orderDirection === 'ASC' ? 'DESC' : 'ASC'
-                      setOrderDirection(newOrderDirection)
-                      resetToFirstPage()
-                    }}
-                  />
-                </Stack>
-              </Flex>
-
-              {domainList}
-
-              <RelayPaginationControls
-                onlyPagination={false}
-                selectedDisplayLimit={domainsPerPage}
-                setSelectedDisplayLimit={setDomainsPerPage}
-                displayLimitOptions={[5, 10, 20, 50, 100]}
-                resetToFirstPage={resetToFirstPage}
-                hasNextPage={hasNextPage}
-                hasPreviousPage={hasPreviousPage}
-                next={next}
-                previous={previous}
-                isLoadingMore={isLoadingMore}
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          alignItems={{ base: 'stretch', md: 'center' }}
+          mb={{ base: '4', md: '8' }}
+        >
+          <Flex
+            direction="row"
+            minW={{ base: '100%', md: '50%' }}
+            alignItems="center"
+            flexGrow={1}
+            mb={2}
+          >
+            <Text
+              as="label"
+              htmlFor="Search-for-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mr={2}
+            >
+              <Trans>Search: </Trans>
+            </Text>
+            <InputGroup flexGrow={1}>
+              <InputLeftElement aria-hidden="true">
+                <SearchIcon color="gray.300" />
+              </InputLeftElement>
+              <Input
+                id="Search-for-field"
+                type="text"
+                placeholder={t`Search for a domain`}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                  resetToFirstPage()
+                }}
               />
-            </ErrorBoundary>
-          </TabPanel>
-          <TabPanel>
-            <ScanDomain />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+            </InputGroup>
+          </Flex>
+
+          <Stack isInline align="center" ml={{ md: '10%' }}>
+            <Text
+              as="label"
+              htmlFor="Sort-by-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+            >
+              <Trans>Sort by:</Trans>
+            </Text>
+            <Select
+              id="Sort-by-field"
+              data-testid="sort-select"
+              width="fit-content"
+              size="md"
+              variant="filled"
+              value={orderField}
+              onChange={(e) => {
+                setOrderField(e.target.value)
+                resetToFirstPage()
+              }}
+            >
+              <option value="DOMAIN">{t`Domain`}</option>
+              <option value="LAST_RAN">{t`Last Scanned`}</option>
+              <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
+              <option value="SSL_STATUS">{t`SSL Status`}</option>
+              <option value="SPF_STATUS">{t`SPF Status`}</option>
+              <option value="DKIM_STATUS">{t`DKIM Status`}</option>
+              <option value="DMARC_STATUS">{t`DMARC Status`}</option>
+            </Select>
+            <IconButton
+              aria-label="Toggle sort direction"
+              icon={orderIconName}
+              color="primary"
+              onClick={() => {
+                const newOrderDirection =
+                  orderDirection === 'ASC' ? 'DESC' : 'ASC'
+                setOrderDirection(newOrderDirection)
+                resetToFirstPage()
+              }}
+            />
+          </Stack>
+        </Flex>
+
+        {domainList}
+
+        <RelayPaginationControls
+          onlyPagination={false}
+          selectedDisplayLimit={domainsPerPage}
+          setSelectedDisplayLimit={setDomainsPerPage}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
+      </ErrorBoundary>
     </Box>
   )
 }
