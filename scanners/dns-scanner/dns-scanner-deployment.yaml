@@ -6,7 +6,6 @@ metadata:
   name: dns-scanner
   namespace: scanners
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: dns-scanner
@@ -18,7 +17,7 @@ spec:
     spec:
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/dns-scanner:test-asdfghj-1632331527
+        image: gcr.io/track-compliance/dns-scanner:test-asdfghj-1632411895
         env:
         - name: PYTHONWARNINGS
           value: ignore

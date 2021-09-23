@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import logging
@@ -9,7 +10,6 @@ from checkdmarc import *
 from dns import resolver
 from dkim import dnsplug, crypto, KeyFormatError
 from dkim.util import InvalidTagValueList
-from pebble import concurrent
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -24,7 +24,6 @@ class DMARCScanner():
         self.domain = target_domain
 
 
-    @concurrent.process(timeout=TIMEOUT)
     def run(self):
 
         # Single-item list to pass off to check_domains function.
@@ -87,7 +86,7 @@ class DMARCScanner():
                         logging.error(f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={self.domain}: {e}")
                         rua["accepting"] = "undetermined"
             except (TypeError, KeyError) as e:
-                logging.error(f"Error occurred while attempting to validate rua address for domain={self.domain}: {e}")
+                logging.error(f"Error `{e}` while validating rua for domain: {self.domain}. scan_result: {json.dumps(scan_result, indent=2)}" )
 
         for ruf in scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []):
             try:
@@ -185,7 +184,6 @@ class DKIMScanner():
         return pk, keysize, ktag
 
 
-    @concurrent.process(timeout=TIMEOUT)
     def run(self):
 
         record = {}
