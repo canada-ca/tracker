@@ -2,7 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ./nats
-- ./arangodb
 - ./counter
 - ./dns-scanner
 - ./dns-processor
@@ -11,3 +10,10 @@ resources:
 - ./https-scanner
 - ./https-processor
 - scanners-namespace.yaml
+replicas:
+- name: dns-scanner
+  count: 3
+- name: tls-scanner
+  count: 3
+- name: https-scanner
+  count: 22
