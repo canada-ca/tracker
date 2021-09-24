@@ -9,109 +9,17 @@ import emoji
 import random
 import datetime
 from arango import ArangoClient
-from gql import gql, Client
-from gql.transport.requests import RequestsHTTPTransport
+from dotenv import load_dotenv
 
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
-DB_PORT = os.getenv("DB_PORT")
-DB_NAME = os.getenv("DB_NAME")
-DB_HOST = os.getenv("DB_HOST")
-REPO_NAME = os.getenv("REPO_NAME")
-REPO_OWNER = os.getenv("REPO_OWNER")
-GUIDANCE_DIR = os.getenv("GUIDANCE_DIR")
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def retrieve_guidance(
-    token=GITHUB_TOKEN, owner=REPO_OWNER, repo=REPO_NAME, directory=GUIDANCE_DIR
-):
-    logging.info(f"Retrieving guidance...")
-
-    gh_client = Client(
-        transport=RequestsHTTPTransport(
-            url="https://api.github.com/graphql",
-            headers={"Authorization": "bearer " + token},
-        ),
-        fetch_schema_from_transport=True,
-    )
-
-    guidance = []
-
-    # fmt: off
-    guidance_files_query = """
-    {{
-      repository(name: "{REPO_NAME}", owner: "{REPO_OWNER}") {{
-        id
-        object(expression: "master:{GUIDANCE_DIR}") {{
-          ... on Tree {{
-            entries {{
-                name
-            }}
-          }}
-        }}
-      }}
-    }}
-    """.format(**{"REPO_NAME": repo, "REPO_OWNER": owner, "GUIDANCE_DIR": directory})
-    # fmt: on
-    guidance_files_result = gh_client.execute(gql(guidance_files_query))
-    file_names = []
-
-    for file in guidance_files_result["repository"]["object"]["entries"]:
-        file_names.append(file["name"])
-
-    for file_name in file_names:
-        # fmt: off
-        guidance_query = """
-        {{
-          repository(name: "{REPO_NAME}", owner: "{REPO_OWNER}") {{
-            id
-            object(expression: "master:{GUIDANCE_DIR}/{FILE_NAME}") {{
-              ... on Blob {{
-                text
-              }}
-            }}
-          }}
-        }}
-        """.format(**{"REPO_NAME": repo, "REPO_OWNER": owner, "GUIDANCE_DIR": directory, "FILE_NAME": file_name})
-        # fmt: on
-        guidance_result = gh_client.execute(gql(guidance_query))
-        try:
-            guidance.append(
-                {
-                    "file": file_name,
-                    "guidance": json.loads(
-                        guidance_result["repository"]["object"]["text"]
-                    ),
-                }
-            )
-        except KeyError:
-            pass
-
-    logging.info(f"Guidance retrieved.")
-
-    return guidance
-
-
-def update_guidance(
-    guidance_data,
-    host=DB_HOST,
-    name=DB_NAME,
-    user=DB_USER,
-    password=DB_PASS,
-    port=DB_PORT,
-):
-    logging.info(f"Updating guidance...")
-
-    # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
-    db = client.db(name, username=user, password=password)
-
+def update_guidance(guidance_data, db):
     for entry in guidance_data:
         if entry["file"] == "scanSummaryCriteria.json":
+            # TODO: this service should not be creating database collections and
+            # hardcoding options like replication_factor
             if not db.has_collection("scanSummaryCriteria"):
                 db.create_collection(
                     name="scanSummaryCriteria",
@@ -248,7 +156,23 @@ def update_guidance(
 
 
 if __name__ == "__main__":
+    load_dotenv()
+
+    DB_USER = os.getenv("DB_USER")
+    DB_PASS = os.getenv("DB_PASS")
+    DB_NAME = os.getenv("DB_NAME")
+    DB_URL = os.getenv("DB_URL")
+
     logging.info(emoji.emojize("Guidance service started :rocket:"))
-    guidance_data = retrieve_guidance()
-    update_guidance(guidance_data)
+
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    guidance_file = open(f"{current_directory}/guidance.json")
+    guidance_data = json.load(guidance_file)
+
+    # Establish DB connection
+    client = ArangoClient(hosts=DB_URL)
+    db = client.db(DB_NAME, username=DB_USER, password=DB_PASS)
+
+    update_guidance(guidance_data, db)
+    guidance_file.close()
     logging.info(f"Guidance service shutting down...")

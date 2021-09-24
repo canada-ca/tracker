@@ -11,6 +11,8 @@ spec:
       - name: guidance
         image: gcr.io/track-compliance/services/guidance:master-410a212-1628257658 # {"$imagepolicy": "flux-system:guidance"}
         env:
+        - name: DB_URL
+          value: "http://arangodb.db:8529"
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -21,28 +23,10 @@ spec:
             secretKeyRef:
               name: scanners
               key: DB_PASS
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_HOST
-        - name: DB_PORT
-          value: "8529"
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
               name: scanners
               key: DB_NAME
-        - name: REPO_NAME
-          value: "tracker"
-        - name: REPO_OWNER
-          value: "canada-ca"
-        - name: GUIDANCE_DIR
-          value: "guidance"
-        - name: GITHUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: GITHUB_TOKEN
       restartPolicy: Never
   backoffLimit: 4

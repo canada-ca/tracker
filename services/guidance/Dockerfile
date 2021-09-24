@@ -1,12 +1,12 @@
-FROM ubuntu:20.04
+FROM ubuntu:21.04
 
-# Copy local code to the container image.
-ENV HOME /guidance
-WORKDIR $HOME
-COPY . ./
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONWARNINGS ignore
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
+RUN useradd -ms /bin/bash guidance
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   apt-utils \
   git \
   python3 \
@@ -16,7 +16,11 @@ RUN apt-get install -y --no-install-recommends \
   build-essential \
   python3-dev
 
+USER guidance
+WORKDIR /home/guidance
+
+COPY . .
 # Install dependencies.
-RUN pip3 install --pre -r requirements.txt
+RUN pip3 install --no-cache-dir --pre -r requirements.txt
 
 CMD ["python3", "guidance.py"]
