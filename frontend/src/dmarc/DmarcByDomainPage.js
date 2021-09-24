@@ -1,17 +1,20 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 import {
   Box,
   Divider,
   Flex,
   Heading,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Link,
   Select,
   Spinner,
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { LinkIcon } from '@chakra-ui/icons'
+import { LinkIcon, SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -22,10 +25,19 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { months } from '../utilities/months'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
+import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
+import { toConstantCase } from '../helpers/toConstantCase'
+import { RelayPaginationControls } from '../components/RelayPaginationControls'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
+
+  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
+  const displayLimitOptions = [5, 10, 20, 50, 100]
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+
   const [selectedPeriod, setSelectedPeriod] = useState('LAST30DAYS')
   const [selectedYear, setSelectedYear] = useState(
     currentDate.getFullYear().toString(),
@@ -33,27 +45,61 @@ export default function DmarcByDomainPage() {
   const [selectedDate, setSelectedDate] = useState(
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
-  const orderBy = {
+  const [orderBy, setOrderBy] = useState({
     field: 'TOTAL_MESSAGES',
     direction: 'DESC',
-  }
+  })
 
   const [infoState, changeInfoState] = useState({
     isVisible: false,
   })
 
-  const { loading, error, nodes, resetToFirstPage } = usePaginatedCollection({
+  const {
+    loading,
+    error,
+    nodes,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    next,
+    previous,
+    isLoadingMore,
+  } = usePaginatedCollection({
     fetchForward: FORWARD,
     recordsPerPage: 10,
     variables: {
       month: selectedPeriod,
       year: selectedYear,
+      search: debouncedSearchTerm,
       orderBy: orderBy,
     },
     relayRoot: 'findMyDmarcSummaries',
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   })
+
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
+  }, [searchTerm])
+
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
+
+  const updateOrderBy = useCallback(
+    (sortBy) => {
+      let newOrderBy = {
+        field: 'TOTAL_MESSAGES',
+        direction: 'DESC',
+      }
+      if (sortBy.length) {
+        newOrderBy = {}
+        newOrderBy.field = toConstantCase(sortBy[0].id)
+        newOrderBy.direction = sortBy[0].desc === true ? 'DESC' : 'ASC'
+      }
+      resetToFirstPage()
+      setOrderBy(newOrderBy)
+    },
+    [resetToFirstPage],
+  )
 
   const formattedData = useMemo(() => {
     const curData = []
@@ -175,6 +221,11 @@ export default function DmarcByDomainPage() {
         initialSort={initialSort}
         mb="10px"
         searchPlaceholder={t`Search for a domain`}
+        frontendPagination={false}
+        selectedDisplayLimit={selectedTableDisplayLimit}
+        manualSort={true}
+        manualFilters={true}
+        onSort={updateOrderBy}
       />
     )
 
@@ -289,6 +340,7 @@ export default function DmarcByDomainPage() {
         >
           {options}
         </Select>
+
         {loading && (
           <Stack
             isInline
@@ -309,8 +361,35 @@ export default function DmarcByDomainPage() {
         )}
       </Flex>
 
+      <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
+        <InputLeftElement>
+          <SearchIcon />
+        </InputLeftElement>
+        <Input
+          type="text"
+          placeholder={t`Search for a domain`}
+          onChange={(e) => {
+            setSearchTerm(e.target.value)
+            resetToFirstPage()
+          }}
+        />
+      </InputGroup>
+
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
+        <RelayPaginationControls
+          mt="0.5rem"
+          onlyPagination={false}
+          selectedDisplayLimit={selectedTableDisplayLimit}
+          setSelectedDisplayLimit={setSelectedTableDisplayLimit}
+          displayLimitOptions={displayLimitOptions}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
       </ErrorBoundary>
     </Box>
   )

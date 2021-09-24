@@ -41,6 +41,7 @@ describe('<DmarcByDomainPage />', () => {
             field: 'TOTAL_MESSAGES',
             direction: 'DESC',
           },
+          search: '',
         },
       },
       result: { data: rawDmarcReportSummaryTableData },
@@ -56,6 +57,7 @@ describe('<DmarcByDomainPage />', () => {
             field: 'TOTAL_MESSAGES',
             direction: 'DESC',
           },
+          search: '',
         },
       },
       result: {
