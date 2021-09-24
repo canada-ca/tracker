@@ -47,7 +47,7 @@ export function TrackerTable({ ...props }) {
     columns,
     title,
     initialSort,
-    frontendPagination,
+    frontendPagination = true,
     selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)')
       .matches
       ? 5
