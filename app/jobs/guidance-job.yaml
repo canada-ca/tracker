@@ -2,7 +2,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: guidance-job
+  namespace: scanners
 spec:
+  ttlSecondsAfterFinished: 100
   template:
     spec:
       containers:
