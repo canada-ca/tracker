@@ -78,6 +78,10 @@ backup:
 superadmin:
 		kubectl apply -f app/jobs/super-admin.yaml
 
+.PHONY: guidance
+guidance:
+		kubectl apply -f app/jobs/guidance-job.yaml
+
 .ONESHELL:
 .PHONY: credentials
 credentials:
