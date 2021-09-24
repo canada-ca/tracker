@@ -80,7 +80,7 @@ superadmin:
 
 .PHONY: guidance
 guidance:
-		kubectl apply -f app/jobs/guidance-job.yaml
+		kubectl apply -f services/guidance/guidance-job.yaml
 
 .ONESHELL:
 .PHONY: credentials
