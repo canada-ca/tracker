@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   useGlobalFilter,
   usePagination,
   useSortBy,
   useTable,
 } from 'react-table'
-import { any, array, bool, func, shape, string } from 'prop-types'
+import { any, array, bool, func, number, shape, string } from 'prop-types'
 import {
   Box,
   Flex,
@@ -38,7 +38,7 @@ import { useLingui } from '@lingui/react'
 
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
 
-import { InfoButton } from '../components/InfoPanel'
+import { InfoButton } from './InfoPanel'
 
 export function TrackerTable({ ...props }) {
   const { i18n } = useLingui()
@@ -47,11 +47,21 @@ export function TrackerTable({ ...props }) {
     columns,
     title,
     initialSort,
+    frontendPagination,
+    selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)')
+      .matches
+      ? 5
+      : 10,
+    onSort,
     infoPanel,
+    manualSort,
+    manualFilters,
     infoState,
     changeInfoState,
     searchPlaceholder,
   } = props
+
+  const [firstRender, setFirstRender] = React.useState(true)
 
   const {
     getTableProps,
@@ -74,9 +84,13 @@ export function TrackerTable({ ...props }) {
     {
       columns,
       data,
+      manualSortBy: manualSort,
+      manualFilters: manualFilters,
+      disableMultiSort: manualSort,
+      disableSortRemove: manualSort,
       initialState: {
         sortBy: initialSort,
-        pageSize: 10,
+        pageSize: selectedDisplayLimit,
         pageIndex: 0,
       },
     },
@@ -85,16 +99,32 @@ export function TrackerTable({ ...props }) {
     usePagination,
   )
 
+  useEffect(() => {
+    if (onSort && !firstRender) {
+      onSort(state.sortBy)
+    }
+  }, [state.sortBy])
+
+  useEffect(() => {
+    if (!firstRender) {
+      setPageSize(selectedDisplayLimit)
+    } else {
+      setFirstRender(false)
+    }
+  }, [selectedDisplayLimit])
+
   return (
     <Box>
       <Flex direction="row" my={2}>
-        <ReactTableGlobalFilter
-          title={title}
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          placeholder={searchPlaceholder}
-        />
+        {!manualFilters && (
+          <ReactTableGlobalFilter
+            title={title}
+            preGlobalFilteredRows={preGlobalFilteredRows}
+            globalFilter={state.globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            placeholder={searchPlaceholder}
+          />
+        )}
 
         {infoState && (
           <InfoButton
@@ -170,95 +200,102 @@ export function TrackerTable({ ...props }) {
         </Tbody>
       </Table>
 
-      <Box className="pagination" mt="0.25em">
-        <Stack isInline align="center" flexWrap="wrap" justify="space-between">
-          <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-            <IconButton
-              onClick={() => {
-                // wrapperRef.current.scrollIntoView()
-                gotoPage(0)
-              }}
-              disabled={!canPreviousPage}
-              icon={<ArrowLeftIcon />}
-              aria-label="Go to first page"
-            />
-            <IconButton
-              onClick={() => {
-                // wrapperRef.current.scrollIntoView(true)
-                previousPage()
-              }}
-              disabled={!canPreviousPage}
-              icon={<ChevronLeftIcon />}
-              aria-label="Go to previous page"
-            />
-            <IconButton
-              onClick={() => {
-                // wrapperRef.current.scrollIntoView(true)
-                nextPage()
-              }}
-              disabled={!canNextPage}
-              icon={<ChevronRightIcon />}
-              aria-label="Go to next page"
-            />
-            <IconButton
-              onClick={() => {
-                // wrapperRef.current.scrollIntoView(true)
-                gotoPage(pageCount - 1)
-              }}
-              disabled={!canNextPage}
-              icon={<ArrowRightIcon />}
-              aria-label="Go to last page"
-            />
-            <Stack isInline align="center" spacing="4px">
-              <Box as="label" htmlFor={`${title.replace(/\s+/g, '-')}-goTo`}>
-                <Trans>Go to page:</Trans>
-              </Box>
-              <NumberInput
-                defaultValue={1}
-                min={1}
-                max={pageOptions.length}
-                id={`${title.replace(/\s+/g, '-')}-goTo`}
-                width="6rem"
-                onChange={(event) => {
-                  gotoPage(parseInt(event) - 1)
+      {frontendPagination && (
+        <Box mt="0.25em">
+          <Stack
+            isInline
+            align="center"
+            flexWrap="wrap"
+            justify="space-between"
+          >
+            <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+              <IconButton
+                onClick={() => {
+                  // wrapperRef.current.scrollIntoView()
+                  gotoPage(0)
                 }}
-              >
-                <NumberInputField />
-              </NumberInput>
+                disabled={!canPreviousPage}
+                icon={<ArrowLeftIcon />}
+                aria-label="Go to first page"
+              />
+              <IconButton
+                onClick={() => {
+                  // wrapperRef.current.scrollIntoView(true)
+                  previousPage()
+                }}
+                disabled={!canPreviousPage}
+                icon={<ChevronLeftIcon />}
+                aria-label="Go to previous page"
+              />
+              <IconButton
+                onClick={() => {
+                  // wrapperRef.current.scrollIntoView(true)
+                  nextPage()
+                }}
+                disabled={!canNextPage}
+                icon={<ChevronRightIcon />}
+                aria-label="Go to next page"
+              />
+              <IconButton
+                onClick={() => {
+                  // wrapperRef.current.scrollIntoView(true)
+                  gotoPage(pageCount - 1)
+                }}
+                disabled={!canNextPage}
+                icon={<ArrowRightIcon />}
+                aria-label="Go to last page"
+              />
+              <Stack isInline align="center" spacing="4px">
+                <Box as="label" htmlFor={`${title.replace(/\s+/g, '-')}-goTo`}>
+                  <Trans>Go to page:</Trans>
+                </Box>
+                <NumberInput
+                  defaultValue={1}
+                  min={1}
+                  max={pageOptions.length}
+                  id={`${title.replace(/\s+/g, '-')}-goTo`}
+                  width="6rem"
+                  onChange={(event) => {
+                    gotoPage(parseInt(event) - 1)
+                  }}
+                >
+                  <NumberInputField />
+                </NumberInput>
+              </Stack>
+              <Text>
+                <Trans>
+                  Page {state.pageIndex + 1} of {pageOptions.length}
+                </Trans>
+              </Text>
             </Stack>
-            <Text>
-              <Trans>
-                Page {state.pageIndex + 1} of {pageOptions.length}
-              </Trans>
-            </Text>
+            <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+              <Text
+                as="label"
+                htmlFor={`${title.replace(/\s+/g, '-')}-items-per-page`}
+                fontSize="md"
+                textAlign="center"
+              >
+                <Trans>Items per page: </Trans>
+              </Text>
+              <Select
+                id={`${title.replace(/\s+/g, '-')}-items-per-page`}
+                value={state.pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value))
+                  // wrapperRef.current.scrollIntoView(true)
+                }}
+                width="fit-content"
+              >
+                {[5, 10, 20].map((pageSize) => (
+                  <option key={pageSize} value={pageSize}>
+                    {i18n._(t`Show ${pageSize}`)}
+                  </option>
+                ))}
+              </Select>
+            </Stack>
           </Stack>
-          <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-            <Text
-              as="label"
-              htmlFor={`${title.replace(/\s+/g, '-')}-items-per-page`}
-              fontSize="md"
-              textAlign="center"
-            >
-              <Trans>Items per page: </Trans>
-            </Text>
-            <Select
-              id={`${title.replace(/\s+/g, '-')}-items-per-page`}
-              value={state.pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value))
-                // wrapperRef.current.scrollIntoView(true)
-              }}
-              width="fit-content"
-            >
-              {[5, 10, 20].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  {i18n._(t`Show ${pageSize}`)}
-                </option>
-              ))}
-            </Select>
-          </Stack>
-        </Stack>
-      </Box>
+        </Box>
+      )}
     </Box>
   )
 }
@@ -268,10 +305,15 @@ TrackerTable.propTypes = {
   columns: array.isRequired,
   title: string,
   initialSort: array.isRequired,
+  frontendPagination: bool,
   infoPanel: any,
   infoState: shape({
     isVisible: bool,
   }),
   changeInfoState: func,
   searchPlaceholder: string,
+  onSort: func,
+  selectedDisplayLimit: number,
+  manualSort: bool,
+  manualFilters: bool,
 }
