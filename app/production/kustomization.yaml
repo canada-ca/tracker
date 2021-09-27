@@ -7,7 +7,6 @@ patchesStrategicMerge:
 - arangodb-deployment.yaml
 - certificate.yaml
 - publicgateway.yaml
-- knative/config/queues.yaml
 replicas:
 - count: 2
   name: tracker-frontend
