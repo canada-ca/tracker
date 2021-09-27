@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+import time
+
 from concurrent.futures import ThreadPoolExecutor
 import json
 import argparse, sys
@@ -161,12 +163,16 @@ async def run(loop):
         user_key = payload["user_key"]
         shared_id = payload["shared_id"]
 
-        scanner = HTTPSScanner(domain)
         loop = asyncio.get_event_loop()
-        executor = ThreadPoolExecutor()
-        scan_results = await loop.run_in_executor(executor, scanner.run)
+        start_time = time.monotonic()
+        print(f"before the scanner")
+        with ThreadPoolExecutor() as executor:
+            scanner = HTTPSScanner(domain)
+            scan_results = await loop.run_in_executor(executor, scanner.run)
+        print(f"After scan. Elapsed time: {time.monotonic() - start_time}")
         processed_results = process_results(scan_results)
-
+        print(f"After processing. Elapsed time: {time.monotonic() - start_time}")
+        print(json.dumps({"process_results": process_results}))
         await nc.publish(
             f"{PUBLISH_TO}.{domain_key}.https",
             json.dumps(
