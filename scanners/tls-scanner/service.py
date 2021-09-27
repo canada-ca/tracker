@@ -98,8 +98,8 @@ async def run(loop):
             scanner = TLSScanner(domain)
 
             loop = asyncio.get_event_loop()
-            executor = ThreadPoolExecutor()
-            scan_results = await loop.run_in_executor(executor, scanner.run)
+            with ThreadPoolExecutor() as executor:
+                scan_results = await loop.run_in_executor(executor, scanner.run)
         except TimeoutError:
             await nc.publish(
                 f"{PUBLISH_TO}.{domain_key}.tls",
