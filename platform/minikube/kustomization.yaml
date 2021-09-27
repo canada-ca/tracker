@@ -2,9 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../base
-- domain-config.yaml
-components:
-- ../components/knative
 patchesJSON6902:
 - target:
     group: install.istio.io
@@ -15,11 +12,3 @@ patchesJSON6902:
   patch: |-
     - op: remove
       path: /spec/components/pilot
-# We deal with namespaces separately, but knative includes one
-# patchesJSON6902:
-# - target:
-#     version: v1
-#     kind: Namespace
-#     name: knative-serving
-#   patch: |-
-#     - op: delete

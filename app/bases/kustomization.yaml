@@ -1,28 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-images:
-- name: gcr.io/track-compliance/db-migration
-  newTag: master-0000000
-- name: gcr.io/track-compliance/dns
-  newTag: master-0000000
-- name: gcr.io/track-compliance/https
-  newTag: master-0000000
-- name: gcr.io/track-compliance/result-queue
-  newTag: master-0000000
-- name: gcr.io/track-compliance/results
-  newTag: master-0000000
-- name: gcr.io/track-compliance/scan-queue
-  newTag: master-0000000
-- name: gcr.io/track-compliance/ssl
-  newTag: master-0000000
 resources:
-- knative/config/queues.yaml
-- knative/config/config.yaml
-- knative/config/autoscan.yaml
-- knative/config/guidance.yaml
-- knative/config/summaries.yaml
-- knative/config/dmarc-report.yaml
-- knative/config/redis.yaml
 - tracker-api-deployment.yaml
 - tracker-api-service.yaml
 - tracker-api-virtual-service.yaml
@@ -35,3 +13,7 @@ resources:
 - arangodb-deployment.yaml
 - issuers.yaml
 - backup-service-account.yaml
+- guidance-cronjob.yaml
+- summaries-cronjob.yaml
+- dmarc-report-cronjob.yaml
+- scan-dispatcher-cronjob.yaml

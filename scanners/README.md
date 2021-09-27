@@ -46,7 +46,7 @@ Please specify a password:
 
 The scanners and processors do what the names suggest: Scanners connect to the domains and publish what they find, the processors do some interpretation and save it to the database.
 ```sh
-$ docker-compose up -d https* dns*
+$ docker-compose up -d https* dns* tls*
 ...
 ```
 

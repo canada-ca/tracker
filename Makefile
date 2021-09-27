@@ -65,10 +65,13 @@ endif
 app:
 		kustomize build app/$(env) | kubectl apply -f -
 
-.PHONY: scans
-scans:
-		kubectl apply -n scanners -f app/jobs/scan-job.yaml
-		kubectl apply -n scanners -f app/jobs/core-job.yaml
+.PHONY: scan
+scan:
+		kustomize build scanners/domain-dispatcher | kubectl apply -f -
+
+.PHONY: scanners
+scanners:
+		kustomize build scanners | kubectl apply -f -
 
 .PHONY: backup
 backup:
