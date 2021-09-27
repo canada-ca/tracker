@@ -7,9 +7,9 @@ name = test
 region = northamerica-northeast1
 mode = dev
 env = test
-displayname="admin"
-SA_USER_USERNAME="admin@example.com""
-SA_USER_PASSWORD="admin"
+displayname=admin
+SA_USER_USERNAME=admin@example.com
+SA_USER_PASSWORD=admin
 
 define scanners =
 endef
@@ -93,9 +93,6 @@ credentials:
 		DB_HOST=arangodb.db
 		DB_USER=root
 		DB_NAME=track_dmarc
-		GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-		REDIS_HOST=redis-service.scanners
-		REDIS_PORT=6379
 		EOF
 		cat <<-'EOF' > platform/creds/$(mode)/kiali.env
 		username=admin
@@ -168,9 +165,9 @@ credentials:
 		DB_PASS=test
 		DB_URL=arangodb.db:8529
 		DB_NAME=track_dmarc
-		SA_USER_DISPLAY_NAME="$(displayname)"
-		SA_USER_USERNAME="$(username)"
-		SA_USER_PASSWORD="$(password)"
+		SA_USER_DISPLAY_NAME=$(displayname)
+		SA_USER_USERNAME=$(username)
+		SA_USER_PASSWORD=$(password)
 		SA_USER_LANG=en
 		SA_ORG_EN_SLUG=sa
 		SA_ORG_EN_ACRONYM=SA
