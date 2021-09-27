@@ -1,5 +1,13 @@
 import React from 'react'
-import { element, func, object, oneOfType, shape, string } from 'prop-types'
+import {
+  element,
+  func,
+  object,
+  oneOfType,
+  shape,
+  string,
+  oneOf,
+} from 'prop-types'
 import {
   FormControl,
   FormErrorMessage,
@@ -23,6 +31,7 @@ function FormField({
   rightElement,
   useFieldInput,
   inputProps,
+  autoComplete,
   ...props
 }) {
   const [field, meta] = useField(useFieldInput || name)
@@ -45,6 +54,7 @@ function FormField({
             type={type || 'text'}
             ref={forwardedRef}
             placeholder={placeholder || ''}
+            autoComplete={autoComplete}
             {...field}
             {...inputProps}
           />
@@ -70,6 +80,7 @@ FormField.propTypes = {
   inputProps: object,
   useFieldInput: object,
   forwardedRef: oneOfType([func, shape({ current: object })]),
+  autoComplete: oneOf(['on', 'off']),
 }
 
 FormField.defaultProps = {
