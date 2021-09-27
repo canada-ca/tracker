@@ -1,23 +1,18 @@
 steps:
-  - name: 'gcr.io/track-compliance/ci'
-    id: test-https
-    dir: services/scanners/https
-    entrypoint: /bin/sh
-    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: services/scanners/https
+    dir: scanners/https-scanner
     args:
       - '-c'
       - |
-        echo "gcr.io/$PROJECT_ID/services/scanners/https:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/https-scanner:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: build-https-if-master
+    id: build-if-master
     entrypoint: 'bash'
-    dir: services/scanners/https
+    dir: scanners/https-scanner
     args:
       -  '-c'
       - |
@@ -30,9 +25,9 @@ steps:
         fi
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: push-https-if-master
+    id: push-if-master
     entrypoint: 'bash'
-    dir: services/scanners/https
+    dir: scanners/https-scanner
     args:
       - '-c'
       - |

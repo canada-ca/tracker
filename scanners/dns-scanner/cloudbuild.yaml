@@ -1,23 +1,18 @@
 steps:
-  - name: 'gcr.io/track-compliance/ci'
-    id: test-dns
-    dir: services/scanners/dns
-    entrypoint: /bin/sh
-    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: services/scanners/dns
+    dir: scanners/dns-scanner
     args:
       - '-c'
       - |
-        echo "gcr.io/$PROJECT_ID/services/scanners/dns:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/dns-scanner:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dns-if-master
     entrypoint: 'bash'
-    dir: services/scanners/dns
+    dir: scanners/dns-scanner
     args:
       -  '-c'
       - |
@@ -32,7 +27,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: push-dns-if-master
     entrypoint: 'bash'
-    dir: services/scanners/dns
+    dir: scanners/dns-scanner
     args:
       - '-c'
       - |
