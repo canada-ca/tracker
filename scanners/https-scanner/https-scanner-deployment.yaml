@@ -17,10 +17,9 @@ spec:
     spec:
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/https-scanner:master-f7096fd-1629118942 # {"$imagepolicy": "flux-system:https-scanner"}
+        image: gcr.io/track-compliance/https-scanner:master-cf1d32e-1632771360 # {"$imagepolicy": "flux-system:https-scanner"}
         env:
-        - # Requests is so loud...
-          name: PYTHONWARNINGS
+        - name: PYTHONWARNINGS # Requests is so loud...
           value: ignore
         - name: PUBLISH_TO
           value: domains
