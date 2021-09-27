@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: https-scanner
-        image: gcr.io/track-compliance/https-scanner:test-asdfghj-1632328728
+        image: gcr.io/track-compliance/https-scanner:test-asdfghj-1632328728 # {"$imagepolicy": "flux-system:https-scanner"}
         env:
         # Requests is so loud...
         - name: PYTHONWARNINGS
