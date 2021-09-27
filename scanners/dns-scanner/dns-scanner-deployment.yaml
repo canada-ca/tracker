@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: dns-scanner
-        image: gcr.io/track-compliance/dns-scanner:master-cf1d32e-1632771360 # {"$imagepolicy": "flux-system:dns-scanner"}
+        image: gcr.io/track-compliance/dns-scanner:master-7af51bd-1632774296 # {"$imagepolicy": "flux-system:dns-scanner"}
         env:
         - name: PYTHONWARNINGS
           value: ignore
