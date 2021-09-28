@@ -2,12 +2,14 @@ version: "3.7"
 services:
   arangodb:
     environment:
-      # - ARANGO_ROOT_PASSWORD=test
-      - ARANGO_NO_AUTH=1
+       - ARANGO_ROOT_PASSWORD=test
+#      - ARANGO_NO_AUTH=1
     image: arangodb
     expose:
       - "8529"
-    network_mode: "host"
+    ports:
+      - 8529:8529
+    network_mode: "bridge"
   nats:
     image: nats
     command: ["-js", "--debug"]
