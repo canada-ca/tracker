@@ -45,7 +45,7 @@ describe('given dmarcPhaseSummary query', () => {
     consoleOutput.length = 0
   })
 
-  describe('given successful dmarcPhase summary retrieval', () => {
+  describe('given successful dmarc phase summary retrieval', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
@@ -73,7 +73,7 @@ describe('given dmarcPhaseSummary query', () => {
     afterAll(async () => {
       await drop()
     })
-    it('returns dmarcPhase summary', async () => {
+    it('returns dmarc phase summary', async () => {
       const response = await graphql(
         schema,
         `
@@ -150,7 +150,7 @@ describe('given dmarcPhaseSummary query', () => {
         },
       })
     })
-    describe('given unsuccessful dmarcPhase summary retrieval', () => {
+    describe('given unsuccessful dmarc phase summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
           const response = await graphql(
@@ -180,13 +180,13 @@ describe('given dmarcPhaseSummary query', () => {
 
           const error = [
             new GraphQLError(
-              `Unable to load dmarcPhase summary. Please try again.`,
+              `Unable to load DMARC phase summary. Please try again.`,
             ),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve dmarcPhase summary.`,
+            `User could not retrieve DMARC phase summary.`,
           ])
         })
       })
@@ -207,7 +207,7 @@ describe('given dmarcPhaseSummary query', () => {
         },
       })
     })
-    describe('given unsuccessful dmarcPhase summary retrieval', () => {
+    describe('given unsuccessful dmarc phase summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
           const response = await graphql(
@@ -243,7 +243,7 @@ describe('given dmarcPhaseSummary query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve dmarcPhase summary.`,
+            `User could not retrieve DMARC phase summary.`,
           ])
         })
       })
