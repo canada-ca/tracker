@@ -35,12 +35,12 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
         scan_fail = 0
         scan_total = 0
         for domain in db.collection("domains"):
-            # We don't want to count domains not passing or failing 
+            # We don't want to count domains not passing or failing
             # (i.e unreachable or unscanned) towards the total.
             if domain["status"][scan_type] == "fail":
                 scan_total = scan_total + 1
                 scan_fail = scan_fail + 1
-                
+
             elif domain["status"][scan_type] == "pass":
                 scan_total = scan_total + 1
                 scan_pass = scan_pass + 1
@@ -67,6 +67,74 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
         logging.info(f"{scan_type} scan summary updated.")
 
     logging.info(f"Scan summary update completed.")
+
+
+def update_dmarc_phase_chart_summaries(db):
+    """Update the dmarc phase chart summaries in the database
+
+    :param db: active arangodb connection
+    """
+
+    # DMARC phases:
+    # 0. Not Implemented
+    # 1. Assess
+    # 2. Deploy
+    # 3. Enforce
+    # 4. Maintain
+
+    not_implemented_count = 0
+    assess_count = 0
+    deploy_count = 0
+    enforce_count = 0
+    maintain_count = 0
+
+    domain_total = 0
+
+    for domain in db.collection("domains"):
+
+        if domain["phase"] == "not implemented":
+            not_implemented_count = not_implemented_count + 1
+        if domain["phase"] == "assess":
+            assess_count = assess_count + 1
+        if domain["phase"] == "deploy":
+            deploy_count = deploy_count + 1
+        if domain["phase"] == "enforce":
+            enforce_count = enforce_count + 1
+        if domain["phase"] == "maintain":
+            maintain_count = maintain_count + 1
+
+    domain_total = not_implemented_count + assess_count + deploy_count + \
+                   enforce_count + maintain_count
+
+    current_summary = db.collection("chartSummaries").get({"_key": "dmarc_phase"})
+
+    summary_exists = current_summary is not None
+
+    if not summary_exists:
+        db.collection("chartSummaries").insert(
+            {
+                "_key": "dmarc_phase",
+                "not_implemented": not_implemented_count,
+                "assess": assess_count,
+                "deploy": deploy_count,
+                "enforce": enforce_count,
+                "maintain": maintain_count,
+                "total": domain_total,
+            }
+        )
+    else:
+        db.collection("chartSummaries").update_match(
+            {"_key": "dmarc_phase"},
+            {
+                "not_implemented": not_implemented_count,
+                "assess": assess_count,
+                "deploy": deploy_count,
+                "enforce": enforce_count,
+                "maintain": maintain_count,
+                "total": domain_total,},
+        )
+
+    logging.info("DMARC phase scan summary updated.")
 
 
 def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS, port=DB_PORT):
@@ -113,6 +181,9 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
             )
 
         logging.info(f"{chart_type} scan summary updated.")
+
+    # handle DMARC phase summary
+    update_dmarc_phase_chart_summaries(db)
 
     logging.info(f"Chart summary update completed.")
 
