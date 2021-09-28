@@ -2,3 +2,4 @@ emoji
 pytest
 pretend
 python-arango
+python-dotenv

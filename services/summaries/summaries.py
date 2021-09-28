@@ -9,6 +9,8 @@ import emoji
 import random
 import datetime
 from arango import ArangoClient
+from dotenv import load_dotenv
+
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -35,12 +37,12 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
         scan_fail = 0
         scan_total = 0
         for domain in db.collection("domains"):
-            # We don't want to count domains not passing or failing 
+            # We don't want to count domains not passing or failing
             # (i.e unreachable or unscanned) towards the total.
             if domain["status"][scan_type] == "fail":
                 scan_total = scan_total + 1
                 scan_fail = scan_fail + 1
-                
+
             elif domain["status"][scan_type] == "pass":
                 scan_total = scan_total + 1
                 scan_pass = scan_pass + 1
@@ -178,6 +180,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
 
 
 if __name__ == "__main__":
+    load_dotenv()
     logging.info(emoji.emojize("Summary service started :rocket:"))
     update_scan_summaries()
     update_chart_summaries()
