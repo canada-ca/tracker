@@ -184,9 +184,9 @@ def test_update_chart_summaries():
 
     dmarcPhaseSummary = db.collection("chartSummaries").get({"_key": "dmarc_phase"})
     assert dmarcPhaseSummary == {
-        "_id": "chartSummaries/mail",
-        "_rev": mailSummary["_rev"],
-        "_key": "mail",
+        "_id": "chartSummaries/dmarc_phase",
+        "_rev": dmarcPhaseSummary["_rev"],
+        "_key": "dmarc_phase",
         "not_implemented": 1,
         "assess": 0,
         "deploy": 0,
