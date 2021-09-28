@@ -591,22 +591,22 @@ const schemaWithMocks = addMocksToSchema({
         const assessCategory = {
           name: 'assess',
           count: assessTotal,
-          percentage: assessTotal / totalDomains,
+          percentage: (assessTotal / totalDomains) * 100,
         }
         const deployCategory = {
           name: 'deploy',
           count: deployTotal,
-          percentage: deployTotal / totalDomains,
+          percentage: (deployTotal / totalDomains) * 100,
         }
         const enforceCategory = {
           name: 'enforce',
           count: enforceTotal,
-          percentage: enforceTotal / totalDomains,
+          percentage: (enforceTotal / totalDomains) * 100,
         }
         const maintainCategory = {
           name: 'maintain',
           count: maintainTotal,
-          percentage: maintainTotal / totalDomains,
+          percentage: (maintainTotal / totalDomains) * 100,
         }
 
         const categories = [
