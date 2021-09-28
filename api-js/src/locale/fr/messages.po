@@ -44,7 +44,7 @@ msgid "Incorrect token value. Please request a new email."
 msgstr "La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail."
 
 #: src/user/mutations/sign-in.js:70
-#: src/user/mutations/sign-in.js:295
+#: src/user/mutations/sign-in.js:294
 msgid "Incorrect username or password. Please try again."
 msgstr "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer."
 
@@ -274,7 +274,7 @@ msgstr "Le numéro de téléphone a été supprimé avec succès."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification."
 
-#: src/user/mutations/update-user-profile.js:160
+#: src/user/mutations/update-user-profile.js:159
 msgid "Profile successfully updated."
 msgstr "Le profil a été mis à jour avec succès."
 
@@ -640,6 +640,10 @@ msgstr "Impossible de charger les données d'échec DMARC. Veuillez réessayer."
 msgid "Unable to load DMARC guidance tag(s). Please try again."
 msgstr "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer."
 
+#: src/summaries/queries/dmarc-phase-summary.js:14
+msgid "Unable to load DMARC phase summary. Please try again."
+msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
+
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:319
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:331
 msgid "Unable to load DMARC scan(s). Please try again."
@@ -881,28 +885,28 @@ msgstr "Impossible de récupérer les informations du rapport DMARC pour : {doma
 msgid "Unable to select DMARC report(s) for this period and year."
 msgstr "Impossible de sélectionner le(s) rapport(s) DMARC pour cette période et cette année."
 
-#: src/notify/notify-send-authenticate-email.js:21
+#: src/notify/notify-send-authenticate-email.js:19
 msgid "Unable to send authentication email. Please try again."
 msgstr "Impossible d'envoyer l'email d'authentification. Veuillez réessayer."
 
-#: src/notify/notify-send-authenticate-text-msg.js:35
+#: src/notify/notify-send-authenticate-text-msg.js:32
 msgid "Unable to send authentication text message. Please try again."
 msgstr "Impossible d'envoyer un message texte d'authentification. Veuillez réessayer."
 
-#: src/notify/notify-send-org-invite-create-account.js:29
-#: src/notify/notify-send-org-invite-email.js:25
+#: src/notify/notify-send-org-invite-create-account.js:31
+#: src/notify/notify-send-org-invite-email.js:26
 msgid "Unable to send org invite email. Please try again."
 msgstr "Impossible d'envoyer l'e-mail d'invitation à l'org. Veuillez réessayer."
 
-#: src/notify/notify-send-password-reset-email.js:27
+#: src/notify/notify-send-password-reset-email.js:30
 msgid "Unable to send password reset email. Please try again."
 msgstr "Impossible d'envoyer l'email de réinitialisation du mot de passe. Veuillez réessayer."
 
-#: src/notify/notify-send-tfa-text-msg.js:27
+#: src/notify/notify-send-tfa-text-msg.js:30
 msgid "Unable to send two factor authentication message. Please try again."
 msgstr "Impossible d'envoyer le message d'authentification à deux facteurs. Veuillez réessayer."
 
-#: src/notify/notify-send-verification-email.js:29
+#: src/notify/notify-send-verification-email.js:30
 msgid "Unable to send verification email. Please try again."
 msgstr "Impossible d'envoyer l'email de vérification. Veuillez réessayer."
 
@@ -916,8 +920,8 @@ msgstr "Impossible de définir le numéro de téléphone, veuillez réessayer."
 #: src/user/mutations/sign-in.js:158
 #: src/user/mutations/sign-in.js:204
 #: src/user/mutations/sign-in.js:213
-#: src/user/mutations/sign-in.js:276
-#: src/user/mutations/sign-in.js:285
+#: src/user/mutations/sign-in.js:275
+#: src/user/mutations/sign-in.js:284
 msgid "Unable to sign in, please try again."
 msgstr "Impossible de se connecter, veuillez réessayer."
 
@@ -1000,8 +1004,8 @@ msgstr "Impossible de mettre à jour le mot de passe, les mots de passe ne corre
 msgid "Unable to update password. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe. Veuillez réessayer."
 
-#: src/user/mutations/update-user-profile.js:134
-#: src/user/mutations/update-user-profile.js:143
+#: src/user/mutations/update-user-profile.js:133
+#: src/user/mutations/update-user-profile.js:142
 msgid "Unable to update profile. Please try again."
 msgstr "Impossible de mettre à jour le profil. Veuillez réessayer."
 
