@@ -7,7 +7,7 @@ import json
 import logging
 import base64
 import urllib
-import publicsuffix2 as publicsuffix
+from publicsuffixlist.compat import PublicSuffixList
 from cryptography.hazmat.primitives.serialization import Encoding
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed
@@ -90,13 +90,6 @@ def load_preload_pending():
     return pending
 
 
-def load_suffix_list():
-    # File does not exist, download current list and cache it at given location.
-    cache_file = publicsuffix.fetch()
-    content = cache_file.readlines()
-    suffixes = publicsuffix.PublicSuffixList(content)
-    return suffixes, content
-
 def initialize_external_data():
     """
     This function serves to load all of third party external data.
@@ -121,10 +114,8 @@ def initialize_external_data():
 
     preload_pending = load_preload_pending()
 
-    suffix_list, raw_content = load_suffix_list()
 
-
-suffix_list = None
+suffix_list = PublicSuffixList()
 preload_pending = None
 preload_list = None
 STORE = "Mozilla"
