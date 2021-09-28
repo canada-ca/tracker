@@ -9,7 +9,6 @@ sslyze = "*"
 docopt = ">=0.6.2"
 python-dateutil = ">=2.7.3"
 pytz = ">=2018.5"
-publicsuffix2 = "*"
 httptools = "*"
 asyncio = "*"
 moz-crlite-query = "*"
@@ -17,6 +16,7 @@ cryptography = "*"
 pyOpenSSL = ">=17.5.0"
 asyncio-nats-client = "*"
 python-dotenv = "*"
+publicsuffixlist = "*"
 
 [dev-packages]
 black = {editable = true, ref = "21.8b0", git = "https://github.com/psf/black.git"}

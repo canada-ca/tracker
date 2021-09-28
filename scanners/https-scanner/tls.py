@@ -172,7 +172,6 @@ async def run(loop):
         print(f"After scan. Elapsed time: {time.monotonic() - start_time}")
         processed_results = process_results(scan_results)
         print(f"After processing. Elapsed time: {time.monotonic() - start_time}")
-        print(json.dumps({"process_results": process_results}))
         await nc.publish(
             f"{PUBLISH_TO}.{domain_key}.https",
             json.dumps(
@@ -185,8 +184,6 @@ async def run(loop):
                 }
             ).encode(),
         )
-
-    options = {}
 
     try:
         await nc.connect(
