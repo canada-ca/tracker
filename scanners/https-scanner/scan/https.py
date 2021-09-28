@@ -92,11 +92,7 @@ def load_preload_pending():
 
 def load_suffix_list():
     # File does not exist, download current list and cache it at given location.
-    try:
-        cache_file = publicsuffix.fetch()
-    except urllib.error.URLError as err:
-        logging.debug("Unable to download the Public Suffix List...")
-        return []
+    cache_file = publicsuffix.fetch()
     content = cache_file.readlines()
     suffixes = publicsuffix.PublicSuffixList(content)
     return suffixes, content
