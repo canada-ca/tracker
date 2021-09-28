@@ -192,6 +192,7 @@ def test_update_chart_summaries():
         "deploy": 0,
         "enforce": 0,
         "maintain": 2,
+        "total": 3,
     }
 
 
