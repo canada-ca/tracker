@@ -575,19 +575,30 @@ const schemaWithMocks = addMocksToSchema({
       },
       dmarcPhaseSummary: (_, _args, _context, _resolveInfo) => {
         // DMARC phases:
+        // NA. Not Implemented
         //  1. Assess
         //  2. Deploy
         //  3. Enforce
         //  4. Maintain
 
+        const notImplementedTotal = faker.datatype.number({ min: 1, max: 2000 })
         const assessTotal = faker.datatype.number({ min: 1, max: 2000 })
         const deployTotal = faker.datatype.number({ min: 1, max: 2000 })
         const enforceTotal = faker.datatype.number({ min: 1, max: 2000 })
         const maintainTotal = faker.datatype.number({ min: 1, max: 2000 })
 
         const totalDomains =
-          assessTotal + deployTotal + enforceTotal + maintainTotal
+          notImplementedTotal +
+          assessTotal +
+          deployTotal +
+          enforceTotal +
+          maintainTotal
 
+        const notImplementedCategory = {
+          name: 'not implemented',
+          count: notImplementedTotal,
+          percentage: (notImplementedTotal / totalDomains) * 100,
+        }
         const assessCategory = {
           name: 'assess',
           count: assessTotal,
@@ -610,6 +621,7 @@ const schemaWithMocks = addMocksToSchema({
         }
 
         const categories = [
+          notImplementedCategory,
           assessCategory,
           deployCategory,
           enforceCategory,
