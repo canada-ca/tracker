@@ -573,6 +573,54 @@ const schemaWithMocks = addMocksToSchema({
       findMyOrganizations: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
+      dmarcPhaseSummary: (_, _args, _context, _resolveInfo) => {
+        // DMARC phases:
+        //  1. Assess
+        //  2. Deploy
+        //  3. Enforce
+        //  4. Maintain
+
+        const assessTotal = faker.datatype.number({ min: 1, max: 2000 })
+        const deployTotal = faker.datatype.number({ min: 1, max: 2000 })
+        const enforceTotal = faker.datatype.number({ min: 1, max: 2000 })
+        const maintainTotal = faker.datatype.number({ min: 1, max: 2000 })
+
+        const totalDomains =
+          assessTotal + deployTotal + enforceTotal + maintainTotal
+
+        const assessCategory = {
+          name: 'assess',
+          count: assessTotal,
+          percentage: assessTotal / totalDomains,
+        }
+        const deployCategory = {
+          name: 'deploy',
+          count: deployTotal,
+          percentage: deployTotal / totalDomains,
+        }
+        const enforceCategory = {
+          name: 'enforce',
+          count: enforceTotal,
+          percentage: enforceTotal / totalDomains,
+        }
+        const maintainCategory = {
+          name: 'maintain',
+          count: maintainTotal,
+          percentage: maintainTotal / totalDomains,
+        }
+
+        const categories = [
+          assessCategory,
+          deployCategory,
+          enforceCategory,
+          maintainCategory,
+        ]
+
+        return {
+          total: totalDomains,
+          categories,
+        }
+      },
     },
     DetailTables: {
       dkimFailure: (_, args, _context, resolveInfo) => {
