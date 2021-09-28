@@ -85,6 +85,10 @@ superadmin:
 guidance:
 		kubectl apply -f services/guidance/guidance-job.yaml
 
+.PHONY: summaries
+summaries:
+		kubectl apply -f services/summaries/summaries-job.yaml
+
 .ONESHELL:
 .PHONY: credentials
 credentials:

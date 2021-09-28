@@ -1,3 +1,7 @@
+**/*.env
 Dockerfile
 tests
-cloudbuild.yaml
+*.yaml
+*.md
+.venv
+.pytest_cache

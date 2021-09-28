@@ -1,14 +1,15 @@
-FROM ubuntu:20.04
+FROM ubuntu:21.04
 
-# Copy local code to the container image.
-ENV HOME /summaries
-WORKDIR $HOME
-COPY . ./
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
+RUN useradd -ms /bin/bash summary
+
+WORKDIR /home/summaries
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
   apt-utils \
-  git \
   python3 \
   python3-pip \
   python3-setuptools \
@@ -16,7 +17,11 @@ RUN apt-get install -y --no-install-recommends \
   build-essential \
   python3-dev
 
+COPY . .
+
+USER summary
+#
 # Install dependencies.
-RUN pip3 install --pre -r requirements.txt
+RUN pip3 install --no-cache-dir --pre -r requirements.txt
 
 CMD ["python3", "summaries.py"]
