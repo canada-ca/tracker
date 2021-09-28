@@ -62,7 +62,7 @@
     "@babel/core": "^7.15.5",
     "@babel/node": "^7.15.4",
     "@babel/preset-env": "^7.15.6",
-    "@jest/test-sequencer": "^27.2.0",
+    "@jest/test-sequencer": "^27.2.3",
     "@lingui/cli": "^3.11.1",
     "@lingui/loader": "^3.11.1",
     "@lingui/macro": "^3.11.1",
