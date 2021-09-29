@@ -30,6 +30,7 @@ org = orgs.insert(
         "summaries": {
             "web": {"pass": 0, "fail": 0, "total": 0},
             "mail": {"pass": 0, "fail": 0, "total": 0},
+
         },
         "orgDetails": {
             "en": {
@@ -60,6 +61,7 @@ domain1 = domains.insert(
     {
         "domain": "cyber1.gc.ca",
         "selectors": ["selector1"],
+        "phase": "not implemented",
         "status": {
             "https": "pass",
             "ssl": "pass",
@@ -73,6 +75,7 @@ domain2 = domains.insert(
     {
         "domain": "cyber2.gc.ca",
         "selectors": ["selector1"],
+        "phase": "maintain",
         "status": {
             "https": "pass",
             "ssl": "pass",
@@ -86,6 +89,7 @@ domain3 = domains.insert(
     {
         "domain": "cyber3.gc.ca",
         "selectors": ["selector1"],
+        "phase": "maintain",
         "status": {
             "https": "fail",
             "ssl": "fail",
@@ -175,6 +179,19 @@ def test_update_chart_summaries():
         "_key": "mail",
         "pass": 1,
         "fail": 2,
+        "total": 3,
+    }
+
+    dmarcPhaseSummary = db.collection("chartSummaries").get({"_key": "dmarc_phase"})
+    assert dmarcPhaseSummary == {
+        "_id": "chartSummaries/dmarc_phase",
+        "_rev": dmarcPhaseSummary["_rev"],
+        "_key": "dmarc_phase",
+        "not_implemented": 1,
+        "assess": 0,
+        "deploy": 0,
+        "enforce": 0,
+        "maintain": 2,
         "total": 3,
     }
 

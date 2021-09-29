@@ -44,7 +44,7 @@ msgid "Incorrect token value. Please request a new email."
 msgstr "Incorrect token value. Please request a new email."
 
 #: src/user/mutations/sign-in.js:70
-#: src/user/mutations/sign-in.js:295
+#: src/user/mutations/sign-in.js:294
 msgid "Incorrect username or password. Please try again."
 msgstr "Incorrect username or password. Please try again."
 
@@ -274,7 +274,7 @@ msgstr "Phone number has been successfully removed."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:160
+#: src/user/mutations/update-user-profile.js:159
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -640,6 +640,10 @@ msgstr "Unable to load DMARC failure data. Please try again."
 msgid "Unable to load DMARC guidance tag(s). Please try again."
 msgstr "Unable to load DMARC guidance tag(s). Please try again."
 
+#: src/summaries/queries/dmarc-phase-summary.js:14
+msgid "Unable to load DMARC phase summary. Please try again."
+msgstr "Unable to load DMARC phase summary. Please try again."
+
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:319
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:331
 msgid "Unable to load DMARC scan(s). Please try again."
@@ -881,28 +885,28 @@ msgstr "Unable to retrieve DMARC report information for: {domain}"
 msgid "Unable to select DMARC report(s) for this period and year."
 msgstr "Unable to select DMARC report(s) for this period and year."
 
-#: src/notify/notify-send-authenticate-email.js:21
+#: src/notify/notify-send-authenticate-email.js:19
 msgid "Unable to send authentication email. Please try again."
 msgstr "Unable to send authentication email. Please try again."
 
-#: src/notify/notify-send-authenticate-text-msg.js:35
+#: src/notify/notify-send-authenticate-text-msg.js:32
 msgid "Unable to send authentication text message. Please try again."
 msgstr "Unable to send authentication text message. Please try again."
 
-#: src/notify/notify-send-org-invite-create-account.js:29
-#: src/notify/notify-send-org-invite-email.js:25
+#: src/notify/notify-send-org-invite-create-account.js:31
+#: src/notify/notify-send-org-invite-email.js:26
 msgid "Unable to send org invite email. Please try again."
 msgstr "Unable to send org invite email. Please try again."
 
-#: src/notify/notify-send-password-reset-email.js:27
+#: src/notify/notify-send-password-reset-email.js:30
 msgid "Unable to send password reset email. Please try again."
 msgstr "Unable to send password reset email. Please try again."
 
-#: src/notify/notify-send-tfa-text-msg.js:27
+#: src/notify/notify-send-tfa-text-msg.js:30
 msgid "Unable to send two factor authentication message. Please try again."
 msgstr "Unable to send two factor authentication message. Please try again."
 
-#: src/notify/notify-send-verification-email.js:29
+#: src/notify/notify-send-verification-email.js:30
 msgid "Unable to send verification email. Please try again."
 msgstr "Unable to send verification email. Please try again."
 
@@ -916,8 +920,8 @@ msgstr "Unable to set phone number, please try again."
 #: src/user/mutations/sign-in.js:158
 #: src/user/mutations/sign-in.js:204
 #: src/user/mutations/sign-in.js:213
-#: src/user/mutations/sign-in.js:276
-#: src/user/mutations/sign-in.js:285
+#: src/user/mutations/sign-in.js:275
+#: src/user/mutations/sign-in.js:284
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
@@ -1000,8 +1004,8 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:134
-#: src/user/mutations/update-user-profile.js:143
+#: src/user/mutations/update-user-profile.js:133
+#: src/user/mutations/update-user-profile.js:142
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 

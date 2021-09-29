@@ -117,142 +117,125 @@
     'Phone number has been successfully set, you will receive a verification text message shortly.':
       'Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification.',
     'Profile successfully updated.': 'Le profil a été mis à jour avec succès.',
-    'Requesting `{amount}` records on the `Affiliation` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `Affiliation` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `DkimFailureTable` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `DkimFailureTable` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `DmarcSummaries` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `Domain` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `FullPassTable` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `GuidanceTag` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `Organization` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `SpfFailureTable` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `VerifiedDomain` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        "La demande d'enregistrements `",
-        ['amount'],
-        '` sur la connexion `VerifiedOrganization` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'La demande de ',
-        ['amount'],
-        ' enregistrements sur la connexion `DKIMResults` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'La demande de ',
-        ['amount'],
-        ' enregistrements sur la connexion `DKIM` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'La demande de ',
-        ['amount'],
-        ' enregistrements sur la connexion `DMARC` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'La demande de ',
-        ['amount'],
-        ' enregistrements sur la connexion `HTTPS` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'La demande de ',
-        ['amount'],
-        ' enregistrements sur la connexion `SPF` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
-    'Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'La demande de ',
-        ['amount'],
-        ' enregistrements sur la connexion `SSL` dépasse la limite `',
-        ['argSet'],
-        '` de 100 enregistrements.',
-      ],
+    'Requesting `{amount}` records on the `Affiliation` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `Affiliation` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `DkimFailureTable` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `DkimFailureTable` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `DmarcSummaries` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `Domain` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `FullPassTable` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `GuidanceTag` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `Organization` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `SpfFailureTable` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `VerifiedDomain` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.': [
+      "La demande d'enregistrements `",
+      ['amount'],
+      '` sur la connexion `VerifiedOrganization` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records.': [
+      'La demande de ',
+      ['amount'],
+      ' enregistrements sur la connexion `DKIMResults` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records.': [
+      'La demande de ',
+      ['amount'],
+      ' enregistrements sur la connexion `DKIM` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records.': [
+      'La demande de ',
+      ['amount'],
+      ' enregistrements sur la connexion `DMARC` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records.': [
+      'La demande de ',
+      ['amount'],
+      ' enregistrements sur la connexion `HTTPS` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records.': [
+      'La demande de ',
+      ['amount'],
+      ' enregistrements sur la connexion `SPF` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
+    'Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records.': [
+      'La demande de ',
+      ['amount'],
+      ' enregistrements sur la connexion `SSL` dépasse la limite `',
+      ['argSet'],
+      '` de 100 enregistrements.',
+    ],
     'Successfully closed account.': 'Le compte a été fermé avec succès.',
     'Successfully dispatched one time scan.':
       'Un seul balayage a été effectué avec succès.',
@@ -372,6 +355,8 @@
       "Impossible de charger les données d'échec DMARC. Veuillez réessayer.",
     'Unable to load DMARC guidance tag(s). Please try again.':
       "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessayer.",
+    'Unable to load DMARC phase summary. Please try again.':
+      'Impossible de charger le résumé du courrier. Veuillez réessayer.',
     'Unable to load DMARC scan(s). Please try again.':
       'Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer.',
     'Unable to load DMARC summary data. Please try again.':
@@ -604,18 +589,16 @@
       ['argSet'],
       '` sur la connexion `DMARC` ne peut être inférieur à zéro.',
     ],
-    '`{argSet}` on the `DkimFailureTable` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` sur la connexion `DkimFailureTable` ne peut être inférieur à zéro.',
-      ],
-    '`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.',
-      ],
+    '`{argSet}` on the `DkimFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` sur la connexion `DkimFailureTable` ne peut être inférieur à zéro.',
+    ],
+    '`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.',
+    ],
     '`{argSet}` on the `DmarcSummaries` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -656,22 +639,20 @@
       ['argSet'],
       '` sur la connexion `SSL` ne peut être inférieur à zéro.',
     ],
-    '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` sur la connexion `SpfFailureTable` ne peut être inférieur à zéro.',
-      ],
+    '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` sur la connexion `SpfFailureTable` ne peut être inférieur à zéro.',
+    ],
     '`{argSet}` on the `VerifiedDomain` connection cannot be less than zero.': [
       '`',
       ['argSet'],
       '` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro.',
     ],
-    '`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro.',
-      ],
+    '`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` sur la connexion `VerifiedOrganization` ne peut être inférieur à zéro.',
+    ],
   },
 }

@@ -113,142 +113,125 @@
     'Phone number has been successfully set, you will receive a verification text message shortly.':
       'Phone number has been successfully set, you will receive a verification text message shortly.',
     'Profile successfully updated.': 'Profile successfully updated.',
-    'Requesting `{amount}` records on the `Affiliation` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `Affiliation` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `DkimFailureTable` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `DmarcFailureTable` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `DmarcSummaries` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `Domain` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `FullPassTable` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `GuidanceTag` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `Organization` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `SpfFailureTable` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `VerifiedDomain` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting `',
-        ['amount'],
-        '` records on the `VerifiedOrganization` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting ',
-        ['amount'],
-        ' records on the `DKIMResults` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting ',
-        ['amount'],
-        ' records on the `DKIM` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting ',
-        ['amount'],
-        ' records on the `DMARC` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting ',
-        ['amount'],
-        ' records on the `HTTPS` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting ',
-        ['amount'],
-        ' records on the `SPF` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
-    'Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records.':
-      [
-        'Requesting ',
-        ['amount'],
-        ' records on the `SSL` connection exceeds the `',
-        ['argSet'],
-        '` limit of 100 records.',
-      ],
+    'Requesting `{amount}` records on the `Affiliation` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `Affiliation` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `DkimFailureTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `DmarcFailureTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `DmarcSummaries` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `Domain` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `FullPassTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `GuidanceTag` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `Organization` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `SpfFailureTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `VerifiedDomain` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `VerifiedOrganization` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `DKIMResults` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `DKIM` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `DMARC` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `HTTPS` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `SPF` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `SSL` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
     'Successfully closed account.': 'Successfully closed account.',
     'Successfully dispatched one time scan.':
       'Successfully dispatched one time scan.',
@@ -372,6 +355,8 @@
       'Unable to load DMARC failure data. Please try again.',
     'Unable to load DMARC guidance tag(s). Please try again.':
       'Unable to load DMARC guidance tag(s). Please try again.',
+    'Unable to load DMARC phase summary. Please try again.':
+      'Unable to load DMARC phase summary. Please try again.',
     'Unable to load DMARC scan(s). Please try again.':
       'Unable to load DMARC scan(s). Please try again.',
     'Unable to load DMARC summary data. Please try again.':
@@ -601,18 +586,16 @@
       ['argSet'],
       '` on the `DMARC` connection cannot be less than zero.',
     ],
-    '`{argSet}` on the `DkimFailureTable` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` on the `DkimFailureTable` connection cannot be less than zero.',
-      ],
-    '`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` on the `DmarcFailureTable` connection cannot be less than zero.',
-      ],
+    '`{argSet}` on the `DkimFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DkimFailureTable` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DmarcFailureTable` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `DmarcSummaries` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -653,22 +636,20 @@
       ['argSet'],
       '` on the `SSL` connection cannot be less than zero.',
     ],
-    '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` on the `SpfFailureTable` connection cannot be less than zero.',
-      ],
+    '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `SpfFailureTable` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `VerifiedDomain` connection cannot be less than zero.': [
       '`',
       ['argSet'],
       '` on the `VerifiedDomain` connection cannot be less than zero.',
     ],
-    '`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero.':
-      [
-        '`',
-        ['argSet'],
-        '` on the `VerifiedOrganization` connection cannot be less than zero.',
-      ],
+    '`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `VerifiedOrganization` connection cannot be less than zero.',
+    ],
   },
 }
