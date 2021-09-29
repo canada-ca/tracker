@@ -94,13 +94,13 @@ def update_dmarc_phase_chart_summaries(db):
 
         if domain["phase"] == "not implemented":
             not_implemented_count = not_implemented_count + 1
-        if domain["phase"] == "assess":
+        elif domain["phase"] == "assess":
             assess_count = assess_count + 1
-        if domain["phase"] == "deploy":
+        elif domain["phase"] == "deploy":
             deploy_count = deploy_count + 1
-        if domain["phase"] == "enforce":
+        elif domain["phase"] == "enforce":
             enforce_count = enforce_count + 1
-        if domain["phase"] == "maintain":
+        elif domain["phase"] == "maintain":
             maintain_count = maintain_count + 1
 
     domain_total = not_implemented_count + assess_count + deploy_count + \
