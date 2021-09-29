@@ -110,6 +110,9 @@ export const getTypeNames = () => gql`
     # Web summary computed values, used to build summary cards.
     webSummary: CategorizedSummary
 
+    # DMARC phase summary computed values, used to build summary cards.
+    dmarcPhaseSummary: CategorizedSummary
+
     # Query the currently logged in user.
     findMe: PersonalUser
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { MockedProvider } from '@apollo/client/testing'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -33,37 +33,55 @@ const data = {
     ],
     total: 13206,
   },
-  mailSummary: {
+  dmarcPhaseSummary: {
     categories: [
       {
-        name: 'pass',
-        count: 2091,
-        percentage: 11.2,
+        name: 'not implemented',
+        count: 200,
+        percentage: 20,
       },
       {
-        name: 'fail',
-        count: 8604,
-        percentage: 46.2,
+        name: 'assess',
+        count: 200,
+        percentage: 20,
+      },
+      {
+        name: 'deploy',
+        count: 200,
+        percentage: 20,
+      },
+      {
+        name: 'enforce',
+        count: 200,
+        percentage: 20,
+      },
+      {
+        name: 'maintain',
+        count: 200,
+        percentage: 20,
       },
     ],
-    total: 18613,
+    total: 1000,
   },
 }
 
 describe('<SummaryGroup />', () => {
   describe('given the data for web and email summaries', () => {
-    it('displays two summary cards', async () => {
-      const { getAllByText } = render(
+    it('displays web and dmarc phase summary cards', async () => {
+      const { getByText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <MockedProvider>
-              <SummaryGroup web={data.webSummary} mail={data.mailSummary} />
+              <SummaryGroup
+                web={data.webSummary}
+                dmarcPhases={data.dmarcPhaseSummary}
+              />
             </MockedProvider>
           </ChakraProvider>
         </I18nProvider>,
       )
-      const summaries = await waitFor(() => getAllByText(/settings summary/i))
-      expect(summaries).toHaveLength(2)
+      expect(getByText(/web encryption settings summary/i)).toBeInTheDocument()
+      expect(getByText(/dmarc phase summary/i)).toBeInTheDocument()
     })
   })
 })

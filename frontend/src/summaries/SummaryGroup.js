@@ -7,7 +7,7 @@ import { SummaryCard } from './SummaryCard'
 
 import theme from '../theme/canada'
 
-export function SummaryGroup({ web, mail }) {
+export function SummaryGroup({ web, dmarcPhases }) {
   const { colors } = theme
 
   const webCard = web ? (
@@ -33,45 +33,58 @@ export function SummaryGroup({ web, mail }) {
     />
   ) : (
     <Text fontWeight="bold" textAlign="center">
-      <Trans>No web configuration information available for this org.</Trans>
+      <Trans>
+        No web configuration information available for this organization.
+      </Trans>
     </Text>
   )
 
-  const mailCard = mail ? (
+  const dmarcPhaseCard = dmarcPhases ? (
     <SummaryCard
-      title={t`Email Configuration`}
-      description={t`Email security settings summary`}
+      id="dmarcPhases"
+      title={t`DMARC Phases`}
+      description={t`DMARC phase summary`}
       categoryDisplay={{
-        pass: {
-          name: t`DMARC pass`,
-          color: colors.strong,
-        },
-        fail: {
-          name: t`DMARC fail`,
+        'not implemented': { name: t`0. Not Implemented`, color: colors.weak },
+        assess: {
+          name: t`1. Assess`,
           color: colors.weak,
+        },
+        deploy: {
+          name: t`2. Deploy`,
+          color: colors.moderateAlt,
+        },
+        enforce: {
+          name: t`3. Enforce`,
+          color: colors.moderate,
+        },
+        maintain: {
+          name: t`4. Maintain`,
+          color: colors.strong,
         },
         unscanned: {
           name: t`Unscanned`,
           color: colors.gray['400'],
         },
       }}
-      data={mail}
+      data={dmarcPhases}
       mb={{ base: 6, md: 0 }}
     />
   ) : (
     <Text fontWeight="bold" textAlign="center">
-      <Trans>No mail configuration information available for this org.</Trans>
+      <Trans>No DMARC phase information available for this organization.</Trans>
     </Text>
   )
+
   return (
     <Flex flexWrap="wrap" justifyContent="space-evenly">
       {webCard}
-      {mailCard}
+      {dmarcPhaseCard}
     </Flex>
   )
 }
 
 SummaryGroup.propTypes = {
   web: object,
-  mail: object,
+  dmarcPhases: object,
 }

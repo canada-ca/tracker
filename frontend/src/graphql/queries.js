@@ -55,7 +55,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
-export const WEB_AND_EMAIL_SUMMARIES = gql`
+export const WEB_AND_PHASE_SUMMARIES = gql`
   query LandingPageSummaries {
     webSummary {
       total
@@ -65,7 +65,7 @@ export const WEB_AND_EMAIL_SUMMARIES = gql`
         percentage
       }
     }
-    mailSummary {
+    dmarcPhaseSummary {
       total
       categories {
         name

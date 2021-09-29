@@ -10,6 +10,7 @@ import { useArcs } from '../utilities/useArcs'
 import trackerLogo from '../images/tracker_v-03.png'
 
 export const Doughnut = ({
+  id, // id is required as svg defs can conflict
   data,
   height,
   width,
@@ -31,30 +32,34 @@ export const Doughnut = ({
 
   const patterns = scaleOrdinal().range([
     data[0] ? data[0].color : '#000',
-    `url(#stripes)`,
-    `url(#dots)`,
-    `url(#crosshatch)`,
-    `url(#zigzag)`,
+    `url(#stripes-${id})`,
+    `url(#dots-${id})`,
+    `url(#crossHatch-${id})`,
+    `url(#zigZag-${id})`,
   ])
 
   const patternDefs = (
     <defs>
       <Stripes
+        id={`stripes-${id}`}
         angle={45}
         background={data[1] ? data[1].color : '#000'}
         color="#fff"
       />
       <Dots
+        id={`dots-${id}`}
         size={1}
         background={data[2] ? data[2].color : '#000'}
         color="#fff"
       />
       <CrossHatch
+        id={`crossHatch-${id}`}
         width={0.8}
         background={data[3] ? data[3].color : '#000'}
         color="#fff"
       />
       <ZigZag
+        id={`zigZag-${id}`}
         width={0.4}
         background={data[4] ? data[4].color : '#000'}
         color="#fff"
@@ -146,6 +151,7 @@ export const Doughnut = ({
 }
 
 Doughnut.propTypes = {
+  id: string.isRequired,
   data: arrayOf(object),
   title: string,
   children: func,

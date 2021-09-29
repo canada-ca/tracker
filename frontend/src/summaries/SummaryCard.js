@@ -42,6 +42,7 @@ export function SummaryCard({
 
       <Box width="boxes.2" bg="white">
         <Doughnut
+          id={title.replace(/ /g, '')} // id is required as svg defs can conflict
           title={title}
           data={data.categories.map(({ name, count, percentage }) => ({
             title: categoryDisplay[name].name,

@@ -125,7 +125,7 @@ export function Stripes({
         d="M 0 10 L 10 0 M -1 1 L 1 -1 M 9 11 L 11 9"
         stroke={color}
         strokeWidth={width}
-      ></path>
+      />
     </pattern>
   )
 }
