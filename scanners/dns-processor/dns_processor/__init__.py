@@ -640,7 +640,6 @@ def process_results(results, domain_key, user_key, shared_id):
     else:
         dkim_status = "pass"
 
-    print(f"line: {line_number()}")
     if user_key is None:
         try:
             dmarcEntry = db.collection("dmarc").insert(dmarcResults)
@@ -657,9 +656,7 @@ def process_results(results, domain_key, user_key, shared_id):
                     {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
                 )
 
-            print(f"domain...")
             domain = db.collection("domains").get({"_key": domain_key})
-            print(f"domain? {domain}")
             db.collection("domainsDMARC").insert(
                 {"_from": domain["_id"], "_to": dmarcEntry["_id"]}
             )
@@ -679,6 +676,12 @@ def process_results(results, domain_key, user_key, shared_id):
                             "dmarc": "unknown",
                             "dkim": "unknown",
                             "spf": "unknown",
+                            "certificates": "fail",
+                            "ciphers": "fail",
+                            "curves": "fail",
+                            "hsts": "fail",
+                            "policy": "fail",
+                            "protocols": "fail",
                         }
                     }
                 )
