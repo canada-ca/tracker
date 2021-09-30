@@ -6,8 +6,6 @@ resources:
 - frontend-image-policy.yaml
 - autoscan-image-policy.yaml
 - dmarc-report-image-policy.yaml
-- dns-scanner-image-policy.yaml
-- https-scanner-image-policy.yaml
 - result-processor-image-policy.yaml
 - ssl-scanner-image-policy.yaml
 - update-automation.yaml
@@ -16,6 +14,5 @@ resources:
 - super-admin-image-policy.yaml
 - queue-image-policies.yaml
 - scanners-image-policies.yaml
-- tracker-repo.yaml
 patchesStrategicMerge:
 - tracker-repo.yaml
