@@ -152,13 +152,23 @@ def process_https(results, domain_key, user_key, shared_id):
         "negativeTags": negative_tags,
     }
 
+    hsts_tags = ["https9", "https10"]
+
     # get https status
     if "https17" in neutral_tags:
         https_status = "info"
-    elif len(negative_tags) > 0:
+    elif len([tag for tag in negative_tags if tag not in hsts_tags]) > 0:
         https_status = "fail"
     else:
         https_status = "pass"
+
+    # get hsts status
+    if "https17" in neutral_tags:
+        hsts_status= "info"
+    elif len([tag for tag in negative_tags if tag in hsts_tags]) > 0:
+        hsts_status = "fail"
+    else:
+        hsts_status = "pass"
 
     if user_key is None:
         try:
@@ -177,10 +187,17 @@ def process_https(results, domain_key, user_key, shared_id):
                             "dmarc": "unknown",
                             "dkim": "unknown",
                             "spf": "unknown",
+                            "certificates": "fail",
+                            "ciphers": "fail",
+                            "curves": "fail",
+                            "hsts": "fail",
+                            "policy": "fail",
+                            "protocols": "fail",
                         }
                     }
                 )
             domain["status"]["https"] = https_status
+            domain["status"]["hsts"] = hsts_status
             db.collection("domains").update(domain)
 
         except Exception as e:

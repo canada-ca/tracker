@@ -121,6 +121,8 @@ def process_results(results, domain_key, user_key, shared_id):
         "negativeTags": negative_tags,
     }
 
+    cipher_tags = ["ssl6"]
+
     # get ssl status
     if "ssl9" in neutral_tags:
         ssl_status = "info"
@@ -128,6 +130,23 @@ def process_results(results, domain_key, user_key, shared_id):
         ssl_status = "fail"
     else:
         ssl_status = "pass"
+
+    # get protocol status
+    if "ssl9" in neutral_tags:
+        protocol_status = "info"
+    elif (
+        len([tag for tag in negative_tags if tag not in cipher_tags]) > 0
+        or "ssl5" not in positive_tags
+    ):
+        protocol_status = "fail"
+    else:
+        protocol_status = "pass"
+
+    # get cipher status
+    cipher_status = "fail" if len(weak_ciphers) > 0 else "pass"
+
+    # get curve status
+    curve_status = "fail" if len(weak_curves) > 0 else "pass"
 
     if user_key is None:
         try:
@@ -146,10 +165,19 @@ def process_results(results, domain_key, user_key, shared_id):
                             "dmarc": "unknown",
                             "dkim": "unknown",
                             "spf": "unknown",
+                            "certificates": "fail",
+                            "ciphers": "fail",
+                            "curves": "fail",
+                            "hsts": "fail",
+                            "policy": "fail",
+                            "protocols": "fail",
                         }
                     }
                 )
             domain["status"]["ssl"] = ssl_status
+            domain["status"]["protocols"] = protocol_status
+            domain["status"]["ciphers"] = cipher_status
+            domain["status"]["curves"] = curve_status
             db.collection("domains").update(domain)
 
         except Exception as e:
@@ -243,6 +271,7 @@ async def run(loop):
 
 
 def main():
+    load_dotenv()
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run(loop))
     try:
