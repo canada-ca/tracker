@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: https-processor
-        image: gcr.io/track-compliance/https-processor:test-asdfghj-1632418519 # {"$imagepolicy": "flux-system:https-processor"}
+        image: gcr.io/track-compliance/https-processor:master-6261300-1632971877 # {"$imagepolicy": "flux-system:https-processor"}
         env:
         - name: DB_NAME
           value: track_dmarc
