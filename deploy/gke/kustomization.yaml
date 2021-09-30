@@ -15,5 +15,7 @@ resources:
 - guidance-image-policy.yaml
 - super-admin-image-policy.yaml
 - queue-image-policies.yaml
+- scanners-image-policies.yaml
+- tracker-repo.yaml
 patchesStrategicMerge:
 - tracker-repo.yaml
