@@ -18,11 +18,15 @@ const i18n = setupI18n({
   },
 })
 const status = {
-  dkim: 'PASS',
-  dmarc: 'PASS',
-  https: 'PASS',
-  spf: 'PASS',
-  ssl: 'PASS',
+  ciphers: 'pass',
+  curves: 'pass',
+  dkim: 'pass',
+  dmarc: 'pass',
+  hsts: 'pass',
+  https: 'pass',
+  protocols: 'pass',
+  spf: 'pass',
+  ssl: 'pass',
 }
 
 describe('<OrganizationsCard />', () => {

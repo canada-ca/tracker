@@ -674,9 +674,13 @@ export const PAGINATED_ORG_DOMAINS = gql`
             domain
             lastRan
             status {
+              ciphers
+              curves
               dkim
               dmarc
+              hsts
               https
+              protocols
               spf
               ssl
             }

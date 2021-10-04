@@ -50,15 +50,23 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
         <Divider variant="card" display={{ md: 'none' }} />
-        <Flex {...statusGroupingProps}>
-          <StatusBadge text="HTTPS:" status={status.https} />
-          <StatusBadge text="SSL:" status={status.ssl} />
-        </Flex>
-        <Flex {...statusGroupingProps}>
-          <StatusBadge text="SPF:" status={status.spf} />
-          <StatusBadge text="DKIM:" status={status.dkim} />
-          <StatusBadge text="DMARC:" status={status.dmarc} />
-        </Flex>
+        <Stack
+          alignItems="center"
+          mx={{ base: 0, md: 'auto' }}
+          flexGrow={{ md: '2' }}
+        >
+          <Flex {...statusGroupingProps}>
+            <StatusBadge text="Ciphers:" status={status.ciphers} />
+            <StatusBadge text="Curves:" status={status.curves} />
+            <StatusBadge text="HSTS:" status={status.hsts} />
+            <StatusBadge text="Protocols:" status={status.protocols} />
+          </Flex>
+          <Flex {...statusGroupingProps}>
+            <StatusBadge text="SPF:" status={status.spf} />
+            <StatusBadge text="DKIM:" status={status.dkim} />
+            <StatusBadge text="DMARC:" status={status.dmarc} />
+          </Flex>
+        </Stack>
         <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"
