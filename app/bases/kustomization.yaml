@@ -12,7 +12,6 @@ resources:
 - arangodb-operator.yaml
 - arangodb-deployment.yaml
 - issuers.yaml
-- backup-service-account.yaml
 - guidance-cronjob.yaml
 - summaries-cronjob.yaml
 - dmarc-report-cronjob.yaml
