@@ -15,7 +15,7 @@ As is common with microservices projects, this repository is organized in the [m
 
 ```
 .
-├── api-js
+├── api
 ├── app
 ├── ci
 ├── clients
@@ -33,7 +33,7 @@ As is common with microservices projects, this repository is organized in the [m
 
 The [ci](ci/README.md) folder contains an image used in the CI process, but the main event is the next three folders:
 
-The [frontend](frontend/README.md) and [api-js](api-js/README.md) folders contain the two main parts parts of the application.
+The [frontend](frontend/README.md) and [api](api/README.md) folders contain the two main parts parts of the application.
 
 The [app](app/README.md), [platform](platform/README.md) and [deploy](deploy/README.md) folders contain the Kubernetes configuration needed to continuously deploy the tracker on the cloud provider of your choice.
 
