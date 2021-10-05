@@ -3,9 +3,10 @@ kind: Kustomization
 resources:
 - ../bases
 - storage-classes.yaml
+- backup-service-account.yaml
+- backup-cronjob.yaml
 patchesStrategicMerge:
 - publicgateway.yaml
-- backup-service-account.yaml
 replicas:
 - count: 2
   name: tracker-frontend
