@@ -1321,8 +1321,8 @@ msgid "No mail configuration information available for this org."
 msgstr "Aucune information sur la configuration du courrier n'est disponible pour cette organisation."
 
 #: src/guidance/ScanCategoryDetails.js:14
-msgid "No scan data available for ${0}."
-msgstr "Aucune donnée d'analyse disponible pour ${0}."
+msgid "No scan data available for {0}."
+msgstr "Aucune donnée d'analyse disponible pour {0}."
 
 #: src/summaries/Doughnut.js:84
 msgid "No scan data for this organization."
