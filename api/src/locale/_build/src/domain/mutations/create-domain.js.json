@@ -1,0 +1,26 @@
+{
+  "Unable to create domain. Please try again.": {
+    "origin": [
+      [
+        "src/domain/mutations/create-domain.js",
+        69
+      ],
+      [
+        "src/domain/mutations/create-domain.js",
+        83
+      ],
+      [
+        "src/domain/mutations/create-domain.js",
+        108
+      ],
+      [
+        "src/domain/mutations/create-domain.js",
+        117
+      ],
+      [
+        "src/domain/mutations/create-domain.js",
+        168
+      ]
+    ]
+  }
+}

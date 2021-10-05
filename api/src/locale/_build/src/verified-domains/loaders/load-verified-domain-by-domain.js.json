@@ -1,0 +1,14 @@
+{
+  "Unable to find verified domain. Please try again.": {
+    "origin": [
+      [
+        "src/verified-domains/loaders/load-verified-domain-by-domain.js",
+        23
+      ],
+      [
+        "src/verified-domains/loaders/load-verified-domain-by-domain.js",
+        37
+      ]
+    ]
+  }
+}

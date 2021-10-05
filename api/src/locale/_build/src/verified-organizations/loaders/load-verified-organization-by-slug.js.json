@@ -1,0 +1,14 @@
+{
+  "Unable to find verified organization. Please try again.": {
+    "origin": [
+      [
+        "src/verified-organizations/loaders/load-verified-organization-by-slug.js",
+        21
+      ],
+      [
+        "src/verified-organizations/loaders/load-verified-organization-by-slug.js",
+        33
+      ]
+    ]
+  }
+}

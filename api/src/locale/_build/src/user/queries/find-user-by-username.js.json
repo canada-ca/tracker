@@ -1,0 +1,10 @@
+{
+  "User could not be queried.": {
+    "origin": [
+      [
+        "src/user/queries/find-user-by-username.js",
+        41
+      ]
+    ]
+  }
+}

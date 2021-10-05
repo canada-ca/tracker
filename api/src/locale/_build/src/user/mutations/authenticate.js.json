@@ -1,0 +1,22 @@
+{
+  "Unable to authenticate. Please try again.": {
+    "origin": [
+      [
+        "src/user/mutations/authenticate.js",
+        56
+      ],
+      [
+        "src/user/mutations/authenticate.js",
+        66
+      ],
+      [
+        "src/user/mutations/authenticate.js",
+        83
+      ],
+      [
+        "src/user/mutations/authenticate.js",
+        101
+      ]
+    ]
+  }
+}

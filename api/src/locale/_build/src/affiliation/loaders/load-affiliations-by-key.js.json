@@ -1,0 +1,14 @@
+{
+  "Unable to find user affiliation(s). Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-key.js",
+        21
+      ],
+      [
+        "src/affiliation/loaders/load-affiliations-by-key.js",
+        35
+      ]
+    ]
+  }
+}

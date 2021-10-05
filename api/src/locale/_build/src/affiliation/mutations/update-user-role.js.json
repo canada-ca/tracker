@@ -1,0 +1,66 @@
+{
+  "Unable to update your own role. Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        64
+      ]
+    ]
+  },
+  "Unable to update users role. Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        75
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        85
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        95
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        110
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        153
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        172
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        185
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        201
+      ],
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        210
+      ]
+    ]
+  },
+  "Unable to update users role. Please invite user to the organization.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        119
+      ]
+    ]
+  },
+  "User role was updated successfully.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/update-user-role.js",
+        218
+      ]
+    ]
+  }
+}

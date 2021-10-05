@@ -1,0 +1,14 @@
+{
+  "Unable to find dmarc guidance tags. Please try again.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-dmarc-guidance-tags.js",
+        18
+      ],
+      [
+        "src/guidance-tag/loaders/load-dmarc-guidance-tags.js",
+        32
+      ]
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "Unable to verify if user is an admin, please try again.": {
+    "origin": [
+      [
+        "src/user/queries/is-user-admin.js",
+        23
+      ]
+    ]
+  }
+}

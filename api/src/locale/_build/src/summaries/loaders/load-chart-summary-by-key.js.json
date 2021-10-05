@@ -1,0 +1,14 @@
+{
+  "Unable to find summary. Please try again.": {
+    "origin": [
+      [
+        "src/summaries/loaders/load-chart-summary-by-key.js",
+        18
+      ],
+      [
+        "src/summaries/loaders/load-chart-summary-by-key.js",
+        30
+      ]
+    ]
+  }
+}

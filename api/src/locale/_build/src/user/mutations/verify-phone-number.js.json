@@ -1,0 +1,38 @@
+{
+  "Authentication error, please sign in again.": {
+    "origin": [
+      [
+        "src/user/mutations/verify-phone-number.js",
+        34
+      ]
+    ]
+  },
+  "Unable to two factor authenticate. Please try again.": {
+    "origin": [
+      [
+        "src/user/mutations/verify-phone-number.js",
+        45
+      ],
+      [
+        "src/user/mutations/verify-phone-number.js",
+        54
+      ],
+      [
+        "src/user/mutations/verify-phone-number.js",
+        64
+      ],
+      [
+        "src/user/mutations/verify-phone-number.js",
+        81
+      ]
+    ]
+  },
+  "Successfully verified phone number, and set TFA send method to text.": {
+    "origin": [
+      [
+        "src/user/mutations/verify-phone-number.js",
+        91
+      ]
+    ]
+  }
+}

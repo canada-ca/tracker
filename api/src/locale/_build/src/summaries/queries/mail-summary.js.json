@@ -1,0 +1,26 @@
+{
+  "Unable to load mail summary. Please try again.": {
+    "origin": [
+      [
+        "src/summaries/queries/mail-summary.js",
+        12
+      ]
+    ]
+  },
+  "pass": {
+    "origin": [
+      [
+        "src/summaries/queries/mail-summary.js",
+        17
+      ]
+    ]
+  },
+  "fail": {
+    "origin": [
+      [
+        "src/summaries/queries/mail-summary.js",
+        22
+      ]
+    ]
+  }
+}

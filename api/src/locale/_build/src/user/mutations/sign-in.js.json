@@ -1,0 +1,34 @@
+{
+  "Unable to sign in, please try again.": {
+    "origin": [
+      [
+        "src/user/mutations/sign-in.js",
+        53
+      ],
+      [
+        "src/user/mutations/sign-in.js",
+        84
+      ],
+      [
+        "src/user/mutations/sign-in.js",
+        103
+      ],
+      [
+        "src/user/mutations/sign-in.js",
+        152
+      ],
+      [
+        "src/user/mutations/sign-in.js",
+        157
+      ]
+    ]
+  },
+  "Too many failed login attempts, please reset your password, and try again.": {
+    "origin": [
+      [
+        "src/user/mutations/sign-in.js",
+        63
+      ]
+    ]
+  }
+}

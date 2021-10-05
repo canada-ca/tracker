@@ -1,0 +1,26 @@
+{
+  "Unable to update organization. Please try again.": {
+    "origin": [
+      [
+        "src/organization/mutations/update-organization.js",
+        138
+      ],
+      [
+        "src/organization/mutations/update-organization.js",
+        150
+      ],
+      [
+        "src/organization/mutations/update-organization.js",
+        167
+      ],
+      [
+        "src/organization/mutations/update-organization.js",
+        223
+      ],
+      [
+        "src/organization/mutations/update-organization.js",
+        234
+      ]
+    ]
+  }
+}

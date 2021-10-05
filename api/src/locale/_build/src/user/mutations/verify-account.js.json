@@ -1,0 +1,38 @@
+{
+  "Unable to verify account. Please try again.": {
+    "origin": [
+      [
+        "src/user/mutations/verify-account.js",
+        42
+      ],
+      [
+        "src/user/mutations/verify-account.js",
+        52
+      ],
+      [
+        "src/user/mutations/verify-account.js",
+        93
+      ]
+    ]
+  },
+  "Unable to verify account. Please request a new email.": {
+    "origin": [
+      [
+        "src/user/mutations/verify-account.js",
+        67
+      ],
+      [
+        "src/user/mutations/verify-account.js",
+        77
+      ]
+    ]
+  },
+  "Successfully email verified account, and set TFA send method to email.": {
+    "origin": [
+      [
+        "src/user/mutations/verify-account.js",
+        102
+      ]
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "No verified domain with the provided domain could be found.": {
+    "origin": [
+      [
+        "src/verified-domains/queries/find-verified-domain-by-domain.js",
+        33
+      ]
+    ]
+  }
+}

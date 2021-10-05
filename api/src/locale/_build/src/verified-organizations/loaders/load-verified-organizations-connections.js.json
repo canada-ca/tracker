@@ -1,0 +1,54 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.": {
+    "origin": [
+      [
+        "src/verified-organizations/loaders/load-verified-organizations-connections.js",
+        31
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.": {
+    "origin": [
+      [
+        "src/verified-organizations/loaders/load-verified-organizations-connections.js",
+        40
+      ]
+    ]
+  },
+  "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/verified-organizations/loaders/load-verified-organizations-connections.js",
+        52
+      ]
+    ]
+  },
+  "Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/verified-organizations/loaders/load-verified-organizations-connections.js",
+        63
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/verified-organizations/loaders/load-verified-organizations-connections.js",
+        78
+      ]
+    ]
+  },
+  "Unable to load verified organizations. Please try again.": {
+    "origin": [
+      [
+        "src/verified-organizations/loaders/load-verified-organizations-connections.js",
+        138
+      ],
+      [
+        "src/verified-organizations/loaders/load-verified-organizations-connections.js",
+        150
+      ]
+    ]
+  }
+}

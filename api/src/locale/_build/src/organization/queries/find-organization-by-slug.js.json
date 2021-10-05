@@ -1,0 +1,18 @@
+{
+  "No organization with the provided slug could be found.": {
+    "origin": [
+      [
+        "src/organization/queries/find-organization-by-slug.js",
+        40
+      ]
+    ]
+  },
+  "Could not retrieve specified organization.": {
+    "origin": [
+      [
+        "src/organization/queries/find-organization-by-slug.js",
+        49
+      ]
+    ]
+  }
+}

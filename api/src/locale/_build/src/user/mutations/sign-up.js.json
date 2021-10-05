@@ -1,0 +1,38 @@
+{
+  "Password is too short.": {
+    "origin": [
+      [
+        "src/user/mutations/sign-up.js",
+        71
+      ]
+    ]
+  },
+  "Passwords do not match.": {
+    "origin": [
+      [
+        "src/user/mutations/sign-up.js",
+        79
+      ]
+    ]
+  },
+  "Username already in use.": {
+    "origin": [
+      [
+        "src/user/mutations/sign-up.js",
+        89
+      ]
+    ]
+  },
+  "Unable to sign up. Please try again.": {
+    "origin": [
+      [
+        "src/user/mutations/sign-up.js",
+        116
+      ],
+      [
+        "src/user/mutations/sign-up.js",
+        125
+      ]
+    ]
+  }
+}

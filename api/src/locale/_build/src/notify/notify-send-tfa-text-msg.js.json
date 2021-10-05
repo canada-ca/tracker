@@ -1,0 +1,10 @@
+{
+  "Unable to send two factor authentication message. Please try again.": {
+    "origin": [
+      [
+        "src/notify/notify-send-tfa-text-msg.js",
+        21
+      ]
+    ]
+  }
+}
