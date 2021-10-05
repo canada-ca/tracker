@@ -1,0 +1,10 @@
+{
+  "Unable to retrieve {0} for domain: {domain}.": {
+    "origin": [
+      [
+        "src/dmarc-report/loaders/load-dmarc-report.js",
+        39
+      ]
+    ]
+  }
+}

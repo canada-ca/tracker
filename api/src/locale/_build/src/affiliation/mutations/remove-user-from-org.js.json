@@ -1,0 +1,46 @@
+{
+  "Unable to remove user from organization. Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        52
+      ],
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        63
+      ],
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        74
+      ],
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        91
+      ],
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        100
+      ],
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        143
+      ],
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        154
+      ],
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        170
+      ]
+    ]
+  },
+  "Successfully removed user from organization.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/remove-user-from-org.js",
+        163
+      ]
+    ]
+  }
+}

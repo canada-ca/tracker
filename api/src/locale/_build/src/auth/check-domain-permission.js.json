@@ -1,0 +1,18 @@
+{
+  "Permission check error. Unable to request domain information.": {
+    "origin": [
+      [
+        "src/auth/check-domain-permission.js",
+        22
+      ],
+      [
+        "src/auth/check-domain-permission.js",
+        43
+      ],
+      [
+        "src/auth/check-domain-permission.js",
+        54
+      ]
+    ]
+  }
+}

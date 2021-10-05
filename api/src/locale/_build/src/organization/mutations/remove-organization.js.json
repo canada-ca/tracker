@@ -1,0 +1,38 @@
+{
+  "Unable to remove organization. Please try again.": {
+    "origin": [
+      [
+        "src/organization/mutations/remove-organization.js",
+        52
+      ],
+      [
+        "src/organization/mutations/remove-organization.js",
+        65
+      ],
+      [
+        "src/organization/mutations/remove-organization.js",
+        74
+      ],
+      [
+        "src/organization/mutations/remove-organization.js",
+        145
+      ],
+      [
+        "src/organization/mutations/remove-organization.js",
+        177
+      ],
+      [
+        "src/organization/mutations/remove-organization.js",
+        188
+      ]
+    ]
+  },
+  "Successfully removed organization: {0}.": {
+    "origin": [
+      [
+        "src/organization/mutations/remove-organization.js",
+        198
+      ]
+    ]
+  }
+}

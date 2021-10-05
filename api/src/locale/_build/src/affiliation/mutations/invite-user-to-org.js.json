@@ -1,0 +1,46 @@
+{
+  "Unable to invite yourself to an org. Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/invite-user-to-org.js",
+        68
+      ]
+    ]
+  },
+  "Unable to invite user. Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/invite-user-to-org.js",
+        79
+      ],
+      [
+        "src/affiliation/mutations/invite-user-to-org.js",
+        92
+      ],
+      [
+        "src/affiliation/mutations/invite-user-to-org.js",
+        155
+      ],
+      [
+        "src/affiliation/mutations/invite-user-to-org.js",
+        177
+      ]
+    ]
+  },
+  "Successfully sent invitation to service, and organization email.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/invite-user-to-org.js",
+        127
+      ]
+    ]
+  },
+  "Successfully invited user to organization, and sent notification email.": {
+    "origin": [
+      [
+        "src/affiliation/mutations/invite-user-to-org.js",
+        186
+      ]
+    ]
+  }
+}

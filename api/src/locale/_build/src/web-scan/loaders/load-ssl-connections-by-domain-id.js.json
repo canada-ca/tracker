@@ -1,0 +1,54 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `ssl` connection.": {
+    "origin": [
+      [
+        "src/web-scan/loaders/load-ssl-connections-by-domain-id.js",
+        40
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `ssl` connection is not supported.": {
+    "origin": [
+      [
+        "src/web-scan/loaders/load-ssl-connections-by-domain-id.js",
+        49
+      ]
+    ]
+  },
+  "`{argSet}` on the `ssl` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/web-scan/loaders/load-ssl-connections-by-domain-id.js",
+        61
+      ]
+    ]
+  },
+  "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/web-scan/loaders/load-ssl-connections-by-domain-id.js",
+        72
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/web-scan/loaders/load-ssl-connections-by-domain-id.js",
+        87
+      ]
+    ]
+  },
+  "Unable to load ssl scans. Please try again.": {
+    "origin": [
+      [
+        "src/web-scan/loaders/load-ssl-connections-by-domain-id.js",
+        143
+      ],
+      [
+        "src/web-scan/loaders/load-ssl-connections-by-domain-id.js",
+        153
+      ]
+    ]
+  }
+}

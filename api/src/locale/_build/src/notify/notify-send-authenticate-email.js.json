@@ -1,0 +1,10 @@
+{
+  "Unable to authenticate. Please try again.": {
+    "origin": [
+      [
+        "src/notify/notify-send-authenticate-email.js",
+        16
+      ]
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "No domain with the provided domain could be found.": {
+    "origin": [
+      [
+        "src/domain/queries/find-domain-by-domain.js",
+        38
+      ]
+    ]
+  },
+  "Could not retrieve specified domain.": {
+    "origin": [
+      [
+        "src/domain/queries/find-domain-by-domain.js",
+        47
+      ]
+    ]
+  }
+}

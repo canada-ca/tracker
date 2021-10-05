@@ -1,0 +1,10 @@
+{
+  "Unable to load organizations. Please try again.": {
+    "origin": [
+      [
+        "src/organization/queries/find-my-organizations.js",
+        32
+      ]
+    ]
+  }
+}

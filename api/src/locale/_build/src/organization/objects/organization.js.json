@@ -1,0 +1,10 @@
+{
+  "Cannot query affiliations on organization without admin permission or higher.": {
+    "origin": [
+      [
+        "src/organization/objects/organization.js",
+        126
+      ]
+    ]
+  }
+}

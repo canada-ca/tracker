@@ -1,0 +1,10 @@
+{
+  "No organization with the provided slug could be found.": {
+    "origin": [
+      [
+        "src/verified-organizations/queries/find-verified-organization-by-slug.js",
+        34
+      ]
+    ]
+  }
+}

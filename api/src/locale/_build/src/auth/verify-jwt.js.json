@@ -1,0 +1,10 @@
+{
+  "Invalid token, please request a new one.": {
+    "origin": [
+      [
+        "src/auth/verify-jwt.js",
+        15
+      ]
+    ]
+  }
+}

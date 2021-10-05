@@ -1,0 +1,14 @@
+{
+  "Error when retrieving dmarc report information. Please try again.": {
+    "origin": [
+      [
+        "src/auth/check-domain-ownership.js",
+        22
+      ],
+      [
+        "src/auth/check-domain-ownership.js",
+        35
+      ]
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "Unable to find spf guidance tags. Please try again.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-spf-guidance-tags.js",
+        18
+      ],
+      [
+        "src/guidance-tag/loaders/load-spf-guidance-tags.js",
+        32
+      ]
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js",
+        30
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js",
+        39
+      ]
+    ]
+  },
+  "`{argSet}` on the `guidanceTag` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js",
+        51
+      ]
+    ]
+  },
+  "Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js",
+        62
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js",
+        77
+      ]
+    ]
+  },
+  "Unable to load ssl guidance tags. Please try again.": {
+    "origin": [
+      [
+        "src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js",
+        130
+      ],
+      [
+        "src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js",
+        142
+      ]
+    ]
+  }
+}

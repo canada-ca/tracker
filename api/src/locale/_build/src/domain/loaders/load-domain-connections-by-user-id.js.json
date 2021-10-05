@@ -1,0 +1,58 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `domain` connection.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-connections-by-user-id.js",
+        40
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `domain` connection is not supported.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-connections-by-user-id.js",
+        49
+      ]
+    ]
+  },
+  "`{argSet}` on the `domain` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-connections-by-user-id.js",
+        61
+      ]
+    ]
+  },
+  "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-connections-by-user-id.js",
+        72
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-connections-by-user-id.js",
+        87
+      ]
+    ]
+  },
+  "Unable to query domains. Please try again.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-connections-by-user-id.js",
+        147
+      ]
+    ]
+  },
+  "Unable to load domains. Please try again.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-connections-by-user-id.js",
+        157
+      ]
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "pass": {
+    "origin": [
+      [
+        "src/organization/objects/organization-summary.js",
+        26
+      ],
+      [
+        "src/organization/objects/organization-summary.js",
+        59
+      ]
+    ]
+  },
+  "fail": {
+    "origin": [
+      [
+        "src/organization/objects/organization-summary.js",
+        31
+      ],
+      [
+        "src/organization/objects/organization-summary.js",
+        64
+      ]
+    ]
+  }
+}

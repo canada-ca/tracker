@@ -27,19 +27,19 @@ steps:
 
 - name: node:alpine
   id: install
-  dir: api-js
+  dir: api
   entrypoint: npm
   args: ['ci', '--no-optional']
 
 - name: node:alpine
   id: lint
-  dir: api-js
+  dir: api
   entrypoint: npm
   args: ['run', lint]
 
 - name: node:alpine
   id: test-subscriptions
-  dir: api-js
+  dir: api
   entrypoint: npm
   args: ['run', 'test-subscriptions']
   env:
@@ -89,7 +89,7 @@ steps:
 
 - name: node:alpine
   id: test
-  dir: api-js
+  dir: api
   entrypoint: npm
   args: ['run', 'test-remainder']
   env:
@@ -139,20 +139,20 @@ steps:
 
 - name: node:alpine
   id: lingui-extract
-  dir: api-js
+  dir: api
   entrypoint: npm
   args: ['run', 'extract']
 
 - name: node:alpine
   id: lingui-compile
-  dir: api-js
+  dir: api
   entrypoint: npm
   args: ['run', 'compile']
 
 - name: 'gcr.io/cloud-builders/docker'
   id: generate-image-name
   entrypoint: 'bash'
-  dir: api-js
+  dir: api
   args:
     - '-c'
     - |
@@ -161,7 +161,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: build-if-master
   entrypoint: 'bash'
-  dir: api-js
+  dir: api
   args:
     - '-c'
     - |
@@ -186,6 +186,7 @@ steps:
       else
         exit 0
       fi
+
 timeout: 1200s
 options:
   machineType: 'E2_HIGHCPU_8'

@@ -1,0 +1,38 @@
+{
+  "Unable to request a on time scan on this domain.": {
+    "origin": [
+      [
+        "src/domain/mutations/request-scan.js",
+        61
+      ],
+      [
+        "src/domain/mutations/request-scan.js",
+        73
+      ]
+    ]
+  },
+  "Unable to dispatch one time scan. Please try again.": {
+    "origin": [
+      [
+        "src/domain/mutations/request-scan.js",
+        95
+      ],
+      [
+        "src/domain/mutations/request-scan.js",
+        109
+      ],
+      [
+        "src/domain/mutations/request-scan.js",
+        123
+      ]
+    ]
+  },
+  "Successfully dispatched one time scan.": {
+    "origin": [
+      [
+        "src/domain/mutations/request-scan.js",
+        132
+      ]
+    ]
+  }
+}

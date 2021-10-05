@@ -1,0 +1,22 @@
+{
+  "Permission error, not an admin for this user.": {
+    "origin": [
+      [
+        "src/auth/check-user-is-admin-for-user.js",
+        19
+      ],
+      [
+        "src/auth/check-user-is-admin-for-user.js",
+        29
+      ],
+      [
+        "src/auth/check-user-is-admin-for-user.js",
+        60
+      ],
+      [
+        "src/auth/check-user-is-admin-for-user.js",
+        70
+      ]
+    ]
+  }
+}

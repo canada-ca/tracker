@@ -1,0 +1,10 @@
+{
+  "Unable to send verification email. Please try again.": {
+    "origin": [
+      [
+        "src/notify/notify-send-verification-email.js",
+        21
+      ]
+    ]
+  }
+}

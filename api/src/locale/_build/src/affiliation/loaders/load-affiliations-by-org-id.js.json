@@ -1,0 +1,58 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `affiliation`.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-org-id.js",
+        33
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `affiliation` is not supported.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-org-id.js",
+        42
+      ]
+    ]
+  },
+  "`{argSet}` on the `affiliations` cannot be less than zero.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-org-id.js",
+        54
+      ]
+    ]
+  },
+  "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-org-id.js",
+        65
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-org-id.js",
+        80
+      ]
+    ]
+  },
+  "Unable to query affiliations. Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-org-id.js",
+        136
+      ]
+    ]
+  },
+  "Unable to load affiliations. Please try again.": {
+    "origin": [
+      [
+        "src/affiliation/loaders/load-affiliations-by-org-id.js",
+        146
+      ]
+    ]
+  }
+}

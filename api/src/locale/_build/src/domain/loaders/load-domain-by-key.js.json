@@ -1,0 +1,14 @@
+{
+  "Unable to find domain. Please try again.": {
+    "origin": [
+      [
+        "src/domain/loaders/load-domain-by-key.js",
+        18
+      ],
+      [
+        "src/domain/loaders/load-domain-by-key.js",
+        30
+      ]
+    ]
+  }
+}
