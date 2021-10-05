@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/canada-ca/tracker/tree/master/api-js"
+    "url": "https://github.com/canada-ca/tracker/tree/master/api"
   },
   "author": "nsdeschenes",
   "license": "MIT",
