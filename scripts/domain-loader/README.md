@@ -4,7 +4,7 @@ This directory contains a program to facilitate the insertion of organization an
 
 The JSON file used for input must adhere to the following structure:
 
-```json
+```
 {
   "<English Acronym-French Acronym>": {
     "acronym_en": "<English Acronym>",
