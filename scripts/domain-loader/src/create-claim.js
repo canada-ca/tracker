@@ -1,6 +1,5 @@
 const createClaim = async ({ trx, query, domainId, orgId }) => {
-  console.info(`\tAdding claim`)
-  
+
   const claimCursor = await trx.step(
     () => query`
       WITH domains, claims, organizations
