@@ -14,19 +14,19 @@ steps:
 
 - name: node:alpine
   id: install
-  dir: scripts/insert-json
+  dir: scripts/domain-loader
   entrypoint: npm
   args: ['ci', '--no-optional']
 
 - name: node:alpine
   id: lint
-  dir: scripts/insert-json
+  dir: scripts/domain-loader
   entrypoint: npm
   args: ['run', lint]
 
 - name: node:alpine
   id: test
-  dir: scripts/insert-json
+  dir: scripts/domain-loader
   entrypoint: npm
   args: ['run', 'test']
   env:
