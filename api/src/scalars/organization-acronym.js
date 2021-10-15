@@ -1,7 +1,7 @@
 import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
-  const ACRONYM_REGEX = /^[A-Z0-9_-]{1,50}$/
+  const ACRONYM_REGEX = /^[A-Za-z0-9_-]{1,50}$/
 
   if (typeof value !== 'string') {
     throw new TypeError(`Value is not string: ${typeof value}`)
@@ -16,7 +16,7 @@ const validate = (value) => {
 export const Acronym = new GraphQLScalarType({
   name: 'Acronym',
   description:
-    'A field whose value is an upper case letter or an under score that has a length between 1 and 50.',
+    'A field whose value consists of upper case or lower case letters or underscores with a length between 1 and 50.',
   serialize: validate,
   parseValue: validate,
 
