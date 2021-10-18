@@ -83,13 +83,11 @@ export const authenticate = new mutationWithClientMutationId({
       const refreshId = uuidv4()
 
       const refreshInfo = {
-        refreshInfo: {
-          refreshId,
-          rememberMe: user.refreshInfo.rememberMe,
-          expiresAt: new Date(
-            new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
-          ),
-        },
+        refreshId,
+        rememberMe: user.refreshInfo.rememberMe,
+        expiresAt: new Date(
+          new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        ),
       }
 
       // Generate list of collections names
