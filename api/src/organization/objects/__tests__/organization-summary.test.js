@@ -171,7 +171,7 @@ describe('given the organization summary object', () => {
           const demoType = organizationSummaryType.getFields()
 
           const dmarcPhase = {
-            'not implemented': 0,
+            not_implemented: 0,
             assess: 0,
             deploy: 0,
             enforce: 0,
@@ -182,7 +182,7 @@ describe('given the organization summary object', () => {
           const i18n = {
             _: jest
               .fn()
-              .mockReturnValueOnce('not implemented')
+              .mockReturnValueOnce('not_implemented')
               .mockReturnValueOnce('assess')
               .mockReturnValueOnce('deploy')
               .mockReturnValueOnce('enforce')
@@ -233,7 +233,7 @@ describe('given the organization summary object', () => {
           const demoType = organizationSummaryType.getFields()
 
           const dmarcPhase = {
-            'not implemented': 0,
+            not_implemented: 50,
             assess: 75,
             deploy: 100,
             enforce: 125,
@@ -244,7 +244,7 @@ describe('given the organization summary object', () => {
           const i18n = {
             _: jest
               .fn()
-              .mockReturnValueOnce('not implemented')
+              .mockReturnValueOnce('not_implemented')
               .mockReturnValueOnce('assess')
               .mockReturnValueOnce('deploy')
               .mockReturnValueOnce('enforce')
