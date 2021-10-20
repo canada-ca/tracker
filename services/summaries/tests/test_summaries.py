@@ -30,6 +30,8 @@ org = orgs.insert(
         "summaries": {
             "web": {"pass": 0, "fail": 0, "total": 0},
             "mail": {"pass": 0, "fail": 0, "total": 0},
+            "dmarc_phase": {"not_implemented": 0, "assess": 0, "deploy": 0,
+                            "enforce": 0, "maintain": 0},
 
         },
         "orgDetails": {
@@ -203,4 +205,6 @@ def test_update_org_summaries():
     assert organization["summaries"] == {
         "web": {"pass": 2, "fail": 1, "total": 3},
         "mail": {"pass": 1, "fail": 2, "total": 3},
+        "dmarc_phase": {"not_implemented": 1, "assess": 0, "deploy": 0,
+                        "enforce": 0, "maintain": 2, "total": 3},
     }

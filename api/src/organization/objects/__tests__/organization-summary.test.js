@@ -15,6 +15,12 @@ describe('given the organization summary object', () => {
       expect(demoType).toHaveProperty('web')
       expect(demoType.web.type).toMatchObject(categorizedSummaryType)
     })
+    it('has a dmarcPhase field', () => {
+      const demoType = organizationSummaryType.getFields()
+
+      expect(demoType).toHaveProperty('dmarcPhase')
+      expect(demoType.dmarcPhase.type).toMatchObject(categorizedSummaryType)
+    })
   })
 
   describe('field resolvers', () => {
@@ -155,6 +161,131 @@ describe('given the organization summary object', () => {
               },
             ],
             total: 1050,
+          })
+        })
+      })
+    })
+    describe('testing dmarcPhase resolver', () => {
+      describe('total is zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
+
+          const dmarcPhase = {
+            not_implemented: 0,
+            assess: 0,
+            deploy: 0,
+            enforce: 0,
+            maintain: 0,
+            total: 0,
+          }
+
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('not_implemented')
+              .mockReturnValueOnce('assess')
+              .mockReturnValueOnce('deploy')
+              .mockReturnValueOnce('enforce')
+              .mockReturnValueOnce('maintain'),
+          }
+
+          expect(
+            demoType.dmarcPhase.resolve(
+              { dmarc_phase: dmarcPhase },
+              {},
+              { i18n },
+            ),
+          ).toEqual({
+            categories: [
+              {
+                count: 0,
+                name: 'not implemented',
+                percentage: 0,
+              },
+              {
+                count: 0,
+                name: 'assess',
+                percentage: 0,
+              },
+              {
+                count: 0,
+                name: 'deploy',
+                percentage: 0,
+              },
+              {
+                count: 0,
+                name: 'enforce',
+                percentage: 0,
+              },
+              {
+                count: 0,
+                name: 'maintain',
+                percentage: 0,
+              },
+            ],
+            total: 0,
+          })
+        })
+      })
+
+      describe('when total is greater then zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
+
+          const dmarcPhase = {
+            not_implemented: 50,
+            assess: 75,
+            deploy: 100,
+            enforce: 125,
+            maintain: 150,
+            total: 500,
+          }
+
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('not_implemented')
+              .mockReturnValueOnce('assess')
+              .mockReturnValueOnce('deploy')
+              .mockReturnValueOnce('enforce')
+              .mockReturnValueOnce('maintain'),
+          }
+
+          expect(
+            demoType.dmarcPhase.resolve(
+              { dmarc_phase: dmarcPhase },
+              {},
+              { i18n },
+            ),
+          ).toEqual({
+            categories: [
+              {
+                count: 50,
+                name: 'not implemented',
+                percentage: 10.0,
+              },
+              {
+                count: 75,
+                name: 'assess',
+                percentage: 15.0,
+              },
+              {
+                count: 100,
+                name: 'deploy',
+                percentage: 20.0,
+              },
+              {
+                count: 125,
+                name: 'enforce',
+                percentage: 25.0,
+              },
+              {
+                count: 150,
+                name: 'maintain',
+                percentage: 30.0,
+              },
+            ],
+            total: 500,
           })
         })
       })
