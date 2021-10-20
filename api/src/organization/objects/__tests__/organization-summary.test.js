@@ -190,7 +190,11 @@ describe('given the organization summary object', () => {
           }
 
           expect(
-            demoType.dmarcPhase.resolve({ dmarcPhase }, {}, { i18n }),
+            demoType.dmarcPhase.resolve(
+              { dmarc_phase: dmarcPhase },
+              {},
+              { i18n },
+            ),
           ).toEqual({
             categories: [
               {
@@ -248,7 +252,11 @@ describe('given the organization summary object', () => {
           }
 
           expect(
-            demoType.dmarcPhase.resolve({ dmarcPhase }, {}, { i18n }),
+            demoType.dmarcPhase.resolve(
+              { dmarc_phase: dmarcPhase },
+              {},
+              { i18n },
+            ),
           ).toEqual({
             categories: [
               {
