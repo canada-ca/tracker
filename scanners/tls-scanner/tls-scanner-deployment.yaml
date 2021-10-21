@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: tls-scanner
-        image: gcr.io/track-compliance/tls-scanner:master-bc30fb3-1632968391 # {"$imagepolicy": "flux-system:tls-scanner"}
+        image: gcr.io/track-compliance/tls-scanner:master-1d0b9ac-1634777786 # {"$imagepolicy": "flux-system:tls-scanner"}
         env:
         - name: PYTHONWARNINGS
           value: ignore
