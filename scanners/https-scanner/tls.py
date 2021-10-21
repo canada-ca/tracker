@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import time
 
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 import json
 import argparse, sys
 import asyncio
@@ -166,7 +166,7 @@ async def run(loop):
         loop = asyncio.get_event_loop()
         start_time = time.monotonic()
         print(f"before the scanner")
-        with ThreadPoolExecutor() as executor:
+        with ProcessPoolExecutor() as executor:
             scanner = HTTPSScanner(domain)
             scan_results = await loop.run_in_executor(executor, scanner.run)
         print(f"After scan. Elapsed time: {time.monotonic() - start_time}")
