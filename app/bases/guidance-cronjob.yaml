@@ -7,8 +7,6 @@ spec:
   schedule: "59 22 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
-  successfulJobsHistoryLimit: 0
-  failedJobsHistoryLimit: 0
   jobTemplate:
     spec:
       template:
