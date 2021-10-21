@@ -6,6 +6,7 @@ metadata:
 spec:
   schedule: "30 10 * * *"
   concurrencyPolicy: Replace
+  startingDeadlineSeconds: 180
   jobTemplate:
     spec:
       template:
