@@ -20,13 +20,8 @@ cluster:
 
 .PHONY: secrets
 secrets:
-ifeq ("$(env)", "gke")
 		kustomize build platform/creds/${mode} | kubectl apply -f -
 		kustomize build app/creds/${mode} | kubectl apply -f -
-else
-		kustomize build platform/creds/${mode}/ | kubectl apply -f -
-		kustomize build app/creds/${mode} | kubectl apply -f -
-endif
 
 .PHONY: dbdump
 dbdump:
