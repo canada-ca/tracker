@@ -8,6 +8,7 @@ It is built with the [Express webserver](https://expressjs.com/) using the [expr
 ```shell
 npm install
 ```
+
 #### Running API Server
 
 In accordance with the [12Factor app](https://12factor.net) philosophy, the server [draws it's config from the environment](https://12factor.net/config). It does based on a `.env` file that should exist in the root of the API folder which can be created with the following command, obviously modifying the test values shown to suit your setup.
@@ -18,7 +19,10 @@ DB_PASS=test
 DB_URL=http://localhost:8529
 DB_NAME=track_dmarc
 AUTHENTICATED_KEY=12341234
+REFRESH_KEY=12341234
 SIGN_IN_KEY=12341234
+AUTH_TOKEN_EXPIRY=60
+REFRESH_TOKEN_EXPIRY=7
 NOTIFICATION_API_KEY=asdf1234
 NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca
 NOTIFICATION_AUTHENTICATE_EMAIL_ID=test_id
@@ -53,12 +57,14 @@ DMARC_SCAN_CHANNEL=scan/dmarc
 HTTPS_SCAN_CHANNEL=scan/https
 SPF_SCAN_CHANNEL=scan/spf
 SSL_SCAN_CHANNEL=scan/ssl
+TRACING_ENABLED=false
 EOF
 ```
+
 With that defined you can start the server with these commands.
 
 ```shell
-# Compile the scripts 
+# Compile the scripts
 npm run build
 # Run the server
 npm start
@@ -69,11 +75,13 @@ An online IDE will be accessible at [localhost:4000/graphql](http://localhost:40
 ### Dev Workflow
 
 #### Install Dev Dependencies
+
 ```shell
 npm install
 ```
 
 #### Running Server with Nodemon
+
 ```shell
 npm run dev-start
 ```
@@ -90,6 +98,7 @@ docker run -d -p=8529:8529 --env-file arangodb.env --name=arango arangodb
 ```
 
 The tests also requires a copy of [Redis](https://redis.io/) to be running locally.
+
 ```bash
 docker run -d -p=6379:6379 --name=redis redis
 ```
@@ -102,21 +111,24 @@ DB_PASS=test
 DB_URL=http://localhost:8529
 DB_NAME=track_dmarc
 AUTHENTICATED_KEY=12341234
+REFRESH_KEY=12341234
 SIGN_IN_KEY=12341234
+AUTH_TOKEN_EXPIRY=60
+REFRESH_TOKEN_EXPIRY=7
 NOTIFICATION_API_KEY=asdf1234
 NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca
-NOTIFICATION_AUTHENTICATE_EMAIL_ID=some-template-id
-NOTIFICATION_AUTHENTICATE_TEXT_ID=some-template-id
-NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN=some-template-id
-NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR=some-template-id
-NOTIFICATION_ORG_INVITE_EN=some-template-id
-NOTIFICATION_ORG_INVITE_FR=some-template-id
-NOTIFICATION_PASSWORD_RESET_EN=some-template-id
-NOTIFICATION_PASSWORD_RESET_FR=some-template-id
-NOTIFICATION_TWO_FACTOR_CODE_EN=some-template-id
-NOTIFICATION_TWO_FACTOR_CODE_FR=some-template-id
-NOTIFICATION_VERIFICATION_EMAIL_EN=some-template-id
-NOTIFICATION_VERIFICATION_EMAIL_FR=some-template-id
+NOTIFICATION_AUTHENTICATE_EMAIL_ID=test_id
+NOTIFICATION_AUTHENTICATE_TEXT_ID=test_id
+NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN=test_id
+NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR=test_id
+NOTIFICATION_ORG_INVITE_EN=test_id
+NOTIFICATION_ORG_INVITE_FR=test_id
+NOTIFICATION_PASSWORD_RESET_EN=test_id
+NOTIFICATION_PASSWORD_RESET_FR=test_id
+NOTIFICATION_TWO_FACTOR_CODE_EN=test_id
+NOTIFICATION_TWO_FACTOR_CODE_FR=test_id
+NOTIFICATION_VERIFICATION_EMAIL_EN=test_id
+NOTIFICATION_VERIFICATION_EMAIL_FR=test_id
 DMARC_REPORT_API_SECRET=somesecretvalue
 TOKEN_HASH=somehash
 DMARC_REPORT_API_TOKEN=uuid-like-string
@@ -126,6 +138,10 @@ COST_LIMIT=100
 SCALAR_COST=1
 OBJECT_COST=1
 LIST_FACTOR=1
+CIPHER_KEY=1234averyveryveryveryverylongkey
+DNS_SCANNER_ENDPOINT=dns.scanners
+HTTPS_SCANNER_ENDPOINT=https.scanners
+SSL_SCANNER_ENDPOINT=ssl.scanners
 REDIS_PORT_NUMBER=6379
 REDIS_DOMAIN_NAME=localhost
 DKIM_SCAN_CHANNEL=scan/dkim
@@ -133,6 +149,7 @@ DMARC_SCAN_CHANNEL=scan/dmarc
 HTTPS_SCAN_CHANNEL=scan/https
 SPF_SCAN_CHANNEL=scan/spf
 SSL_SCAN_CHANNEL=scan/ssl
+TRACING_ENABLED=false
 EOF
 ```
 
@@ -155,6 +172,7 @@ npm run lint
 ```
 
 #### Formatting Code with Prettier
+
 ```shell
 npm run prettier
 ```
