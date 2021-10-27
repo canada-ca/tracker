@@ -39,7 +39,7 @@ export function OrganizationSummary({
           </Stack>
         )}
       </Stack>
-      <SummaryGroup web={summaries?.web} mail={summaries?.mail} />
+      <SummaryGroup web={summaries?.web} dmarcPhases={summaries?.dmarcPhase} />
     </Box>
   )
 }

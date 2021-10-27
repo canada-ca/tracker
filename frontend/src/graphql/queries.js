@@ -648,6 +648,14 @@ export const ORG_DETAILS_PAGE = gql`
             percentage
           }
         }
+        dmarcPhase {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
       }
       affiliations(first: 1) {
         totalCount
