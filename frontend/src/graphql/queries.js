@@ -632,14 +632,6 @@ export const ORG_DETAILS_PAGE = gql`
       province
       verified
       summaries {
-        mail {
-          total
-          categories {
-            name
-            count
-            percentage
-          }
-        }
         web {
           total
           categories {

@@ -67,21 +67,6 @@ describe('<OrganizationDetails />', () => {
                 province: 'ON',
                 verified: true,
                 summaries: {
-                  mail: {
-                    total: 86954,
-                    categories: [
-                      {
-                        name: 'pass',
-                        count: 7435,
-                        percentage: 50,
-                      },
-                      {
-                        name: 'fail',
-                        count: 7435,
-                        percentage: 43.5,
-                      },
-                    ],
-                  },
                   web: {
                     total: 54386,
                     categories: [
@@ -208,24 +193,6 @@ describe('<OrganizationDetails />', () => {
                 province: 'Ontario',
                 verified: true,
                 summaries: {
-                  mail: {
-                    total: 82,
-                    categories: [
-                      {
-                        name: 'pass',
-                        count: 0,
-                        percentage: 0,
-                        __typename: 'SummaryCategory',
-                      },
-                      {
-                        name: 'fail',
-                        count: 82,
-                        percentage: 100,
-                        __typename: 'SummaryCategory',
-                      },
-                    ],
-                    __typename: 'CategorizedSummary',
-                  },
                   web: {
                     total: 82,
                     categories: [
