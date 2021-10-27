@@ -1,7 +1,7 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
-const { databaseOptions } = require('../../database-options')
+const { databaseOptions } = require('../../../database-options')
 
 const { checkDomain } = require('../check-domain')
 

@@ -1,7 +1,7 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
-const { databaseOptions } = require('../../database-options')
+const { databaseOptions } = require('../../../database-options')
 const { slugify } = require('../slugify')
 
 const { createOrganization } = require('../create-organization')
@@ -112,7 +112,13 @@ describe('given the createOrganization function', () => {
       },
     }
 
-    const checkOrg = await createOrganization({ slugify, data, key, trx, query })
+    const checkOrg = await createOrganization({
+      slugify,
+      data,
+      key,
+      trx,
+      query,
+    })
 
     // commit the transaction
     await trx.commit()

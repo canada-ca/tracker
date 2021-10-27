@@ -15,7 +15,8 @@
   "dependencies": {
     "arangojs": "^7.5.0",
     "dotenv-safe": "^8.2.0",
-    "url-slug": "^3.0.2"
+    "url-slug": "^3.0.2",
+    "yargs": "^17.2.1"
   },
   "devDependencies": {
     "arango-tools": "^0.5.0",

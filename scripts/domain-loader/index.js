@@ -1,64 +1,46 @@
 require('dotenv-safe').config()
+
 const { Database, aql } = require('arangojs')
+const yargs = require('yargs/yargs')
+const { hideBin } = require('yargs/helpers')
 
-const {
-  FILE = './organization-domains.json',
-  DB_PASS: rootPass,
-  DB_URL: url,
-  DB_NAME: databaseName,
-} = process.env
+const { addOrganizationsDomains, alignOrganizationsDomains } = require('./src')
 
-const {
-  checkClaimCount,
-  checkDomain,
-  checkOrganization,
-  createClaim,
-  createDomain,
-  createOrganization,
-  slugify,
-} = require('./src')
+const argv = yargs(hideBin(process.argv))
+  .usage('Usage: $0 <command> [options]')
+  .command(
+    'add',
+    'Add organizations and domains to the database from a JSON file',
+  )
+  .command(
+    'align',
+    'Add and remove organizations and domains to align with a JSON file',
+  )
+  .example(
+    '$0 add -f ./organization-domains.json',
+    'add new organizations and domains to the database from the given JSON file',
+  )
+  .alias('f', 'file')
+  .nargs('f', 1)
+  .describe(
+    'f',
+    'Structured JSON file containing list of organizations and their domains',
+  )
+  .demandOption(['f'])
+  .help('h')
+  .alias('h', 'help')
+  .version(false).argv
+
+const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 
 ;(async () => {
   let data
   try {
-    data = require(FILE)
+    data = require(argv.file)
   } catch (err) {
     console.error(err)
     return
   }
-
-  const collections = [
-    'affiliations',
-    'aggregateGuidanceTags',
-    'chartSummaries',
-    'chartSummaryCriteria',
-    'claims',
-    'dkim',
-    'dkimGuidanceTags',
-    'dkimResults',
-    'dkimToDkimResults',
-    'dmarc',
-    'dmarcGuidanceTags',
-    'dmarcSummaries',
-    'domains',
-    'domainsDKIM',
-    'domainsDMARC',
-    'domainsHTTPS',
-    'domainsSPF',
-    'domainsSSL',
-    'domainsToDmarcSummaries',
-    'https',
-    'httpsGuidanceTags',
-    'organizations',
-    'ownership',
-    'scanSummaries',
-    'scanSummaryCriteria',
-    'spf',
-    'spfGuidanceTags',
-    'ssl',
-    'sslGuidanceTags',
-    'users',
-  ]
 
   const db = new Database({
     url,
@@ -72,53 +54,11 @@ const {
     })
   }
 
-  for (const key in data) {
-    const trx = await db.beginTransaction(collections)
-    let org
-    org = await checkOrganization({ data, key, query })
-
-    if (!org) {
-      org = await createOrganization({ slugify, data, key, trx, query })
-    }
-
-    for (const domain of data[key].domains) {
-      const checkedDomain = await checkDomain({ query, domain })
-
-      if (!checkedDomain) {
-        const savedDomain = await createDomain({ trx, query, domain })
-
-        await createClaim({
-          trx,
-          query,
-          domainId: savedDomain._id,
-          orgId: org._id,
-        })
-      } else {
-        const claimCount = await checkClaimCount({
-          query,
-          domainId: checkedDomain._id,
-        })
-
-        if (claimCount === 0) {
-          await createClaim({
-            trx,
-            query,
-            domainId: checkedDomain._id,
-            orgId: org._id,
-          })
-        }
-      }
-      console.log({
-        org: key,
-        domain,
-        saved: true,
-      })
-    }
-
-    try {
-      trx.commit()
-    } catch (err) {
-      throw new Error(err)
-    }
+  switch (argv._) {
+    case 'add':
+      addOrganizationsDomains({ db, query, data })
+      break
+    case 'align':
+      alignOrganizationsDomains({ db, query, data })
   }
 })()
