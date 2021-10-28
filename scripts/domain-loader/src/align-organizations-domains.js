@@ -6,7 +6,7 @@ const {
   createDomain,
   createOrganization,
   slugify,
-} = require('./src')
+} = require('./helpers')
 
 const alignOrganizationsDomains = () => {}
 

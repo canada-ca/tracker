@@ -33,6 +33,8 @@ const argv = yargs(hideBin(process.argv))
 
 const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 
+const data = require(argv.file)
+
 ;(async () => {
   let data
   try {

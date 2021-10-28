@@ -6,7 +6,7 @@ const {
   createDomain,
   createClaim,
   checkClaimCount,
-} = require('./src')
+} = require('./helpers')
 
 const addOrganizationsDomains = async ({ db, query, data }) => {
   const collections = ['claims', 'domains', 'organizations']
