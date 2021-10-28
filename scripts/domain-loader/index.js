@@ -35,12 +35,10 @@ const {
   DB_NAME: databaseName,
 } = process.env
 
-const data = require(path.join(__dirname, FILE))
-
 ;(async () => {
   let data
   try {
-    data = require(argv.file)
+    data = require(FILE)
   } catch (err) {
     console.error(err)
     return
