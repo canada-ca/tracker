@@ -56,11 +56,18 @@ const {
     })
   }
 
-  switch (argv._) {
+  try {
+    await db.exists()
+  } catch (err) {
+    console.error('Error while checking if database exists\n', err)
+  }
+
+  switch (argv._[0]) {
     case 'add':
       await addOrganizationsDomains({ db, query, data })
       break
     case 'align':
       await alignOrganizationsDomains({ db, query, data })
+      break
   }
 })()
