@@ -29,9 +29,9 @@ spec:
                     secretKeyRef:
                       key: az-dbdump-sak
                       name: az-dbdump-sak
-                  volumeMounts:
-                    - mountPath: /tmp/dump
-                      name: dump
+              volumeMounts:
+                - mountPath: /tmp/dump
+                  name: dump
               image: rclone/rclone
               name: upload
           initContainers:
