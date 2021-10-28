@@ -428,6 +428,8 @@ const mocks = {
       ],
     }
 
+    const dmarcPhase = dmarcPhaseSummaryMock()
+
     const affiliationCount = faker.datatype.number({ min: 0, max: 200 })
 
     return {
@@ -444,7 +446,7 @@ const mocks = {
       name,
       province,
       slug,
-      summaries: { web, mail },
+      summaries: { web, mail, dmarcPhase },
     }
   },
   OrganizationConnection: () => {
@@ -552,6 +554,67 @@ const getConnectionObject = (store, args, resolveInfo) => {
   }
 }
 
+const dmarcPhaseSummaryMock = () => {
+  // DMARC phases:
+  // NA. Not Implemented
+  //  1. Assess
+  //  2. Deploy
+  //  3. Enforce
+  //  4. Maintain
+
+  const notImplementedTotal = faker.datatype.number({ min: 1, max: 2000 })
+  const assessTotal = faker.datatype.number({ min: 1, max: 2000 })
+  const deployTotal = faker.datatype.number({ min: 1, max: 2000 })
+  const enforceTotal = faker.datatype.number({ min: 1, max: 2000 })
+  const maintainTotal = faker.datatype.number({ min: 1, max: 2000 })
+
+  const totalDomains =
+    notImplementedTotal +
+    assessTotal +
+    deployTotal +
+    enforceTotal +
+    maintainTotal
+
+  const notImplementedCategory = {
+    name: 'not implemented',
+    count: notImplementedTotal,
+    percentage: (notImplementedTotal / totalDomains) * 100,
+  }
+  const assessCategory = {
+    name: 'assess',
+    count: assessTotal,
+    percentage: (assessTotal / totalDomains) * 100,
+  }
+  const deployCategory = {
+    name: 'deploy',
+    count: deployTotal,
+    percentage: (deployTotal / totalDomains) * 100,
+  }
+  const enforceCategory = {
+    name: 'enforce',
+    count: enforceTotal,
+    percentage: (enforceTotal / totalDomains) * 100,
+  }
+  const maintainCategory = {
+    name: 'maintain',
+    count: maintainTotal,
+    percentage: (maintainTotal / totalDomains) * 100,
+  }
+
+  const categories = [
+    notImplementedCategory,
+    assessCategory,
+    deployCategory,
+    enforceCategory,
+    maintainCategory,
+  ]
+
+  return {
+    total: totalDomains,
+    categories,
+  }
+}
+
 // Create a new schema with mocks and resolvers
 const schemaWithMocks = addMocksToSchema({
   schema,
@@ -574,64 +637,7 @@ const schemaWithMocks = addMocksToSchema({
         return getConnectionObject(store, args, resolveInfo)
       },
       dmarcPhaseSummary: (_, _args, _context, _resolveInfo) => {
-        // DMARC phases:
-        // NA. Not Implemented
-        //  1. Assess
-        //  2. Deploy
-        //  3. Enforce
-        //  4. Maintain
-
-        const notImplementedTotal = faker.datatype.number({ min: 1, max: 2000 })
-        const assessTotal = faker.datatype.number({ min: 1, max: 2000 })
-        const deployTotal = faker.datatype.number({ min: 1, max: 2000 })
-        const enforceTotal = faker.datatype.number({ min: 1, max: 2000 })
-        const maintainTotal = faker.datatype.number({ min: 1, max: 2000 })
-
-        const totalDomains =
-          notImplementedTotal +
-          assessTotal +
-          deployTotal +
-          enforceTotal +
-          maintainTotal
-
-        const notImplementedCategory = {
-          name: 'not implemented',
-          count: notImplementedTotal,
-          percentage: (notImplementedTotal / totalDomains) * 100,
-        }
-        const assessCategory = {
-          name: 'assess',
-          count: assessTotal,
-          percentage: (assessTotal / totalDomains) * 100,
-        }
-        const deployCategory = {
-          name: 'deploy',
-          count: deployTotal,
-          percentage: (deployTotal / totalDomains) * 100,
-        }
-        const enforceCategory = {
-          name: 'enforce',
-          count: enforceTotal,
-          percentage: (enforceTotal / totalDomains) * 100,
-        }
-        const maintainCategory = {
-          name: 'maintain',
-          count: maintainTotal,
-          percentage: (maintainTotal / totalDomains) * 100,
-        }
-
-        const categories = [
-          notImplementedCategory,
-          assessCategory,
-          deployCategory,
-          enforceCategory,
-          maintainCategory,
-        ]
-
-        return {
-          total: totalDomains,
-          categories,
-        }
+        return dmarcPhaseSummaryMock()
       },
     },
     DetailTables: {

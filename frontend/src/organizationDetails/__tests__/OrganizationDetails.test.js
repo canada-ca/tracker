@@ -67,8 +67,8 @@ describe('<OrganizationDetails />', () => {
                 province: 'ON',
                 verified: true,
                 summaries: {
-                  mail: {
-                    total: 86954,
+                  web: {
+                    total: 54386,
                     categories: [
                       {
                         name: 'pass',
@@ -82,18 +82,33 @@ describe('<OrganizationDetails />', () => {
                       },
                     ],
                   },
-                  web: {
-                    total: 54386,
+                  dmarcPhase: {
+                    total: 5355,
                     categories: [
                       {
-                        name: 'pass',
-                        count: 7435,
-                        percentage: 50,
+                        name: 'not implemented',
+                        count: 611,
+                        percentage: 11.409897292250234,
                       },
                       {
-                        name: 'fail',
-                        count: 7435,
-                        percentage: 43.5,
+                        name: 'assess',
+                        count: 410,
+                        percentage: 7.65639589169001,
+                      },
+                      {
+                        name: 'deploy',
+                        count: 1751,
+                        percentage: 32.698412698412696,
+                      },
+                      {
+                        name: 'enforce',
+                        count: 1248,
+                        percentage: 23.30532212885154,
+                      },
+                      {
+                        name: 'maintain',
+                        count: 1335,
+                        percentage: 24.92997198879552,
                       },
                     ],
                   },
@@ -178,24 +193,6 @@ describe('<OrganizationDetails />', () => {
                 province: 'Ontario',
                 verified: true,
                 summaries: {
-                  mail: {
-                    total: 82,
-                    categories: [
-                      {
-                        name: 'pass',
-                        count: 0,
-                        percentage: 0,
-                        __typename: 'SummaryCategory',
-                      },
-                      {
-                        name: 'fail',
-                        count: 82,
-                        percentage: 100,
-                        __typename: 'SummaryCategory',
-                      },
-                    ],
-                    __typename: 'CategorizedSummary',
-                  },
                   web: {
                     total: 82,
                     categories: [
@@ -209,6 +206,42 @@ describe('<OrganizationDetails />', () => {
                         name: 'fail',
                         count: 77,
                         percentage: 93.9,
+                        __typename: 'SummaryCategory',
+                      },
+                    ],
+                    __typename: 'CategorizedSummary',
+                  },
+                  dmarcPhase: {
+                    total: 5355,
+                    categories: [
+                      {
+                        name: 'not implemented',
+                        count: 611,
+                        percentage: 11.409897292250234,
+                        __typename: 'SummaryCategory',
+                      },
+                      {
+                        name: 'assess',
+                        count: 410,
+                        percentage: 7.65639589169001,
+                        __typename: 'SummaryCategory',
+                      },
+                      {
+                        name: 'deploy',
+                        count: 1751,
+                        percentage: 32.698412698412696,
+                        __typename: 'SummaryCategory',
+                      },
+                      {
+                        name: 'enforce',
+                        count: 1248,
+                        percentage: 23.30532212885154,
+                        __typename: 'SummaryCategory',
+                      },
+                      {
+                        name: 'maintain',
+                        count: 1335,
+                        percentage: 24.92997198879552,
                         __typename: 'SummaryCategory',
                       },
                     ],

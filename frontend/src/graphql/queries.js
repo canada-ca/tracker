@@ -632,7 +632,7 @@ export const ORG_DETAILS_PAGE = gql`
       province
       verified
       summaries {
-        mail {
+        web {
           total
           categories {
             name
@@ -640,7 +640,7 @@ export const ORG_DETAILS_PAGE = gql`
             percentage
           }
         }
-        web {
+        dmarcPhase {
           total
           categories {
             name
