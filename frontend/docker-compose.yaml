@@ -13,7 +13,7 @@ services:
       - "3000:3000"
       - "3001:3001"
   frontend: # localhost:3000/* is sent to frontend
-    image: node:alpine
+    image: node:16.3.0-alpine
     working_dir: /app
     command: npm run dev
     volumes:
@@ -21,12 +21,12 @@ services:
     expose:
       - "3000"
   mocked_api: # available at localhost:3000/graphql
-    image: node:alpine
+    image: node:16.3.0-alpine
     working_dir: /app
     command: npm run mocker
     volumes:
       - ./mocking/:/app/mocking
-      - ./node_modules/:/app/node_modules/
+      - ./node_modules/:/app/node_modules
       - ./package.json:/app/package.json
       - ./.babelrc:/app/.babelrc
     expose:
