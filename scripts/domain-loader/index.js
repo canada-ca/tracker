@@ -1,8 +1,12 @@
-require('dotenv-safe').config()
-
 const { Database, aql } = require('arangojs')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
+
+const path = require('path')
+require('dotenv-safe').config({
+  path: path.join(__dirname, '/.env'),
+  example: path.join(__dirname, '/.env.example'),
+})
 
 const { addOrganizationsDomains, alignOrganizationsDomains } = require('./src')
 
@@ -17,23 +21,21 @@ const argv = yargs(hideBin(process.argv))
     'Add and remove organizations and domains to align with a JSON file',
   )
   .example(
-    '$0 add -f ./organization-domains.json',
-    'add new organizations and domains to the database from the given JSON file',
+    '$0 add',
+    'add new organizations and domains to the database from a JSON file',
   )
-  .alias('f', 'file')
-  .nargs('f', 1)
-  .describe(
-    'f',
-    'Structured JSON file containing list of organizations and their domains',
-  )
-  .demandOption(['f'])
   .help('h')
   .alias('h', 'help')
   .version(false).argv
 
-const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
+const {
+  FILE,
+  DB_PASS: rootPass,
+  DB_URL: url,
+  DB_NAME: databaseName,
+} = process.env
 
-const data = require(argv.file)
+const data = require(path.join(__dirname, FILE))
 
 ;(async () => {
   let data
@@ -58,9 +60,9 @@ const data = require(argv.file)
 
   switch (argv._) {
     case 'add':
-      addOrganizationsDomains({ db, query, data })
+      await addOrganizationsDomains({ db, query, data })
       break
     case 'align':
-      alignOrganizationsDomains({ db, query, data })
+      await alignOrganizationsDomains({ db, query, data })
   }
 })()

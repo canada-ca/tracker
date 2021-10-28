@@ -8,7 +8,7 @@ const {
   slugify,
 } = require('./helpers')
 
-const alignOrganizationsDomains = () => {}
+const alignOrganizationsDomains = async () => {}
 
 module.exports = {
   alignOrganizationsDomains,
