@@ -97,7 +97,7 @@ def update_dmarc_phase_chart_summaries(db):
         phase = domain.get("phase")
 
         if phase is None:
-            logging.info(f"Phase property does not exist for domain \"${domain.domain}\".")
+            logging.info(f"Property \"phase\" does not exist for domain \"${domain['domain']}\".")
             continue
 
         if phase == "not implemented":
@@ -243,8 +243,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
             phase = domain.get("phase")
 
             if phase is None:
-                logging.info(
-                    f"Property \"phase\" does not exist for domain \"${domain.domain}\".")
+                logging.info(f"Property \"phase\" does not exist for domain \"${domain['domain']}\".")
                 continue
 
             if phase == "not implemented":
