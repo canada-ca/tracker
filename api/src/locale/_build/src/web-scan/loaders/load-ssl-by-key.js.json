@@ -1,0 +1,14 @@
+{
+  "Unable to find ssl scan. Please try again.": {
+    "origin": [
+      [
+        "src/web-scan/loaders/load-ssl-by-key.js",
+        17
+      ],
+      [
+        "src/web-scan/loaders/load-ssl-by-key.js",
+        29
+      ]
+    ]
+  }
+}

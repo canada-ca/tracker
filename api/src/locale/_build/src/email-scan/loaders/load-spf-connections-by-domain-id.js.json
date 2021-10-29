@@ -1,0 +1,54 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `spf` connection.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-spf-connections-by-domain-id.js",
+        40
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `spf` connection is not supported.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-spf-connections-by-domain-id.js",
+        49
+      ]
+    ]
+  },
+  "`{argSet}` on the `spf` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-spf-connections-by-domain-id.js",
+        61
+      ]
+    ]
+  },
+  "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-spf-connections-by-domain-id.js",
+        72
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-spf-connections-by-domain-id.js",
+        87
+      ]
+    ]
+  },
+  "Unable to load spf scans. Please try again.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-spf-connections-by-domain-id.js",
+        143
+      ],
+      [
+        "src/email-scan/loaders/load-spf-connections-by-domain-id.js",
+        153
+      ]
+    ]
+  }
+}

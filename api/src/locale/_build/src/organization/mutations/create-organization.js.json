@@ -1,0 +1,22 @@
+{
+  "Unable to create organization. Please try again.": {
+    "origin": [
+      [
+        "src/organization/mutations/create-organization.js",
+        134
+      ],
+      [
+        "src/organization/mutations/create-organization.js",
+        188
+      ],
+      [
+        "src/organization/mutations/create-organization.js",
+        209
+      ],
+      [
+        "src/organization/mutations/create-organization.js",
+        220
+      ]
+    ]
+  }
+}

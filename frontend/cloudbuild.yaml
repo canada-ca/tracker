@@ -1,36 +1,35 @@
 steps:
-
-  - name: node:alpine
+  - name: node:16.3.0-alpine
     id: install
     dir: frontend
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - name: node:alpine
+  - name: node:16.3.0-alpine
     id: lint
     dir: frontend
     entrypoint: npm
     args: ['run', 'lint']
 
-  - name: node:alpine
+  - name: node:16.3.0-alpine
     id: test
     dir: frontend
     entrypoint: npm
     args: ['test']
 
-  - name: node:alpine
+  - name: node:16.3.0-alpine
     id: lingui-extract
     dir: frontend
     entrypoint: npm
     args: ['run', 'extract']
 
-  - name: node:alpine
+  - name: node:16.3.0-alpine
     id: lingui-compile
     dir: frontend
     entrypoint: npm
     args: ['run', 'compile']
 
-  - name: node:alpine
+  - name: node:16.3.0-alpine
     id: build-production-bundle
     dir: frontend
     entrypoint: npm
@@ -45,35 +44,34 @@ steps:
       - |
         echo "gcr.io/$PROJECT_ID/frontend:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-
   - name: 'gcr.io/cloud-builders/docker'
     id: build-if-master
     entrypoint: 'bash'
     dir: frontend
     args:
-    - '-c'
-    - |
-      if [[ "$BRANCH_NAME" == "master" ]]
-      then
-        image=$(cat /workspace/imagename)
-        docker build -t $image .
-      else
-        exit 0
-      fi
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker build -t $image .
+        else
+          exit 0
+        fi
 
   - name: 'gcr.io/cloud-builders/docker'
     id: push-if-master
     entrypoint: 'bash'
     args:
-    - '-c'
-    - |
-      if [[ "$BRANCH_NAME" == "master" ]]
-      then
-        image=$(cat /workspace/imagename)
-        docker push $image
-      else
-        exit 0
-      fi
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi
 
 timeout: 1200s
 options:

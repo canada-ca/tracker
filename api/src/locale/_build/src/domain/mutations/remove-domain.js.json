@@ -1,0 +1,50 @@
+{
+  "Unable to remove domain. Please try again.": {
+    "origin": [
+      [
+        "src/domain/mutations/remove-domain.js",
+        58
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        69
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        80
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        87
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        100
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        171
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        188
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        209
+      ],
+      [
+        "src/domain/mutations/remove-domain.js",
+        220
+      ]
+    ]
+  },
+  "Successfully removed domain: {0} from {1}.": {
+    "origin": [
+      [
+        "src/domain/mutations/remove-domain.js",
+        228
+      ]
+    ]
+  }
+}

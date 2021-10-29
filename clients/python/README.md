@@ -1,6 +1,6 @@
 # Tracker Python API Client
 
-The Tracker Python API Client provides a simple Python interface for the [Tracker GraphQL API](https://github.com/canada-ca/tracker/blob/master/api-js/README.md), with the aim of allowing users to easily integrate data from Tracker into existing workflows and platforms. It allows access to the JSON data served by the API without requiring specific knowledge of [GraphQL](https://graphql.org/) or the Tracker API. This is done by providing an object-oriented interface to execute canned queries against the API using [gql](https://github.com/graphql-python/gql). Responses are formatted to remove pagination related structures, and to ensure useful keys are always present.
+The Tracker Python API Client provides a simple Python interface for the [Tracker GraphQL API](https://github.com/canada-ca/tracker/blob/master/api/README.md), with the aim of allowing users to easily integrate data from Tracker into existing workflows and platforms. It allows access to the JSON data served by the API without requiring specific knowledge of [GraphQL](https://graphql.org/) or the Tracker API. This is done by providing an object-oriented interface to execute canned queries against the API using [gql](https://github.com/graphql-python/gql). Responses are formatted to remove pagination related structures, and to ensure useful keys are always present.
 
 
 ## Installation

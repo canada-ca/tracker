@@ -7,15 +7,13 @@ spec:
   schedule: "30 10 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
-  successfulJobsHistoryLimit: 0
-  failedJobsHistoryLimit: 0
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: dmarc-report
-            image: gcr.io/track-compliance/dmarc-report:master-1030db4-1632940427 # {"$imagepolicy": "flux-system:dmarc-report"}
+            image: gcr.io/track-compliance/dmarc-report:master-c51ff12-1634936950 # {"$imagepolicy": "flux-system:dmarc-report"}
             env:
             - name: DB_NAME
               valueFrom:

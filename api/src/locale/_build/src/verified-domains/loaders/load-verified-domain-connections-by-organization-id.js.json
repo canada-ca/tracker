@@ -1,0 +1,54 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection.": {
+    "origin": [
+      [
+        "src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js",
+        32
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported.": {
+    "origin": [
+      [
+        "src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js",
+        41
+      ]
+    ]
+  },
+  "`{argSet}` on the `verifiedDomain` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js",
+        53
+      ]
+    ]
+  },
+  "Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js",
+        64
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js",
+        79
+      ]
+    ]
+  },
+  "Unable to load verified domains. Please try again.": {
+    "origin": [
+      [
+        "src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js",
+        136
+      ],
+      [
+        "src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js",
+        148
+      ]
+    ]
+  }
+}

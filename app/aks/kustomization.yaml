@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - ../bases
 - storage-classes.yaml
+# - backup-cronjob.yaml
 patchesStrategicMerge:
 - arangodb-deployment.yaml
 - certificate.yaml

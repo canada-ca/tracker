@@ -217,7 +217,7 @@ export function UserListModal({
                     )}
                     {(editingUserRole === 'SUPER_ADMIN' ||
                       (permission === 'SUPER_ADMIN' &&
-                        orgSlug === 'super-admin')) && (
+                        ['super-admin', 'sa'].includes(orgSlug))) && (
                       <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
                     )}
                   </Select>

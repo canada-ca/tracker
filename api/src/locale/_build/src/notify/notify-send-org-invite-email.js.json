@@ -1,0 +1,10 @@
+{
+  "Unable to send org invite email. Please try again.": {
+    "origin": [
+      [
+        "src/notify/notify-send-org-invite-email.js",
+        20
+      ]
+    ]
+  }
+}

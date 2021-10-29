@@ -1,0 +1,26 @@
+{
+  "Unable to load web summary. Please try again.": {
+    "origin": [
+      [
+        "src/summaries/queries/web-summary.js",
+        13
+      ]
+    ]
+  },
+  "pass": {
+    "origin": [
+      [
+        "src/summaries/queries/web-summary.js",
+        18
+      ]
+    ]
+  },
+  "fail": {
+    "origin": [
+      [
+        "src/summaries/queries/web-summary.js",
+        23
+      ]
+    ]
+  }
+}

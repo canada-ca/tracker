@@ -1,0 +1,10 @@
+{
+  "If an account with this username is found, an email verification link will be found in your inbox.": {
+    "origin": [
+      [
+        "src/user/mutations/send-email-verification.js",
+        71
+      ]
+    ]
+  }
+}

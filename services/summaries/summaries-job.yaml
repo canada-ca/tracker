@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: Job
 metadata:
   name: summaries-job
@@ -7,30 +7,30 @@ spec:
   template:
     spec:
       containers:
-      - name: summaries
-        image: gcr.io/track-compliance/services/summaries:master-29b26c7-1632938197 # {"$imagepolicy": "flux-system:summaries"}
-        env:
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_USER
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_PASS
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_HOST
-        - name: DB_PORT
-          value: "8529"
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_NAME
+        - name: summaries
+          image: gcr.io/track-compliance/services/summaries:master-85c7685-1635535936 # {"$imagepolicy": "flux-system:summaries"}
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "8529"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
       restartPolicy: Never
   backoffLimit: 4

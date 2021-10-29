@@ -1,0 +1,54 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js",
+        30
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js",
+        39
+      ]
+    ]
+  },
+  "`{argSet}` on the `dkimResults` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js",
+        51
+      ]
+    ]
+  },
+  "Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js",
+        62
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js",
+        77
+      ]
+    ]
+  },
+  "Unable to load dkim results. Please try again.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js",
+        131
+      ],
+      [
+        "src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js",
+        141
+      ]
+    ]
+  }
+}

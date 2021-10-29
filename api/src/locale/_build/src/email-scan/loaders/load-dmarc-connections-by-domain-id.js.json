@@ -1,0 +1,54 @@
+{
+  "You must provide a `first` or `last` value to properly paginate the `dmarc` connection.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dmarc-connections-by-domain-id.js",
+        40
+      ]
+    ]
+  },
+  "Passing both `first` and `last` to paginate the `dmarc` connection is not supported.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dmarc-connections-by-domain-id.js",
+        49
+      ]
+    ]
+  },
+  "`{argSet}` on the `dmarc` connection cannot be less than zero.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dmarc-connections-by-domain-id.js",
+        62
+      ]
+    ]
+  },
+  "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dmarc-connections-by-domain-id.js",
+        73
+      ]
+    ]
+  },
+  "`{argSet}` must be of type `number` not `{typeSet}`.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dmarc-connections-by-domain-id.js",
+        88
+      ]
+    ]
+  },
+  "Unable to load dmarc scans. Please try again.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dmarc-connections-by-domain-id.js",
+        145
+      ],
+      [
+        "src/email-scan/loaders/load-dmarc-connections-by-domain-id.js",
+        155
+      ]
+    ]
+  }
+}

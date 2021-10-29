@@ -12,6 +12,7 @@ python-dotenv = "*"
 pyopenssl = "*"
 sslyze = "*"
 scapy = "*"
+setproctitle = "*"
 
 [dev-packages]
 pytest = "*"

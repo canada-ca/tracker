@@ -1,0 +1,26 @@
+{
+  "Authentication error. Please sign in again.": {
+    "origin": [
+      [
+        "src/auth/check-permission.js",
+        19
+      ],
+      [
+        "src/auth/check-permission.js",
+        46
+      ]
+    ]
+  },
+  "Unable to check permission. Please try again.": {
+    "origin": [
+      [
+        "src/auth/check-permission.js",
+        29
+      ],
+      [
+        "src/auth/check-permission.js",
+        55
+      ]
+    ]
+  }
+}

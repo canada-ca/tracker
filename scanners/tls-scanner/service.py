@@ -7,7 +7,7 @@ import os
 import signal
 import traceback
 import datetime as dt
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from operator import itemgetter
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
@@ -98,7 +98,7 @@ async def run(loop):
             scanner = TLSScanner(domain)
 
             loop = asyncio.get_event_loop()
-            with ThreadPoolExecutor() as executor:
+            with ProcessPoolExecutor() as executor:
                 scan_results = await loop.run_in_executor(executor, scanner.run)
         except TimeoutError:
             await nc.publish(
@@ -157,6 +157,9 @@ async def run(loop):
 
 
 if __name__ == "__main__":
+    import setproctitle
+
+    setproctitle.setproctitle('tls-scanner')
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run(loop))
     try:

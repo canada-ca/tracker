@@ -1,0 +1,18 @@
+{
+  "Authentication error. Please sign in.": {
+    "origin": [
+      [
+        "src/auth/user-required.js",
+        12
+      ],
+      [
+        "src/auth/user-required.js",
+        23
+      ],
+      [
+        "src/auth/user-required.js",
+        30
+      ]
+    ]
+  }
+}

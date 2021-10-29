@@ -13,6 +13,7 @@ spec:
     defaultConfig:
       tracing:
         sampling: 100.0
+    accessLogEncoding: JSON
   components:
     pilot:
       k8s:

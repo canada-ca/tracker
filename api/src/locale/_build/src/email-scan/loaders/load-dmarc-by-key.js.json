@@ -1,0 +1,14 @@
+{
+  "Unable to find dmarc scan. Please try again.": {
+    "origin": [
+      [
+        "src/email-scan/loaders/load-dmarc-by-key.js",
+        18
+      ],
+      [
+        "src/email-scan/loaders/load-dmarc-by-key.js",
+        30
+      ]
+    ]
+  }
+}

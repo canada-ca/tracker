@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: Job
 metadata:
   name: guidance-job
@@ -8,25 +8,25 @@ spec:
   template:
     spec:
       containers:
-      - name: guidance
-        image: gcr.io/track-compliance/services/guidance:master-ea926c6-1632520273 # {"$imagepolicy": "flux-system:guidance"}
-        env:
-        - name: DB_URL
-          value: "http://arangodb.db:8529"
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_USER
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_PASS
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_NAME
+        - name: guidance
+          image: gcr.io/track-compliance/services/guidance:master-cd3c41a-1635436294 # {"$imagepolicy": "flux-system:guidance"}
+          env:
+            - name: DB_URL
+              value: "http://arangodb.db:8529"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
       restartPolicy: Never
   backoffLimit: 4

@@ -94,15 +94,21 @@ def update_dmarc_phase_chart_summaries(db):
 
     for domain in db.collection("domains"):
 
-        if domain["phase"] == "not implemented":
+        phase = domain.get("phase")
+
+        if phase is None:
+            logging.info(f"Phase property does not exist for domain \"${domain.domain}\".")
+            continue
+
+        if phase == "not implemented":
             not_implemented_count = not_implemented_count + 1
-        elif domain["phase"] == "assess":
+        elif phase == "assess":
             assess_count = assess_count + 1
-        elif domain["phase"] == "deploy":
+        elif phase == "deploy":
             deploy_count = deploy_count + 1
-        elif domain["phase"] == "enforce":
+        elif phase == "enforce":
             enforce_count = enforce_count + 1
-        elif domain["phase"] == "maintain":
+        elif phase == "maintain":
             maintain_count = maintain_count + 1
 
     domain_total = not_implemented_count + assess_count + deploy_count + \
@@ -203,6 +209,11 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
         web_pass = 0
         mail_fail = 0
         mail_pass = 0
+        dmarc_phase_not_implemented = 0
+        dmarc_phase_assess = 0
+        dmarc_phase_deploy = 0
+        dmarc_phase_enforce = 0
+        dmarc_phase_maintain = 0
         domain_total = 0
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
@@ -229,6 +240,24 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
             else:
                 mail_fail = mail_fail + 1
 
+            phase = domain.get("phase")
+
+            if phase is None:
+                logging.info(
+                    f"Property \"phase\" does not exist for domain \"${domain.domain}\".")
+                continue
+
+            if phase == "not implemented":
+                dmarc_phase_not_implemented = dmarc_phase_not_implemented + 1
+            elif phase == "assess":
+                dmarc_phase_assess = dmarc_phase_assess + 1
+            elif phase == "deploy":
+                dmarc_phase_deploy = dmarc_phase_deploy + 1
+            elif phase == "enforce":
+                dmarc_phase_enforce = dmarc_phase_enforce + 1
+            elif phase == "maintain":
+                dmarc_phase_maintain = dmarc_phase_maintain + 1
+
         summary_data = {
             "summaries": {
                 "web": {
@@ -240,7 +269,15 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
                     "pass": mail_pass,
                     "fail": mail_fail,
                     "total": domain_total,
-                }
+                },
+                "dmarc_phase": {
+                        "not_implemented": dmarc_phase_not_implemented,
+                        "assess": dmarc_phase_assess,
+                        "deploy": dmarc_phase_deploy,
+                        "enforce": dmarc_phase_enforce,
+                        "maintain": dmarc_phase_maintain,
+                        "total": domain_total,
+                },
             }
         }
 

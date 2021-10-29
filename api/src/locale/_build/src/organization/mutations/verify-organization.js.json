@@ -1,0 +1,38 @@
+{
+  "Unable to verify organization. Please try again.": {
+    "origin": [
+      [
+        "src/organization/mutations/verify-organization.js",
+        47
+      ],
+      [
+        "src/organization/mutations/verify-organization.js",
+        59
+      ],
+      [
+        "src/organization/mutations/verify-organization.js",
+        99
+      ],
+      [
+        "src/organization/mutations/verify-organization.js",
+        110
+      ]
+    ]
+  },
+  "Organization has already been verified.": {
+    "origin": [
+      [
+        "src/organization/mutations/verify-organization.js",
+        68
+      ]
+    ]
+  },
+  "Successfully verified organization: {0}.": {
+    "origin": [
+      [
+        "src/organization/mutations/verify-organization.js",
+        118
+      ]
+    ]
+  }
+}

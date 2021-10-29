@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
 from dns_scanner import DMARCScanner, DKIMScanner
 from nats.aio.client import Client as NATS
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 
 load_dotenv()
 
@@ -67,7 +67,7 @@ async def run(loop):
 
             dmarc_start_time = time.monotonic()
             print(f"starting dmarc scanner")
-            with ThreadPoolExecutor() as executor:
+            with ProcessPoolExecutor() as executor:
                 dmarc_scanner = DMARCScanner(domain)
                 scan_results = await loop.run_in_executor(executor, dmarc_scanner.run)
             print(f"dmarc scan elapsed time: {time.monotonic() - dmarc_start_time}")
