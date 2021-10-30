@@ -120,6 +120,10 @@ export default function DomainsPage() {
       <InfoPanel state={infoState}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
+          title={t`Policy`}
+          info={t`Shows if the domain is Policy compliant.`}
+        />
+        <InfoBox
           title={t`Ciphers`}
           info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
         />

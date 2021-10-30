@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: Job
 metadata:
   name: scan-job
@@ -10,30 +10,30 @@ spec:
         role: scan-job
     spec:
       containers:
-      - name: scan
-        image: gcr.io/track-compliance/services/autoscan:master-b0e6547-1625576840 # {"$imagepolicy": "flux-system:autoscan"}
-        env:
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_USER
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_PASS
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_HOST
-        - name: DB_PORT
-          value: "8529"
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_NAME
+        - name: scan
+          image: gcr.io/track-compliance/services/autoscan:master-b0e6547-1625576840 # {"$imagepolicy": "flux-system:autoscan"}
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "8529"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
       restartPolicy: Never
   backoffLimit: 4
