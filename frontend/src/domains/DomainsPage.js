@@ -121,7 +121,7 @@ export default function DomainsPage() {
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
           title={t`Policy`}
-          info={t`Shows if the domain is Policy compliant.`}
+          info={t`Shows if the domain is policy compliant.`}
         />
         <InfoBox
           title={t`Ciphers`}

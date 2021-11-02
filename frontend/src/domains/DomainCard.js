@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   Box,
   Button,
@@ -51,12 +51,12 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
         <Divider variant="card" display={{ md: 'none' }} />
         <Divider variant="card" display={{ md: 'none' }} />
         <Flex {...statusGroupingProps}>
-          <StatusBadge text="Policy" status={status.policy} />
-          <StatusBadge text="HTTPS" status={status.https} />
-          <StatusBadge text="HSTS" status={status.hsts} />
-          <StatusBadge text="Ciphers" status={status.ciphers} />
-          <StatusBadge text="Curves" status={status.curves} />
-          <StatusBadge text="Protocols" status={status.protocols} />
+          <StatusBadge text={t`Policy`} status={status.policy} />
+          <StatusBadge text={t`HTTPS`} status={status.https} />
+          <StatusBadge text={t`HSTS`} status={status.hsts} />
+          <StatusBadge text={t`Ciphers`} status={status.ciphers} />
+          <StatusBadge text={t`Curves`} status={status.curves} />
+          <StatusBadge text={t`Protocols`} status={status.protocols} />
         </Flex>
         <Flex {...statusGroupingProps}>
           <StatusBadge text="SPF" status={status.spf} />

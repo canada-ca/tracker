@@ -311,7 +311,9 @@ msgstr "Changements requis pour la conformité aux exigences de configuration de
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
+#: src/domains/DomainsPage.js:127
 #: src/guidance/ScanCategoryDetails.js:214
+#: src/organizationDetails/OrganizationDomains.js:62
 msgid "Ciphers"
 msgstr "Ciphers"
 
@@ -466,12 +468,14 @@ msgstr "Mot de passe actuel:"
 msgid "Current Phone Number:"
 msgstr "Numéro de téléphone actuel:"
 
+#: src/domains/DomainsPage.js:131
 #: src/guidance/ScanCategoryDetails.js:217
+#: src/organizationDetails/OrganizationDomains.js:66
 msgid "Curves"
 msgstr "Courbes"
 
-#: src/domains/DomainsPage.js:135
-#: src/organizationDetails/OrganizationDomains.js:74
+#: src/domains/DomainsPage.js:151
+#: src/organizationDetails/OrganizationDomains.js:86
 msgid "DKIM"
 msgstr "DKIM"
 
@@ -508,12 +512,12 @@ msgstr "Sélecteurs DKIM"
 msgid "DKIM Selectors:"
 msgstr "Sélecteurs DKIM:"
 
-#: src/domains/DomainsPage.js:210
+#: src/domains/DomainsPage.js:226
 msgid "DKIM Status"
 msgstr "Statut DKIM"
 
-#: src/domains/DomainsPage.js:139
-#: src/organizationDetails/OrganizationDomains.js:78
+#: src/domains/DomainsPage.js:155
+#: src/organizationDetails/OrganizationDomains.js:90
 msgid "DMARC"
 msgstr "DMARC"
 
@@ -536,7 +540,7 @@ msgid "DMARC Phases"
 msgstr "Phases DMARC"
 
 #: src/dmarc/DmarcReportPage.js:144
-#: src/domains/DomainCard.js:88
+#: src/domains/DomainCard.js:92
 #: src/guidance/DmarcGuidancePage.js:70
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
@@ -545,7 +549,7 @@ msgstr "Rapport DMARC "
 msgid "DMARC Report for {domainSlug}"
 msgstr "Rapport DMARC pour {domainSlug}"
 
-#: src/domains/DomainsPage.js:211
+#: src/domains/DomainsPage.js:227
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
@@ -636,7 +640,7 @@ msgstr "Disposition"
 #: src/dmarc/DmarcByDomainPage.js:126
 #: src/dmarc/DmarcByDomainPage.js:297
 #: src/domains/DomainsPage.js:121
-#: src/domains/DomainsPage.js:205
+#: src/domains/DomainsPage.js:221
 #: src/organizationDetails/OrganizationDomains.js:56
 msgid "Domain"
 msgstr "Domaine"
@@ -935,7 +939,7 @@ msgstr "Direction du graphique :"
 
 #: src/dmarc/DmarcReportPage.js:245
 #: src/dmarc/DmarcReportPage.js:768
-#: src/domains/DomainCard.js:77
+#: src/domains/DomainCard.js:81
 msgid "Guidance"
 msgstr "Conseils"
 
@@ -948,6 +952,11 @@ msgstr "Étiquettes d'orientation"
 msgid "Guidance:"
 msgstr "Orientation:"
 
+#: src/domains/DomainsPage.js:135
+#: src/organizationDetails/OrganizationDomains.js:70
+msgid "HSTS"
+msgstr "HSTS"
+
 #: src/guidance/ScanCategoryDetails.js:86
 msgid "HSTS Age:"
 msgstr "Âge du HSTS:"
@@ -956,8 +965,8 @@ msgstr "Âge du HSTS:"
 msgid "HSTS Status:"
 msgstr "Statut HSTS:"
 
-#: src/domains/DomainsPage.js:123
-#: src/organizationDetails/OrganizationDomains.js:62
+#: src/domains/DomainsPage.js:139
+#: src/organizationDetails/OrganizationDomains.js:74
 msgid "HTTPS"
 msgstr "HTTPS"
 
@@ -965,7 +974,7 @@ msgstr "HTTPS"
 msgid "HTTPS Scan Complete"
 msgstr "Scan HTTPS terminé"
 
-#: src/domains/DomainsPage.js:207
+#: src/domains/DomainsPage.js:223
 msgid "HTTPS Status"
 msgstr "Statut HTTPS"
 
@@ -1179,13 +1188,13 @@ msgstr "La langue:"
 msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
 
-#: src/domains/DomainsPage.js:206
+#: src/domains/DomainsPage.js:222
 msgid "Last Scanned"
 msgstr "Dernière numérisation"
 
 #: src/organizationDetails/OrganizationDomains.js:58
-msgid "Last scanned"
-msgstr "Dernière numérisation"
+#~ msgid "Last scanned"
+#~ msgstr "Dernière numérisation"
 
 #: src/admin/AdminDomainCard.js:37
 #: src/domains/DomainCard.js:61
@@ -1306,7 +1315,7 @@ msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organi
 
 #: src/admin/AdminDomains.js:150
 #: src/domains/DomainsPage.js:83
-#: src/organizationDetails/OrganizationDomains.js:87
+#: src/organizationDetails/OrganizationDomains.js:99
 msgid "No Domains"
 msgstr "Aucun domaine"
 
@@ -1535,6 +1544,11 @@ msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 msgid "Please follow the link in order to verify your account and start using Tracker."
 msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à utiliser Tracker."
 
+#: src/domains/DomainsPage.js:123
+#: src/organizationDetails/OrganizationDomains.js:58
+msgid "Policy"
+msgstr "Politique"
+
 #: src/guidance/GuidanceTagList.js:107
 msgid "Positive Tags"
 msgstr "Étiquettes positives"
@@ -1564,6 +1578,11 @@ msgstr "Loi sur la protection de la vie privée."
 #: src/termsConditions/TermsConditionsPage.js:239
 msgid "Privacy Notice Statement"
 msgstr "Déclaration de confidentialité"
+
+#: src/domains/DomainsPage.js:143
+#: src/organizationDetails/OrganizationDomains.js:78
+msgid "Protocols"
+msgstr "Protocoles"
 
 #: src/createOrganization/CreateOrganizationPage.js:214
 #: src/createOrganization/CreateOrganizationPage.js:219
@@ -1649,8 +1668,8 @@ msgstr "Fonction:"
 msgid "Rotate DKIM keys annually."
 msgstr "Effectuer la rotation des clés DKIM annuellement."
 
-#: src/domains/DomainsPage.js:131
-#: src/organizationDetails/OrganizationDomains.js:70
+#: src/domains/DomainsPage.js:147
+#: src/organizationDetails/OrganizationDomains.js:82
 msgid "SPF"
 msgstr "SPF"
 
@@ -1675,20 +1694,20 @@ msgstr "Défaillances du SPF par adresse IP"
 msgid "SPF Results"
 msgstr "Résultats du SPF"
 
-#: src/domains/DomainsPage.js:209
+#: src/domains/DomainsPage.js:225
 msgid "SPF Status"
 msgstr "Statut SPF"
 
 #: src/domains/DomainsPage.js:127
 #: src/organizationDetails/OrganizationDomains.js:66
-msgid "SSL"
-msgstr "SSL"
+#~ msgid "SSL"
+#~ msgstr "SSL"
 
 #: src/app/RequestScanNotificationHandler.js:72
 msgid "SSL Scan Complete"
 msgstr "Analyse SSL terminée"
 
-#: src/domains/DomainsPage.js:208
+#: src/domains/DomainsPage.js:224
 msgid "SSL Status"
 msgstr "Statut SSL"
 
@@ -1750,7 +1769,7 @@ msgstr "Recherche par URL de domaine"
 
 #: src/dmarc/DmarcByDomainPage.js:223
 #: src/dmarc/DmarcByDomainPage.js:370
-#: src/domains/DomainsPage.js:174
+#: src/domains/DomainsPage.js:190
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
@@ -1761,7 +1780,7 @@ msgstr "Rechercher une organisation"
 #: src/admin/AdminDomains.js:218
 #: src/admin/UserList.js:209
 #: src/components/ReactTableGlobalFilter.js:36
-#: src/domains/DomainsPage.js:165
+#: src/domains/DomainsPage.js:181
 #: src/organizations/Organizations.js:177
 msgid "Search:"
 msgstr "Recherche:"
@@ -1813,30 +1832,65 @@ msgstr "Voir {pageSize}"
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période:"
 
-#: src/domains/DomainsPage.js:136
-#: src/organizationDetails/OrganizationDomains.js:75
+#: src/domains/DomainsPage.js:124
+#: src/organizationDetails/OrganizationDomains.js:59
+msgid "Shows if the domain is policy compliant."
+msgstr "Indique si le domaine est conforme à la politique."
+
+#: src/domains/DomainsPage.js:152
+#: src/organizationDetails/OrganizationDomains.js:87
 msgid "Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
 msgstr "Indique si le domaine répond aux exigences de DomainKeys Identified Mail (DKIM)."
 
-#: src/domains/DomainsPage.js:124
-#: src/organizationDetails/OrganizationDomains.js:63
-msgid "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments."
-msgstr "Indique si le domaine répond aux exigences du protocole de transfert hypertexte sécurisé (HTTPS)."
+#: src/domains/DomainsPage.js:136
+#: src/organizationDetails/OrganizationDomains.js:71
+msgid "Shows if the domain meets the HSTS requirements."
+msgstr "Indique si le domaine répond aux exigences du HSTS."
 
 #: src/domains/DomainsPage.js:140
-#: src/organizationDetails/OrganizationDomains.js:79
+#: src/organizationDetails/OrganizationDomains.js:75
+msgid "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements."
+msgstr "Indique si le domaine répond aux exigences du protocole de transfert hypertexte sécurisé (HTTPS)."
+
+#: src/domains/DomainsPage.js:124
+#: src/organizationDetails/OrganizationDomains.js:63
+#~ msgid "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments."
+#~ msgstr "Indique si le domaine répond aux exigences du protocole de transfert hypertexte sécurisé (HTTPS)."
+
+#: src/domains/DomainsPage.js:156
+#: src/organizationDetails/OrganizationDomains.js:91
 msgid "Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
 msgstr "Indique si le domaine répond aux exigences de Message Authentication, Reporting, and Conformance (DMARC)."
 
 #: src/domains/DomainsPage.js:128
 #: src/organizationDetails/OrganizationDomains.js:67
-msgid "Shows if the domain meets the Secure Sockets Layer (SSL) requirements."
-msgstr "Indique si le domaine répond aux exigences du protocole SSL (Secure Sockets Layer)."
+#~ msgid "Shows if the domain meets the Secure Sockets Layer (SSL) requirements."
+#~ msgstr "Indique si le domaine répond aux exigences du protocole SSL (Secure Sockets Layer)."
+
+#: src/domains/DomainsPage.js:148
+#: src/organizationDetails/OrganizationDomains.js:83
+msgid "Shows if the domain meets the Sender Policy Framework (SPF) requirements."
+msgstr "Indique si le domaine répond aux exigences du Sender Policy Framework (SPF)."
 
 #: src/domains/DomainsPage.js:132
 #: src/organizationDetails/OrganizationDomains.js:71
-msgid "Shows if the domain meets the Sender Policy Framework (SPF) requiremtns."
-msgstr "Indique si le domaine répond aux exigences du Sender Policy Framework (SPF)."
+#~ msgid "Shows if the domain meets the Sender Policy Framework (SPF) requiremtns."
+#~ msgstr "Indique si le domaine répond aux exigences du Sender Policy Framework (SPF)."
+
+#: src/domains/DomainsPage.js:144
+#: src/organizationDetails/OrganizationDomains.js:79
+msgid "Shows if the domain uses acceptable protocols."
+msgstr "Indique si le domaine utilise des protocoles acceptables."
+
+#: src/domains/DomainsPage.js:128
+#: src/organizationDetails/OrganizationDomains.js:63
+msgid "Shows if the domain uses only ciphers that are strong or acceptable."
+msgstr "Indique si le domaine utilise uniquement des ciphers forts ou acceptables."
+
+#: src/domains/DomainsPage.js:132
+#: src/organizationDetails/OrganizationDomains.js:67
+msgid "Shows if the domain uses only curves that are strong or acceptable."
+msgstr "Indique si le domaine utilise uniquement des courbes fortes ou acceptables"
 
 #: src/organizations/Organizations.js:139
 msgid "Shows the number of domains that the organization is in control of."
@@ -1904,7 +1958,7 @@ msgstr "Passer au contenu principal"
 msgid "Slug:"
 msgstr "Slug:"
 
-#: src/domains/DomainsPage.js:191
+#: src/domains/DomainsPage.js:207
 #: src/organizations/Organizations.js:203
 msgid "Sort by:"
 msgstr "Trier par:"
@@ -1998,8 +2052,8 @@ msgid "The reproduction is not represented as an official version of the materia
 msgstr "La reproduction n'est pas présentée comme une version officielle des documents reproduits, ni comme ayant été faite en affiliation avec le SCT ou sous sa direction."
 
 #: src/organizationDetails/OrganizationDomains.js:59
-msgid "The time the domain was last scanned by the system."
-msgstr "L'heure à laquelle le domaine a été analysé pour la dernière fois par le système."
+#~ msgid "The time the domain was last scanned by the system."
+#~ msgstr "L'heure à laquelle le domaine a été analysé pour la dernière fois par le système."
 
 #: src/admin/UserListModal.js:108
 msgid "The user's role has been successfully updated"
@@ -2505,6 +2559,10 @@ msgstr "{info}"
 #: src/components/InfoPanel.js:42
 msgid "{label}"
 msgstr "{label}"
+
+#: src/domains/StatusBadge.js:22
+msgid "{text}"
+msgstr ""
 
 #: src/components/InfoPanel.js:20
 msgid "{title}"
