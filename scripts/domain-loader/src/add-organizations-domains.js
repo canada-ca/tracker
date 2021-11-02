@@ -5,14 +5,44 @@ const {
   checkDomain,
   createDomain,
   createClaim,
-  checkClaimCount,
+  checkClaim,
 } = require('./helpers')
 
 const addOrganizationsDomains = async ({ db, query, data }) => {
-  const collections = ['claims', 'domains', 'organizations']
+  const requiredCollectionTypes = {
+    claims: 'edge',
+    domains: 'document',
+    organizations: 'document',
+    affiliations: 'edge',
+  }
+
+  // check if collections exist
+  const existingCollections = (await db.listCollections()).map((collection) => {
+    return collection.name
+  })
+
+  for (const key of Object.keys(requiredCollectionTypes)) {
+    console.log(`Checking if collection "${key}" exists`)
+    if (!existingCollections.includes(key)) {
+      // collection does not exist, create collection
+      console.log(
+        `Collection "${key} does not exist, creating collection ${key}"`,
+      )
+      if (requiredCollectionTypes[key] === 'document') {
+        // create document collection
+        await db.createCollection(key)
+      } else {
+        // create edge collection
+        await db.createEdgeCollection(key)
+      }
+    } else {
+      // collections exists
+      console.log(`Collection "${key}" exists`)
+    }
+  }
 
   for (const key in data) {
-    const trx = await db.beginTransaction(collections)
+    const trx = await db.beginTransaction(Object.keys(requiredCollectionTypes))
     let org
     org = await checkOrganization({ data, key, query })
 
@@ -33,12 +63,13 @@ const addOrganizationsDomains = async ({ db, query, data }) => {
           orgId: org._id,
         })
       } else {
-        const claimCount = await checkClaimCount({
+        const claim = await checkClaim({
           query,
           domainId: checkedDomain._id,
+          orgId: org._id,
         })
 
-        if (claimCount === 0) {
+        if (!claim) {
           await createClaim({
             trx,
             query,
@@ -55,7 +86,7 @@ const addOrganizationsDomains = async ({ db, query, data }) => {
     }
 
     try {
-      trx.commit()
+      await trx.commit()
     } catch (err) {
       throw new Error(err)
     }

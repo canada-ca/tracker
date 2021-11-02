@@ -3,7 +3,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ensure, dbNameFromFile } = require('arango-tools')
 const { databaseOptions } = require('../../../database-options')
 
-const { checkClaimCount } = require('../check-claim-count')
+const { checkClaimCount } = require('../check-claim')
 
 describe('given the checkClaims function', () => {
   let query, drop, truncate, collections, org, domain
