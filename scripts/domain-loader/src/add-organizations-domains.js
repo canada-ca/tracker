@@ -69,7 +69,7 @@ const addOrganizationsDomains = async ({ db, query, data }) => {
           orgId: org._id,
         })
 
-        if (!claim) {
+        if (claim.length === 0) {
           await createClaim({
             trx,
             query,
