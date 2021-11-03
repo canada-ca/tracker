@@ -92,7 +92,7 @@ const alignOrganizationsDomains = async ({ db, query, data }) => {
   ).all()
 
   // format to:
-  // { domain1: ['ORG-ACRO1', 'ORG-ACRO2'], domain2: ['ORG-ACRO1'] }
+  // { domain1: ['ORG-ACRO1'], domain2: ['ORG-ACRO1'] }
   const orgsClaimingDomainAcronyms = Object.keys(data).reduce(
     (prev, currentKey) => {
       data[currentKey].domains.forEach((domain) => {
@@ -130,6 +130,7 @@ const alignOrganizationsDomains = async ({ db, query, data }) => {
       console.log(
         `Claims for domain "${domain.domain}" found in JSON data, not deleting domain`,
       )
+      delete orgsClaimingDomainAcronyms[domain.domain]
       continue
     }
 
