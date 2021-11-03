@@ -12,6 +12,7 @@ const removeEdges = async ({
     await (
       await db.query(
         `
+        WITH ${vertexCollection}
         FOR v, e IN 1..1 ${direction} @vertexSelectorId @edgeCollection
           REMOVE e IN ${edgeCollection}
           REMOVE v IN ${vertexCollection}
