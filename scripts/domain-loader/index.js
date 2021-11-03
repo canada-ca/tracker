@@ -1,22 +1,44 @@
-require('dotenv-safe').config()
 const { Database, aql } = require('arangojs')
+const yargs = require('yargs/yargs')
+const { hideBin } = require('yargs/helpers')
+const { addOrganizationsDomains, alignOrganizationsDomains } = require('./src')
 
-const {
-  FILE = './organization-domains.json',
-  DB_PASS: rootPass,
-  DB_URL: url,
-  DB_NAME: databaseName,
-} = process.env
+const path = require('path')
+require('dotenv-safe').config({
+  path: path.join(__dirname, '/.env'),
+  example: path.join(__dirname, '/.env.example'),
+})
 
-const {
-  checkClaimCount,
-  checkDomain,
-  checkOrganization,
-  createClaim,
-  createDomain,
-  createOrganization,
-  slugify,
-} = require('./src')
+const argv = yargs(hideBin(process.argv))
+  .usage('Usage: $0 <command> [options]')
+  .command(
+    'add',
+    'Add organizations and domains to the database from a JSON file',
+  )
+  .command(
+    'align',
+    'Add and remove organizations and domains to align with a JSON file',
+  )
+  .example(
+    '$0 add',
+    'add new organizations and domains to the database from a JSON file',
+  )
+  .demandCommand(
+    1,
+    1,
+    'You must include the command you wish to run.',
+    'You must include the command you wish to run.',
+  )
+  .help('h')
+  .alias('h', 'help')
+  .version(false).argv
+
+if (!['add', 'align'].includes(argv._[0])) {
+  console.error('Incorrect command entered, use "node index.js -h" for help.')
+  process.exit(-1)
+}
+
+const { FILE, DB_USERNAME, DB_PASS, DB_URL, DB_NAME } = process.env
 
 ;(async () => {
   let data
@@ -27,44 +49,33 @@ const {
     return
   }
 
-  const collections = [
-    'affiliations',
-    'aggregateGuidanceTags',
-    'chartSummaries',
-    'chartSummaryCriteria',
-    'claims',
-    'dkim',
-    'dkimGuidanceTags',
-    'dkimResults',
-    'dkimToDkimResults',
-    'dmarc',
-    'dmarcGuidanceTags',
-    'dmarcSummaries',
-    'domains',
-    'domainsDKIM',
-    'domainsDMARC',
-    'domainsHTTPS',
-    'domainsSPF',
-    'domainsSSL',
-    'domainsToDmarcSummaries',
-    'https',
-    'httpsGuidanceTags',
-    'organizations',
-    'ownership',
-    'scanSummaries',
-    'scanSummaryCriteria',
-    'spf',
-    'spfGuidanceTags',
-    'ssl',
-    'sslGuidanceTags',
-    'users',
-  ]
-
-  const db = new Database({
-    url,
-    databaseName,
-    auth: { username: 'root', password: rootPass },
+  const rootDb = new Database({
+    url: DB_URL,
+    auth: { username: DB_USERNAME, password: DB_PASS },
   })
+
+  try {
+    await rootDb.exists()
+  } catch (err) {
+    console.error('Error while connecting to database\n', err)
+    return
+  }
+
+  console.log('Successfully created database connection')
+
+  // check if database exists
+  const databaseExists = (await rootDb.listDatabases()).includes(DB_NAME)
+  // create database if it does not exist
+  if (!databaseExists) {
+    console.log(`Database does not exist, creating database "${DB_NAME}"`)
+    await rootDb.createDatabase(DB_NAME)
+  } else {
+    console.log(`Database ${DB_NAME} already exists`)
+  }
+  const db = rootDb.database(DB_NAME)
+  db.useBasicAuth(DB_USERNAME, DB_PASS)
+
+  console.log(`Using database "${DB_NAME}"`)
 
   const query = async function query(strings, ...vars) {
     return db.query(aql(strings, ...vars), {
@@ -72,53 +83,18 @@ const {
     })
   }
 
-  for (const key in data) {
-    const trx = await db.beginTransaction(collections)
-    let org
-    org = await checkOrganization({ data, key, query })
-
-    if (!org) {
-      org = await createOrganization({ slugify, data, key, trx, query })
-    }
-
-    for (const domain of data[key].domains) {
-      const checkedDomain = await checkDomain({ query, domain })
-
-      if (!checkedDomain) {
-        const savedDomain = await createDomain({ trx, query, domain })
-
-        await createClaim({
-          trx,
-          query,
-          domainId: savedDomain._id,
-          orgId: org._id,
-        })
-      } else {
-        const claimCount = await checkClaimCount({
-          query,
-          domainId: checkedDomain._id,
-        })
-
-        if (claimCount === 0) {
-          await createClaim({
-            trx,
-            query,
-            domainId: checkedDomain._id,
-            orgId: org._id,
-          })
-        }
-      }
-      console.log({
-        org: key,
-        domain,
-        saved: true,
-      })
-    }
-
-    try {
-      trx.commit()
-    } catch (err) {
-      throw new Error(err)
-    }
+  switch (argv._[0]) {
+    case 'add':
+      console.log(
+        `Adding domains and organizations from "${FILE}" to "${DB_NAME}"`,
+      )
+      await addOrganizationsDomains({ db: db, query, data })
+      break
+    case 'align':
+      console.log(
+        `Aligning domains and organizations in "${DB_NAME}" with ${FILE}`,
+      )
+      await alignOrganizationsDomains({ db: db, query, data })
+      break
   }
 })()

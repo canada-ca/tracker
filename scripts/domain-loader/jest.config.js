@@ -1,5 +1,5 @@
 module.exports = {
-  setupFiles: ['<rootDir>/src/setupEnv.js'],
+  setupFiles: ['<rootDir>/setupEnv.js'],
   collectCoverage: false,
   collectCoverageFrom: ['src/**/*.js'],
   coveragePathIgnorePatterns: [

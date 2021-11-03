@@ -1,9 +1,9 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
-const { databaseOptions } = require('../../database-options')
+const { databaseOptions } = require('../../../database-options')
 
-const { checkClaimCount } = require('../check-claim-count')
+const { checkClaim } = require('../check-claim')
 
 describe('given the checkClaims function', () => {
   let query, drop, truncate, collections, org, domain
@@ -45,9 +45,14 @@ describe('given the checkClaims function', () => {
         _to: domain._id,
       })
     })
-    it('returns 1', async () => {
-      const count = await checkClaimCount({ query, domainId: domain._id })
-      expect(count).toEqual(1)
+    it('returns 1 claim', async () => {
+      const claims = await checkClaim({
+        query,
+        domainId: domain._id,
+        orgId: org._id,
+      })
+      console.log(claims)
+      expect(claims.length).toEqual(1)
     })
   })
 
@@ -63,8 +68,12 @@ describe('given the checkClaims function', () => {
       })
     })
     it('returns 0', async () => {
-      const count = await checkClaimCount({ query, domainId: domain._id })
-      expect(count).toEqual(0)
+      const claims = await checkClaim({
+        query,
+        domainId: domain._id,
+        orgId: org._id,
+      })
+      expect(claims.length).toEqual(0)
     })
   })
 })
