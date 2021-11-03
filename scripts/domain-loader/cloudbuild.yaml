@@ -33,6 +33,8 @@ steps:
   - DB_PASS=$_DB_PASS
   - DB_URL=$_DB_URL
   - DB_NAME=$_DB_NAME
+  - FILE=
+  - DB_USERNAME=
 
 timeout: 1200s
 options:
