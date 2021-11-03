@@ -118,6 +118,7 @@ const alignOrganizationsDomains = async ({ db, query, data }) => {
     await (
       await db.query(
         `
+        WITH organizations
         FOR v, e IN 1..1 ANY @domainId claims
           FILTER v.orgDetails.en.acronym NOT IN ${jsonOrgDomainClaimsString}
           REMOVE e IN claims`,
