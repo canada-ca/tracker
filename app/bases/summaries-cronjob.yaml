@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: summaries
@@ -12,29 +12,29 @@ spec:
       template:
         spec:
           containers:
-          - name: summaries
-            image: gcr.io/track-compliance/services/summaries:master-43ce82a-1634754318 # {"$imagepolicy": "flux-system:summaries"}
-            env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "8529"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
+            - name: summaries
+              image: gcr.io/track-compliance/services/summaries:master-e613264-1635540018 # {"$imagepolicy": "flux-system:summaries"}
+              env:
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_USER
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_PASS
+                - name: DB_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_HOST
+                - name: DB_PORT
+                  value: "8529"
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_NAME
           restartPolicy: OnFailure

@@ -18,13 +18,13 @@ spec:
         app: tracker-frontend
     spec:
       containers:
-      - image: gcr.io/track-compliance/frontend:master-4d383c0-1634941520 # {"$imagepolicy": "flux-system:frontend"}
-        name: frontend
-        resources:
-          limits:
-            cpu: 200m
-            memory: 45Mi
-          requests:
-            cpu: 200m
-            memory: 45Mi
+        - image: gcr.io/track-compliance/frontend:master-5fc77b3-1635435733 # {"$imagepolicy": "flux-system:frontend"}
+          name: frontend
+          resources:
+            limits:
+              cpu: 200m
+              memory: 45Mi
+            requests:
+              cpu: 200m
+              memory: 45Mi
 status: {}

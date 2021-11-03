@@ -401,7 +401,7 @@ export const getTypeNames = () => gql`
     # The city in which the organization resides.
     city: String
 
-    # Wether the organization is a verified organization.
+    # Whether the organization is a verified organization.
     verified: Boolean
 
     # Summaries based on scan types that are preformed on the given organizations domains.
@@ -456,10 +456,10 @@ export const getTypeNames = () => gql`
     ): AffiliationConnection
   }
 
-  # A field whose value is an upper case letter or an under score that has a length between 1 and 50.
+  # A field whose value consists of upper case or lower case letters or underscores with a length between 1 and 50.
   scalar Acronym
 
-  # A field whos values contain numbers, letters, dashes, and underscores.
+  # A field whose values contain numbers, letters, dashes, and underscores.
   scalar Slug
 
   # Summaries based on domains that the organization has claimed.
@@ -469,6 +469,9 @@ export const getTypeNames = () => gql`
 
     # Summary based on web scan results for a given organization.
     web: CategorizedSummary
+
+    # Summary based on DMARC phases for a given organization.
+    dmarcPhase: CategorizedSummary
   }
 
   # This object contains the list of different categories for pre-computed
@@ -1241,7 +1244,7 @@ export const getTypeNames = () => gql`
   # particular, existing protocols place no restriction on what a sending
   # host can use as the "MAIL FROM" of a message or the domain given on
   # the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
-  # protocol is where ADministrative Management Domains (ADMDs) can explicitly
+  # protocol is where Administrative Management Domains (ADMDs) can explicitly
   # authorize the hosts that are allowed to use their domain names, and a
   # receiving host can check such authorization.
   type SPF implements Node {
@@ -1804,16 +1807,16 @@ export const getTypeNames = () => gql`
   # This object displays the percentages of the category totals.
   type CategoryPercentages {
     # Percentage of messages that are failing all checks.
-    failPercentage: Int
+    failPercentage: Float
 
     # Percentage of messages that are passing all checks.
-    fullPassPercentage: Int
+    fullPassPercentage: Float
 
     # Percentage of messages that are passing only dkim.
-    passDkimOnlyPercentage: Int
+    passDkimOnlyPercentage: Float
 
     # Percentage of messages that are passing only spf.
-    passSpfOnlyPercentage: Int
+    passSpfOnlyPercentage: Float
 
     # The total amount of messages sent by this domain.
     totalMessages: Int
@@ -2382,7 +2385,7 @@ export const getTypeNames = () => gql`
     # The city in which the organization resides.
     city: String
 
-    # Wether the organization is a verified organization.
+    # Whether the organization is a verified organization.
     verified: Boolean
 
     # Summaries based on scan types that are preformed on the given organizations domains.
@@ -2521,11 +2524,13 @@ export const getTypeNames = () => gql`
     # This mutation allows users to leave a given organization.
     leaveOrganization(input: LeaveOrganizationInput!): LeaveOrganizationPayload
 
-    # This mutation allows users to close their account.
-    closeAccount(input: CloseAccountInput!): CloseAccountPayload
-
     # This mutation allows admins or higher to remove users from any organizations they belong to.
     removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
+
+    # This mutation allows a user to transfer org ownership to another user in the given org.
+    transferOrgOwnership(
+      input: TransferOrgOwnershipInput!
+    ): TransferOrgOwnershipPayload
 
     # This mutation allows super admins, and admins of the given organization to
     # update the permission level of a given user that already belongs to the
@@ -2566,6 +2571,9 @@ export const getTypeNames = () => gql`
 
     # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
     authenticate(input: AuthenticateInput!): AuthenticatePayload
+
+    # This mutation allows a user to close their account, or a super admin to close another user's account.
+    closeAccount(input: CloseAccountInput!): CloseAccountPayload
 
     # This mutation allows users to give their current auth token, and refresh token, and receive a freshly updated auth token.
     refreshTokens(input: RefreshTokensInput!): RefreshTokensPayload
@@ -2661,7 +2669,7 @@ export const getTypeNames = () => gql`
   # This union is used with the \`leaveOrganization\` mutation, allowing for users to leave a given organization, and support any errors that may occur.
   union LeaveOrganizationUnion = AffiliationError | LeaveOrganizationResult
 
-  # This object is used to inform the user that they successfully left a given organization.
+  # This object is used to inform the user that they successful left a given organization.
   type LeaveOrganizationResult {
     # Status message confirming the user left the org.
     status: String
@@ -2671,35 +2679,6 @@ export const getTypeNames = () => gql`
     # Id of the organization the user is looking to leave.
     orgId: ID!
     clientMutationId: String
-  }
-
-  type CloseAccountPayload {
-    # \`CloseAccountUnion\` resolving to either a \`CloseAccountResult\` or \`CloseAccountError\`.
-    result: CloseAccountUnion
-    clientMutationId: String
-  }
-
-  # This union is used with the \`CloseAccount\` mutation, allowing for users to close their account, and support any errors that may occur.
-  union CloseAccountUnion = CloseAccountError | CloseAccountResult
-
-  # This object is used to inform the user if any errors occurred during closure of an account.
-  type CloseAccountError {
-    # Error code to inform user what the issue is related to.
-    code: Int
-
-    # Description of the issue that was encountered.
-    description: String
-  }
-
-  # This object is used to inform the user that they successfully closed their account.
-  type CloseAccountResult {
-    # Status message confirming the user has closed their account.
-    status: String
-  }
-
-  input CloseAccountInput {
-    # Id of the user who is closing their account.
-    userId: ID
   }
 
   type RemoveUserFromOrgPayload {
@@ -2729,6 +2708,33 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type TransferOrgOwnershipPayload {
+    # \`TransferOrgOwnershipUnion\` resolving to either a \`TransferOrgOwnershipResult\` or \`AffiliationError\`.
+    result: TransferOrgOwnershipUnion
+    clientMutationId: String
+  }
+
+  # This union is used with the \`transferOrgOwnership\` mutation, allowing for
+  # users to transfer ownership of a given organization, and support any errors that may occur.
+  union TransferOrgOwnershipUnion =
+      AffiliationError
+    | TransferOrgOwnershipResult
+
+  # This object is used to inform the user that they successful transferred ownership of a given organization.
+  type TransferOrgOwnershipResult {
+    # Status message confirming the user transferred ownership of the org.
+    status: String
+  }
+
+  input TransferOrgOwnershipInput {
+    # Id of the organization the user is looking to transfer ownership of.
+    orgId: ID!
+
+    # Id of the user that the org ownership is being transferred to.
+    userId: ID!
+    clientMutationId: String
+  }
+
   type UpdateUserRolePayload {
     # \`UpdateUserRoleUnion\` returning either a \`UpdateUserRoleResult\`, or \`UpdateUserRoleError\` object.
     result: UpdateUserRoleUnion
@@ -2740,8 +2746,11 @@ export const getTypeNames = () => gql`
 
   # This object is used to inform the user of the status of the role update.
   type UpdateUserRoleResult {
-    # Informs the user if the user was successfully removed.
+    # Informs the user if the user who's role was successfully updated.
     status: String
+
+    # The user who's role was successfully updated.
+    user: SharedUser
   }
 
   input UpdateUserRoleInput {
@@ -3056,6 +3065,36 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type CloseAccountPayload {
+    # \`CloseAccountUnion\` returning either a \`CloseAccountResult\`, or \`CloseAccountError\` object.
+    result: CloseAccountUnion
+    clientMutationId: String
+  }
+
+  # This union is used for the \`closeAccount\` mutation, to support successful or errors that may occur.
+  union CloseAccountUnion = CloseAccountResult | CloseAccountError
+
+  # This object is used to inform the user of the status of closing their account.
+  type CloseAccountResult {
+    # Status of closing the users account.
+    status: String
+  }
+
+  # This object is used to inform the user if any errors occurred while closing their account.
+  type CloseAccountError {
+    # Error code to inform user what the issue is related to.
+    code: Int
+
+    # Description of the issue encountered.
+    description: String
+  }
+
+  input CloseAccountInput {
+    # The user id of a user you want to close the account of.
+    userId: ID
+    clientMutationId: String
+  }
+
   type RefreshTokensPayload {
     # Refresh tokens union returning either a \`authResult\` or \`authenticateError\` object.
     result: RefreshTokensUnion
@@ -3215,7 +3254,7 @@ export const getTypeNames = () => gql`
     # Token used to verify during authentication.
     authenticateToken: String
 
-    # Wether the authentication code was sent through text, or email.
+    # Whether the authentication code was sent through text, or email.
     sendMethod: String
   }
 
