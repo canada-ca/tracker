@@ -51,6 +51,7 @@ describe('given the checkClaims function', () => {
         domainId: domain._id,
         orgId: org._id,
       })
+      console.log(claims)
       expect(claims.length).toEqual(1)
     })
   })
@@ -67,7 +68,11 @@ describe('given the checkClaims function', () => {
       })
     })
     it('returns 0', async () => {
-      const claims = await checkClaim({ query, domainId: domain._id })
+      const claims = await checkClaim({
+        query,
+        domainId: domain._id,
+        orgId: org._id,
+      })
       expect(claims.length).toEqual(0)
     })
   })
