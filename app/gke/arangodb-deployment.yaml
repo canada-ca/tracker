@@ -4,11 +4,6 @@ metadata:
   name: arangodb
   namespace: db
 spec:
-  agents:
-    volumeClaimTemplate:
-      spec:
-        storageClassName: slow-retain
-        persistentVolumeReclaimPolicy: Retain
   dbservers:
     volumeClaimTemplate:
       spec:
