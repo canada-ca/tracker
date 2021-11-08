@@ -120,16 +120,32 @@ export default function DomainsPage() {
       <InfoPanel state={infoState}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
-          title={t`HTTPS`}
-          info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirments.`}
+          title={t`Policy`}
+          info={t`Shows if the domain is policy compliant.`}
         />
         <InfoBox
-          title={t`SSL`}
-          info={t`Shows if the domain meets the Secure Sockets Layer (SSL) requirements.`}
+          title={t`Ciphers`}
+          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
+        />
+        <InfoBox
+          title={t`Curves`}
+          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
+        />
+        <InfoBox
+          title={t`HSTS`}
+          info={t`Shows if the domain meets the HSTS requirements.`}
+        />
+        <InfoBox
+          title={t`HTTPS`}
+          info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
+        />
+        <InfoBox
+          title={t`Protocols`}
+          info={t`Shows if the domain uses acceptable protocols.`}
         />
         <InfoBox
           title={t`SPF`}
-          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requiremtns.`}
+          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
         />
         <InfoBox
           title={t`DKIM`}
