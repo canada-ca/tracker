@@ -7,7 +7,7 @@ const checkClaim = async ({ query, domainId, orgId }) => {
     FILTER v._id == ${orgId}
       RETURN v
   `
-  ).all()
+  ).next()
 }
 
 module.exports = {
