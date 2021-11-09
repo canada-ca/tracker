@@ -4,7 +4,7 @@ metadata:
   name: dispatcher
   namespace: scanners
 spec:
-  ttlSecondsAfterFinished: 100
+  ttlSecondsAfterFinished: 21600
   template:
     metadata:
       labels:

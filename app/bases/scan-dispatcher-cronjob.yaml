@@ -7,7 +7,6 @@ spec:
   schedule: "0 0 * * *"
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 100
       template:
         metadata:
           labels:

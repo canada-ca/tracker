@@ -58,7 +58,6 @@ spec:
           volumes:
             - emptyDir: {}
               name: dump
-      ttlSecondsAfterFinished: 100
   schedule: 59 3 * * *
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0

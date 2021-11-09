@@ -4,7 +4,7 @@ metadata:
   name: guidance-job
   namespace: scanners
 spec:
-  ttlSecondsAfterFinished: 100
+  ttlSecondsAfterFinished: 21600
   template:
     spec:
       containers:
