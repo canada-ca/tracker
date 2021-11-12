@@ -150,7 +150,7 @@ services:
       - DB_URL=http://localhost:8529
       - SUBSCRIBE_TO=domains.*.https
       - PUBLISH_TO=domains
-      - SERVERS=nats://localhost:4222
+      - NATS_SERVERS=nats://localhost:4222
       - PYTHONASYNCIODEBUG=1
     volumes:
       - ./https-processor/:/results
