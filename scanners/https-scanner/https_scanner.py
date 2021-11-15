@@ -1,11 +1,8 @@
-import os
 import sys
 import logging
 from scan import https
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
-TIMEOUT = int(os.getenv("SCAN_TIMEOUT"))
 
 
 class HTTPSScanner:
