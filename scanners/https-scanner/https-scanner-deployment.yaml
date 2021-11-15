@@ -16,24 +16,24 @@ spec:
         app: https-scanner
     spec:
       containers:
-      - name: https-scanner
-        image: gcr.io/track-compliance/https-scanner:master-f2b522e-1634779500 # {"$imagepolicy": "flux-system:https-scanner"}
-        env:
-        - name: PYTHONWARNINGS # Requests is so loud...
-          value: ignore
-        - name: PUBLISH_TO
-          value: domains
-        - name: SUBSCRIBE_TO
-          value: domains.*
-        - name: QUEUE_GROUP
-          value: httpsscanner
-        - name: SERVERS
-          value: nats://nats.pubsub:4222
-        - name: SCAN_TIMEOUT
-          value: "0.5"
-        - name: NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        resources: {}
+        - name: https-scanner
+          image: gcr.io/track-compliance/https-scanner:master-ca7eac1-1636992145 # {"$imagepolicy": "flux-system:https-scanner"}
+          env:
+            - name: PYTHONWARNINGS # Requests is so loud...
+              value: ignore
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*
+            - name: QUEUE_GROUP
+              value: httpsscanner
+            - name: SERVERS
+              value: nats://nats.pubsub:4222
+            - name: SCAN_TIMEOUT
+              value: "0.5"
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources: {}
 status: {}
