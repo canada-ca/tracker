@@ -1,25 +1,3 @@
-class Domain(object):
-    def __init__(self, domain):
-        self.domain = domain
-
-        # 4 endpoints for each domain.
-        self.http = None
-        self.httpwww = None
-        self.https = None
-        self.httpswww = None
-        self.unknown_error = False
-
-        # Filled in after analyzing each endpoint.
-        self.canonical = None
-
-    def to_object(self):
-        return {
-            "https": self.https.to_object(),
-            "httpswww": self.httpswww.to_object(),
-            "http": self.http.to_object(),
-            "httpwww": self.httpwww.to_object(),
-        }
-
 
 class Endpoint(object):
     def __init__(self, protocol, host, base_domain):
@@ -132,3 +110,29 @@ class Endpoint(object):
             obj["hsts_preload"] = self.hsts_preload
 
         return obj
+
+
+class Domain(object):
+    def __init__(self, domain):
+        self.domain = domain
+
+        # 4 endpoints for each domain.
+        self.http = Endpoint("http", "root", domain)
+        self.httpwww = Endpoint("http", "www", domain)
+        self.https = Endpoint("https", "root", domain)
+        self.httpswww = Endpoint("https", "www", domain)
+        self.endpoints = lambda: [self.http, self.httpwww, self.https, self.httpswww]
+        self.totally_unreachable = lambda: all(not endpoint.live for endpoint in self.endpoints())
+        self.unknown_error = False
+
+        # Filled in after analyzing each endpoint.
+        self.canonical = None
+
+    def to_object(self):
+        return {
+            "https": self.https.to_object(),
+            "httpswww": self.httpswww.to_object(),
+            "http": self.http.to_object(),
+            "httpwww": self.httpwww.to_object(),
+        }
+

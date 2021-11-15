@@ -29,8 +29,13 @@ def to_json(msg):
 def process_results(results):
     report = {}
 
+    if results == {} or results["Totally unreachable"]:
+        # This domain doesn't do web content.
+        return {"error": "unreachable"}
+
     if results == {} or not results["Live"]:
-        report = {"error": "missing"}
+        # web domain with missing tls
+        return {"error": "missing"}
 
     else:
         if results["Valid HTTPS"]:

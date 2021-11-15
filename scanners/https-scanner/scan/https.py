@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 import datetime
@@ -21,9 +22,10 @@ from sslyze.plugins.certificate_info._certificate_utils import (
     extract_dns_subject_alternative_names,
 )
 
-from .models import Domain, Endpoint
+from .models import Domain
 from .query_crlite import query_crlite
 
+TIMEOUT = float(os.getenv("SCAN_TIMEOUT", 0.001))
 
 def load_preload_list():
     preload_json = None
@@ -135,6 +137,7 @@ def result_for(domain):
     # First, the basic fields the CSV will use.
     result = {
         "Domain": domain.domain,
+        "Totally unreachable": domain.totally_unreachable(),
         "Base Domain": parent_domain_for(domain.domain),
         "Canonical URL": domain.canonical.url,
         "Live": is_live(domain),
@@ -865,10 +868,6 @@ def run(domains):
     for base_domain in domains:
 
         domain = Domain(base_domain)
-        domain.http = Endpoint("http", "root", base_domain)
-        domain.httpwww = Endpoint("http", "www", base_domain)
-        domain.https = Endpoint("https", "root", base_domain)
-        domain.httpswww = Endpoint("https", "www", base_domain)
 
         # Analyze HTTP endpoint responsiveness and behavior.
         basic_check(domain.http)
@@ -879,16 +878,15 @@ def run(domains):
         # Analyze HSTS header, if present, on each HTTPS endpoint.
         hsts_check(domain.https)
         hsts_check(domain.httpswww)
-
         results[base_domain] = result_for(domain)
 
         return results
 
 
-def ping(url, allow_redirects=False, verify=True):
+def ping(url, allow_redirects=False, verify=True, timeout=TIMEOUT):
 
     return requests.get(
-        url, allow_redirects=allow_redirects, verify=verify, stream=True
+        url, allow_redirects=allow_redirects, verify=verify, stream=True, timeout=timeout
     )
 
 
@@ -911,6 +909,8 @@ def basic_check(endpoint):
                 endpoint.https_full_connection = True
                 endpoint.https_valid = True
 
+    except requests.exceptions.Timeout:
+        endpoint.live = False
     except requests.exceptions.SSLError as err:
         if "bad handshake" in str(err) and (
             "sslv3 alert handshake failure" in str(err)
@@ -965,6 +965,7 @@ def basic_check(endpoint):
                 )
                 return
             except OpenSSL.SSL.Error as err:
+                # Mixing "liveness" with correctness?
                 endpoint.live = False
                 logging.debug(
                     "{}: Unexpected OpenSSL exception during retry.".format(
@@ -972,6 +973,8 @@ def basic_check(endpoint):
                     )
                 )
                 return
+            except requests.exceptions.Timeout:
+                endpoint.live = False
             except Exception as err:
                 endpoint.unknown_error = True
                 logging.debug(
@@ -985,6 +988,8 @@ def basic_check(endpoint):
         # unless SSLyze encounters a connection error later
         endpoint.live = True
 
+    except requests.exceptions.Timeout:
+        endpoint.live = False
     except requests.exceptions.ConnectionError as err:
         # We can get this for some endpoints that are actually live,
         # so if it's https let's try sslyze to be sure
