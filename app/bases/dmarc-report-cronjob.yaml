@@ -12,67 +12,67 @@ spec:
       template:
         spec:
           containers:
-          - name: dmarc-report
-            image: gcr.io/track-compliance/dmarc-report:master-c51ff12-1634936950 # {"$imagepolicy": "flux-system:dmarc-report"}
-            env:
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: DB_NAME
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: DB_PASS
-            - name: DB_URL
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: DB_URL
-            - name: GITHUB_BRANCH
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: GITHUB_BRANCH
-            - name: GITHUB_FILE
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: GITHUB_FILE
-            - name: GITHUB_OWNER
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: GITHUB_OWNER
-            - name: GITHUB_REPO
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: GITHUB_REPO
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: GITHUB_TOKEN
-            - name: GITHUB_URL
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: GITHUB_URL
-            - name: AZURE_CONN_STRING
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: AZURE_CONN_STRING
-            - name: DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: DATABASE
-            - name: SUMMARIES_CONTAINER
-              valueFrom:
-                secretKeyRef:
-                  name: dmarc
-                  key: SUMMARIES_CONTAINER
+            - name: dmarc-report
+              image: gcr.io/track-compliance/dmarc-report:master-59f22a0-1637014799 # {"$imagepolicy": "flux-system:dmarc-report"}
+              env:
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: DB_NAME
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: DB_PASS
+                - name: DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: DB_URL
+                - name: GITHUB_BRANCH
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: GITHUB_BRANCH
+                - name: GITHUB_FILE
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: GITHUB_FILE
+                - name: GITHUB_OWNER
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: GITHUB_OWNER
+                - name: GITHUB_REPO
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: GITHUB_REPO
+                - name: GITHUB_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: GITHUB_TOKEN
+                - name: GITHUB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: GITHUB_URL
+                - name: AZURE_CONN_STRING
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: AZURE_CONN_STRING
+                - name: DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: DATABASE
+                - name: SUMMARIES_CONTAINER
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: SUMMARIES_CONTAINER
           restartPolicy: OnFailure
