@@ -98,6 +98,9 @@ def process_results(results, domain_key, user_key, shared_id):
         if len(weak_ciphers) > 0:
             negative_tags.append("ssl6")
 
+        if len(weak_curves) > 0:
+            negative_tags.append("ssl10")
+
         if results["heartbleed"]:
             negative_tags.append("ssl7")
 
