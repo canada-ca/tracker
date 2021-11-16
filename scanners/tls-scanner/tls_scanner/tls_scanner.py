@@ -193,6 +193,16 @@ class TLSScanner:
                 res["supported_curves"] = []
                 if result.supported_curves is not None:
                     for curve in result.supported_curves:
-                        res["supported_curves"].append(curve.name)
+                        # sslyze returns ANSI curve names occaisionally
+                        # In at least these two cases we can simply convert to
+                        # using the equivalent SECG name, so that this aligns
+                        # with CCCS guidance:
+                        # https://datatracker.ietf.org/doc/html/rfc4492#appendix-A
+                        if curve.name == "prime192v1":
+                            res["supported_curves"].append("secp192r1")
+                        elif curve.name == "prime256v1":
+                            res["supported_curves"].append("secp256r1")
+                        else:
+                            res["supported_curves"].append(curve.name)
 
         return res
