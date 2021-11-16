@@ -42,7 +42,7 @@ Deploying to prod is a little anticlimactic. You'll want some read/write credent
 Tracker uses SSH deploy keys to allow those updates, and uses kustomize to [generate secrets](https://github.com/kubernetes-sigs/kustomize/blob/master/examples/secretGeneratorPlugin.md#secret-values-from-local-files). To create the keys, use the following commands.
 
 ```bash
-ssh-keygen -q -N "" -C "flux-read-write" -f ./deploy/creds/readwrite/identity
+ssh-keygen -t ed25519 -q -N "" -C "flux-read-write" -f ./deploy/creds/readwrite/identity
 ssh-keyscan github.com > ./deploy/creds/readwrite/known_hosts
 ```
 
