@@ -123,30 +123,30 @@ def process_results(results, domain_key, user_key, shared_id):
 
     cipher_tags = ["ssl6"]
 
-    # get ssl status
-    if "ssl9" in neutral_tags:
+    if results.get("error") == "unreachable":
+        # no web, no problem.
         ssl_status = "info"
-    elif len(negative_tags) > 0 or "ssl5" not in positive_tags:
-        ssl_status = "fail"
-    else:
-        ssl_status = "pass"
-
-    # get protocol status
-    if "ssl9" in neutral_tags:
         protocol_status = "info"
-    elif (
-        len([tag for tag in negative_tags if tag not in cipher_tags]) > 0
-        or "ssl5" not in positive_tags
-    ):
-        protocol_status = "fail"
+        cipher_status = "info"
+        curve_status = "info"
     else:
-        protocol_status = "pass"
+        # ssl status
+        if len(negative_tags) > 0 or "ssl5" not in positive_tags:
+            ssl_status = "fail"
+        else:
+            ssl_status = "pass"
 
-    # get cipher status
-    cipher_status = "fail" if len(weak_ciphers) > 0 else "pass"
+        # protocol status
+        if (len([tag for tag in negative_tags if tag not in cipher_tags]) > 0 or "ssl5" not in positive_tags):
+            protocol_status = "fail"
+        else:
+            protocol_status = "pass"
 
-    # get curve status
-    curve_status = "fail" if len(weak_curves) > 0 else "pass"
+        # get cipher status
+        cipher_status = "fail" if len(weak_ciphers) > 0 else "pass"
+
+        # get curve status
+        curve_status = "fail" if len(weak_curves) > 0 else "pass"
 
     if user_key is None:
         try:
@@ -174,6 +174,17 @@ def process_results(results, domain_key, user_key, shared_id):
                         }
                     }
                 )
+            # printing criteria and judgement so we can easily look at logs for debugging.
+            print(json.dumps({"line": line_number(), "criteria": {"domain": domain["domain"],
+                "weak_curves": weak_curves,"strong_curves": strong_curves,
+                "acceptable_curves": acceptable_curves, "weak_ciphers":
+                weak_ciphers,  "strong_ciphers": strong_ciphers,
+                "acceptable_ciphers": acceptable_ciphers , "neutral_tags":
+                neutral_tags, "positive_tags": positive_tags, "negative_tags": negative_tags},
+                "judgement": {"cipher_status": cipher_status, "curve_status":
+                    curve_status, "ssl_status": ssl_status, "protocol_status":
+                    protocol_status}, "saved_result": {"domain": domain }}, indent=2))
+
             domain["status"]["ssl"] = ssl_status
             domain["status"]["protocols"] = protocol_status
             domain["status"]["ciphers"] = cipher_status
@@ -204,7 +215,6 @@ def process_results(results, domain_key, user_key, shared_id):
             "ssl",
             user_key,
         )
-        logging.info("SSL Scan published to redis")
 
 
 async def run(loop):
