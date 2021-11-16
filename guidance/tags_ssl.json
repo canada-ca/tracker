@@ -282,5 +282,39 @@
             ],
             "refLinksTechnical": [""]
         }
+    },
+    "ssl10": {
+        "en": {
+            "tagName": "Invalid-curves",
+            "guidance": "One or more cryptographic curves in use are not compliant with guidelines",
+            "refLinksGuide": [
+                {
+                    "description": "6.1.3/6.1.4/6.1.5 Direction",
+                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "See ITSP.40.062 for approved list of cryptographic curves",
+                    "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#tab4"
+                }
+            ]
+        },
+        "fr": {
+            "tagName": "Invalid-curves",
+            "guidance": "Une ou plusieurs courbes cryptographiques utilisées ne sont pas conformes aux directives.",
+            "refLinksGuide": [
+                {
+                    "description": "6.1.3/6.1.4/6.1.5 Direction",
+                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
+                }
+            ],
+            "refLinksTechnical": [
+                {
+                    "description": "Voir ITSP.40.062 pour la liste approuvée des courbes cryptographiques.",
+                    "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062#tab4"
+                }
+            ]
+        }
     }
 }
