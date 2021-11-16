@@ -16,22 +16,22 @@ spec:
         app: tls-scanner
     spec:
       containers:
-      - name: tls-scanner
-        image: gcr.io/track-compliance/tls-scanner:master-7352bcd-1634779462 # {"$imagepolicy": "flux-system:tls-scanner"}
-        env:
-        - name: PYTHONWARNINGS
-          value: ignore
-        - name: PUBLISH_TO
-          value: domains
-        - name: SUBSCRIBE_TO
-          value: domains.*
-        - name: QUEUE_GROUP
-          value: tlsscanner
-        - name: NATS_SERVERS
-          value: nats://nats.pubsub:4222
-        - name: NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        resources: {}
+        - name: tls-scanner
+          image: gcr.io/track-compliance/tls-scanner:master-ad1b14d-1637090396 # {"$imagepolicy": "flux-system:tls-scanner"}
+          env:
+            - name: PYTHONWARNINGS
+              value: ignore
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*
+            - name: QUEUE_GROUP
+              value: tlsscanner
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources: {}
 status: {}
