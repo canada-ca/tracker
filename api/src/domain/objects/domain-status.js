@@ -40,7 +40,7 @@ export const domainStatus = new GraphQLObjectType({
       type: StatusEnum,
       description: 'Policy Status',
       resolve: ({ ciphers, https, hsts, protocols, ssl }) =>
-        [ciphers, https, hsts, protocols, ssl].every((t) => t === 'pass')
+        [ciphers, https, hsts, protocols, ssl].every((t) => t !== 'fail')
           ? 'pass'
           : 'fail',
     },
