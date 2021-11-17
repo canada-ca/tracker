@@ -108,8 +108,9 @@ describe('given the domainStatus object', () => {
         expect(demoType.hsts.resolve({ hsts: 'pass' })).toEqual('pass')
       })
     })
+
     describe('testing the policy resolver', () => {
-      it('returns the resolved value', () => {
+      it('sets the policy field to pass if every component passes', () => {
         const demoType = domainStatus.getFields()
         const fields = {
           ciphers: 'pass',
@@ -129,6 +130,51 @@ describe('given the domainStatus object', () => {
         })
       })
     })
+
+    describe('testing the policy resolver', () => {
+      it('sets the policy field to pass if every component is info', () => {
+        const demoType = domainStatus.getFields()
+        const fields = {
+          ciphers: 'info',
+          https: 'info',
+          hsts: 'info',
+          protocols: 'info',
+          ssl: 'info',
+        }
+        // All info so policy passes
+        expect(demoType.policy.resolve(fields)).toEqual('pass')
+
+        // One fails so policy fails
+        Object.keys(fields).forEach((k) => {
+          const mutatedFields = Object.assign({}, fields)
+          mutatedFields[k] = 'fail'
+          expect(demoType.policy.resolve(mutatedFields)).toEqual('fail')
+        })
+      })
+    })
+
+    describe('testing the policy resolver', () => {
+      it('returns fail if any field fails', () => {
+        const demoType = domainStatus.getFields()
+        const fields = {
+          ciphers: 'info',
+          https: 'info',
+          hsts: 'fail',
+          protocols: 'info',
+          ssl: 'info',
+        }
+        // All info so policy passes
+        expect(demoType.policy.resolve(fields)).toEqual('fail')
+
+        // One fails so policy fails
+        Object.keys(fields).forEach((k) => {
+          const mutatedFields = Object.assign({}, fields)
+          mutatedFields[k] = 'fail'
+          expect(demoType.policy.resolve(mutatedFields)).toEqual('fail')
+        })
+      })
+    })
+
     describe('testing the protocols resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
