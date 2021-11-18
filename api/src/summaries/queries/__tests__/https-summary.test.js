@@ -161,12 +161,12 @@ describe('given httpsSummary query', () => {
           )
 
           const error = [
-            new GraphQLError(`Unable to load https summary. Please try again.`),
+            new GraphQLError(`Unable to load HTTPS summary. Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve https summary.`,
+            `User could not retrieve HTTPS summary.`,
           ])
         })
       })
@@ -223,7 +223,7 @@ describe('given httpsSummary query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve https summary.`,
+            `User could not retrieve HTTPS summary.`,
           ])
         })
       })
