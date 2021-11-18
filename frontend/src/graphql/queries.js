@@ -632,7 +632,7 @@ export const ORG_DETAILS_PAGE = gql`
       province
       verified
       summaries {
-        web {
+        https {
           total
           categories {
             name

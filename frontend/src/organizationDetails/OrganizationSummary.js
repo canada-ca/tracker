@@ -39,7 +39,10 @@ export function OrganizationSummary({
           </Stack>
         )}
       </Stack>
-      <SummaryGroup web={summaries?.web} dmarcPhases={summaries?.dmarcPhase} />
+      <SummaryGroup
+        https={summaries?.https}
+        dmarcPhases={summaries?.dmarcPhase}
+      />
     </Box>
   )
 }
