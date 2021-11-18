@@ -6,6 +6,39 @@ export const organizationSummaryType = new GraphQLObjectType({
   name: 'OrganizationSummary',
   description: 'Summaries based on domains that the organization has claimed.',
   fields: () => ({
+    https: {
+      type: categorizedSummaryType,
+      description:
+        'Summary based on HTTPS scan results for a given organization.',
+      resolve: ({ https }, _) => {
+        let percentPass, percentageFail
+        if (https.total <= 0) {
+          percentPass = 0
+          percentageFail = 0
+        } else {
+          percentPass = Number(((https.pass / https.total) * 100).toFixed(1))
+          percentageFail = Number(((https.fail / https.total) * 100).toFixed(1))
+        }
+
+        const categories = [
+          {
+            name: 'pass',
+            count: https.pass,
+            percentage: percentPass,
+          },
+          {
+            name: 'fail',
+            count: https.fail,
+            percentage: percentageFail,
+          },
+        ]
+
+        return {
+          categories,
+          total: https.total,
+        }
+      },
+    },
     mail: {
       type: categorizedSummaryType,
       description:
