@@ -73,14 +73,18 @@ describe('<SummaryGroup />', () => {
           <ChakraProvider theme={theme}>
             <MockedProvider>
               <SummaryGroup
-                web={data.httpsSummary}
+                https={data.httpsSummary}
                 dmarcPhases={data.dmarcPhaseSummary}
               />
             </MockedProvider>
           </ChakraProvider>
         </I18nProvider>,
       )
-      expect(getByText(/HTTPS Configuration Summary/i)).toBeInTheDocument()
+      expect(
+        getByText(
+          /HTTPS is configured and HTTP connections redirect to HTTPS \(ITPIN 6.1.1\)/i,
+        ),
+      ).toBeInTheDocument()
       expect(getByText(/dmarc phase summary/i)).toBeInTheDocument()
     })
   })
