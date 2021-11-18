@@ -287,7 +287,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
                 "https": {
                     "pass": https_pass,
                     "fail": https_fail,
-                    "domain_total": https_pass + https_fail  # Don't count non web-hosting domains
+                    "total": https_pass + https_fail  # Don't count non web-hosting domains
                 }
             }
         }
