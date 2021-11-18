@@ -311,6 +311,7 @@ msgstr "Changements requis pour la conformité aux exigences de configuration de
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
+#: src/domains/DomainCard.js:57
 #: src/domains/DomainsPage.js:127
 #: src/guidance/ScanCategoryDetails.js:214
 #: src/organizationDetails/OrganizationDomains.js:62
@@ -358,8 +359,12 @@ msgid "Collect and analyze DMARC reports."
 msgstr "Recueillir et analyser les rapports DMARC."
 
 #: src/summaries/SummaryGroup.js:23
-msgid "Compliant TLS"
-msgstr "TLS conformant"
+msgid "Compliant HTTPS"
+msgstr "HTTPS conforme"
+
+#: src/summaries/SummaryGroup.js:23
+#~ msgid "Compliant TLS"
+#~ msgstr "TLS conformant"
 
 #: src/admin/AdminDomainModal.js:280
 #: src/admin/AdminDomains.js:305
@@ -468,6 +473,7 @@ msgstr "Mot de passe actuel:"
 msgid "Current Phone Number:"
 msgstr "Numéro de téléphone actuel:"
 
+#: src/domains/DomainCard.js:58
 #: src/domains/DomainsPage.js:131
 #: src/guidance/ScanCategoryDetails.js:217
 #: src/organizationDetails/OrganizationDomains.js:66
@@ -952,6 +958,7 @@ msgstr "Étiquettes d'orientation"
 msgid "Guidance:"
 msgstr "Orientation:"
 
+#: src/domains/DomainCard.js:56
 #: src/domains/DomainsPage.js:135
 #: src/organizationDetails/OrganizationDomains.js:70
 msgid "HSTS"
@@ -965,10 +972,19 @@ msgstr "Âge du HSTS:"
 msgid "HSTS Status:"
 msgstr "Statut HSTS:"
 
+#: src/domains/DomainCard.js:55
 #: src/domains/DomainsPage.js:139
 #: src/organizationDetails/OrganizationDomains.js:74
 msgid "HTTPS"
 msgstr "HTTPS"
+
+#: src/summaries/SummaryGroup.js:15
+#~ msgid "HTTPS Configuration"
+#~ msgstr "Configuration de HTTPS"
+
+#: src/summaries/SummaryGroup.js:15
+msgid "HTTPS Configuration Summary"
+msgstr "Résumé de la configuration HTTPS"
 
 #: src/app/RequestScanNotificationHandler.js:89
 msgid "HTTPS Scan Complete"
@@ -977,6 +993,10 @@ msgstr "Scan HTTPS terminé"
 #: src/domains/DomainsPage.js:223
 msgid "HTTPS Status"
 msgstr "Statut HTTPS"
+
+#: src/summaries/SummaryGroup.js:16
+msgid "HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)"
+msgstr "HTTPS est configuré et les connexions HTTP sont redirigées vers HTTPS (ITPIN 6.1.1)"
 
 #: src/app/RequestScanNotificationHandler.js:90
 msgid "HTTPS scan for domain \"{0}\" has completed."
@@ -1319,6 +1339,10 @@ msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organi
 msgid "No Domains"
 msgstr "Aucun domaine"
 
+#: src/summaries/SummaryGroup.js:36
+msgid "No HTTPS configuration information available for this organization."
+msgstr "Aucune information de configuration HTTPS disponible pour cette organisation."
+
 #: src/organizations/Organizations.js:91
 msgid "No Organizations"
 msgstr "Aucune organisation"
@@ -1380,12 +1404,16 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 #~ msgstr "Aucune information de configuration web disponible pour cette org."
 
 #: src/summaries/SummaryGroup.js:36
-msgid "No web configuration information available for this organization."
-msgstr "Aucune information de configuration web disponible pour cette organisation."
+#~ msgid "No web configuration information available for this organization."
+#~ msgstr "Aucune information de configuration web disponible pour cette organisation."
 
 #: src/summaries/SummaryGroup.js:19
-msgid "Non-compliant TLS"
-msgstr "TLS non conforme"
+msgid "Non-compliant HTTPS"
+msgstr "HTTPS non conforme"
+
+#: src/summaries/SummaryGroup.js:19
+#~ msgid "Non-compliant TLS"
+#~ msgstr "TLS non conforme"
 
 #: src/guidance/ScanCategoryDetails.js:134
 #: src/user/EditableUserTFAMethod.js:144
@@ -1544,6 +1572,7 @@ msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 msgid "Please follow the link in order to verify your account and start using Tracker."
 msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à utiliser Tracker."
 
+#: src/domains/DomainCard.js:54
 #: src/domains/DomainsPage.js:123
 #: src/organizationDetails/OrganizationDomains.js:58
 msgid "Policy"
@@ -1579,6 +1608,7 @@ msgstr "Loi sur la protection de la vie privée."
 msgid "Privacy Notice Statement"
 msgstr "Déclaration de confidentialité"
 
+#: src/domains/DomainCard.js:59
 #: src/domains/DomainsPage.js:143
 #: src/organizationDetails/OrganizationDomains.js:78
 msgid "Protocols"
@@ -2378,7 +2408,6 @@ msgstr "Courbes faibles:"
 
 #: src/organizations/OrganizationCard.js:115
 #: src/organizations/Organizations.js:142
-#: src/summaries/SummaryGroup.js:15
 msgid "Web Configuration"
 msgstr "Configuration Web"
 
@@ -2397,8 +2426,8 @@ msgid "Web Sites and Services Management Configuration Requirements Compliant"
 msgstr "Gestion des sites et services Web - Exigences de configuration conformes"
 
 #: src/summaries/SummaryGroup.js:16
-msgid "Web encryption settings summary"
-msgstr "Résumé des paramètres de cryptage du Web"
+#~ msgid "Web encryption settings summary"
+#~ msgstr "Résumé des paramètres de cryptage du Web"
 
 #: src/auth/CreateUserPage.js:60
 msgid "Welcome, you are successfully signed in to your new account!"
@@ -2561,8 +2590,8 @@ msgid "{label}"
 msgstr "{label}"
 
 #: src/domains/StatusBadge.js:22
-msgid "{text}"
-msgstr ""
+#~ msgid "{text}"
+#~ msgstr ""
 
 #: src/components/InfoPanel.js:20
 msgid "{title}"

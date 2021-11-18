@@ -2,16 +2,15 @@ import React from 'react'
 import { useQuery } from '@apollo/client'
 
 import { SummaryGroup } from '../summaries/SummaryGroup'
-import { WEB_AND_PHASE_SUMMARIES } from '../graphql/queries'
+import { HTTPS_AND_DMARC_SUMMARY } from '../graphql/queries'
 
 export function LandingPageSummaries() {
-  const { _loading, _error, data } = useQuery(WEB_AND_PHASE_SUMMARIES)
+  const { _loading, _error, data } = useQuery(HTTPS_AND_DMARC_SUMMARY)
 
   return (
     <SummaryGroup
-      web={data?.webSummary}
-      mail={data?.mailSummary}
       dmarcPhases={data?.dmarcPhaseSummary}
+      https={data?.httpsSummary}
     />
   )
 }

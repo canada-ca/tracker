@@ -18,7 +18,7 @@ const i18n = setupI18n({
 })
 
 const data = {
-  webSummary: {
+  httpsSummary: {
     categories: [
       {
         name: 'pass',
@@ -66,21 +66,21 @@ const data = {
 }
 
 describe('<SummaryGroup />', () => {
-  describe('given the data for web and email summaries', () => {
-    it('displays web and dmarc phase summary cards', async () => {
+  describe('given the data for HTTPS and email summaries', () => {
+    it('displays HTTPS and dmarc phase summary cards', async () => {
       const { getByText } = render(
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
             <MockedProvider>
               <SummaryGroup
-                web={data.webSummary}
+                web={data.httpsSummary}
                 dmarcPhases={data.dmarcPhaseSummary}
               />
             </MockedProvider>
           </ChakraProvider>
         </I18nProvider>,
       )
-      expect(getByText(/web encryption settings summary/i)).toBeInTheDocument()
+      expect(getByText(/HTTPS Configuration Summary/i)).toBeInTheDocument()
       expect(getByText(/dmarc phase summary/i)).toBeInTheDocument()
     })
   })
