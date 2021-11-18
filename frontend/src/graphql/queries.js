@@ -57,7 +57,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
 
 export const HTTPS_AND_DMARC_SUMMARY = gql`
   query LandingPageSummaries {
-    https {
+    httpsSummary {
       total
       categories {
         name

@@ -113,6 +113,9 @@ export const getTypeNames = () => gql`
     # DMARC phase summary computed values, used to build summary cards.
     dmarcPhaseSummary: CategorizedSummary
 
+    # HTTPS summary computed values, used to build summary cards.
+    httpsSummary: CategorizedSummary
+
     # Query the currently logged in user.
     findMe: PersonalUser
 
@@ -323,18 +326,6 @@ export const getTypeNames = () => gql`
 
   # This object contains how the domain is doing on the various scans we preform, based on the latest scan data.
   type DomainStatus {
-    # Policy Status
-    policy: StatusEnum
-
-    # Protocols Status
-    protocols: StatusEnum
-
-    # HSTS Status
-    hsts: StatusEnum
-
-    # Certificates Status
-    certificates: StatusEnum
-
     # Ciphers Status
     ciphers: StatusEnum
 
@@ -349,6 +340,15 @@ export const getTypeNames = () => gql`
 
     # HTTPS Status
     https: StatusEnum
+
+    # HSTS Status
+    hsts: StatusEnum
+
+    # Policy Status
+    policy: StatusEnum
+
+    # Protocols Status
+    protocols: StatusEnum
 
     # SPF Status
     spf: StatusEnum
@@ -482,6 +482,9 @@ export const getTypeNames = () => gql`
 
   # Summaries based on domains that the organization has claimed.
   type OrganizationSummary {
+    # Summary based on HTTPS scan results for a given organization.
+    https: CategorizedSummary
+
     # Summary based on mail scan results for a given organization.
     mail: CategorizedSummary
 

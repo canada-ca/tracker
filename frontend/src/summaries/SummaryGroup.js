@@ -16,11 +16,11 @@ export function SummaryGroup({ https, dmarcPhases }) {
       description={t`HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)`}
       categoryDisplay={{
         fail: {
-          name: t`Non-compliant HTTPS`,
+          name: t`Non-compliant`,
           color: colors.weak,
         },
         pass: {
-          name: t`Compliant HTTPS`,
+          name: t`Compliant`,
           color: colors.strong,
         },
         unscanned: {

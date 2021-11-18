@@ -359,8 +359,12 @@ msgid "Collect and analyze DMARC reports."
 msgstr "Recueillir et analyser les rapports DMARC."
 
 #: src/summaries/SummaryGroup.js:23
-msgid "Compliant HTTPS"
-msgstr "HTTPS conforme"
+msgid "Compliant"
+msgstr "Conforme"
+
+#: src/summaries/SummaryGroup.js:23
+#~ msgid "Compliant HTTPS"
+#~ msgstr "HTTPS conforme"
 
 #: src/summaries/SummaryGroup.js:23
 #~ msgid "Compliant TLS"
@@ -1408,8 +1412,12 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 #~ msgstr "Aucune information de configuration web disponible pour cette organisation."
 
 #: src/summaries/SummaryGroup.js:19
-msgid "Non-compliant HTTPS"
-msgstr "HTTPS non conforme"
+msgid "Non-compliant"
+msgstr "Non conforme"
+
+#: src/summaries/SummaryGroup.js:19
+#~ msgid "Non-compliant HTTPS"
+#~ msgstr "HTTPS non conforme"
 
 #: src/summaries/SummaryGroup.js:19
 #~ msgid "Non-compliant TLS"
