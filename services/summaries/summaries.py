@@ -19,7 +19,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
 
 SCAN_TYPES = ["https", "ssl", "dkim", "spf", "dmarc"]
-CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"]}
+CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"], "https": ["https"]}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -205,6 +205,8 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
+        https_fail = 0
+        https_pass = 0
         web_fail = 0
         web_pass = 0
         mail_fail = 0
@@ -230,6 +232,11 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
                 or domain["status"]["https"] == "fail"
             ):
                 web_fail = web_fail + 1
+
+            if (domain["status"]["https"] == "pass"):
+                https_pass = https_pass + 1
+            if (domain["status"]["https"] == "fail"):
+                https_fail = https_fail + 1
 
             if (
                 domain["status"]["dmarc"] == "pass"
@@ -277,6 +284,11 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
                         "maintain": dmarc_phase_maintain,
                         "total": domain_total,
                 },
+                "https": {
+                    "pass": https_pass,
+                    "fail": https_fail,
+                    "total": https_pass + https_fail  # Don't count non web-hosting domains
+                }
             }
         }
 

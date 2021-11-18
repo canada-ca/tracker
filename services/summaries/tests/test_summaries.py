@@ -30,6 +30,7 @@ org = orgs.insert(
         "summaries": {
             "web": {"pass": 0, "fail": 0, "total": 0},
             "mail": {"pass": 0, "fail": 0, "total": 0},
+            "https": {"pass": 0, "fail": 0, "total": 0},
             "dmarc_phase": {"not_implemented": 0, "assess": 0, "deploy": 0,
                             "enforce": 0, "maintain": 0},
 
@@ -164,6 +165,16 @@ def test_update_scan_summaries():
 def test_update_chart_summaries():
     update_chart_summaries(host="testdb", name="test", user="", password="", port=8529)
 
+    httpsSummary = db.collection("chartSummaries").get({"_key": "https"})
+    assert httpsSummary == {
+        "_id": "chartSummaries/https",
+        "_rev": httpsSummary["_rev"],
+        "_key": "https",
+        "pass": 2,
+        "fail": 1,
+        "total": 3,
+    }
+
     webSummary = db.collection("chartSummaries").get({"_key": "web"})
     assert webSummary == {
         "_id": "chartSummaries/web",
@@ -203,6 +214,7 @@ def test_update_org_summaries():
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
+        "https": {"pass": 2, "fail": 1, "total": 3},
         "web": {"pass": 2, "fail": 1, "total": 3},
         "mail": {"pass": 1, "fail": 2, "total": 3},
         "dmarc_phase": {"not_implemented": 1, "assess": 0, "deploy": 0,
