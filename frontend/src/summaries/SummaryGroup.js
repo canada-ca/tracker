@@ -7,20 +7,20 @@ import { SummaryCard } from './SummaryCard'
 
 import theme from '../theme/canada'
 
-export function SummaryGroup({ web, dmarcPhases }) {
+export function SummaryGroup({ https, dmarcPhases }) {
   const { colors } = theme
 
-  const webCard = web ? (
+  const httpsCard = https ? (
     <SummaryCard
-      title={t`Web Configuration`}
-      description={t`Web encryption settings summary`}
+      title={t`HTTPS Configuration Summary`}
+      description={t`HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)`}
       categoryDisplay={{
         fail: {
-          name: t`Non-compliant TLS`,
+          name: t`Non-compliant`,
           color: colors.weak,
         },
         pass: {
-          name: t`Compliant TLS`,
+          name: t`Compliant`,
           color: colors.strong,
         },
         unscanned: {
@@ -28,13 +28,13 @@ export function SummaryGroup({ web, dmarcPhases }) {
           color: colors.gray['400'],
         },
       }}
-      data={web}
+      data={https}
       mb={{ base: 6, md: 0 }}
     />
   ) : (
     <Text fontWeight="bold" textAlign="center">
       <Trans>
-        No web configuration information available for this organization.
+        No HTTPS configuration information available for this organization.
       </Trans>
     </Text>
   )
@@ -78,13 +78,13 @@ export function SummaryGroup({ web, dmarcPhases }) {
 
   return (
     <Flex flexWrap="wrap" justifyContent="space-evenly">
-      {webCard}
+      {httpsCard}
       {dmarcPhaseCard}
     </Flex>
   )
 }
 
 SummaryGroup.propTypes = {
-  web: object,
+  https: object,
   dmarcPhases: object,
 }

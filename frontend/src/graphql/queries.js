@@ -55,9 +55,9 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
-export const WEB_AND_PHASE_SUMMARIES = gql`
+export const HTTPS_AND_DMARC_SUMMARY = gql`
   query LandingPageSummaries {
-    webSummary {
+    httpsSummary {
       total
       categories {
         name
@@ -632,7 +632,7 @@ export const ORG_DETAILS_PAGE = gql`
       province
       verified
       summaries {
-        web {
+        https {
           total
           categories {
             name

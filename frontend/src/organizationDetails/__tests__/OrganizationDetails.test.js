@@ -67,7 +67,7 @@ describe('<OrganizationDetails />', () => {
                 province: 'ON',
                 verified: true,
                 summaries: {
-                  web: {
+                  https: {
                     total: 54386,
                     categories: [
                       {
@@ -193,7 +193,7 @@ describe('<OrganizationDetails />', () => {
                 province: 'Ontario',
                 verified: true,
                 summaries: {
-                  web: {
+                  https: {
                     total: 82,
                     categories: [
                       {

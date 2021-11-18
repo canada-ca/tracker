@@ -388,22 +388,22 @@ const mocks = {
     const city = location.city
     const province = location.province
 
-    const webPassCount = faker.datatype.number({ min: 0, max: domainCount })
-    const webFailCount = domainCount - webPassCount
-    const webPassPercentage = (webPassCount / domainCount) * 100
-    const webFailPercentage = 100 - webPassPercentage
-    const web = {
+    const httpsPassCount = faker.datatype.number({ min: 0, max: domainCount })
+    const httpsFailCount = domainCount - httpsPassCount
+    const httpsPassPercentage = (httpsPassCount / domainCount) * 100
+    const httpsFailPercentage = 100 - httpsPassPercentage
+    const https = {
       total: domainCount,
       categories: [
         {
           name: 'pass',
-          count: webPassCount,
-          percentage: webPassPercentage,
+          count: httpsPassCount,
+          percentage: httpsPassPercentage,
         },
         {
           name: 'fail',
-          count: webFailCount,
-          percentage: webFailPercentage,
+          count: httpsFailCount,
+          percentage: httpsFailPercentage,
         },
       ],
     }
@@ -446,7 +446,7 @@ const mocks = {
       name,
       province,
       slug,
-      summaries: { web, mail, dmarcPhase },
+      summaries: { https, mail, dmarcPhase },
     }
   },
   OrganizationConnection: () => {
