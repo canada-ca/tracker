@@ -35,7 +35,7 @@ msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de réinitia
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "Si un compte avec ce nom d'utilisateur est trouvé, un lien de vérification par e-mail sera trouvé dans votre boîte de réception."
 
-#: src/user/mutations/authenticate.js:177
+#: src/user/mutations/authenticate.js:175
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "Code TFA incorrect. Veuillez vous reconnecter."
 
@@ -440,8 +440,8 @@ msgid "Unable leave organization. Please try again."
 msgstr "Impossible de quitter l'organisation. Veuillez réessayer."
 
 #: src/user/mutations/authenticate.js:77
-#: src/user/mutations/authenticate.js:125
-#: src/user/mutations/authenticate.js:134
+#: src/user/mutations/authenticate.js:123
+#: src/user/mutations/authenticate.js:132
 msgid "Unable to authenticate. Please try again."
 msgstr "Impossible de s'authentifier. Veuillez réessayer."
 
@@ -642,7 +642,7 @@ msgstr "Impossible de charger le(s) tag(s) d'orientation DMARC. Veuillez réessa
 
 #: src/summaries/queries/dmarc-phase-summary.js:14
 msgid "Unable to load DMARC phase summary. Please try again."
-msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
+msgstr "Impossible de charger le résumé DMARC. Veuillez réessayer."
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:319
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:331
@@ -668,6 +668,10 @@ msgstr "Impossible de charger la ou les balises d'orientation HTTPS. Veuillez r�
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:345
 msgid "Unable to load HTTPS scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) HTTPS. Veuillez réessayer."
+
+#: src/summaries/queries/https-summary.js:13
+msgid "Unable to load HTTPS summary. Please try again."
+msgstr "Impossible de charger le résumé HTTPS. Veuillez réessayer."
 
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:13
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:140

@@ -237,7 +237,7 @@ describe('given dmarcPhaseSummary query', () => {
 
           const error = [
             new GraphQLError(
-              'Impossible de charger le résumé du courrier. Veuillez réessayer.',
+              'Impossible de charger le résumé DMARC. Veuillez réessayer.',
             ),
           ]
 
