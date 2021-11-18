@@ -11,7 +11,7 @@ import { loadChartSummaryByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given dmarcPhaseSummary query', () => {
+describe('given httpsSummary query', () => {
   let query, drop, truncate, schema, collections, i18n
 
   const consoleOutput = []
@@ -45,7 +45,7 @@ describe('given dmarcPhaseSummary query', () => {
     consoleOutput.length = 0
   })
 
-  describe('given successful dmarc phase summary retrieval', () => {
+  describe('given successful https summary retrieval', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
@@ -58,13 +58,10 @@ describe('given dmarcPhaseSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'dmarc_phase',
-        not_implemented: 200,
-        assess: 200,
-        deploy: 200,
-        enforce: 200,
-        maintain: 200,
+        _key: 'https',
         total: 1000,
+        fail: 500,
+        pass: 500,
       })
     })
     afterEach(async () => {
@@ -73,12 +70,12 @@ describe('given dmarcPhaseSummary query', () => {
     afterAll(async () => {
       await drop()
     })
-    it('returns dmarc phase summary', async () => {
+    it('returns https summary', async () => {
       const response = await graphql(
         schema,
         `
           query {
-            dmarcPhaseSummary {
+            httpsSummary {
               total
               categories {
                 name
@@ -99,33 +96,18 @@ describe('given dmarcPhaseSummary query', () => {
 
       const expectedResponse = {
         data: {
-          dmarcPhaseSummary: {
+          httpsSummary: {
             total: 1000,
             categories: [
               {
-                name: 'not implemented',
-                count: 200,
-                percentage: 20,
+                name: 'pass',
+                count: 500,
+                percentage: 50,
               },
               {
-                name: 'assess',
-                count: 200,
-                percentage: 20,
-              },
-              {
-                name: 'deploy',
-                count: 200,
-                percentage: 20,
-              },
-              {
-                name: 'enforce',
-                count: 200,
-                percentage: 20,
-              },
-              {
-                name: 'maintain',
-                count: 200,
-                percentage: 20,
+                name: 'fail',
+                count: 500,
+                percentage: 50,
               },
             ],
           },
@@ -150,14 +132,14 @@ describe('given dmarcPhaseSummary query', () => {
         },
       })
     })
-    describe('given unsuccessful dmarc phase summary retrieval', () => {
+    describe('given unsuccessful https summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
           const response = await graphql(
             schema,
             `
               query {
-                dmarcPhaseSummary {
+                httpsSummary {
                   total
                   categories {
                     name
@@ -179,14 +161,12 @@ describe('given dmarcPhaseSummary query', () => {
           )
 
           const error = [
-            new GraphQLError(
-              `Unable to load DMARC phase summary. Please try again.`,
-            ),
+            new GraphQLError(`Unable to load HTTPS summary. Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve DMARC phase summary.`,
+            `User could not retrieve HTTPS summary.`,
           ])
         })
       })
@@ -207,14 +187,14 @@ describe('given dmarcPhaseSummary query', () => {
         },
       })
     })
-    describe('given unsuccessful dmarc phase summary retrieval', () => {
+    describe('given unsuccessful https summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
           const response = await graphql(
             schema,
             `
               query {
-                dmarcPhaseSummary {
+                httpsSummary {
                   total
                   categories {
                     name
@@ -237,13 +217,13 @@ describe('given dmarcPhaseSummary query', () => {
 
           const error = [
             new GraphQLError(
-              'Impossible de charger le résumé DMARC. Veuillez réessayer.',
+              'Impossible de charger le résumé HTTPS. Veuillez réessayer.',
             ),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve DMARC phase summary.`,
+            `User could not retrieve HTTPS summary.`,
           ])
         })
       })

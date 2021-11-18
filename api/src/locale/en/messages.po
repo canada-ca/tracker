@@ -35,7 +35,7 @@ msgstr "If an account with this username is found, a password reset link will be
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "If an account with this username is found, an email verification link will be found in your inbox."
 
-#: src/user/mutations/authenticate.js:177
+#: src/user/mutations/authenticate.js:175
 msgid "Incorrect TFA code. Please sign in again."
 msgstr "Incorrect TFA code. Please sign in again."
 
@@ -440,8 +440,8 @@ msgid "Unable leave organization. Please try again."
 msgstr "Unable leave organization. Please try again."
 
 #: src/user/mutations/authenticate.js:77
-#: src/user/mutations/authenticate.js:125
-#: src/user/mutations/authenticate.js:134
+#: src/user/mutations/authenticate.js:123
+#: src/user/mutations/authenticate.js:132
 msgid "Unable to authenticate. Please try again."
 msgstr "Unable to authenticate. Please try again."
 
@@ -668,6 +668,10 @@ msgstr "Unable to load HTTPS guidance tag(s). Please try again."
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:345
 msgid "Unable to load HTTPS scan(s). Please try again."
 msgstr "Unable to load HTTPS scan(s). Please try again."
+
+#: src/summaries/queries/https-summary.js:13
+msgid "Unable to load HTTPS summary. Please try again."
+msgstr "Unable to load HTTPS summary. Please try again."
 
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:13
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:140
