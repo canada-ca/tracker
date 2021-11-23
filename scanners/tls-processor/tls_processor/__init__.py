@@ -156,7 +156,7 @@ def process_results(results, domain_key, user_key, shared_id):
             sslEntry = db.collection("ssl").insert(sslResults)
             domain = db.collection("domains").get({"_key": domain_key})
             db.collection("domainsSSL").insert(
-                {"_from": domain["_id"], "_to": sslEntry["_id"]}
+                {"_from": domain["_id"], "timestamp": timestamp, "_to": sslEntry["_id"]}
             )
 
             if domain.get("status", None) == None:
