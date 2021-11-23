@@ -276,6 +276,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
                 "dmarc": {
                     "pass": dmarc_pass,
                     "fail": dmarc_fail,
+                    "total": dmarc_pass + dmarc_fail
                 },
                 "web": {
                     "pass": web_pass,
