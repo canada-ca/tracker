@@ -28,6 +28,7 @@ org = orgs.insert(
         "_key": "testorg",
         "verified": "true",
         "summaries": {
+            "dmarc": {"pass": 0, "fail": 0, "total": 0},
             "web": {"pass": 0, "fail": 0, "total": 0},
             "mail": {"pass": 0, "fail": 0, "total": 0},
             "https": {"pass": 0, "fail": 0, "total": 0},
@@ -214,6 +215,7 @@ def test_update_org_summaries():
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
+        "dmarc": {"pass": 2, "fail": 1, "total": 3},
         "https": {"pass": 2, "fail": 1, "total": 3},
         "web": {"pass": 2, "fail": 1, "total": 3},
         "mail": {"pass": 1, "fail": 2, "total": 3},

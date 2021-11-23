@@ -3,6 +3,12 @@ import { categorizedSummaryType } from '../../../summaries/objects'
 
 describe('given the organization summary object', () => {
   describe('testing field definitions', () => {
+    it('has a dmarc field', () => {
+      const demoType = organizationSummaryType.getFields()
+
+      expect(demoType).toHaveProperty('dmarc')
+      expect(demoType.dmarc.type).toMatchObject(categorizedSummaryType)
+    })
     it('has a https field', () => {
       const demoType = organizationSummaryType.getFields()
 
@@ -30,6 +36,78 @@ describe('given the organization summary object', () => {
   })
 
   describe('field resolvers', () => {
+    describe('dmarc resolver', () => {
+      describe('total is zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
+
+          const dmarc = {
+            pass: 0,
+            fail: 0,
+            total: 0,
+          }
+
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.dmarc.resolve({ dmarc }, {}, { i18n })).toEqual({
+            categories: [
+              {
+                count: 0,
+                name: 'pass',
+                percentage: 0,
+              },
+              {
+                count: 0,
+                name: 'fail',
+                percentage: 0,
+              },
+            ],
+            total: 0,
+          })
+        })
+      })
+
+      describe('when total is greater then zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
+
+          const dmarc = {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          }
+
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.dmarc.resolve({ dmarc }, {}, { i18n })).toEqual({
+            categories: [
+              {
+                count: 50,
+                name: 'pass',
+                percentage: 4.8,
+              },
+              {
+                count: 1000,
+                name: 'fail',
+                percentage: 95.2,
+              },
+            ],
+            total: 1050,
+          })
+        })
+      })
+    })
+
     describe('https resolver', () => {
       describe('total is zero', () => {
         it('returns the resolved value', () => {
