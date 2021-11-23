@@ -205,6 +205,8 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
+        dmarc_pass = 0
+        dmarc_fail = 0
         https_fail = 0
         https_pass = 0
         web_fail = 0
@@ -221,6 +223,11 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
             domain_total = domain_total + 1
+
+            if (domain["status"]["dmarc"] == "pass"):
+                dmarc_pass = dmarc_pass + 1
+            else:
+                dmarc_fail = dmarc_fail + 1
 
             if (
                 domain["status"]["ssl"] == "pass"
@@ -266,6 +273,11 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
 
         summary_data = {
             "summaries": {
+                "dmarc": {
+                    "pass": dmarc_pass,
+                    "fail": dmarc_fail,
+                    "total": dmarc_pass + dmarc_fail
+                },
                 "web": {
                     "pass": web_pass,
                     "fail": web_fail,
