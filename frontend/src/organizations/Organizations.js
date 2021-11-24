@@ -139,12 +139,12 @@ export default function Organizations() {
           info={t`Shows the number of domains that the organization is in control of.`}
         />
         <InfoBox
-          title={t`Web Configuration`}
-          info={t`Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts.`}
+          title={t`HTTPS Configured`}
+          info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)`}
         />
         <InfoBox
-          title={t`Email Configuration`}
-          info={t`Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC.`}
+          title={t`DMARC Configuration`}
+          info={t`Shows the percentage of domains which have a valid DMARC policy configuration.`}
         />
         <Divider borderColor="gray.500" mb={4} />
         <Trans>

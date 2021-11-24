@@ -26,7 +26,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
           domainCount
           verified
           summaries {
-            mail {
+            dmarc {
               total
               categories {
                 name
@@ -34,7 +34,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
                 percentage
               }
             }
-            web {
+            https {
               total
               categories {
                 name
