@@ -49,9 +49,11 @@ export function LandingPage() {
           />
         </Box>
       </Grid>
-      <Box pt={7}>
-        <LandingPageSummaries />
-      </Box>
+      {document.location.origin !== 'https://tracker.alpha.canada.ca' && (
+        <Box pt={7}>
+          <LandingPageSummaries />
+        </Box>
+      )}
     </Stack>
   )
 }
