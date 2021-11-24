@@ -110,6 +110,9 @@ export const getTypeNames = () => gql`
     # Web summary computed values, used to build summary cards.
     webSummary: CategorizedSummary
 
+    # DMARC summary computed values, used to build summary cards.
+    dmarcSummary: CategorizedSummary
+
     # DMARC phase summary computed values, used to build summary cards.
     dmarcPhaseSummary: CategorizedSummary
 
@@ -482,6 +485,9 @@ export const getTypeNames = () => gql`
 
   # Summaries based on domains that the organization has claimed.
   type OrganizationSummary {
+    # Summary based on DMARC scan results for a given organization.
+    dmarc: CategorizedSummary
+
     # Summary based on HTTPS scan results for a given organization.
     https: CategorizedSummary
 

@@ -531,6 +531,14 @@ msgstr "DKIM Status"
 msgid "DMARC"
 msgstr "DMARC"
 
+#: src/organizations/Organizations.js:146
+msgid "DMARC Configuration"
+msgstr "DMARC Configuration"
+
+#: src/organizations/OrganizationCard.js:127
+msgid "DMARC Configured"
+msgstr "DMARC Configured"
+
 #: src/dmarc/DmarcReportPage.js:631
 msgid "DMARC Failure Table"
 msgstr "DMARC Failure Table"
@@ -747,8 +755,8 @@ msgstr "Email"
 
 #: src/organizations/OrganizationCard.js:127
 #: src/organizations/Organizations.js:146
-msgid "Email Configuration"
-msgstr "Email Configuration"
+#~ msgid "Email Configuration"
+#~ msgstr "Email Configuration"
 
 #: src/domains/ScanDomain.js:286
 #: src/guidance/DmarcGuidancePage.js:81
@@ -831,7 +839,7 @@ msgstr "Enter and confirm your new password below:"
 msgid "Enter and confirm your new password."
 msgstr "Enter and confirm your new password."
 
-#: src/components/fields/AuthenticateField.js:38
+#: src/components/fields/AuthenticateField.js:35
 msgid "Enter two factor code"
 msgstr "Enter two factor code"
 
@@ -989,6 +997,11 @@ msgstr "HTTPS"
 #: src/summaries/SummaryGroup.js:15
 msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
+
+#: src/organizations/OrganizationCard.js:115
+#: src/organizations/Organizations.js:142
+msgid "HTTPS Configured"
+msgstr "HTTPS Configured"
 
 #: src/app/RequestScanNotificationHandler.js:89
 msgid "HTTPS Scan Complete"
@@ -1572,7 +1585,7 @@ msgstr "Please choose your preferred language"
 msgid "Please enter your current password."
 msgstr "Please enter your current password."
 
-#: src/components/fields/AuthenticateField.js:35
+#: src/components/fields/AuthenticateField.js:32
 msgid "Please enter your two factor code below."
 msgstr "Please enter your two factor code below."
 
@@ -1935,12 +1948,20 @@ msgid "Shows the number of domains that the organization is in control of."
 msgstr "Shows the number of domains that the organization is in control of."
 
 #: src/organizations/Organizations.js:143
-msgid "Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts."
-msgstr "Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts."
+#~ msgid "Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts."
+#~ msgstr "Shows the percentage of Domains that have passed both HTTPS and SSL requiremnts."
 
 #: src/organizations/Organizations.js:147
-msgid "Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
-msgstr "Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
+#~ msgid "Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
+#~ msgstr "Shows the percentage of Domains that have passed the requirements for SPF, DKIM, and DMARC."
+
+#: src/organizations/Organizations.js:143
+msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
+msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
+
+#: src/organizations/Organizations.js:147
+msgid "Shows the percentage of domains which have a valid DMARC policy configuration."
+msgstr "Shows the percentage of domains which have a valid DMARC policy configuration."
 
 #: src/dmarc/DmarcByDomainPage.js:312
 msgid "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
@@ -2377,40 +2398,40 @@ msgid "We reserve the right to modify or terminate our services for any reason, 
 msgstr "We reserve the right to modify or terminate our services for any reason, without notice, at any time."
 
 #: src/components/fields/AuthenticateField.js:26
-msgid ""
-"We've sent an SMS to your new phone number with an authentication code\n"
-"to confirm this change."
-msgstr ""
-"We've sent an SMS to your new phone number with an authentication code\n"
-"to confirm this change."
+#~ msgid ""
+#~ "We've sent an SMS to your new phone number with an authentication code\n"
+#~ "to confirm this change."
+#~ msgstr ""
+#~ "We've sent an SMS to your new phone number with an authentication code\n"
+#~ "to confirm this change."
 
-#: src/AuthenticateField.js:33
-#~ msgid "We've sent an SMS to your new phone number with an authentication code to confirm this change."
-#~ msgstr "We've sent an SMS to your new phone number with an authentication code to confirm this change."
+#: src/components/fields/AuthenticateField.js:24
+msgid "We've sent an SMS to your new phone number with an authentication code to confirm this change."
+msgstr "We've sent an SMS to your new phone number with an authentication code to confirm this change."
 
 #: src/components/fields/AuthenticateField.js:22
-msgid ""
-"We've sent an SMS to your registered phone number with an authentication\n"
-"code to sign into Tracker."
-msgstr ""
-"We've sent an SMS to your registered phone number with an authentication\n"
-"code to sign into Tracker."
+#~ msgid ""
+#~ "We've sent an SMS to your registered phone number with an authentication\n"
+#~ "code to sign into Tracker."
+#~ msgstr ""
+#~ "We've sent an SMS to your registered phone number with an authentication\n"
+#~ "code to sign into Tracker."
 
-#: src/AuthenticateField.js:28
-#~ msgid "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker."
-#~ msgstr "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker."
+#: src/components/fields/AuthenticateField.js:21
+msgid "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker."
+msgstr "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker."
 
 #: src/components/fields/AuthenticateField.js:18
-msgid ""
-"We've sent you an email with an authentication code to sign into\n"
-"Tracker."
-msgstr ""
-"We've sent you an email with an authentication code to sign into\n"
-"Tracker."
+#~ msgid ""
+#~ "We've sent you an email with an authentication code to sign into\n"
+#~ "Tracker."
+#~ msgstr ""
+#~ "We've sent you an email with an authentication code to sign into\n"
+#~ "Tracker."
 
-#: src/AuthenticateField.js:23
-#~ msgid "We've sent you an email with an authentication code to sign into Tracker."
-#~ msgstr "We've sent you an email with an authentication code to sign into Tracker."
+#: src/components/fields/AuthenticateField.js:18
+msgid "We've sent you an email with an authentication code to sign into Tracker."
+msgstr "We've sent you an email with an authentication code to sign into Tracker."
 
 #: src/guidance/ScanCategoryDetails.js:165
 msgid "Weak Ciphers:"
@@ -2422,8 +2443,8 @@ msgstr "Weak Curves:"
 
 #: src/organizations/OrganizationCard.js:115
 #: src/organizations/Organizations.js:142
-msgid "Web Configuration"
-msgstr "Web Configuration"
+#~ msgid "Web Configuration"
+#~ msgstr "Web Configuration"
 
 #: src/domains/ScanDomain.js:283
 #: src/guidance/DmarcGuidancePage.js:78

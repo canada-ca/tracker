@@ -16,16 +16,13 @@ function AuthenticateField({
   const codeSendMessage =
     sendMethod.toLowerCase() === 'email'
       ? t`
-        We've sent you an email with an authentication code to sign into
-        Tracker.`
+        We've sent you an email with an authentication code to sign into Tracker.`
       : sendMethod.toLowerCase() === 'phone'
       ? t`
-        We've sent an SMS to your registered phone number with an authentication
-        code to sign into Tracker.`
+        We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.`
       : sendMethod.toLowerCase() === 'verifyphone'
       ? t`
-        We've sent an SMS to your new phone number with an authentication code
-        to confirm this change.`
+        We've sent an SMS to your new phone number with an authentication code to confirm this change.`
       : ''
 
   return (

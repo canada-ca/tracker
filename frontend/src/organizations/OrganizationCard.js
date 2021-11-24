@@ -24,29 +24,29 @@ export function OrganizationCard({
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
-  let webValue = 0
-  let mailValue = 0
-  const webSummary =
-    summaries?.web?.categories?.filter((cat) => {
+  let httpsValue = 0
+  let dmarcValue = 0
+  const httpsSummary =
+    summaries?.https?.categories?.filter((cat) => {
       return cat.name === 'pass'
     }) || []
-  const mailSummary =
-    summaries?.mail?.categories?.filter((cat) => {
+  const dmarc =
+    summaries?.dmarc?.categories?.filter((cat) => {
       return cat.name === 'pass'
     }) || []
-  if (webSummary[0]?.percentage) webValue = webSummary[0]?.percentage
-  if (mailSummary[0]?.percentage) mailValue = mailSummary[0]?.percentage
+  if (httpsSummary[0]?.percentage) httpsValue = httpsSummary[0]?.percentage
+  if (dmarc[0]?.percentage) dmarcValue = dmarc[0]?.percentage
 
-  if (webValue % 1 >= 0.5) {
-    webValue = Math.ceil(webValue)
+  if (httpsValue % 1 >= 0.5) {
+    httpsValue = Math.ceil(httpsValue)
   } else {
-    webValue = Math.floor(webValue)
+    httpsValue = Math.floor(httpsValue)
   }
 
-  if (mailValue % 1 >= 0.5) {
-    mailValue = Math.ceil(mailValue)
+  if (dmarcValue % 1 >= 0.5) {
+    dmarcValue = Math.ceil(dmarcValue)
   } else {
-    mailValue = Math.floor(mailValue)
+    dmarcValue = Math.floor(dmarcValue)
   }
 
   // 'as' property does not accept responsive values, this works as a replacement
@@ -112,10 +112,10 @@ export function OrganizationCard({
           textAlign="left"
         >
           <Text fontWeight="bold">
-            <Trans>Web Configuration</Trans>
+            <Trans>HTTPS Configured</Trans>
           </Text>
-          <Text>{webValue}%</Text>
-          <Progress value={webValue} bg="gray.300" aria-hidden="true" />
+          <Text>{httpsValue}%</Text>
+          <Progress value={httpsValue} bg="gray.300" aria-hidden="true" />
         </Box>
 
         <Box
@@ -124,10 +124,10 @@ export function OrganizationCard({
           textAlign="left"
         >
           <Text fontWeight="bold">
-            <Trans>Email Configuration</Trans>
+            <Trans>DMARC Configured</Trans>
           </Text>
-          <Text>{mailValue}%</Text>
-          <Progress value={mailValue} bg="gray.300" aria-hidden="true" />
+          <Text>{dmarcValue}%</Text>
+          <Progress value={dmarcValue} bg="gray.300" aria-hidden="true" />
         </Box>
         {hasButton && (
           <Button
