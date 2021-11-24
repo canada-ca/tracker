@@ -653,18 +653,32 @@ def process_results(results, domain_key, user_key, shared_id):
                     dkimResults[selector]
                 )
                 db.collection("dkimToDkimResults").insert(
-                    {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
+                    {
+                        "_from": dkimEntry["_id"],
+                        # Add timestamps to edges so that traversals can be
+                        # constrained by time.
+                        "timestamp": timestamp,
+                        "_to": dkimResultsEntry["_id"],
+                    }
                 )
 
             domain = db.collection("domains").get({"_key": domain_key})
             db.collection("domainsDMARC").insert(
-                {"_from": domain["_id"], "_to": dmarcEntry["_id"]}
+                {
+                    "_from": domain["_id"],
+                    "timestamp": timestamp,
+                    "_to": dmarcEntry["_id"],
+                }
             )
             db.collection("domainsSPF").insert(
-                {"_from": domain["_id"], "_to": spfEntry["_id"]}
+                {"_from": domain["_id"], "timestamp": timestamp, "_to": spfEntry["_id"]}
             )
             db.collection("domainsDKIM").insert(
-                {"_from": domain["_id"], "_to": dkimEntry["_id"]}
+                {
+                    "_from": domain["_id"],
+                    "timestamp": timestamp,
+                    "_to": dkimEntry["_id"],
+                }
             )
 
             if domain.get("status", None) == None:

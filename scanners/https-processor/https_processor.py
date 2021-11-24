@@ -175,7 +175,7 @@ def process_https(results, domain_key, user_key, shared_id):
             httpsEntry = db.collection("https").insert(httpsResults)
             domain = db.collection("domains").get({"_key": domain_key})
             db.collection("domainsHTTPS").insert(
-                {"_from": domain["_id"], "_to": httpsEntry["_id"]}
+                {"_from": domain["_id"], "timestamp": timestamp, "_to": httpsEntry["_id"]}
             )
 
             if domain.get("status", None) == None:
