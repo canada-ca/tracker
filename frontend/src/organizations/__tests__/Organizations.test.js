@@ -28,7 +28,7 @@ const i18n = setupI18n({
 })
 
 const summaries = {
-  mail: {
+  dmarc: {
     total: 86954,
     categories: [
       {
@@ -43,7 +43,7 @@ const summaries = {
       },
     ],
   },
-  web: {
+  https: {
     total: 54386,
     categories: [
       {
