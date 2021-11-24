@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: tls-processor
-          image: gcr.io/track-compliance/tls-processor:master-a2c7ce2-1637081864 # {"$imagepolicy": "flux-system:tls-processor"}
+          image: gcr.io/track-compliance/tls-processor:master-1e7f30f-1637761205 # {"$imagepolicy": "flux-system:tls-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
