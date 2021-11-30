@@ -66,7 +66,7 @@ export default function DmarcByDomainPage() {
     isLoadingMore,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    recordsPerPage: 10,
+    recordsPerPage: selectedTableDisplayLimit,
     variables: {
       month: selectedPeriod,
       year: selectedYear,
