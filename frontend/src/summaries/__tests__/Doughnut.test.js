@@ -25,6 +25,7 @@ describe('<Doughnut/>', () => {
     const { queryAllByTestId } = render(
       <I18nProvider i18n={i18n}>
         <Doughnut
+          id="web"
           title="doughnut chart!"
           data={data}
           height={320}
