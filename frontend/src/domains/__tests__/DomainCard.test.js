@@ -18,6 +18,7 @@ const i18n = setupI18n({
   },
 })
 const status = {
+  policy: 'pass',
   ciphers: 'pass',
   curves: 'pass',
   dkim: 'pass',
