@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n } from '@lingui/core'
 import userEvent from '@testing-library/user-event'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
@@ -19,15 +19,9 @@ import {
   UPDATE_ORGANIZATION,
 } from '../../graphql/mutations'
 
-const i18n = setupI18n({
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  localeData: {
-    en: { plurals: en },
-  },
-})
+i18n.loadLocaleData('en', { plurals: en })
+i18n.load('en', { en: {} })
+i18n.activate('en')
 
 const mocks = [
   {
