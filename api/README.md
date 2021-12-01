@@ -83,7 +83,7 @@ npm install
 #### Running Server with Nodemon
 
 ```shell
-npm run dev-start
+npm run dev
 ```
 
 #### Running Tests
