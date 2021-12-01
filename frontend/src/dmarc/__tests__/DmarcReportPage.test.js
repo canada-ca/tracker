@@ -17,7 +17,7 @@ import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcReportGraphData } from '../../fixtures/dmarcReportGraphData'
 import {
   rawDmarcReportData,
-  rawDmarcReportGraphDataWithoutReport,
+  rawDmarcReportGraphDataWithoutReport, // eslint-disable-line import/named
   augustDmarcReportData,
 } from '../../fixtures/dmarcReportData.js'
 import {
