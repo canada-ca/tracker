@@ -1,4 +1,4 @@
-FROM node:16.3.0-alpine as build-env
+FROM node:17-alpine as build-env
 
 WORKDIR /app
 
@@ -8,9 +8,7 @@ COPY . .
 RUN npm ci && npm run build && npm prune --production
 
 # https://github.com/astefanutti/scratch-node
-# FROM astefanutti/scratch-node
-# Our build of the above:
-FROM gcr.io/track-compliance/scratch-node:16.3.0
+FROM astefanutti/scratch-node:17
 LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
 
 ENV HOST 0.0.0.0
@@ -21,6 +19,8 @@ WORKDIR /app
 COPY --from=build-env /app .
 
 ENV NODE_ENV production
+# https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
 USER node
 EXPOSE 3000
