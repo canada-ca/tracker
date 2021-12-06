@@ -1389,7 +1389,7 @@ export const ORGANIZATION_INFORMATION = gql`
   }
 `
 
-export const ADMIN_AFFILIATIONS = gql`
+export const ADMIN_PAGE = gql`
   query AdminAffiliations(
     $after: String
     $first: Int
@@ -1419,11 +1419,6 @@ export const ADMIN_AFFILIATIONS = gql`
         }
       }
     }
-  }
-`
-
-export const IS_USER_SUPER_ADMIN = gql`
-  query IsUserSuperAdmin {
     isUserSuperAdmin
   }
 `
