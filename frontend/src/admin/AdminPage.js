@@ -9,7 +9,7 @@ import { useLingui } from '@lingui/react'
 import { AdminPanel } from './AdminPanel'
 import { OrganizationInformation } from './OrganizationInformation'
 
-import { ADMIN_AFFILIATIONS, IS_USER_SUPER_ADMIN } from '../graphql/queries'
+import { ADMIN_PAGE } from '../graphql/queries'
 import { Dropdown } from '../components/Dropdown'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
@@ -28,7 +28,7 @@ export default function AdminPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const { loading, error, data } = useQuery(ADMIN_AFFILIATIONS, {
+  const { loading, error, data } = useQuery(ADMIN_PAGE, {
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
     variables: {
@@ -38,20 +38,6 @@ export default function AdminPage() {
       includeSuperAdminOrg: true,
       search: debouncedSearchTerm,
     },
-    onError: (error) => {
-      const [_, message] = error.message.split(': ')
-      toast({
-        title: 'Error',
-        description: message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-  })
-
-  const { data: isSA } = useQuery(IS_USER_SUPER_ADMIN, {
     onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
@@ -137,7 +123,7 @@ export default function AdminPage() {
           <AdminPanel
             orgSlug={orgDetails.slug}
             orgId={orgDetails.id}
-            permission={isSA?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
+            permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
             mr="4"
           />
         </>

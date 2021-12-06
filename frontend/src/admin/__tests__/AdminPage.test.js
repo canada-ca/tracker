@@ -12,8 +12,7 @@ import userEvent from '@testing-library/user-event'
 
 import { UserVarProvider } from '../../utilities/userState'
 import {
-  ADMIN_AFFILIATIONS,
-  IS_USER_SUPER_ADMIN,
+  ADMIN_PAGE,
   ORGANIZATION_INFORMATION,
   PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
   PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
@@ -30,10 +29,109 @@ const i18n = setupI18n({
 })
 
 describe('<AdminPage />', () => {
-  const mocks = [
+  it('shows a list of the users organizations', async () => {
+    const { getByText } = render(
+      <MockedProvider mocks={mocks()} addTypename={false}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+        >
+          <I18nProvider i18n={i18n}>
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                <AdminPage />
+              </MemoryRouter>
+            </ChakraProvider>
+          </I18nProvider>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    await waitFor(() => {
+      const welcome = getByText(/Select an organization to view admin options/i)
+      expect(welcome).toBeInTheDocument()
+    })
+  })
+
+  it('displays info for admin', async () => {
+    const { getByText, findByRole } = render(
+      <MockedProvider mocks={mocks()} addTypename={false}>
+        <UserVarProvider
+          userVar={makeVar({
+            jwt: null,
+            tfaSendMethod: null,
+            userName: null,
+          })}
+        >
+          <I18nProvider i18n={i18n}>
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                <AdminPage />
+              </MemoryRouter>
+            </ChakraProvider>
+          </I18nProvider>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    const organizationInput = await findByRole('textbox', {
+      name: /Organization/,
+    })
+    userEvent.click(organizationInput)
+
+    const orgEntry = getByText(/Wolf Group/)
+    userEvent.click(orgEntry)
+
+    await waitFor(() => {
+      expect(getByText(/Slug:/i)).toHaveTextContent(/Slug: Wolf-Group/i)
+    })
+  })
+
+  it('filters organization list', async () => {
+    const { getByText, queryByText, findByRole } = render(
+      <MockedProvider mocks={mocks()} addTypename={false}>
+        <UserVarProvider
+          userVar={makeVar({
+            jwt: null,
+            tfaSendMethod: null,
+            userName: null,
+          })}
+        >
+          <I18nProvider i18n={i18n}>
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+                <AdminPage />
+              </MemoryRouter>
+            </ChakraProvider>
+          </I18nProvider>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    const organizationInput = await findByRole('textbox', {
+      name: /Organization/,
+    })
+
+    userEvent.click(organizationInput)
+
+    await waitFor(() => {
+      expect(getByText(/Wolf Group/)).toBeInTheDocument()
+      expect(getByText(/Hane - Pollich/)).toBeInTheDocument()
+    })
+
+    userEvent.type(organizationInput, 'Wolf Group')
+
+    await waitFor(() => {
+      expect(getByText(/Wolf Group/)).toBeInTheDocument()
+      expect(queryByText(/Hane - Pollich/)).not.toBeInTheDocument()
+    })
+  })
+})
+
+function mocks() {
+  return [
     {
       request: {
-        query: ADMIN_AFFILIATIONS,
+        query: ADMIN_PAGE,
         variables: {
           first: 100,
           orderBy: {
@@ -75,12 +173,13 @@ describe('<AdminPage />', () => {
               },
             ],
           },
+          isUserSuperAdmin: false,
         },
       },
     },
     {
       request: {
-        query: ADMIN_AFFILIATIONS,
+        query: ADMIN_PAGE,
         variables: {
           first: 100,
           orderBy: {
@@ -106,16 +205,6 @@ describe('<AdminPage />', () => {
               },
             ],
           },
-        },
-      },
-    },
-    {
-      request: {
-        query: IS_USER_SUPER_ADMIN,
-        variables: {},
-      },
-      result: {
-        data: {
           isUserSuperAdmin: false,
         },
       },
@@ -245,103 +334,4 @@ describe('<AdminPage />', () => {
       },
     },
   ]
-
-  it('renders correctly', async () => {
-    const { getByText } = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
-          <I18nProvider i18n={i18n}>
-            <ChakraProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-                <AdminPage />
-              </MemoryRouter>
-            </ChakraProvider>
-          </I18nProvider>
-        </UserVarProvider>
-      </MockedProvider>,
-    )
-
-    await waitFor(() => {
-      const welcome = getByText(/Select an organization to view admin options/i)
-      expect(welcome).toBeInTheDocument()
-    })
-  })
-
-  describe('Organization select', () => {
-    it('displays info for admin', async () => {
-      const { getByText, findByRole } = render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <I18nProvider i18n={i18n}>
-              <ChakraProvider theme={theme}>
-                <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-                  <AdminPage />
-                </MemoryRouter>
-              </ChakraProvider>
-            </I18nProvider>
-          </UserVarProvider>
-        </MockedProvider>,
-      )
-
-      const organizationInput = await findByRole('textbox', {
-        name: /Organization/,
-      })
-      userEvent.click(organizationInput)
-
-      const orgEntry = getByText(/Wolf Group/)
-      userEvent.click(orgEntry)
-
-      await waitFor(() => {
-        expect(getByText(/Slug:/i)).toHaveTextContent(/Slug: Wolf-Group/i)
-      })
-    })
-
-    it('filters organization list', async () => {
-      const { getByText, queryByText, findByRole } = render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <I18nProvider i18n={i18n}>
-              <ChakraProvider theme={theme}>
-                <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
-                  <AdminPage />
-                </MemoryRouter>
-              </ChakraProvider>
-            </I18nProvider>
-          </UserVarProvider>
-        </MockedProvider>,
-      )
-
-      const organizationInput = await findByRole('textbox', {
-        name: /Organization/,
-      })
-
-      userEvent.click(organizationInput)
-
-      await waitFor(() => {
-        expect(getByText(/Wolf Group/)).toBeInTheDocument()
-        expect(getByText(/Hane - Pollich/)).toBeInTheDocument()
-      })
-
-      userEvent.type(organizationInput, 'Wolf Group')
-
-      await waitFor(() => {
-        expect(getByText(/Wolf Group/)).toBeInTheDocument()
-        expect(queryByText(/Hane - Pollich/)).not.toBeInTheDocument()
-      })
-    })
-  })
-})
+}
