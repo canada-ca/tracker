@@ -415,6 +415,7 @@ describe('<UserListModal />', () => {
       })
     })
   })
+
   describe('admin is adding a new user', () => {
     describe('admin has "ADMIN" privileges', () => {
       it('admin can add a user with "USER" privileges', async () => {
@@ -469,7 +470,10 @@ describe('<UserListModal />', () => {
 
         // modal closed
         const openModalButton = getByRole('button', { name: /Open Modal/ })
-        expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+        await waitFor(() => {
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+        })
 
         // modal opened
         userEvent.click(openModalButton)
