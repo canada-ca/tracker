@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "scripts": {
     "build": "webpack --env production --config webpack.config.js",
-    "dev": "webpack serve --hot --env development",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --hot --env development",
     "webpack": "webpack",
-    "start": "node index.js",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider node index.js",
     "test": "jest",
     "lint": "eslint src",
     "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
