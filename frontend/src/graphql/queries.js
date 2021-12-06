@@ -506,57 +506,6 @@ export const ORGANIZATIONS = gql`
   }
 `
 
-export const ADMIN_PANEL = gql`
-  query AdminPanel(
-    $orgSlug: Slug!
-    $domainsFirst: Int
-    $domainsCursor: String
-    $affiliationsFirst: Int
-    $affiliationsCursor: String
-  ) {
-    findOrganizationBySlug(orgSlug: $orgSlug) {
-      id
-      name
-      domains(first: $domainsFirst, after: $domainsCursor) {
-        edges {
-          node {
-            id
-            domain
-            lastRan
-            selectors
-          }
-        }
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
-        }
-        totalCount
-      }
-      affiliations(first: $affiliationsFirst, after: $affiliationsCursor) {
-        edges {
-          node {
-            id
-            permission
-            user {
-              userName
-              displayName
-            }
-          }
-        }
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
-        }
-        totalCount
-      }
-    }
-  }
-`
-
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
   query PaginatedOrgAffiliations(
     $orgSlug: Slug!
