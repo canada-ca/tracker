@@ -30,7 +30,6 @@ export function createCache() {
           },
         },
       },
-      AffiliationsConnection: relayStylePagination(),
       DetailTables: {
         fields: {
           dkimFailure: relayStylePagination(),
@@ -50,6 +49,7 @@ export function createCache() {
       },
       Organization: {
         fields: {
+          affiliations: relayStylePagination(),
           domains: relayStylePagination(),
         },
       },
