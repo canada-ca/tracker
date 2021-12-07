@@ -532,17 +532,10 @@ const mocks = {
   ...mockOverrides,
 }
 
-const getConnectionObject = (store, args, resolveInfo) => {
-  // use key of calling object to ensure consistency
-  const allEdges = store.get(
-    resolveInfo.returnType.toString(),
-    resolveInfo.path.key,
-    'edges',
-  )
-
+const edgesToConnection = (store, edges, args) => {
   // we only need the nodes since connectionFromArray will generate the proper cursors
   // extract all nodes and place into new array
-  const allNodes = allEdges.map((edge) => {
+  const allNodes = edges.map((edge) => {
     return store.get(edge.$ref.typeName, edge.$ref.key, 'node')
   })
 
@@ -552,6 +545,17 @@ const getConnectionObject = (store, args, resolveInfo) => {
     totalCount: allNodes.length,
     ...requestedConnection,
   }
+}
+
+const getConnectionObject = (store, args, resolveInfo) => {
+  // use key of calling object to ensure consistency
+  const allEdges = store.get(
+    resolveInfo.returnType.toString(),
+    resolveInfo.path.key,
+    'edges',
+  )
+
+  return edgesToConnection(store, allEdges, args)
 }
 
 const dmarcPhaseSummaryMock = () => {
@@ -633,6 +637,9 @@ const schemaWithMocks = addMocksToSchema({
       findMyDomains: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
+      findOrganizationBySlug: (_, args, _context, _resolveInfo) => {
+        return store.get('Organization', args.orgSlug)
+      },
       findMyOrganizations: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
@@ -652,6 +659,19 @@ const schemaWithMocks = addMocksToSchema({
       },
       spfFailure: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
+      },
+    },
+    Organization: {
+      affiliations: (parent, args, _context, _resolveInfo) => {
+        const organizationAffiliationEdges = store.get(parent, [
+          'affiliations',
+          'edges',
+        ])
+        return edgesToConnection(store, organizationAffiliationEdges, args)
+      },
+      domains: (parent, args, _context, _resolveInfo) => {
+        const organizationDomainEdges = store.get(parent, ['domains', 'edges'])
+        return edgesToConnection(store, organizationDomainEdges, args)
       },
     },
     WebScan: {
