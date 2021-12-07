@@ -27,6 +27,8 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
     variables: { slug: orgSlug },
     recordsPerPage: usersPerPage,
     relayRoot: 'findOrganizationBySlug.affiliations',
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
