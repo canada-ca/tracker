@@ -261,9 +261,9 @@ msgstr "By accessing, browsing, or using our website or our services, you acknow
 msgid "CCS Injection Vulnerability:"
 msgstr "CCS Injection Vulnerability:"
 
-#: src/landing/LandingPage.js:27
-msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
-msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
+#: src/landing/LandingPage.js:35
+msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
+msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
 #: src/organizationDetails/OrganizationDetails.js:227
 #: src/user/UserPage.js:282
@@ -1298,7 +1298,7 @@ msgstr "No HTTPS configuration information available for this organization."
 msgid "No Organizations"
 msgstr "No Organizations"
 
-#: src/organizationDetails/OrganizationAffiliations.js:48
+#: src/organizationDetails/OrganizationAffiliations.js:50
 msgid "No Users"
 msgstr "No Users"
 
@@ -2023,7 +2023,7 @@ msgstr "Total Messages"
 msgid "Total users"
 msgstr "Total users"
 
-#: src/landing/LandingPage.js:23
+#: src/landing/LandingPage.js:31
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
 
@@ -2181,7 +2181,7 @@ msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25%
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 msgstr "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 
-#: src/organizationDetails/OrganizationAffiliations.js:37
+#: src/organizationDetails/OrganizationAffiliations.js:39
 msgid "User Affiliations"
 msgstr "User Affiliations"
 

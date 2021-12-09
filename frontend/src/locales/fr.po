@@ -261,9 +261,9 @@ msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos service
 msgid "CCS Injection Vulnerability:"
 msgstr "Vulnérabilité d'injection de CCS:"
 
-#: src/landing/LandingPage.js:27
-msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
-msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour le courrier électronique et les services Web. Suivez l'évolution de la sécurisation des sites gouvernementaux."
+#: src/landing/LandingPage.js:35
+msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
+msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
 #: src/organizationDetails/OrganizationDetails.js:227
 #: src/user/UserPage.js:282
@@ -1298,7 +1298,7 @@ msgstr "Aucune information de configuration HTTPS disponible pour cette organisa
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
-#: src/organizationDetails/OrganizationAffiliations.js:48
+#: src/organizationDetails/OrganizationAffiliations.js:50
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
 
@@ -2023,7 +2023,7 @@ msgstr "Total des messages"
 msgid "Total users"
 msgstr "total des utilisateurs"
 
-#: src/landing/LandingPage.js:23
+#: src/landing/LandingPage.js:31
 msgid "Track Digital Security"
 msgstr "Suivre la sécurité numérique"
 
@@ -2181,7 +2181,7 @@ msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer prog
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 msgstr "L'utilisation de la propriété intellectuelle en violation du présent accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Tracker."
 
-#: src/organizationDetails/OrganizationAffiliations.js:37
+#: src/organizationDetails/OrganizationAffiliations.js:39
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 

@@ -1,11 +1,19 @@
 import React from 'react'
 import trackerLogo from '../images/trackerlogo.svg'
-import { Box, Divider, Grid, Image, Stack, Text } from '@chakra-ui/react'
+import { Link, Box, Divider, Grid, Image, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
+import { useLingui } from '@lingui/react'
 import { LandingPageSummaries } from './LandingPageSummaries'
+const emailUrlEn = 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27600'
+const itpinUrlEn =
+  'https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html'
+const emailUrlFr = 'https://www.tbs-sct.gc.ca/pol/doc-fra.aspx?id=27600'
+const itpinUrlFr =
+  'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html'
 
 export function LandingPage() {
+  const { i18n } = useLingui()
   return (
     <Stack>
       <Grid
@@ -28,8 +36,21 @@ export function LandingPage() {
               Canadians rely on the Government of Canada to provide secure
               digital services. The Policy on Service and Digital guides
               government online services to adopt good security practices for
-              email and web services. Track how government sites are becoming
-              more secure.
+              practices outlined in the{' '}
+              <Link
+                href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
+                isExternal
+              >
+                email
+              </Link>{' '}
+              and{' '}
+              <Link
+                href={i18n.locale === 'en' ? itpinUrlEn : itpinUrlFr}
+                isExternal
+              >
+                web
+              </Link>{' '}
+              services. Track how government sites are becoming more secure.
             </Trans>
           </Text>
         </Box>
