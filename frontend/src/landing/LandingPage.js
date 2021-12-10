@@ -40,6 +40,7 @@ export function LandingPage() {
               <Link
                 href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
                 isExternal
+                style={{ textDecoration: 'underline', fontWeight: 'bold' }}
               >
                 email
               </Link>{' '}
@@ -47,6 +48,7 @@ export function LandingPage() {
               <Link
                 href={i18n.locale === 'en' ? itpinUrlEn : itpinUrlFr}
                 isExternal
+                style={{ textDecoration: 'underline', fontWeight: 'bold' }}
               >
                 web
               </Link>{' '}
