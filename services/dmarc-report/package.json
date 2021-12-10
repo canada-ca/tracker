@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/canada-ca/tracker#readme",
   "dependencies": {
-    "@azure/cosmos": "^3.14.1",
+    "@azure/cosmos": "^3.15.0",
     "arango-tools": "0.5.0",
     "arangojs": "^7.6.1",
     "dotenv-safe": "^8.2.0",
@@ -38,7 +38,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0",
-    "jest": "27.4.1",
+    "jest": "27.4.4",
     "jest-fetch-mock": "^3.0.3",
     "jest-matcher-utils": "^27.2.4",
     "prettier": "^2.4.1",
