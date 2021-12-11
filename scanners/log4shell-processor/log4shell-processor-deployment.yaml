@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: log4shell-processor
+  name: log4shell-processor
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log4shell-processor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: log4shell-processor
+    spec:
+      containers:
+      - name: log4shell-processor
+        image: gcr.io/track-compliance/log4shell-processor:test-0000-1639259128
+        resources: {}
+status: {}
