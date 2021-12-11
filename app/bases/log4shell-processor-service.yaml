@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: log4shell-processor
+  name: log4shell-processor
+  namespace: scanners
+spec:
+  ports:
+  - name: tcp-1389
+    port: 1389
+    targetPort: 1389
+  selector:
+    app: log4shell-processor
+  type: ClusterIP
+status:
+  loadBalancer: {}
