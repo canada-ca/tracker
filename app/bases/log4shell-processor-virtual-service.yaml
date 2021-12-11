@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: log4shell-processor
+  namespace: scanners
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-system/publicgateway
+  tcp:
+  - name: gateway-to-log4shell
+    match:
+    - port: 1389
+    route:
+    - destination:
+        host: log4shell-processor.scanners.svc.cluster.local
+        port:
+          number: 1389
