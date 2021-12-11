@@ -9,8 +9,7 @@ spec:
   gateways:
   - istio-system/publicgateway
   tcp:
-  - name: gateway-to-log4shell
-    match:
+  - match:
     - port: 1389
     route:
     - destination:
