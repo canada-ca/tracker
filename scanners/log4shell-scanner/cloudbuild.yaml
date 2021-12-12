@@ -1,0 +1,39 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: scanners/log4shell-scanner
+    args:
+      - '-c'
+      - |
+        echo "gcr.io/$PROJECT_ID/log4shell-scanner:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-if-master
+    entrypoint: 'bash'
+    dir: scanners/log4shell-scanner
+    args:
+      -  '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+            image=$(cat /workspace/imagename)
+            docker build -t $image .
+        else
+          exit 0
+        fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-if-master
+    entrypoint: 'bash'
+    dir: scanners/log4shell-scanner
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi
