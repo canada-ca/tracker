@@ -18,6 +18,6 @@ spec:
     spec:
       containers:
       - name: log4shell-processor
-        image: gcr.io/track-compliance/log4shell-processor:test-0000-1639276126
+        image: gcr.io/track-compliance/log4shell-processor:test-0000-1639338462
         resources: {}
 status: {}
