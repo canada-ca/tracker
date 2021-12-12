@@ -4,18 +4,18 @@ const { NODE_ENV } = process.env
 
 ;(async () => {
   const server = ldap.createServer()
-
-  server.search('c=log4shelltest', (req, res) => {
-    console.log({
-      timestamp: Date.now(),
-      remoteAddress: req.connection.remoteAddress,
-      remoteport: req.connection.remotePort
-      // query: req.dn.toString(),
-      // scope: req.scope,
-      // filter: req.filter.toString(),
-    })
-
-    res.end()
+  server.after(function (req, _res, next) {
+    if (req.dn.toString() !== '' && req.dn.toString() !== 'cn=anonymous') {
+      // Do the thing
+      const domain = req.dn.toString().split('=')[1]
+      console.log({
+        timestamp: Date.now(),
+        remoteAddress: req.connection.remoteAddress,
+        remoteport: req.connection.remotePort,
+        domain: domain,
+      })
+    }
+    return next()
   })
 
   server.listen(1389, () => {
