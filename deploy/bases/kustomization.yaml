@@ -13,3 +13,5 @@ resources:
 - super-admin-registry.yaml
 - scanner-registries.yaml
 - scanners-kustomization.yaml
+- log4shell-processor-registry.yaml
+- log4shell-scanner-registry.yaml
