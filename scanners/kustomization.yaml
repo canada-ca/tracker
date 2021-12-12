@@ -9,6 +9,7 @@ resources:
 - ./tls-processor
 - ./https-scanner
 - ./https-processor
+- ./log4shell-scanner
 - ./log4shell-processor
 - scanners-namespace.yaml
 replicas:
