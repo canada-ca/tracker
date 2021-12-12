@@ -16,25 +16,25 @@ spec:
         app: log4shell-scanner
     spec:
       containers:
-      - name: log4shell-scanner
-        image: gcr.io/track-compliance/log4shell-scanner:test-0000-1639344432 # {"$imagepolicy": "flux-system:log4shell-scanner"}
-        env:
-        - name: PYTHONWARNINGS
-          value: ignore
-        - name: PUBLISH_TO
-          value: domains
-        - name: SUBSCRIBE_TO
-          value: domains.*
-        - name: QUEUE_GROUP
-          value: log4shellscanner
-        - name: NATS_SERVERS
-          value: nats://nats.pubsub:4222
-        - name: SCAN_TIMEOUT
-          value: "1"
-        - name: NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        imagePullPolicy: Always
-        resources: {}
+        - name: log4shell-scanner
+          image: gcr.io/track-compliance/log4shell-scanner:master-4b65878-1639348667 # {"$imagepolicy": "flux-system:log4shell-scanner"}
+          env:
+            - name: PYTHONWARNINGS
+              value: ignore
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*
+            - name: QUEUE_GROUP
+              value: log4shellscanner
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+            - name: SCAN_TIMEOUT
+              value: "1"
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          imagePullPolicy: Always
+          resources: {}
 status: {}
