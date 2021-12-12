@@ -8,12 +8,12 @@ const { NODE_ENV } = process.env
     if (req.dn.toString() !== '' && req.dn.toString() !== 'cn=anonymous') {
       // Do the thing
       const domain = req.dn.toString().split('=')[1]
-      console.log({
+      console.log(JSON.stringify({
         timestamp: Date.now(),
         remoteAddress: req.connection.remoteAddress,
         remoteport: req.connection.remotePort,
         domain: domain,
-      })
+      }))
     }
     return next()
   })
