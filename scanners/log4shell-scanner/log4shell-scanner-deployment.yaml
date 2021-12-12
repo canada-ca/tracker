@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: log4shell-scanner
-        image: gcr.io/track-compliance/log4shell-scanner:test-0000-1639275085
+        image: gcr.io/track-compliance/log4shell-scanner:test-0000-1639276957
         env:
         - name: PYTHONWARNINGS
           value: ignore
