@@ -85,9 +85,6 @@ spec:
             - name: http
               port: 80
               targetPort: 8080
-            - name: tcp-1389
-              port: 1389
-              targetPort: 1389
             - name: https
               port: 443
               targetPort: 8443
