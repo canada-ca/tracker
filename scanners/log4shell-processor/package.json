@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "description": "records events on a channel",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "lint": "eslint src",
-    "dbg": "node --inspect-brk --experimental-vm-modules index.js",
-    "start": "node --experimental-vm-modules index.js"
+    "dbg": "node --inspect-brk index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "Mike Williamson",
   "license": "MIT",
   "dependencies": {
-    "ldapjs": "^2.3.1"
+    "dns2": "^2.0.1"
   },
   "devDependencies": {
     "eslint": "^7.0.0",
