@@ -10,12 +10,6 @@ spec:
     istio: ingressgateway
   servers:
     - port:
-        number: 1389
-        name: tcp-1389
-        protocol: tcp
-      hosts:
-      - log4shell-processor.scanners.svc.cluster.local
-    - port:
         number: 80
         name: http
         protocol: HTTP
