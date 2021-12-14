@@ -5,6 +5,7 @@ const { createClaim } = require('./create-claim')
 const { createDomain } = require('./create-domain')
 const { createOrganization } = require('./create-organization')
 const { removeEdges } = require('./remove-edges')
+const { saltedHash } = require('./salted-hash')
 const slugify = require('./slugify')
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   createDomain,
   createOrganization,
   removeEdges,
+  saltedHash,
   ...slugify,
 }

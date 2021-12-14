@@ -1,9 +1,14 @@
+const { saltedHash } = require('./salted-hash')
+
+const { HASHING_SALT } = process.env
+
 const createDomain = async ({ domain, trx, query }) => {
   console.info(`\tCreating domain: ${domain}.`)
   
   const domainStruct = {
     domain: domain,
     selectors: [],
+    hash: saltedHash(domain, HASHING_SALT),
     status: {
       dkim: 'fail',
       dmarc: 'fail',
