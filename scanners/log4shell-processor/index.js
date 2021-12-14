@@ -13,6 +13,12 @@ const server = dns.createServer({
 
 server.on('request', (request, send) => {
   const response = Packet.createResponseFromRequest(request)
+
+  if (request.questions.length === 0) {
+    send(response)
+    return
+  }
+
   const [question] = request.questions
   const { name } = question
 
