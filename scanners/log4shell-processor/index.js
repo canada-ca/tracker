@@ -31,7 +31,7 @@ server.on('request', (request, send) => {
   const closed = new Promise((resolve) => process.on('SIGINT', resolve))
   await server.listen({
     udp: 5353,
-    tcp: 5353,
+    tcp: 5454,
   })
   console.log('Listening.')
   console.log(server.addresses())
