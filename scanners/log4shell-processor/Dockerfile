@@ -11,6 +11,7 @@ RUN npm ci
 COPY . .
 
 USER node
-EXPOSE 53
+EXPOSE 5353
+EXPOSE 5454
 
 CMD ["npm", "start"]
