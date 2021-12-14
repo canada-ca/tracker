@@ -13,6 +13,7 @@ import {
   checkPermission,
   userRequired,
   checkSuperAdmin,
+  saltedHash,
   verifiedRequired,
 } from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
@@ -22,7 +23,7 @@ import {
 } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
 
 describe('create a domain', () => {
   let query, drop, truncate, schema, collections, transaction, user, org
@@ -152,6 +153,7 @@ describe('create a domain', () => {
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
+                saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -302,6 +304,7 @@ describe('create a domain', () => {
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
+                saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -429,6 +432,7 @@ describe('create a domain', () => {
             userKey: user._key,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
+              saltedHash: saltedHash(HASHING_SECRET),
               userRequired: userRequired({
                 userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
@@ -555,6 +559,7 @@ describe('create a domain', () => {
             userKey: user._key,
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
+              saltedHash: saltedHash(HASHING_SECRET),
               userRequired: userRequired({
                 userKey: user._key,
                 loadUserByKey: loadUserByKey({ query }),
@@ -590,6 +595,7 @@ describe('create a domain', () => {
                 id: toGlobalId('domain', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
+
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
                 status: {
                   dkim: null,
@@ -659,6 +665,7 @@ describe('create a domain', () => {
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
             lastRan: null,
+
             status: {
               dkim: null,
               dmarc: null,
@@ -724,6 +731,7 @@ describe('create a domain', () => {
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
+                saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -759,6 +767,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
+
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   status: {
                     dkim: null,
@@ -801,6 +810,7 @@ describe('create a domain', () => {
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
             lastRan: null,
+
             status: {
               dkim: null,
               dmarc: null,
@@ -867,6 +877,7 @@ describe('create a domain', () => {
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
+                saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -902,6 +913,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
+
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   status: {
                     dkim: null,
@@ -944,6 +956,7 @@ describe('create a domain', () => {
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
             lastRan: null,
+
             status: {
               dkim: null,
               dmarc: null,
@@ -1010,6 +1023,7 @@ describe('create a domain', () => {
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
+                saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -1158,6 +1172,7 @@ describe('create a domain', () => {
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
+                saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -1301,6 +1316,7 @@ describe('create a domain', () => {
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
+                saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
                   loadUserByKey: loadUserByKey({ query }),
@@ -1446,6 +1462,7 @@ describe('create a domain', () => {
               userKey: 123,
               auth: {
                 checkPermission: jest.fn(),
+                saltedHash: jest.fn(),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
               },
@@ -1539,6 +1556,7 @@ describe('create a domain', () => {
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
+                saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
               },
               loaders: {
@@ -1635,6 +1653,7 @@ describe('create a domain', () => {
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
+                saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
               },
               loaders: {
@@ -1732,6 +1751,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
@@ -1824,6 +1844,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
@@ -1918,6 +1939,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
@@ -2013,6 +2035,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -2108,6 +2131,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -2202,6 +2226,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -2300,6 +2325,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -2401,6 +2427,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
@@ -2509,6 +2536,7 @@ describe('create a domain', () => {
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
+                saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
               },
               loaders: {
@@ -2601,6 +2629,7 @@ describe('create a domain', () => {
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
+                saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
               },
               loaders: {
@@ -2697,6 +2726,7 @@ describe('create a domain', () => {
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
+                saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
               },
               loaders: {
@@ -2794,6 +2824,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
@@ -2888,6 +2919,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
@@ -2984,6 +3016,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
@@ -3081,6 +3114,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -3178,6 +3212,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -3274,6 +3309,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -3374,6 +3410,7 @@ describe('create a domain', () => {
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
+                    saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
                   },
                   loaders: {
@@ -3477,6 +3514,7 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
+                  saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {

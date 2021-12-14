@@ -40,7 +40,7 @@ export const createDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired },
+      auth: { checkPermission, saltedHash, userRequired, verifiedRequired },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
     },
@@ -101,6 +101,7 @@ export const createDomain = new mutationWithClientMutationId({
       domain: domain.toLowerCase(),
       lastRan: null,
       selectors: selectors,
+      hash: saltedHash(domain.toLowerCase()),
       status: {
         dkim: null,
         dmarc: null,
