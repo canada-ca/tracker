@@ -35,6 +35,7 @@ steps:
   - DB_NAME=$_DB_NAME
   - FILE=
   - DB_USERNAME=
+  - HASHING_SALT=$_HASHING_SALT
 
 timeout: 1200s
 options:

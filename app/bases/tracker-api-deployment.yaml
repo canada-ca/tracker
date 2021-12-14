@@ -239,6 +239,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: HTTPS_SCAN_CHANNEL
+            - name: HASHING_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: HASHING_SALT
           resources:
             limits:
               cpu: 300m

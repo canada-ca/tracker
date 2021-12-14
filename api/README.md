@@ -58,6 +58,7 @@ HTTPS_SCAN_CHANNEL=scan/https
 SPF_SCAN_CHANNEL=scan/spf
 SSL_SCAN_CHANNEL=scan/ssl
 TRACING_ENABLED=false
+HASHING_SALT=secret-salt
 EOF
 ```
 
@@ -150,6 +151,7 @@ HTTPS_SCAN_CHANNEL=scan/https
 SPF_SCAN_CHANNEL=scan/spf
 SSL_SCAN_CHANNEL=scan/ssl
 TRACING_ENABLED=false
+HASHING_SALT=secret-salt
 EOF
 ```
 

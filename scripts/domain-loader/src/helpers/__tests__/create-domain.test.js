@@ -1,9 +1,10 @@
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { DB_PASS: rootPass, DB_URL: url, HASHING_SALT } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
 const { databaseOptions } = require('../../../database-options')
 
 const { createDomain } = require('../create-domain')
+const { saltedHash } = require('../salted-hash')
 
 describe('given the createDomain function', () => {
   let query, drop, truncate, collections, transaction, trx
@@ -54,6 +55,7 @@ describe('given the createDomain function', () => {
       _key: checkDomain._key,
       _rev: checkDomain._rev,
       domain: 'domain.ca',
+      hash: saltedHash('domain.ca', HASHING_SALT),
       selectors: [],
       status: {
         dkim: 'fail',
@@ -76,6 +78,7 @@ describe('given the createDomain function', () => {
       _key: checkDomain._key,
       _rev: checkDomain._rev,
       domain: 'domain.ca',
+      hash: saltedHash('domain.ca', HASHING_SALT),
       selectors: [],
       status: {
         dkim: 'fail',
