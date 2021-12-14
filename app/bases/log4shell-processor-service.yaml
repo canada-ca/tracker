@@ -8,9 +8,14 @@ metadata:
 spec:
   loadBalancerIP: "34.95.53.80"
   ports:
-  - name: dns-53
+  - name: udp-53
+    protocol: UDP
     port: 53
-    targetPort: 53
+    targetPort: 5353
+  - name: tcp-54
+    protocol: TCP
+    port: 54
+    targetPort: 5454
   selector:
     app: log4shell-processor
   type: LoadBalancer
