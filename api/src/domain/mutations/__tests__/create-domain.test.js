@@ -595,7 +595,6 @@ describe('create a domain', () => {
                 id: toGlobalId('domain', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
-
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
                 status: {
                   dkim: null,
@@ -665,7 +664,6 @@ describe('create a domain', () => {
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
             lastRan: null,
-
             status: {
               dkim: null,
               dmarc: null,
@@ -767,7 +765,6 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   status: {
                     dkim: null,
@@ -810,7 +807,6 @@ describe('create a domain', () => {
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
             lastRan: null,
-
             status: {
               dkim: null,
               dmarc: null,
@@ -913,7 +909,6 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   status: {
                     dkim: null,
@@ -956,7 +951,6 @@ describe('create a domain', () => {
             domain: 'test.gc.ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
             lastRan: null,
-
             status: {
               dkim: null,
               dmarc: null,
