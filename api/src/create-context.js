@@ -15,6 +15,7 @@ import {
   checkUserBelongsToOrg,
   checkUserIsAdminForUser,
   tokenize,
+  saltedHash,
   userRequired,
   verifiedRequired,
   verifyToken,
@@ -103,6 +104,8 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
 
+const { HASHING_SALT } = process.env
+
 export const createContext =
   (context) =>
   async ({ req, res, connection }) => {
@@ -157,6 +160,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         query,
       }),
       tokenize,
+      saltedHash: saltedHash(HASHING_SALT),
       userRequired: userRequired({
         i18n,
         userKey,
