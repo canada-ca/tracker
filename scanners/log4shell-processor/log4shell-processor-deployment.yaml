@@ -18,6 +18,6 @@ spec:
     spec:
       containers:
         - name: log4shell-processor
-          image: gcr.io/track-compliance/log4shell-processor:master-8d49b1b-1639489692 # {"$imagepolicy": "flux-system:log4shell-processor"}
+          image: gcr.io/track-compliance/log4shell-processor:master-be10fe1-1639490943 # {"$imagepolicy": "flux-system:log4shell-processor"}
           resources: {}
 status: {}
