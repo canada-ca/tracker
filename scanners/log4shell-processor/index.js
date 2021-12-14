@@ -1,26 +1,42 @@
-import ldap from 'ldapjs'
+const dns = require('dns2')
+const { Packet } = dns
 
-const { NODE_ENV, PORT = 1389 } = process.env
+const { DOMAIN, TOKEN } = process.env
 
+const domain = DOMAIN || 'log4shell.tracker.alpha.canada.ca'
+const token = TOKEN || 't'
+
+const server = dns.createServer({
+  udp: true,
+  tcp: true,
+})
+
+server.on('request', (request, send) => {
+  const response = Packet.createResponseFromRequest(request)
+  const [question] = request.questions
+  const { name } = question
+
+  // Test domain lookup
+  if (name.endsWith(`.${token}.${domain}`)) {
+    console.log(
+      JSON.stringify({
+        timestamp: Date.now(),
+        domainHash: name.replace(`.${token}.${domain}`, ''),
+      }),
+    )
+  }
+  send(response)
+})
 ;(async () => {
-  const server = ldap.createServer()
-  server.after(function (req, _res, next) {
-    if (req.dn.toString() !== '' && req.dn.toString() !== 'cn=anonymous') {
-      // Do the thing
-      const domain = req.dn.toString().split('=')[1]
-      console.log(
-        JSON.stringify({
-          timestamp: Date.now(),
-          remoteAddress: req.connection.remoteAddress,
-          remoteport: req.connection.remotePort,
-          domain: domain,
-        }),
-      )
-    }
-    return next()
+  const closed = new Promise((resolve) => process.on('SIGINT', resolve))
+  await server.listen({
+    udp: 53,
+    tcp: 53,
   })
-
-  server.listen(PORT, () => {
-    console.log('LDAP server listening at %s', server.url)
-  })
+  console.log('Listening.')
+  console.log(server.addresses())
+  await closed
+  process.stdout.write('\n')
+  await server.close()
+  console.log('Closed.')
 })()
