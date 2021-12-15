@@ -9,8 +9,6 @@ resources:
 - ./tls-processor
 - ./https-scanner
 - ./https-processor
-- ./log4shell-scanner
-- ./log4shell-processor
 - scanners-namespace.yaml
 replicas:
 - name: dns-scanner
@@ -19,5 +17,3 @@ replicas:
   count: 7
 - name: https-scanner
   count: 13
-- name: log4shell-scanner
-  count: 2
