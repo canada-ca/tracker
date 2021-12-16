@@ -9,7 +9,6 @@ import os
 import signal
 import traceback
 import hashlib
-from timedsocket import socket
 import random
 import string
 import datetime as dt
