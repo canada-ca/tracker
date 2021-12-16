@@ -29,8 +29,8 @@ spec:
               value: log4shellscanner
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
-            - name: SCAN_TIMEOUT
-              value: "1"
+            - name: TIMEOUT
+              value: "2"
             - name: NAME
               valueFrom:
                 fieldRef:
