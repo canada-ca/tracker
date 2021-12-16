@@ -28,6 +28,6 @@ replicas:
 - count: 1
   name: arango-storage-operator
 - name: log4shell-scanner
-  count: 2
+  count: 4
 components:
 - ../namespaces
