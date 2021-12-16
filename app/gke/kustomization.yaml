@@ -5,22 +5,29 @@ resources:
 - storage-classes.yaml
 - backup-service-account.yaml
 - backup-cronjob.yaml
+- log4shell-processor-deployment.yaml
+- log4shell-scanner-deployment.yaml
 patchesStrategicMerge:
 - arangodb-deployment.yaml
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
 - publicgateway.yaml
 - certificate.yaml
+- log4shell-scanner-deployment.yaml
+- log4shell-processor-deployment.yaml
+
 replicas:
-- name: tracker-frontend
+- count: 2
+  name: tracker-frontend
+- count: 2
+  name: tracker-api
+- count: 1
+  name: arango-deployment-replication-operator
+- count: 1
+  name: arango-deployment-operator
+- count: 1
+  name: arango-storage-operator
+- name: log4shell-scanner
   count: 2
-- name: tracker-api
-  count: 2
-- name: arango-deployment-replication-operator
-  count: 1
-- name: arango-deployment-operator
-  count: 1
-- name: arango-storage-operator
-  count: 1
 components:
 - ../namespaces
