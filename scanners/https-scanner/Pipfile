@@ -17,6 +17,7 @@ pyOpenSSL = ">=17.5.0"
 asyncio-nats-client = "*"
 python-dotenv = "*"
 publicsuffixlist = "*"
+urllib3 = "*"
 
 [dev-packages]
 black = {editable = true, ref = "21.8b0", git = "https://github.com/psf/black.git"}
