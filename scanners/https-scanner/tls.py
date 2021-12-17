@@ -9,6 +9,8 @@ import os
 import signal
 from https_scanner import HTTPSScanner
 from nats.aio.client import Client as NATS
+import urllib3
+urllib3.disable_warnings()
 
 MIN_HSTS_AGE = 31536000  # one year
 
