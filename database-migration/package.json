@@ -1,0 +1,31 @@
+{
+  "name": "database-setup",
+  "version": "1.0.0",
+  "description": "creates the database according to a setup file",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint src",
+    "start": "node --dns-result-order=ipv4first --experimental-json-modules --experimental-vm-modules index.js"
+  },
+  "keywords": [],
+  "author": "Mike Williamson",
+  "license": "MIT",
+  "dependencies": {
+    "arango-tools": "^0.6.0",
+    "dotenv-safe": "^8.2.0",
+    "json-placeholder-replacer": "^1.0.35"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-standard": "^4.1.0",
+    "prettier": "^2.3.2"
+  }
+}
