@@ -15,6 +15,7 @@ import {
   Image,
   Link,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
@@ -230,6 +231,22 @@ export const FloatingMenu = () => {
                     text={t`Report an Issue`}
                     isExternal
                   />
+
+                  <Text
+                    fontWeight="bold"
+                    color="white"
+                    fontSize="lg"
+                    textAlign="right"
+                  >
+                    Contact:{' '}
+                    <FloatingMenuLink
+                      to={
+                        'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=Tracker%20Issue%20Report'
+                      }
+                      text={t`zzTBSCybers@tbs-sct.gc.ca`}
+                      isExternal
+                    />
+                  </Text>
                 </Stack>
               </DrawerBody>
 
