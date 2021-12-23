@@ -159,6 +159,7 @@ credentials:
 		SPF_SCAN_CHANNEL=scan/spf
 		SSL_SCAN_CHANNEL=scan/ssl
 		TRACING_ENABLED=false
+		HASHING_SALT=somerandomvalue
 		EOF
 		cat <<-'EOF' > app/creds/$(mode)/superadmin.env
 		DB_PASS=test
