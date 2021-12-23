@@ -35,7 +35,7 @@ steps:
     - DB_URL=$_DB_URL
     - DB_NAME=$_DB_NAME
     - DB_USER=$_DB_USER
-    - DB_HOST=arangodb
+    - DB_HOST=$_DB_HOST
     - DB_COLLECTION=domains
     - DB_PORT=8529
     - PUBLISH_TO=domains
