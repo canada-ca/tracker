@@ -4,29 +4,63 @@ import { dispatchDomains } from '../dispatchDomains.js'
 import { jest } from '@jest/globals' // support for ESM modules
 
 const {
-  DB_URL: url,
-  DB_COLLECTION: collection,
-  DB_NAME: databaseName,
+  DB_HOST: host,
+  DB_PORT: port,
+  DB_NAME,
+  DB_COLLECTION: collectionName,
   DB_PASS: password,
   DB_USER: username,
 } = process.env
 
-const db = new Database({ url, databaseName, auth: { username, password } })
+const sys = new Database({
+  url: `${host}:${port}`,
+  auth: { username, password },
+})
+
+
+const databaseName = `${DB_NAME}-${Date.now()}`
 
 const logger = {
   error: jest.fn(),
   info: jest.fn(),
 }
 
+let db
+
 describe('domain-dispatcher', () => {
+  beforeAll(async () => {
+    await sys.createDatabase(databaseName, {
+      users: [{ username: 'root' }],
+      precaptureStackTraces: true,
+    })
+
+    db = new Database({
+      url: `${host}:${port}`,
+      databaseName,
+      auth: { username, password },
+      precaptureStackTraces: true,
+    })
+
+    const collection = db.collection(collectionName)
+    await collection.create()
+  })
+
+  afterAll(async () => {
+    await sys.dropDatabase(databaseName)
+  })
+
   describe('dispatchDomains', () => {
-    const domains = db.collection('domains')
+    let domains
+
+    beforeEach(async () => {
+      domains = db.collection(collectionName)
+    })
 
     afterEach(async () => {
       await domains.truncate()
     })
 
-    it('calls publish once per domain', async () => {
+    it.only('calls publish once per domain', async () => {
       const publish = jest.fn()
       await domains.save({ domain: 'cyber.gc.ca' })
       await domains.save({ domain: 'tbs-sct.gc.ca' })
@@ -35,7 +69,7 @@ describe('domain-dispatcher', () => {
         db,
         publish,
         logger,
-        collection,
+        collection: collectionName,
       })
 
       expect(publish).toHaveBeenCalledTimes(2)
