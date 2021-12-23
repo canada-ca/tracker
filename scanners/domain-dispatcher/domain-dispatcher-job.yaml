@@ -11,30 +11,30 @@ spec:
         app: domain-dispatcher
     spec:
       containers:
-      - name: domain-dispatcher
-        image: gcr.io/track-compliance/domain-dispatcher:test-asdfghj-1632166692 # {"$imagepolicy": "flux-system:domain-dispatcher"}
-        env:
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_PASS
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: scanners
-              key: DB_USER
-        - name: DB_HOST
-          value: arangodb.db
-        - name: DB_PORT
-          value: "8529"
-        - name: DB_NAME
-          value: track_dmarc
-        - name: DB_COLLECTION
-          value: domains
-        - name: PUBLISH_TO
-          value: domains
-        - name: NATS_URL
-          value: nats://nats.pubsub:4222
+        - name: domain-dispatcher
+          image: gcr.io/track-compliance/domain-dispatcher:master-55f0224-1640299515 # {"$imagepolicy": "flux-system:domain-dispatcher"}
+          env:
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_HOST
+              value: arangodb.db
+            - name: DB_PORT
+              value: "8529"
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_COLLECTION
+              value: domains
+            - name: PUBLISH_TO
+              value: domains
+            - name: NATS_URL
+              value: nats://nats.pubsub:4222
       restartPolicy: Never
   backoffLimit: 4
