@@ -32,7 +32,6 @@ steps:
     args: ['test']
     env:
     - DB_PASS=$_DB_PASS
-    - DB_URL=$_DB_URL
     - DB_NAME=$_DB_NAME
     - DB_USER=$_DB_USER
     - DB_HOST=$_DB_HOST
@@ -45,7 +44,6 @@ steps:
     id: generate-image-name
     dir: scanners/domain-dispatcher
     entrypoint: 'bash'
-    dir: api-js
     args:
       - '-c'
       - |
@@ -55,7 +53,6 @@ steps:
     id: build-if-master
     dir: scanners/domain-dispatcher
     entrypoint: 'bash'
-    dir: frontend
     args:
       - '-c'
       - |

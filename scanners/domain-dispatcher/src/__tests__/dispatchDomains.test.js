@@ -13,9 +13,10 @@ const {
 } = process.env
 
 const sys = new Database({
-  url: `http://${host}:${port}`,
+  url: `${host}:${port}`,
   auth: { username, password },
 })
+
 
 const databaseName = `${DB_NAME}-${Date.now()}`
 
@@ -34,7 +35,7 @@ describe('domain-dispatcher', () => {
     })
 
     db = new Database({
-      url: `http://${host}:${port}`,
+      url: `${host}:${port}`,
       databaseName,
       auth: { username, password },
       precaptureStackTraces: true,
