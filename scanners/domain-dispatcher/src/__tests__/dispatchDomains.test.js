@@ -7,7 +7,7 @@ const {
   DB_URL: url,
   DB_COLLECTION: collection,
   DB_NAME: databaseName,
-  DB_PASSWORD: password,
+  DB_PASS: password,
   DB_USER: username,
 } = process.env
 

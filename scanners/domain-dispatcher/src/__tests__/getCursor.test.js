@@ -4,7 +4,7 @@ import { getCursor } from '../getCursor.js'
 const {
   DB_URL: url,
   DB_NAME: databaseName,
-  DB_PASSWORD: password,
+  DB_PASS: password,
   DB_USER: username,
 } = process.env
 
