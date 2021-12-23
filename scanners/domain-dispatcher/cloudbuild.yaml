@@ -15,19 +15,19 @@ steps:
 
   - name: node:16-alpine
     id: install
-    dir: frontend
+    dir: scanners/domain-dispatcher
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - name: node:16-alpine
     id: lint
-    dir: frontend
+    dir: scanners/domain-dispatcher
     entrypoint: npm
     args: ['run', 'lint']
 
   - name: node:16-alpine
     id: test
-    dir: frontend
+    dir: scanners/domain-dispatcher
     entrypoint: npm
     args: ['test']
     env:
@@ -42,6 +42,7 @@ steps:
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
+    dir: scanners/domain-dispatcher
     entrypoint: 'bash'
     dir: api-js
     args:
@@ -51,6 +52,7 @@ steps:
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-if-master
+    dir: scanners/domain-dispatcher
     entrypoint: 'bash'
     dir: frontend
     args:
