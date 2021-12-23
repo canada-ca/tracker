@@ -36,6 +36,7 @@ steps:
     - DB_NAME=$_DB_NAME
     - DB_USER=$_DB_USER
     - DB_HOST=arangodb
+    - DB_COLLECTION=domains
     - DB_PORT=8529
     - PUBLISH_TO=domains
     - NATS_URL=nats://demo.nats.io:4222
