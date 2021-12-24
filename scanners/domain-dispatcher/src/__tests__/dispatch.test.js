@@ -19,14 +19,14 @@ describe('domain-dispatcher', () => {
                 {
                   user_key: 1,
                   domain: 'tbs-sct.gc.ca',
-                  domain_key: 'domains/1',
+                  _key: '1',
                   hash: '8a237c3e4033c5f9ec06f28edddbccd6',
                   shared_id: 1234,
                 },
                 {
                   user_key: 1,
                   domain: 'cyber.gc.ca',
-                  domain_key: 'domains/2',
+                  _key: '2',
                   hash: '56f36ef5e84af6eef45299d58890bfe5',
                   shared_id: 1235,
                 },
@@ -37,10 +37,6 @@ describe('domain-dispatcher', () => {
 
         await dispatch({
           cursor: asyncIterable,
-          endpoints: [
-            'http://dns-scanner.scanners.svc.cluster.local',
-            'http://https-scanner.scanners.svc.cluster.local',
-          ],
           publish,
           logger,
         })
@@ -107,14 +103,14 @@ describe('domain-dispatcher', () => {
                 {
                   user_key: 1,
                   domain: 'tbs-sct.gc.ca',
-                  domain_key: 'domains/1',
+                  _key: '1',
                   hash: '8a237c3e4033c5f9ec06f28edddbccd6',
                   shared_id: 1234,
                 },
                 {
                   user_key: 1,
                   domain: 'cyber.gc.ca',
-                  domain_key: 'domains/2',
+                  _key: '2',
                   hash: '56f36ef5e84af6eef45299d58890bfe5',
                   shared_id: 1235,
                 },
@@ -125,10 +121,6 @@ describe('domain-dispatcher', () => {
 
         await dispatch({
           cursor: asyncIterable,
-          endpoints: [
-            'http://dns-scanner.scanners.svc.cluster.local',
-            'http://https-scanner.scanners.svc.cluster.local',
-          ],
           publish: async () => {
             throw new Error('so bad!')
           },
