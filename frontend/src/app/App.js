@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
 import { i18n } from '@lingui/core'
-import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
+import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -299,17 +299,15 @@ export function App() {
             <Trans>Report an Issue</Trans>
           </Link>
 
-          <Text ml={4}>
-            Contact:{' '}
-            <Link
-              href={
-                'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=Tracker%20Issue%20Report'
-              }
-              isExternal={true}
-            >
-              zzTBSCybers@tbs-sct.gc.ca
-            </Link>
-          </Text>
+          <Link
+            ml={4}
+            href={
+              'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=Tracker%20Issue%20Report'
+            }
+            isExternal={true}
+          >
+            <Trans>Contact</Trans>
+          </Link>
         </Footer>
       </Flex>
     </>
