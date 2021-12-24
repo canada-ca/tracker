@@ -15,7 +15,6 @@ import {
   Image,
   Link,
   Stack,
-  Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'

@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
 import { i18n } from '@lingui/core'
-import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
+import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 
