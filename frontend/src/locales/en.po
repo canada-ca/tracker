@@ -82,7 +82,7 @@ msgid "Account Closed Successfully"
 msgstr "Account Closed Successfully"
 
 #: src/app/App.js:112
-#: src/app/FloatingMenu.js:177
+#: src/app/FloatingMenu.js:178
 #: src/user/UserPage.js:150
 msgid "Account Settings"
 msgstr "Account Settings"
@@ -133,7 +133,7 @@ msgstr "Add User"
 msgid "Admin"
 msgstr "Admin"
 
-#: src/app/FloatingMenu.js:179
+#: src/app/FloatingMenu.js:180
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
@@ -149,7 +149,7 @@ msgstr "An email was sent with a link to reset your password"
 msgid "An error has occurred."
 msgstr "An error has occurred."
 
-#: src/app/FloatingMenu.js:38
+#: src/app/FloatingMenu.js:39
 #: src/app/TopBanner.js:25
 msgid "An error occured when you attempted to sign out"
 msgstr "An error occured when you attempted to sign out"
@@ -340,7 +340,7 @@ msgid "Clear"
 msgstr "Clear"
 
 #: src/admin/OrganizationInformation.js:385
-#: src/app/FloatingMenu.js:259
+#: src/app/FloatingMenu.js:268
 msgid "Close"
 msgstr "Close"
 
@@ -394,6 +394,11 @@ msgstr "Confirm removal of domain:"
 msgid "Confirm removal of user:"
 msgstr "Confirm removal of user:"
 
+#: src/app/App.js:309
+#: src/app/FloatingMenu.js:239
+msgid "Contact"
+msgstr "Contact"
+
 #: src/auth/CreateUserPage.js:119
 #: src/auth/EmailValidationPage.js:88
 msgid "Continue"
@@ -425,7 +430,7 @@ msgstr "Country (FR)"
 msgid "Country:"
 msgstr "Country:"
 
-#: src/app/FloatingMenu.js:200
+#: src/app/FloatingMenu.js:201
 #: src/app/TopBanner.js:92
 #: src/auth/CreateUserPage.js:203
 msgid "Create Account"
@@ -561,7 +566,7 @@ msgstr "DMARC Status"
 
 #: src/app/App.js:105
 #: src/app/App.js:239
-#: src/app/FloatingMenu.js:131
+#: src/app/FloatingMenu.js:132
 #: src/dmarc/DmarcByDomainPage.js:183
 #: src/dmarc/DmarcByDomainPage.js:285
 msgid "DMARC Summaries"
@@ -685,7 +690,7 @@ msgstr "Domain:"
 #: src/admin/AdminPanel.js:25
 #: src/app/App.js:102
 #: src/app/App.js:209
-#: src/app/FloatingMenu.js:116
+#: src/app/FloatingMenu.js:117
 #: src/domains/DomainsPage.js:76
 #: src/domains/DomainsPage.js:110
 #: src/organizationDetails/OrganizationDetails.js:171
@@ -980,7 +985,7 @@ msgstr "Heartbleed Vulnerability:"
 
 #: src/app/App.js:93
 #: src/app/App.js:130
-#: src/app/FloatingMenu.js:175
+#: src/app/FloatingMenu.js:176
 msgid "Home"
 msgstr "Home"
 
@@ -1205,8 +1210,8 @@ msgstr "March"
 msgid "May"
 msgstr "May"
 
-#: src/app/FloatingMenu.js:146
-#: src/app/FloatingMenu.js:169
+#: src/app/FloatingMenu.js:147
+#: src/app/FloatingMenu.js:170
 msgid "Menu"
 msgstr "Menu"
 
@@ -1407,7 +1412,7 @@ msgstr "Organization:"
 
 #: src/app/App.js:99
 #: src/app/App.js:181
-#: src/app/FloatingMenu.js:103
+#: src/app/FloatingMenu.js:104
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:122
 msgid "Organizations"
@@ -1521,7 +1526,7 @@ msgid "Previous"
 msgstr "Previous"
 
 #: src/app/App.js:287
-#: src/app/FloatingMenu.js:219
+#: src/app/FloatingMenu.js:220
 #: src/termsConditions/TermsConditionsPage.js:40
 msgid "Privacy"
 msgstr "Privacy"
@@ -1584,7 +1589,7 @@ msgid "Removed Organization"
 msgstr "Removed Organization"
 
 #: src/app/App.js:299
-#: src/app/FloatingMenu.js:230
+#: src/app/FloatingMenu.js:231
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
@@ -1853,7 +1858,7 @@ msgid "Shows the total number of emails that have been sent by this domain durin
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
 #: src/app/App.js:143
-#: src/app/FloatingMenu.js:197
+#: src/app/FloatingMenu.js:198
 #: src/app/TopBanner.js:82
 #: src/auth/SignInPage.js:175
 msgid "Sign In"
@@ -1864,12 +1869,12 @@ msgstr "Sign In"
 msgid "Sign In."
 msgstr "Sign In."
 
-#: src/app/FloatingMenu.js:192
+#: src/app/FloatingMenu.js:193
 #: src/app/TopBanner.js:70
 msgid "Sign Out"
 msgstr "Sign Out"
 
-#: src/app/FloatingMenu.js:48
+#: src/app/FloatingMenu.js:49
 #: src/app/TopBanner.js:35
 msgid "Sign Out."
 msgstr "Sign Out."
@@ -1941,7 +1946,7 @@ msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
 #: src/app/App.js:291
-#: src/app/FloatingMenu.js:225
+#: src/app/FloatingMenu.js:226
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -2315,7 +2320,7 @@ msgstr "You agree to protect any information disclosed to you by TBS in accordan
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
-#: src/app/FloatingMenu.js:49
+#: src/app/FloatingMenu.js:50
 #: src/app/TopBanner.js:36
 msgid "You have successfully been signed out."
 msgstr "You have successfully been signed out."

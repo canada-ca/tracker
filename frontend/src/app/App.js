@@ -299,17 +299,15 @@ export function App() {
             <Trans>Report an Issue</Trans>
           </Link>
 
-          <Text ml={4}>
-            Contact:{' '}
-            <Link
-              href={
-                'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=Tracker%20Issue%20Report'
-              }
-              isExternal={true}
-            >
-              zzTBSCybers@tbs-sct.gc.ca
-            </Link>
-          </Text>
+          <Link
+            ml={4}
+            href={
+              'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=Tracker%20Issue%20Report'
+            }
+            isExternal={true}
+          >
+            <Trans>Contact</Trans>
+          </Link>
         </Footer>
       </Flex>
     </>
