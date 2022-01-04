@@ -81,8 +81,8 @@ msgstr "Compte"
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
-#: src/app/App.js:112
-#: src/app/FloatingMenu.js:178
+#: src/app/App.js:113
+#: src/app/FloatingMenu.js:177
 #: src/user/UserPage.js:150
 msgid "Account Settings"
 msgstr "Paramètres du compte"
@@ -129,15 +129,15 @@ msgstr "Ajouter les détails du domaine"
 msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
-#: src/app/App.js:201
+#: src/app/App.js:208
 msgid "Admin"
 msgstr "Administrateur"
 
-#: src/app/FloatingMenu.js:180
+#: src/app/FloatingMenu.js:179
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/app/App.js:118
+#: src/app/App.js:119
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
@@ -149,7 +149,7 @@ msgstr "Un courriel a été envoyé avec un lien pour réinitialiser votre mot d
 msgid "An error has occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/app/FloatingMenu.js:39
+#: src/app/FloatingMenu.js:38
 #: src/app/TopBanner.js:25
 msgid "An error occured when you attempted to sign out"
 msgstr "Une erreur s'est produite lorsque vous avez tenté de vous déconnecter."
@@ -231,11 +231,11 @@ msgstr "Évaluer l’état actuel."
 msgid "August"
 msgstr "Août"
 
-#: src/app/App.js:160
+#: src/app/App.js:161
 msgid "Authenticate"
 msgstr "Authentifier"
 
-#: src/app/App.js:85
+#: src/app/App.js:86
 msgid "BETA"
 msgstr "BETA"
 
@@ -340,7 +340,7 @@ msgid "Clear"
 msgstr "Dégager"
 
 #: src/admin/OrganizationInformation.js:385
-#: src/app/FloatingMenu.js:268
+#: src/app/FloatingMenu.js:267
 msgid "Close"
 msgstr "Fermer"
 
@@ -394,10 +394,19 @@ msgstr "Confirmer la suppression du domaine:"
 msgid "Confirm removal of user:"
 msgstr "Confirmer le retrait de l'utilisateur:"
 
-#: src/app/App.js:309
-#: src/app/FloatingMenu.js:239
+#: src/app/FloatingMenu.js:238
 msgid "Contact"
 msgstr "Contact"
+
+#: src/app/App.js:185
+#: src/app/App.js:310
+#: src/app/ContactUsPage.js:49
+msgid "Contact Us"
+msgstr "Nous contacter"
+
+#: src/app/ContactUsPage.js:9
+msgid "Contact the Tracker Team"
+msgstr "Contacter l'équipe Tracker"
 
 #: src/auth/CreateUserPage.js:119
 #: src/auth/EmailValidationPage.js:88
@@ -430,19 +439,19 @@ msgstr "Pays (FR)"
 msgid "Country:"
 msgstr "Pays:"
 
-#: src/app/FloatingMenu.js:201
+#: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:92
 #: src/auth/CreateUserPage.js:203
 msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/admin/AdminPage.js:111
-#: src/app/App.js:267
+#: src/app/App.js:274
 #: src/createOrganization/CreateOrganizationPage.js:245
 msgid "Create Organization"
 msgstr "Créer une organisation"
 
-#: src/app/App.js:136
+#: src/app/App.js:137
 msgid "Create an Account"
 msgstr "Créer un compte"
 
@@ -564,9 +573,9 @@ msgstr "Rapport DMARC pour {domainSlug}"
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/app/App.js:105
-#: src/app/App.js:239
-#: src/app/FloatingMenu.js:132
+#: src/app/App.js:106
+#: src/app/App.js:246
+#: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:183
 #: src/dmarc/DmarcByDomainPage.js:285
 msgid "DMARC Summaries"
@@ -688,9 +697,9 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/admin/AdminPanel.js:25
-#: src/app/App.js:102
-#: src/app/App.js:209
-#: src/app/FloatingMenu.js:117
+#: src/app/App.js:103
+#: src/app/App.js:216
+#: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:76
 #: src/domains/DomainsPage.js:110
 #: src/organizationDetails/OrganizationDetails.js:171
@@ -752,7 +761,7 @@ msgstr "Courriel envoyé"
 msgid "Email Validated"
 msgstr "Courriel validé"
 
-#: src/app/App.js:261
+#: src/app/App.js:268
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
@@ -862,7 +871,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS:"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique:"
 
-#: src/app/App.js:166
+#: src/app/App.js:167
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
@@ -901,6 +910,10 @@ msgstr "Entièrement aligné par adresse IP"
 msgid "Further details for each organization can be found by clicking on its row."
 msgstr "Vous trouverez de plus amples informations sur chaque organisation en cliquant sur sa ligne."
 
+#: src/app/ContactUsPage.js:14
+msgid "General Public"
+msgstr "Grand public"
+
 #: src/dmarc/DmarcByDomainPage.js:290
 #: src/domains/DomainsPage.js:114
 #: src/organizations/Organizations.js:126
@@ -910,6 +923,10 @@ msgstr "Glossaire"
 #: src/components/TrackerTable.js:250
 msgid "Go to page:"
 msgstr "Aller à la page"
+
+#: src/app/ContactUsPage.js:23
+msgid "Government of Canada Employees"
+msgstr "Employés du gouvernement du Canada"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:99
 msgid "Graph direction:"
@@ -983,9 +1000,9 @@ msgstr "En-tête De"
 msgid "Heartbleed Vulnerability:"
 msgstr "Vulnérabilité Heartbleed:"
 
-#: src/app/App.js:93
-#: src/app/App.js:130
-#: src/app/FloatingMenu.js:176
+#: src/app/App.js:94
+#: src/app/App.js:131
+#: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Accueil"
 
@@ -1121,6 +1138,14 @@ msgstr "Incorrect updateUserRole.result typename."
 msgid "Incorrect verifyPhoneNumber.result typename."
 msgstr "Une erreur s'est produite lors de la vérification de votre numéro de téléphone."
 
+#: src/app/ContactUsPage.js:26
+msgid "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
+msgstr "Les personnes d'un groupe ministériel de technologie de l'information peuvent communiquer avec la boîte aux lettres de la cybersécurité du SCT pour obtenir des interprétations de cette NIPTI."
+
+#: src/app/ContactUsPage.js:17
+msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
+msgstr "Les personnes ayant des questions sur l'exactitude des données de conformité de leur domaine peuvent contacter la boîte aux lettres de la cybersécurité du SCT."
+
 #: src/termsConditions/TermsConditionsPage.js:328
 msgid "Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:"
 msgstr "L'information contenue dans ce site, à l'exception des éléments de propriété intellectuelle protégés, comme les droits d'auteur et les marques de commerce, ainsi que les symboles et autres éléments graphiques du gouvernement du Canada, a été affichée afin qu'elle soit facilement accessible pour une utilisation personnelle ou publique non commerciale et peut être reproduite, en tout ou en partie et par quelque moyen que ce soit, sans frais ou autre permission du SCT. Nous ne demandons que cela:"
@@ -1210,8 +1235,8 @@ msgstr "Mars"
 msgid "May"
 msgstr "Mai"
 
-#: src/app/FloatingMenu.js:147
-#: src/app/FloatingMenu.js:170
+#: src/app/FloatingMenu.js:146
+#: src/app/FloatingMenu.js:169
 msgid "Menu"
 msgstr "Menu"
 
@@ -1360,6 +1385,10 @@ msgstr "Non conforme"
 msgid "None"
 msgstr "Aucun"
 
+#: src/app/ContactUsPage.js:33
+msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
+msgstr "Notez que les données de conformité ne sont pas automatiquement actualisées. La mise à jour des modifications apportées aux domaines peut prendre 24 heures."
+
 #: src/termsConditions/TermsConditionsPage.js:20
 msgid "Notice of Agreement"
 msgstr "Avis d'accord"
@@ -1410,9 +1439,9 @@ msgstr "Organisation non mise à jour"
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/app/App.js:99
-#: src/app/App.js:181
-#: src/app/FloatingMenu.js:104
+#: src/app/App.js:100
+#: src/app/App.js:188
+#: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:122
 msgid "Organizations"
@@ -1525,8 +1554,8 @@ msgstr "Statut préchargé:"
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/app/App.js:287
-#: src/app/FloatingMenu.js:220
+#: src/app/App.js:294
+#: src/app/FloatingMenu.js:219
 #: src/termsConditions/TermsConditionsPage.js:40
 msgid "Privacy"
 msgstr "Confidentialité"
@@ -1588,8 +1617,8 @@ msgstr "Supprimer l'utilisateur"
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
-#: src/app/App.js:299
-#: src/app/FloatingMenu.js:231
+#: src/app/App.js:306
+#: src/app/FloatingMenu.js:230
 msgid "Report an Issue"
 msgstr "Signaler un problème"
 
@@ -1597,7 +1626,7 @@ msgstr "Signaler un problème"
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
-#: src/app/App.js:172
+#: src/app/App.js:173
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -1857,8 +1886,8 @@ msgstr "Indique le pourcentage d'e-mails du domaine qui ont passé les exigences
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine pendant la période sélectionnée."
 
-#: src/app/App.js:143
-#: src/app/FloatingMenu.js:198
+#: src/app/App.js:144
+#: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:82
 #: src/auth/SignInPage.js:175
 msgid "Sign In"
@@ -1869,12 +1898,12 @@ msgstr "Se connecter"
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/app/FloatingMenu.js:193
+#: src/app/FloatingMenu.js:192
 #: src/app/TopBanner.js:70
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: src/app/FloatingMenu.js:49
+#: src/app/FloatingMenu.js:48
 #: src/app/TopBanner.js:35
 msgid "Sign Out."
 msgstr "Déconnexion."
@@ -1883,7 +1912,7 @@ msgstr "Déconnexion."
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/app/App.js:83
+#: src/app/App.js:84
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -1941,12 +1970,12 @@ msgstr "TBS se réserve le droit de refuser le service, de rejeter votre demande
 msgid "Termination"
 msgstr "Terminaison"
 
-#: src/app/App.js:178
+#: src/app/App.js:179
 msgid "Terms & Conditions"
 msgstr "Termes et conditions"
 
-#: src/app/App.js:291
-#: src/app/FloatingMenu.js:226
+#: src/app/App.js:298
+#: src/app/FloatingMenu.js:225
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -2009,7 +2038,7 @@ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'ana
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/app/App.js:86
+#: src/app/App.js:87
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 
@@ -2320,7 +2349,7 @@ msgstr "Vous acceptez de protéger toute information qui vous est divulguée par
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "Vous acceptez d'utiliser notre site Web, nos produits et nos services uniquement à des fins légales et de manière à ne pas enfreindre les droits d'un tiers, ni à restreindre ou à empêcher l'utilisation et la jouissance du site Web, des produits ou des services par un tiers. En outre, vous ne devez pas abuser, compromettre ou interférer avec nos services, ni introduire dans nos services des éléments malveillants ou technologiquement dangereux. Vous ne devez pas tenter d'obtenir un accès non autorisé à notre site Web, à nos produits ou services, au(x) serveur(s) sur le(s)quel(s) ils sont stockés, ou à tout serveur, ordinateur ou base de données connecté à notre site Web, à nos produits ou à nos services, ni les altérer, les désosser ou les modifier. Nous pouvons suspendre ou cesser de vous fournir nos produits ou services si vous ne respectez pas nos conditions ou politiques ou si nous enquêtons sur une suspicion de mauvaise conduite. Tout soupçon d'utilisation illégale de notre site web, de nos produits ou de nos services peut être signalé aux autorités compétentes chargées de l'application de la loi et, si nécessaire, nous coopérerons avec ces autorités en leur divulguant votre identité."
 
-#: src/app/FloatingMenu.js:50
+#: src/app/FloatingMenu.js:49
 #: src/app/TopBanner.js:36
 msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
@@ -2369,7 +2398,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "Vous aurez besoin d'un compte Tracker pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
-#: src/app/App.js:249
+#: src/app/App.js:256
 msgid "Your Account"
 msgstr "Votre compte"
 

@@ -5,11 +5,13 @@ import { Box, Divider, Heading, Button, Text, Link } from '@chakra-ui/react'
 export default function ContactUsPage() {
   return (
     <Box w="100%" p="4">
-      <Heading>Contact the Tracker Team</Heading>
+      <Heading>
+        <Trans>Contact the Tracker Team</Trans>
+      </Heading>
       <Divider borderBottomColor="gray.900" mb="2" />
       <Box fontSize="xl">
         <Text fontWeight="bold" fontSize="2xl">
-          General Public
+          <Trans>General Public</Trans>
         </Text>
         <Text mb="2">
           <Trans>
@@ -18,7 +20,7 @@ export default function ContactUsPage() {
           </Trans>
         </Text>
         <Text fontWeight="bold" fontSize="2xl">
-          Government of Canada Employees
+          <Trans>Government of Canada Employees</Trans>
         </Text>
         <Text mb="2">
           <Trans>

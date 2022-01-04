@@ -81,8 +81,8 @@ msgstr "Account"
 msgid "Account Closed Successfully"
 msgstr "Account Closed Successfully"
 
-#: src/app/App.js:112
-#: src/app/FloatingMenu.js:178
+#: src/app/App.js:113
+#: src/app/FloatingMenu.js:177
 #: src/user/UserPage.js:150
 msgid "Account Settings"
 msgstr "Account Settings"
@@ -129,15 +129,15 @@ msgstr "Add Domain Details"
 msgid "Add User"
 msgstr "Add User"
 
-#: src/app/App.js:201
+#: src/app/App.js:208
 msgid "Admin"
 msgstr "Admin"
 
-#: src/app/FloatingMenu.js:180
+#: src/app/FloatingMenu.js:179
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
-#: src/app/App.js:118
+#: src/app/App.js:119
 msgid "Admin Profile"
 msgstr "Admin Profile"
 
@@ -149,7 +149,7 @@ msgstr "An email was sent with a link to reset your password"
 msgid "An error has occurred."
 msgstr "An error has occurred."
 
-#: src/app/FloatingMenu.js:39
+#: src/app/FloatingMenu.js:38
 #: src/app/TopBanner.js:25
 msgid "An error occured when you attempted to sign out"
 msgstr "An error occured when you attempted to sign out"
@@ -231,11 +231,11 @@ msgstr "Assess current state;"
 msgid "August"
 msgstr "August"
 
-#: src/app/App.js:160
+#: src/app/App.js:161
 msgid "Authenticate"
 msgstr "Authenticate"
 
-#: src/app/App.js:85
+#: src/app/App.js:86
 msgid "BETA"
 msgstr "BETA"
 
@@ -340,7 +340,7 @@ msgid "Clear"
 msgstr "Clear"
 
 #: src/admin/OrganizationInformation.js:385
-#: src/app/FloatingMenu.js:268
+#: src/app/FloatingMenu.js:267
 msgid "Close"
 msgstr "Close"
 
@@ -394,10 +394,19 @@ msgstr "Confirm removal of domain:"
 msgid "Confirm removal of user:"
 msgstr "Confirm removal of user:"
 
-#: src/app/App.js:309
-#: src/app/FloatingMenu.js:239
+#: src/app/FloatingMenu.js:238
 msgid "Contact"
 msgstr "Contact"
+
+#: src/app/App.js:185
+#: src/app/App.js:310
+#: src/app/ContactUsPage.js:49
+msgid "Contact Us"
+msgstr "Contact Us"
+
+#: src/app/ContactUsPage.js:9
+msgid "Contact the Tracker Team"
+msgstr "Contact the Tracker Team"
 
 #: src/auth/CreateUserPage.js:119
 #: src/auth/EmailValidationPage.js:88
@@ -430,19 +439,19 @@ msgstr "Country (FR)"
 msgid "Country:"
 msgstr "Country:"
 
-#: src/app/FloatingMenu.js:201
+#: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:92
 #: src/auth/CreateUserPage.js:203
 msgid "Create Account"
 msgstr "Create Account"
 
 #: src/admin/AdminPage.js:111
-#: src/app/App.js:267
+#: src/app/App.js:274
 #: src/createOrganization/CreateOrganizationPage.js:245
 msgid "Create Organization"
 msgstr "Create Organization"
 
-#: src/app/App.js:136
+#: src/app/App.js:137
 msgid "Create an Account"
 msgstr "Create an Account"
 
@@ -564,9 +573,9 @@ msgstr "DMARC Report for {domainSlug}"
 msgid "DMARC Status"
 msgstr "DMARC Status"
 
-#: src/app/App.js:105
-#: src/app/App.js:239
-#: src/app/FloatingMenu.js:132
+#: src/app/App.js:106
+#: src/app/App.js:246
+#: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:183
 #: src/dmarc/DmarcByDomainPage.js:285
 msgid "DMARC Summaries"
@@ -688,9 +697,9 @@ msgid "Domain:"
 msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:25
-#: src/app/App.js:102
-#: src/app/App.js:209
-#: src/app/FloatingMenu.js:117
+#: src/app/App.js:103
+#: src/app/App.js:216
+#: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:76
 #: src/domains/DomainsPage.js:110
 #: src/organizationDetails/OrganizationDetails.js:171
@@ -752,7 +761,7 @@ msgstr "Email Sent"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:261
+#: src/app/App.js:268
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -862,7 +871,7 @@ msgstr "For in-depth CCCS implementation guidance:"
 msgid "For technical implementation guidance:"
 msgstr "For technical implementation guidance:"
 
-#: src/app/App.js:166
+#: src/app/App.js:167
 msgid "Forgot Password"
 msgstr "Forgot Password"
 
@@ -901,6 +910,10 @@ msgstr "Fully Aligned by IP Address"
 msgid "Further details for each organization can be found by clicking on its row."
 msgstr "Further details for each organization can be found by clicking on its row."
 
+#: src/app/ContactUsPage.js:14
+msgid "General Public"
+msgstr "General Public"
+
 #: src/dmarc/DmarcByDomainPage.js:290
 #: src/domains/DomainsPage.js:114
 #: src/organizations/Organizations.js:126
@@ -910,6 +923,10 @@ msgstr "Glossary"
 #: src/components/TrackerTable.js:250
 msgid "Go to page:"
 msgstr "Go to page:"
+
+#: src/app/ContactUsPage.js:23
+msgid "Government of Canada Employees"
+msgstr "Government of Canada Employees"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:99
 msgid "Graph direction:"
@@ -983,9 +1000,9 @@ msgstr "Header From"
 msgid "Heartbleed Vulnerability:"
 msgstr "Heartbleed Vulnerability:"
 
-#: src/app/App.js:93
-#: src/app/App.js:130
-#: src/app/FloatingMenu.js:176
+#: src/app/App.js:94
+#: src/app/App.js:131
+#: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Home"
 
@@ -1121,6 +1138,14 @@ msgstr "Incorrect updateUserRole.result typename."
 msgid "Incorrect verifyPhoneNumber.result typename."
 msgstr "Incorrect verifyPhoneNumber.result typename."
 
+#: src/app/ContactUsPage.js:26
+msgid "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
+msgstr "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
+
+#: src/app/ContactUsPage.js:17
+msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
+msgstr "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
+
 #: src/termsConditions/TermsConditionsPage.js:328
 msgid "Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:"
 msgstr "Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:"
@@ -1210,8 +1235,8 @@ msgstr "March"
 msgid "May"
 msgstr "May"
 
-#: src/app/FloatingMenu.js:147
-#: src/app/FloatingMenu.js:170
+#: src/app/FloatingMenu.js:146
+#: src/app/FloatingMenu.js:169
 msgid "Menu"
 msgstr "Menu"
 
@@ -1360,6 +1385,10 @@ msgstr "Non-compliant"
 msgid "None"
 msgstr "None"
 
+#: src/app/ContactUsPage.js:33
+msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
+msgstr "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
+
 #: src/termsConditions/TermsConditionsPage.js:20
 msgid "Notice of Agreement"
 msgstr "Notice of Agreement"
@@ -1410,9 +1439,9 @@ msgstr "Organization not updated"
 msgid "Organization:"
 msgstr "Organization:"
 
-#: src/app/App.js:99
-#: src/app/App.js:181
-#: src/app/FloatingMenu.js:104
+#: src/app/App.js:100
+#: src/app/App.js:188
+#: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:122
 msgid "Organizations"
@@ -1525,8 +1554,8 @@ msgstr "Preloaded Status:"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/app/App.js:287
-#: src/app/FloatingMenu.js:220
+#: src/app/App.js:294
+#: src/app/FloatingMenu.js:219
 #: src/termsConditions/TermsConditionsPage.js:40
 msgid "Privacy"
 msgstr "Privacy"
@@ -1588,8 +1617,8 @@ msgstr "Remove User"
 msgid "Removed Organization"
 msgstr "Removed Organization"
 
-#: src/app/App.js:299
-#: src/app/FloatingMenu.js:231
+#: src/app/App.js:306
+#: src/app/FloatingMenu.js:230
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
@@ -1597,7 +1626,7 @@ msgstr "Report an Issue"
 msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
-#: src/app/App.js:172
+#: src/app/App.js:173
 msgid "Reset Password"
 msgstr "Reset Password"
 
@@ -1857,8 +1886,8 @@ msgstr "Shows the percentage of emails from the domain that have passed both SPF
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
-#: src/app/App.js:143
-#: src/app/FloatingMenu.js:198
+#: src/app/App.js:144
+#: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:82
 #: src/auth/SignInPage.js:175
 msgid "Sign In"
@@ -1869,12 +1898,12 @@ msgstr "Sign In"
 msgid "Sign In."
 msgstr "Sign In."
 
-#: src/app/FloatingMenu.js:193
+#: src/app/FloatingMenu.js:192
 #: src/app/TopBanner.js:70
 msgid "Sign Out"
 msgstr "Sign Out"
 
-#: src/app/FloatingMenu.js:49
+#: src/app/FloatingMenu.js:48
 #: src/app/TopBanner.js:35
 msgid "Sign Out."
 msgstr "Sign Out."
@@ -1883,7 +1912,7 @@ msgstr "Sign Out."
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 
-#: src/app/App.js:83
+#: src/app/App.js:84
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -1941,12 +1970,12 @@ msgstr "TBS reserves the right to refuse service, and may reject your applicatio
 msgid "Termination"
 msgstr "Termination"
 
-#: src/app/App.js:178
+#: src/app/App.js:179
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/app/App.js:291
-#: src/app/FloatingMenu.js:226
+#: src/app/App.js:298
+#: src/app/FloatingMenu.js:225
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -2009,7 +2038,7 @@ msgstr "This could be due to improper configuration, or could be the result of a
 msgid "This field cannot be empty"
 msgstr "This field cannot be empty"
 
-#: src/app/App.js:86
+#: src/app/App.js:87
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
 
@@ -2320,7 +2349,7 @@ msgstr "You agree to protect any information disclosed to you by TBS in accordan
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
-#: src/app/FloatingMenu.js:50
+#: src/app/FloatingMenu.js:49
 #: src/app/TopBanner.js:36
 msgid "You have successfully been signed out."
 msgstr "You have successfully been signed out."
@@ -2369,7 +2398,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:249
+#: src/app/App.js:256
 msgid "Your Account"
 msgstr "Your Account"
 
