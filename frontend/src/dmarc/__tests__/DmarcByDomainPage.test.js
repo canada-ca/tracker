@@ -29,6 +29,8 @@ const i18n = setupI18n({
 matchMediaSize()
 
 describe('<DmarcByDomainPage />', () => {
+  const currentYear = new Date().getFullYear().toString()
+
   const mocks = [
     {
       request: {
@@ -36,7 +38,7 @@ describe('<DmarcByDomainPage />', () => {
         variables: {
           first: 10,
           month: 'LAST30DAYS',
-          year: '2021',
+          year: currentYear,
           orderBy: {
             field: 'TOTAL_MESSAGES',
             direction: 'DESC',
