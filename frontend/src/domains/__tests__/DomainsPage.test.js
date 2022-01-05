@@ -280,11 +280,13 @@ describe('<DomainsPage />', () => {
           </MockedProvider>,
         )
 
+        const currentYear = new Date().getFullYear()
+
         await waitFor(() => {
           const reportLinks = getAllByText(/DMARC Report/i)
           fireEvent.click(reportLinks[0])
           expect(history.location.pathname).toEqual(
-            '/domains/tbs-sct.gc.ca/dmarc-report/LAST30DAYS/2021',
+            `/domains/tbs-sct.gc.ca/dmarc-report/LAST30DAYS/${currentYear}`,
           )
         })
       })
