@@ -60,6 +60,7 @@ const EmailValidationPage = lazyWithRetry(() =>
 const CreateOrganizationPage = lazyWithRetry(() =>
   import('../createOrganization/CreateOrganizationPage'),
 )
+const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 
 export function App() {
   // Hooks to be used with this functional component
@@ -176,6 +177,12 @@ export function App() {
                 path="/terms-and-conditions"
                 component={TermsConditionsPage}
                 title={t`Terms & Conditions`}
+              />
+
+              <Page
+                path="/contact-us"
+                component={ContactUsPage}
+                title={t`Contact Us`}
               />
 
               <PrivatePage path="/organizations" title={t`Organizations`} exact>
@@ -299,14 +306,8 @@ export function App() {
             <Trans>Report an Issue</Trans>
           </Link>
 
-          <Link
-            ml={4}
-            href={
-              'mailto:zzTBSCybers@tbs-sct.gc.ca?subject=Tracker%20Issue%20Report'
-            }
-            isExternal={true}
-          >
-            <Trans>Contact</Trans>
+          <Link as={RouteLink} to="/contact-us" ml={4}>
+            <Trans>Contact Us</Trans>
           </Link>
         </Footer>
       </Flex>
