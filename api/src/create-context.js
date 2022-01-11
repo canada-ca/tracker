@@ -104,23 +104,21 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
 
-const { HASHING_SALT } = process.env
+const { HASHING_SALT, LOGIN_REQUIRED } = process.env
 
-export const createContext =
-  (context) =>
-  async ({ req, res, connection }) => {
-    if (connection) {
-      req = {
-        headers: {
-          authorization: connection.authorization,
-        },
-        language: connection.language,
-      }
-      return createContextObject({ context, req })
-    } else {
-      return createContextObject({ context, req, res })
+export const createContext = (context) => async ({ req, res, connection }) => {
+  if (connection) {
+    req = {
+      headers: {
+        authorization: connection.authorization,
+      },
+      language: connection.language,
     }
+    return createContextObject({ context, req })
+  } else {
+    return createContextObject({ context, req, res })
   }
+}
 
 const createContextObject = ({ context, req: request, res: response }) => {
   const { query } = context
@@ -159,6 +157,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         query,
       }),
+      loginRequiredVar: LOGIN_REQUIRED === 'true',
       tokenize,
       saltedHash: saltedHash(HASHING_SALT),
       userRequired: userRequired({
@@ -194,14 +193,15 @@ const createContextObject = ({ context, req: request, res: response }) => {
         i18n,
         language: request.language,
       }),
-      loadAggregateGuidanceTagConnectionsByTagId:
-        loadAggregateGuidanceTagConnectionsByTagId({
+      loadAggregateGuidanceTagConnectionsByTagId: loadAggregateGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           i18n,
           cleanseInput,
           language: request.language,
-        }),
+        },
+      ),
       loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
         userKey,
@@ -225,12 +225,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
           i18n,
         }),
       }),
-      loadDmarcSummaryEdgeByDomainIdAndPeriod:
-        loadDmarcSummaryEdgeByDomainIdAndPeriod({
+      loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
+        {
           query,
           userKey,
           i18n,
-        }),
+        },
+      ),
       loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query, userKey, i18n }),
       loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
         query,
@@ -310,70 +311,75 @@ const createContextObject = ({ context, req: request, res: response }) => {
         i18n,
         language: request.language,
       }),
-      loadDkimGuidanceTagConnectionsByTagId:
-        loadDkimGuidanceTagConnectionsByTagId({
+      loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadDmarcGuidanceTagConnectionsByTagId:
-        loadDmarcGuidanceTagConnectionsByTagId({
+      loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadHttpsGuidanceTagConnectionsByTagId:
-        loadHttpsGuidanceTagConnectionsByTagId({
+      loadHttpsGuidanceTagConnectionsByTagId: loadHttpsGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadSpfGuidanceTagConnectionsByTagId:
-        loadSpfGuidanceTagConnectionsByTagId({
+      loadSpfGuidanceTagConnectionsByTagId: loadSpfGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadSslGuidanceTagConnectionsByTagId:
-        loadSslGuidanceTagConnectionsByTagId({
+      loadSslGuidanceTagConnectionsByTagId: loadSslGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadOrgByKey: loadOrgByKey({
         query,
         language: request.language,
@@ -423,12 +429,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      loadVerifiedDomainConnectionsByOrgId:
-        loadVerifiedDomainConnectionsByOrgId({
+      loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+        {
           query,
           cleanseInput,
           i18n,
-        }),
+        },
+      ),
       loadVerifiedOrgByKey: loadVerifiedOrgByKey({
         query,
         language: request.language,
@@ -439,13 +446,14 @@ const createContextObject = ({ context, req: request, res: response }) => {
         language: request.language,
         i18n,
       }),
-      loadVerifiedOrgConnectionsByDomainId:
-        loadVerifiedOrgConnectionsByDomainId({
+      loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
+        {
           query,
           language: request.language,
           cleanseInput,
           i18n,
-        }),
+        },
+      ),
       loadVerifiedOrgConnections: loadVerifiedOrgConnections({
         query,
         language: request.language,
