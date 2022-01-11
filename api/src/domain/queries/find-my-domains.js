@@ -28,14 +28,22 @@ export const findMyDomains = {
     args,
     {
       userKey,
-      auth: { checkSuperAdmin, userRequired, verifiedRequired },
+      auth: {
+        checkSuperAdmin,
+        userRequired,
+        loginRequiredBool,
+        verifiedRequired,
+      },
       loaders: { loadDomainConnectionsByUserId },
     },
   ) => {
-    const user = await userRequired()
-    verifiedRequired({ user })
+    let isSuperAdmin
+    if (loginRequiredBool) {
+      const user = await userRequired()
+      verifiedRequired({ user })
 
-    const isSuperAdmin = await checkSuperAdmin()
+      isSuperAdmin = await checkSuperAdmin()
+    }
 
     const domainConnections = await loadDomainConnectionsByUserId({
       isSuperAdmin,

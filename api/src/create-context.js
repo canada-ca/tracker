@@ -132,7 +132,11 @@ const createContextObject = ({ context, req: request, res: response }) => {
   const token = request.headers.authorization || ''
   if (token !== '') {
     userKey = verify({ token }).userKey
+  } else {
+    userKey = 'NO_USER'
   }
+
+  const loginRequiredBool = LOGIN_REQUIRED === 'true'
 
   return {
     ...context,
@@ -157,7 +161,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         query,
       }),
-      loginRequiredVar: LOGIN_REQUIRED === 'true',
+      loginRequiredBool,
       tokenize,
       saltedHash: saltedHash(HASHING_SALT),
       userRequired: userRequired({
@@ -264,6 +268,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
       loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
