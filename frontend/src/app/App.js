@@ -4,6 +4,7 @@ import { i18n } from '@lingui/core'
 import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useQuery } from '@apollo/client'
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
@@ -23,6 +24,7 @@ import { useUserVar } from '../utilities/userState'
 import { lazyWithRetry } from '../utilities/lazyWithRetry'
 
 import { LandingPage } from '../landing/LandingPage'
+import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
 const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
@@ -66,6 +68,17 @@ export function App() {
   // Hooks to be used with this functional component
   const { currentUser, isLoggedIn, isEmailValidated } = useUserVar()
 
+  const { data, loading, error } = useQuery(IS_LOGIN_REQUIRED, {
+    onComplete: (stuff) => console.log(`completed! recieved: ${stuff}`),
+    onError: (e) => console.log(`error! recieved: ${e}`),
+  })
+  if (loading) {
+    console.info('loading...')
+  }
+  if (error) {
+    console.error(error)
+  }
+
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
   useEffect(() => {
@@ -94,7 +107,7 @@ export function App() {
             <Trans>Home</Trans>
           </RouteLink>
 
-          {isLoggedIn() && isEmailValidated() && (
+          {((isLoggedIn() && isEmailValidated()) || !data?.isLoginRequired) && (
             <>
               <RouteLink to="/organizations">
                 <Trans>Organizations</Trans>
@@ -185,7 +198,12 @@ export function App() {
                 title={t`Contact Us`}
               />
 
-              <PrivatePage path="/organizations" title={t`Organizations`} exact>
+              <PrivatePage
+                isLoginRequired={data?.isLoginRequired}
+                path="/organizations"
+                title={t`Organizations`}
+                exact
+              >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <Organizations />
@@ -194,6 +212,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
+                isLoginRequired={data?.isLoginRequired}
                 path="/organizations/:orgSlug"
                 setTitle={false}
                 exact
@@ -213,7 +232,12 @@ export function App() {
                 )}
               </PrivatePage>
 
-              <PrivatePage path="/domains" title={t`Domains`} exact>
+              <PrivatePage
+                isLoginRequired={data?.isLoginRequired}
+                path="/domains"
+                title={t`Domains`}
+                exact
+              >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <DomainsPage />
@@ -221,7 +245,12 @@ export function App() {
                 )}
               </PrivatePage>
 
-              <PrivatePage path="/domains/:domainSlug" setTitle={false} exact>
+              <PrivatePage
+                isLoginRequired={data?.isLoginRequired}
+                path="/domains/:domainSlug"
+                setTitle={false}
+                exact
+              >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <DmarcGuidancePage />
@@ -230,6 +259,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
+                isLoginRequired={data?.isLoginRequired}
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
                 setTitle={false}
                 exact
@@ -242,6 +272,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
+                isLoginRequired={data?.isLoginRequired}
                 path="/dmarc-summaries"
                 title={t`DMARC Summaries`}
                 exact

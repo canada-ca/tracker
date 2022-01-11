@@ -137,6 +137,9 @@ export const getTypeNames = () => gql`
     # Query used to check if the user has a super admin role.
     isUserSuperAdmin: Boolean
 
+    # Query used to check if sign in is required to view data.
+    isLoginRequired: Boolean
+
     # Retrieve a specific verified domain by providing a domain.
     findVerifiedDomainByDomain(
       # The domain you wish to retrieve information for.

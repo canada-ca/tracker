@@ -1377,3 +1377,9 @@ export const IS_USER_ADMIN = gql`
     isUserAdmin(orgId: $orgId)
   }
 `
+
+export const IS_LOGIN_REQUIRED = gql`
+  query IsLoginRequired {
+    isLoginRequired
+  }
+`
