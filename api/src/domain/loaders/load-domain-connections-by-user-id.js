@@ -286,7 +286,22 @@ export const loadDomainConnectionsByUserId = ({
   }
 
   let domainKeysQuery
-  if (isSuperAdmin || !loginRequiredBool) {
+  if (!loginRequiredBool) {
+    domainKeysQuery = aql`
+      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
+      LET domainKeys = UNIQUE(FLATTEN(
+        LET keys = []
+        LET orgIds = (FOR org IN organizations RETURN org._id)
+        FOR orgId IN orgIds
+          LET claimDomainKeys = (
+            FOR v, e IN 1..1 OUTBOUND orgId claims
+              OPTIONS {bfs: true}
+              RETURN v._key
+          )
+          RETURN APPEND(keys, claimDomainKeys)
+      ))
+    `
+  } else if (isSuperAdmin) {
     domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET domainKeys = UNIQUE(FLATTEN(
