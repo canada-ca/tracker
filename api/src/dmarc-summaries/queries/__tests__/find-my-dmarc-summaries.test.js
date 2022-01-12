@@ -198,14 +198,16 @@ describe('given the findMyDmarcSummaries query', () => {
             verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
-            loadDmarcSummaryConnectionsByUserId:
-              loadDmarcSummaryConnectionsByUserId({
+            loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+              {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: mockedStartDateLoader,
-              }),
+              },
+            ),
           },
         },
       )
@@ -348,16 +350,18 @@ describe('given the findMyDmarcSummaries query', () => {
                 verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDmarcSummaryConnectionsByUserId:
-                  loadDmarcSummaryConnectionsByUserId({
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
                     query: jest
                       .fn()
                       .mockRejectedValue(new Error('Database error occurred.')),
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     i18n,
                     loadStartDateFromPeriod: jest.fn(),
-                  }),
+                  },
+                ),
               },
             },
           )
@@ -427,6 +431,7 @@ describe('given the findMyDmarcSummaries query', () => {
                   loadUserByKey: {
                     load: jest.fn(),
                   },
+                  loginRequiredBool: true,
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
               },
@@ -483,16 +488,18 @@ describe('given the findMyDmarcSummaries query', () => {
                 verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDmarcSummaryConnectionsByUserId:
-                  loadDmarcSummaryConnectionsByUserId({
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
                     query: jest
                       .fn()
                       .mockRejectedValue(new Error('Database error occurred.')),
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     i18n,
                     loadStartDateFromPeriod: jest.fn(),
-                  }),
+                  },
+                ),
               },
             },
           )

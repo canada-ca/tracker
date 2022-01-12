@@ -151,6 +151,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
+                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey(query, 'en'),
@@ -160,15 +161,18 @@ describe('given findOrganizationBySlugQuery', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n,
                 }),
-                loadAffiliationConnectionsByOrgId:
-                  loadAffiliationConnectionsByOrgId({
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
+                  {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     i18n,
-                  }),
+                  },
+                ),
               },
             },
           )
@@ -256,6 +260,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
+                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey(query, 'fr'),
@@ -265,15 +270,18 @@ describe('given findOrganizationBySlugQuery', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n,
                 }),
-                loadAffiliationConnectionsByOrgId:
-                  loadAffiliationConnectionsByOrgId({
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
+                  {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     i18n,
-                  }),
+                  },
+                ),
               },
             },
           )
@@ -353,6 +361,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
+                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgBySlug: {
@@ -407,6 +416,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
+                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgBySlug: {
@@ -479,6 +489,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
+                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgBySlug: {
@@ -533,6 +544,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
+                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgBySlug: {

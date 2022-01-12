@@ -8,6 +8,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadOrgConnectionsByUserId, loadOrgByKey } from '../index'
+import { loginRequired } from '../../../user'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -193,8 +194,10 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
+                auth: { loginRequired: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -225,10 +228,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: true,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[1]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -242,6 +242,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -274,10 +275,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: true,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
@@ -291,6 +289,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -322,10 +321,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: true,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
@@ -339,6 +335,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -370,10 +367,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: true,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[1]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -405,6 +399,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'en',
                   i18n,
                 })
@@ -447,6 +442,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'en',
                   i18n,
                 })
@@ -492,6 +488,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'en',
                   i18n,
                 })
@@ -527,10 +524,7 @@ describe('given the load organization connections by user id function', () => {
                       'organization',
                       expectedOrgs[0]._key,
                     ),
-                    endCursor: toGlobalId(
-                      'organization',
-                      expectedOrgs[1]._key,
-                    ),
+                    endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   },
                 }
 
@@ -602,6 +596,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -631,10 +626,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -651,6 +643,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -680,10 +673,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -702,6 +692,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -731,10 +722,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -751,6 +739,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -780,10 +769,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -802,6 +788,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -831,10 +818,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -851,6 +835,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -880,10 +865,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -902,6 +884,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -931,10 +914,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -951,6 +931,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -980,10 +961,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1002,6 +980,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1031,10 +1010,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1051,6 +1027,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1080,10 +1057,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1102,6 +1076,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1131,10 +1106,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1151,6 +1123,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1180,10 +1153,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1202,6 +1172,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1231,10 +1202,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1251,6 +1219,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1280,10 +1249,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1302,6 +1268,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1331,10 +1298,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1351,6 +1315,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1380,10 +1345,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1402,6 +1364,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1431,10 +1394,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1451,6 +1411,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1480,10 +1441,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1502,6 +1460,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1531,10 +1490,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1551,6 +1507,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1580,10 +1537,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1602,6 +1556,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1631,10 +1586,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1651,6 +1603,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1680,10 +1633,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1702,6 +1652,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1731,10 +1682,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1751,6 +1699,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1780,10 +1729,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1802,6 +1748,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1831,10 +1778,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1851,6 +1795,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1880,10 +1825,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1902,6 +1844,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1931,10 +1874,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -1951,6 +1891,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -1980,10 +1921,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2002,6 +1940,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -2031,10 +1970,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2051,6 +1987,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -2080,10 +2017,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2102,6 +2036,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -2131,10 +2066,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2151,6 +2083,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   })
@@ -2180,10 +2113,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2199,6 +2129,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -2237,10 +2168,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -2254,6 +2182,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -2283,10 +2212,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[1]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -2346,6 +2272,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'en',
                   i18n,
                 })
@@ -2392,10 +2319,7 @@ describe('given the load organization connections by user id function', () => {
                       'organization',
                       expectedOrgs[0]._key,
                     ),
-                    endCursor: toGlobalId(
-                      'organization',
-                      expectedOrgs[2]._key,
-                    ),
+                    endCursor: toGlobalId('organization', expectedOrgs[2]._key),
                   },
                 }
 
@@ -2408,6 +2332,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'en',
                   i18n,
                 })
@@ -2448,10 +2373,7 @@ describe('given the load organization connections by user id function', () => {
                       'organization',
                       expectedOrgs[0]._key,
                     ),
-                    endCursor: toGlobalId(
-                      'organization',
-                      expectedOrgs[1]._key,
-                    ),
+                    endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   },
                 }
 
@@ -2468,6 +2390,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'en',
               i18n,
             })
@@ -2516,6 +2439,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -2548,10 +2472,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: true,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[1]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -2565,6 +2486,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -2597,10 +2519,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: true,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
@@ -2614,6 +2533,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -2645,10 +2565,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: true,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[0]._key),
                 },
               }
@@ -2662,6 +2579,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -2693,10 +2611,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: true,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[1]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -2768,6 +2683,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -2797,10 +2713,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2817,6 +2730,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -2846,10 +2760,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2868,6 +2779,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -2897,10 +2809,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2917,6 +2826,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -2946,10 +2856,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -2968,6 +2875,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -2997,10 +2905,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3017,6 +2922,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3046,10 +2952,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3068,6 +2971,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3097,10 +3001,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3117,6 +3018,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3146,10 +3048,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3168,6 +3067,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3197,10 +3097,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3217,6 +3114,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3246,10 +3144,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3268,6 +3163,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3297,10 +3193,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3317,6 +3210,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3346,10 +3240,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3368,6 +3259,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3397,10 +3289,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3417,6 +3306,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3446,10 +3336,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3468,6 +3355,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3497,10 +3385,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3517,6 +3402,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3546,10 +3432,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3568,6 +3451,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3597,10 +3481,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3617,6 +3498,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3646,10 +3528,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3668,6 +3547,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3697,10 +3577,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3717,6 +3594,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3746,10 +3624,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3768,6 +3643,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3797,10 +3673,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3817,6 +3690,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3846,10 +3720,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3868,6 +3739,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3897,10 +3769,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3917,6 +3786,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3946,10 +3816,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -3968,6 +3835,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -3997,10 +3865,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4017,6 +3882,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -4046,10 +3912,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4068,6 +3931,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -4097,10 +3961,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4117,6 +3978,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -4146,10 +4008,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4168,6 +4027,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -4197,10 +4057,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4217,6 +4074,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -4246,10 +4104,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4268,6 +4123,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -4297,10 +4153,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4317,6 +4170,7 @@ describe('given the load organization connections by user id function', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
+                    auth: { loginRequired: true },
                     language: 'fr',
                     i18n,
                   })
@@ -4346,10 +4200,7 @@ describe('given the load organization connections by user id function', () => {
                     pageInfo: {
                       hasNextPage: true,
                       hasPreviousPage: true,
-                      startCursor: toGlobalId(
-                        'organization',
-                        expectedOrg._key,
-                      ),
+                      startCursor: toGlobalId('organization', expectedOrg._key),
                       endCursor: toGlobalId('organization', expectedOrg._key),
                     },
                   }
@@ -4383,6 +4234,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'fr',
                   i18n,
                 })
@@ -4425,6 +4277,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'fr',
                   i18n,
                 })
@@ -4470,6 +4323,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'fr',
                   i18n,
                 })
@@ -4505,10 +4359,7 @@ describe('given the load organization connections by user id function', () => {
                       'organization',
                       expectedOrgs[0]._key,
                     ),
-                    endCursor: toGlobalId(
-                      'organization',
-                      expectedOrgs[1]._key,
-                    ),
+                    endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   },
                 }
 
@@ -4522,6 +4373,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -4560,10 +4412,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -4577,6 +4426,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -4606,10 +4456,7 @@ describe('given the load organization connections by user id function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[1]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -4669,6 +4516,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'fr',
                   i18n,
                 })
@@ -4715,10 +4563,7 @@ describe('given the load organization connections by user id function', () => {
                       'organization',
                       expectedOrgs[0]._key,
                     ),
-                    endCursor: toGlobalId(
-                      'organization',
-                      expectedOrgs[2]._key,
-                    ),
+                    endCursor: toGlobalId('organization', expectedOrgs[2]._key),
                   },
                 }
 
@@ -4731,6 +4576,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'fr',
                   i18n,
                 })
@@ -4771,10 +4617,7 @@ describe('given the load organization connections by user id function', () => {
                       'organization',
                       expectedOrgs[0]._key,
                     ),
-                    endCursor: toGlobalId(
-                      'organization',
-                      expectedOrgs[1]._key,
-                    ),
+                    endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                   },
                 }
 
@@ -4791,6 +4634,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'fr',
               i18n,
             })
@@ -4840,6 +4684,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'en',
               i18n,
             })
@@ -4868,6 +4713,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'en',
               i18n,
             })
@@ -4900,6 +4746,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -4930,6 +4777,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -4962,6 +4810,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -4992,6 +4841,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
               })
@@ -5027,6 +4877,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: 123,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'en',
                   i18n,
                 })
@@ -5061,6 +4912,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: 123,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'en',
                   i18n,
                 })
@@ -5101,6 +4953,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'en',
               i18n,
             })
@@ -5140,6 +4993,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'en',
               i18n,
             })
@@ -5186,6 +5040,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'fr',
               i18n,
             })
@@ -5214,6 +5069,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'fr',
               i18n,
             })
@@ -5246,6 +5102,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -5276,6 +5133,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -5308,6 +5166,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -5338,6 +5197,7 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: 123,
                 cleanseInput,
+                auth: { loginRequired: true },
                 language: 'fr',
                 i18n,
               })
@@ -5373,6 +5233,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: 123,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'fr',
                   i18n,
                 })
@@ -5407,6 +5268,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: 123,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   language: 'fr',
                   i18n,
                 })
@@ -5447,6 +5309,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'fr',
               i18n,
             })
@@ -5488,6 +5351,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               userKey: 123,
               cleanseInput,
+              auth: { loginRequired: true },
               language: 'fr',
               i18n,
             })
