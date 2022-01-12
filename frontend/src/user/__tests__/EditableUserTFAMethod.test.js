@@ -55,6 +55,10 @@ describe('<EditableUserTFAMethod />', () => {
               result: {
                 status: 'Hello World',
                 user: {
+                  id: '1234asdf',
+                  userName: 'testUser@canada.gc.ca',
+                  displayName: 'test user',
+                  preferredLang: 'en',
                   tfaSendMethod: 'EMAIL',
                   __typename: 'PersonalUser',
                 },

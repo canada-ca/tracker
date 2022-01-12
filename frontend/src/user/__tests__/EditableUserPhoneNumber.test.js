@@ -140,6 +140,13 @@ describe('<EditableUserPhoneNumber />', () => {
                       status:
                         'Phone number has been successfully set, you will receive a verification text message shortly.',
                       user: {
+                        id: '1234asdf',
+                        userName: 'testUser@canada.gc.ca',
+                        displayName: 'test user',
+                        tfaSendMethod: 'PHONE',
+                        preferredLang: 'en',
+                        emailValidated: true,
+                        phoneValidated: true,
                         phoneNumber: '+17895551234',
                         __typename: 'PersonalUser',
                       },
@@ -162,6 +169,7 @@ describe('<EditableUserPhoneNumber />', () => {
                       status:
                         'You have successfully verified your phone number.',
                       user: {
+                        id: '1234asdf',
                         phoneNumber: '+19025555555',
                         phoneValidated: true,
                         __typename: 'PersonalUser',

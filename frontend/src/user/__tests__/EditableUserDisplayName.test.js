@@ -129,7 +129,12 @@ describe('<EditableUserDisplayName>', () => {
                       status: 'Hello World',
                       __typename: 'UpdateUserProfileResult',
                       user: {
+                        id: '1234asdf',
+                        userName: 'elise.ortiz@gmail.com',
                         displayName: 'Elisa Ortiz',
+                        tfaSendMethod: 'PHONE',
+                        preferredLang: 'en',
+                        emailValidated: true,
                         __typename: 'PersonalUser',
                       },
                     },

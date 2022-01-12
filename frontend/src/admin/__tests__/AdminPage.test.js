@@ -248,6 +248,7 @@ function mocks() {
                   node: {
                     id: 'e86770be-b13e-4bee-b833-6a2e31add85c',
                     domain: 'antonia.name',
+                    lastRan: '2020-08-13T14:42:03.385294',
                     selectors: ['selector9._domainkey', 'selector7._domainkey'],
                     __typename: 'Domain',
                   },
@@ -257,6 +258,7 @@ function mocks() {
                   node: {
                     id: '11494bbf-1ed6-4edb-b96f-3fed6f36a226',
                     domain: 'blaise.biz',
+                    lastRan: '2020-08-13T14:42:03.385294',
                     selectors: ['selector3._domainkey', 'selector5._domainkey'],
                     __typename: 'Domain',
                   },
