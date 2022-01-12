@@ -127,7 +127,12 @@ describe('<EditableUserEmail />', () => {
                       status: 'Hello World',
                       __typename: 'UpdateUserProfileResult',
                       user: {
+                        id: '1234asdf',
                         userName: 'testUser@canada.gc.ca',
+                        displayName: 'test user',
+                        tfaSendMethod: 'PHONE',
+                        preferredLang: 'en',
+                        emailValidated: true,
                         __typename: 'PersonalUser',
                       },
                     },

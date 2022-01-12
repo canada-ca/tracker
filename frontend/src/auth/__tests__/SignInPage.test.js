@@ -200,8 +200,11 @@ describe('<SignInPage />', () => {
                 signIn: {
                   result: {
                     user: {
+                      id: '1234asdf',
                       userName: 'Thalia.Rosenbaum@gmail.com',
                       tfaSendMethod: false,
+                      preferredLang: 'en',
+                      emailValidated: true,
                     },
                     authToken: 'test123stringJWT',
                     __typename: 'AuthResult',
