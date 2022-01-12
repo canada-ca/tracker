@@ -774,6 +774,7 @@ export const QUERY_CURRENT_USER = gql`
       phoneValidated
       emailValidated
     }
+    isUserAdmin
   }
 `
 

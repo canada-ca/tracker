@@ -18,6 +18,7 @@ import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 
 export function EditableUserTFAMethod({
   currentTFAMethod,
+  isUserAdmin,
   emailValidated,
   phoneValidated,
 }) {
@@ -141,7 +142,9 @@ export function EditableUserTFAMethod({
                 {...getFieldProps('tfaMethod')}
                 w="57%"
               >
-                <option value="NONE">{t`None`}</option>
+                {(!isUserAdmin || currentTFAMethod === 'NONE') && (
+                  <option value="NONE">{t`None`}</option>
+                )}
                 {emailValidated && <option value="EMAIL">{t`Email`}</option>}
                 {phoneValidated && <option value="PHONE">{t`Phone`}</option>}
               </Field>
@@ -162,6 +165,7 @@ export function EditableUserTFAMethod({
 
 EditableUserTFAMethod.propTypes = {
   currentTFAMethod: string,
+  isUserAdmin: bool,
   emailValidated: bool,
   phoneValidated: bool,
 }
