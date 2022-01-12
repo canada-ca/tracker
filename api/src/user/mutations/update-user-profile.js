@@ -77,6 +77,40 @@ export const updateUserProfile = new mutationWithClientMutationId({
       }
     }
 
+    // Check to see if admin user is disabling TFA
+    if (subTfaSendMethod === 'none') {
+      // check to see if user is an admin or higher for at least one org
+      let userAdmin
+      try {
+        userAdmin = await query`
+        FOR v, e IN 1..1 INBOUND ${user._id} affiliations
+        FILTER e.permission == "admin" || e.permission == "super_admin"
+        LIMIT 1
+        RETURN e.permission
+      `
+      } catch (err) {
+        console.error(
+          `Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`,
+        )
+        throw new Error(
+          i18n._(t`Unable to verify if user is an admin, please try again.`),
+        )
+      }
+
+      if (userAdmin.count > 0) {
+        console.error(
+          `User: ${userKey} attempted to remove MFA, however they are an admin of at least one organization.`,
+        )
+        return {
+          _type: 'error',
+          code: 403,
+          description: i18n._(
+            t`Permission Denied: Multi-factor authentication is required for admin accounts`,
+          ),
+        }
+      }
+    }
+
     let tfaSendMethod
     if (subTfaSendMethod === 'phone' && user.phoneValidated) {
       tfaSendMethod = 'phone'
