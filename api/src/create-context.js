@@ -150,7 +150,12 @@ const createContextObject = ({ context, req: request, res: response }) => {
     jwt,
     auth: {
       bcrypt,
-      checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
+      checkDomainOwnership: checkDomainOwnership({
+        i18n,
+        userKey,
+        query,
+        auth: { loginRequiredBool },
+      }),
       checkDomainPermission: checkDomainPermission({ i18n, userKey, query }),
       checkOrgOwner: checkOrgOwner({ i18n, userKey, query }),
       checkPermission: checkPermission({ i18n, userKey, query }),
