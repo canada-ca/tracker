@@ -41,13 +41,12 @@ export const findMyOrganizations = {
       loaders: { loadOrgConnectionsByUserId },
     },
   ) => {
-    let isSuperAdmin
     if (loginRequiredBool) {
       const user = await userRequired()
       verifiedRequired({ user })
-
-      isSuperAdmin = checkSuperAdmin()
     }
+
+    const isSuperAdmin = checkSuperAdmin()
 
     const orgConnections = await loadOrgConnectionsByUserId({
       isSuperAdmin,

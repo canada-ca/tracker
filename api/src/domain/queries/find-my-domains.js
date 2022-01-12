@@ -37,13 +37,12 @@ export const findMyDomains = {
       loaders: { loadDomainConnectionsByUserId },
     },
   ) => {
-    let isSuperAdmin
     if (loginRequiredBool) {
       const user = await userRequired()
       verifiedRequired({ user })
-
-      isSuperAdmin = await checkSuperAdmin()
     }
+
+    const isSuperAdmin = await checkSuperAdmin()
 
     const domainConnections = await loadDomainConnectionsByUserId({
       isSuperAdmin,
