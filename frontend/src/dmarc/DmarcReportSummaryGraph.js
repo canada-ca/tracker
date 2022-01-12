@@ -11,7 +11,7 @@ import { localPoint } from '@visx/event'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Box, Flex, Select, Stack, Text } from '@chakra-ui/react'
-import { number, node } from 'prop-types'
+import { number, array, object } from 'prop-types'
 
 import theme from '../theme/canada'
 
@@ -521,31 +521,31 @@ VerticalGraph.propTypes = {
   width: number,
   height: number,
   margin: number,
-  data: node,
-  keys: node,
+  data: object,
+  keys: array,
   screenWidth: number,
-  periods: node,
-  strengths: node,
+  periods: object,
+  strengths: object,
 }
 
 HorizontalGraph.propTypes = {
   width: number,
   height: number,
   margin: number,
-  data: node,
-  keys: node,
+  data: object,
+  keys: array,
   screenWidth: number,
-  periods: node,
-  strengths: node,
+  periods: object,
+  strengths: object,
 }
 
 DmarcReportSummaryGraph.propTypes = {
   width: number,
   height: number,
   margin: number,
-  data: node,
-  keys: node,
+  data: object,
+  keys: array,
   screenWidth: number,
-  periods: node,
-  strengths: node,
+  periods: object,
+  strengths: object,
 }
