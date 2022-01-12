@@ -49,6 +49,30 @@ describe('<UserPage />', () => {
             phoneValidated: phoneValidated,
             emailValidated: emailValidated,
           },
+          isUserAdmin: false,
+        },
+      },
+    },
+  ]
+
+  const adminMFABannerMocks = [
+    {
+      request: {
+        query: QUERY_CURRENT_USER,
+      },
+      result: {
+        data: {
+          userPage: {
+            id: 'ODk3MDg5MzI2MA==',
+            userName: userName,
+            displayName: displayName,
+            preferredLang: preferredLang,
+            phoneNumber: phoneNumber,
+            tfaSendMethod: 'NONE',
+            phoneValidated: phoneValidated,
+            emailValidated: emailValidated,
+          },
+          isUserAdmin: true,
         },
       },
     },
@@ -71,6 +95,32 @@ describe('<UserPage />', () => {
       </MockedProvider>,
     )
     await waitFor(() => expect(queryByText(userName)).toBeInTheDocument())
+  })
+
+  it('displays MFA notification banner when admin user lacks a TFA method', async () => {
+    const { queryByText } = render(
+      <MockedProvider mocks={adminMFABannerMocks} addTypename={false}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+        >
+          <MemoryRouter initialEntries={['/']}>
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <UserPage />
+              </I18nProvider>
+            </ChakraProvider>
+          </MemoryRouter>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    await waitFor(() => {
+      expect(
+        queryByText(
+          /Admin accounts must activate a multi-factor authentication option/,
+        ),
+      ).toBeInTheDocument()
+    })
   })
 
   it.skip('can update display name', async () => {
