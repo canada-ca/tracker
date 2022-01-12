@@ -223,6 +223,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
         loadStartDateFromPeriod: loadStartDateFromPeriod({
           moment,
           userKey,
@@ -262,6 +263,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
         query,
@@ -403,6 +405,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
         query,
@@ -410,6 +413,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         cleanseInput,
         language: request.language,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
       loadUserByKey: loadUserByKey({ query, userKey, i18n }),
