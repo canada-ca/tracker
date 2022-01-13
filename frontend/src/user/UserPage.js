@@ -16,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { EmailIcon } from '@chakra-ui/icons'
+import { EmailIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
 import { useHistory } from 'react-router-dom'
@@ -42,7 +42,7 @@ import {
   CLOSE_ACCOUNT,
   SIGN_OUT,
 } from '../graphql/mutations'
-import { MFANotificationBar } from '../app/MFANotificationBar'
+import { NotificationBanner } from '../app/NotificationBanner'
 
 export default function UserPage() {
   const toast = useToast()
@@ -170,8 +170,13 @@ export default function UserPage() {
 
   return (
     <Box w="100%">
-      {queryUserData?.isUserAdmin && tfaSendMethod === 'NONE' && (
-        <MFANotificationBar />
+      {tfaSendMethod === 'NONE' && queryUserData?.isUserAdmin && (
+        <NotificationBanner bg="blue.200">
+          <WarningTwoIcon color="orange.300" mr="2" />
+          <Trans>
+            Admin accounts must activate a multi-factor authentication option.
+          </Trans>
+        </NotificationBanner>
       )}
       <SimpleGrid columns={{ base: 1, md: 2 }} width="100%">
         <Stack py={25} px="4">

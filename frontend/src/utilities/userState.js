@@ -32,6 +32,10 @@ export function UserVarProvider({
     return currentUser?.emailValidated
   }
 
+  const currentTFAMethod = () => {
+    return currentUser?.tfaSendMethod
+  }
+
   const login = (newUserState) => {
     userVar(newUserState)
   }
@@ -50,6 +54,7 @@ export function UserVarProvider({
     currentUser,
     isLoggedIn,
     isEmailValidated,
+    currentTFAMethod,
     login,
     logout,
   }

@@ -81,7 +81,7 @@ msgstr "Compte"
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
-#: src/app/App.js:113
+#: src/app/App.js:119
 #: src/app/FloatingMenu.js:177
 #: src/user/UserPage.js:152
 msgid "Account Settings"
@@ -129,7 +129,7 @@ msgstr "Ajouter les détails du domaine"
 msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
-#: src/app/App.js:208
+#: src/app/App.js:235
 msgid "Admin"
 msgstr "Administrateur"
 
@@ -137,12 +137,20 @@ msgstr "Administrateur"
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/app/App.js:119
+#: src/app/App.js:125
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
 #: src/app/MFANotificationBar.js:20
-msgid "Admin accounts must activate a multi-factor authentication option"
+#~ msgid "Admin accounts must activate a multi-factor authentication option"
+#~ msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
+
+#: src/app/App.js:145
+msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
+msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle, <0>s'il vous plaît activer MFA</0>."
+
+#: src/user/UserPage.js:176
+msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
 
 #: src/auth/ForgotPasswordPage.js:39
@@ -235,11 +243,11 @@ msgstr "Évaluer l’état actuel."
 msgid "August"
 msgstr "Août"
 
-#: src/app/App.js:161
+#: src/app/App.js:188
 msgid "Authenticate"
 msgstr "Authentifier"
 
-#: src/app/App.js:86
+#: src/app/App.js:92
 msgid "BETA"
 msgstr "BETA"
 
@@ -270,7 +278,7 @@ msgid "Canadians rely on the Government of Canada to provide secure digital serv
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
 #: src/organizationDetails/OrganizationDetails.js:227
-#: src/user/UserPage.js:289
+#: src/user/UserPage.js:294
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -348,8 +356,8 @@ msgstr "Dégager"
 msgid "Close"
 msgstr "Fermer"
 
-#: src/user/UserPage.js:230
-#: src/user/UserPage.js:260
+#: src/user/UserPage.js:235
+#: src/user/UserPage.js:265
 msgid "Close Account"
 msgstr "Fermer le compte"
 
@@ -378,7 +386,7 @@ msgstr "Conforme"
 #: src/user/EditableUserPassword.js:172
 #: src/user/EditableUserPhoneNumber.js:186
 #: src/user/EditableUserPhoneNumber.js:244
-#: src/user/UserPage.js:298
+#: src/user/UserPage.js:303
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -402,8 +410,8 @@ msgstr "Confirmer le retrait de l'utilisateur:"
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:185
-#: src/app/App.js:310
+#: src/app/App.js:212
+#: src/app/App.js:337
 #: src/app/ContactUsPage.js:49
 msgid "Contact Us"
 msgstr "Nous contacter"
@@ -450,12 +458,12 @@ msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/admin/AdminPage.js:111
-#: src/app/App.js:274
+#: src/app/App.js:301
 #: src/createOrganization/CreateOrganizationPage.js:245
 msgid "Create Organization"
 msgstr "Créer une organisation"
 
-#: src/app/App.js:137
+#: src/app/App.js:164
 msgid "Create an Account"
 msgstr "Créer un compte"
 
@@ -577,8 +585,8 @@ msgstr "Rapport DMARC pour {domainSlug}"
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/app/App.js:106
-#: src/app/App.js:246
+#: src/app/App.js:112
+#: src/app/App.js:273
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:183
 #: src/dmarc/DmarcByDomainPage.js:285
@@ -701,8 +709,8 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/admin/AdminPanel.js:25
-#: src/app/App.js:103
-#: src/app/App.js:216
+#: src/app/App.js:109
+#: src/app/App.js:243
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:76
 #: src/domains/DomainsPage.js:110
@@ -765,7 +773,7 @@ msgstr "Courriel envoyé"
 msgid "Email Validated"
 msgstr "Courriel validé"
 
-#: src/app/App.js:268
+#: src/app/App.js:295
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
@@ -804,7 +812,7 @@ msgstr "Anglais"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/user/UserPage.js:270
+#: src/user/UserPage.js:275
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -875,7 +883,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS:"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique:"
 
-#: src/app/App.js:167
+#: src/app/App.js:194
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
@@ -1004,8 +1012,8 @@ msgstr "En-tête De"
 msgid "Heartbleed Vulnerability:"
 msgstr "Vulnérabilité Heartbleed:"
 
-#: src/app/App.js:94
-#: src/app/App.js:131
+#: src/app/App.js:100
+#: src/app/App.js:158
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Accueil"
@@ -1443,8 +1451,8 @@ msgstr "Organisation non mise à jour"
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/app/App.js:100
-#: src/app/App.js:188
+#: src/app/App.js:106
+#: src/app/App.js:215
 #: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:122
@@ -1558,7 +1566,7 @@ msgstr "Statut préchargé:"
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/app/App.js:294
+#: src/app/App.js:321
 #: src/app/FloatingMenu.js:219
 #: src/termsConditions/TermsConditionsPage.js:40
 msgid "Privacy"
@@ -1621,7 +1629,7 @@ msgstr "Supprimer l'utilisateur"
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
-#: src/app/App.js:306
+#: src/app/App.js:333
 #: src/app/FloatingMenu.js:230
 msgid "Report an Issue"
 msgstr "Signaler un problème"
@@ -1630,7 +1638,7 @@ msgstr "Signaler un problème"
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
-#: src/app/App.js:173
+#: src/app/App.js:200
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -1890,7 +1898,7 @@ msgstr "Indique le pourcentage d'e-mails du domaine qui ont passé les exigences
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine pendant la période sélectionnée."
 
-#: src/app/App.js:144
+#: src/app/App.js:171
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:82
 #: src/auth/SignInPage.js:175
@@ -1916,7 +1924,7 @@ msgstr "Déconnexion."
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/app/App.js:84
+#: src/app/App.js:90
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -1974,11 +1982,11 @@ msgstr "TBS se réserve le droit de refuser le service, de rejeter votre demande
 msgid "Termination"
 msgstr "Terminaison"
 
-#: src/app/App.js:179
+#: src/app/App.js:206
 msgid "Terms & Conditions"
 msgstr "Termes et conditions"
 
-#: src/app/App.js:298
+#: src/app/App.js:325
 #: src/app/FloatingMenu.js:225
 msgid "Terms & conditions"
 msgstr "Avis"
@@ -2025,7 +2033,7 @@ msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr "Les présentes conditions générales sont régies et interprétées en vertu des lois du Canada, sans égard aux règles de droit applicables. Les tribunaux du Canada auront la compétence exclusive sur toutes les questions relatives à ces conditions générales."
 
-#: src/user/UserPage.js:264
+#: src/user/UserPage.js:269
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
@@ -2042,11 +2050,11 @@ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'ana
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/app/App.js:87
+#: src/app/App.js:93
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 
-#: src/app/VerifyAccountNotificationBar.js:17
+#: src/app/App.js:132
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "Pour activer toutes les fonctionnalités de l'application et maximiser la sécurité de votre compte, <0>vous devez vérifier votre compte</0>."
 
@@ -2223,7 +2231,7 @@ msgstr "L'utilisation de la propriété intellectuelle en violation du présent 
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
-#: src/user/UserPage.js:278
+#: src/user/UserPage.js:283
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
@@ -2268,7 +2276,7 @@ msgstr "Vérifié"
 msgid "Verify"
 msgstr "Vérifier"
 
-#: src/user/UserPage.js:214
+#: src/user/UserPage.js:219
 msgid "Verify Account"
 msgstr "Vérifier le compte"
 
@@ -2402,7 +2410,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "Vous aurez besoin d'un compte Tracker pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
-#: src/app/App.js:256
+#: src/app/App.js:283
 msgid "Your Account"
 msgstr "Votre compte"
 

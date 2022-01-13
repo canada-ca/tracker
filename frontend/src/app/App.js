@@ -14,7 +14,6 @@ import { SkipLink } from './SkipLink'
 import { FloatingMenu } from './FloatingMenu'
 import { PrivatePage } from './PrivatePage'
 import { Page } from './Page'
-import { VerifyAccountNotificationBar } from './VerifyAccountNotificationBar'
 
 import { wsClient } from '../client'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -23,6 +22,8 @@ import { useUserVar } from '../utilities/userState'
 import { lazyWithRetry } from '../utilities/lazyWithRetry'
 
 import { LandingPage } from '../landing/LandingPage'
+import { NotificationBanner } from './NotificationBanner'
+
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
 const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
@@ -64,7 +65,12 @@ const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn, isEmailValidated } = useUserVar()
+  const {
+    currentUser,
+    isLoggedIn,
+    isEmailValidated,
+    currentTFAMethod,
+  } = useUserVar()
 
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
@@ -122,7 +128,28 @@ export function App() {
         </Navigation>
 
         {isLoggedIn() && !isEmailValidated() && (
-          <VerifyAccountNotificationBar />
+          <NotificationBanner>
+            <Trans>
+              To enable full app functionality and maximize your account's
+              security,{' '}
+              <Link textDecoration="underline" as={RouteLink} to="/user">
+                please verify your account
+              </Link>
+              .
+            </Trans>
+          </NotificationBanner>
+        )}
+
+        {isLoggedIn() && isEmailValidated() && currentTFAMethod() === 'NONE' && (
+          <NotificationBanner>
+            <Trans>
+              Admin accounts must activate a multi-factor authentication option,{' '}
+              <Link textDecoration="underline" as={RouteLink} to="/user">
+                please activate MFA
+              </Link>
+              .
+            </Trans>
+          </NotificationBanner>
         )}
 
         <Main marginBottom={{ base: '40px', md: 'none' }}>
