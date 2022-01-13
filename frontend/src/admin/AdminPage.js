@@ -13,8 +13,9 @@ import { ADMIN_PAGE } from '../graphql/queries'
 import { Dropdown } from '../components/Dropdown'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
+import { bool } from 'prop-types'
 
-export default function AdminPage() {
+export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
   const [searchTerm, setSearchTerm] = useState('')
@@ -119,6 +120,7 @@ export default function AdminPage() {
             removeOrgCallback={setSelectedOrg}
             // set key, this resets state when switching orgs (closes editing box)
             key={orgDetails.slug}
+            isLoginRequired={isLoginRequired}
           />
           <AdminPanel
             orgSlug={orgDetails.slug}
@@ -134,4 +136,8 @@ export default function AdminPage() {
       )}
     </Stack>
   )
+}
+
+AdminPage.propTypes = {
+  isLoginRequired: bool,
 }

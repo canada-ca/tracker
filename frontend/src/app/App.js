@@ -68,16 +68,7 @@ export function App() {
   // Hooks to be used with this functional component
   const { currentUser, isLoggedIn, isEmailValidated } = useUserVar()
 
-  const { data, loading, error } = useQuery(IS_LOGIN_REQUIRED, {
-    onComplete: (stuff) => console.log(`completed! recieved: ${stuff}`),
-    onError: (e) => console.log(`error! recieved: ${e}`),
-  })
-  if (loading) {
-    console.info('loading...')
-  }
-  if (error) {
-    console.error(error)
-  }
+  const { data } = useQuery(IS_LOGIN_REQUIRED, {})
 
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
@@ -219,7 +210,9 @@ export function App() {
               >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <OrganizationDetails />
+                    <OrganizationDetails
+                      isLoginRequired={data?.isLoginRequired}
+                    />
                   </ErrorBoundary>
                 )}
               </PrivatePage>
@@ -227,7 +220,7 @@ export function App() {
               <PrivatePage path="/admin" title={t`Admin`}>
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <AdminPage />
+                    <AdminPage isLoginRequired={data?.isLoginRequired} />
                   </ErrorBoundary>
                 )}
               </PrivatePage>
