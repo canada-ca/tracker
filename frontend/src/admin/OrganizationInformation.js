@@ -39,6 +39,7 @@ import {
   getRequirement,
   schemaToValidation,
 } from '../utilities/fieldRequirements'
+import { useHistory } from 'react-router-dom'
 
 export function OrganizationInformation({
   orgSlug,
@@ -48,6 +49,7 @@ export function OrganizationInformation({
 }) {
   const toast = useToast()
   const { i18n } = useLingui()
+  const history = useHistory()
   const {
     isOpen: isRemovalOpen,
     onOpen: onRemovalOpen,
@@ -215,7 +217,7 @@ export function OrganizationInformation({
             position: 'top-left',
           })
           leaveOrgOnClose()
-          // history.push('/organizations')
+          history.go(0)
         } else if (leaveOrganization.result.__typename === 'AffiliationError') {
           toast({
             title: i18n._(t`Unable to leave organization.`),
@@ -631,7 +633,7 @@ export function OrganizationInformation({
               onClick={async () => {
                 await leaveOrganization({
                   variables: {
-                    orgId: data?.organization?.id,
+                    orgId: org.id,
                   },
                 })
               }}
