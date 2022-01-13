@@ -363,7 +363,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: { loginRequiredBool: true },
             })
 
             const domainLoader = loadDomainByKey({ query })

@@ -374,7 +374,13 @@ export const loadOrgConnectionsByUserId = ({
 
   let orgKeysQuery
   if (!loginRequiredBool) {
-    orgKeysQuery = aql`
+    if (isAdmin) {
+      aql`
+        WITH affiliations, claims, domains, organizations, organizationSearch, users
+        LET orgKeys = []
+      `
+    } else {
+      orgKeysQuery = aql`
         WITH claims, domains, organizations, organizationSearch
         LET orgKeys = (
           FOR org IN organizations
@@ -386,6 +392,7 @@ export const loadOrgConnectionsByUserId = ({
             RETURN org._key
         )
       `
+    }
   } else if (isSuperAdmin) {
     orgKeysQuery = aql`
         WITH claims, domains, organizations, organizationSearch

@@ -148,10 +148,11 @@ describe('given findOrganizationBySlugQuery', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                loginRequiredBool: true,
               },
               validators: {
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: { loginRequiredBool: true },
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey(query, 'en'),
@@ -161,7 +162,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: { loginRequiredBool: true },
                   i18n,
                 }),
                 loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
@@ -169,7 +170,7 @@ describe('given findOrganizationBySlugQuery', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
-                    auth: { loginRequired: true },
+                    auth: { loginRequiredBool: true },
                     i18n,
                   },
                 ),
@@ -257,10 +258,11 @@ describe('given findOrganizationBySlugQuery', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                loginRequiredBool: true,
               },
               validators: {
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: { loginRequiredBool: true },
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey(query, 'fr'),
@@ -270,7 +272,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: { loginRequiredBool: true },
                   i18n,
                 }),
                 loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
@@ -278,7 +280,6 @@ describe('given findOrganizationBySlugQuery', () => {
                     query,
                     userKey: user._key,
                     cleanseInput,
-                    auth: { loginRequired: true },
                     i18n,
                   },
                 ),
@@ -361,7 +362,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: { loginRequiredBool: true },
               },
               loaders: {
                 loadOrgBySlug: {
@@ -413,10 +414,10 @@ describe('given findOrganizationBySlugQuery', () => {
                   _key: 123,
                 }),
                 verifiedRequired: jest.fn(),
+                loginRequiredBool: true,
               },
               validators: {
                 cleanseInput,
-                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgBySlug: {
@@ -489,7 +490,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               validators: {
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: { loginRequiredBool: true },
               },
               loaders: {
                 loadOrgBySlug: {
@@ -541,10 +542,10 @@ describe('given findOrganizationBySlugQuery', () => {
                   _key: 123,
                 }),
                 verifiedRequired: jest.fn(),
+                loginRequiredBool: true,
               },
               validators: {
                 cleanseInput,
-                auth: { loginRequired: true },
               },
               loaders: {
                 loadOrgBySlug: {

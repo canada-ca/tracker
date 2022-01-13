@@ -298,6 +298,7 @@ describe('given the findMyDmarcSummaries query', () => {
                   },
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
+                loginRequiredBool: true,
               },
               loaders: {
                 loadDmarcSummaryConnectionsByUserId: jest.fn(),
@@ -431,8 +432,8 @@ describe('given the findMyDmarcSummaries query', () => {
                   loadUserByKey: {
                     load: jest.fn(),
                   },
-                  loginRequiredBool: true,
                 }),
+                loginRequiredBool: true,
                 verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {

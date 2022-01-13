@@ -405,7 +405,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: { loginRequiredBool: true },
           })
 
           const domainLoader = loadDomainByKey({ query })
