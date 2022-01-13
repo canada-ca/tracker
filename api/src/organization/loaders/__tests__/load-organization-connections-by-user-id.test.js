@@ -8,7 +8,6 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadOrgConnectionsByUserId, loadOrgByKey } from '../index'
-import { loginRequired } from '../../../user'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
