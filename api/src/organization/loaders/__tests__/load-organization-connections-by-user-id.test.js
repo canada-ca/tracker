@@ -194,7 +194,6 @@ describe('given the load organization connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
                 language: 'en',
                 i18n,
                 auth: { loginRequired: true },
