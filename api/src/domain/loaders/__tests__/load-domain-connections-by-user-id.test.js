@@ -119,6 +119,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
           })
 
           const domainLoader = loadDomainByKey({ query })
@@ -163,6 +164,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
           })
 
           const domainLoader = loadDomainByKey({ query })
@@ -207,6 +209,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
           })
 
           const domainLoader = loadDomainByKey({ query })
@@ -250,6 +253,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
           })
 
           const domainLoader = loadDomainByKey({ query })
@@ -302,6 +306,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
           })
 
           const domainLoader = loadDomainByKey({ query })
@@ -358,6 +363,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequiredBool: true },
             })
 
             const domainLoader = loadDomainByKey({ query })
@@ -398,6 +404,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
             })
 
             const domainLoader = loadDomainByKey({ query })
@@ -473,6 +480,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -520,6 +528,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -569,6 +578,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -616,6 +626,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -665,6 +676,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -712,6 +724,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -761,6 +774,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -808,6 +822,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -857,6 +872,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -904,6 +920,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -953,6 +970,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1000,6 +1018,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1049,6 +1068,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1096,6 +1116,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1147,6 +1168,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1194,6 +1216,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1243,6 +1266,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1290,6 +1314,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1339,6 +1364,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1386,6 +1412,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1435,6 +1462,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1482,6 +1510,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1531,6 +1560,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1578,6 +1608,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1627,6 +1658,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1674,6 +1706,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1723,6 +1756,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1770,6 +1804,7 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                 })
                 const domains = await connectionLoader({ ...connectionArgs })
 
@@ -1803,6 +1838,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
           })
 
           const connectionArgs = {
@@ -1856,6 +1892,7 @@ describe('given the load domain connections by user id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
+          auth: { loginRequired: true },
         })
 
         const connectionArgs = {
@@ -1900,6 +1937,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1927,6 +1965,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1958,6 +1997,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -1987,6 +2027,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2018,6 +2059,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2047,6 +2089,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2081,6 +2124,7 @@ describe('given the load domain connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -2116,6 +2160,7 @@ describe('given the load domain connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -2157,6 +2202,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -2193,6 +2239,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -2238,6 +2285,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -2265,6 +2313,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -2296,6 +2345,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2325,6 +2375,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2356,6 +2407,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2385,6 +2437,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2419,6 +2472,7 @@ describe('given the load domain connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -2454,6 +2508,7 @@ describe('given the load domain connections by user id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -2495,6 +2550,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -2533,6 +2589,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n,
           })
 

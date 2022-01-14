@@ -104,23 +104,21 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
 
-const { HASHING_SALT } = process.env
+const { HASHING_SALT, LOGIN_REQUIRED } = process.env
 
-export const createContext =
-  (context) =>
-  async ({ req, res, connection }) => {
-    if (connection) {
-      req = {
-        headers: {
-          authorization: connection.authorization,
-        },
-        language: connection.language,
-      }
-      return createContextObject({ context, req })
-    } else {
-      return createContextObject({ context, req, res })
+export const createContext = (context) => async ({ req, res, connection }) => {
+  if (connection) {
+    req = {
+      headers: {
+        authorization: connection.authorization,
+      },
+      language: connection.language,
     }
+    return createContextObject({ context, req })
+  } else {
+    return createContextObject({ context, req, res })
   }
+}
 
 const createContextObject = ({ context, req: request, res: response }) => {
   const { query } = context
@@ -134,7 +132,11 @@ const createContextObject = ({ context, req: request, res: response }) => {
   const token = request.headers.authorization || ''
   if (token !== '') {
     userKey = verify({ token }).userKey
+  } else {
+    userKey = 'NO_USER'
   }
+
+  const loginRequiredBool = LOGIN_REQUIRED === 'true'
 
   return {
     ...context,
@@ -148,7 +150,12 @@ const createContextObject = ({ context, req: request, res: response }) => {
     jwt,
     auth: {
       bcrypt,
-      checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
+      checkDomainOwnership: checkDomainOwnership({
+        i18n,
+        userKey,
+        query,
+        auth: { loginRequiredBool },
+      }),
       checkDomainPermission: checkDomainPermission({ i18n, userKey, query }),
       checkOrgOwner: checkOrgOwner({ i18n, userKey, query }),
       checkPermission: checkPermission({ i18n, userKey, query }),
@@ -159,6 +166,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         query,
       }),
+      loginRequiredBool,
       tokenize,
       saltedHash: saltedHash(HASHING_SALT),
       userRequired: userRequired({
@@ -194,14 +202,15 @@ const createContextObject = ({ context, req: request, res: response }) => {
         i18n,
         language: request.language,
       }),
-      loadAggregateGuidanceTagConnectionsByTagId:
-        loadAggregateGuidanceTagConnectionsByTagId({
+      loadAggregateGuidanceTagConnectionsByTagId: loadAggregateGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           i18n,
           cleanseInput,
           language: request.language,
-        }),
+        },
+      ),
       loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
         userKey,
@@ -219,18 +228,20 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
         loadStartDateFromPeriod: loadStartDateFromPeriod({
           moment,
           userKey,
           i18n,
         }),
       }),
-      loadDmarcSummaryEdgeByDomainIdAndPeriod:
-        loadDmarcSummaryEdgeByDomainIdAndPeriod({
+      loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
+        {
           query,
           userKey,
           i18n,
-        }),
+        },
+      ),
       loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query, userKey, i18n }),
       loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
         query,
@@ -257,12 +268,14 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
         query,
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
       loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
@@ -310,70 +323,75 @@ const createContextObject = ({ context, req: request, res: response }) => {
         i18n,
         language: request.language,
       }),
-      loadDkimGuidanceTagConnectionsByTagId:
-        loadDkimGuidanceTagConnectionsByTagId({
+      loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadDmarcGuidanceTagConnectionsByTagId:
-        loadDmarcGuidanceTagConnectionsByTagId({
+      loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadHttpsGuidanceTagConnectionsByTagId:
-        loadHttpsGuidanceTagConnectionsByTagId({
+      loadHttpsGuidanceTagConnectionsByTagId: loadHttpsGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadSpfGuidanceTagConnectionsByTagId:
-        loadSpfGuidanceTagConnectionsByTagId({
+      loadSpfGuidanceTagConnectionsByTagId: loadSpfGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
         query,
         userKey,
         i18n,
         language: request.language,
       }),
-      loadSslGuidanceTagConnectionsByTagId:
-        loadSslGuidanceTagConnectionsByTagId({
+      loadSslGuidanceTagConnectionsByTagId: loadSslGuidanceTagConnectionsByTagId(
+        {
           query,
           userKey,
           cleanseInput,
           i18n,
           language: request.language,
-        }),
+        },
+      ),
       loadOrgByKey: loadOrgByKey({
         query,
         language: request.language,
@@ -392,6 +410,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
         query,
@@ -399,6 +418,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         cleanseInput,
         language: request.language,
         i18n,
+        auth: { loginRequiredBool },
       }),
       loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
       loadUserByKey: loadUserByKey({ query, userKey, i18n }),
@@ -423,12 +443,13 @@ const createContextObject = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      loadVerifiedDomainConnectionsByOrgId:
-        loadVerifiedDomainConnectionsByOrgId({
+      loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+        {
           query,
           cleanseInput,
           i18n,
-        }),
+        },
+      ),
       loadVerifiedOrgByKey: loadVerifiedOrgByKey({
         query,
         language: request.language,
@@ -439,13 +460,14 @@ const createContextObject = ({ context, req: request, res: response }) => {
         language: request.language,
         i18n,
       }),
-      loadVerifiedOrgConnectionsByDomainId:
-        loadVerifiedOrgConnectionsByDomainId({
+      loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
+        {
           query,
           language: request.language,
           cleanseInput,
           i18n,
-        }),
+        },
+      ),
       loadVerifiedOrgConnections: loadVerifiedOrgConnections({
         query,
         language: request.language,

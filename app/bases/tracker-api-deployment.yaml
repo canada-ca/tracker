@@ -69,6 +69,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: REFRESH_TOKEN_EXPIRY
+            - name: LOGIN_REQUIRED
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: LOGIN_REQUIRED
             - name: NOTIFICATION_API_KEY
               valueFrom:
                 secretKeyRef:

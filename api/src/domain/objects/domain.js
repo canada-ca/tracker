@@ -38,9 +38,9 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _,
-        { auth: { checkDomainOwnership, userRequired } },
+        { auth: { checkDomainOwnership, userRequired, loginRequiredBool } },
       ) => {
-        await userRequired()
+        if (loginRequiredBool) await userRequired()
         const hasDMARCReport = await checkDomainOwnership({
           domainId: _id,
         })
@@ -143,23 +143,25 @@ export const domainType = new GraphQLObjectType({
             loadDmarcSummaryEdgeByDomainIdAndPeriod,
             loadStartDateFromPeriod,
           },
-          auth: { checkDomainOwnership, userRequired },
+          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
         },
       ) => {
-        await userRequired()
-        const permitted = await checkDomainOwnership({
-          domainId: _id,
-        })
+        if (loginRequiredBool) {
+          await userRequired()
+          const permitted = await checkDomainOwnership({
+            domainId: _id,
+          })
 
-        if (!permitted) {
-          console.warn(
-            `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
-          )
-          throw new Error(
-            i18n._(
-              t`Unable to retrieve DMARC report information for: ${domain}`,
-            ),
-          )
+          if (!permitted) {
+            console.warn(
+              `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+            )
+            throw new Error(
+              i18n._(
+                t`Unable to retrieve DMARC report information for: ${domain}`,
+              ),
+            )
+          }
         }
 
         const startDate = loadStartDateFromPeriod({ period: month, year })
@@ -186,23 +188,26 @@ export const domainType = new GraphQLObjectType({
           i18n,
           userKey,
           loaders: { loadDmarcYearlySumEdge },
-          auth: { checkDomainOwnership, userRequired },
+          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
         },
       ) => {
-        await userRequired()
-        const permitted = await checkDomainOwnership({
-          domainId: _id,
-        })
+        if (loginRequiredBool) {
+          await userRequired()
 
-        if (!permitted) {
-          console.warn(
-            `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
-          )
-          throw new Error(
-            i18n._(
-              t`Unable to retrieve DMARC report information for: ${domain}`,
-            ),
-          )
+          const permitted = await checkDomainOwnership({
+            domainId: _id,
+          })
+
+          if (!permitted) {
+            console.warn(
+              `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+            )
+            throw new Error(
+              i18n._(
+                t`Unable to retrieve DMARC report information for: ${domain}`,
+              ),
+            )
+          }
         }
 
         const dmarcSummaryEdges = await loadDmarcYearlySumEdge({
