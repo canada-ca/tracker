@@ -1379,7 +1379,7 @@ export const IS_USER_ADMIN = gql`
 `
 
 export const IS_LOGIN_REQUIRED = gql`
-  query IsLoginRequired {
-    isLoginRequired
+  query LoginRequired {
+    loginRequired
   }
 `

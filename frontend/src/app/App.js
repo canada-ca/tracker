@@ -98,7 +98,7 @@ export function App() {
             <Trans>Home</Trans>
           </RouteLink>
 
-          {((isLoggedIn() && isEmailValidated()) || !data?.isLoginRequired) && (
+          {((isLoggedIn() && isEmailValidated()) || !data?.loginRequired) && (
             <>
               <RouteLink to="/organizations">
                 <Trans>Organizations</Trans>
@@ -190,7 +190,7 @@ export function App() {
               />
 
               <PrivatePage
-                isLoginRequired={data?.isLoginRequired}
+                isLoginRequired={data?.loginRequired}
                 path="/organizations"
                 title={t`Organizations`}
                 exact
@@ -203,7 +203,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
-                isLoginRequired={data?.isLoginRequired}
+                isLoginRequired={data?.loginRequired}
                 path="/organizations/:orgSlug"
                 setTitle={false}
                 exact
@@ -211,7 +211,7 @@ export function App() {
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <OrganizationDetails
-                      isLoginRequired={data?.isLoginRequired}
+                      isLoginRequired={data?.loginRequired}
                     />
                   </ErrorBoundary>
                 )}
@@ -220,13 +220,13 @@ export function App() {
               <PrivatePage path="/admin" title={t`Admin`}>
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <AdminPage isLoginRequired={data?.isLoginRequired} />
+                    <AdminPage isLoginRequired={data?.loginRequired} />
                   </ErrorBoundary>
                 )}
               </PrivatePage>
 
               <PrivatePage
-                isLoginRequired={data?.isLoginRequired}
+                isLoginRequired={data?.loginRequired}
                 path="/domains"
                 title={t`Domains`}
                 exact
@@ -239,7 +239,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
-                isLoginRequired={data?.isLoginRequired}
+                isLoginRequired={data?.loginRequired}
                 path="/domains/:domainSlug"
                 setTitle={false}
                 exact
@@ -252,7 +252,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
-                isLoginRequired={data?.isLoginRequired}
+                isLoginRequired={data?.loginRequired}
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
                 setTitle={false}
                 exact
@@ -265,7 +265,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
-                isLoginRequired={data?.isLoginRequired}
+                isLoginRequired={data?.loginRequired}
                 path="/dmarc-summaries"
                 title={t`DMARC Summaries`}
                 exact

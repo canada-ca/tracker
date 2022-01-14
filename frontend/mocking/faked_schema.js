@@ -128,6 +128,9 @@ export const getTypeNames = () => gql`
       userName: EmailAddress!
     ): SharedUser
 
+    # Checks if user must be logged in to access data.
+    loginRequired: Boolean
+
     # Query used to check if the user has an admin role.
     isUserAdmin(
       # Optional org id to see if user is an admin for the requested org.
@@ -136,9 +139,6 @@ export const getTypeNames = () => gql`
 
     # Query used to check if the user has a super admin role.
     isUserSuperAdmin: Boolean
-
-    # Query used to check if sign in is required to view data.
-    isLoginRequired: Boolean
 
     # Retrieve a specific verified domain by providing a domain.
     findVerifiedDomainByDomain(
