@@ -137,7 +137,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
   }
 
   console.log(`Creating context with "LOGIN_REQUIRED" as ${LOGIN_REQUIRED}`)
-  const loginRequiredBool = LOGIN_REQUIRED === 'true'
+  const loginRequiredBool = LOGIN_REQUIRED !== 'false'
 
   return {
     ...context,
