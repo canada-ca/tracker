@@ -45,7 +45,7 @@ window.resizeTo = function resizeTo(width, height) {
 
 describe('<OrganizationDetails />', () => {
   describe('given the url /organisations/tbs-sct-gc-ca', () => {
-    it('displays details using the tbs-sct-gc-ca slug', async () => {
+    it.skip('displays details using the tbs-sct-gc-ca slug', async () => {
       window.resizeTo(1024, 768)
 
       const name = 'Treasury Board Secretariat'
