@@ -373,27 +373,7 @@ export const loadOrgConnectionsByUserId = ({
   }
 
   let orgKeysQuery
-  if (!loginRequiredBool) {
-    if (isAdmin) {
-      aql`
-        WITH affiliations, claims, domains, organizations, organizationSearch, users
-        LET orgKeys = []
-      `
-    } else {
-      orgKeysQuery = aql`
-        WITH claims, domains, organizations, organizationSearch
-        LET orgKeys = (
-          FOR org IN organizations
-            ${
-              includeSuperAdminOrg && isSuperAdmin
-                ? aql``
-                : includeSuperAdminOrgQuery
-            }
-            RETURN org._key
-        )
-      `
-    }
-  } else if (isSuperAdmin) {
+  if (isSuperAdmin) {
     orgKeysQuery = aql`
         WITH claims, domains, organizations, organizationSearch
         LET orgKeys = (
@@ -415,7 +395,17 @@ export const loadOrgConnectionsByUserId = ({
         )
       `
   } else {
-    orgKeysQuery = aql`
+    if (!loginRequiredBool) {
+      orgKeysQuery = aql`
+        WITH claims, domains, organizations, organizationSearch
+        LET orgKeys = (
+          FOR org IN organizations
+            FILTER org.orgDetails.en.slug != "super-admin" OR org.orgDetails.fr.slug != "super-admin"
+            RETURN org._key
+        )
+      `
+    } else {
+      orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET orgKeys = (
           FOR org, e IN 1..1
@@ -424,6 +414,7 @@ export const loadOrgConnectionsByUserId = ({
           RETURN org._key
         )
       `
+    }
   }
 
   let orgQuery = aql``
