@@ -2270,7 +2270,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: { loginRequiredBool: true },
                   language: 'en',
                   i18n,
                 })
@@ -4514,7 +4514,7 @@ describe('given the load organization connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: { loginRequiredBool: true },
                   language: 'fr',
                   i18n,
                 })
