@@ -63,10 +63,7 @@ export const findOrganizationBySlug = {
         )
       }
     } else {
-      if (
-        org.orgDetails.en.slug === 'super-admin' ||
-        org.orgDetails.fr.slug === 'super-admin'
-      ) {
+      if (org.slugEN === 'super-admin' || org.slugFR === 'super-admin') {
         // Check user permission for super-admin organization access
         const permission = await checkPermission({ orgId: org._id })
 
