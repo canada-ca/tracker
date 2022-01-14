@@ -106,11 +106,9 @@ export const Server = async ({
 
   const schema = createSchema()
 
-  const createdContext = createContext(context)
-
   const server = new ApolloServer({
     schema,
-    context: createdContext,
+    context: createContext(context),
     validationRules: createValidationRules(
       maxDepth,
       complexityCost,
@@ -122,10 +120,6 @@ export const Server = async ({
     tracing,
     plugins: [enablePlayground()],
   })
-
-  console.log(
-    `Context created with login required set to "${createdContext.auth.loginRequiredBool}"`,
-  )
 
   await server.start()
   server.applyMiddleware({ app })
