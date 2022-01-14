@@ -136,7 +136,6 @@ const createContextObject = ({ context, req: request, res: response }) => {
     userKey = 'NO_USER'
   }
 
-  console.log(`Creating context with "LOGIN_REQUIRED" as ${LOGIN_REQUIRED}`)
   const loginRequiredBool = LOGIN_REQUIRED !== 'false'
 
   return {
