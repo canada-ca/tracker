@@ -217,13 +217,17 @@ export function App() {
                 )}
               </PrivatePage>
 
-              <PrivatePage path="/admin" title={t`Admin`}>
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <AdminPage isLoginRequired={data?.loginRequired} />
-                  </ErrorBoundary>
+              <Page path="/admin" title={t`Admin`}>
+                {isLoggedIn() && isEmailValidated() ? (
+                  <AdminPage isLoginRequired={data?.loginRequired} />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                    }}
+                  />
                 )}
-              </PrivatePage>
+              </Page>
 
               <PrivatePage
                 isLoginRequired={data?.loginRequired}
@@ -293,12 +297,17 @@ export function App() {
                 {() => <EmailValidationPage />}
               </Page>
 
-              <PrivatePage
-                path="/create-organization"
-                title={t`Create Organization`}
-              >
-                {() => <CreateOrganizationPage />}
-              </PrivatePage>
+              <Page path="/create-organization" title={t`Create Organization`}>
+                {isLoggedIn() && isEmailValidated() ? (
+                  <CreateOrganizationPage />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                    }}
+                  />
+                )}
+              </Page>
 
               <Page component={PageNotFound} title="404" />
             </Switch>

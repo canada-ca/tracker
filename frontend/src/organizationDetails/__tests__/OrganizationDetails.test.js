@@ -12,7 +12,7 @@ import { en } from 'make-plural/plurals'
 import OrganizationDetails from '../OrganizationDetails'
 
 import { UserVarProvider } from '../../utilities/userState'
-import { ORG_DETAILS_PAGE, IS_USER_ADMIN } from '../../graphql/queries'
+import { ORG_DETAILS_PAGE } from '../../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',
