@@ -12,6 +12,7 @@ import { App } from '../App'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { REFRESH_TOKENS } from '../../graphql/mutations'
+import { IS_LOGIN_REQUIRED } from '../../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -38,6 +39,16 @@ const mocks = [
           },
           __typename: 'RefreshTokensPayload',
         },
+      },
+    },
+  },
+  {
+    request: {
+      query: IS_LOGIN_REQUIRED,
+    },
+    result: {
+      data: {
+        loginRequired: false,
       },
     },
   },
@@ -185,6 +196,33 @@ describe('<App/>', () => {
           /To enable full app functionality and maximize your account's security/,
         ),
       ).not.toBeInTheDocument()
+    })
+  })
+
+  describe('When login is not required', () => {
+    it('displays additional navbar options', () => {
+      const { queryByRole } = render(
+        <MockedProvider mocks={mocks}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <MemoryRouter initialEntries={['/']}>
+                <I18nProvider i18n={i18n}>
+                  <App />
+                </I18nProvider>
+              </MemoryRouter>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+      expect(
+        queryByRole('link', { name: 'Organizations', hidden: false }),
+      ).toBeInTheDocument()
     })
   })
 })

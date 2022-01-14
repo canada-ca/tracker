@@ -46,7 +46,7 @@ export const findMyOrganizations = {
       verifiedRequired({ user })
     }
 
-    const isSuperAdmin = checkSuperAdmin()
+    const isSuperAdmin = await checkSuperAdmin()
 
     const orgConnections = await loadOrgConnectionsByUserId({
       isSuperAdmin,

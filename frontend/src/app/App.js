@@ -4,6 +4,7 @@ import { i18n } from '@lingui/core'
 import { CSSReset, Flex, Link } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useQuery } from '@apollo/client'
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
@@ -23,6 +24,7 @@ import { useUserVar } from '../utilities/userState'
 import { lazyWithRetry } from '../utilities/lazyWithRetry'
 
 import { LandingPage } from '../landing/LandingPage'
+import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
 const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
@@ -66,6 +68,8 @@ export function App() {
   // Hooks to be used with this functional component
   const { currentUser, isLoggedIn, isEmailValidated } = useUserVar()
 
+  const { data } = useQuery(IS_LOGIN_REQUIRED, {})
+
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
   useEffect(() => {
@@ -94,7 +98,7 @@ export function App() {
             <Trans>Home</Trans>
           </RouteLink>
 
-          {isLoggedIn() && isEmailValidated() && (
+          {((isLoggedIn() && isEmailValidated()) || !data?.loginRequired) && (
             <>
               <RouteLink to="/organizations">
                 <Trans>Organizations</Trans>
@@ -185,7 +189,12 @@ export function App() {
                 title={t`Contact Us`}
               />
 
-              <PrivatePage path="/organizations" title={t`Organizations`} exact>
+              <PrivatePage
+                isLoginRequired={data?.loginRequired}
+                path="/organizations"
+                title={t`Organizations`}
+                exact
+              >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <Organizations />
@@ -194,26 +203,38 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
+                isLoginRequired={data?.loginRequired}
                 path="/organizations/:orgSlug"
                 setTitle={false}
                 exact
               >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <OrganizationDetails />
+                    <OrganizationDetails
+                      isLoginRequired={data?.loginRequired}
+                    />
                   </ErrorBoundary>
                 )}
               </PrivatePage>
 
-              <PrivatePage path="/admin" title={t`Admin`}>
-                {() => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <AdminPage />
-                  </ErrorBoundary>
+              <Page path="/admin" title={t`Admin`}>
+                {isLoggedIn() && isEmailValidated() ? (
+                  <AdminPage isLoginRequired={data?.loginRequired} />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                    }}
+                  />
                 )}
-              </PrivatePage>
+              </Page>
 
-              <PrivatePage path="/domains" title={t`Domains`} exact>
+              <PrivatePage
+                isLoginRequired={data?.loginRequired}
+                path="/domains"
+                title={t`Domains`}
+                exact
+              >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <DomainsPage />
@@ -221,7 +242,12 @@ export function App() {
                 )}
               </PrivatePage>
 
-              <PrivatePage path="/domains/:domainSlug" setTitle={false} exact>
+              <PrivatePage
+                isLoginRequired={data?.loginRequired}
+                path="/domains/:domainSlug"
+                setTitle={false}
+                exact
+              >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <DmarcGuidancePage />
@@ -230,6 +256,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
+                isLoginRequired={data?.loginRequired}
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
                 setTitle={false}
                 exact
@@ -242,6 +269,7 @@ export function App() {
               </PrivatePage>
 
               <PrivatePage
+                isLoginRequired={data?.loginRequired}
                 path="/dmarc-summaries"
                 title={t`DMARC Summaries`}
                 exact
@@ -269,12 +297,17 @@ export function App() {
                 {() => <EmailValidationPage />}
               </Page>
 
-              <PrivatePage
-                path="/create-organization"
-                title={t`Create Organization`}
-              >
-                {() => <CreateOrganizationPage />}
-              </PrivatePage>
+              <Page path="/create-organization" title={t`Create Organization`}>
+                {isLoggedIn() && isEmailValidated() ? (
+                  <CreateOrganizationPage />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                    }}
+                  />
+                )}
+              </Page>
 
               <Page component={PageNotFound} title="404" />
             </Switch>
