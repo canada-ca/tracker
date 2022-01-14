@@ -104,7 +104,7 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
 
-const { HASHING_SALT, LOGIN_REQUIRED = true } = process.env
+const { HASHING_SALT, LOGIN_REQUIRED = 'true' } = process.env
 
 export const createContext = (context) => async ({ req, res, connection }) => {
   if (connection) {
@@ -136,7 +136,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
     userKey = 'NO_USER'
   }
 
-  const loginRequiredBool = LOGIN_REQUIRED === 'true'
+  const loginRequiredBool = LOGIN_REQUIRED !== 'false'
 
   return {
     ...context,
