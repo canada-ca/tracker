@@ -175,6 +175,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n: {},
             loadStartDateFromPeriod: jest
               .fn()
@@ -224,6 +225,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n: {},
             loadStartDateFromPeriod: jest
               .fn()
@@ -273,6 +275,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n: {},
             loadStartDateFromPeriod: jest
               .fn()
@@ -321,6 +324,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n: {},
             loadStartDateFromPeriod: jest
               .fn()
@@ -380,6 +384,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n: {},
             loadStartDateFromPeriod: jest
               .fn()
@@ -432,6 +437,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -491,6 +497,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -552,6 +559,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -611,6 +619,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -672,6 +681,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -731,6 +741,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -792,6 +803,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -851,6 +863,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -912,6 +925,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -971,6 +985,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1032,6 +1047,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1091,6 +1107,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1152,6 +1169,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1211,6 +1229,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1272,6 +1291,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1331,6 +1351,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1392,6 +1413,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1451,6 +1473,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1512,6 +1535,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1571,6 +1595,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1634,6 +1659,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1693,6 +1719,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1754,6 +1781,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1813,6 +1841,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1874,6 +1903,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1933,6 +1963,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -1994,6 +2025,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2053,6 +2085,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2114,6 +2147,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2173,6 +2207,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2234,6 +2269,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2293,6 +2329,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2354,6 +2391,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2413,6 +2451,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2474,6 +2513,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2533,6 +2573,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2594,6 +2635,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2653,6 +2695,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2714,6 +2757,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2773,6 +2817,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n: {},
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -2835,6 +2880,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             query,
             userKey: user._key,
             cleanseInput,
+            auth: { loginRequired: true },
             i18n: {},
             loadStartDateFromPeriod: jest
               .fn()
@@ -2889,6 +2935,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           query,
           userKey: user._key,
           cleanseInput,
+          auth: { loginRequired: true },
           i18n,
           loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
         })
@@ -2939,6 +2986,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -2972,6 +3020,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -3008,6 +3057,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3042,6 +3092,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3078,6 +3129,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3112,6 +3164,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3151,6 +3204,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n,
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -3191,6 +3245,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n,
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -3229,6 +3284,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -3262,6 +3318,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -3300,6 +3357,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3343,6 +3401,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3396,6 +3455,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -3429,6 +3489,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -3465,6 +3526,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3499,6 +3561,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3535,6 +3598,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3569,6 +3633,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3608,6 +3673,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n,
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -3648,6 +3714,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
+                  auth: { loginRequired: true },
                   i18n,
                   loadStartDateFromPeriod: jest
                     .fn()
@@ -3686,6 +3753,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -3719,6 +3787,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               query,
               userKey: user._key,
               cleanseInput,
+              auth: { loginRequired: true },
               i18n,
               loadStartDateFromPeriod: jest
                 .fn()
@@ -3757,6 +3826,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()
@@ -3800,6 +3870,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
+                auth: { loginRequired: true },
                 i18n,
                 loadStartDateFromPeriod: jest
                   .fn()

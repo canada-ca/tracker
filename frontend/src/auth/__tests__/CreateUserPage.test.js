@@ -428,9 +428,11 @@ describe('<CreateUserPage />', () => {
               signUp: {
                 result: {
                   user: {
+                    id: '1234asdf',
                     jwt: 'user-jwt',
                     tfaSendMethod: 'NONE',
                     userName: 'UserName',
+                    emailValidated: true,
                     preferredLang: 'ENGLISH',
                   },
                   authToken: 'some-auth-token',

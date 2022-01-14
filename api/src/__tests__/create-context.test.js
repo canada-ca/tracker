@@ -7,13 +7,13 @@ describe('given the create context function', () => {
   console.warn = mockedWarn
 
   describe('request authorization token is not set', () => {
-    it('returns object with userKey as undefined', async () => {
+    it('returns object with userKey as "NO_USER"', async () => {
       const context = await createContext({})({
         req: { headers: { authorization: '' }, language: 'en' },
         res: {},
       })
 
-      expect(context.userKey).toEqual(undefined)
+      expect(context.userKey).toEqual('NO_USER')
     })
   })
   describe('request authorization token is set', () => {

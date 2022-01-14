@@ -193,6 +193,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -242,6 +243,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -291,6 +293,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -339,6 +342,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -396,6 +400,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -439,6 +444,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -482,6 +488,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -518,10 +525,7 @@ describe('given the load organizations connection function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -596,6 +600,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -643,6 +648,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -692,6 +698,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -739,6 +746,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -788,6 +796,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -835,6 +844,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -884,6 +894,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -931,6 +942,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -980,6 +992,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1027,6 +1040,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1076,6 +1090,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1123,6 +1138,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1172,6 +1188,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1219,6 +1236,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1268,6 +1286,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1315,6 +1334,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1364,6 +1384,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1411,6 +1432,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1460,6 +1482,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1507,6 +1530,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1556,6 +1580,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1603,6 +1628,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1652,6 +1678,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1699,6 +1726,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1748,6 +1776,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1795,6 +1824,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1844,6 +1874,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1891,6 +1922,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1940,6 +1972,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -1987,6 +2020,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -2036,6 +2070,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -2083,6 +2118,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -2129,6 +2165,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const connectionArgs = {
@@ -2161,6 +2198,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -2216,6 +2254,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -2312,6 +2351,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -2355,10 +2395,7 @@ describe('given the load organizations connection function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[2]._key),
                 },
               }
@@ -2374,6 +2411,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
@@ -2411,10 +2449,7 @@ describe('given the load organizations connection function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -2449,6 +2484,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -2498,6 +2534,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -2547,6 +2584,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -2595,6 +2633,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -2652,6 +2691,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -2695,6 +2735,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -2738,6 +2779,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -2774,10 +2816,7 @@ describe('given the load organizations connection function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -2852,6 +2891,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -2899,6 +2939,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -2948,6 +2989,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -2995,6 +3037,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3044,6 +3087,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3091,6 +3135,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3140,6 +3185,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3187,6 +3233,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3236,6 +3283,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3283,6 +3331,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3332,6 +3381,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3379,6 +3429,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3428,6 +3479,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3475,6 +3527,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3524,6 +3577,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3571,6 +3625,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3620,6 +3675,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3667,6 +3723,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3716,6 +3773,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3763,6 +3821,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3812,6 +3871,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3859,6 +3919,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3908,6 +3969,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -3955,6 +4017,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4004,6 +4067,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4051,6 +4115,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4100,6 +4165,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4147,6 +4213,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4196,6 +4263,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4243,6 +4311,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4292,6 +4361,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4339,6 +4409,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
                 const connectionArgs = {
                   first: 5,
@@ -4385,6 +4456,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const connectionArgs = {
@@ -4417,6 +4489,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -4472,6 +4545,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -4568,6 +4642,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -4611,10 +4686,7 @@ describe('given the load organizations connection function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[2]._key),
                 },
               }
@@ -4630,6 +4702,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
@@ -4667,10 +4740,7 @@ describe('given the load organizations connection function', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId(
-                    'organization',
-                    expectedOrgs[0]._key,
-                  ),
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
                   endCursor: toGlobalId('organization', expectedOrgs[1]._key),
                 },
               }
@@ -4707,6 +4777,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             try {
@@ -4736,6 +4807,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             try {
@@ -4769,6 +4841,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -4800,6 +4873,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -4833,6 +4907,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -4864,6 +4939,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -4900,6 +4976,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
 
                 const connectionArgs = {
@@ -4936,6 +5013,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
 
                 const connectionArgs = {
@@ -4976,6 +5054,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             try {
@@ -5013,6 +5092,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -5063,6 +5143,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             try {
@@ -5092,6 +5173,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             try {
@@ -5125,6 +5207,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -5156,6 +5239,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -5189,6 +5273,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -5220,6 +5305,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
@@ -5256,6 +5342,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
 
                 const connectionArgs = {
@@ -5292,6 +5379,7 @@ describe('given the load organizations connection function', () => {
                   userKey: user._key,
                   cleanseInput,
                   i18n,
+                  auth: { loginRequiredBool: true },
                 })
 
                 const connectionArgs = {
@@ -5332,6 +5420,7 @@ describe('given the load organizations connection function', () => {
               userKey: user._key,
               cleanseInput,
               i18n,
+              auth: { loginRequiredBool: true },
             })
 
             try {
@@ -5371,6 +5460,7 @@ describe('given the load organizations connection function', () => {
                 userKey: user._key,
                 cleanseInput,
                 i18n,
+                auth: { loginRequiredBool: true },
               })
 
               try {
