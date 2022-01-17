@@ -105,6 +105,7 @@ describe('given the check domain ownership function', () => {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               query,
               userKey: user._key,
+              auth: { loginRequiredBool: true },
             })
             permitted = await testCheckDomainOwnerShip({
               domainId: domain._id,
@@ -125,6 +126,7 @@ describe('given the check domain ownership function', () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
             userKey: user._key,
+            auth: { loginRequiredBool: true },
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -144,6 +146,7 @@ describe('given the check domain ownership function', () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
             userKey: user._key,
+            auth: { loginRequiredBool: true },
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -164,6 +167,7 @@ describe('given the check domain ownership function', () => {
                 .mockReturnValue({ superAdmin: true, domainOwnership: false }),
             }),
             userKey: 123,
+            auth: { loginRequiredBool: true },
           })
           const permitted = await testCheckDomainOwnerShip({
             domainId: 'domains/123',
@@ -180,10 +184,12 @@ describe('given the check domain ownership function', () => {
             .fn()
             .mockReturnValueOnce({
               next: jest.fn().mockReturnValue({ superAdmin: false }),
-            }).mockReturnValue({
+            })
+            .mockReturnValue({
               next: jest.fn().mockReturnValue([]),
             }),
           userKey: '123',
+          auth: { loginRequiredBool: true },
         })
         permitted = await testCheckDomainOwnerShip({
           domainId: 'domains/123',
@@ -218,6 +224,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -257,6 +264,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -284,6 +292,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -319,6 +328,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -365,6 +375,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -404,6 +415,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -431,6 +443,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -466,6 +479,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })

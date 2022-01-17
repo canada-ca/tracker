@@ -395,7 +395,15 @@ describe('<DmarcReportPage />', () => {
               after: '',
             },
           },
-          result: { data: { findDomainByDomain: { hasDMARCReport: false } } },
+          result: {
+            data: {
+              findDomainByDomain: {
+                id: 'asdf',
+                dmarcSummaryByPeriod: null,
+                hasDMARCReport: false,
+              },
+            },
+          },
         },
       ]
 

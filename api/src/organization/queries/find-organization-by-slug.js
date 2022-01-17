@@ -20,15 +20,22 @@ export const findOrganizationBySlug = {
     args,
     {
       i18n,
-      auth: { checkPermission, userRequired, verifiedRequired },
+      userKey,
+      auth: {
+        checkPermission,
+        userRequired,
+        verifiedRequired,
+        loginRequiredBool,
+      },
       loaders: { loadOrgBySlug },
       validators: { cleanseInput },
     },
   ) => {
-    // Get User
-    const user = await userRequired()
-
-    verifiedRequired({ user })
+    if (loginRequiredBool) {
+      // Get User
+      const user = await userRequired()
+      verifiedRequired({ user })
+    }
 
     // Cleanse input
     const orgSlug = cleanseInput(args.orgSlug)
@@ -37,26 +44,42 @@ export const findOrganizationBySlug = {
     const org = await loadOrgBySlug.load(orgSlug)
 
     if (typeof org === 'undefined') {
-      console.warn(`User ${user._key} could not retrieve organization.`)
+      console.warn(`User ${userKey} could not retrieve organization.`)
       throw new Error(
         i18n._(t`No organization with the provided slug could be found.`),
       )
     }
 
-    // Check user permission for organization access
-    const permission = await checkPermission({ orgId: org._id })
+    if (loginRequiredBool) {
+      // Check user permission for organization access
+      const permission = await checkPermission({ orgId: org._id })
 
-    if (!['super_admin', 'admin', 'user'].includes(permission)) {
-      console.warn(`User ${user._key} could not retrieve organization.`)
-      throw new Error(
-        i18n._(
-          t`Permission Denied: Could not retrieve specified organization.`,
-        ),
-      )
+      if (!['super_admin', 'admin', 'user'].includes(permission)) {
+        console.warn(`User ${userKey} could not retrieve organization.`)
+        throw new Error(
+          i18n._(
+            t`Permission Denied: Could not retrieve specified organization.`,
+          ),
+        )
+      }
+    } else {
+      if (org.slugEN === 'super-admin' || org.slugFR === 'super-admin') {
+        // Check user permission for super-admin organization access
+        const permission = await checkPermission({ orgId: org._id })
+
+        if (!['super_admin', 'admin', 'user'].includes(permission)) {
+          console.warn(`User ${userKey} could not retrieve organization.`)
+          throw new Error(
+            i18n._(
+              t`Permission Denied: Could not retrieve specified organization.`,
+            ),
+          )
+        }
+      }
     }
 
     console.info(
-      `User ${user._key} successfully retrieved organization ${org._key}.`,
+      `User ${userKey} successfully retrieved organization ${org._key}.`,
     )
     org.id = org._key
     return org

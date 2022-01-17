@@ -32,13 +32,19 @@ export const findMyOrganizations = {
     args,
     {
       userKey,
-      auth: { checkSuperAdmin, userRequired, verifiedRequired },
+      auth: {
+        checkSuperAdmin,
+        userRequired,
+        verifiedRequired,
+        loginRequiredBool,
+      },
       loaders: { loadOrgConnectionsByUserId },
     },
   ) => {
-    const user = await userRequired()
-
-    verifiedRequired({ user })
+    if (loginRequiredBool) {
+      const user = await userRequired()
+      verifiedRequired({ user })
+    }
 
     const isSuperAdmin = await checkSuperAdmin()
 

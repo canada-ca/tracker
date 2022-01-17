@@ -598,9 +598,6 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      affiliations(first: 1) {
-        totalCount
-      }
     }
   }
 `
@@ -1376,5 +1373,11 @@ export const ADMIN_PAGE = gql`
 export const IS_USER_ADMIN = gql`
   query IsUserAdmin($orgId: ID!) {
     isUserAdmin(orgId: $orgId)
+  }
+`
+
+export const IS_LOGIN_REQUIRED = gql`
+  query LoginRequired {
+    loginRequired
   }
 `

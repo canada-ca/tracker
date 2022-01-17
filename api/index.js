@@ -14,6 +14,7 @@ const {
   OBJECT_COST: objectCost,
   LIST_FACTOR: listFactor,
   TRACING_ENABLED: tracing,
+  LOGIN_REQUIRED,
 } = process.env
 
 ;(async () => {
@@ -46,6 +47,8 @@ const {
       transaction,
     },
   })
+
+  console.log(`Starting server with "LOGIN_REQUIRED" set to "${LOGIN_REQUIRED}"`)
 
   await server.listen(PORT, (err) => {
     if (err) throw err

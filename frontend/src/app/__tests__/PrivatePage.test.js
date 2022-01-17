@@ -34,7 +34,9 @@ describe('<PrivatePage />', () => {
               })}
             >
               <MemoryRouter initialEntries={['/']}>
-                <PrivatePage path="/">{() => <p>foo</p>}</PrivatePage>
+                <PrivatePage isLoginRequired={true} path="/">
+                  {() => <p>foo</p>}
+                </PrivatePage>
               </MemoryRouter>
             </UserVarProvider>
           </MockedProvider>
@@ -59,7 +61,12 @@ describe('<PrivatePage />', () => {
               })}
             >
               <MemoryRouter initialEntries={['/organizations/foo']}>
-                <PrivatePage path="/organizations/:orgSlug" title={'foo'} exact>
+                <PrivatePage
+                  isLoginRequired={true}
+                  path="/organizations/:orgSlug"
+                  title={'foo'}
+                  exact
+                >
                   {({ match }) => <p>{match.params.orgSlug}</p>}
                 </PrivatePage>
               </MemoryRouter>
@@ -86,7 +93,12 @@ describe('<PrivatePage />', () => {
               })}
             >
               <MemoryRouter initialEntries={['/organizations/foo']}>
-                <PrivatePage path="/organizations/:orgSlug" title={'foo'} exact>
+                <PrivatePage
+                  isLoginRequired={true}
+                  path="/organizations/:orgSlug"
+                  title={'foo'}
+                  exact
+                >
                   {({ match }) => <p>{match.params.orgSlug}</p>}
                 </PrivatePage>
               </MemoryRouter>

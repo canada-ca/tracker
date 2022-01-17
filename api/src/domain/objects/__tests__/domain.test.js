@@ -394,6 +394,7 @@ describe('given the domain object', () => {
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
                     userRequired: jest.fn(),
+                    loginRequiredBool: true,
                   },
                 },
               ),
@@ -450,6 +451,7 @@ describe('given the domain object', () => {
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
                     userRequired: jest.fn(),
+                    loginRequiredBool: true,
                   },
                 },
               ),
@@ -548,6 +550,7 @@ describe('given the domain object', () => {
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
                     userRequired: jest.fn(),
+                    loginRequiredBool: true,
                   },
                 },
               ),
@@ -600,6 +603,7 @@ describe('given the domain object', () => {
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
                     userRequired: jest.fn(),
+                    loginRequiredBool: true,
                   },
                 },
               ),

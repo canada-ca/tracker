@@ -36,8 +36,9 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { ORG_DETAILS_PAGE } from '../graphql/queries'
 import { LEAVE_ORG } from '../graphql/mutations'
+import { bool } from 'prop-types'
 
-export default function OrganizationDetails() {
+export default function OrganizationDetails({ isLoginRequired }) {
   const { orgSlug } = useParams()
   const toast = useToast()
   const history = useHistory()
@@ -150,17 +151,19 @@ export default function OrganizationDetails() {
             </>
           )}
         </Heading>
-        <Button
-          variant="danger"
-          order={{ base: 1, md: 2 }}
-          onClick={() => {
-            leaveOrgOnOpen()
-          }}
-          flexShrink={0}
-          ml="auto"
-        >
-          <Trans> Leave Organization </Trans>
-        </Button>
+        {isLoginRequired && (
+          <Button
+            variant="danger"
+            order={{ base: 1, md: 2 }}
+            onClick={() => {
+              leaveOrgOnOpen()
+            }}
+            flexShrink={0}
+            ml="auto"
+          >
+            <Trans> Leave Organization </Trans>
+          </Button>
+        )}
       </Flex>
       <Tabs isFitted>
         <TabList mb="4">
@@ -246,4 +249,8 @@ export default function OrganizationDetails() {
       </Modal>
     </Box>
   )
+}
+
+OrganizationDetails.propTypes = {
+  isLoginRequired: bool,
 }

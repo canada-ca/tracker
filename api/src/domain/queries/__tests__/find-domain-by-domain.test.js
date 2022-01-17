@@ -279,6 +279,7 @@ describe('given findDomainByDomain query', () => {
                     _key: '1',
                   }),
                   verifiedRequired: jest.fn(),
+                  loginRequiredBool: true,
                 },
                 validators: {
                   cleanseInput,
@@ -395,6 +396,7 @@ describe('given findDomainByDomain query', () => {
                   _key: '1',
                 }),
                 verifiedRequired: jest.fn(),
+                loginRequiredBool: true,
               },
               validators: {
                 cleanseInput,

@@ -24,7 +24,7 @@ export const loadOrgBySlug = ({ query, language, userKey, i18n }) =>
               summaries: org.summaries,
               slugEN: org.orgDetails.en.slug,
               slugFR: org.orgDetails.fr.slug
-            }, 
+            },
             TRANSLATE(${language}, org.orgDetails)
           )
       `
