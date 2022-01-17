@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
 import { i18n } from '@lingui/core'
-import { CSSReset, Flex, Link } from '@chakra-ui/react'
+import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useQuery } from '@apollo/client'
@@ -132,27 +132,31 @@ export function App() {
         </Navigation>
 
         {isLoggedIn() && !isEmailValidated() && (
-          <NotificationBanner>
-            <Trans>
-              To enable full app functionality and maximize your account's
-              security,{' '}
-              <Link textDecoration="underline" as={RouteLink} to="/user">
-                please verify your account
-              </Link>
-              .
-            </Trans>
+          <NotificationBanner bg="yellow.250">
+            <Text fontWeight="medium">
+              <Trans>
+                To enable full app functionality and maximize your account's
+                security,{' '}
+                <Link textDecoration="underline" as={RouteLink} to="/user">
+                  please verify your account
+                </Link>
+                .
+              </Trans>
+            </Text>
           </NotificationBanner>
         )}
 
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() === 'NONE' && (
-          <NotificationBanner>
-            <Trans>
-              Admin accounts must activate a multi-factor authentication option,{' '}
-              <Link textDecoration="underline" as={RouteLink} to="/user">
-                please activate MFA
-              </Link>
-              .
-            </Trans>
+          <NotificationBanner bg="yellow.250">
+            <Text fontWeight="medium">
+              <Trans>
+                To maximize your account's security,{' '}
+                <Link textDecoration="underline" as={RouteLink} to="/user">
+                  please activate a multi-factor authentication option
+                </Link>
+                .
+              </Trans>
+            </Text>
           </NotificationBanner>
         )}
 

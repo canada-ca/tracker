@@ -129,7 +129,7 @@ msgstr "Add Domain Details"
 msgid "Add User"
 msgstr "Add User"
 
-#: src/app/App.js:247
+#: src/app/App.js:251
 msgid "Admin"
 msgstr "Admin"
 
@@ -146,8 +146,8 @@ msgstr "Admin Profile"
 #~ msgstr "Admin accounts must activate a multi-factor authentication option"
 
 #: src/app/App.js:149
-msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
-msgstr "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
+#~ msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
+#~ msgstr "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
 
 #: src/user/UserPage.js:176
 msgid "Admin accounts must activate a multi-factor authentication option."
@@ -248,7 +248,7 @@ msgstr "Assess current state;"
 msgid "August"
 msgstr "August"
 
-#: src/app/App.js:192
+#: src/app/App.js:196
 msgid "Authenticate"
 msgstr "Authenticate"
 
@@ -417,8 +417,8 @@ msgstr "Confirm removal of user:"
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:216
-#: src/app/App.js:370
+#: src/app/App.js:220
+#: src/app/App.js:374
 #: src/app/ContactUsPage.js:49
 msgid "Contact Us"
 msgstr "Contact Us"
@@ -465,12 +465,12 @@ msgid "Create Account"
 msgstr "Create Account"
 
 #: src/admin/AdminPage.js:112
-#: src/app/App.js:327
+#: src/app/App.js:331
 #: src/createOrganization/CreateOrganizationPage.js:245
 msgid "Create Organization"
 msgstr "Create Organization"
 
-#: src/app/App.js:168
+#: src/app/App.js:172
 msgid "Create an Account"
 msgstr "Create an Account"
 
@@ -593,7 +593,7 @@ msgid "DMARC Status"
 msgstr "DMARC Status"
 
 #: src/app/App.js:116
-#: src/app/App.js:301
+#: src/app/App.js:305
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:183
 #: src/dmarc/DmarcByDomainPage.js:285
@@ -717,7 +717,7 @@ msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:25
 #: src/app/App.js:113
-#: src/app/App.js:262
+#: src/app/App.js:266
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:76
 #: src/domains/DomainsPage.js:110
@@ -780,7 +780,7 @@ msgstr "Email Sent"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:323
+#: src/app/App.js:327
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -890,7 +890,7 @@ msgstr "For in-depth CCCS implementation guidance:"
 msgid "For technical implementation guidance:"
 msgstr "For technical implementation guidance:"
 
-#: src/app/App.js:198
+#: src/app/App.js:202
 msgid "Forgot Password"
 msgstr "Forgot Password"
 
@@ -1020,7 +1020,7 @@ msgid "Heartbleed Vulnerability:"
 msgstr "Heartbleed Vulnerability:"
 
 #: src/app/App.js:104
-#: src/app/App.js:162
+#: src/app/App.js:166
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Home"
@@ -1464,7 +1464,7 @@ msgid "Organization:"
 msgstr "Organization:"
 
 #: src/app/App.js:110
-#: src/app/App.js:222
+#: src/app/App.js:226
 #: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:122
@@ -1578,7 +1578,7 @@ msgstr "Preloaded Status:"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/app/App.js:354
+#: src/app/App.js:358
 #: src/app/FloatingMenu.js:219
 #: src/termsConditions/TermsConditionsPage.js:40
 msgid "Privacy"
@@ -1641,7 +1641,7 @@ msgstr "Remove User"
 msgid "Removed Organization"
 msgstr "Removed Organization"
 
-#: src/app/App.js:366
+#: src/app/App.js:370
 #: src/app/FloatingMenu.js:230
 msgid "Report an Issue"
 msgstr "Report an Issue"
@@ -1650,7 +1650,7 @@ msgstr "Report an Issue"
 msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
-#: src/app/App.js:204
+#: src/app/App.js:208
 msgid "Reset Password"
 msgstr "Reset Password"
 
@@ -1910,7 +1910,7 @@ msgstr "Shows the percentage of emails from the domain that have passed both SPF
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
-#: src/app/App.js:175
+#: src/app/App.js:179
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:82
 #: src/auth/SignInPage.js:175
@@ -1994,11 +1994,11 @@ msgstr "TBS reserves the right to refuse service, and may reject your applicatio
 msgid "Termination"
 msgstr "Termination"
 
-#: src/app/App.js:210
+#: src/app/App.js:214
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/app/App.js:358
+#: src/app/App.js:362
 #: src/app/FloatingMenu.js:225
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
@@ -2066,9 +2066,13 @@ msgstr "This field cannot be empty"
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
 
-#: src/app/App.js:136
+#: src/app/App.js:137
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
+
+#: src/app/App.js:152
+msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
+msgstr "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 
 #: src/dmarc/DmarcByDomainPage.js:144
 #: src/dmarc/DmarcByDomainPage.js:299
@@ -2424,7 +2428,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:311
+#: src/app/App.js:315
 msgid "Your Account"
 msgstr "Your Account"
 
