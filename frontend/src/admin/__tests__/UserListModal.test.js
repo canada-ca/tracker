@@ -444,7 +444,7 @@ describe('<UserListModal />', () => {
           },
         ]
 
-        const { getAllByText, queryByRole, getByRole, queryByText } = render(
+        const { getAllByText, getByRole, queryByText } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
               userVar={makeVar({
@@ -502,11 +502,12 @@ describe('<UserListModal />', () => {
         })
 
         // wait for modal to close
-        await waitFor(() => {
-          expect(
-            queryByRole('combobox', { name: /Role:/ }),
-          ).not.toBeInTheDocument()
-        })
+        await waitFor(
+          () => {
+            expect(newUserRoleSelect).not.toBeInTheDocument()
+          },
+          { timeout: 2000 },
+        )
       })
     })
     it('admin can add a user with "ADMIN" privileges', async () => {
@@ -535,7 +536,7 @@ describe('<UserListModal />', () => {
         },
       ]
 
-      const { getAllByText, queryByRole, getByRole, queryByText } = render(
+      const { getAllByText, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -591,11 +592,12 @@ describe('<UserListModal />', () => {
       })
 
       // wait for modal to close
-      await waitFor(() => {
-        expect(
-          queryByRole('combobox', { name: /Role:/ }),
-        ).not.toBeInTheDocument()
-      })
+      await waitFor(
+        () => {
+          expect(newUserRoleSelect).not.toBeInTheDocument()
+        },
+        { timeout: 2000 },
+      )
     })
   })
 })
