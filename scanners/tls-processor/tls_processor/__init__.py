@@ -124,8 +124,6 @@ def process_results(results, domain_key, user_key, shared_id):
         "negativeTags": negative_tags,
     }
 
-    cipher_tags = ["ssl6"]
-
     if results.get("error") == "unreachable":
         # no web, no problem.
         ssl_status = "info"
@@ -140,7 +138,7 @@ def process_results(results, domain_key, user_key, shared_id):
             ssl_status = "pass"
 
         # protocol status
-        if (len([tag for tag in negative_tags if tag not in cipher_tags]) > 0 or "ssl5" not in positive_tags):
+        if (len(negative_tags) > 0 or "ssl5" not in positive_tags):
             protocol_status = "fail"
         else:
             protocol_status = "pass"
