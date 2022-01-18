@@ -28,7 +28,7 @@ steps:
   id: test
   dir: api
   entrypoint: npm
-  args: ['run', 'test-remainder']
+  args: ['test']
   env:
   - DB_PASS=$_DB_PASS
   - DB_URL=$_DB_URL
