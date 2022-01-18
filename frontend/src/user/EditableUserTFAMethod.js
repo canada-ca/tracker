@@ -15,6 +15,7 @@ import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
+import { useUserVar } from '../utilities/userState'
 
 export function EditableUserTFAMethod({
   currentTFAMethod,
@@ -22,6 +23,7 @@ export function EditableUserTFAMethod({
   phoneValidated,
 }) {
   const toast = useToast()
+  const { login, currentUser } = useUserVar()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
@@ -45,6 +47,10 @@ export function EditableUserTFAMethod({
             duration: 9000,
             isClosable: true,
             position: 'top-left',
+          })
+          login({
+            ...currentUser,
+            tfaSendMethod: updateUserProfile.result.user.tfaSendMethod,
           })
         } else if (
           updateUserProfile.result.__typename === 'UpdateUserProfileError'
