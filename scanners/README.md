@@ -81,4 +81,4 @@ arangosh --quiet --server.database track_dmarc --javascript.execute query-result
 
 ## Watching events
 
-You can subscript to all the events for debugging purposes with `nats sub domains.>`
+You can subscript to all the events for debugging purposes with `nats sub "domains.>"`
