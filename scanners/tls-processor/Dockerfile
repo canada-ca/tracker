@@ -18,7 +18,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 
 COPY . .
 
-RUN pip3 install -r requirements.txt
+# The "no-deps" option here is to work around a pip issue. Poetry has already
+# done the dependency resolution, so pip should just install what is specified.
+# https://github.com/python-poetry/poetry/issues/3472#issuecomment-973170415
+RUN pip3 install --no-deps -r requirements.txt
 
 USER scanner
 # Run the web service on container startup. Using uvicorn, in this case.
