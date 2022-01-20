@@ -187,6 +187,10 @@ msgstr "Les mots de passe ne correspondent pas."
 msgid "Permission Denied: Could not retrieve specified organization."
 msgstr "Permission refusée : Impossible de récupérer l'organisation spécifiée."
 
+#: src/user/mutations/update-user-profile.js:107
+msgid "Permission Denied: Multi-factor authentication is required for admin accounts"
+msgstr "Permission refusée : L'authentification multifactorielle est requise pour les comptes admin."
+
 #: src/affiliation/mutations/transfer-org-ownership.js:95
 msgid "Permission Denied: Please contact org owner to transfer ownership."
 msgstr "Permission refusée : Veuillez contacter le propriétaire de l'org pour transférer la propriété."
@@ -274,7 +278,7 @@ msgstr "Le numéro de téléphone a été supprimé avec succès."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification."
 
-#: src/user/mutations/update-user-profile.js:159
+#: src/user/mutations/update-user-profile.js:191
 msgid "Profile successfully updated."
 msgstr "Le profil a été mis à jour avec succès."
 
@@ -479,18 +483,18 @@ msgstr "Impossible de fermer le compte. Veuillez réessayer."
 msgid "Unable to create domain in unknown organization."
 msgstr "Impossible de créer un domaine dans une organisation inconnue."
 
-#: src/domain/mutations/create-domain.js:151
+#: src/domain/mutations/create-domain.js:152
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Impossible de créer le domaine, l'organisation l'a déjà réclamé."
 
-#: src/domain/mutations/create-domain.js:130
-#: src/domain/mutations/create-domain.js:140
-#: src/domain/mutations/create-domain.js:189
-#: src/domain/mutations/create-domain.js:199
-#: src/domain/mutations/create-domain.js:217
-#: src/domain/mutations/create-domain.js:247
-#: src/domain/mutations/create-domain.js:265
-#: src/domain/mutations/create-domain.js:275
+#: src/domain/mutations/create-domain.js:131
+#: src/domain/mutations/create-domain.js:141
+#: src/domain/mutations/create-domain.js:190
+#: src/domain/mutations/create-domain.js:200
+#: src/domain/mutations/create-domain.js:218
+#: src/domain/mutations/create-domain.js:248
+#: src/domain/mutations/create-domain.js:266
+#: src/domain/mutations/create-domain.js:276
 msgid "Unable to create domain. Please try again."
 msgstr "Impossible de créer un domaine. Veuillez réessayer."
 
@@ -1008,8 +1012,8 @@ msgstr "Impossible de mettre à jour le mot de passe, les mots de passe ne corre
 msgid "Unable to update password. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe. Veuillez réessayer."
 
-#: src/user/mutations/update-user-profile.js:133
-#: src/user/mutations/update-user-profile.js:142
+#: src/user/mutations/update-user-profile.js:165
+#: src/user/mutations/update-user-profile.js:174
 msgid "Unable to update profile. Please try again."
 msgstr "Impossible de mettre à jour le profil. Veuillez réessayer."
 
@@ -1058,6 +1062,7 @@ msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 msgid "Unable to verify if user is a super admin, please try again."
 msgstr "Impossible de vérifier si l'utilisateur est un super administrateur, veuillez réessayer."
 
+#: src/user/mutations/update-user-profile.js:94
 #: src/user/queries/is-user-admin.js:58
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer."

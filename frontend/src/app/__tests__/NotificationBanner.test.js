@@ -7,7 +7,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 
-import { VerifyAccountNotificationBar } from '../VerifyAccountNotificationBar'
+import { NotificationBanner } from '../NotificationBanner'
 
 import { UserVarProvider } from '../../utilities/userState'
 
@@ -21,7 +21,7 @@ const i18n = setupI18n({
   },
 })
 
-describe('<VerifyAccountNotificationBar />', () => {
+describe('<NotificationBanner />', () => {
   it('renders correctly', () => {
     const { getByText } = render(
       <MockedProvider>
@@ -31,7 +31,10 @@ describe('<VerifyAccountNotificationBar />', () => {
           <ChakraProvider theme={theme}>
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
-                <VerifyAccountNotificationBar />
+                <NotificationBanner>
+                  To enable full app functionality and maximize your account's
+                  security
+                </NotificationBanner>
               </I18nProvider>
             </MemoryRouter>
           </ChakraProvider>

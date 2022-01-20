@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Box,
   Button,
   Divider,
   Modal,
@@ -15,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { EmailIcon } from '@chakra-ui/icons'
+import { EmailIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
 import { useHistory } from 'react-router-dom'
@@ -41,6 +42,7 @@ import {
   CLOSE_ACCOUNT,
   SIGN_OUT,
 } from '../graphql/mutations'
+import { NotificationBanner } from '../app/NotificationBanner'
 
 export default function UserPage() {
   const toast = useToast()
@@ -167,136 +169,147 @@ export default function UserPage() {
   } = queryUserData?.userPage
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2 }} width="100%">
-      <Stack py={25} px="4">
-        <EditableUserDisplayName detailValue={displayName} />
+    <Box w="100%">
+      {tfaSendMethod === 'NONE' && queryUserData?.isUserAdmin && (
+        <NotificationBanner bg="blue.200">
+          <WarningTwoIcon color="orange.300" mr="2" />
+          <Trans>
+            Admin accounts must activate a multi-factor authentication option.
+          </Trans>
+        </NotificationBanner>
+      )}
+      <SimpleGrid columns={{ base: 1, md: 2 }} width="100%">
+        <Stack py={25} px="4">
+          <EditableUserDisplayName detailValue={displayName} />
 
-        <Divider />
+          <Divider />
 
-        <EditableUserEmail detailValue={userName} />
+          <EditableUserEmail detailValue={userName} />
 
-        <Divider />
+          <Divider />
 
-        <EditableUserPassword />
+          <EditableUserPassword />
 
-        <Divider />
+          <Divider />
 
-        <EditableUserLanguage currentLang={preferredLang} />
-      </Stack>
+          <EditableUserLanguage currentLang={preferredLang} />
+        </Stack>
 
-      <Stack p={25} spacing={4}>
-        <EditableUserPhoneNumber detailValue={phoneNumber} />
+        <Stack p={25} spacing={4}>
+          <EditableUserPhoneNumber detailValue={phoneNumber} />
 
-        <Divider />
+          <Divider />
 
-        <EditableUserTFAMethod
-          currentTFAMethod={tfaSendMethod}
-          emailValidated={emailValidated}
-          phoneValidated={phoneValidated}
-        />
+          <EditableUserTFAMethod
+            isUserAdmin={queryUserData?.isUserAdmin}
+            currentTFAMethod={tfaSendMethod}
+            emailValidated={emailValidated}
+            phoneValidated={phoneValidated}
+          />
 
-        {!emailValidated && (
-          <Button
-            variant="primary"
-            onClick={() => {
-              sendEmailVerification({ variables: { userName: userName } })
-            }}
-            disabled={emailSent}
-          >
-            <EmailIcon mr={2} aria-hidden="true" />
-            <Trans>Verify Account</Trans>
-          </Button>
-        )}
-
-        <Divider />
-
-        <Button
-          variant="danger"
-          onClick={() => {
-            closeAccountOnOpen()
-          }}
-          ml="auto"
-          w={{ base: '100%', md: 'auto' }}
-          mb={2}
-          alignSelf="flex-end"
-        >
-          <Trans> Close Account </Trans>
-        </Button>
-      </Stack>
-
-      <Modal
-        isOpen={closeAccountIsOpen}
-        onClose={closeAccountOnClose}
-        motionPreset="slideInBottom"
-      >
-        <Formik
-          validateOnBlur={false}
-          initialValues={{
-            matchEmail: '',
-          }}
-          initialTouched={{
-            matchEmail: true,
-          }}
-          validationSchema={createValidationSchema(['matchEmail'], {
-            matches: userName,
-          })}
-          onSubmit={async () => {
-            await closeAccount({})
-            signOut()
-          }}
-        >
-          {({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <ModalOverlay />
-              <ModalContent pb={4}>
-                <ModalHeader>
-                  <Trans>Close Account</Trans>
-                </ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Trans>
-                    This action CANNOT be reversed, are you sure you wish to to
-                    close the account {displayName}?
-                  </Trans>
-
-                  <Text mb="1rem">
-                    <Trans>
-                      Enter "{userName}" below to confirm removal. This field is
-                      case-sensitive.
-                    </Trans>
-                  </Text>
-
-                  <FormField
-                    name="matchEmail"
-                    label={t`User Email`}
-                    placeholder={userName}
-                  />
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button
-                    variant="primaryOutline"
-                    mr="4"
-                    onClick={closeAccountOnClose}
-                  >
-                    <Trans>Cancel</Trans>
-                  </Button>
-
-                  <Button
-                    variant="primary"
-                    mr="4"
-                    type="submit"
-                    isLoading={loadingCloseAccount}
-                  >
-                    <Trans>Confirm</Trans>
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </form>
+          {!emailValidated && (
+            <Button
+              variant="primary"
+              onClick={() => {
+                sendEmailVerification({ variables: { userName: userName } })
+              }}
+              disabled={emailSent}
+            >
+              <EmailIcon mr={2} aria-hidden="true" />
+              <Trans>Verify Account</Trans>
+            </Button>
           )}
-        </Formik>
-      </Modal>
-    </SimpleGrid>
+
+          <Divider />
+
+          <Button
+            variant="danger"
+            onClick={() => {
+              closeAccountOnOpen()
+            }}
+            ml="auto"
+            w={{ base: '100%', md: 'auto' }}
+            mb={2}
+            alignSelf="flex-end"
+          >
+            <Trans> Close Account </Trans>
+          </Button>
+        </Stack>
+
+        <Modal
+          isOpen={closeAccountIsOpen}
+          onClose={closeAccountOnClose}
+          motionPreset="slideInBottom"
+        >
+          <Formik
+            validateOnBlur={false}
+            initialValues={{
+              matchEmail: '',
+            }}
+            initialTouched={{
+              matchEmail: true,
+            }}
+            validationSchema={createValidationSchema(['matchEmail'], {
+              matches: userName,
+            })}
+            onSubmit={async () => {
+              await closeAccount({})
+              signOut()
+            }}
+          >
+            {({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <ModalOverlay />
+                <ModalContent pb={4}>
+                  <ModalHeader>
+                    <Trans>Close Account</Trans>
+                  </ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <Trans>
+                      This action CANNOT be reversed, are you sure you wish to
+                      to close the account {displayName}?
+                    </Trans>
+
+                    <Text mb="1rem">
+                      <Trans>
+                        Enter "{userName}" below to confirm removal. This field
+                        is case-sensitive.
+                      </Trans>
+                    </Text>
+
+                    <FormField
+                      name="matchEmail"
+                      label={t`User Email`}
+                      placeholder={userName}
+                    />
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button
+                      variant="primaryOutline"
+                      mr="4"
+                      onClick={closeAccountOnClose}
+                    >
+                      <Trans>Cancel</Trans>
+                    </Button>
+
+                    <Button
+                      variant="primary"
+                      mr="4"
+                      type="submit"
+                      isLoading={loadingCloseAccount}
+                    >
+                      <Trans>Confirm</Trans>
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </form>
+            )}
+          </Formik>
+        </Modal>
+      </SimpleGrid>
+    </Box>
   )
 }
 

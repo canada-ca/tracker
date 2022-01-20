@@ -77,13 +77,13 @@ msgstr "Loi sur l'accès à l'information."
 msgid "Account"
 msgstr "Compte"
 
-#: src/user/UserPage.js:94
+#: src/user/UserPage.js:96
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
-#: src/app/App.js:117
+#: src/app/App.js:123
 #: src/app/FloatingMenu.js:177
-#: src/user/UserPage.js:150
+#: src/user/UserPage.js:152
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
@@ -129,7 +129,7 @@ msgstr "Ajouter les détails du domaine"
 msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
-#: src/app/App.js:220
+#: src/app/App.js:251
 msgid "Admin"
 msgstr "Administrateur"
 
@@ -137,9 +137,21 @@ msgstr "Administrateur"
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/app/App.js:123
+#: src/app/App.js:129
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
+
+#: src/app/MFANotificationBar.js:20
+#~ msgid "Admin accounts must activate a multi-factor authentication option"
+#~ msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
+
+#: src/app/App.js:149
+#~ msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
+#~ msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle, <0>s'il vous plaît activer MFA</0>."
+
+#: src/user/UserPage.js:176
+msgid "Admin accounts must activate a multi-factor authentication option."
+msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
 
 #: src/auth/ForgotPasswordPage.js:39
 msgid "An email was sent with a link to reset your password"
@@ -162,7 +174,7 @@ msgstr "Une erreur s'est produite lors de la suppression de cette organisation."
 msgid "An error occurred while updating this organization."
 msgstr "Une erreur s'est produite lors de la mise à jour de cette organisation."
 
-#: src/user/EditableUserTFAMethod.js:31
+#: src/user/EditableUserTFAMethod.js:32
 msgid "An error occurred while updating your TFA send method."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre méthode d'envoi de TFA."
 
@@ -199,7 +211,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:57
 #: src/organizationDetails/OrganizationDetails.js:59
-#: src/user/UserPage.js:83
+#: src/user/UserPage.js:85
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -236,11 +248,11 @@ msgstr "Évaluer l’état actuel."
 msgid "August"
 msgstr "Août"
 
-#: src/app/App.js:165
+#: src/app/App.js:196
 msgid "Authenticate"
 msgstr "Authentifier"
 
-#: src/app/App.js:90
+#: src/app/App.js:96
 msgid "BETA"
 msgstr "BETA"
 
@@ -272,7 +284,7 @@ msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des se
 
 #: src/admin/OrganizationInformation.js:627
 #: src/organizationDetails/OrganizationDetails.js:230
-#: src/user/UserPage.js:282
+#: src/user/UserPage.js:294
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -281,7 +293,7 @@ msgstr "Annuler"
 msgid "Change Password"
 msgstr "Changer le mot de passe"
 
-#: src/user/EditableUserTFAMethod.js:42
+#: src/user/EditableUserTFAMethod.js:43
 msgid "Changed TFA Send Method"
 msgstr "Changement de la méthode d'envoi des TFA"
 
@@ -313,7 +325,7 @@ msgstr "Changements requis pour la mise en conformité ITPIN"
 msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 msgstr "Changements requis pour la conformité aux exigences de configuration de la gestion des sites et services Web."
 
-#: src/user/UserPage.js:67
+#: src/user/UserPage.js:69
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
@@ -350,8 +362,8 @@ msgstr "Dégager"
 msgid "Close"
 msgstr "Fermer"
 
-#: src/user/UserPage.js:223
-#: src/user/UserPage.js:253
+#: src/user/UserPage.js:235
+#: src/user/UserPage.js:265
 msgid "Close Account"
 msgstr "Fermer le compte"
 
@@ -381,7 +393,7 @@ msgstr "Conforme"
 #: src/user/EditableUserPassword.js:172
 #: src/user/EditableUserPhoneNumber.js:186
 #: src/user/EditableUserPhoneNumber.js:244
-#: src/user/UserPage.js:291
+#: src/user/UserPage.js:303
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -405,8 +417,8 @@ msgstr "Confirmer le retrait de l'utilisateur:"
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:189
-#: src/app/App.js:343
+#: src/app/App.js:220
+#: src/app/App.js:374
 #: src/app/ContactUsPage.js:49
 msgid "Contact Us"
 msgstr "Nous contacter"
@@ -453,12 +465,12 @@ msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/admin/AdminPage.js:112
-#: src/app/App.js:300
+#: src/app/App.js:331
 #: src/createOrganization/CreateOrganizationPage.js:245
 msgid "Create Organization"
 msgstr "Créer une organisation"
 
-#: src/app/App.js:141
+#: src/app/App.js:172
 msgid "Create an Account"
 msgstr "Créer un compte"
 
@@ -580,8 +592,8 @@ msgstr "Rapport DMARC pour {domainSlug}"
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/app/App.js:110
-#: src/app/App.js:274
+#: src/app/App.js:116
+#: src/app/App.js:305
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:183
 #: src/dmarc/DmarcByDomainPage.js:285
@@ -704,8 +716,8 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/admin/AdminPanel.js:25
-#: src/app/App.js:107
-#: src/app/App.js:235
+#: src/app/App.js:113
+#: src/app/App.js:266
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:76
 #: src/domains/DomainsPage.js:110
@@ -746,7 +758,7 @@ msgid "Edit User"
 msgstr "Modifier l'utilisateur"
 
 #: src/components/fields/EmailField.js:15
-#: src/user/EditableUserTFAMethod.js:145
+#: src/user/EditableUserTFAMethod.js:148
 msgid "Email"
 msgstr "Courriel"
 
@@ -764,11 +776,11 @@ msgstr "Résultats de l'analyse des courriels"
 msgid "Email Sent"
 msgstr "Courriel envoyé"
 
-#: src/user/EditableUserTFAMethod.js:98
+#: src/user/EditableUserTFAMethod.js:99
 msgid "Email Validated"
 msgstr "Courriel validé"
 
-#: src/app/App.js:296
+#: src/app/App.js:327
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
@@ -782,7 +794,7 @@ msgstr "Le courriel ne peut être vide"
 msgid "Email invitation sent"
 msgstr "Envoi d'une invitation par courriel"
 
-#: src/user/UserPage.js:66
+#: src/user/UserPage.js:68
 msgid "Email successfully sent"
 msgstr "Courriel envoyé avec succès"
 
@@ -807,7 +819,7 @@ msgstr "Anglais"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/user/UserPage.js:263
+#: src/user/UserPage.js:275
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -878,7 +890,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS:"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique:"
 
-#: src/app/App.js:171
+#: src/app/App.js:202
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
@@ -1007,8 +1019,8 @@ msgstr "En-tête De"
 msgid "Heartbleed Vulnerability:"
 msgstr "Vulnérabilité Heartbleed:"
 
-#: src/app/App.js:98
-#: src/app/App.js:135
+#: src/app/App.js:104
+#: src/app/App.js:166
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Accueil"
@@ -1047,7 +1059,7 @@ msgstr "Mise en œuvre:"
 msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
-#: src/user/UserPage.js:117
+#: src/user/UserPage.js:119
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
@@ -1098,8 +1110,8 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPassword.js:73
 #: src/user/EditableUserPhoneNumber.js:65
 #: src/user/EditableUserPhoneNumber.js:116
-#: src/user/EditableUserTFAMethod.js:62
-#: src/user/UserPage.js:116
+#: src/user/EditableUserTFAMethod.js:63
+#: src/user/UserPage.js:118
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
@@ -1135,7 +1147,7 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserDisplayName.js:71
 #: src/user/EditableUserEmail.js:71
 #: src/user/EditableUserLanguage.js:52
-#: src/user/EditableUserTFAMethod.js:63
+#: src/user/EditableUserTFAMethod.js:64
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
 
@@ -1392,7 +1404,7 @@ msgid "Non-compliant"
 msgstr "Non conforme"
 
 #: src/guidance/ScanCategoryDetails.js:134
-#: src/user/EditableUserTFAMethod.js:144
+#: src/user/EditableUserTFAMethod.js:146
 msgid "None"
 msgstr "Aucun"
 
@@ -1451,8 +1463,8 @@ msgstr "Organisation non mise à jour"
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/app/App.js:104
-#: src/app/App.js:195
+#: src/app/App.js:110
+#: src/app/App.js:226
 #: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:122
@@ -1511,7 +1523,7 @@ msgstr "Les mots de passe doivent correspondre"
 msgid "Percentages"
 msgstr "Pourcentages"
 
-#: src/user/EditableUserTFAMethod.js:146
+#: src/user/EditableUserTFAMethod.js:149
 msgid "Phone"
 msgstr "Téléphone"
 
@@ -1520,7 +1532,7 @@ msgstr "Téléphone"
 msgid "Phone Number:"
 msgstr "Numéro de téléphone:"
 
-#: src/user/EditableUserTFAMethod.js:118
+#: src/user/EditableUserTFAMethod.js:119
 msgid "Phone Validated"
 msgstr "Téléphone validé"
 
@@ -1566,7 +1578,7 @@ msgstr "Statut préchargé:"
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/app/App.js:327
+#: src/app/App.js:358
 #: src/app/FloatingMenu.js:219
 #: src/termsConditions/TermsConditionsPage.js:40
 msgid "Privacy"
@@ -1629,7 +1641,7 @@ msgstr "Supprimer l'utilisateur"
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
-#: src/app/App.js:339
+#: src/app/App.js:370
 #: src/app/FloatingMenu.js:230
 msgid "Report an Issue"
 msgstr "Signaler un problème"
@@ -1638,7 +1650,7 @@ msgstr "Signaler un problème"
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
-#: src/app/App.js:177
+#: src/app/App.js:208
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -1716,7 +1728,7 @@ msgstr "Le scan SSL pour le domaine \"{0}\" est terminé."
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
-#: src/user/EditableUserTFAMethod.js:153
+#: src/user/EditableUserTFAMethod.js:156
 msgid "Save"
 msgstr "Sauvez"
 
@@ -1898,7 +1910,7 @@ msgstr "Indique le pourcentage d'e-mails du domaine qui ont passé les exigences
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine pendant la période sélectionnée."
 
-#: src/app/App.js:148
+#: src/app/App.js:179
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:82
 #: src/auth/SignInPage.js:175
@@ -1924,7 +1936,7 @@ msgstr "Déconnexion."
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/app/App.js:88
+#: src/app/App.js:94
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -1982,11 +1994,11 @@ msgstr "TBS se réserve le droit de refuser le service, de rejeter votre demande
 msgid "Termination"
 msgstr "Terminaison"
 
-#: src/app/App.js:183
+#: src/app/App.js:214
 msgid "Terms & Conditions"
 msgstr "Termes et conditions"
 
-#: src/app/App.js:331
+#: src/app/App.js:362
 #: src/app/FloatingMenu.js:225
 msgid "Terms & conditions"
 msgstr "Avis"
@@ -2033,7 +2045,7 @@ msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr "Les présentes conditions générales sont régies et interprétées en vertu des lois du Canada, sans égard aux règles de droit applicables. Les tribunaux du Canada auront la compétence exclusive sur toutes les questions relatives à ces conditions générales."
 
-#: src/user/UserPage.js:257
+#: src/user/UserPage.js:269
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
@@ -2050,13 +2062,17 @@ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'ana
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/app/App.js:91
+#: src/app/App.js:97
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 
-#: src/app/VerifyAccountNotificationBar.js:17
+#: src/app/App.js:137
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "Pour activer toutes les fonctionnalités de l'application et maximiser la sécurité de votre compte, <0>vous devez vérifier votre compte</0>."
+
+#: src/app/App.js:152
+msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
+msgstr "Pour maximiser la sécurité de votre compte, <0>vous devez activer une option d'authentification multifactorielle</0>."
 
 #: src/dmarc/DmarcByDomainPage.js:144
 #: src/dmarc/DmarcByDomainPage.js:299
@@ -2073,7 +2089,7 @@ msgstr "total des utilisateurs"
 msgid "Track Digital Security"
 msgstr "Suivre la sécurité numérique"
 
-#: src/user/UserPage.js:96
+#: src/user/UserPage.js:98
 msgid "Tracker account has been successfully closed."
 msgstr "Le compte du traqueur a été fermé avec succès."
 
@@ -2085,7 +2101,7 @@ msgstr "Loi sur les marques de commerce"
 msgid "Two Factor Authentication"
 msgstr "Authentification à deux facteurs"
 
-#: src/user/EditableUserTFAMethod.js:78
+#: src/user/EditableUserTFAMethod.js:79
 msgid "Two-Factor Authentication:"
 msgstr "Authentification à deux facteurs:"
 
@@ -2097,7 +2113,7 @@ msgstr "UTILISATEUR"
 msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
-#: src/user/UserPage.js:107
+#: src/user/UserPage.js:109
 msgid "Unable to close the account."
 msgstr "Impossible de fermer le compte."
 
@@ -2150,7 +2166,7 @@ msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
 msgid "Unable to send password reset link to email."
 msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
 
-#: src/user/UserPage.js:57
+#: src/user/UserPage.js:59
 msgid "Unable to send verification email"
 msgstr "Impossible d'envoyer l'e-mail de vérification"
 
@@ -2173,7 +2189,7 @@ msgstr "Impossible de mettre à jour le mot de passe"
 msgid "Unable to update this organization."
 msgstr "Impossible de mettre à jour cette organisation."
 
-#: src/user/EditableUserTFAMethod.js:53
+#: src/user/EditableUserTFAMethod.js:54
 msgid "Unable to update to your TFA send method, please try again."
 msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer."
 
@@ -2232,7 +2248,7 @@ msgstr "L'utilisation de la propriété intellectuelle en violation du présent 
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
-#: src/user/UserPage.js:271
+#: src/user/UserPage.js:283
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
@@ -2277,7 +2293,7 @@ msgstr "Vérifié"
 msgid "Verify"
 msgstr "Vérifier"
 
-#: src/user/UserPage.js:207
+#: src/user/UserPage.js:219
 msgid "Verify Account"
 msgstr "Vérifier le compte"
 
@@ -2376,7 +2392,7 @@ msgstr "Vous avez quitté {orgSlug} avec succès."
 msgid "You have successfully removed {0}."
 msgstr "Vous avez retiré {0} avec succès."
 
-#: src/user/EditableUserTFAMethod.js:43
+#: src/user/EditableUserTFAMethod.js:44
 msgid "You have successfully updated your TFA send method."
 msgstr "Vous avez mis à jour avec succès votre méthode d'envoi de TFA."
 
@@ -2412,7 +2428,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "Vous aurez besoin d'un compte Tracker pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
-#: src/app/App.js:284
+#: src/app/App.js:315
 msgid "Your Account"
 msgstr "Votre compte"
 

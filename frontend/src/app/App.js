@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
 import { i18n } from '@lingui/core'
-import { CSSReset, Flex, Link } from '@chakra-ui/react'
+import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useQuery } from '@apollo/client'
@@ -15,7 +15,6 @@ import { SkipLink } from './SkipLink'
 import { FloatingMenu } from './FloatingMenu'
 import { PrivatePage } from './PrivatePage'
 import { Page } from './Page'
-import { VerifyAccountNotificationBar } from './VerifyAccountNotificationBar'
 
 import { wsClient } from '../client'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -24,7 +23,9 @@ import { useUserVar } from '../utilities/userState'
 import { lazyWithRetry } from '../utilities/lazyWithRetry'
 
 import { LandingPage } from '../landing/LandingPage'
+import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
+
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
 const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
@@ -66,7 +67,12 @@ const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn, isEmailValidated } = useUserVar()
+  const {
+    currentUser,
+    isLoggedIn,
+    isEmailValidated,
+    currentTFAMethod,
+  } = useUserVar()
 
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
 
@@ -126,7 +132,32 @@ export function App() {
         </Navigation>
 
         {isLoggedIn() && !isEmailValidated() && (
-          <VerifyAccountNotificationBar />
+          <NotificationBanner bg="yellow.250">
+            <Text fontWeight="medium">
+              <Trans>
+                To enable full app functionality and maximize your account's
+                security,{' '}
+                <Link textDecoration="underline" as={RouteLink} to="/user">
+                  please verify your account
+                </Link>
+                .
+              </Trans>
+            </Text>
+          </NotificationBanner>
+        )}
+
+        {isLoggedIn() && isEmailValidated() && currentTFAMethod() === 'NONE' && (
+          <NotificationBanner bg="yellow.250">
+            <Text fontWeight="medium">
+              <Trans>
+                To maximize your account's security,{' '}
+                <Link textDecoration="underline" as={RouteLink} to="/user">
+                  please activate a multi-factor authentication option
+                </Link>
+                .
+              </Trans>
+            </Text>
+          </NotificationBanner>
         )}
 
         <Main marginBottom={{ base: '40px', md: 'none' }}>

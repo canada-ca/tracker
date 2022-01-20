@@ -187,6 +187,10 @@ msgstr "Passwords do not match."
 msgid "Permission Denied: Could not retrieve specified organization."
 msgstr "Permission Denied: Could not retrieve specified organization."
 
+#: src/user/mutations/update-user-profile.js:107
+msgid "Permission Denied: Multi-factor authentication is required for admin accounts"
+msgstr "Permission Denied: Multi-factor authentication is required for admin accounts"
+
 #: src/affiliation/mutations/transfer-org-ownership.js:95
 msgid "Permission Denied: Please contact org owner to transfer ownership."
 msgstr "Permission Denied: Please contact org owner to transfer ownership."
@@ -274,7 +278,7 @@ msgstr "Phone number has been successfully removed."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:159
+#: src/user/mutations/update-user-profile.js:191
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -479,18 +483,18 @@ msgstr "Unable to close account. Please try again."
 msgid "Unable to create domain in unknown organization."
 msgstr "Unable to create domain in unknown organization."
 
-#: src/domain/mutations/create-domain.js:151
+#: src/domain/mutations/create-domain.js:152
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Unable to create domain, organization has already claimed it."
 
-#: src/domain/mutations/create-domain.js:130
-#: src/domain/mutations/create-domain.js:140
-#: src/domain/mutations/create-domain.js:189
-#: src/domain/mutations/create-domain.js:199
-#: src/domain/mutations/create-domain.js:217
-#: src/domain/mutations/create-domain.js:247
-#: src/domain/mutations/create-domain.js:265
-#: src/domain/mutations/create-domain.js:275
+#: src/domain/mutations/create-domain.js:131
+#: src/domain/mutations/create-domain.js:141
+#: src/domain/mutations/create-domain.js:190
+#: src/domain/mutations/create-domain.js:200
+#: src/domain/mutations/create-domain.js:218
+#: src/domain/mutations/create-domain.js:248
+#: src/domain/mutations/create-domain.js:266
+#: src/domain/mutations/create-domain.js:276
 msgid "Unable to create domain. Please try again."
 msgstr "Unable to create domain. Please try again."
 
@@ -1008,8 +1012,8 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:133
-#: src/user/mutations/update-user-profile.js:142
+#: src/user/mutations/update-user-profile.js:165
+#: src/user/mutations/update-user-profile.js:174
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -1058,6 +1062,7 @@ msgstr "Unable to verify account. Please try again."
 msgid "Unable to verify if user is a super admin, please try again."
 msgstr "Unable to verify if user is a super admin, please try again."
 
+#: src/user/mutations/update-user-profile.js:94
 #: src/user/queries/is-user-admin.js:58
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Unable to verify if user is an admin, please try again."
