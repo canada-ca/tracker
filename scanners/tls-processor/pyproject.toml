@@ -11,6 +11,7 @@ asyncio-nats-client = "^0.11.4"
 python-dotenv = "^0.19.0"
 asyncio = "^3.4.3"
 python-arango = "^7.2.0"
+setuptools-scm = {extras = ["toml"], version = "^6.4.2"}
 
 [tool.poetry.dev-dependencies]
 black = "^21.8b0"
