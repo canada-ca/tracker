@@ -129,6 +129,7 @@ services:
       - PUBLISH_TO=domains
       - SUBSCRIBE_TO=domains.*
       - SERVERS=nats://0.0.0.0:4222
+      - QUEUE_GROUP=https-scanner
       - SCAN_TIMEOUT=0.5
     volumes:
       - ./https-scanner/:/https
