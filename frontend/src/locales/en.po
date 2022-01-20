@@ -293,7 +293,7 @@ msgstr "Cancel"
 msgid "Change Password"
 msgstr "Change Password"
 
-#: src/user/EditableUserTFAMethod.js:43
+#: src/user/EditableUserTFAMethod.js:44
 msgid "Changed TFA Send Method"
 msgstr "Changed TFA Send Method"
 
@@ -419,7 +419,7 @@ msgstr "Contact"
 
 #: src/app/App.js:220
 #: src/app/App.js:374
-#: src/app/ContactUsPage.js:49
+#: src/app/ContactUsPage.js:40
 msgid "Contact Us"
 msgstr "Contact Us"
 
@@ -758,7 +758,7 @@ msgid "Edit User"
 msgstr "Edit User"
 
 #: src/components/fields/EmailField.js:15
-#: src/user/EditableUserTFAMethod.js:148
+#: src/user/EditableUserTFAMethod.js:151
 msgid "Email"
 msgstr "Email"
 
@@ -776,7 +776,7 @@ msgstr "Email Scan Results"
 msgid "Email Sent"
 msgstr "Email Sent"
 
-#: src/user/EditableUserTFAMethod.js:99
+#: src/user/EditableUserTFAMethod.js:104
 msgid "Email Validated"
 msgstr "Email Validated"
 
@@ -930,8 +930,8 @@ msgid "Further details for each organization can be found by clicking on its row
 msgstr "Further details for each organization can be found by clicking on its row."
 
 #: src/app/ContactUsPage.js:14
-msgid "General Public"
-msgstr "General Public"
+#~ msgid "General Public"
+#~ msgstr "General Public"
 
 #: src/dmarc/DmarcByDomainPage.js:290
 #: src/domains/DomainsPage.js:114
@@ -943,7 +943,7 @@ msgstr "Glossary"
 msgid "Go to page:"
 msgstr "Go to page:"
 
-#: src/app/ContactUsPage.js:23
+#: src/app/ContactUsPage.js:14
 msgid "Government of Canada Employees"
 msgstr "Government of Canada Employees"
 
@@ -1110,8 +1110,8 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPassword.js:73
 #: src/user/EditableUserPhoneNumber.js:65
 #: src/user/EditableUserPhoneNumber.js:116
-#: src/user/EditableUserTFAMethod.js:63
-#: src/user/UserPage.js:118
+#: src/user/EditableUserTFAMethod.js:68
+#: src/user/UserPage.js:116
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
 
@@ -1147,7 +1147,7 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserDisplayName.js:71
 #: src/user/EditableUserEmail.js:71
 #: src/user/EditableUserLanguage.js:52
-#: src/user/EditableUserTFAMethod.js:64
+#: src/user/EditableUserTFAMethod.js:69
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
 
@@ -1159,13 +1159,17 @@ msgstr "Incorrect updateUserRole.result typename."
 msgid "Incorrect verifyPhoneNumber.result typename."
 msgstr "Incorrect verifyPhoneNumber.result typename."
 
+#: src/app/ContactUsPage.js:17
+msgid "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for ITPIN interpretation and domain management."
+msgstr "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for ITPIN interpretation and domain management."
+
 #: src/app/ContactUsPage.js:26
-msgid "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
-msgstr "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
+#~ msgid "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
+#~ msgstr "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
 
 #: src/app/ContactUsPage.js:17
-msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
-msgstr "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
+#~ msgid "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
+#~ msgstr "Individuals with questions about the accuracy of their domain’s compliance data may contact the TBS Cyber Security mailbox."
 
 #: src/termsConditions/TermsConditionsPage.js:328
 msgid "Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:"
@@ -1404,11 +1408,11 @@ msgid "Non-compliant"
 msgstr "Non-compliant"
 
 #: src/guidance/ScanCategoryDetails.js:134
-#: src/user/EditableUserTFAMethod.js:146
+#: src/user/EditableUserTFAMethod.js:150
 msgid "None"
 msgstr "None"
 
-#: src/app/ContactUsPage.js:33
+#: src/app/ContactUsPage.js:24
 msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 msgstr "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 
@@ -1523,7 +1527,7 @@ msgstr "Passwords must match"
 msgid "Percentages"
 msgstr "Percentages"
 
-#: src/user/EditableUserTFAMethod.js:149
+#: src/user/EditableUserTFAMethod.js:152
 msgid "Phone"
 msgstr "Phone"
 
@@ -1532,7 +1536,7 @@ msgstr "Phone"
 msgid "Phone Number:"
 msgstr "Phone Number:"
 
-#: src/user/EditableUserTFAMethod.js:119
+#: src/user/EditableUserTFAMethod.js:124
 msgid "Phone Validated"
 msgstr "Phone Validated"
 
@@ -1728,7 +1732,7 @@ msgstr "SSL scan for domain \"{0}\" has completed."
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
-#: src/user/EditableUserTFAMethod.js:156
+#: src/user/EditableUserTFAMethod.js:159
 msgid "Save"
 msgstr "Save"
 
@@ -2101,7 +2105,7 @@ msgstr "Trademarks Act"
 msgid "Two Factor Authentication"
 msgstr "Two Factor Authentication"
 
-#: src/user/EditableUserTFAMethod.js:79
+#: src/user/EditableUserTFAMethod.js:84
 msgid "Two-Factor Authentication:"
 msgstr "Two-Factor Authentication:"
 
@@ -2189,7 +2193,7 @@ msgstr "Unable to update password"
 msgid "Unable to update this organization."
 msgstr "Unable to update this organization."
 
-#: src/user/EditableUserTFAMethod.js:54
+#: src/user/EditableUserTFAMethod.js:59
 msgid "Unable to update to your TFA send method, please try again."
 msgstr "Unable to update to your TFA send method, please try again."
 
@@ -2392,6 +2396,7 @@ msgstr "You have successfully left {orgSlug}"
 msgid "You have successfully removed {0}."
 msgstr "You have successfully removed {0}."
 
+#: src/user/EditableUserTFAMethod.js:45
 #: src/user/EditableUserTFAMethod.js:44
 msgid "You have successfully updated your TFA send method."
 msgstr "You have successfully updated your TFA send method."
