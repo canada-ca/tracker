@@ -40,7 +40,13 @@ export const createDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, saltedHash, userRequired, verifiedRequired },
+      auth: {
+        checkPermission,
+        saltedHash,
+        userRequired,
+        verifiedRequired,
+        tfaRequired,
+      },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
     },
@@ -49,6 +55,7 @@ export const createDomain = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
+    tfaRequired({ user })
 
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
@@ -117,7 +124,7 @@ export const createDomain = new mutationWithClientMutationId({
       checkDomainCursor = await query`
         WITH claims, domains, organizations
         LET domainIds = (FOR domain IN domains FILTER domain.domain == ${insertDomain.domain} RETURN { id: domain._id })
-        FOR domainId IN domainIds 
+        FOR domainId IN domainIds
           LET domainEdges = (FOR v, e IN 1..1 ANY domainId.id claims RETURN { _from: e._from })
             FOR domainEdge IN domainEdges
               LET org = DOCUMENT(domainEdge._from)
@@ -173,7 +180,7 @@ export const createDomain = new mutationWithClientMutationId({
           () =>
             query`
             WITH domains
-            INSERT ${insertDomain} INTO domains 
+            INSERT ${insertDomain} INTO domains
             RETURN MERGE(
               {
                 id: NEW._key,

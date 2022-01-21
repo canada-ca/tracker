@@ -46,7 +46,13 @@ able to sign-up and be assigned to that organization in one mutation.`,
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, tokenize, userRequired, verifiedRequired },
+      auth: {
+        checkPermission,
+        tokenize,
+        userRequired,
+        verifiedRequired,
+        tfaRequired,
+      },
       loaders: { loadOrgByKey, loadUserByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
@@ -61,6 +67,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     const user = await userRequired()
 
     verifiedRequired({ user })
+    tfaRequired({ user })
 
     // Make sure user is not inviting themselves
     if (user.userName === userName) {

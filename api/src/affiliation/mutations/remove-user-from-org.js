@@ -34,7 +34,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByKey },
       validators: { cleanseInput },
     },
@@ -47,6 +47,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
+    tfaRequired({ user })
 
     // Get requested org
     const requestedOrg = await loadOrgByKey.load(requestedOrgKey)
@@ -176,7 +177,9 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
           `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
         )
         throw new Error(
-          i18n._(t`Unable to remove user from this organization. Please try again.`),
+          i18n._(
+            t`Unable to remove user from this organization. Please try again.`,
+          ),
         )
       }
 
@@ -187,7 +190,9 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
           `Trx commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
         )
         throw new Error(
-          i18n._(t`Unable to remove user from this organization. Please try again.`),
+          i18n._(
+            t`Unable to remove user from this organization. Please try again.`,
+          ),
         )
       }
 
