@@ -130,7 +130,7 @@ services:
       - SUBSCRIBE_TO=domains.*
       - SERVERS=nats://0.0.0.0:4222
       - QUEUE_GROUP=https-scanner
-      - SCAN_TIMEOUT=0.5
+      - SCAN_TIMEOUT=5.0
     volumes:
       - ./https-scanner/:/https
     network_mode: host
