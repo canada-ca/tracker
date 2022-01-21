@@ -27,6 +27,8 @@ from .query_crlite import query_crlite
 
 TIMEOUT = float(os.getenv("SCAN_TIMEOUT", 0.001))
 
+print(f"Timeout set to: {TIMEOUT}")
+
 def load_preload_list():
     preload_json = None
 
@@ -1102,6 +1104,8 @@ def basic_check(endpoint):
         try:
             with ping(endpoint.url, allow_redirects=True, verify=False) as ultimate_req:
                 pass
+        except requests.exceptions.Timeout:
+            logging.debug(f"Timeout occurred at endpoint with redirects allowed: {endpoint.url}")
         except (requests.exceptions.RequestException, OpenSSL.SSL.Error):
             # Swallow connection errors, but we won't be saving redirect info.
             logging.debug("Connection error")
