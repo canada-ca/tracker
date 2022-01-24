@@ -9,7 +9,12 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
+import {
+  checkPermission,
+  userRequired,
+  verifiedRequired,
+  tfaRequired,
+} from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 
@@ -52,6 +57,7 @@ describe('update a users role', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         emailValidated: true,
+        tfaSendMethod: 'email',
       })
     })
     afterEach(async () => {
@@ -169,6 +175,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -245,6 +252,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -330,6 +338,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -406,6 +415,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -500,6 +510,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -642,6 +653,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -719,6 +731,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -805,6 +818,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -882,6 +896,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -977,6 +992,7 @@ describe('update a users role', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1068,6 +1084,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1138,6 +1155,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1208,6 +1226,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1280,6 +1299,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1355,6 +1375,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1430,6 +1451,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1512,6 +1534,7 @@ describe('update a users role', () => {
                         userName: 'test.account@istio.actually.exists',
                       }),
                       verifiedRequired: jest.fn(),
+                      tfaRequired: jest.fn(),
                     },
                     loaders: {
                       loadOrgByKey: {
@@ -1594,6 +1617,7 @@ describe('update a users role', () => {
                         userName: 'test.account@istio.actually.exists',
                       }),
                       verifiedRequired: jest.fn(),
+                      tfaRequired: jest.fn(),
                     },
                     loaders: {
                       loadOrgByKey: {
@@ -1677,6 +1701,7 @@ describe('update a users role', () => {
                       userName: 'test.account@istio.actually.exists',
                     }),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadOrgByKey: {
@@ -1755,6 +1780,7 @@ describe('update a users role', () => {
                       userName: 'test.account@istio.actually.exists',
                     }),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadOrgByKey: {
@@ -1833,6 +1859,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1907,6 +1934,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -1983,6 +2011,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2058,6 +2087,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2145,6 +2175,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2216,6 +2247,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2287,6 +2319,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2360,6 +2393,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2435,6 +2469,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2510,6 +2545,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2592,6 +2628,7 @@ describe('update a users role', () => {
                         userName: 'test.account@istio.actually.exists',
                       }),
                       verifiedRequired: jest.fn(),
+                      tfaRequired: jest.fn(),
                     },
                     loaders: {
                       loadOrgByKey: {
@@ -2674,6 +2711,7 @@ describe('update a users role', () => {
                         userName: 'test.account@istio.actually.exists',
                       }),
                       verifiedRequired: jest.fn(),
+                      tfaRequired: jest.fn(),
                     },
                     loaders: {
                       loadOrgByKey: {
@@ -2757,6 +2795,7 @@ describe('update a users role', () => {
                       userName: 'test.account@istio.actually.exists',
                     }),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadOrgByKey: {
@@ -2835,6 +2874,7 @@ describe('update a users role', () => {
                       userName: 'test.account@istio.actually.exists',
                     }),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadOrgByKey: {
@@ -2913,6 +2953,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2987,6 +3028,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -3063,6 +3105,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -3138,6 +3181,7 @@ describe('update a users role', () => {
                     userName: 'test.account@istio.actually.exists',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {

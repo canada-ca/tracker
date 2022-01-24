@@ -5,7 +5,12 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
+import {
+  checkPermission,
+  userRequired,
+  verifiedRequired,
+  tfaRequired,
+} from '../../../auth'
 import { databaseOptions } from '../../../../database-options'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
@@ -60,6 +65,7 @@ describe('invite user to org', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         emailValidated: true,
+        tfaSendMethod: 'email',
       })
     })
     afterEach(async () => {
@@ -176,6 +182,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -272,6 +279,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -368,6 +376,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -459,6 +468,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -554,6 +564,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -650,6 +661,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -763,6 +775,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -859,6 +872,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -951,6 +965,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1047,6 +1062,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
@@ -1203,6 +1219,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1299,6 +1316,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1395,6 +1413,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1487,6 +1506,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1580,6 +1600,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1673,6 +1694,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1783,6 +1805,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1879,6 +1902,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -1971,6 +1995,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2064,6 +2089,7 @@ describe('invite user to org', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
@@ -2171,6 +2197,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@istio.actually.exists',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loaders: {
@@ -2252,6 +2279,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2331,6 +2359,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2411,6 +2440,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2491,6 +2521,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2574,6 +2605,7 @@ describe('invite user to org', () => {
                     userName: 'test.account@exists.ca',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2594,9 +2626,7 @@ describe('invite user to org', () => {
             )
 
             const error = [
-              new GraphQLError(
-                'Unable to invite user. Please try again.',
-              ),
+              new GraphQLError('Unable to invite user. Please try again.'),
             ]
 
             expect(response.errors).toEqual(error)
@@ -2653,6 +2683,7 @@ describe('invite user to org', () => {
                     userName: 'test.account@exists.ca',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -2747,6 +2778,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@istio.actually.exists',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loaders: {
@@ -2828,6 +2860,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2850,7 +2883,8 @@ describe('invite user to org', () => {
               inviteUserToOrg: {
                 result: {
                   code: 400,
-                  description: "Impossible d'inviter un utilisateur à une organisation inconnue.",
+                  description:
+                    "Impossible d'inviter un utilisateur à une organisation inconnue.",
                 },
               },
             },
@@ -2907,6 +2941,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2930,7 +2965,7 @@ describe('invite user to org', () => {
                 result: {
                   code: 403,
                   description:
-                  "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
+                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
                 },
               },
             },
@@ -2987,6 +3022,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -3010,7 +3046,7 @@ describe('invite user to org', () => {
                 result: {
                   code: 403,
                   description:
-                  "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
+                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
                 },
               },
             },
@@ -3067,6 +3103,7 @@ describe('invite user to org', () => {
                   userName: 'test.account@exists.ca',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -3090,7 +3127,7 @@ describe('invite user to org', () => {
                 result: {
                   code: 403,
                   description:
-                  "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
+                    "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs.",
                 },
               },
             },
@@ -3150,6 +3187,7 @@ describe('invite user to org', () => {
                     userName: 'test.account@exists.ca',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {
@@ -3229,6 +3267,7 @@ describe('invite user to org', () => {
                     userName: 'test.account@exists.ca',
                   }),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadOrgByKey: {

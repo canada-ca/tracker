@@ -9,7 +9,12 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
+import {
+  checkPermission,
+  userRequired,
+  verifiedRequired,
+  tfaRequired,
+} from '../../../auth'
 import { loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -53,6 +58,7 @@ describe('updating a domain', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         emailValidated: true,
+        tfaSendMethod: 'email',
       })
       org = await collections.organizations.save({
         orgDetails: {
@@ -139,6 +145,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -211,6 +218,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -284,6 +292,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -362,6 +371,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -434,6 +444,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -507,6 +518,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -585,6 +597,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -657,6 +670,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -730,6 +744,7 @@ describe('updating a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               validators: {
                 cleanseInput,
@@ -824,6 +839,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -901,6 +917,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -978,6 +995,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -1056,6 +1074,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -1135,6 +1154,7 @@ describe('updating a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: {
                   cleanseInput,
@@ -1211,6 +1231,7 @@ describe('updating a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: {
                   cleanseInput,
@@ -1287,6 +1308,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -1373,6 +1395,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -1451,6 +1474,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -1529,6 +1553,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -1607,6 +1632,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,
@@ -1686,6 +1712,7 @@ describe('updating a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: {
                   cleanseInput,
@@ -1764,6 +1791,7 @@ describe('updating a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: {
                   cleanseInput,
@@ -1842,6 +1870,7 @@ describe('updating a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: {
                 cleanseInput,

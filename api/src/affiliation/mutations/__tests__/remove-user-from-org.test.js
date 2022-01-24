@@ -9,7 +9,12 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
+import {
+  checkPermission,
+  userRequired,
+  verifiedRequired,
+  tfaRequired,
+} from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadAffiliationByKey } from '../../loaders'
@@ -98,6 +103,7 @@ const adminData = {
   preferredLang: 'french',
   tfaValidated: false,
   emailValidated: true,
+  tfaSendMethod: 'email',
 }
 
 const userData = {
@@ -106,6 +112,7 @@ const userData = {
   preferredLang: 'french',
   tfaValidated: false,
   emailValidated: true,
+  tfaSendMethod: 'email',
 }
 
 describe('given the removeUserFromOrg mutation', () => {
@@ -234,6 +241,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
+                tfaRequired: tfaRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -330,6 +338,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -433,6 +442,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -524,6 +534,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
+                tfaRequired: tfaRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -620,6 +631,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -723,6 +735,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -832,6 +845,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 }),
                 verifiedRequired: verifiedRequired({ i18n }),
+                tfaRequired: tfaRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -928,6 +942,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -1031,6 +1046,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -1130,6 +1146,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1210,6 +1227,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1291,6 +1309,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1372,6 +1391,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1449,6 +1469,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1531,6 +1552,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1613,6 +1635,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1693,6 +1716,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1769,6 +1793,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1849,6 +1874,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -1929,6 +1955,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 _key: '123',
               }),
               verifiedRequired: jest.fn(),
+              tfaRequired: jest.fn(),
             },
             loaders: {
               loadOrgByKey: {
@@ -2014,6 +2041,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2094,6 +2122,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2176,6 +2205,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2258,6 +2288,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2335,6 +2366,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2417,6 +2449,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2499,6 +2532,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2579,6 +2613,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2655,6 +2690,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2735,6 +2771,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   _key: '123',
                 }),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadOrgByKey: {
@@ -2815,6 +2852,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 _key: '123',
               }),
               verifiedRequired: jest.fn(),
+              tfaRequired: jest.fn(),
             },
             loaders: {
               loadOrgByKey: {
