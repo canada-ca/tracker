@@ -9,7 +9,12 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
+import {
+  checkPermission,
+  userRequired,
+  verifiedRequired,
+  tfaRequired,
+} from '../../../auth'
 import { loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -48,6 +53,7 @@ describe('removing a domain', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         emailValidated: true,
+        tfaSendMethod: 'email',
       })
     })
     afterEach(async () => {
@@ -239,6 +245,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -326,6 +333,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -399,6 +407,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -461,6 +470,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -551,6 +561,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -628,6 +639,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -746,6 +758,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -833,6 +846,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -906,6 +920,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -968,6 +983,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1058,6 +1074,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1135,6 +1152,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1230,6 +1248,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1317,6 +1336,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1390,6 +1410,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1452,6 +1473,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1578,6 +1600,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1655,6 +1678,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1742,6 +1766,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1829,6 +1854,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -1902,6 +1928,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -1964,6 +1991,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2090,6 +2118,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2167,6 +2196,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2370,6 +2400,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2457,6 +2488,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2530,6 +2562,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2592,6 +2625,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -2682,6 +2716,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2759,6 +2794,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2848,6 +2884,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -2935,6 +2972,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3008,6 +3046,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3070,6 +3109,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   }),
                   verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3196,6 +3236,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3273,6 +3314,7 @@ describe('removing a domain', () => {
                       loadUserByKey: loadUserByKey({ query }),
                     }),
                     verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -3358,6 +3400,7 @@ describe('removing a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
@@ -3425,6 +3468,7 @@ describe('removing a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
@@ -3496,6 +3540,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3570,6 +3615,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3644,6 +3690,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3720,6 +3767,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3794,6 +3842,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3870,6 +3919,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -3939,6 +3989,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4012,6 +4063,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -4085,6 +4137,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -4163,6 +4216,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4244,6 +4298,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -4320,6 +4375,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -4395,6 +4451,7 @@ describe('removing a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
@@ -4477,6 +4534,7 @@ describe('removing a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
@@ -4544,6 +4602,7 @@ describe('removing a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {
@@ -4615,6 +4674,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4689,6 +4749,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4763,6 +4824,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4839,6 +4901,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('user'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4913,6 +4976,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue(undefined),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -4989,6 +5053,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -5060,6 +5125,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -5135,6 +5201,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -5210,6 +5277,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -5290,6 +5358,7 @@ describe('removing a domain', () => {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 validators: { cleanseInput },
                 loaders: {
@@ -5373,6 +5442,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -5451,6 +5521,7 @@ describe('removing a domain', () => {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   validators: { cleanseInput },
                   loaders: {
@@ -5528,6 +5599,7 @@ describe('removing a domain', () => {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               validators: { cleanseInput },
               loaders: {

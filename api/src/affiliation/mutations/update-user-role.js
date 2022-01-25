@@ -43,7 +43,7 @@ given organization.`,
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey, loadUserByUserName },
       validators: { cleanseInput },
     },
@@ -57,6 +57,7 @@ given organization.`,
     const user = await userRequired()
 
     verifiedRequired({ user })
+    tfaRequired({ user })
 
     // Make sure user is not attempting to update their own role
     if (user.userName === userName) {
@@ -119,7 +120,7 @@ given organization.`,
     try {
       affiliationCursor = await query`
       WITH affiliations, organizations, users
-      FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations 
+      FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations
         FILTER e._from == ${org._id}
         RETURN { _key: e._key, permission: e.permission }
       `

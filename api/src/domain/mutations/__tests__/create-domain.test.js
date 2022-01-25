@@ -15,6 +15,7 @@ import {
   checkSuperAdmin,
   saltedHash,
   verifiedRequired,
+  tfaRequired,
 } from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import {
@@ -59,6 +60,7 @@ describe('create a domain', () => {
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         emailValidated: true,
+        tfaSendMethod: 'email',
       })
       org = await collections.organizations.save({
         orgDetails: {
@@ -160,6 +162,7 @@ describe('create a domain', () => {
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -312,6 +315,7 @@ describe('create a domain', () => {
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -441,6 +445,7 @@ describe('create a domain', () => {
               }),
               checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               verifiedRequired: verifiedRequired({}),
+              tfaRequired: tfaRequired({}),
             },
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
@@ -569,6 +574,7 @@ describe('create a domain', () => {
               }),
               checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               verifiedRequired: verifiedRequired({}),
+              tfaRequired: tfaRequired({}),
             },
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
@@ -740,6 +746,7 @@ describe('create a domain', () => {
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -885,6 +892,7 @@ describe('create a domain', () => {
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1030,6 +1038,7 @@ describe('create a domain', () => {
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1180,6 +1189,7 @@ describe('create a domain', () => {
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1325,6 +1335,7 @@ describe('create a domain', () => {
                 }),
                 checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
+                tfaRequired: tfaRequired({}),
               },
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
@@ -1468,6 +1479,7 @@ describe('create a domain', () => {
                 saltedHash: jest.fn(),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadDomainByDomain: {
@@ -1561,6 +1573,7 @@ describe('create a domain', () => {
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadDomainByDomain: {
@@ -1658,6 +1671,7 @@ describe('create a domain', () => {
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadDomainByDomain: {
@@ -1756,6 +1770,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {
@@ -1849,6 +1864,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {
@@ -1944,6 +1960,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {
@@ -2040,6 +2057,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -2136,6 +2154,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -2231,6 +2250,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -2330,6 +2350,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -2432,6 +2453,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {
@@ -2541,6 +2563,7 @@ describe('create a domain', () => {
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadDomainByDomain: {
@@ -2634,6 +2657,7 @@ describe('create a domain', () => {
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadDomainByDomain: {
@@ -2731,6 +2755,7 @@ describe('create a domain', () => {
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
                 verifiedRequired: jest.fn(),
+                tfaRequired: jest.fn(),
               },
               loaders: {
                 loadDomainByDomain: {
@@ -2829,6 +2854,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {
@@ -2924,6 +2950,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {
@@ -3021,6 +3048,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {
@@ -3119,6 +3147,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -3217,6 +3246,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -3314,6 +3344,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -3415,6 +3446,7 @@ describe('create a domain', () => {
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
                     verifiedRequired: jest.fn(),
+                    tfaRequired: jest.fn(),
                   },
                   loaders: {
                     loadDomainByDomain: {
@@ -3519,6 +3551,7 @@ describe('create a domain', () => {
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
                   verifiedRequired: jest.fn(),
+                  tfaRequired: jest.fn(),
                 },
                 loaders: {
                   loadDomainByDomain: {

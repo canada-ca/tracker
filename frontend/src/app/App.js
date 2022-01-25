@@ -85,6 +85,8 @@ export function App() {
     }
   }, [currentUser.jwt])
 
+  console.log(currentTFAMethod())
+
   return (
     <>
       <Flex direction="column" minHeight="100vh" bg="gray.50">
@@ -124,7 +126,7 @@ export function App() {
             </RouteLink>
           )}
 
-          {isLoggedIn() && isEmailValidated() && (
+          {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
             <RouteLink to="/admin">
               <Trans>Admin Profile</Trans>
             </RouteLink>
@@ -249,7 +251,9 @@ export function App() {
               </PrivatePage>
 
               <Page path="/admin" title={t`Admin`}>
-                {isLoggedIn() && isEmailValidated() ? (
+                {isLoggedIn() &&
+                isEmailValidated() &&
+                currentTFAMethod() !== 'NONE' ? (
                   <AdminPage isLoginRequired={data?.loginRequired} />
                 ) : (
                   <Redirect
@@ -329,7 +333,9 @@ export function App() {
               </Page>
 
               <Page path="/create-organization" title={t`Create Organization`}>
-                {isLoggedIn() && isEmailValidated() ? (
+                {isLoggedIn() &&
+                isEmailValidated() &&
+                currentTFAMethod() !== 'NONE' ? (
                   <CreateOrganizationPage />
                 ) : (
                   <Redirect

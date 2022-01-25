@@ -45,7 +45,7 @@ export const updateDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
     },
@@ -54,6 +54,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
+    tfaRequired({ user })
 
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
@@ -119,7 +120,7 @@ export const updateDomain = new mutationWithClientMutationId({
     try {
       countCursor = await query`
         WITH claims, domains, organizations
-        FOR v, e IN 1..1 ANY ${domain._id} claims 
+        FOR v, e IN 1..1 ANY ${domain._id} claims
           FILTER e._from == ${org._id}
           RETURN e
       `

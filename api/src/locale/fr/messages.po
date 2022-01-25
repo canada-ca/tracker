@@ -56,7 +56,7 @@ msgstr "Jeton invalide, veuillez vous connecter."
 msgid "New passwords do not match."
 msgstr "Les nouveaux mots de passe ne correspondent pas."
 
-#: src/organization/queries/find-organization-by-slug.js:42
+#: src/organization/queries/find-organization-by-slug.js:49
 msgid "No organization with the provided slug could be found."
 msgstr "Aucune organisation avec le slug fourni n'a pu être trouvée."
 
@@ -80,10 +80,10 @@ msgstr "Le nom de l'organisation est déjà utilisé, veuillez en choisir un aut
 msgid "Organization name already in use. Please try again with a different name."
 msgstr "Le nom de l'organisation est déjà utilisé. Veuillez réessayer avec un nom différent."
 
-#: src/auth/check-domain-ownership.js:30
-#: src/auth/check-domain-ownership.js:42
-#: src/auth/check-domain-ownership.js:68
-#: src/auth/check-domain-ownership.js:79
+#: src/auth/check-domain-ownership.js:33
+#: src/auth/check-domain-ownership.js:45
+#: src/auth/check-domain-ownership.js:67
+#: src/auth/check-domain-ownership.js:78
 msgid "Ownership check error. Unable to request domain information."
 msgstr "Erreur de vérification de la propriété. Impossible de demander des informations sur le domaine."
 
@@ -113,12 +113,12 @@ msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DkimFailu
 msgid "Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DmarcFailureTable` n'est pas supporté."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:193
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:198
 msgid "Passing both `first` and `last` to paginate the `DmarcSummaries` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `DmarcSummaries` n'est pas supporté."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:147
-#: src/domain/loaders/load-domain-connections-by-user-id.js:156
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:160
+#: src/domain/loaders/load-domain-connections-by-user-id.js:160
 msgid "Passing both `first` and `last` to paginate the `Domain` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Domain` n'est pas supporté."
 
@@ -139,8 +139,8 @@ msgstr "Passer à la fois `first` et `last` pour paginer la connexion `GuidanceT
 msgid "Passing both `first` and `last` to paginate the `HTTPS` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `HTTPS` n'est pas supporté."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:187
-#: src/organization/loaders/load-organization-connections-by-user-id.js:186
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:192
+#: src/organization/loaders/load-organization-connections-by-user-id.js:191
 msgid "Passing both `first` and `last` to paginate the `Organization` connection is not supported."
 msgstr "Passer à la fois `first` et `last` pour paginer la connexion `Organization` n'est pas supporté."
 
@@ -183,11 +183,12 @@ msgstr "Le mot de passe a été mis à jour avec succès."
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: src/organization/queries/find-organization-by-slug.js:53
+#: src/organization/queries/find-organization-by-slug.js:61
+#: src/organization/queries/find-organization-by-slug.js:74
 msgid "Permission Denied: Could not retrieve specified organization."
 msgstr "Permission refusée : Impossible de récupérer l'organisation spécifiée."
 
-#: src/user/mutations/update-user-profile.js:107
+#: src/user/mutations/update-user-profile.js:108
 msgid "Permission Denied: Multi-factor authentication is required for admin accounts"
 msgstr "Permission refusée : L'authentification multifactorielle est requise pour les comptes admin."
 
@@ -195,7 +196,7 @@ msgstr "Permission refusée : L'authentification multifactorielle est requise po
 msgid "Permission Denied: Please contact org owner to transfer ownership."
 msgstr "Permission refusée : Veuillez contacter le propriétaire de l'org pour transférer la propriété."
 
-#: src/domain/mutations/remove-domain.js:109
+#: src/domain/mutations/remove-domain.js:110
 msgid "Permission Denied: Please contact organization admin for help with removing domain."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine."
 
@@ -203,7 +204,7 @@ msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisat
 msgid "Permission Denied: Please contact organization admin for help with removing organization."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer l'organisation."
 
-#: src/affiliation/mutations/remove-user-from-org.js:214
+#: src/affiliation/mutations/remove-user-from-org.js:219
 msgid "Permission Denied: Please contact organization admin for help with removing users."
 msgstr "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs."
 
@@ -211,25 +212,25 @@ msgstr "Autorisation refusée : Veuillez contacter l'administrateur de l'organis
 msgid "Permission Denied: Please contact organization admin for help with updating organization."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs."
 
-#: src/affiliation/mutations/update-user-role.js:190
-#: src/affiliation/mutations/update-user-role.js:213
-#: src/affiliation/mutations/update-user-role.js:231
+#: src/affiliation/mutations/update-user-role.js:191
+#: src/affiliation/mutations/update-user-role.js:214
+#: src/affiliation/mutations/update-user-role.js:232
 msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs."
 
-#: src/affiliation/mutations/invite-user-to-org.js:106
+#: src/affiliation/mutations/invite-user-to-org.js:113
 msgid "Permission Denied: Please contact organization admin for help with user invitations."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs."
 
-#: src/affiliation/mutations/update-user-role.js:112
+#: src/affiliation/mutations/update-user-role.js:113
 msgid "Permission Denied: Please contact organization admin for help with user role changes."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs."
 
-#: src/domain/mutations/create-domain.js:95
+#: src/domain/mutations/create-domain.js:102
 msgid "Permission Denied: Please contact organization user for help with creating domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la création du domaine."
 
-#: src/domain/queries/find-domain-by-domain.js:48
+#: src/domain/queries/find-domain-by-domain.js:57
 msgid "Permission Denied: Please contact organization user for help with retrieving this domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide pour récupérer ce domaine."
 
@@ -237,11 +238,11 @@ msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation
 msgid "Permission Denied: Please contact organization user for help with scanning this domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur l'analyse de ce domaine."
 
-#: src/domain/mutations/update-domain.js:112
+#: src/domain/mutations/update-domain.js:113
 msgid "Permission Denied: Please contact organization user for help with updating this domain."
 msgstr "Autorisation refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
-#: src/domain/mutations/remove-domain.js:96
+#: src/domain/mutations/remove-domain.js:97
 msgid "Permission Denied: Please contact super admin for help with removing domain."
 msgstr "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine."
 
@@ -278,7 +279,7 @@ msgstr "Le numéro de téléphone a été supprimé avec succès."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Le numéro de téléphone a été configuré avec succès, vous recevrez bientôt un message de vérification."
 
-#: src/user/mutations/update-user-profile.js:191
+#: src/user/mutations/update-user-profile.js:193
 msgid "Profile successfully updated."
 msgstr "Le profil a été mis à jour avec succès."
 
@@ -295,12 +296,12 @@ msgstr "La demande d'enregistrements `{amount}` sur la connexion `DkimFailureTab
 msgid "Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `DkimFailureTable` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:216
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:221
 msgid "Requesting `{amount}` records on the `DmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `DmarcSummaries` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:170
-#: src/domain/loaders/load-domain-connections-by-user-id.js:179
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:183
+#: src/domain/loaders/load-domain-connections-by-user-id.js:183
 msgid "Requesting `{amount}` records on the `Domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `Domain` dépasse la limite `{argSet}` de 100 enregistrements."
 
@@ -317,8 +318,8 @@ msgstr "La demande d'enregistrements `{amount}` sur la connexion `FullPassTable`
 msgid "Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `GuidanceTag` dépasse la limite `{argSet}` de 100 enregistrements."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:210
-#: src/organization/loaders/load-organization-connections-by-user-id.js:209
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:215
+#: src/organization/loaders/load-organization-connections-by-user-id.js:214
 msgid "Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "La demande d'enregistrements `{amount}` sur la connexion `Organization` dépasse la limite `{argSet}` de 100 enregistrements."
 
@@ -372,7 +373,7 @@ msgstr "Un seul balayage a été effectué avec succès."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:195
+#: src/affiliation/mutations/invite-user-to-org.js:202
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé."
 
@@ -380,7 +381,7 @@ msgstr "L'utilisateur a été invité avec succès à l'organisation et l'email 
 msgid "Successfully left organization: {0}"
 msgstr "L'organisation a été quittée avec succès: {0}"
 
-#: src/domain/mutations/remove-domain.js:402
+#: src/domain/mutations/remove-domain.js:403
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "A réussi à supprimer le domaine : {0} de {1}."
 
@@ -388,11 +389,11 @@ msgstr "A réussi à supprimer le domaine : {0} de {1}."
 msgid "Successfully removed organization: {0}."
 msgstr "A réussi à supprimer l'organisation : {0}."
 
-#: src/affiliation/mutations/remove-user-from-org.js:200
+#: src/affiliation/mutations/remove-user-from-org.js:205
 msgid "Successfully removed user from organization."
 msgstr "L'utilisateur a été retiré de l'organisation avec succès."
 
-#: src/affiliation/mutations/invite-user-to-org.js:137
+#: src/affiliation/mutations/invite-user-to-org.js:144
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisation."
 
@@ -479,22 +480,22 @@ msgstr "Impossible de fermer le compte d'un utilisateur non défini."
 msgid "Unable to close account. Please try again."
 msgstr "Impossible de fermer le compte. Veuillez réessayer."
 
-#: src/domain/mutations/create-domain.js:75
+#: src/domain/mutations/create-domain.js:82
 msgid "Unable to create domain in unknown organization."
 msgstr "Impossible de créer un domaine dans une organisation inconnue."
 
-#: src/domain/mutations/create-domain.js:152
+#: src/domain/mutations/create-domain.js:159
 msgid "Unable to create domain, organization has already claimed it."
 msgstr "Impossible de créer le domaine, l'organisation l'a déjà réclamé."
 
-#: src/domain/mutations/create-domain.js:131
-#: src/domain/mutations/create-domain.js:141
-#: src/domain/mutations/create-domain.js:190
-#: src/domain/mutations/create-domain.js:200
-#: src/domain/mutations/create-domain.js:218
-#: src/domain/mutations/create-domain.js:248
-#: src/domain/mutations/create-domain.js:266
-#: src/domain/mutations/create-domain.js:276
+#: src/domain/mutations/create-domain.js:138
+#: src/domain/mutations/create-domain.js:148
+#: src/domain/mutations/create-domain.js:197
+#: src/domain/mutations/create-domain.js:207
+#: src/domain/mutations/create-domain.js:225
+#: src/domain/mutations/create-domain.js:255
+#: src/domain/mutations/create-domain.js:273
+#: src/domain/mutations/create-domain.js:283
 msgid "Unable to create domain. Please try again."
 msgstr "Impossible de créer un domaine. Veuillez réessayer."
 
@@ -574,7 +575,7 @@ msgstr "Impossible de trouver le(s) tag(s) d'orientation SSL. Veuillez réessaye
 msgid "Unable to find SSL scan(s). Please try again."
 msgstr "Impossible de trouver le(s) scan(s) SSL. Veuillez réessayer."
 
-#: src/domain/queries/find-domain-by-domain.js:38
+#: src/domain/queries/find-domain-by-domain.js:46
 msgid "Unable to find the requested domain."
 msgstr "Impossible de trouver le domaine demandé."
 
@@ -590,16 +591,16 @@ msgstr "Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez rées
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:87
+#: src/affiliation/mutations/invite-user-to-org.js:94
 msgid "Unable to invite user to unknown organization."
 msgstr "Impossible d'inviter un utilisateur à une organisation inconnue."
 
-#: src/affiliation/mutations/invite-user-to-org.js:170
-#: src/affiliation/mutations/invite-user-to-org.js:185
+#: src/affiliation/mutations/invite-user-to-org.js:177
+#: src/affiliation/mutations/invite-user-to-org.js:192
 msgid "Unable to invite user. Please try again."
 msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:73
+#: src/affiliation/mutations/invite-user-to-org.js:80
 msgid "Unable to invite yourself to an org."
 msgstr "Impossible de s'inviter à un org."
 
@@ -653,8 +654,8 @@ msgstr "Impossible de charger le résumé DMARC. Veuillez réessayer."
 msgid "Unable to load DMARC scan(s). Please try again."
 msgstr "Impossible de charger le(s) scan(s) DMARC. Veuillez réessayer."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:472
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:484
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:477
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:489
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:20
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:32
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:20
@@ -712,9 +713,9 @@ msgstr "Impossible de charger les informations d'affiliation. Veuillez réessaye
 msgid "Unable to load affiliation(s). Please try again."
 msgstr "Impossible de charger l'affiliation (s). Veuillez réessayer."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:364
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:374
-#: src/domain/loaders/load-domain-connections-by-user-id.js:394
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:391
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:401
+#: src/domain/loaders/load-domain-connections-by-user-id.js:413
 msgid "Unable to load domain(s). Please try again."
 msgstr "Impossible de charger le(s) domaine(s). Veuillez réessayer."
 
@@ -739,10 +740,10 @@ msgstr "Impossible de charger le résumé du courrier. Veuillez réessayer."
 #: src/organization/loaders/load-organization-by-key.js:47
 #: src/organization/loaders/load-organization-by-slug.js:36
 #: src/organization/loaders/load-organization-by-slug.js:51
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:513
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:525
-#: src/organization/loaders/load-organization-connections-by-user-id.js:504
-#: src/organization/loaders/load-organization-connections-by-user-id.js:516
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:533
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:545
+#: src/organization/loaders/load-organization-connections-by-user-id.js:520
+#: src/organization/loaders/load-organization-connections-by-user-id.js:532
 msgid "Unable to load organization(s). Please try again."
 msgstr "Impossible de charger l'organisation (s). Veuillez réessayer."
 
@@ -790,7 +791,7 @@ msgstr "Impossible de charger le résumé web. Veuillez réessayer."
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "Impossible de demander l'affiliation (s). Veuillez réessayer."
 
-#: src/domain/loaders/load-domain-connections-by-user-id.js:384
+#: src/domain/loaders/load-domain-connections-by-user-id.js:403
 msgid "Unable to query domain(s). Please try again."
 msgstr "Impossible d'interroger le(s) domaine(s). Veuillez réessayer."
 
@@ -804,22 +805,22 @@ msgstr "Impossible d'interroger le(s) domaine(s). Veuillez réessayer."
 msgid "Unable to refresh tokens, please sign in."
 msgstr "Impossible de rafraîchir les jetons, veuillez vous connecter."
 
-#: src/affiliation/mutations/remove-user-from-org.js:122
+#: src/affiliation/mutations/remove-user-from-org.js:123
 msgid "Unable to remove a user that already does not belong to this organization."
 msgstr "Impossible de supprimer un utilisateur qui n'appartient déjà plus à cette organisation."
 
-#: src/domain/mutations/remove-domain.js:79
+#: src/domain/mutations/remove-domain.js:80
 msgid "Unable to remove domain from unknown organization."
 msgstr "Impossible de supprimer le domaine d'une organisation inconnue."
 
-#: src/domain/mutations/remove-domain.js:125
-#: src/domain/mutations/remove-domain.js:139
-#: src/domain/mutations/remove-domain.js:178
-#: src/domain/mutations/remove-domain.js:197
-#: src/domain/mutations/remove-domain.js:332
-#: src/domain/mutations/remove-domain.js:359
-#: src/domain/mutations/remove-domain.js:382
-#: src/domain/mutations/remove-domain.js:393
+#: src/domain/mutations/remove-domain.js:126
+#: src/domain/mutations/remove-domain.js:140
+#: src/domain/mutations/remove-domain.js:179
+#: src/domain/mutations/remove-domain.js:198
+#: src/domain/mutations/remove-domain.js:333
+#: src/domain/mutations/remove-domain.js:360
+#: src/domain/mutations/remove-domain.js:383
+#: src/domain/mutations/remove-domain.js:394
 msgid "Unable to remove domain. Please try again."
 msgstr "Impossible de supprimer le domaine. Veuillez réessayer."
 
@@ -842,7 +843,7 @@ msgstr "Impossible de supprimer l'organisation. Veuillez réessayer."
 msgid "Unable to remove phone number. Please try again."
 msgstr "Impossible de supprimer le numéro de téléphone. Veuillez réessayer."
 
-#: src/domain/mutations/remove-domain.js:63
+#: src/domain/mutations/remove-domain.js:64
 msgid "Unable to remove unknown domain."
 msgstr "Impossible de supprimer un domaine inconnu."
 
@@ -850,22 +851,22 @@ msgstr "Impossible de supprimer un domaine inconnu."
 msgid "Unable to remove unknown organization."
 msgstr "Impossible de supprimer une organisation inconnue."
 
-#: src/affiliation/mutations/remove-user-from-org.js:89
+#: src/affiliation/mutations/remove-user-from-org.js:90
 msgid "Unable to remove unknown user from organization."
 msgstr "Impossible de supprimer un utilisateur inconnu de l'organisation."
 
-#: src/affiliation/mutations/remove-user-from-org.js:75
+#: src/affiliation/mutations/remove-user-from-org.js:76
 msgid "Unable to remove user from organization."
 msgstr "Impossible de supprimer un utilisateur de l'organisation."
 
-#: src/affiliation/mutations/remove-user-from-org.js:109
-#: src/affiliation/mutations/remove-user-from-org.js:136
-#: src/affiliation/mutations/remove-user-from-org.js:179
-#: src/affiliation/mutations/remove-user-from-org.js:190
+#: src/affiliation/mutations/remove-user-from-org.js:110
+#: src/affiliation/mutations/remove-user-from-org.js:137
+#: src/affiliation/mutations/remove-user-from-org.js:181
+#: src/affiliation/mutations/remove-user-from-org.js:194
 msgid "Unable to remove user from this organization. Please try again."
 msgstr "Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."
 
-#: src/affiliation/mutations/remove-user-from-org.js:61
+#: src/affiliation/mutations/remove-user-from-org.js:62
 msgid "Unable to remove user from unknown organization."
 msgstr "Impossible de supprimer un utilisateur d'une organisation inconnue."
 
@@ -883,8 +884,8 @@ msgstr "Impossible de réinitialiser le mot de passe. Veuillez demander un nouve
 msgid "Unable to reset password. Please try again."
 msgstr "Impossible de réinitialiser le mot de passe. Veuillez réessayer."
 
-#: src/domain/objects/domain.js:160
-#: src/domain/objects/domain.js:203
+#: src/domain/objects/domain.js:161
+#: src/domain/objects/domain.js:207
 msgid "Unable to retrieve DMARC report information for: {domain}"
 msgstr "Impossible de récupérer les informations du rapport DMARC pour : {domain}"
 
@@ -973,17 +974,17 @@ msgstr "Impossible de transférer la propriété à un utilisateur extérieur à
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "Impossible de s'authentifier par deux facteurs. Veuillez réessayer."
 
-#: src/domain/mutations/update-domain.js:93
+#: src/domain/mutations/update-domain.js:94
 msgid "Unable to update domain in an unknown org."
 msgstr "Impossible de mettre à jour le domaine dans un org inconnu."
 
-#: src/domain/mutations/update-domain.js:141
+#: src/domain/mutations/update-domain.js:142
 msgid "Unable to update domain that does not belong to the given organization."
 msgstr "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée."
 
-#: src/domain/mutations/update-domain.js:130
-#: src/domain/mutations/update-domain.js:177
-#: src/domain/mutations/update-domain.js:187
+#: src/domain/mutations/update-domain.js:131
+#: src/domain/mutations/update-domain.js:178
+#: src/domain/mutations/update-domain.js:188
 msgid "Unable to update domain. Please try again."
 msgstr "Impossible de mettre à jour le domaine. Veuillez réessayer."
 
@@ -1012,24 +1013,24 @@ msgstr "Impossible de mettre à jour le mot de passe, les mots de passe ne corre
 msgid "Unable to update password. Please try again."
 msgstr "Impossible de mettre à jour le mot de passe. Veuillez réessayer."
 
-#: src/user/mutations/update-user-profile.js:165
-#: src/user/mutations/update-user-profile.js:174
+#: src/user/mutations/update-user-profile.js:167
+#: src/user/mutations/update-user-profile.js:176
 msgid "Unable to update profile. Please try again."
 msgstr "Impossible de mettre à jour le profil. Veuillez réessayer."
 
-#: src/affiliation/mutations/update-user-role.js:97
+#: src/affiliation/mutations/update-user-role.js:98
 msgid "Unable to update role: organization unknown."
 msgstr "Impossible de mettre à jour le rôle : organisation inconnue."
 
-#: src/affiliation/mutations/update-user-role.js:143
+#: src/affiliation/mutations/update-user-role.js:144
 msgid "Unable to update role: user does not belong to organization."
 msgstr "Impossible de mettre à jour le rôle : l'utilisateur n'appartient pas à l'organisation."
 
-#: src/affiliation/mutations/update-user-role.js:83
+#: src/affiliation/mutations/update-user-role.js:84
 msgid "Unable to update role: user unknown."
 msgstr "Impossible de mettre à jour le rôle : utilisateur inconnu."
 
-#: src/domain/mutations/update-domain.js:79
+#: src/domain/mutations/update-domain.js:80
 msgid "Unable to update unknown domain."
 msgstr "Impossible de mettre à jour un domaine inconnu."
 
@@ -1037,14 +1038,14 @@ msgstr "Impossible de mettre à jour un domaine inconnu."
 msgid "Unable to update unknown organization."
 msgstr "Impossible de mettre à jour une organisation inconnue."
 
-#: src/affiliation/mutations/update-user-role.js:131
-#: src/affiliation/mutations/update-user-role.js:156
-#: src/affiliation/mutations/update-user-role.js:251
-#: src/affiliation/mutations/update-user-role.js:262
+#: src/affiliation/mutations/update-user-role.js:132
+#: src/affiliation/mutations/update-user-role.js:157
+#: src/affiliation/mutations/update-user-role.js:252
+#: src/affiliation/mutations/update-user-role.js:263
 msgid "Unable to update user's role. Please try again."
 msgstr "Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer."
 
-#: src/affiliation/mutations/update-user-role.js:69
+#: src/affiliation/mutations/update-user-role.js:70
 msgid "Unable to update your own role."
 msgstr "Impossible de mettre à jour votre propre rôle."
 
@@ -1062,7 +1063,7 @@ msgstr "Impossible de vérifier le compte. Veuillez réessayer."
 msgid "Unable to verify if user is a super admin, please try again."
 msgstr "Impossible de vérifier si l'utilisateur est un super administrateur, veuillez réessayer."
 
-#: src/user/mutations/update-user-profile.js:94
+#: src/user/mutations/update-user-profile.js:96
 #: src/user/queries/is-user-admin.js:58
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer."
@@ -1081,13 +1082,17 @@ msgstr "Impossible de vérifier une organisation inconnue."
 msgid "User could not be queried."
 msgstr "L'utilisateur n'a pas pu être interrogé."
 
-#: src/affiliation/mutations/update-user-role.js:272
+#: src/affiliation/mutations/update-user-role.js:273
 msgid "User role was updated successfully."
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès."
 
 #: src/user/mutations/update-user-profile.js:75
 msgid "Username not available, please try another."
 msgstr "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre."
+
+#: src/auth/tfa-required.js:15
+msgid "Verification error. Please activate multi-factor authentication to access content."
+msgstr "Erreur de vérification. Veuillez activer l'authentification multifactorielle pour accéder au contenu."
 
 #: src/auth/verified-required.js:15
 msgid "Verification error. Please verify your account via email to access content."
@@ -1118,12 +1123,12 @@ msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctemen
 msgid "You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcFailureTable`."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:184
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:189
 msgid "You must provide a `first` or `last` value to properly paginate the `DmarcSummaries` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `DmarcSummaries`."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:138
-#: src/domain/loaders/load-domain-connections-by-user-id.js:147
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:151
+#: src/domain/loaders/load-domain-connections-by-user-id.js:151
 msgid "You must provide a `first` or `last` value to properly paginate the `Domain` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Domain`."
 
@@ -1144,8 +1149,8 @@ msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctemen
 msgid "You must provide a `first` or `last` value to properly paginate the `HTTPS` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `HTTPS`."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:178
-#: src/organization/loaders/load-organization-connections-by-user-id.js:177
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:183
+#: src/organization/loaders/load-organization-connections-by-user-id.js:182
 msgid "You must provide a `first` or `last` value to properly paginate the `Organization` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `Organization`."
 
@@ -1171,11 +1176,11 @@ msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctemen
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
 msgstr "Vous devez fournir une valeur `first` ou `last` pour paginer correctement la connexion `VerifiedOrganization`."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:26
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:31
 msgid "You must provide a `period` value to access the `DmarcSummaries` connection."
 msgstr "Vous devez fournir une valeur `period` pour accéder à la connexion `DmarcSummaries`."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:38
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:43
 msgid "You must provide a `year` value to access the `DmarcSummaries` connection."
 msgstr "Vous devez fournir une valeur `year` pour accéder à la connexion `DmarcSummaries`."
 
@@ -1183,11 +1188,11 @@ msgstr "Vous devez fournir une valeur `year` pour accéder à la connexion `Dmar
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:208
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:83
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:83
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:231
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:236
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:83
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:83
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:185
-#: src/domain/loaders/load-domain-connections-by-user-id.js:194
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:198
+#: src/domain/loaders/load-domain-connections-by-user-id.js:198
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:170
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:136
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:186
@@ -1198,8 +1203,8 @@ msgstr "Vous devez fournir une valeur `year` pour accéder à la connexion `Dmar
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:136
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:225
-#: src/organization/loaders/load-organization-connections-by-user-id.js:224
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:230
+#: src/organization/loaders/load-organization-connections-by-user-id.js:229
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:164
 #: src/verified-domains/loaders/load-verified-domain-connections.js:164
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:214
@@ -1234,12 +1239,12 @@ msgstr "`{argSet}` sur la connexion `DkimFailureTable` ne peut être inférieur 
 msgid "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:205
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:210
 msgid "`{argSet}` on the `DmarcSummaries` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:159
-#: src/domain/loaders/load-domain-connections-by-user-id.js:168
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:172
+#: src/domain/loaders/load-domain-connections-by-user-id.js:172
 msgid "`{argSet}` on the `Domain` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `Domain` ne peut être inférieur à zéro."
 
@@ -1260,8 +1265,8 @@ msgstr "`{argSet}` sur la connexion `GuidanceTag` ne peut être inférieure à z
 msgid "`{argSet}` on the `HTTPS` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `HTTPS` ne peut être inférieur à zéro."
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:199
-#: src/organization/loaders/load-organization-connections-by-user-id.js:198
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:204
+#: src/organization/loaders/load-organization-connections-by-user-id.js:203
 msgid "`{argSet}` on the `Organization` connection cannot be less than zero."
 msgstr "`{argSet}` sur la connexion `Organization` ne peut être inférieure à zéro."
 

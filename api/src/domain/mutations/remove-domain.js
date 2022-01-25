@@ -33,7 +33,7 @@ export const removeDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
     },
@@ -42,6 +42,7 @@ export const removeDomain = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
+    tfaRequired({ user })
 
     // Cleanse Input
     const { type: _domainType, id: domainId } = fromGlobalId(
@@ -154,17 +155,17 @@ export const removeDomain = new mutationWithClientMutationId({
           () => query`
             WITH ownership, organizations, domains, dmarcSummaries, domainsToDmarcSummaries
             LET dmarcSummaryEdges = (
-              FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToDmarcSummaries 
+              FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToDmarcSummaries
                 RETURN { edgeKey: e._key, dmarcSummaryId: e._to }
             )
             LET removeDmarcSummaryEdges = (
-              FOR dmarcSummaryEdge IN dmarcSummaryEdges 
+              FOR dmarcSummaryEdge IN dmarcSummaryEdges
                 REMOVE dmarcSummaryEdge.edgeKey IN domainsToDmarcSummaries
                 OPTIONS { waitForSync: true }
             )
             LET removeDmarcSummary = (
-              FOR dmarcSummaryEdge IN dmarcSummaryEdges 
-                LET key = PARSE_IDENTIFIER(dmarcSummaryEdge.dmarcSummaryId).key 
+              FOR dmarcSummaryEdge IN dmarcSummaryEdges
+                LET key = PARSE_IDENTIFIER(dmarcSummaryEdge.dmarcSummaryId).key
                 REMOVE key IN dmarcSummaries
                 OPTIONS { waitForSync: true }
             )
@@ -211,13 +212,13 @@ export const removeDomain = new mutationWithClientMutationId({
                 FOR dkimEdge IN dkimEdges
                   LET dkimResultEdges = (FOR v, e IN 1..1 OUTBOUND dkimEdge.dkimId dkimToDkimResults RETURN { edgeKey: e._key, dkimResultId: e._to })
                   LET removeDkimResultEdges = (
-                    FOR dkimResultEdge IN dkimResultEdges 
+                    FOR dkimResultEdge IN dkimResultEdges
                       REMOVE dkimResultEdge.edgeKey IN dkimToDkimResults
                       OPTIONS { waitForSync: true }
                   )
                   LET removeDkimResult = (
-                    FOR dkimResultEdge IN dkimResultEdges 
-                      LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key 
+                    FOR dkimResultEdge IN dkimResultEdges
+                      LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key
                       REMOVE key IN dkimResults
                       OPTIONS { waitForSync: true }
                   )
@@ -231,13 +232,13 @@ export const removeDomain = new mutationWithClientMutationId({
               FOR domainEdge in domainEdges
                 LET dkimEdges = (FOR v, e IN 1..1 OUTBOUND domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
                 LET removeDkimEdges = (
-                  FOR dkimEdge IN dkimEdges 
+                  FOR dkimEdge IN dkimEdges
                     REMOVE dkimEdge.edgeKey IN domainsDKIM
                     OPTIONS { waitForSync: true }
                 )
                 LET removeDkim = (
-                  FOR dkimEdge IN dkimEdges 
-                    LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key 
+                  FOR dkimEdge IN dkimEdges
+                    LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key
                     REMOVE key IN dkim
                     OPTIONS { waitForSync: true }
                 )
@@ -251,13 +252,13 @@ export const removeDomain = new mutationWithClientMutationId({
               FOR domainEdge in domainEdges
                 LET dmarcEdges = (FOR v, e IN 1..1 OUTBOUND domainEdge.domainId domainsDMARC RETURN { edgeKey: e._key, dmarcId: e._to })
                 LET removeDmarcEdges = (
-                  FOR dmarcEdge IN dmarcEdges 
+                  FOR dmarcEdge IN dmarcEdges
                     REMOVE dmarcEdge.edgeKey IN domainsDMARC
                     OPTIONS { waitForSync: true }
                 )
                 LET removeDmarc = (
-                  FOR dmarcEdge IN dmarcEdges 
-                    LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key 
+                  FOR dmarcEdge IN dmarcEdges
+                    LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key
                     REMOVE key IN dmarc
                     OPTIONS { waitForSync: true }
                 )
@@ -271,13 +272,13 @@ export const removeDomain = new mutationWithClientMutationId({
               FOR domainEdge in domainEdges
                 LET spfEdges = (FOR v, e IN 1..1 OUTBOUND domainEdge.domainId domainsSPF RETURN { edgeKey: e._key, spfId: e._to })
                 LET removeSpfEdges = (
-                  FOR spfEdge IN spfEdges 
+                  FOR spfEdge IN spfEdges
                     REMOVE spfEdge.edgeKey IN domainsSPF
                     OPTIONS { waitForSync: true }
                 )
                 LET removeSpf = (
-                  FOR spfEdge IN spfEdges 
-                    LET key = PARSE_IDENTIFIER(spfEdge.spfId).key 
+                  FOR spfEdge IN spfEdges
+                    LET key = PARSE_IDENTIFIER(spfEdge.spfId).key
                     REMOVE key IN spf
                     OPTIONS { waitForSync: true }
                 )
@@ -296,8 +297,8 @@ export const removeDomain = new mutationWithClientMutationId({
                     OPTIONS { waitForSync: true }
                 )
                 LET removeHttps = (
-                  FOR httpsEdge IN httpsEdges 
-                    LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key 
+                  FOR httpsEdge IN httpsEdges
+                    LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key
                     REMOVE key IN https
                     OPTIONS { waitForSync: true }
                 )
@@ -311,13 +312,13 @@ export const removeDomain = new mutationWithClientMutationId({
               FOR domainEdge in domainEdges
                 LET sslEdges = (FOR v, e IN 1..1 OUTBOUND domainEdge.domainId domainsSSL RETURN { edgeKey: e._key, sslId: e._to})
                 LET removeSslEdges = (
-                  FOR sslEdge IN sslEdges 
+                  FOR sslEdge IN sslEdges
                     REMOVE sslEdge.edgeKey IN domainsSSL
                     OPTIONS { waitForSync: true }
                 )
                 LET removeSsl = (
-                  FOR sslEdge IN sslEdges 
-                    LET key = PARSE_IDENTIFIER(sslEdge.sslId).key 
+                  FOR sslEdge IN sslEdges
+                    LET key = PARSE_IDENTIFIER(sslEdge.sslId).key
                     REMOVE key IN ssl
                     OPTIONS { waitForSync: true }
                 )
@@ -344,8 +345,8 @@ export const removeDomain = new mutationWithClientMutationId({
                 OPTIONS { waitForSync: true }
             )
             LET removeDomain = (
-              FOR domainEdge in domainEdges 
-                LET key = PARSE_IDENTIFIER(domainEdge.domainId).key 
+              FOR domainEdge in domainEdges
+                LET key = PARSE_IDENTIFIER(domainEdge.domainId).key
                 REMOVE key IN domains
                 OPTIONS { waitForSync: true }
             )
@@ -365,7 +366,7 @@ export const removeDomain = new mutationWithClientMutationId({
             WITH claims, domains, organizations
             LET domainEdges = (FOR v, e IN 1..1 INBOUND ${domain._id} claims RETURN { _key: e._key, _from: e._from, _to: e._to })
             LET edgeKeys = (
-              FOR domainEdge IN domainEdges 
+              FOR domainEdge IN domainEdges
                 FILTER domainEdge._to ==  ${domain._id}
                 FILTER domainEdge._from == ${org._id}
                 RETURN domainEdge._key
