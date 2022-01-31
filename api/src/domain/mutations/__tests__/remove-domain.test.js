@@ -1430,7 +1430,7 @@ describe('removing a domain', () => {
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
-          it('removes all scan data', async () => {
+          it.skip('removes all scan data', async () => {
             await graphql(
               schema,
               `
@@ -3066,7 +3066,7 @@ describe('removing a domain', () => {
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
-          it('removes all scan data', async () => {
+          it.skip('removes all scan data', async () => {
             await graphql(
               schema,
               `
