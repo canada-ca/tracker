@@ -54,58 +54,42 @@ describe('<OrganizationDomains />', () => {
         {
           request: {
             query: PAGINATED_ORG_DOMAINS,
-            variables: { slug: 'tbs-sct-gc-ca', first: 10 },
+            variables: {
+              slug: 'tbs-sct-gc-ca',
+              first: 10,
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              search: '',
+            },
           },
           result: {
             data: {
               findOrganizationBySlug: {
-                id: 'testid',
+                id: 'fdscdc',
                 domains: {
                   pageInfo: {
                     hasNextPage: false,
-                    endCursor: 'string',
-                    hasPreviousPage: true,
-                    startCursor: 'string',
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjgx',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                   },
                   edges: [
                     {
-                      cursor: 'string',
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                       node: {
-                        id: 'OTUyNTQ3Mjg0Nw==',
+                        id: '185514a7-45d2-497f-9fb0-57970a96c7d4',
                         domain: 'dfo-mpo.gc.ca',
-                        lastRan: '1612768306050',
+                        lastRan: '2020-04-27 23:23:44.565Z',
                         status: {
                           ciphers: 'PASS',
                           curves: 'PASS',
-                          dkim: 'FAIL',
-                          dmarc: 'FAIL',
-                          hsts: 'PASS',
-                          https: 'INFO',
-                          policy: 'PASS',
-                          protocols: 'PASS',
+                          dkim: 'INFO',
+                          dmarc: 'INFO',
+                          hsts: 'FAIL',
+                          https: 'FAIL',
+                          policy: 'INFO',
+                          protocols: 'FAIL',
                           spf: 'FAIL',
-                          ssl: 'PASS',
-                        },
-                        hasDMARCReport: true,
-                      },
-                    },
-                    {
-                      cursor: 'string',
-                      node: {
-                        id: 'ODEzNzA4ODA3OA==',
-                        domain: 'dfait-maeci.gc.ca',
-                        lastRan: '1612792126546',
-                        status: {
-                          ciphers: 'PASS',
-                          curves: 'PASS',
-                          dkim: 'FAIL',
-                          dmarc: 'FAIL',
-                          hsts: 'PASS',
-                          https: 'INFO',
-                          policy: 'PASS',
-                          protocols: 'PASS',
-                          spf: 'FAIL',
-                          ssl: 'PASS',
+                          ssl: 'INFO',
                         },
                         hasDMARCReport: true,
                       },
