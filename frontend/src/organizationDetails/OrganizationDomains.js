@@ -8,6 +8,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link,
   Select,
   Stack,
   Text,
@@ -24,7 +25,12 @@ import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORG_DOMAINS as FORWARD } from '../graphql/queries'
-import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ExternalLinkIcon,
+  SearchIcon,
+} from '@chakra-ui/icons'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -117,7 +123,19 @@ export function OrganizationDomains({ orgSlug }) {
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
           title={t`ITPIN`}
-          info={t`Shows if the domain is compliant with policy ITPIN 2018-01.`}
+          info={
+            <>
+              <Trans>Shows if the domain is compliant with</Trans>
+              <Link
+                ml="1"
+                href="https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
+                isExternal
+              >
+                ITPIN 2018-01
+                <ExternalLinkIcon mx="2px" />
+              </Link>
+            </>
+          }
         />
         <InfoBox
           title={t`Ciphers`}
