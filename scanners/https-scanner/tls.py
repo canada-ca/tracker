@@ -159,39 +159,6 @@ async def run(loop):
     async def reconnected_cb():
         print(f"Connected to NATS at {nc.connected_url.netloc}...")
 
-    async def subscribe_handler(msg):
-        subject = msg.subject
-        reply = msg.reply
-        data = msg.data.decode()
-        print(f"Received a message on '{subject} {reply}': {data}")
-        payload = json.loads(msg.data)
-        domain = payload["domain"]
-        domain_key = payload["domain_key"]
-        user_key = payload["user_key"]
-        shared_id = payload["shared_id"]
-
-        loop = asyncio.get_event_loop()
-        start_time = time.monotonic()
-        print(f"before the scanner")
-        with ProcessPoolExecutor() as executor:
-            scanner = HTTPSScanner(domain)
-            scan_results = await loop.run_in_executor(executor, scanner.run)
-        print(f"After scan. Elapsed time: {time.monotonic() - start_time}")
-        processed_results = process_results(scan_results)
-        print(f"After processing. Elapsed time: {time.monotonic() - start_time}")
-        await nc.publish(
-            f"{PUBLISH_TO}.{domain_key}.https",
-            json.dumps(
-                {
-                    "results": processed_results,
-                    "scan_type": "https",
-                    "user_key": user_key,
-                    "domain_key": domain_key,
-                    "shared_id": shared_id,
-                }
-            ).encode(),
-        )
-
     try:
         await nc.connect(
             loop=loop,
@@ -205,6 +172,47 @@ async def run(loop):
         print(e)
 
     print(f"Connected to NATS at {nc.connected_url.netloc}...")
+
+    executor = ProcessPoolExecutor(max_workers=5)
+
+    async def subscribe_handler(msg):
+        subject = msg.subject
+        reply = msg.reply
+        data = msg.data.decode()
+        print(f"Received a message on '{subject} {reply}': {data}")
+
+        async def task(nats_message):
+            payload = json.loads(nats_message.data)
+            domain = payload["domain"]
+            domain_key = payload["domain_key"]
+            user_key = payload["user_key"]
+            shared_id = payload["shared_id"]
+
+            start_time = time.monotonic()
+            print(f"before the scanner")
+
+            scanner = HTTPSScanner(domain)
+            scan_results = await loop.run_in_executor(executor, scanner.run)
+
+            print(f"After scan. Elapsed time: {time.monotonic() - start_time}")
+
+            processed_results = process_results(scan_results)
+            print(f"After processing. Elapsed time: {time.monotonic() - start_time}")
+
+            await nc.publish(
+                f"{PUBLISH_TO}.{domain_key}.https",
+                json.dumps(
+                    {
+                        "results": processed_results,
+                        "scan_type": "https",
+                        "user_key": user_key,
+                        "domain_key": domain_key,
+                        "shared_id": shared_id,
+                    }
+                ).encode(),
+            )
+
+        asyncio.create_task(task(msg))
 
     def signal_handler():
         if nc.is_closed:
