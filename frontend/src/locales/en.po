@@ -1033,6 +1033,12 @@ msgstr "Home"
 msgid "Horizontal View"
 msgstr "Horizontal View"
 
+#: src/domains/DomainCard.js:54
+#: src/domains/DomainsPage.js:123
+#: src/organizationDetails/OrganizationDomains.js:119
+msgid "ITPIN"
+msgstr "ITPIN"
+
 #: src/domains/ScanDomain.js:320
 msgid "ITPIN Compliant"
 msgstr "ITPIN Compliant"
@@ -1572,8 +1578,8 @@ msgstr "Please follow the link in order to verify your account and start using T
 #: src/domains/DomainCard.js:54
 #: src/domains/DomainsPage.js:123
 #: src/organizationDetails/OrganizationDomains.js:119
-msgid "Policy"
-msgstr "Policy"
+#~ msgid "Policy"
+#~ msgstr "Policy"
 
 #: src/guidance/GuidanceTagList.js:107
 msgid "Positive Tags"
@@ -1848,8 +1854,13 @@ msgstr "Showing data for period:"
 
 #: src/domains/DomainsPage.js:124
 #: src/organizationDetails/OrganizationDomains.js:120
-msgid "Shows if the domain is policy compliant."
-msgstr "Shows if the domain is policy compliant."
+msgid "Shows if the domain is compliant with policy ITPIN2018-01."
+msgstr "Shows if the domain is compliant with policy ITPIN2018-01."
+
+#: src/domains/DomainsPage.js:124
+#: src/organizationDetails/OrganizationDomains.js:120
+#~ msgid "Shows if the domain is policy compliant."
+#~ msgstr "Shows if the domain is policy compliant."
 
 #: src/domains/DomainsPage.js:152
 #: src/organizationDetails/OrganizationDomains.js:148

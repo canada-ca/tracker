@@ -116,8 +116,8 @@ export function OrganizationDomains({ orgSlug }) {
       <InfoPanel state={infoState}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
-          title={t`Policy`}
-          info={t`Shows if the domain is policy compliant.`}
+          title={t`ITPIN`}
+          info={t`Shows if the domain is compliant with policy ITPIN 2018-01.`}
         />
         <InfoBox
           title={t`Ciphers`}
