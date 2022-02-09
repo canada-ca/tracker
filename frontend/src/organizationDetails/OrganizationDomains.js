@@ -1,6 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Divider, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Flex,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Select,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { number, string } from 'prop-types'
 
@@ -11,9 +22,26 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
+import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORG_DOMAINS as FORWARD } from '../graphql/queries'
+import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 
-export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
+export function OrganizationDomains({ orgSlug }) {
+  const [orderDirection, setOrderDirection] = useState('ASC')
+  const [orderField, setOrderField] = useState('DOMAIN')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [domainsPerPage, setDomainsPerPage] = useState(10)
+
+  const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
+    setDebouncedSearchTerm(searchTerm)
+  }, [searchTerm])
+
+  useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
+
+  const orderIconName =
+    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
+
   const {
     loading,
     isLoadingMore,
@@ -21,13 +49,20 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
     nodes,
     next,
     previous,
+    resetToFirstPage,
     hasNextPage,
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    variables: { slug: orgSlug },
     recordsPerPage: domainsPerPage,
     relayRoot: 'findOrganizationBySlug.domains',
+    variables: {
+      slug: orgSlug,
+      orderBy: { field: orderField, direction: orderDirection },
+      search: debouncedSearchTerm,
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   })
 
   const [infoState, changeInfoState] = useState({
@@ -36,12 +71,37 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
 
   if (error) return <ErrorFallbackMessage error={error} />
 
-  if (loading)
-    return (
-      <LoadingMessage>
-        <Trans>Domains</Trans>
-      </LoadingMessage>
-    )
+  const domainList = loading ? (
+    <LoadingMessage>
+      <Trans>Domains</Trans>
+    </LoadingMessage>
+  ) : (
+    <ListOf
+      elements={nodes}
+      ifEmpty={() => (
+        <Text layerStyle="loadingMessage">
+          <Trans>No Domains</Trans>
+        </Text>
+      )}
+      mb="4"
+    >
+      {({ id, domain, status, hasDMARCReport }, index) => (
+        <ErrorBoundary
+          key={`${id}:${index}`}
+          FallbackComponent={ErrorFallbackMessage}
+        >
+          <Box>
+            <DomainCard
+              url={domain}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+            />
+            <Divider borderColor="gray.900" />
+          </Box>
+        </ErrorBoundary>
+      )}
+    </ListOf>
+  )
 
   return (
     <Box>
@@ -50,6 +110,7 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
         label="Glossary"
         state={infoState}
         changeState={changeInfoState}
+        mb="2"
       />
 
       <InfoPanel state={infoState}>
@@ -92,33 +153,94 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
         />
       </InfoPanel>
 
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Domains</Trans>
-          </Text>
-        )}
-        mb="4"
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        alignItems={{ base: 'stretch', md: 'center' }}
+        mb={{ base: '4', md: '8' }}
       >
-        {({ id, domain, status, hasDMARCReport }, index) => (
-          <ErrorBoundary
-            key={`${id}:${index}`}
-            FallbackComponent={ErrorFallbackMessage}
+        <Flex
+          direction="row"
+          minW={{ base: '100%', md: '50%' }}
+          alignItems="center"
+          flexGrow={1}
+          mb={2}
+        >
+          <Text
+            as="label"
+            htmlFor="Search-for-field"
+            fontSize="md"
+            fontWeight="bold"
+            textAlign="center"
+            mr={2}
           >
-            <Box>
-              <DomainCard
-                url={domain}
-                status={status}
-                hasDMARCReport={hasDMARCReport}
-              />
-              <Divider borderColor="gray.900" />
-            </Box>
-          </ErrorBoundary>
-        )}
-      </ListOf>
+            <Trans>Search: </Trans>
+          </Text>
+          <InputGroup flexGrow={1}>
+            <InputLeftElement aria-hidden="true">
+              <SearchIcon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              id="Search-for-field"
+              type="text"
+              placeholder={t`Search for a domain`}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+                resetToFirstPage()
+              }}
+            />
+          </InputGroup>
+        </Flex>
+
+        <Stack isInline align="center" ml={{ md: '10%' }}>
+          <Text
+            as="label"
+            htmlFor="Sort-by-field"
+            fontSize="md"
+            fontWeight="bold"
+            textAlign="center"
+          >
+            <Trans>Sort by:</Trans>
+          </Text>
+          <Select
+            id="Sort-by-field"
+            data-testid="sort-select"
+            width="fit-content"
+            size="md"
+            variant="filled"
+            value={orderField}
+            onChange={(e) => {
+              setOrderField(e.target.value)
+              resetToFirstPage()
+            }}
+          >
+            <option value="DOMAIN">{t`Domain`}</option>
+            <option value="LAST_RAN">{t`Last Scanned`}</option>
+            <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
+            <option value="SSL_STATUS">{t`SSL Status`}</option>
+            <option value="SPF_STATUS">{t`SPF Status`}</option>
+            <option value="DKIM_STATUS">{t`DKIM Status`}</option>
+            <option value="DMARC_STATUS">{t`DMARC Status`}</option>
+          </Select>
+          <IconButton
+            aria-label="Toggle sort direction"
+            icon={orderIconName}
+            color="primary"
+            onClick={() => {
+              const newOrderDirection =
+                orderDirection === 'ASC' ? 'DESC' : 'ASC'
+              setOrderDirection(newOrderDirection)
+              resetToFirstPage()
+            }}
+          />
+        </Stack>
+      </Flex>
+      {domainList}
       <RelayPaginationControls
-        onlyPagination={true}
+        onlyPagination={false}
+        selectedDisplayLimit={domainsPerPage}
+        setSelectedDisplayLimit={setDomainsPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
         next={next}
