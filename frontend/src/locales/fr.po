@@ -543,8 +543,8 @@ msgstr "Sélecteurs DKIM"
 msgid "DKIM Selectors:"
 msgstr "Sélecteurs DKIM:"
 
-#: src/domains/DomainsPage.js:244
-#: src/organizationDetails/OrganizationDomains.js:239
+#: src/domains/DomainsPage.js:243
+#: src/organizationDetails/OrganizationDomains.js:238
 msgid "DKIM Status"
 msgstr "Statut DKIM"
 
@@ -589,8 +589,8 @@ msgstr "Rapport DMARC "
 msgid "DMARC Report for {domainSlug}"
 msgstr "Rapport DMARC pour {domainSlug}"
 
-#: src/domains/DomainsPage.js:245
-#: src/organizationDetails/OrganizationDomains.js:240
+#: src/domains/DomainsPage.js:244
+#: src/organizationDetails/OrganizationDomains.js:239
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
@@ -1002,8 +1002,8 @@ msgstr "HTTPS configuré"
 msgid "HTTPS Scan Complete"
 msgstr "Scan HTTPS terminé"
 
-#: src/domains/DomainsPage.js:241
-#: src/organizationDetails/OrganizationDomains.js:236
+#: src/domains/DomainsPage.js:240
+#: src/organizationDetails/OrganizationDomains.js:235
 msgid "HTTPS Status"
 msgstr "Statut HTTPS"
 
@@ -1243,8 +1243,8 @@ msgstr "Les 30 derniers jours"
 
 #: src/domains/DomainsPage.js:240
 #: src/organizationDetails/OrganizationDomains.js:235
-msgid "Last Scanned"
-msgstr "Dernière numérisation"
+#~ msgid "Last Scanned"
+#~ msgstr "Dernière numérisation"
 
 #: src/admin/OrganizationInformation.js:325
 #: src/admin/OrganizationInformation.js:615
@@ -1723,8 +1723,8 @@ msgstr "Défaillances du SPF par adresse IP"
 msgid "SPF Results"
 msgstr "Résultats du SPF"
 
-#: src/domains/DomainsPage.js:243
-#: src/organizationDetails/OrganizationDomains.js:238
+#: src/domains/DomainsPage.js:242
+#: src/organizationDetails/OrganizationDomains.js:237
 msgid "SPF Status"
 msgstr "Statut SPF"
 
@@ -1732,8 +1732,8 @@ msgstr "Statut SPF"
 msgid "SSL Scan Complete"
 msgstr "Analyse SSL terminée"
 
-#: src/domains/DomainsPage.js:242
-#: src/organizationDetails/OrganizationDomains.js:237
+#: src/domains/DomainsPage.js:241
+#: src/organizationDetails/OrganizationDomains.js:236
 msgid "SSL Status"
 msgstr "Statut SSL"
 

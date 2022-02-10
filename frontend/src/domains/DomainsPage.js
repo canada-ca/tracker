@@ -237,7 +237,6 @@ export default function DomainsPage() {
               }}
             >
               <option value="DOMAIN">{t`Domain`}</option>
-              <option value="LAST_RAN">{t`Last Scanned`}</option>
               <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
               <option value="SSL_STATUS">{t`SSL Status`}</option>
               <option value="SPF_STATUS">{t`SPF Status`}</option>
