@@ -629,7 +629,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
           node {
             id
             domain
-            lastRan
             status {
               ciphers
               curves
@@ -696,7 +695,6 @@ export const PAGINATED_DOMAINS = gql`
         node {
           id
           domain
-          lastRan
           status {
             ciphers
             curves

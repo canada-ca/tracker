@@ -9,11 +9,17 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link,
   Select,
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ExternalLinkIcon,
+  SearchIcon,
+} from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -120,8 +126,20 @@ export default function DomainsPage() {
       <InfoPanel state={infoState}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
-          title={t`Policy`}
-          info={t`Shows if the domain is policy compliant.`}
+          title={t`ITPIN`}
+          info={
+            <>
+              <Trans>Shows if the domain is compliant with</Trans>
+              <Link
+                ml="1"
+                href="https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
+                isExternal
+              >
+                ITPIN 2018-01
+                <ExternalLinkIcon mx="2px" />
+              </Link>
+            </>
+          }
         />
         <InfoBox
           title={t`Ciphers`}
@@ -219,7 +237,6 @@ export default function DomainsPage() {
               }}
             >
               <option value="DOMAIN">{t`Domain`}</option>
-              <option value="LAST_RAN">{t`Last Scanned`}</option>
               <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
               <option value="SSL_STATUS">{t`SSL Status`}</option>
               <option value="SPF_STATUS">{t`SPF Status`}</option>
