@@ -2,8 +2,8 @@ version: "3.7"
 services:
   arangodb:
     environment:
-    # - ARANGO_ROOT_PASSWORD=test
-    - ARANGO_NO_AUTH=1
+     - ARANGO_ROOT_PASSWORD=test
+#    - ARANGO_NO_AUTH=1
     image: arangodb
     expose:
       - "8529"
@@ -26,7 +26,7 @@ services:
     - nats
     environment:
       - SUBSCRIBE_TO=domains.>
-      - SERVERS=nats://localhost:4222
+      - NATS_SERVERS=nats://localhost:4222
     volumes:
       - ./counter/:/counter
     network_mode: host
@@ -39,7 +39,7 @@ services:
       replicas: 1
     depends_on:
     - nats
-    - arangodb
+#    - arangodb
     environment:
       - PYTHONASYNCIODEBUG=1
       - DB_USER=root
@@ -47,6 +47,7 @@ services:
       - DB_NAME=track_dmarc
       - DB_URL=http://localhost:8529
       - SUBSCRIBE_TO=domains.*.tls
+      - QUEUE_GROUP=tlsprocessor
       - PUBLISH_TO=domains
       - NATS_SERVERS=nats://localhost:4222
     volumes:
@@ -67,7 +68,8 @@ services:
       - PYTHONWARNINGS=ignore
       - PUBLISH_TO=domains
       - SUBSCRIBE_TO=domains.*
-      - SERVERS=nats://localhost:4222
+      - QUEUE_GROUP=tlsscanner
+      - NATS_SERVERS=nats://localhost:4222
     volumes:
       - ./tls-scanner/:/tls
     network_mode: host
@@ -85,7 +87,7 @@ services:
       - PYTHONASYNCIODEBUG=1
       - PUBLISH_TO=domains
       - SUBSCRIBE_TO=domains.*
-      - QUEUE_GROUP=dns
+      - QUEUE_GROUP=dnsscanner
       - SCAN_TIMEOUT=80
       - NATS_SERVERS=nats://localhost:4222
     volumes:
@@ -100,7 +102,7 @@ services:
       replicas: 1
     depends_on:
     - nats
-    - arangodb
+#    - arangodb
     environment:
       - PYTHONASYNCIODEBUG=1
       - DB_USER=root
@@ -109,6 +111,7 @@ services:
       - DB_URL=http://localhost:8529
       - SUBSCRIBE_TO=domains.*.dns
       - PUBLISH_TO=domains
+      - QUEUE_GROUP=dnsprocessor
       - NATS_SERVERS=nats://localhost:4222
     volumes:
       - ./dns-processor/:/dns
@@ -128,8 +131,8 @@ services:
       - PYTHONWARNINGS=ignore
       - PUBLISH_TO=domains
       - SUBSCRIBE_TO=domains.*
-      - SERVERS=nats://0.0.0.0:4222
-      - QUEUE_GROUP=https-scanner
+      - SERVERS=nats://localhost:4222
+      - QUEUE_GROUP=httpsscanner
       - SCAN_TIMEOUT=5.0
     volumes:
       - ./https-scanner/:/https
@@ -143,13 +146,14 @@ services:
       replicas: 1
     depends_on:
     - nats
-    - arangodb
+#    - arangodb
     environment:
       - DB_USER=root
       - DB_PASS=test
       - DB_NAME=track_dmarc
       - DB_URL=http://localhost:8529
       - SUBSCRIBE_TO=domains.*.https
+      - QUEUE_GROUP=httpsprocessor
       - PUBLISH_TO=domains
       - NATS_SERVERS=nats://localhost:4222
       - PYTHONASYNCIODEBUG=1
@@ -167,10 +171,10 @@ services:
       - DB_NAME=track_dmarc
       - DB_URL=http://arangodb:8529
       - PUBLISH_TO=domains
-      - SERVERS=nats://nats:4222
+      - NATS_SERVERS=nats://localhost:4222
     depends_on:
     - nats
-    - arangodb
+#    - arangodb
     volumes:
       - type: bind
         source: ./domain-dispatcher
