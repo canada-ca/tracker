@@ -28,6 +28,8 @@ const {
     options: databaseOptions({ rootPass }),
   })
 
+  console.log(`Connecting to NATS server: ${NATS_URL}`)
+
   const nc = await connect({ servers: NATS_URL })
 
   const jsm = await nc.jetstreamManager()
