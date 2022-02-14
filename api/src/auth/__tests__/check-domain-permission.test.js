@@ -13,6 +13,8 @@ describe('given the check domain permission function', () => {
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
 
+  const loginRequiredBool = true
+
   beforeAll(() => {
     console.error = mockedError
   })
@@ -96,6 +98,7 @@ describe('given the check domain permission function', () => {
       })
       it('will return true', async () => {
         const testCheckDomainPermission = checkDomainPermission({
+          auth: { loginRequiredBool },
           query,
           userKey: user._key,
         })
@@ -114,6 +117,7 @@ describe('given the check domain permission function', () => {
         })
         it('will return true', async () => {
           const testCheckDomainPermission = checkDomainPermission({
+            auth: { loginRequiredBool },
             query,
             userKey: user._key,
           })
@@ -131,6 +135,7 @@ describe('given the check domain permission function', () => {
         })
         it('will return true', async () => {
           const testCheckDomainPermission = checkDomainPermission({
+            auth: { loginRequiredBool },
             query,
             userKey: user._key,
           })
@@ -146,6 +151,7 @@ describe('given the check domain permission function', () => {
       let permitted
       it('will return false', async () => {
         const testCheckDomainPermission = checkDomainPermission({
+          auth: { loginRequiredBool },
           query: jest
             .fn()
             .mockReturnValueOnce({ count: 0 })
@@ -179,6 +185,7 @@ describe('given the check domain permission function', () => {
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
+              auth: { loginRequiredBool },
               i18n,
               query: mockQuery,
               userKey: 123,
@@ -205,6 +212,7 @@ describe('given the check domain permission function', () => {
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
+              auth: { loginRequiredBool },
               i18n,
               query: mockQuery,
               userKey: 123,
@@ -236,6 +244,7 @@ describe('given the check domain permission function', () => {
             .mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
+              auth: { loginRequiredBool },
               i18n,
               query: mockQuery,
               userKey: 123,
@@ -277,6 +286,7 @@ describe('given the check domain permission function', () => {
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
+              auth: { loginRequiredBool },
               i18n,
               query: mockQuery,
               userKey: 123,
@@ -303,6 +313,7 @@ describe('given the check domain permission function', () => {
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
+              auth: { loginRequiredBool },
               i18n,
               query: mockQuery,
               userKey: 123,
@@ -334,6 +345,7 @@ describe('given the check domain permission function', () => {
             .mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
+              auth: { loginRequiredBool },
               i18n,
               query: mockQuery,
               userKey: 123,
