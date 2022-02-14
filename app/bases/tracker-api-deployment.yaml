@@ -139,6 +139,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: HTTPS_SCANNER_ENDPOINT
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NATS_URL
             - name: SSL_SCANNER_ENDPOINT
               valueFrom:
                 secretKeyRef:
