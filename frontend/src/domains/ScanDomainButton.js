@@ -16,7 +16,7 @@ export function ScanDomainButton({ domain, ...props }) {
 
   const [
     requestScan,
-    { loading: requestScanLoading, error: _requestScanError, data },
+    { loading: requestScanLoading, error: _requestScanError },
   ] = useMutation(REQUEST_SCAN, {
     onError: ({ message }) => {
       toast({
