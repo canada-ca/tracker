@@ -26,14 +26,10 @@ describe('given findDomainByDomain query', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
-  const loginRequiredBool = true
-
   beforeAll(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
@@ -139,7 +135,6 @@ describe('given findDomainByDomain query', () => {
             query: query,
             auth: {
               checkDomainPermission: checkDomainPermission({
-                auth: { loginRequiredBool },
                 query,
                 userKey: user._key,
               }),
