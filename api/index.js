@@ -2,7 +2,6 @@ import './src/env'
 import { ensure } from 'arango-tools'
 import { Server } from './src/server'
 import { databaseOptions } from './database-options'
-import { connect, JSONCodec } from 'nats'
 
 const {
   PORT = 4000,
@@ -16,7 +15,6 @@ const {
   LIST_FACTOR: listFactor,
   TRACING_ENABLED: tracing,
   LOGIN_REQUIRED,
-  NATS_URL,
 } = process.env
 
 ;(async () => {
@@ -27,22 +25,6 @@ const {
     rootPassword: rootPass,
     options: databaseOptions({ rootPass }),
   })
-
-  const nc = await connect({ servers: NATS_URL })
-
-  const jsm = await nc.jetstreamManager()
-
-  await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
-
-  // create a jetstream client:
-  const js = nc.jetstream()
-
-  // eslint-disable-next-line new-cap
-  const jc = JSONCodec()
-
-  const publish = async ({ channel, msg }) => {
-    await js.publish(channel, jc.encode(msg))
-  }
 
   const server = await Server({
     arango: {
@@ -63,13 +45,10 @@ const {
       query,
       collections,
       transaction,
-      publish,
     },
   })
 
-  console.log(
-    `Starting server with "LOGIN_REQUIRED" set to "${LOGIN_REQUIRED}"`,
-  )
+  console.log(`Starting server with "LOGIN_REQUIRED" set to "${LOGIN_REQUIRED}"`)
 
   await server.listen(PORT, (err) => {
     if (err) throw err

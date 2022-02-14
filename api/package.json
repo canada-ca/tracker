@@ -48,7 +48,6 @@
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
-    "nats": "^2.6.0",
     "notifications-node-client": "^5.1.0",
     "subscriptions-transport-ws": "^0.11.0",
     "url-slug": "^3.0.2",

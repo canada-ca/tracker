@@ -159,12 +159,7 @@ const createContextObject = ({ context, req: request, res: response }) => {
         query,
         auth: { loginRequiredBool },
       }),
-      checkDomainPermission: checkDomainPermission({
-        i18n,
-        userKey,
-        query,
-        auth: { loginRequiredBool },
-      }),
+      checkDomainPermission: checkDomainPermission({ i18n, userKey, query }),
       checkOrgOwner: checkOrgOwner({ i18n, userKey, query }),
       checkPermission: checkPermission({ i18n, userKey, query }),
       checkSuperAdmin: checkSuperAdmin({ i18n, userKey, query }),
