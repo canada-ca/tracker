@@ -30,11 +30,27 @@ const {
 
   console.log(`Connecting to NATS server: ${NATS_URL}`)
 
-  const nc = await connect({ servers: NATS_URL })
+  let nc
+  try {
+    nc = await connect({ servers: NATS_URL })
+  } catch (e) {
+    console.error('Error while connecting to NATS server: ', e)
+  }
 
-  const jsm = await nc.jetstreamManager()
+  console.log(`Successfully connected to NATS server: ${NATS_URL}`)
 
-  await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
+  let jsm
+  try {
+    jsm = await nc.jetstreamManager()
+  } catch (e) {
+    console.error('Error while creating jetstreamManager: ', e)
+  }
+
+  try {
+    await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
+  } catch (e) {
+    console.error('Error while adding jetstream stream "domains.*"')
+  }
 
   // create a jetstream client:
   const js = nc.jetstream()
