@@ -100,7 +100,7 @@ def update_dmarc_phase_chart_summaries(db):
 
         if phase is None:
             logging.info(
-                f"Property \"phase\" does not exist for domain \"${domain['domain']}\".")
+                f"Property \"phase\" does not exist for domain \"{domain['domain']}\".")
             continue
 
         if phase == "not implemented":

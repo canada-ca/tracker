@@ -17,7 +17,8 @@ module.exports.dmarcReport = async ({
   const orgAcronyms = Object.keys(ownerships)
 
   // loop through orgs
-  for (const orgAcronymEn of orgAcronyms) {
+  for (const orgAcronym of orgAcronyms) {
+    const orgAcronymEn = orgAcronym.split('-')[0]
     // check if org exists
     const checkOrg = await loadCheckOrg({ orgAcronymEn })
     if (!checkOrg) {
