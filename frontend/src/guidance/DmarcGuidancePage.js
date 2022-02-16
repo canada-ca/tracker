@@ -22,7 +22,6 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
-import { ScanDomainButton } from '../domains/ScanDomainButton'
 
 export default function DmarcGuidancePage() {
   const { domainSlug } = useParams()
@@ -57,13 +56,12 @@ export default function DmarcGuidancePage() {
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>
-        <ScanDomainButton domain={data.findDomainByDomain.domain} ml="auto" />
         {data.findDomainByDomain.hasDMARCReport && (
           <Link
             color="teal.600"
             whiteSpace="noWrap"
             my="auto"
-            ml={4}
+            ml="auto"
             to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             as={RouteLink}
             d="block"

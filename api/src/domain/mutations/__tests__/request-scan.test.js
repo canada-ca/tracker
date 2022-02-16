@@ -21,13 +21,11 @@ require('jest-fetch-mock').enableFetchMocks()
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe.skip('requesting a one time scan', () => {
+describe('requesting a one time scan', () => {
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-
-  const loginRequiredBool = true
 
   let query, drop, truncate, schema, collections, i18n, org, user, domain, org2
 
@@ -145,7 +143,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4: mockUUID,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -212,7 +209,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4: mockUUID,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -279,7 +275,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4: mockUUID,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -341,7 +336,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -433,7 +427,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -498,7 +491,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -569,7 +561,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -633,7 +624,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -698,7 +688,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -788,7 +777,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4: mockUUID,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -855,7 +843,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4: mockUUID,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -922,7 +909,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4: mockUUID,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -984,7 +970,6 @@ describe.skip('requesting a one time scan', () => {
               uuidv4,
               auth: {
                 checkDomainPermission: checkDomainPermission({
-                  auth: { loginRequiredBool },
                   i18n,
                   query,
                   userKey: user._key,
@@ -1076,7 +1061,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -1141,7 +1125,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -1212,7 +1195,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -1276,7 +1258,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
@@ -1341,7 +1322,6 @@ describe.skip('requesting a one time scan', () => {
                 uuidv4,
                 auth: {
                   checkDomainPermission: checkDomainPermission({
-                    auth: { loginRequiredBool },
                     i18n,
                     query,
                     userKey: user._key,
