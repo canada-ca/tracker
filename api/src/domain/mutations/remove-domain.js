@@ -202,9 +202,8 @@ export const removeDomain = new mutationWithClientMutationId({
     if (countCursor.count <= 1) {
       // Remove scan data
       try {
-        await Promise.all([
-          trx.step(async () => {
-            await query`
+        await trx.step(async () => {
+          await query`
               WITH claims, dkim, domains, domainsDKIM, organizations, dkimToDkimResults, dkimResults
               LET domainEdges = (FOR v, e IN 1..1 OUTBOUND ${org._id} claims RETURN { edgeKey: e._key, domainId: e._to })
               FOR domainEdge in domainEdges
@@ -224,7 +223,8 @@ export const removeDomain = new mutationWithClientMutationId({
                   )
               RETURN true
             `
-          }),
+        })
+        await Promise.all([
           trx.step(async () => {
             await query`
               WITH claims, dkim, domains, domainsDKIM, organizations
