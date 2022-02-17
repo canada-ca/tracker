@@ -89,22 +89,10 @@ const upsertSummary =
               categoryPercentages: ${summary.categoryPercentages},
               categoryTotals: ${summary.categoryTotals},
               detailTables: {
-                dkimFailure: UNION_DISTINCT(
-                  summary.detailTables.dkimFailure,
-                  ${summary.detailTables.dkimFailure}
-                ),
-                dmarcFailure: UNION_DISTINCT(
-                  summary.detailTables.dmarcFailure,
-                  ${summary.detailTables.dmarcFailure}
-                ),
-                fullPass: UNION_DISTINCT(
-                  summary.detailTables.fullPass,
-                  ${summary.detailTables.fullPass}
-                ),
-                spfFailure: UNION_DISTINCT(
-                  summary.detailTables.spfFailure,
-                  ${summary.detailTables.spfFailure}
-                ),
+                dkimFailure: ${summary.detailTables.dkimFailure},
+                dmarcFailure: ${summary.detailTables.dmarcFailure},
+                fullPass: ${summary.detailTables.fullPass},
+                spfFailure: ${summary.detailTables.spfFailure},
               },
               totalMessages: ${summary.totalMessages},
             }
