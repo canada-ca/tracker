@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: dmarc-report
-              image: gcr.io/track-compliance/dmarc-report:master-a4b4d03-1645033200 # {"$imagepolicy": "flux-system:dmarc-report"}
+              image: gcr.io/track-compliance/dmarc-report:master-e1d6414-1645125832 # {"$imagepolicy": "flux-system:dmarc-report"}
               env:
                 - name: DB_NAME
                   valueFrom:
