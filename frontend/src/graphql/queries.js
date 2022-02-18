@@ -705,7 +705,6 @@ export const PAGINATED_DOMAINS = gql`
             policy
             protocols
             spf
-            ssl
           }
           hasDMARCReport
           __typename
