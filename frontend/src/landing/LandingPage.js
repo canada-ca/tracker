@@ -5,6 +5,8 @@ import { Trans } from '@lingui/macro'
 
 import { useLingui } from '@lingui/react'
 import { LandingPageSummaries } from './LandingPageSummaries'
+import { MultiGauge } from '../summaries/MultiGauge'
+
 const emailUrlEn = 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27600'
 const itpinUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html'
@@ -75,6 +77,7 @@ export function LandingPage() {
       {document.location.origin !== 'https://tracker.alpha.canada.ca' && (
         <Box pt={7}>
           <LandingPageSummaries />
+          <MultiGauge />
         </Box>
       )}
     </Stack>

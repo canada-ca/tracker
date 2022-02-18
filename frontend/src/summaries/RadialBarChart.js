@@ -9,7 +9,7 @@ import { CrossHatch, Dots, Stripes, ZigZag } from './patterns'
 import { useArcs } from '../utilities/useArcs'
 import trackerLogo from '../images/tracker_v-03.png'
 
-export const Doughnut = ({
+export const RadialBarChart = ({
   id, // id is required as svg defs can conflict
   data,
   height,
@@ -152,7 +152,7 @@ export const Doughnut = ({
   )
 }
 
-Doughnut.propTypes = {
+RadialBarChart.propTypes = {
   id: string.isRequired,
   data: arrayOf(object),
   title: string,
