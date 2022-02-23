@@ -7,11 +7,11 @@ import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
-import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 
@@ -42,16 +42,12 @@ describe('authenticate user account', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
+        type: 'database',
+        name: dbNameFromFile(__filename),
         url,
-      },
-
-      schema: dbschema,
-    }))
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
       tokenize = jest.fn().mockReturnValue('token')
     })
     beforeEach(async () => {

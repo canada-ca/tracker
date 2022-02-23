@@ -1,6 +1,7 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
@@ -8,9 +9,8 @@ import {
   loadHttpsConnectionsByDomainId,
   loadSslConnectionByDomainId,
 } from '../../loaders'
-import { webScanType, httpsConnection, sslConnection } from '../index'
 
-import dbschema from '../../../../database.json'
+import { webScanType, httpsConnection, sslConnection } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -41,16 +41,12 @@ describe('given the web scan gql object', () => {
 
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
+        type: 'database',
+        name: dbNameFromFile(__filename),
         url,
-      },
-
-      schema: dbschema,
-    }))
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

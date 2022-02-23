@@ -11,12 +11,12 @@ import {
   verifiedRequired,
   tfaRequired,
 } from '../../../auth'
+import { databaseOptions } from '../../../../database-options'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
-import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
@@ -53,16 +53,12 @@ describe('invite user to org', () => {
   describe('given a successful invitation', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
+        type: 'database',
+        name: dbNameFromFile(__filename),
         url,
-      },
-
-      schema: dbschema,
-    }))
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
       tokenize = jest.fn().mockReturnValue('token')
     })
     beforeEach(async () => {
