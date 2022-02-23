@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { Server } from '../server'
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { databaseOptions } from '../../database-options'
+import dbschema from '../../database.json'
 
 const {
   DB_PASS: rootPass,
@@ -24,11 +24,14 @@ describe('parse server', () => {
     console.warn = mockedWarn
     // create the database so that middleware can connect
     ;({ drop } = await ensure({
-      type: 'database',
-      name,
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      variables: {
+        dbname: name,
+        username: 'root',
+        rootPassword: rootPass,
+        password: rootPass,
+        url,
+      },
+      schema: dbschema,
     }))
   })
 
@@ -120,7 +123,7 @@ describe('parse server', () => {
                   password: rootPass,
                 },
               },
-              maxDepth,
+              maxDepth: 5,
               complexityCost: 1,
               scalarCost: 100,
               objectCost: 100,

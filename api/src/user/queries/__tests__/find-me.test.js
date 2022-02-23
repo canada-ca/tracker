@@ -2,13 +2,13 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
 import { userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
 import { loadUserByKey } from '../../loaders'
 import { cleanseInput } from '../../../validators'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -23,12 +23,16 @@ describe('given the findMe query', () => {
     })
     // Generate DB Items
     ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
+    variables: {
+      dbname: dbNameFromFile(__filename),
+      username: 'root',
       rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+      password: rootPass,
+      url,
+    },
+
+    schema: dbschema,
+  }))
   })
 
   let consoleOutput = []
