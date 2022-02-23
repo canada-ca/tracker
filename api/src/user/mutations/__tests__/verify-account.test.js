@@ -4,12 +4,12 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
+import dbschema from '../../../../database.json';
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -40,12 +40,16 @@ describe('user send password reset email', () => {
   describe('given a successful validation', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     afterEach(async () => {
       await truncate()

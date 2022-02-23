@@ -5,9 +5,9 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadDmarcConnectionsByDomainId, loadDmarcByKey } from '../index'
+import dbschema from '../../../../database.json';
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -52,12 +52,16 @@ describe('when given the load dmarc connection function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       user = await collections.users.save({

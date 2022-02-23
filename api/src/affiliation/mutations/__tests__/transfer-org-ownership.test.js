@@ -5,13 +5,13 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { checkOrgOwner, userRequired, verifiedRequired } from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
+import dbschema from '../../../../database.json';
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
@@ -59,12 +59,16 @@ describe('given the transferOrgOwnership mutation', () => {
   describe('given a successful transfer', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       org = await collections.organizations.save({

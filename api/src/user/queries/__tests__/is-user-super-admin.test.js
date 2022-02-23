@@ -2,13 +2,13 @@ import { setupI18n } from '@lingui/core'
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 
-import { databaseOptions } from '../../../../database-options'
 import { checkPermission, userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey } from '../../loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
+import dbschema from '../../../../database.json';
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -37,12 +37,16 @@ describe('given the isUserSuperAdmin query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       await collections.users.save({

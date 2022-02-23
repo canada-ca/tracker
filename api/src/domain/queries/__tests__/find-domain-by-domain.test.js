@@ -5,7 +5,6 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -16,6 +15,7 @@ import {
 } from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
+import dbschema from '../../../../database.json';
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -43,12 +43,16 @@ describe('given findDomainByDomain query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       user = await collections.users.save({

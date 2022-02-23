@@ -5,7 +5,6 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -18,6 +17,7 @@ import {
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadAffiliationByKey } from '../../loaders'
+import dbschema from '../../../../database.json';
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -162,12 +162,16 @@ describe('given the removeUserFromOrg mutation', () => {
   describe('given a successful mutation', () => {
     beforeEach(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
       orgOne = await collections.organizations.save(orgOneData)
       orgTwo = await collections.organizations.save(orgTwoData)
       admin = await collections.users.save(adminData)

@@ -1,10 +1,10 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLID, GraphQLList } from 'graphql'
 
-import { databaseOptions } from '../../../../database-options'
 import { dkimResultSubType, dkimSubType } from '../index'
 import { domainType } from '../../../domain/objects'
 import { StatusEnum } from '../../../enums'
+import dbschema from '../../../../database.json';
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -87,12 +87,16 @@ describe('given the dkimSubType object', () => {
 
       beforeAll(async () => {
         ;({ drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
           rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
+      }))
       })
 
       beforeEach(async () => {
