@@ -5,12 +5,12 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadVerifiedDomainConnectionsByOrgId,
   loadVerifiedDomainByKey,
 } from '../../loaders'
-import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -30,16 +30,12 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
+        type: 'database',
+        name: dbNameFromFile(__filename),
         url,
-      },
-
-      schema: dbschema,
-    }))
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({

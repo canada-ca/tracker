@@ -1,10 +1,10 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
+import { databaseOptions } from '../../../database-options'
 import { checkSuperAdmin } from '../check-super-admin'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
-import dbschema from '../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -23,16 +23,12 @@ describe('given the check super admin function', () => {
   describe('given a successful call', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
+        type: 'database',
+        name: dbNameFromFile(__filename),
         url,
-      },
-
-      schema: dbschema,
-    }))
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({

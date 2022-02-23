@@ -75,7 +75,6 @@ steps:
   - SPF_SCAN_CHANNEL=$_SPF_SCAN_CHANNEL
   - SSL_SCAN_CHANNEL=$_SSL_SCAN_CHANNEL
   - HASHING_SALT=$_HASHING_SALT
-  - LOGIN_REQUIRED=false
 
 - name: node:alpine
   id: lingui-extract

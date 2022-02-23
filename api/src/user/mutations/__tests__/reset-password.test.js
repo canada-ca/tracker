@@ -7,12 +7,12 @@ import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
-import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -42,16 +42,12 @@ describe('reset users password', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
+        type: 'database',
+        name: dbNameFromFile(__filename),
         url,
-      },
-
-      schema: dbschema,
-    }))
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
     beforeEach(async () => {
       await graphql(
