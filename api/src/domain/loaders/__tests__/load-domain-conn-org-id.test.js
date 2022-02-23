@@ -7,7 +7,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { loadDomainConnectionsByOrgId, loadDomainByKey } from '../index'
 import { toGlobalId } from 'graphql-relay'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

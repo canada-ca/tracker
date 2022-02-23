@@ -12,7 +12,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const {
   DB_PASS: rootPass,

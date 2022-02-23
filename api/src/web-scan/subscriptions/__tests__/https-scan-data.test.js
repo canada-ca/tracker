@@ -16,7 +16,7 @@ import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { loadDomainByKey } from '../../../domain/loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const {
   REDIS_PORT_NUMBER,

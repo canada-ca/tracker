@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByKey } from '../../loaders'
 import { tokenize } from '../../../auth'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const {
   DB_PASS: rootPass,

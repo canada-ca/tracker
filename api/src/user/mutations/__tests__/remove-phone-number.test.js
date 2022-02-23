@@ -8,7 +8,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { userRequired } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

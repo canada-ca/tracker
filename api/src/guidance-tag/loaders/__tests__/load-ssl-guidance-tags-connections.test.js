@@ -10,7 +10,7 @@ import {
   loadSslGuidanceTagConnectionsByTagId,
   loadSslGuidanceTagByTagId,
 } from '../index'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

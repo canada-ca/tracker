@@ -9,7 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()

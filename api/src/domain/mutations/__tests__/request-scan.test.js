@@ -15,7 +15,7 @@ import {
 import { loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 require('jest-fetch-mock').enableFetchMocks()
 

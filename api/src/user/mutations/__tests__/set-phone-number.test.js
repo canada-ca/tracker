@@ -10,7 +10,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput, decryptPhoneNumber } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()

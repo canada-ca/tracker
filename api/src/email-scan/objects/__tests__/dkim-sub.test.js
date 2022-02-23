@@ -4,7 +4,7 @@ import { GraphQLID, GraphQLList } from 'graphql'
 import { dkimResultSubType, dkimSubType } from '../index'
 import { domainType } from '../../../domain/objects'
 import { StatusEnum } from '../../../enums'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

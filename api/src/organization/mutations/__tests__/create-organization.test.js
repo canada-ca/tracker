@@ -11,7 +11,7 @@ import { cleanseInput, slugify } from '../../../validators'
 import { userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 

@@ -22,7 +22,7 @@ import {
   loadOrgConnectionsByDomainId,
 } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
 

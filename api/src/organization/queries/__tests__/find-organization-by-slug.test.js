@@ -13,7 +13,7 @@ import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug, loadOrgByKey } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

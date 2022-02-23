@@ -11,7 +11,7 @@ import { loadUserByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

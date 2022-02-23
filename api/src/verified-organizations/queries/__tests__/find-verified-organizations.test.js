@@ -10,7 +10,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadVerifiedDomainConnectionsByOrgId } from '../../../verified-domains/loaders'
 import { loadVerifiedOrgConnections } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

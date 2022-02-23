@@ -16,7 +16,7 @@ import {
 } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

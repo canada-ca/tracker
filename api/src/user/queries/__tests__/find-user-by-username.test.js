@@ -10,7 +10,7 @@ import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey, loadUserByUserName } from '../../loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

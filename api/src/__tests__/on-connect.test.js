@@ -4,7 +4,7 @@ import { createContext } from '../create-context'
 import { customOnConnect } from '../on-connect'
 import { verifyToken, tokenize, userRequired } from '../auth'
 import { createI18n } from '../create-i18n'
-import dbschema from '../../database.json';
+import dbschema from '../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

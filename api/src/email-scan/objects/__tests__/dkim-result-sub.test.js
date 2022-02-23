@@ -5,7 +5,7 @@ import { GraphQLJSON } from 'graphql-scalars'
 import { loadDkimGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { dkimResultSubType } from '../index'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

@@ -11,7 +11,7 @@ import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
 import { loadDomainConnectionsByUserId } from '../../loaders'
 import { loadUserByKey } from '../../../user'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

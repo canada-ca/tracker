@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 

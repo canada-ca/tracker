@@ -8,7 +8,7 @@ import { createMutationSchema } from '../../../mutation'
 import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
 import { loadUserByKey } from '../../loaders'
 import { cleanseInput } from '../../../validators'
-import dbschema from '../../../../database.json';
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
