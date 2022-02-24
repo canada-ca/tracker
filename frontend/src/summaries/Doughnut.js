@@ -30,8 +30,6 @@ export const Doughnut = ({
     valueAccessor,
   })
 
-  console.log(arcs)
-
   const patterns = scaleOrdinal().range([
     data[0] ? data[0].color : '#000',
     `url(#stripes-${id})`,
