@@ -232,8 +232,12 @@ export function OrganizationDomains({ orgSlug }) {
             }}
           >
             <option value="DOMAIN">{t`Domain`}</option>
+            <option value="POLICY_STATUS">{t`ITPIN Status`}</option>
             <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
-            <option value="SSL_STATUS">{t`SSL Status`}</option>
+            <option value="HSTS_STATUS">{t`HSTS Status`}</option>
+            <option value="CIPHERS_STATUS">{t`Ciphers Status`}</option>
+            <option value="CURVES_STATUS">{t`Curves Status`}</option>
+            <option value="PROTOCOLS_STATUS">{t`Protocols Status`}</option>
             <option value="SPF_STATUS">{t`SPF Status`}</option>
             <option value="DKIM_STATUS">{t`DKIM Status`}</option>
             <option value="DMARC_STATUS">{t`DMARC Status`}</option>
