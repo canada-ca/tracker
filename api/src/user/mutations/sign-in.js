@@ -90,6 +90,7 @@ export const signIn = new mutationWithClientMutationId({
       for (const property in collections) {
         collectionStrings.push(property.toString())
       }
+      console.debug({collectionStrings, collections})
 
       // Setup Transaction
       const trx = await transaction(collectionStrings)
