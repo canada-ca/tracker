@@ -16,6 +16,39 @@ import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 const mockNotify = jest.fn()
 
 describe('reset users password', () => {
@@ -42,16 +75,16 @@ describe('reset users password', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await graphql(
@@ -80,7 +113,7 @@ describe('reset users password', () => {
         null,
         {
           query,
-          collections,
+          collections: collectionNames,
           transaction,
           jwt,
           uuidv4,
@@ -164,7 +197,7 @@ describe('reset users password', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               bcrypt,
@@ -225,7 +258,7 @@ describe('reset users password', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             jwt,
             response: mockedResponse,
@@ -301,7 +334,7 @@ describe('reset users password', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               bcrypt,
@@ -382,7 +415,7 @@ describe('reset users password', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               bcrypt,
@@ -443,7 +476,7 @@ describe('reset users password', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             uuidv4,
             response: mockedResponse,
@@ -519,7 +552,7 @@ describe('reset users password', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               bcrypt,
@@ -596,7 +629,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -665,7 +698,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -734,7 +767,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -805,7 +838,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -877,7 +910,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -948,7 +981,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -1023,7 +1056,7 @@ describe('reset users password', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -1096,7 +1129,7 @@ describe('reset users password', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest
@@ -1182,7 +1215,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -1251,7 +1284,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -1320,7 +1353,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -1392,7 +1425,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -1464,7 +1497,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -1536,7 +1569,7 @@ describe('reset users password', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 bcrypt,
@@ -1611,7 +1644,7 @@ describe('reset users password', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -1686,7 +1719,7 @@ describe('reset users password', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest

@@ -20,6 +20,39 @@ const {
   REFRESH_TOKEN_EXPIRY,
 } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 describe('refresh users tokens', () => {
   let query, drop, truncate, schema, collections, transaction, user
 
@@ -44,16 +77,16 @@ describe('refresh users tokens', () => {
   describe('given a successful refresh', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     afterEach(async () => {
       await truncate()
@@ -120,7 +153,7 @@ describe('refresh users tokens', () => {
           null,
           {
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             uuidv4,
             jwt,
@@ -223,7 +256,7 @@ describe('refresh users tokens', () => {
           null,
           {
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             uuidv4,
             jwt,
@@ -322,7 +355,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -398,7 +431,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -474,7 +507,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -552,7 +585,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -634,7 +667,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -724,7 +757,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 uuidv4,
                 jwt,
@@ -810,7 +843,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 uuidv4,
                 jwt,
@@ -900,7 +933,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -977,7 +1010,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -1054,7 +1087,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -1133,7 +1166,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -1216,7 +1249,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 uuidv4,
                 jwt,
@@ -1307,7 +1340,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 uuidv4,
                 jwt,
@@ -1395,7 +1428,7 @@ describe('refresh users tokens', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 uuidv4,
                 jwt,

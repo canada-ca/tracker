@@ -85,15 +85,8 @@ export const signIn = new mutationWithClientMutationId({
         ),
       }
     } else {
-      // Generate list of collections names
-      const collectionStrings = []
-      for (const property in collections) {
-        collectionStrings.push(property.toString())
-      }
-      console.debug({collectionStrings, collections})
-
       // Setup Transaction
-      const trx = await transaction(collectionStrings)
+      const trx = await transaction(collections)
 
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {

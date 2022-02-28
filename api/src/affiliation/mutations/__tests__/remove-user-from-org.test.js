@@ -21,6 +21,39 @@ import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 const orgOneData = {
   verified: true,
   summaries: {
@@ -162,16 +195,16 @@ describe('given the removeUserFromOrg mutation', () => {
   describe('given a successful mutation', () => {
     beforeEach(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
       orgOne = await collections.organizations.save(orgOneData)
       orgTwo = await collections.organizations.save(orgTwoData)
       admin = await collections.users.save(adminData)
@@ -226,7 +259,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: admin._key,
               auth: {
@@ -323,7 +356,7 @@ describe('given the removeUserFromOrg mutation', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: admin._key,
                 auth: {
@@ -427,7 +460,7 @@ describe('given the removeUserFromOrg mutation', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: admin._key,
                 auth: {
@@ -519,7 +552,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: admin._key,
               auth: {
@@ -616,7 +649,7 @@ describe('given the removeUserFromOrg mutation', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: admin._key,
                 auth: {
@@ -720,7 +753,7 @@ describe('given the removeUserFromOrg mutation', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: admin._key,
                 auth: {
@@ -830,7 +863,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: admin._key,
               auth: {
@@ -927,7 +960,7 @@ describe('given the removeUserFromOrg mutation', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: admin._key,
                 auth: {
@@ -1031,7 +1064,7 @@ describe('given the removeUserFromOrg mutation', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: admin._key,
                 auth: {
@@ -1141,7 +1174,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1222,7 +1255,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1304,7 +1337,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1386,7 +1419,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1464,7 +1497,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1547,7 +1580,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1630,7 +1663,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1711,7 +1744,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1788,7 +1821,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1869,7 +1902,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
               auth: {
@@ -1950,7 +1983,7 @@ describe('given the removeUserFromOrg mutation', () => {
           {
             i18n,
             query: mockedQuery,
-            collections,
+            collections: collectionNames,
             transaction: mockedTransaction,
             userKey: 123,
             auth: {
@@ -2036,7 +2069,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2117,7 +2150,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2200,7 +2233,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2283,7 +2316,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2361,7 +2394,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2444,7 +2477,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2527,7 +2560,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2608,7 +2641,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2685,7 +2718,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2766,7 +2799,7 @@ describe('given the removeUserFromOrg mutation', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
               auth: {
@@ -2847,7 +2880,7 @@ describe('given the removeUserFromOrg mutation', () => {
           {
             i18n,
             query: mockedQuery,
-            collections,
+            collections: collectionNames,
             transaction: mockedTransaction,
             userKey: 123,
             auth: {

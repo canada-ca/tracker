@@ -164,14 +164,8 @@ export const createDomain = new mutationWithClientMutationId({
     // Check to see if domain already exists in db
     const checkDomain = await loadDomainByDomain.load(insertDomain.domain)
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Transaction
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     let insertedDomainCursor
     if (typeof checkDomain === 'undefined') {

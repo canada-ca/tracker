@@ -167,14 +167,8 @@ export const createOrganization = new mutationWithClientMutationId({
       },
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Trans action
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     let cursor
     try {

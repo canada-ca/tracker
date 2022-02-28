@@ -13,6 +13,39 @@ import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 describe('user send password reset email', () => {
   let query, drop, truncate, collections, transaction, schema, request, i18n
   const consoleOutput = []
@@ -40,16 +73,16 @@ describe('user send password reset email', () => {
   describe('given a successful validation', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     afterEach(async () => {
       await truncate()
@@ -114,7 +147,7 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               verifyToken: verifyToken({}),
@@ -184,7 +217,7 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               verifyToken: verifyToken({}),
@@ -265,7 +298,7 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               verifyToken: verifyToken({}),
@@ -336,7 +369,7 @@ describe('user send password reset email', () => {
             request,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               verifyToken: verifyToken({}),
@@ -406,7 +439,7 @@ describe('user send password reset email', () => {
               request,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 verifyToken: verifyToken({}),
@@ -475,7 +508,7 @@ describe('user send password reset email', () => {
               request,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 verifyToken: verifyToken({}),
@@ -543,7 +576,7 @@ describe('user send password reset email', () => {
               request,
               userKey: 1,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 verifyToken: verifyToken({}),
@@ -607,7 +640,7 @@ describe('user send password reset email', () => {
                 request,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -677,7 +710,7 @@ describe('user send password reset email', () => {
                 request,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest
@@ -763,7 +796,7 @@ describe('user send password reset email', () => {
               request,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 verifyToken: verifyToken({}),
@@ -832,7 +865,7 @@ describe('user send password reset email', () => {
               request,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 verifyToken: verifyToken({}),
@@ -900,7 +933,7 @@ describe('user send password reset email', () => {
               request,
               userKey: 1,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 verifyToken: verifyToken({}),
@@ -964,7 +997,7 @@ describe('user send password reset email', () => {
                 request,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -1036,7 +1069,7 @@ describe('user send password reset email', () => {
                 request,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest

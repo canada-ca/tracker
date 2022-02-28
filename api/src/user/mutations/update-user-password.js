@@ -95,14 +95,8 @@ export const updateUserPassword = new mutationWithClientMutationId({
     // Update password in DB
     const hashedPassword = bcrypt.hashSync(updatedPassword, 10)
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Transaction
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     try {
       await trx.step(

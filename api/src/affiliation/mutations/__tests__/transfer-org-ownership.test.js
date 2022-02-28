@@ -15,6 +15,39 @@ import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 describe('given the transferOrgOwnership mutation', () => {
   let query,
     drop,
@@ -59,16 +92,16 @@ describe('given the transferOrgOwnership mutation', () => {
   describe('given a successful transfer', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       org = await collections.organizations.save({
@@ -151,7 +184,7 @@ describe('given the transferOrgOwnership mutation', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -185,7 +218,7 @@ describe('given the transferOrgOwnership mutation', () => {
         )
 
         const testAffiliationCursor = await query`
-          FOR aff IN affiliations 
+          FOR aff IN affiliations
             FILTER aff._to == ${user._id}
             RETURN aff
         `
@@ -219,7 +252,7 @@ describe('given the transferOrgOwnership mutation', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -253,7 +286,7 @@ describe('given the transferOrgOwnership mutation', () => {
         )
 
         const testAffiliationCursor = await query`
-          FOR aff IN affiliations 
+          FOR aff IN affiliations
             FILTER aff._to == ${user2._id}
             RETURN aff
         `
@@ -300,7 +333,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -394,7 +427,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -494,7 +527,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -568,7 +601,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -645,7 +678,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -718,7 +751,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -789,7 +822,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query: jest.fn().mockReturnValue({ count: 0 }),
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -863,7 +896,7 @@ describe('given the transferOrgOwnership mutation', () => {
               {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('Database error')),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -936,7 +969,7 @@ describe('given the transferOrgOwnership mutation', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
@@ -1010,7 +1043,7 @@ describe('given the transferOrgOwnership mutation', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
@@ -1083,7 +1116,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query: jest.fn().mockReturnValue({ count: 1 }),
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
               auth: {
@@ -1166,7 +1199,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1240,7 +1273,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1317,7 +1350,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1390,7 +1423,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1461,7 +1494,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query: jest.fn().mockReturnValue({ count: 0 }),
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1535,7 +1568,7 @@ describe('given the transferOrgOwnership mutation', () => {
               {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('Database error')),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1608,7 +1641,7 @@ describe('given the transferOrgOwnership mutation', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
@@ -1682,7 +1715,7 @@ describe('given the transferOrgOwnership mutation', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
@@ -1755,7 +1788,7 @@ describe('given the transferOrgOwnership mutation', () => {
             {
               i18n,
               query: jest.fn().mockReturnValue({ count: 1 }),
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
               auth: {

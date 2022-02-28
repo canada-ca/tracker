@@ -17,6 +17,39 @@ import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 describe('testing user sign up', () => {
   let query,
     drop,
@@ -58,16 +91,16 @@ describe('testing user sign up', () => {
   describe('given a successful sign up', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     afterEach(async () => {
       await truncate()
@@ -134,7 +167,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   response: mockedResponse,
                   uuidv4,
@@ -233,7 +266,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -310,7 +343,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   response: mockedResponse,
                   uuidv4,
@@ -409,7 +442,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -522,7 +555,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   response: mockedResponse,
                   uuidv4,
@@ -624,7 +657,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -707,7 +740,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -787,7 +820,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   response: mockedResponse,
                   uuidv4,
@@ -889,7 +922,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -972,7 +1005,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -1070,7 +1103,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   response: mockedResponse,
                   uuidv4,
@@ -1169,7 +1202,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -1246,7 +1279,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   response: mockedResponse,
                   uuidv4,
@@ -1345,7 +1378,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -1458,7 +1491,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   response: mockedResponse,
@@ -1560,7 +1593,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -1643,7 +1676,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -1723,7 +1756,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   response: mockedResponse,
@@ -1825,7 +1858,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -1908,7 +1941,7 @@ describe('testing user sign up', () => {
                 {
                   request,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   uuidv4,
                   auth: {
@@ -2003,7 +2036,7 @@ describe('testing user sign up', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -2083,7 +2116,7 @@ describe('testing user sign up', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -2163,7 +2196,7 @@ describe('testing user sign up', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -2261,7 +2294,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
@@ -2385,7 +2418,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
@@ -2476,7 +2509,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({
                     next: jest.fn().mockRejectedValue('Cursor Error'),
@@ -2584,7 +2617,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('Transaction Step Error'),
                 }),
@@ -2699,7 +2732,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -2806,7 +2839,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
                   commit: jest
@@ -2930,7 +2963,7 @@ describe('testing user sign up', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -3010,7 +3043,7 @@ describe('testing user sign up', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -3090,7 +3123,7 @@ describe('testing user sign up', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -3188,7 +3221,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
@@ -3312,7 +3345,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({
                     next: jest.fn(),
@@ -3403,7 +3436,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({
                     next: jest.fn().mockRejectedValue('Cursor Error'),
@@ -3511,7 +3544,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('Transaction Step Error'),
                 }),
@@ -3626,7 +3659,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -3733,7 +3766,7 @@ describe('testing user sign up', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
                   commit: jest

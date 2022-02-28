@@ -55,14 +55,8 @@ export const leaveOrganization = new mutationWithClientMutationId({
     // check to see if org owner
     const owner = await checkOrgOwner({ orgId: org._id })
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Trans action
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     if (owner) {
       // check to see if org has any dmarc summaries

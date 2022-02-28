@@ -20,6 +20,39 @@ import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 describe('invite user to org', () => {
   let query,
     drop,
@@ -53,16 +86,16 @@ describe('invite user to org', () => {
   describe('given a successful invitation', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
       tokenize = jest.fn().mockReturnValue('token')
     })
     beforeEach(async () => {
@@ -172,7 +205,7 @@ describe('invite user to org', () => {
                     language: 'en',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -269,7 +302,7 @@ describe('invite user to org', () => {
                     language: 'en',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -366,7 +399,7 @@ describe('invite user to org', () => {
                     language: 'en',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -458,7 +491,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -554,7 +587,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -651,7 +684,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -765,7 +798,7 @@ describe('invite user to org', () => {
                     language: 'en',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -862,7 +895,7 @@ describe('invite user to org', () => {
                     language: 'en',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -955,7 +988,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1052,7 +1085,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1209,7 +1242,7 @@ describe('invite user to org', () => {
                     language: 'fr',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1306,7 +1339,7 @@ describe('invite user to org', () => {
                     language: 'fr',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1403,7 +1436,7 @@ describe('invite user to org', () => {
                     language: 'fr',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1496,7 +1529,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1590,7 +1623,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1684,7 +1717,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1795,7 +1828,7 @@ describe('invite user to org', () => {
                     language: 'fr',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1892,7 +1925,7 @@ describe('invite user to org', () => {
                     language: 'fr',
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1985,7 +2018,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2079,7 +2112,7 @@ describe('invite user to org', () => {
                     get: (text) => text,
                   },
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2191,7 +2224,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2273,7 +2306,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2353,7 +2386,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2434,7 +2467,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2515,7 +2548,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2597,7 +2630,7 @@ describe('invite user to org', () => {
                   get: (text) => text,
                 },
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step err'),
                 }),
@@ -2674,7 +2707,7 @@ describe('invite user to org', () => {
                   get: (text) => text,
                 },
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit err'),
@@ -2772,7 +2805,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2854,7 +2887,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -2935,7 +2968,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -3016,7 +3049,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -3097,7 +3130,7 @@ describe('invite user to org', () => {
                 get: (text) => text,
               },
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -3179,7 +3212,7 @@ describe('invite user to org', () => {
                   get: (text) => text,
                 },
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step err'),
                 }),
@@ -3258,7 +3291,7 @@ describe('invite user to org', () => {
                   get: (text) => text,
                 },
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit err'),

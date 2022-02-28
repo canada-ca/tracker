@@ -21,6 +21,39 @@ const {
   REFRESH_TOKEN_EXPIRY,
 } = process.env
 
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 describe('authenticate user account', () => {
   let query, drop, truncate, schema, collections, transaction, mockTokenize
 
@@ -46,16 +79,16 @@ describe('authenticate user account', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     afterEach(async () => {
       await truncate()
@@ -128,7 +161,7 @@ describe('authenticate user account', () => {
           null,
           {
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             uuidv4,
             response: mockedResponse,
@@ -252,7 +285,7 @@ describe('authenticate user account', () => {
           null,
           {
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             uuidv4,
             response: mockedResponse,
@@ -369,7 +402,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -443,7 +476,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -517,7 +550,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -593,7 +626,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -666,7 +699,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -748,7 +781,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
                   commit: jest
@@ -845,7 +878,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -920,7 +953,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -995,7 +1028,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -1072,7 +1105,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               uuidv4,
               auth: {
@@ -1145,7 +1178,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -1229,7 +1262,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
                   commit: jest
