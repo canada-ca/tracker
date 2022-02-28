@@ -52,7 +52,7 @@ const collectionNames = [
 const mockNotfiy = jest.fn()
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, schema, i18n, user, collections, transaction
+  let query, drop, truncate, schema, i18n, user, transaction
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
@@ -75,7 +75,7 @@ describe('authenticate user account', () => {
   describe('given a successful update', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({ query, drop, truncate, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',

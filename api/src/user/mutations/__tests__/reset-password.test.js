@@ -52,7 +52,7 @@ const collectionNames = [
 const mockNotify = jest.fn()
 
 describe('reset users password', () => {
-  let query, drop, truncate, schema, i18n, collections, transaction
+  let query, drop, truncate, schema, i18n, transaction
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -74,7 +74,7 @@ describe('reset users password', () => {
   describe('given a successful reset', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({ query, drop, truncate, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
