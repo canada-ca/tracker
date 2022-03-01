@@ -86,14 +86,8 @@ export const verifyOrganization = new mutationWithClientMutationId({
     // Set org to verified
     currentOrg.verified = true
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Trans action
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     // Upsert new org details
     try {

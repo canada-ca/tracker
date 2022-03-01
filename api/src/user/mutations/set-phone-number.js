@@ -71,14 +71,8 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       tfaSendMethod = 'email'
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Transaction
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     // Insert TFA code into DB
     try {

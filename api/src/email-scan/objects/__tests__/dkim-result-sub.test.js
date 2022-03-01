@@ -2,10 +2,10 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
 import { loadDkimGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { dkimResultSubType } from '../index'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -103,12 +103,16 @@ describe('Given The dkimResultSubType object', () => {
       let query, drop, truncate, collections, dkimGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
           rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
+      }))
       })
       beforeEach(async () => {
         await truncate()
@@ -182,12 +186,16 @@ describe('Given The dkimResultSubType object', () => {
       let query, drop, truncate, collections, dkimGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
           rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
+      }))
       })
       beforeEach(async () => {
         await truncate()
@@ -261,12 +269,16 @@ describe('Given The dkimResultSubType object', () => {
       let query, drop, truncate, collections, dkimGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
           rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
+      }))
       })
       beforeEach(async () => {
         await truncate()

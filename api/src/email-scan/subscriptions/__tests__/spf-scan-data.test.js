@@ -12,11 +12,11 @@ import {
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
 import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { loadDomainByKey } from '../../../domain/loaders'
+import dbschema from '../../../../database.json'
 
 const {
   REDIS_PORT_NUMBER,
@@ -64,12 +64,16 @@ describe('given the spfScanData subscription', () => {
 
     // Generate DB Items
     ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
+    variables: {
+      dbname: dbNameFromFile(__filename),
+      username: 'root',
       rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+      password: rootPass,
+      url,
+    },
+
+    schema: dbschema,
+  }))
 
     publisherClient = new Redis(options)
     subscriberClient = new Redis(options)

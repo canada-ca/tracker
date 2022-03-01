@@ -141,14 +141,8 @@ export const updateUserProfile = new mutationWithClientMutationId({
       emailValidated,
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Transaction
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     try {
       await trx.step(

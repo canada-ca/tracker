@@ -559,11 +559,14 @@ export const getTypeNames = () => gql`
 
   # Properties by which domain connections can be ordered.
   enum DomainOrderField {
+    # Order domains by ciphers status.
+    CIPHERS_STATUS
+
+    # Order domains by curves status.
+    CURVES_STATUS
+
     # Order domains by domain.
     DOMAIN
-
-    # Order domains by last ran.
-    LAST_RAN
 
     # Order domains by dkim status.
     DKIM_STATUS
@@ -574,11 +577,17 @@ export const getTypeNames = () => gql`
     # Order domains by https status.
     HTTPS_STATUS
 
+    # Order domains by hsts status.
+    HSTS_STATUS
+
+    # Order domains by ITPIN policy status.
+    POLICY_STATUS
+
+    # Order domains by protocols status.
+    PROTOCOLS_STATUS
+
     # Order domains by spf status.
     SPF_STATUS
-
-    # Order domains by ssl status.
-    SSL_STATUS
   }
 
   # Possible directions in which to order a list of items when provided an \`orderBy\` argument.

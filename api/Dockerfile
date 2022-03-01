@@ -13,7 +13,7 @@ RUN npm install
 
 COPY ./src ./src
 COPY ./index.js .
-COPY ./database-options.js .
+COPY ./database.json .
 COPY ./.env.example .
 
 RUN npm run build
@@ -29,7 +29,7 @@ COPY --from=builder /app/package.json .
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.env.example .
 COPY --from=builder /app/index.js .
-COPY --from=builder /app/database-options.js .
+COPY --from=builder /app/database.json .
 COPY --from=builder /app/dist ./dist
 
 USER node

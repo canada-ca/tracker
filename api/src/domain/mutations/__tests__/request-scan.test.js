@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import {
@@ -16,6 +15,7 @@ import {
 import { loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
+import dbschema from '../../../../database.json'
 
 require('jest-fetch-mock').enableFetchMocks()
 
@@ -36,12 +36,16 @@ describe('requesting a one time scan', () => {
       mutation: createMutationSchema(),
     })
     ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
+    variables: {
+      dbname: dbNameFromFile(__filename),
+      username: 'root',
       rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
+      password: rootPass,
+      url,
+    },
+
+    schema: dbschema,
+  }))
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError

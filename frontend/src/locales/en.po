@@ -336,6 +336,11 @@ msgstr "Check your associated Tracker email for the verification link"
 msgid "Ciphers"
 msgstr "Ciphers"
 
+#: src/domains/DomainsPage.js:243
+#: src/organizationDetails/OrganizationDomains.js:238
+msgid "Ciphers Status"
+msgstr "Ciphers Status"
+
 #: src/createOrganization/CreateOrganizationPage.js:203
 #: src/createOrganization/CreateOrganizationPage.js:208
 msgid "City"
@@ -505,6 +510,11 @@ msgstr "Current Phone Number:"
 msgid "Curves"
 msgstr "Curves"
 
+#: src/domains/DomainsPage.js:244
+#: src/organizationDetails/OrganizationDomains.js:239
+msgid "Curves Status"
+msgstr "Curves Status"
+
 #: src/domains/DomainsPage.js:169
 #: src/organizationDetails/OrganizationDomains.js:165
 msgid "DKIM"
@@ -543,8 +553,8 @@ msgstr "DKIM Selectors"
 msgid "DKIM Selectors:"
 msgstr "DKIM Selectors:"
 
-#: src/domains/DomainsPage.js:243
-#: src/organizationDetails/OrganizationDomains.js:238
+#: src/domains/DomainsPage.js:247
+#: src/organizationDetails/OrganizationDomains.js:242
 msgid "DKIM Status"
 msgstr "DKIM Status"
 
@@ -589,8 +599,8 @@ msgstr "DMARC Report"
 msgid "DMARC Report for {domainSlug}"
 msgstr "DMARC Report for {domainSlug}"
 
-#: src/domains/DomainsPage.js:244
-#: src/organizationDetails/OrganizationDomains.js:239
+#: src/domains/DomainsPage.js:248
+#: src/organizationDetails/OrganizationDomains.js:243
 msgid "DMARC Status"
 msgstr "DMARC Status"
 
@@ -979,6 +989,11 @@ msgstr "HSTS"
 msgid "HSTS Age:"
 msgstr "HSTS Age:"
 
+#: src/domains/DomainsPage.js:242
+#: src/organizationDetails/OrganizationDomains.js:237
+msgid "HSTS Status"
+msgstr "HSTS Status"
+
 #: src/guidance/ScanCategoryDetails.js:79
 msgid "HSTS Status:"
 msgstr "HSTS Status:"
@@ -1002,8 +1017,8 @@ msgstr "HTTPS Configured"
 msgid "HTTPS Scan Complete"
 msgstr "HTTPS Scan Complete"
 
-#: src/domains/DomainsPage.js:240
-#: src/organizationDetails/OrganizationDomains.js:235
+#: src/domains/DomainsPage.js:241
+#: src/organizationDetails/OrganizationDomains.js:236
 msgid "HTTPS Status"
 msgstr "HTTPS Status"
 
@@ -1042,6 +1057,11 @@ msgstr "ITPIN"
 #: src/domains/ScanDomain.js:320
 msgid "ITPIN Compliant"
 msgstr "ITPIN Compliant"
+
+#: src/domains/DomainsPage.js:240
+#: src/organizationDetails/OrganizationDomains.js:235
+msgid "ITPIN Status"
+msgstr "ITPIN Status"
 
 #: src/domains/ScanDomain.js:120
 #: src/guidance/ScanCard.js:31
@@ -1613,6 +1633,11 @@ msgstr "Privacy Notice Statement"
 msgid "Protocols"
 msgstr "Protocols"
 
+#: src/domains/DomainsPage.js:245
+#: src/organizationDetails/OrganizationDomains.js:240
+msgid "Protocols Status"
+msgstr "Protocols Status"
+
 #: src/createOrganization/CreateOrganizationPage.js:214
 #: src/createOrganization/CreateOrganizationPage.js:219
 msgid "Province"
@@ -1723,8 +1748,8 @@ msgstr "SPF Failures by IP Address"
 msgid "SPF Results"
 msgstr "SPF Results"
 
-#: src/domains/DomainsPage.js:242
-#: src/organizationDetails/OrganizationDomains.js:237
+#: src/domains/DomainsPage.js:246
+#: src/organizationDetails/OrganizationDomains.js:241
 msgid "SPF Status"
 msgstr "SPF Status"
 
@@ -1734,8 +1759,8 @@ msgstr "SSL Scan Complete"
 
 #: src/domains/DomainsPage.js:241
 #: src/organizationDetails/OrganizationDomains.js:236
-msgid "SSL Status"
-msgstr "SSL Status"
+#~ msgid "SSL Status"
+#~ msgstr "SSL Status"
 
 #: src/app/RequestScanNotificationHandler.js:73
 msgid "SSL scan for domain \"{0}\" has completed."
