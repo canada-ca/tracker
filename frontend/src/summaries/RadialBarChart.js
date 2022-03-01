@@ -6,15 +6,15 @@ import { t } from '@lingui/macro'
 import { useD3 } from '../utilities/useD3'
 import { Box } from '@chakra-ui/react'
 
-export function RadialBarChart({ data, height = 500, width = 600 }) {
+export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
   const ref = useD3(
     (svg) => {
-      const chartRadius = height / 2 - 40
+      const chartRadius = height / 2
       const PI = Math.PI
-      const arcMinRadius = 80
-      const arcPadding = 10
+      const arcMinRadius = chartRadius / 3
+      const arcPadding = 20
       const maxPercentage = 0.75
-      const labelPadding = -260
+      const labelPadding = -width / 2 + 40
 
       const { colors } = theme
       const color = d3
@@ -74,7 +74,7 @@ export function RadialBarChart({ data, height = 500, width = 600 }) {
       radialAxis
         .append('text')
         .attr('x', labelPadding)
-        .attr('y', (_d, i) => -getOuterRadius(i) + arcPadding + 2)
+        .attr('y', (_d, i) => -getOuterRadius(i) + arcPadding / 1.5)
         .text(
           (d) =>
             `${categoryDisplay[d.name].name}: ${
@@ -177,12 +177,7 @@ export function RadialBarChart({ data, height = 500, width = 600 }) {
   )
 
   return (
-    <Box
-      align="center"
-      justifyContent="center"
-      borderWidth="1"
-      borderColor="primary"
-    >
+    <Box {...props} align="center">
       <svg ref={ref} />
     </Box>
   )

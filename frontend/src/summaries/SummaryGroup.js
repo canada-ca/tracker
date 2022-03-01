@@ -6,7 +6,6 @@ import { object } from 'prop-types'
 import { SummaryCard } from './SummaryCard'
 
 import theme from '../theme/canada'
-import { RadialBarChart } from './RadialBarChart'
 
 export function SummaryGroup({ https, dmarcPhases }) {
   const { colors } = theme
@@ -41,37 +40,39 @@ export function SummaryGroup({ https, dmarcPhases }) {
   )
 
   const dmarcPhaseCard = dmarcPhases ? (
-    // <SummaryCard
-    //   id="dmarcPhases"
-    //   title={t`DMARC Phases`}
-    //   description={t`DMARC phase summary`}
-    //   categoryDisplay={{
-    //     'not implemented': { name: t`0. Not Implemented`, color: colors.weak },
-    //     assess: {
-    //       name: t`1. Assess`,
-    //       color: colors.weak,
-    //     },
-    //     deploy: {
-    //       name: t`2. Deploy`,
-    //       color: colors.moderateAlt,
-    //     },
-    //     enforce: {
-    //       name: t`3. Enforce`,
-    //       color: colors.moderate,
-    //     },
-    //     maintain: {
-    //       name: t`4. Maintain`,
-    //       color: colors.strong,
-    //     },
-    //     unscanned: {
-    //       name: t`Unscanned`,
-    //       color: colors.gray['400'],
-    //     },
-    //   }}
-    //   data={dmarcPhases}
-    //   mb={{ base: 6, md: 0 }}
-    // />
-    <RadialBarChart data={dmarcPhases.categories} />
+    <SummaryCard
+      id="dmarcPhases"
+      title={t`DMARC Phases`}
+      description={t`DMARC phase summary`}
+      categoryDisplay={{
+        'not implemented': {
+          name: t`0. Not Implemented`,
+          color: colors.weak,
+        },
+        assess: {
+          name: t`1. Assess`,
+          color: colors.weak,
+        },
+        deploy: {
+          name: t`2. Deploy`,
+          color: colors.moderateAlt,
+        },
+        enforce: {
+          name: t`3. Enforce`,
+          color: colors.moderate,
+        },
+        maintain: {
+          name: t`4. Maintain`,
+          color: colors.strong,
+        },
+        unscanned: {
+          name: t`Unscanned`,
+          color: colors.gray['400'],
+        },
+      }}
+      data={dmarcPhases}
+      mb={{ base: 6, md: 0 }}
+    />
   ) : (
     <Text fontWeight="bold" textAlign="center">
       <Trans>No DMARC phase information available for this organization.</Trans>
