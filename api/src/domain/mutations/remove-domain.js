@@ -140,14 +140,8 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Trans action
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     if (dmarcCountCursor.count === 1) {
       try {

@@ -3,7 +3,6 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
@@ -12,8 +11,42 @@ import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('removing an organization', () => {
   let query, drop, truncate, schema, collections, transaction, user, i18n
@@ -53,11 +86,15 @@ describe('removing an organization', () => {
     })
     beforeEach(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
@@ -198,7 +235,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -263,7 +300,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -323,7 +360,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -390,7 +427,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -448,7 +485,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -530,7 +567,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -588,7 +625,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -661,7 +698,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -719,7 +756,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -801,7 +838,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -859,7 +896,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -939,7 +976,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1025,7 +1062,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1154,7 +1191,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1219,7 +1256,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1279,7 +1316,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1346,7 +1383,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1404,7 +1441,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1486,7 +1523,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1544,7 +1581,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1617,7 +1654,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1639,7 +1676,7 @@ describe('removing an organization', () => {
               },
             )
 
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
 
             const testDkimResultCursor =
               await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
@@ -1675,7 +1712,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1757,7 +1794,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1779,9 +1816,9 @@ describe('removing an organization', () => {
               },
             )
 
-              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+            await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor = 
+            const domainCursor =
               await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
@@ -1815,7 +1852,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1895,7 +1932,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1981,7 +2018,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2099,7 +2136,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2122,7 +2159,7 @@ describe('removing an organization', () => {
             )
 
             await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
-              await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
+            await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
 
             const testDmarcSummaryCursor =
               await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
@@ -2164,7 +2201,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2224,7 +2261,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2291,7 +2328,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2349,7 +2386,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2431,7 +2468,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2455,7 +2492,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor = 
+            const domainCursor =
               await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
@@ -2489,7 +2526,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2562,7 +2599,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2620,7 +2657,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2702,7 +2739,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2726,7 +2763,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor = 
+            const domainCursor =
               await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
@@ -2760,7 +2797,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2840,7 +2877,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2926,7 +2963,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -3017,7 +3054,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -3084,7 +3121,7 @@ describe('removing an organization', () => {
                   {
                     i18n,
                     query,
-                    collections,
+                    collections: collectionNames,
                     transaction,
                     userKey: 123,
                     auth: {
@@ -3176,7 +3213,7 @@ describe('removing an organization', () => {
                   {
                     i18n,
                     query,
-                    collections,
+                    collections: collectionNames,
                     transaction,
                     userKey: 123,
                     auth: {
@@ -3274,7 +3311,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -3367,7 +3404,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -3462,7 +3499,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -3555,7 +3592,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -3651,7 +3688,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -3748,7 +3785,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -3845,7 +3882,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -3945,7 +3982,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -4050,7 +4087,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -4156,7 +4193,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -4252,7 +4289,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
               auth: {
@@ -4352,7 +4389,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -4420,7 +4457,7 @@ describe('removing an organization', () => {
                   {
                     i18n,
                     query,
-                    collections,
+                    collections: collectionNames,
                     transaction,
                     userKey: 123,
                     auth: {
@@ -4512,7 +4549,7 @@ describe('removing an organization', () => {
                   {
                     i18n,
                     query,
-                    collections,
+                    collections: collectionNames,
                     transaction,
                     userKey: 123,
                     auth: {
@@ -4610,7 +4647,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -4703,7 +4740,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -4798,7 +4835,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -4891,7 +4928,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -4987,7 +5024,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -5084,7 +5121,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -5181,7 +5218,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -5281,7 +5318,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -5386,7 +5423,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -5492,7 +5529,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -5588,7 +5625,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query: mockedQuery,
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
               auth: {

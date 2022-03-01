@@ -5,15 +5,48 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { checkOrgOwner, userRequired, verifiedRequired } from '../../../auth'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('given a successful leave', () => {
   let query,
@@ -56,11 +89,15 @@ describe('given a successful leave', () => {
   })
   beforeEach(async () => {
     ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
+        rootPassword: rootPass,
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
     }))
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
@@ -195,7 +232,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -280,7 +317,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -358,7 +395,7 @@ describe('given a successful leave', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -449,7 +486,7 @@ describe('given a successful leave', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -537,7 +574,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -627,7 +664,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -742,7 +779,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -827,7 +864,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -901,7 +938,7 @@ describe('given a successful leave', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -985,7 +1022,7 @@ describe('given a successful leave', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -1044,7 +1081,7 @@ describe('given a successful leave', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -1078,7 +1115,7 @@ describe('given a successful leave', () => {
         const testOrgCursor = await query`
           FOR org IN organizations
             OPTIONS { waitForSync: true }
-            FILTER org.orgDetails.en.slug != "treasury-board-secretariat-2" 
+            FILTER org.orgDetails.en.slug != "treasury-board-secretariat-2"
             RETURN org
         `
         const testOrg = await testOrgCursor.next()
@@ -1130,7 +1167,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1220,7 +1257,7 @@ describe('given a successful leave', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1310,7 +1347,7 @@ describe('given a successful leave', () => {
         {
           i18n,
           query,
-          collections,
+          collections: collectionNames,
           transaction,
           userKey: user._key,
           auth: {
@@ -1383,7 +1420,7 @@ describe('given a successful leave', () => {
         {
           i18n,
           query,
-          collections,
+          collections: collectionNames,
           transaction,
           userKey: user._key,
           auth: {
@@ -1467,7 +1504,7 @@ describe('given a successful leave', () => {
         {
           i18n,
           query,
-          collections,
+          collections: collectionNames,
           transaction,
           userKey: user._key,
           auth: {
@@ -1531,7 +1568,7 @@ describe('given a successful leave', () => {
         {
           i18n,
           query,
-          collections,
+          collections: collectionNames,
           transaction,
           userKey: user._key,
           auth: {
@@ -1607,7 +1644,7 @@ describe('given a successful leave', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -1693,7 +1730,7 @@ describe('given a successful leave', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {

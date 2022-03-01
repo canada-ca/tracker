@@ -7,19 +7,52 @@ import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 const mockNotfiy = jest.fn()
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, schema, i18n, user, collections, transaction
+  let query, drop, truncate, schema, i18n, user, transaction
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
@@ -42,12 +75,16 @@ describe('authenticate user account', () => {
   describe('given a successful update', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+      ;({ query, drop, truncate, transaction } = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
     })
     beforeEach(async () => {
@@ -77,7 +114,7 @@ describe('authenticate user account', () => {
         null,
         {
           query,
-          collections,
+          collections: collectionNames,
           transaction,
           jwt,
           uuidv4,
@@ -157,7 +194,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -217,7 +254,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             uuidv4,
             auth: {
@@ -295,7 +332,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             userKey: user._key,
             auth: {
@@ -355,7 +392,7 @@ describe('authenticate user account', () => {
           {
             i18n,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             uuidv4,
             auth: {
@@ -436,7 +473,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -501,7 +538,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -566,7 +603,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -632,7 +669,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -696,7 +733,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest
@@ -776,7 +813,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -841,7 +878,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -906,7 +943,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -972,7 +1009,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -1038,7 +1075,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest

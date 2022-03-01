@@ -4,13 +4,46 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { userRequired } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('testing the removePhoneNumber mutation', () => {
   let query, drop, truncate, schema, i18n, collections, transaction, user
@@ -38,11 +71,15 @@ describe('testing the removePhoneNumber mutation', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
     })
     afterEach(async () => {
@@ -101,7 +138,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -149,7 +186,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -188,7 +225,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -227,7 +264,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -281,7 +318,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -329,7 +366,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -368,7 +405,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -407,7 +444,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -477,7 +514,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -525,7 +562,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -564,7 +601,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -603,7 +640,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -657,7 +694,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -705,7 +742,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -744,7 +781,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -783,7 +820,7 @@ describe('testing the removePhoneNumber mutation', () => {
             null,
             {
               i18n,
-              collections,
+              collections: collectionNames,
               query,
               transaction,
               auth: {
@@ -852,7 +889,7 @@ describe('testing the removePhoneNumber mutation', () => {
               null,
               {
                 i18n,
-                collections,
+                collections: collectionNames,
                 query,
                 transaction: mockedTransaction,
                 auth: {
@@ -906,7 +943,7 @@ describe('testing the removePhoneNumber mutation', () => {
               null,
               {
                 i18n,
-                collections,
+                collections: collectionNames,
                 query,
                 transaction: mockedTransaction,
                 auth: {
@@ -975,7 +1012,7 @@ describe('testing the removePhoneNumber mutation', () => {
               null,
               {
                 i18n,
-                collections,
+                collections: collectionNames,
                 query,
                 transaction: mockedTransaction,
                 auth: {
@@ -1029,7 +1066,7 @@ describe('testing the removePhoneNumber mutation', () => {
               null,
               {
                 i18n,
-                collections,
+                collections: collectionNames,
                 query,
                 transaction: mockedTransaction,
                 auth: {

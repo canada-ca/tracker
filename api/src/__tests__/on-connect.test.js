@@ -4,7 +4,7 @@ import { createContext } from '../create-context'
 import { customOnConnect } from '../on-connect'
 import { verifyToken, tokenize, userRequired } from '../auth'
 import { createI18n } from '../create-i18n'
-import { databaseOptions } from '../../database-options'
+import dbschema from '../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -116,12 +116,16 @@ describe('given the customOnConnect function', () => {
 
     beforeAll(async () => {
       ;({ query, drop, truncate } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
 
     afterEach(async () => {

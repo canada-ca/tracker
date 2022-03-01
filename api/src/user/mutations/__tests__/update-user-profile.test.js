@@ -6,14 +6,47 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('authenticate user account', () => {
   let query, drop, truncate, collections, transaction, schema, i18n
@@ -41,11 +74,15 @@ describe('authenticate user account', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
     })
     beforeEach(async () => {
@@ -110,7 +147,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -186,7 +223,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               request: {
@@ -265,7 +302,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               request: {
@@ -344,7 +381,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 request: {
@@ -416,7 +453,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 request: {
@@ -484,7 +521,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -587,7 +624,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -688,7 +725,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -774,7 +811,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -858,7 +895,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -943,7 +980,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1034,7 +1071,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1111,7 +1148,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 request: {
@@ -1190,7 +1227,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 request: {
@@ -1269,7 +1306,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   request: {
                     get: jest.fn().mockReturnValue('domain.ca'),
@@ -1341,7 +1378,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   request: {
                     get: jest.fn().mockReturnValue('domain.ca'),
@@ -1410,7 +1447,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -1513,7 +1550,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1614,7 +1651,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1700,7 +1737,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1784,7 +1821,7 @@ describe('authenticate user account', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1869,7 +1906,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1957,7 +1994,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction: jest.fn(),
               userKey: 123,
               auth: {
@@ -2032,7 +2069,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -2105,7 +2142,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest
@@ -2190,7 +2227,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction: jest.fn(),
               userKey: 123,
               auth: {
@@ -2266,7 +2303,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -2341,7 +2378,7 @@ describe('authenticate user account', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest

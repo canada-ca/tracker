@@ -98,14 +98,8 @@ export const closeAccount = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to close account. Please try again.`))
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Trans action
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     // loop through each found org
     for (const affiliation of orgOwnerAffiliationCheck) {

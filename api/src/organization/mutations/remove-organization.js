@@ -87,14 +87,8 @@ export const removeOrganization = new mutationWithClientMutationId({
       }
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Trans action
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     // check to see if org has any dmarc summaries
     let dmarcSummaryCheckCursor
