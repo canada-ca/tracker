@@ -45,7 +45,10 @@ export function SummaryGroup({ https, dmarcPhases }) {
       title={t`DMARC Phases`}
       description={t`DMARC phase summary`}
       categoryDisplay={{
-        'not implemented': { name: t`0. Not Implemented`, color: colors.weak },
+        'not implemented': {
+          name: t`0. Not Implemented`,
+          color: colors.weak,
+        },
         assess: {
           name: t`1. Assess`,
           color: colors.weak,

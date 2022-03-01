@@ -1,6 +1,6 @@
 import React from 'react'
 import { arrayOf, func, number, object, string } from 'prop-types'
-import { Box, Image, Text } from '@chakra-ui/react'
+import { Box, Image, Stack, Text } from '@chakra-ui/react'
 import { scaleOrdinal } from 'd3'
 import { Trans } from '@lingui/macro'
 
@@ -16,9 +16,9 @@ export const Doughnut = ({
   width,
   title,
   valueAccessor = (d) => d,
-  innerRadius = Math.ceil(width / 3.5),
+  innerRadius = Math.ceil(width / 2.8),
   outerRadius = Math.ceil(width / 2.2),
-  padAngle = 0.05,
+  padAngle = 0.025,
   children,
   ...rest
 }) => {
@@ -100,7 +100,7 @@ export const Doughnut = ({
 
   return (
     <div {...rest}>
-      {chartContent}
+      <Box my="4">{chartContent}</Box>
       {arcs.map(({ title, count, percentage }, index) => {
         if (percentage % 1 >= 0.5) {
           percentage = Math.ceil(percentage)
@@ -108,12 +108,14 @@ export const Doughnut = ({
           percentage = Math.floor(percentage)
         }
         return (
-          <Box
+          <Stack
+            isInline
+            borderTop={index === 0 && '1px'}
+            textAlign="left"
+            align="center"
             key={`legend:${index}`}
-            backgroundColor="primary"
-            px="2"
+            px="4"
             py={arcs.length > 2 ? '2' : '5'}
-            mx="auto"
             overflow="hidden"
           >
             <svg
@@ -135,15 +137,14 @@ export const Doughnut = ({
             </svg>
             <p
               style={{
-                color: '#fff',
+                color: 'black',
                 fontWeight: 'bold',
-                backgroundColor: '#2e2e40',
                 display: 'inline',
               }}
             >
               {`${title}: ${count} - ${percentage}% `}
             </p>
-          </Box>
+          </Stack>
         )
       })}
     </div>

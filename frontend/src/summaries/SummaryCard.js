@@ -13,34 +13,29 @@ export function SummaryCard({
 }) {
   return (
     <Box
-      bg="primary"
       rounded="lg"
       overflow="hidden"
-      boxShadow="medium"
-      width="min-content"
-      height="auto"
+      borderWidth="1px"
+      borderColor="black"
+      width={{ md: '100%', lg: '45%' }}
       {...props}
     >
-      <Box bg="primary" px="8">
+      <Box px="8">
         <Text
           fontSize="xl"
           fontWeight="semibold"
-          textAlign="center"
-          color="white"
+          textAlign="left"
+          color="primary"
+          my="2"
         >
           {title}
         </Text>
-        <Text
-          fontSize="md"
-          textAlign="center"
-          color="white"
-          wordBreak="break-word"
-        >
+        <Text fontSize="md" wordBreak="break-word" mb="2">
           {description}
         </Text>
       </Box>
 
-      <Box width="boxes.2" bg="white">
+      <Box align="center" borderTop="1px" borderColor="black">
         <Doughnut
           id={title.replace(/ /g, '')} // id is required as svg defs can conflict
           title={title}
