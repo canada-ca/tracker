@@ -21,23 +21,28 @@ msgstr ", et"
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ". Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du"
 
-#: src/summaries/SummaryGroup.js:48
+#: src/summaries/RadialBarChart.js:25
+#: src/summaries/SummaryGroup.js:49
 msgid "0. Not Implemented"
 msgstr "0. Non mis en œuvre"
 
-#: src/summaries/SummaryGroup.js:50
+#: src/summaries/RadialBarChart.js:27
+#: src/summaries/SummaryGroup.js:53
 msgid "1. Assess"
 msgstr "1. Évaluez"
 
-#: src/summaries/SummaryGroup.js:54
+#: src/summaries/RadialBarChart.js:31
+#: src/summaries/SummaryGroup.js:57
 msgid "2. Deploy"
 msgstr "2. Déployer"
 
-#: src/summaries/SummaryGroup.js:58
+#: src/summaries/RadialBarChart.js:35
+#: src/summaries/SummaryGroup.js:61
 msgid "3. Enforce"
 msgstr "3. Appliquer"
 
-#: src/summaries/SummaryGroup.js:62
+#: src/summaries/RadialBarChart.js:39
+#: src/summaries/SummaryGroup.js:65
 msgid "4. Maintain"
 msgstr "4. Maintenir"
 
@@ -49,7 +54,7 @@ msgstr "404 - Page non trouvée"
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "Une ventilation plus détaillée de chaque domaine peut être trouvée en cliquant sur son adresse dans la première colonne."
 
-#: src/auth/CreateUserPage.js:97
+#: src/auth/CreateUserPage.js:98
 msgid "A verification link has been sent to your email account"
 msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
 
@@ -87,7 +92,7 @@ msgstr "Compte clôturé avec succès"
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
-#: src/auth/CreateUserPage.js:59
+#: src/auth/CreateUserPage.js:60
 msgid "Account created."
 msgstr "Compte créé"
 
@@ -210,7 +215,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/UserListModal.js:47
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:57
-#: src/organizationDetails/OrganizationDetails.js:59
+#: src/organizationDetails/OrganizationDetails.js:61
 #: src/user/UserPage.js:85
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
@@ -235,7 +240,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer définitivement l'organisation \"{0
 msgid "Are you sure you wish to leave {0}? You will have to be invited back in to access it."
 msgstr "Etes-vous sûr de vouloir quitter {0} ? Vous devrez être réinvité pour y accéder."
 
-#: src/organizationDetails/OrganizationDetails.js:222
+#: src/organizationDetails/OrganizationDetails.js:239
 msgid "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 msgstr "Êtes-vous sûr de vouloir quitter {orgName}? Vous devrez être réinvité pour y accéder."
 
@@ -256,8 +261,7 @@ msgstr "Authentifier"
 msgid "BETA"
 msgstr "BETA"
 
-#: src/auth/CreateUserPage.js:194
-#: src/auth/ForgotPasswordPage.js:90
+#: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:236
 msgid "Back"
 msgstr "Retour"
@@ -278,17 +282,17 @@ msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos service
 msgid "CCS Injection Vulnerability:"
 msgstr "Vulnérabilité d'injection de CCS:"
 
-#: src/landing/LandingPage.js:35
+#: src/landing/LandingPage.js:36
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
 #: src/admin/OrganizationInformation.js:627
-#: src/organizationDetails/OrganizationDetails.js:230
+#: src/organizationDetails/OrganizationDetails.js:247
 #: src/user/UserPage.js:294
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/auth/ResetPasswordPage.js:112
+#: src/auth/ResetPasswordPage.js:126
 #: src/user/EditableUserPassword.js:143
 msgid "Change Password"
 msgstr "Changer le mot de passe"
@@ -392,7 +396,7 @@ msgstr "Conforme"
 #: src/admin/OrganizationInformation.js:642
 #: src/admin/UserList.js:283
 #: src/admin/UserListModal.js:234
-#: src/organizationDetails/OrganizationDetails.js:245
+#: src/organizationDetails/OrganizationDetails.js:262
 #: src/user/EditableUserDisplayName.js:163
 #: src/user/EditableUserEmail.js:158
 #: src/user/EditableUserPassword.js:172
@@ -406,7 +410,7 @@ msgstr "Confirmer"
 msgid "Confirm New Password:"
 msgstr "Confirmer le nouveau mot de passe:"
 
-#: src/components/fields/PasswordConfirmation.js:141
+#: src/components/fields/PasswordConfirmation.js:137
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe:"
 
@@ -430,9 +434,9 @@ msgstr "Nous contacter"
 
 #: src/app/ContactUsPage.js:9
 msgid "Contact the Tracker Team"
-msgstr "Contacter l'équipe Tracker"
+msgstr "Contacter l'équipe Suivi"
 
-#: src/auth/CreateUserPage.js:119
+#: src/auth/CreateUserPage.js:120
 #: src/auth/EmailValidationPage.js:88
 msgid "Continue"
 msgstr "Continuer"
@@ -465,7 +469,7 @@ msgstr "Pays:"
 
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:92
-#: src/auth/CreateUserPage.js:203
+#: src/auth/CreateUserPage.js:225
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -480,8 +484,8 @@ msgid "Create an Account"
 msgstr "Créer un compte"
 
 #: src/auth/CreateUserPage.js:166
-msgid "Create an account by entering an email and password."
-msgstr "Créez un compte en entrant un courriel et un mot de passe."
+#~ msgid "Create an account by entering an email and password."
+#~ msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
 #: src/createOrganization/CreateOrganizationPage.js:142
 msgid "Create an organization"
@@ -585,6 +589,7 @@ msgstr "Défaillances du DMARC par adresse IP"
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
+#: src/organizationDetails/OrganizationDetails.js:176
 #: src/summaries/SummaryGroup.js:45
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
@@ -734,10 +739,14 @@ msgstr "Domaine:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:82
 #: src/domains/DomainsPage.js:116
-#: src/organizationDetails/OrganizationDetails.js:174
+#: src/organizationDetails/OrganizationDetails.js:179
 #: src/organizationDetails/OrganizationDomains.js:82
 msgid "Domains"
 msgstr "Domaines"
+
+#: src/auth/SignInPage.js:192
+msgid "Don't have an account? <0>Sign up</0>"
+msgstr "Vous n'avez pas de compte ? <0>S'inscrire</0>"
 
 #: src/user/EditableUserDisplayName.js:104
 #: src/user/EditableUserEmail.js:99
@@ -840,7 +849,7 @@ msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ
 msgid "Enter and confirm your new password below:"
 msgstr "Entrez et confirmez votre nouveau mot de passe ci-dessous:"
 
-#: src/auth/ResetPasswordPage.js:100
+#: src/auth/ResetPasswordPage.js:110
 msgid "Enter and confirm your new password."
 msgstr "Entrez et confirmez votre nouveau mot de passe."
 
@@ -848,7 +857,7 @@ msgstr "Entrez et confirmez votre nouveau mot de passe."
 msgid "Enter two factor code"
 msgstr "Entrez le code à deux facteurs"
 
-#: src/auth/ForgotPasswordPage.js:70
+#: src/auth/ForgotPasswordPage.js:80
 msgid "Enter your user account's verified email address and we will send you a password reset link."
 msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
 
@@ -904,10 +913,11 @@ msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique:"
 
 #: src/app/App.js:204
+#: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
-#: src/auth/SignInPage.js:163
+#: src/auth/SignInPage.js:176
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -1079,7 +1089,7 @@ msgstr "Si, à tout moment, vous ou vos représentants souhaitez adapter ou annu
 
 #: src/guidance/GuidanceTagList.js:93
 msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
-msgstr "Si vous pensez que cela est dû à un problème avec Tracker, veuillez utiliser le lien \"Signaler un problème\" ci-dessous"
+msgstr "Si vous pensez que cela est dû à un problème avec Suivi, veuillez utiliser le lien \"Signaler un problème\" ci-dessous"
 
 #: src/guidance/ScanCategoryDetails.js:67
 msgid "Implementation:"
@@ -1106,7 +1116,7 @@ msgid "Incorrect inviteUserToOrg.result typename."
 msgstr "Incorrect inviteUserToOrg.result typename."
 
 #: src/admin/OrganizationInformation.js:234
-#: src/organizationDetails/OrganizationDetails.js:92
+#: src/organizationDetails/OrganizationDetails.js:94
 msgid "Incorrect leaveOrganization.result typename."
 msgstr "Incorrect leaveOrganization.result typename."
 
@@ -1128,12 +1138,12 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/OrganizationInformation.js:232
 #: src/admin/UserListModal.js:77
 #: src/admin/UserListModal.js:126
-#: src/auth/CreateUserPage.js:77
+#: src/auth/CreateUserPage.js:78
 #: src/auth/ResetPasswordPage.js:60
 #: src/auth/SignInPage.js:99
 #: src/auth/TwoFactorAuthenticatePage.js:77
 #: src/createOrganization/CreateOrganizationPage.js:87
-#: src/organizationDetails/OrganizationDetails.js:90
+#: src/organizationDetails/OrganizationDetails.js:92
 #: src/user/EditableUserDisplayName.js:70
 #: src/user/EditableUserEmail.js:70
 #: src/user/EditableUserLanguage.js:51
@@ -1153,7 +1163,7 @@ msgstr "Incorrect setPhoneNumber.result typename."
 msgid "Incorrect signIn.result typename."
 msgstr "Nom d'utilisateur incorrect signIn.result."
 
-#: src/auth/CreateUserPage.js:78
+#: src/auth/CreateUserPage.js:79
 msgid "Incorrect signUp.result typename."
 msgstr "Incorrect signUp.result typename."
 
@@ -1268,10 +1278,14 @@ msgstr "Les 30 derniers jours"
 
 #: src/admin/OrganizationInformation.js:325
 #: src/admin/OrganizationInformation.js:615
-#: src/organizationDetails/OrganizationDetails.js:164
-#: src/organizationDetails/OrganizationDetails.js:218
+#: src/organizationDetails/OrganizationDetails.js:166
+#: src/organizationDetails/OrganizationDetails.js:235
 msgid "Leave Organization"
 msgstr "Organisation des congés"
+
+#: src/auth/CreateUserPage.js:180
+msgid "Let's get you set up so you can verify your account information and begin using Tracker."
+msgstr "Nous allons vous configurer pour que vous puissiez vérifier les informations de votre compte et commencer à utiliser Suivi."
 
 #: src/termsConditions/TermsConditionsPage.js:281
 msgid "Limitation of Liability"
@@ -1284,6 +1298,14 @@ msgstr "Chargement des données..."
 #: src/components/LoadingMessage.js:18
 msgid "Loading {children}..."
 msgstr "Chargement {children}..."
+
+#: src/auth/SignInPage.js:142
+msgid "Login"
+msgstr "Connexion"
+
+#: src/auth/SignInPage.js:147
+msgid "Login to your account"
+msgstr "Connectez-vous à votre compte"
 
 #: src/utilities/months.js:6
 msgid "March"
@@ -1368,7 +1390,7 @@ msgstr "Suivant"
 msgid "No"
 msgstr "Non"
 
-#: src/summaries/SummaryGroup.js:75
+#: src/summaries/SummaryGroup.js:78
 msgid "No DMARC phase information available for this organization."
 msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organisation."
 
@@ -1463,7 +1485,7 @@ msgstr "Novembre"
 msgid "October"
 msgstr "Octobre"
 
-#: src/organizationDetails/OrganizationDetails.js:114
+#: src/organizationDetails/OrganizationDetails.js:116
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
 
@@ -1481,7 +1503,7 @@ msgid "Organization created"
 msgstr "Organisation créée"
 
 #: src/admin/OrganizationInformation.js:212
-#: src/organizationDetails/OrganizationDetails.js:70
+#: src/organizationDetails/OrganizationDetails.js:72
 msgid "Organization left successfully"
 msgstr "L'organisation est partie avec succès"
 
@@ -1517,8 +1539,8 @@ msgstr "Page {0} de {1}"
 msgid "Pass"
 msgstr "Passez"
 
-#: src/components/fields/PasswordConfirmation.js:82
-#: src/components/fields/PasswordConfirmation.js:120
+#: src/components/fields/PasswordConfirmation.js:81
+#: src/components/fields/PasswordConfirmation.js:117
 #: src/components/fields/PasswordField.js:29
 msgid "Password"
 msgstr "Mot de passe"
@@ -1543,7 +1565,7 @@ msgstr "La confirmation du mot de passe ne peut pas être vide"
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
 
-#: src/components/fields/PasswordConfirmation.js:140
+#: src/components/fields/PasswordConfirmation.js:136
 #: src/components/fields/PasswordField.js:46
 #: src/user/EditableUserPassword.js:89
 msgid "Password:"
@@ -1591,9 +1613,9 @@ msgstr "Veuillez entrer votre mot de passe actuel."
 msgid "Please enter your two factor code below."
 msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 
-#: src/auth/CreateUserPage.js:104
+#: src/auth/CreateUserPage.js:105
 msgid "Please follow the link in order to verify your account and start using Tracker."
-msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à utiliser Tracker."
+msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à utiliser Suivi."
 
 #: src/domains/DomainCard.js:54
 #: src/domains/DomainsPage.js:123
@@ -1655,12 +1677,16 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
+#: src/auth/CreateUserPage.js:172
+msgid "Register"
+msgstr "Registre"
+
 #: src/domains/ScanDomain.js:128
 #: src/guidance/ScanCard.js:39
 msgid "Reject all messages from non-mail domains."
 msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
 
-#: src/auth/SignInPage.js:152
+#: src/auth/SignInPage.js:165
 msgid "Remember me"
 msgstr "Rappelle-toi de moi"
 
@@ -1967,7 +1993,7 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 #: src/app/App.js:181
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:82
-#: src/auth/SignInPage.js:175
+#: src/auth/SignInPage.js:188
 msgid "Sign In"
 msgstr "Se connecter"
 
@@ -1987,8 +2013,8 @@ msgid "Sign Out."
 msgstr "Déconnexion."
 
 #: src/auth/SignInPage.js:137
-msgid "Sign in with your username and password."
-msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
+#~ msgid "Sign in with your username and password."
+#~ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
 #: src/app/App.js:96
 msgid "Skip to main content"
@@ -2016,7 +2042,7 @@ msgstr "Ciphers forts:"
 msgid "Strong Curves:"
 msgstr "Courbes fortes:"
 
-#: src/auth/ForgotPasswordPage.js:86
+#: src/auth/ForgotPasswordPage.js:97
 #: src/auth/TwoFactorAuthenticatePage.js:124
 msgid "Submit"
 msgstr "Soumettre"
@@ -2025,7 +2051,7 @@ msgstr "Soumettre"
 msgid "Successfully removed user {0}."
 msgstr "L'utilisateur {0} a été supprimé."
 
-#: src/organizationDetails/OrganizationDetails.js:171
+#: src/organizationDetails/OrganizationDetails.js:173
 msgid "Summary"
 msgstr "Résumé"
 
@@ -2068,7 +2094,7 @@ msgstr "Conditions d'utilisation"
 
 #: src/termsConditions/TermsConditionsPage.js:286
 msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
-msgstr "Les conseils, orientations ou services qui vous sont fournis par le SCT le seront “tels quels“, sans garantie ni déclaration d'aucune sorte, et le SCT ne pourra être tenu responsable de toute perte, responsabilité, dommage ou coût, y compris la perte de données ou les interruptions d'activité découlant de la fourniture de ces conseils, orientations ou services par Tracker. Par conséquent, TBS recommande aux utilisateurs d'exercer leur propre compétence et leur propre prudence en ce qui concerne l'utilisation des conseils, orientations et services fournis par Tracker."
+msgstr "Les conseils, orientations ou services qui vous sont fournis par le SCT le seront “tels quels“, sans garantie ni déclaration d'aucune sorte, et le SCT ne pourra être tenu responsable de toute perte, responsabilité, dommage ou coût, y compris la perte de données ou les interruptions d'activité découlant de la fourniture de ces conseils, orientations ou services par Suivi. Par conséquent, TBS recommande aux utilisateurs d'exercer leur propre compétence et leur propre prudence en ce qui concerne l'utilisation des conseils, orientations et services fournis par Suivi."
 
 #: src/dmarc/DmarcByDomainPage.js:297
 #: src/domains/DomainsPage.js:127
@@ -2078,7 +2104,7 @@ msgstr "L'adresse du domaine."
 
 #: src/termsConditions/TermsConditionsPage.js:142
 msgid "The graphics displayed on the Tracker website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada’s approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs."
-msgstr "Les graphiques affichés sur le site Web de Tracker ne peuvent pas être utilisés, en tout ou en partie, en relation avec une entreprise, des produits ou des services, ou autrement utilisés, d'une manière susceptible de faire croire que ce produit d'entreprise, ce service ou cette autre utilisation, a reçu l'approbation du gouvernement du Canada et ne peuvent pas être copiés, reproduits, imités ou utilisés, en tout ou en partie, sans l'autorisation écrite préalable de tbs."
+msgstr "Les graphiques affichés sur le site Web de Suivi ne peuvent pas être utilisés, en tout ou en partie, en relation avec une entreprise, des produits ou des services, ou autrement utilisés, d'une manière susceptible de faire croire que ce produit d'entreprise, ce service ou cette autre utilisation, a reçu l'approbation du gouvernement du Canada et ne peuvent pas être copiés, reproduits, imités ou utilisés, en tout ou en partie, sans l'autorisation écrite préalable de tbs."
 
 #: src/termsConditions/TermsConditionsPage.js:153
 msgid "The material available on this web site is subject to the"
@@ -2140,7 +2166,7 @@ msgstr "Total des messages"
 msgid "Total users"
 msgstr "total des utilisateurs"
 
-#: src/landing/LandingPage.js:31
+#: src/landing/LandingPage.js:32
 msgid "Track Digital Security"
 msgstr "Suivre la sécurité numérique"
 
@@ -2172,7 +2198,7 @@ msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 msgid "Unable to close the account."
 msgstr "Impossible de fermer le compte."
 
-#: src/auth/CreateUserPage.js:68
+#: src/auth/CreateUserPage.js:69
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
@@ -2184,7 +2210,7 @@ msgstr "Impossible de créer un nouveau domaine."
 msgid "Unable to create new organization."
 msgstr "Impossible de créer une nouvelle organisation."
 
-#: src/auth/CreateUserPage.js:39
+#: src/auth/CreateUserPage.js:40
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
@@ -2193,7 +2219,7 @@ msgid "Unable to invite user."
 msgstr "Impossible d'inviter un utilisateur."
 
 #: src/admin/OrganizationInformation.js:223
-#: src/organizationDetails/OrganizationDetails.js:81
+#: src/organizationDetails/OrganizationDetails.js:83
 msgid "Unable to leave organization."
 msgstr "Impossible de quitter l'organisation."
 
@@ -2276,8 +2302,9 @@ msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez rée
 msgid "Unable to verify your phone number, please try again."
 msgstr "Impossible de vérifier votre numéro de téléphone, veuillez réessayer."
 
+#: src/summaries/RadialBarChart.js:43
 #: src/summaries/SummaryGroup.js:27
-#: src/summaries/SummaryGroup.js:66
+#: src/summaries/SummaryGroup.js:69
 msgid "Unscanned"
 msgstr "Non balayé"
 
@@ -2297,7 +2324,7 @@ msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer prog
 
 #: src/termsConditions/TermsConditionsPage.js:190
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
-msgstr "L'utilisation de la propriété intellectuelle en violation du présent accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Tracker."
+msgstr "L'utilisation de la propriété intellectuelle en violation du présent accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Suivi."
 
 #: src/organizationDetails/OrganizationAffiliations.js:39
 msgid "User Affiliations"
@@ -2328,7 +2355,7 @@ msgid "User:"
 msgstr "Utilisateur:"
 
 #: src/admin/AdminPanel.js:28
-#: src/organizationDetails/OrganizationDetails.js:178
+#: src/organizationDetails/OrganizationDetails.js:183
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -2402,7 +2429,11 @@ msgstr "Résultats de l'analyse du Web"
 msgid "Web Sites and Services Management Configuration Requirements Compliant"
 msgstr "Gestion des sites et services Web - Exigences de configuration conformes"
 
-#: src/auth/CreateUserPage.js:60
+#: src/auth/CreateUserPage.js:177
+msgid "Welcome to Tracker, please enter your details."
+msgstr "Bienvenue sur Suivi, veuillez entrer vos coordonnées."
+
+#: src/auth/CreateUserPage.js:61
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
@@ -2439,7 +2470,7 @@ msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
 
 #: src/admin/OrganizationInformation.js:213
-#: src/organizationDetails/OrganizationDetails.js:71
+#: src/organizationDetails/OrganizationDetails.js:73
 msgid "You have successfully left {orgSlug}"
 msgstr "Vous avez quitté {orgSlug} avec succès."
 
@@ -2481,7 +2512,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 
 #: src/termsConditions/TermsConditionsPage.js:253
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
-msgstr "Vous aurez besoin d'un compte Tracker pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
+msgstr "Vous aurez besoin d'un compte Suivi pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
 #: src/app/App.js:319
 msgid "Your Account"

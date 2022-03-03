@@ -1,6 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Heading, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Text, useToast } from '@chakra-ui/react'
 import { object, ref, string } from 'yup'
 import { Formik } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
@@ -72,7 +72,7 @@ export default function ResetPasswordPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="4" mx="auto" overflow="hidden">
+    <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -96,13 +96,27 @@ export default function ResetPasswordPage() {
             aria-label="form"
             name="form"
           >
-            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
-              <Trans>Enter and confirm your new password.</Trans>
+            <Heading
+              as="h1"
+              fontSize="3xl"
+              mb="8"
+              textAlign={{ lg: 'left', md: 'center' }}
+            >
+              Reset Password
             </Heading>
 
-            <PasswordConfirmation mb={4} />
+            <Box mb="8">
+              <Text fontSize="lg" mb="2">
+                <Trans>Enter and confirm your new password.</Trans>
+              </Text>
+            </Box>
+
+            <Box w={{ md: '100%', lg: '33%' }}>
+              <PasswordConfirmation mb="4" />
+            </Box>
 
             <Button
+              w={['100%', '33%']}
               type="submit"
               isLoading={isSubmitting}
               id="submitBtn"

@@ -21,23 +21,28 @@ msgstr ", and"
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 
-#: src/summaries/SummaryGroup.js:48
+#: src/summaries/RadialBarChart.js:25
+#: src/summaries/SummaryGroup.js:49
 msgid "0. Not Implemented"
 msgstr "0. Not Implemented"
 
-#: src/summaries/SummaryGroup.js:50
+#: src/summaries/RadialBarChart.js:27
+#: src/summaries/SummaryGroup.js:53
 msgid "1. Assess"
 msgstr "1. Assess"
 
-#: src/summaries/SummaryGroup.js:54
+#: src/summaries/RadialBarChart.js:31
+#: src/summaries/SummaryGroup.js:57
 msgid "2. Deploy"
 msgstr "2. Deploy"
 
-#: src/summaries/SummaryGroup.js:58
+#: src/summaries/RadialBarChart.js:35
+#: src/summaries/SummaryGroup.js:61
 msgid "3. Enforce"
 msgstr "3. Enforce"
 
-#: src/summaries/SummaryGroup.js:62
+#: src/summaries/RadialBarChart.js:39
+#: src/summaries/SummaryGroup.js:65
 msgid "4. Maintain"
 msgstr "4. Maintain"
 
@@ -49,7 +54,7 @@ msgstr "404 - Page Not Found"
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 
-#: src/auth/CreateUserPage.js:97
+#: src/auth/CreateUserPage.js:98
 msgid "A verification link has been sent to your email account"
 msgstr "A verification link has been sent to your email account"
 
@@ -87,7 +92,7 @@ msgstr "Account Closed Successfully"
 msgid "Account Settings"
 msgstr "Account Settings"
 
-#: src/auth/CreateUserPage.js:59
+#: src/auth/CreateUserPage.js:60
 msgid "Account created."
 msgstr "Account created."
 
@@ -210,7 +215,7 @@ msgstr "An error occurred while verifying your phone number."
 #: src/admin/UserListModal.js:47
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:57
-#: src/organizationDetails/OrganizationDetails.js:59
+#: src/organizationDetails/OrganizationDetails.js:61
 #: src/user/UserPage.js:85
 msgid "An error occurred."
 msgstr "An error occurred."
@@ -235,7 +240,7 @@ msgstr "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgid "Are you sure you wish to leave {0}? You will have to be invited back in to access it."
 msgstr "Are you sure you wish to leave {0}? You will have to be invited back in to access it."
 
-#: src/organizationDetails/OrganizationDetails.js:222
+#: src/organizationDetails/OrganizationDetails.js:239
 msgid "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 msgstr "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 
@@ -256,8 +261,7 @@ msgstr "Authenticate"
 msgid "BETA"
 msgstr "BETA"
 
-#: src/auth/CreateUserPage.js:194
-#: src/auth/ForgotPasswordPage.js:90
+#: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:236
 msgid "Back"
 msgstr "Back"
@@ -278,17 +282,17 @@ msgstr "By accessing, browsing, or using our website or our services, you acknow
 msgid "CCS Injection Vulnerability:"
 msgstr "CCS Injection Vulnerability:"
 
-#: src/landing/LandingPage.js:35
+#: src/landing/LandingPage.js:36
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
 #: src/admin/OrganizationInformation.js:627
-#: src/organizationDetails/OrganizationDetails.js:230
+#: src/organizationDetails/OrganizationDetails.js:247
 #: src/user/UserPage.js:294
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/auth/ResetPasswordPage.js:112
+#: src/auth/ResetPasswordPage.js:126
 #: src/user/EditableUserPassword.js:143
 msgid "Change Password"
 msgstr "Change Password"
@@ -392,7 +396,7 @@ msgstr "Compliant"
 #: src/admin/OrganizationInformation.js:642
 #: src/admin/UserList.js:283
 #: src/admin/UserListModal.js:234
-#: src/organizationDetails/OrganizationDetails.js:245
+#: src/organizationDetails/OrganizationDetails.js:262
 #: src/user/EditableUserDisplayName.js:163
 #: src/user/EditableUserEmail.js:158
 #: src/user/EditableUserPassword.js:172
@@ -406,7 +410,7 @@ msgstr "Confirm"
 msgid "Confirm New Password:"
 msgstr "Confirm New Password:"
 
-#: src/components/fields/PasswordConfirmation.js:141
+#: src/components/fields/PasswordConfirmation.js:137
 msgid "Confirm Password:"
 msgstr "Confirm Password:"
 
@@ -432,7 +436,7 @@ msgstr "Contact Us"
 msgid "Contact the Tracker Team"
 msgstr "Contact the Tracker Team"
 
-#: src/auth/CreateUserPage.js:119
+#: src/auth/CreateUserPage.js:120
 #: src/auth/EmailValidationPage.js:88
 msgid "Continue"
 msgstr "Continue"
@@ -465,7 +469,7 @@ msgstr "Country:"
 
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:92
-#: src/auth/CreateUserPage.js:203
+#: src/auth/CreateUserPage.js:225
 msgid "Create Account"
 msgstr "Create Account"
 
@@ -480,8 +484,8 @@ msgid "Create an Account"
 msgstr "Create an Account"
 
 #: src/auth/CreateUserPage.js:166
-msgid "Create an account by entering an email and password."
-msgstr "Create an account by entering an email and password."
+#~ msgid "Create an account by entering an email and password."
+#~ msgstr "Create an account by entering an email and password."
 
 #: src/createOrganization/CreateOrganizationPage.js:142
 msgid "Create an organization"
@@ -585,6 +589,7 @@ msgstr "DMARC Failures by IP Address"
 msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
+#: src/organizationDetails/OrganizationDetails.js:176
 #: src/summaries/SummaryGroup.js:45
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
@@ -734,10 +739,14 @@ msgstr "Domain:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:82
 #: src/domains/DomainsPage.js:116
-#: src/organizationDetails/OrganizationDetails.js:174
+#: src/organizationDetails/OrganizationDetails.js:179
 #: src/organizationDetails/OrganizationDomains.js:82
 msgid "Domains"
 msgstr "Domains"
+
+#: src/auth/SignInPage.js:192
+msgid "Don't have an account? <0>Sign up</0>"
+msgstr "Don't have an account? <0>Sign up</0>"
 
 #: src/user/EditableUserDisplayName.js:104
 #: src/user/EditableUserEmail.js:99
@@ -840,7 +849,7 @@ msgstr "Enter \"{userName}\" below to confirm removal. This field is case-sensit
 msgid "Enter and confirm your new password below:"
 msgstr "Enter and confirm your new password below:"
 
-#: src/auth/ResetPasswordPage.js:100
+#: src/auth/ResetPasswordPage.js:110
 msgid "Enter and confirm your new password."
 msgstr "Enter and confirm your new password."
 
@@ -848,7 +857,7 @@ msgstr "Enter and confirm your new password."
 msgid "Enter two factor code"
 msgstr "Enter two factor code"
 
-#: src/auth/ForgotPasswordPage.js:70
+#: src/auth/ForgotPasswordPage.js:80
 msgid "Enter your user account's verified email address and we will send you a password reset link."
 msgstr "Enter your user account's verified email address and we will send you a password reset link."
 
@@ -904,10 +913,11 @@ msgid "For technical implementation guidance:"
 msgstr "For technical implementation guidance:"
 
 #: src/app/App.js:204
+#: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Forgot Password"
 
-#: src/auth/SignInPage.js:163
+#: src/auth/SignInPage.js:176
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
@@ -1106,7 +1116,7 @@ msgid "Incorrect inviteUserToOrg.result typename."
 msgstr "Incorrect inviteUserToOrg.result typename."
 
 #: src/admin/OrganizationInformation.js:234
-#: src/organizationDetails/OrganizationDetails.js:92
+#: src/organizationDetails/OrganizationDetails.js:94
 msgid "Incorrect leaveOrganization.result typename."
 msgstr "Incorrect leaveOrganization.result typename."
 
@@ -1128,12 +1138,12 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/OrganizationInformation.js:232
 #: src/admin/UserListModal.js:77
 #: src/admin/UserListModal.js:126
-#: src/auth/CreateUserPage.js:77
+#: src/auth/CreateUserPage.js:78
 #: src/auth/ResetPasswordPage.js:60
 #: src/auth/SignInPage.js:99
 #: src/auth/TwoFactorAuthenticatePage.js:77
 #: src/createOrganization/CreateOrganizationPage.js:87
-#: src/organizationDetails/OrganizationDetails.js:90
+#: src/organizationDetails/OrganizationDetails.js:92
 #: src/user/EditableUserDisplayName.js:70
 #: src/user/EditableUserEmail.js:70
 #: src/user/EditableUserLanguage.js:51
@@ -1153,7 +1163,7 @@ msgstr "Incorrect setPhoneNumber.result typename."
 msgid "Incorrect signIn.result typename."
 msgstr "Incorrect signIn.result typename."
 
-#: src/auth/CreateUserPage.js:78
+#: src/auth/CreateUserPage.js:79
 msgid "Incorrect signUp.result typename."
 msgstr "Incorrect signUp.result typename."
 
@@ -1268,10 +1278,14 @@ msgstr "Last 30 Days"
 
 #: src/admin/OrganizationInformation.js:325
 #: src/admin/OrganizationInformation.js:615
-#: src/organizationDetails/OrganizationDetails.js:164
-#: src/organizationDetails/OrganizationDetails.js:218
+#: src/organizationDetails/OrganizationDetails.js:166
+#: src/organizationDetails/OrganizationDetails.js:235
 msgid "Leave Organization"
 msgstr "Leave Organization"
+
+#: src/auth/CreateUserPage.js:180
+msgid "Let's get you set up so you can verify your account information and begin using Tracker."
+msgstr "Let's get you set up so you can verify your account information and begin using Tracker."
 
 #: src/termsConditions/TermsConditionsPage.js:281
 msgid "Limitation of Liability"
@@ -1284,6 +1298,14 @@ msgstr "Loading Data..."
 #: src/components/LoadingMessage.js:18
 msgid "Loading {children}..."
 msgstr "Loading {children}..."
+
+#: src/auth/SignInPage.js:142
+msgid "Login"
+msgstr "Login"
+
+#: src/auth/SignInPage.js:147
+msgid "Login to your account"
+msgstr "Login to your account"
 
 #: src/utilities/months.js:6
 msgid "March"
@@ -1368,7 +1390,7 @@ msgstr "Next"
 msgid "No"
 msgstr "No"
 
-#: src/summaries/SummaryGroup.js:75
+#: src/summaries/SummaryGroup.js:78
 msgid "No DMARC phase information available for this organization."
 msgstr "No DMARC phase information available for this organization."
 
@@ -1463,7 +1485,7 @@ msgstr "November"
 msgid "October"
 msgstr "October"
 
-#: src/organizationDetails/OrganizationDetails.js:114
+#: src/organizationDetails/OrganizationDetails.js:116
 msgid "Organization Details"
 msgstr "Organization Details"
 
@@ -1481,7 +1503,7 @@ msgid "Organization created"
 msgstr "Organization created"
 
 #: src/admin/OrganizationInformation.js:212
-#: src/organizationDetails/OrganizationDetails.js:70
+#: src/organizationDetails/OrganizationDetails.js:72
 msgid "Organization left successfully"
 msgstr "Organization left successfully"
 
@@ -1517,8 +1539,8 @@ msgstr "Page {0} of {1}"
 msgid "Pass"
 msgstr "Pass"
 
-#: src/components/fields/PasswordConfirmation.js:82
-#: src/components/fields/PasswordConfirmation.js:120
+#: src/components/fields/PasswordConfirmation.js:81
+#: src/components/fields/PasswordConfirmation.js:117
 #: src/components/fields/PasswordField.js:29
 msgid "Password"
 msgstr "Password"
@@ -1543,7 +1565,7 @@ msgstr "Password confirmation cannot be empty"
 msgid "Password must be at least 12 characters long"
 msgstr "Password must be at least 12 characters long"
 
-#: src/components/fields/PasswordConfirmation.js:140
+#: src/components/fields/PasswordConfirmation.js:136
 #: src/components/fields/PasswordField.js:46
 #: src/user/EditableUserPassword.js:89
 msgid "Password:"
@@ -1591,7 +1613,7 @@ msgstr "Please enter your current password."
 msgid "Please enter your two factor code below."
 msgstr "Please enter your two factor code below."
 
-#: src/auth/CreateUserPage.js:104
+#: src/auth/CreateUserPage.js:105
 msgid "Please follow the link in order to verify your account and start using Tracker."
 msgstr "Please follow the link in order to verify your account and start using Tracker."
 
@@ -1655,12 +1677,16 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
+#: src/auth/CreateUserPage.js:172
+msgid "Register"
+msgstr "Register"
+
 #: src/domains/ScanDomain.js:128
 #: src/guidance/ScanCard.js:39
 msgid "Reject all messages from non-mail domains."
 msgstr "Reject all messages from non-mail domains."
 
-#: src/auth/SignInPage.js:152
+#: src/auth/SignInPage.js:165
 msgid "Remember me"
 msgstr "Remember me"
 
@@ -1967,7 +1993,7 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 #: src/app/App.js:181
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:82
-#: src/auth/SignInPage.js:175
+#: src/auth/SignInPage.js:188
 msgid "Sign In"
 msgstr "Sign In"
 
@@ -1987,8 +2013,8 @@ msgid "Sign Out."
 msgstr "Sign Out."
 
 #: src/auth/SignInPage.js:137
-msgid "Sign in with your username and password."
-msgstr "Sign in with your username and password."
+#~ msgid "Sign in with your username and password."
+#~ msgstr "Sign in with your username and password."
 
 #: src/app/App.js:96
 msgid "Skip to main content"
@@ -2016,7 +2042,7 @@ msgstr "Strong Ciphers:"
 msgid "Strong Curves:"
 msgstr "Strong Curves:"
 
-#: src/auth/ForgotPasswordPage.js:86
+#: src/auth/ForgotPasswordPage.js:97
 #: src/auth/TwoFactorAuthenticatePage.js:124
 msgid "Submit"
 msgstr "Submit"
@@ -2025,7 +2051,7 @@ msgstr "Submit"
 msgid "Successfully removed user {0}."
 msgstr "Successfully removed user {0}."
 
-#: src/organizationDetails/OrganizationDetails.js:171
+#: src/organizationDetails/OrganizationDetails.js:173
 msgid "Summary"
 msgstr "Summary"
 
@@ -2140,7 +2166,7 @@ msgstr "Total Messages"
 msgid "Total users"
 msgstr "Total users"
 
-#: src/landing/LandingPage.js:31
+#: src/landing/LandingPage.js:32
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
 
@@ -2172,7 +2198,7 @@ msgstr "Unable to change user role, please try again."
 msgid "Unable to close the account."
 msgstr "Unable to close the account."
 
-#: src/auth/CreateUserPage.js:68
+#: src/auth/CreateUserPage.js:69
 msgid "Unable to create account, please try again."
 msgstr "Unable to create account, please try again."
 
@@ -2184,7 +2210,7 @@ msgstr "Unable to create new domain."
 msgid "Unable to create new organization."
 msgstr "Unable to create new organization."
 
-#: src/auth/CreateUserPage.js:39
+#: src/auth/CreateUserPage.js:40
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
 
@@ -2193,7 +2219,7 @@ msgid "Unable to invite user."
 msgstr "Unable to invite user."
 
 #: src/admin/OrganizationInformation.js:223
-#: src/organizationDetails/OrganizationDetails.js:81
+#: src/organizationDetails/OrganizationDetails.js:83
 msgid "Unable to leave organization."
 msgstr "Unable to leave organization."
 
@@ -2276,8 +2302,9 @@ msgstr "Unable to update your phone number, please try again."
 msgid "Unable to verify your phone number, please try again."
 msgstr "Unable to verify your phone number, please try again."
 
+#: src/summaries/RadialBarChart.js:43
 #: src/summaries/SummaryGroup.js:27
-#: src/summaries/SummaryGroup.js:66
+#: src/summaries/SummaryGroup.js:69
 msgid "Unscanned"
 msgstr "Unscanned"
 
@@ -2328,7 +2355,7 @@ msgid "User:"
 msgstr "User:"
 
 #: src/admin/AdminPanel.js:28
-#: src/organizationDetails/OrganizationDetails.js:178
+#: src/organizationDetails/OrganizationDetails.js:183
 msgid "Users"
 msgstr "Users"
 
@@ -2402,7 +2429,11 @@ msgstr "Web Scan Results"
 msgid "Web Sites and Services Management Configuration Requirements Compliant"
 msgstr "Web Sites and Services Management Configuration Requirements Compliant"
 
-#: src/auth/CreateUserPage.js:60
+#: src/auth/CreateUserPage.js:177
+msgid "Welcome to Tracker, please enter your details."
+msgstr "Welcome to Tracker, please enter your details."
+
+#: src/auth/CreateUserPage.js:61
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Welcome, you are successfully signed in to your new account!"
 
@@ -2439,7 +2470,7 @@ msgid "You have successfully been signed out."
 msgstr "You have successfully been signed out."
 
 #: src/admin/OrganizationInformation.js:213
-#: src/organizationDetails/OrganizationDetails.js:71
+#: src/organizationDetails/OrganizationDetails.js:73
 msgid "You have successfully left {orgSlug}"
 msgstr "You have successfully left {orgSlug}"
 

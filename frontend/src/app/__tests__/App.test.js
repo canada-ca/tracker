@@ -104,9 +104,7 @@ describe('<App/>', () => {
             </UserVarProvider>
           </MockedProvider>,
         )
-        const domains = await waitFor(() =>
-          getByText(/Sign in with your username and password./i),
-        )
+        const domains = await waitFor(() => getByText(/Login to your account/i))
         await waitFor(() => {
           expect(domains).toBeInTheDocument()
         })
