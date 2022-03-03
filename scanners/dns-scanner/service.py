@@ -61,6 +61,7 @@ async def run(loop):
         shared_id = payload["shared_id"]
         selectors = payload["selectors"]
 
+        start = time.monotonic()
         try:
             # DMARC scan
             loop = asyncio.get_event_loop()
@@ -76,9 +77,9 @@ async def run(loop):
                 # DKIM scan
                 dkim_start_time = time.time()
                 print(f"starting dmarc scanner")
-                with ThreadPoolExecutor() as executor:
+                with ProcessPoolExecutor() as executor:
                     dkim_scanner = DKIMScanner(domain, selectors)
-                    scan_results["dkim"] = await loop.run_in_executor(executor, scanner.run)
+                    scan_results["dkim"] = await loop.run_in_executor(executor, dkim_scanner.run)
                 print(f"dkim scan elapsed time: {time.monotonic() - dkim_start_time}")
             else:
                 scan_results["dkim"] = {"error": "missing"}
