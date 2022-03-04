@@ -11,9 +11,9 @@ export const Footer = ({ children, ...props }) => {
 
   return (
     <Layout
-      borderTop="2px solid"
-      borderTopColor="gray.300"
-      bg="gray.200"
+      // borderTop="2px solid"
+      // borderTopColor="gray.300"
+      // bg="gray.200"
       {...props}
     >
       <Flex mx="auto" py={4} align="center" direction="row">

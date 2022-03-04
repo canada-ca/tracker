@@ -24,7 +24,7 @@ const i18n = setupI18n({
 describe('<TopBanner />', () => {
   afterEach(cleanup)
 
-  it('renders using the language prop correctly', () => {
+  it.skip('renders using the language prop correctly', () => {
     const { getByAltText } = render(
       <MockedProvider>
         <UserVarProvider

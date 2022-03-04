@@ -1,23 +1,35 @@
 import React from 'react'
-import trackerLogo from '../images/trackerlogo.svg'
-import { Link, Box, Divider, Grid, Image, Stack, Text } from '@chakra-ui/react'
+// import trackerLogo from '../images/trackerlogo.svg'
+import {
+  // Link,
+  // Box,
+  // Divider,
+  // Grid,
+  // Image,
+  Stack,
+  // Text,
+  Heading,
+} from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
-import { useLingui } from '@lingui/react'
+// import { useLingui } from '@lingui/react'
 import { LandingPageSummaries } from './LandingPageSummaries'
 
-const emailUrlEn = 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27600'
-const itpinUrlEn =
-  'https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html'
-const emailUrlFr = 'https://www.tbs-sct.gc.ca/pol/doc-fra.aspx?id=27600'
-const itpinUrlFr =
-  'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html'
+// const emailUrlEn = 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27600'
+// const itpinUrlEn =
+//   'https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html'
+// const emailUrlFr = 'https://www.tbs-sct.gc.ca/pol/doc-fra.aspx?id=27600'
+// const itpinUrlFr =
+//   'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html'
 
 export function LandingPage() {
-  const { i18n } = useLingui()
+  // const { i18n } = useLingui()
   return (
-    <Stack>
-      <Grid
+    <Stack w="100%" px="4">
+      <Heading as="h1" mb="16" textAlign="left">
+        <Trans>Track Digital Security</Trans>
+      </Heading>
+      {/* <Grid
         bg="primary"
         height="fit-content"
         templateAreas={{ sm: 'welcome', md: 'welcome logo' }}
@@ -72,11 +84,9 @@ export function LandingPage() {
             alignSelf="center"
           />
         </Box>
-      </Grid>
+      </Grid> */}
       {document.location.origin !== 'https://tracker.alpha.canada.ca' && (
-        <Box pt={7}>
-          <LandingPageSummaries />
-        </Box>
+        <LandingPageSummaries />
       )}
     </Stack>
   )

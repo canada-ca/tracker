@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
-import { i18n } from '@lingui/core'
+// import { i18n } from '@lingui/core'
 import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -8,7 +8,6 @@ import { useQuery } from '@apollo/client'
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
-import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { SkipLink } from './SkipLink'
@@ -67,12 +66,8 @@ const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const {
-    currentUser,
-    isLoggedIn,
-    isEmailValidated,
-    currentTFAMethod,
-  } = useUserVar()
+  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } =
+    useUserVar()
 
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
 
@@ -85,8 +80,6 @@ export function App() {
     }
   }, [currentUser.jwt])
 
-  console.log(currentTFAMethod())
-
   return (
     <>
       <Flex direction="column" minHeight="100vh" bg="gray.50">
@@ -95,9 +88,6 @@ export function App() {
           <SkipLink invisible href="#main">
             <Trans>Skip to main content</Trans>
           </SkipLink>
-          <PhaseBanner phase={<Trans>BETA</Trans>}>
-            <Trans>This is a new service, we are constantly improving.</Trans>
-          </PhaseBanner>
           <TopBanner />
         </header>
 
@@ -161,6 +151,10 @@ export function App() {
             </Text>
           </NotificationBanner>
         )}
+
+        {/* <Box align="flex-start" justifyContent="center">
+          <TrackerDrawer />
+        </Box> */}
 
         <Main marginBottom={{ base: '40px', md: 'none' }}>
           <Suspense fallback={<LoadingMessage />}>
@@ -353,7 +347,7 @@ export function App() {
         <FloatingMenu />
 
         <Footer display={{ base: 'none', md: 'inline' }}>
-          <Link
+          {/* <Link
             isExternal={true}
             href={
               i18n.locale === 'en'
@@ -378,7 +372,7 @@ export function App() {
 
           <Link as={RouteLink} to="/contact-us" ml={4}>
             <Trans>Contact Us</Trans>
-          </Link>
+          </Link> */}
         </Footer>
       </Flex>
     </>
