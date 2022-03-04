@@ -1,8 +1,13 @@
+import traceback
+from http.client import HTTPResponse
+from typing import List, Optional
+
 import sys
 import logging
 import json
-from dataclasses import dataclass
-from sslyze import Scanner, ServerScanRequest, ServerScanResultAsJson, ScanCommandResult, ServerScanResult
+from dataclasses import dataclass, field, asdict
+from sslyze import Scanner, ServerScanRequest, ServerScanResultAsJson, \
+    ScanCommandResult, ServerScanResult
 from sslyze.connection_helpers.http_request_generator import \
     HttpRequestGenerator
 from sslyze.connection_helpers.http_response_parser import HttpResponseParser
@@ -14,9 +19,20 @@ from sslyze.server_setting import (
     ServerNetworkLocation,
     ServerNetworkConfiguration,
 )
-# logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
+
 logger = logging.getLogger(__name__)
-from scan import https
+# from scan import https
+
+
+# @dataclass
+# class HTTPConnection:
+#     http_response: HTTPResponse
+#     live: bool = field(init=False)
+#     redirect_to: str = field(init=False)
+#
+#     def __post_init__(self):
+#         self.live = False
+#         self.redirect_to = self.http_response.headers.get("location", None)
 
 
 @dataclass
@@ -24,168 +40,175 @@ class HTTPConnection:
     live: bool
     redirect_to: str
 
+    def __init__(self, http_response: HTTPResponse):
+        content = http_response.read1()
+        # print("DICT", http_response.__dict__)
+        # print("LOCATION", http_response.getheader("location"))
+        # print("INFO", http_response.info())
+        # print(http_response.geturl())
+        # print("CODE", http_response.getcode())
+        # print("HEADERS", http_response.getheaders())
 
-@dataclass
-class HTTPSConnection:
-    ssl_connection: list[dict]
+        self.live = False
+        self.redirect_to = http_response.headers.get("location", None)
 
 
-@dataclass
+@dataclass()
 class HTTPResult(ScanCommandResult):
-    uri: str
-    ip: str
-    live: bool
-    connections: list[dict]
-    protocol: str = "http"
+    request_uri: str
+    ip_address: str
+    live: bool = field(init=False)
+    connections: list[HTTPConnection] = field(init=False)
+
+    def __post_init__(self):
+        self.live = False
 
 
 @dataclass
+class HTTPSConnection(HTTPConnection):
+    HSTS: bool = field(init=False)
+
+    def __init__(self, http_response: HTTPResponse):
+        super().__init__(http_response=http_response)
+        self.HSTS = True
+
+
+@dataclass
+class HTTPSConnectionRequest:
+    request_uri: str
+    ip_address: str
+    https_connection: HTTPSConnection
+    error: Optional[Exception]
+
+    def __init__(self, request_uri: str, ip_address: str, http_response: Optional[HTTPResponse] = None, error: Optional[Exception] = None):
+        self.request_uri = request_uri
+        self.ip_address = ip_address
+        self.error = error
+        if error:
+            return
+        self.https_connection = HTTPSConnection(http_response=http_response)
+
+
+@dataclass()
 class HTTPSResult(HTTPResult):
-    protocol: str = "https"
+    connections: list[HTTPSConnectionRequest] = field(init=False)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.connections = [self.get_https_connection(request_uri=self.request_uri, ip_address=self.ip_address)]
+
+    @staticmethod
+    def get_https_connection(request_uri, ip_address) -> HTTPSConnectionRequest:
+        try:
+            server_location = ServerNetworkLocation(
+                hostname=request_uri, ip_address=ip_address)
+            network_configuration = ServerNetworkConfiguration.default_for_server_location(
+                server_location)
+
+            tls_probing_result = check_connectivity_to_server(
+                server_location=server_location,
+                network_configuration=network_configuration)
+            server_connectivity_info = ServerConnectivityInfo(
+                server_location=server_location,
+                network_configuration=network_configuration,
+                tls_probing_result=tls_probing_result)
+
+            tls_connection = server_connectivity_info.get_preconfigured_tls_connection()
+            tls_connection.connect()
+        except Exception as e:
+            logger.error(
+                f"HTTPS scanner could not connect to {server_location.hostname}: {e}")
+            return HTTPSConnectionRequest(request_uri=request_uri, ip_address=ip_address, error=e)
+
+        try:
+            request = HttpRequestGenerator.get_request(
+                    host=server_connectivity_info.network_configuration.tls_server_name_indication,
+
+                )
+            print(request)
+            tls_connection.ssl_client.write(request)
+
+            http_response = HttpResponseParser.parse_from_ssl_connection(
+                tls_connection.ssl_client)
+        except BaseException as e:
+            logger.error(
+                f"Error requesting content from {server_location.hostname}.")
+        finally:
+            tls_connection.close()
+
+        return HTTPSConnectionRequest(request_uri=request_uri, ip_address=server_location.ip_address, http_response=http_response)
 
 
 @dataclass
-class ScanHTTPChainResult:
-    http_chain_result: HTTPResult
-    https_chain_result: HTTPSResult
+class HTTPChainScanResult:
+    # Use asdict() from dataclasses for dict output of this class
+
+    domain: str
+    ip_address: str
+    # http_chain_result: HTTPResult = field(init=False)
+    https_chain_result: Optional[HTTPSResult] = field(init=False)
+
+    def __post_init__(self):
+        self.https_chain_result = HTTPSResult(request_uri=self.domain, ip_address=self.ip_address)
 
 
-# class HTTPScanner:
-#     domain = None
-#
-#     def __init__(self, target_domain):
-#         self.domain = target_domain
-#
-#     def run(self) -> ScanResult:
-#         try:
-#             results = https.run([self.domain])
-#             print({"full results": results})
-#             return results.get(self.domain)
-#         except Exception as e:
-#             logger.error(f"An error occurred while scanning domain: {e}")
-#             return {}
+class SslyzeScanRequest:
+    def __init__(self, sslyze_scan_result: Optional[ServerScanResult] = None, error: Optional[Exception] = None):
+        self.error = error
+        if error:
+            return
+        self.sslyze_scan_result = sslyze_scan_result
 
 
-def run_sslyze_scan(server_location: ServerNetworkLocation, network_configuration: ServerNetworkConfiguration) -> ServerScanResult:
+class HTTPScanResult:
+    http_chain_scan_result: HTTPChainScanResult
+    sslyze_scan_result: SslyzeScanRequest
+
+    def __init__(self, http_chain_scan_result: HTTPChainScanResult, sslyze_scan_result: SslyzeScanRequest):
+        self.http_chain_scan_result = http_chain_scan_result
+        self.sslyze_scan_result = sslyze_scan_result
+
+    def dict(self):
+        sslyze_scan_result_dict = json.loads(ServerScanResultAsJson.from_orm(self.sslyze_scan_result.sslyze_scan_result).json())
+        http__chain_scan_result_dict = asdict(self.http_chain_scan_result)
+
+        return {"sslyze_scan_result": sslyze_scan_result_dict, "http_chain_scan_result": http__chain_scan_result_dict}
+
+
+def run_http_chain_scan(domain, ip_address) -> HTTPChainScanResult:
+    http_chain_result = HTTPChainScanResult(domain=domain, ip_address=ip_address)
+
+    return http_chain_result
+
+
+def run_sslyze_scan(domain, ip_address) -> SslyzeScanRequest:
     try:
+        server_location = ServerNetworkLocation(
+            hostname=domain, ip_address=ip_address)
+        network_configuration = ServerNetworkConfiguration.default_for_server_location(
+            server_location)
+
         all_scan_requests = [
             ServerScanRequest(server_location=server_location,
                               network_configuration=network_configuration,
                               scan_commands={ScanCommand.CERTIFICATE_INFO}),
         ]
-    except ServerHostnameCouldNotBeResolved:
+    except ServerHostnameCouldNotBeResolved as e:
         # Handle bad input ie. invalid hostnames
-        logger.error("Error resolving the supplied hostname")
-        raise
+        logger.error(f"Sslyze could not resolve hostname: {e}")
+        return SslyzeScanRequest(error=e)
 
     scanner = Scanner()
     scanner.queue_scans(all_scan_requests)
 
-    return [result for result in scanner.get_results()][0]
-
-
-def run_http_chain_scan(server_location: ServerNetworkLocation, network_configuration: ServerNetworkConfiguration):
-    try:
-        tls_probing_result = check_connectivity_to_server(
-            server_location=server_location,
-            network_configuration=network_configuration)
-        server_connectivity_info = ServerConnectivityInfo(
-            server_location=server_location,
-            network_configuration=network_configuration,
-            tls_probing_result=tls_probing_result)
-
-        tls_connection = server_connectivity_info.get_preconfigured_tls_connection()
-        tls_connection.connect()
-    except BaseException:
-        logger.error(f"Could not make connection to {server_location.hostname}.")
-        raise
-
-    try:
-        tls_connection.ssl_client.write(
-            HttpRequestGenerator.get_request(
-                host=server_connectivity_info.network_configuration.tls_server_name_indication,
-                path="/home.html"
-            )
-        )
-    except BaseException:
-        logger.error(f"Error while sending request to {server_location.hostname}")
-        raise
-    finally:
-        tls_connection.close()
-
-    try:
-        http_response = HttpResponseParser.parse_from_ssl_connection(
-            tls_connection.ssl_client)
-    except BaseException as e:
-        logger.error(f"Error while parsing response from {server_location.hostname}", exc_info=e)
-        sys.exit()
-
-    return http_response
+    # We only scan one domain at a time, so we get the first entry
+    return SslyzeScanRequest(
+        sslyze_scan_result=[result for result in scanner.get_results()][0])
 
 
 def scan_http(domain, ip_address=None):
-    logger.debug("TEST")
+    sslyze_scan_result = run_sslyze_scan(domain=domain, ip_address=ip_address)
+    http_chain_scan_result = run_http_chain_scan(domain=domain, ip_address=ip_address)
 
-    server_location = ServerNetworkLocation(
-        hostname=domain, ip_address=ip_address)
-    network_configuration = ServerNetworkConfiguration.default_for_server_location(
-        server_location)
-
-    sslyze_results = run_sslyze_scan(server_location=server_location, network_configuration=network_configuration)
-    sslyze_results_as_dict = json.loads(ServerScanResultAsJson.from_orm(
-        sslyze_results).json())
-
-    http_chain_results = run_http_chain_scan(server_location=server_location, network_configuration=network_configuration)
-
-    print(http_chain_results.__dict__)
-
-    # return sslyze_results_as_dict
-
-    # try:
-    #     tls_probing_result = check_connectivity_to_server(
-    #         server_location=server_location,
-    #         network_configuration=network_configuration)
-    #     server_connectivity_info = ServerConnectivityInfo(
-    #         server_location=server_location, network_configuration=network_configuration, tls_probing_result=tls_probing_result)
-    #
-    #     tls_connection = server_connectivity_info.get_preconfigured_tls_connection()
-    #     tls_connection.connect()
-    #
-    # except BaseException as err:
-    #     print("Could not make connection")
-    #     print(err)
-    #     pass
-    #
-    # try:
-    #     tls_connection.ssl_client.write(
-    #         HttpRequestGenerator.get_request(
-    #             host=server_connectivity_info.network_configuration.tls_server_name_indication,
-    #             path="/home.html"
-    #         )
-    #     )
-    #     http_response = HttpResponseParser.parse_from_ssl_connection(
-    #         tls_connection.ssl_client)
-    #     # print(tls_connection.ssl_client.read())
-    #
-    # except BaseException as err:
-    #     print(f"Error while scanning domain: {err}")
-    #
-    # finally:
-    #     tls_connection.close()
-
-    # print(http_response.__dict__)
-
-    # print(http_response.read(9112))
-
-
-
-    # results["http_scan_result"] = http_response
-
-    # return SslyzeOutputAsJson(
-    #     server_scan_results=[ServerScanResultAsJson.from_orm(result) for result
-    #                          in scanner.get_results()],
-    #     date_scans_started=start_time,
-    #     date_scans_completed=datetime.utcnow())
-    #
-    # return results
-
+    res = HTTPScanResult(sslyze_scan_result=sslyze_scan_result, http_chain_scan_result=http_chain_scan_result)
+    return res

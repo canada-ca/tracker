@@ -2,6 +2,7 @@ import argparse
 import json
 import logging
 import sys
+from dataclasses import asdict
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -17,11 +18,10 @@ if __name__ == "__main__":
 
     from https_scanner import scan_http
 
-    print(args)
-
     if args.v:
         logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     else:
         logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
-    json.dumps(scan_http(domain=args.domain, ip_address=args.ip), indent=4)
+    scan_http(domain=args.domain, ip_address=args.ip)
+    # print(json.dumps(scan_http(domain=args.domain, ip_address=args.ip).dict(), indent=4))
