@@ -10,12 +10,7 @@ export const Footer = ({ children, ...props }) => {
   const { i18n } = useLingui()
 
   return (
-    <Layout
-      // borderTop="2px solid"
-      // borderTopColor="gray.300"
-      // bg="gray.200"
-      {...props}
-    >
+    <Layout {...props}>
       <Flex mx="auto" py={4} align="center" direction="row">
         {children}
         <Box

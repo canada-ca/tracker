@@ -1,6 +1,5 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
-// import { i18n } from '@lingui/core'
 import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -24,6 +23,7 @@ import { lazyWithRetry } from '../utilities/lazyWithRetry'
 import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
+import { SlideMessage } from './SlideMessage'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
@@ -152,11 +152,8 @@ export function App() {
           </NotificationBanner>
         )}
 
-        {/* <Box align="flex-start" justifyContent="center">
-          <TrackerDrawer />
-        </Box> */}
-
         <Main marginBottom={{ base: '40px', md: 'none' }}>
+          <SlideMessage />
           <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>
@@ -346,34 +343,7 @@ export function App() {
         </Main>
         <FloatingMenu />
 
-        <Footer display={{ base: 'none', md: 'inline' }}>
-          {/* <Link
-            isExternal={true}
-            href={
-              i18n.locale === 'en'
-                ? 'https://www.canada.ca/en/transparency/privacy.html'
-                : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-            }
-          >
-            <Trans>Privacy</Trans>
-          </Link>
-
-          <Link as={RouteLink} to="/terms-and-conditions" ml={4}>
-            <Trans>Terms & conditions</Trans>
-          </Link>
-
-          <Link
-            ml={4}
-            href={'https://github.com/canada-ca/tracker/issues'}
-            isExternal={true}
-          >
-            <Trans>Report an Issue</Trans>
-          </Link>
-
-          <Link as={RouteLink} to="/contact-us" ml={4}>
-            <Trans>Contact Us</Trans>
-          </Link> */}
-        </Footer>
+        <Footer display={{ base: 'none', md: 'inline' }} />
       </Flex>
     </>
   )
