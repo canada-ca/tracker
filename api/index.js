@@ -1,8 +1,6 @@
+import 'dotenv-safe/config'
 import { Database, aql } from 'arangojs'
 import { Server } from './src/server'
-import { config } from 'dotenv-safe'
-
-config()
 
 const {
   PORT = 4000,
