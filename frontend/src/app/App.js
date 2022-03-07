@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
-import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
+import { CSSReset, Flex, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useQuery } from '@apollo/client'
@@ -69,6 +69,8 @@ export function App() {
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } =
     useUserVar()
 
+  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: false })
+
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
 
   // Close websocket on user jwt change (refresh/logout)
@@ -82,7 +84,12 @@ export function App() {
 
   return (
     <>
-      <Flex direction="column" minHeight="100vh" bg="gray.50">
+      <Flex
+        direction="column"
+        minHeight="100vh"
+        bg="gray.50"
+        ml={isOpen && '25%'}
+      >
         <header>
           <CSSReset />
           <SkipLink invisible href="#main">
@@ -90,7 +97,6 @@ export function App() {
           </SkipLink>
           <TopBanner />
         </header>
-
         <Navigation>
           <RouteLink to="/">
             <Trans>Home</Trans>
@@ -153,7 +159,6 @@ export function App() {
         )}
 
         <Main marginBottom={{ base: '40px', md: 'none' }}>
-          <SlideMessage />
           <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>

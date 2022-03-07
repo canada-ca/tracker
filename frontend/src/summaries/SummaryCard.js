@@ -5,6 +5,7 @@ import { arrayOf, number, objectOf, shape, string } from 'prop-types'
 import { Doughnut, Segment } from './Doughnut'
 
 export function SummaryCard({
+  id,
   title,
   categoryDisplay,
   description,
@@ -17,7 +18,7 @@ export function SummaryCard({
       overflow="hidden"
       borderWidth="1px"
       borderColor="black"
-      width={{ md: '100%', lg: '40%' }}
+      width={{ md: '100%', lg: '35%' }}
       {...props}
     >
       <Box px="8">
@@ -30,14 +31,18 @@ export function SummaryCard({
         >
           {title}
         </Text>
-        <Text fontSize="md" wordBreak="break-word" mb="2">
+        <Text
+          fontSize="md"
+          wordBreak="break-word"
+          mb={id === 'dmarcPhases' ? '8' : '2'}
+        >
           {description}
         </Text>
       </Box>
 
       <Box align="center" borderTop="1px" borderColor="black">
         <Doughnut
-          id={title.replace(/ /g, '')} // id is required as svg defs can conflict
+          id={id}
           title={title}
           data={data.categories.map(({ name, count, percentage }) => ({
             title: categoryDisplay[name].name,
@@ -60,6 +65,7 @@ export function SummaryCard({
 }
 
 SummaryCard.propTypes = {
+  id: string,
   title: string.isRequired,
   description: string.isRequired,
   // An object of keys whose values have a shape:
