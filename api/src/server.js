@@ -11,7 +11,6 @@ import { createComplexityLimitRule } from 'graphql-validation-complexity'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
-import { createContext } from './create-context'
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
 import { createSubscriptionSchema } from './subscription'
@@ -100,7 +99,7 @@ export const Server = async ({
 
   const server = new ApolloServer({
     schema,
-    context: createContext(context),
+    context,
     validationRules: createValidationRules(
       maxDepth,
       complexityCost,
