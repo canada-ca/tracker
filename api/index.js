@@ -67,14 +67,6 @@ const collections = [
   }
 
   const server = await Server({
-    arango: {
-      db: databaseName,
-      url,
-      as: {
-        username: 'root',
-        password: rootPass,
-      },
-    },
     maxDepth,
     complexityCost,
     scalarCost,
