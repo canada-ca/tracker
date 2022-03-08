@@ -19,7 +19,6 @@ import { createI18n } from './create-i18n'
 import { verifyToken, userRequired, verifiedRequired } from './auth'
 import { loadUserByKey } from './user/loaders'
 import { customOnConnect } from './on-connect'
-import { arangodb } from 'arango-express'
 
 const createSchema = () =>
   new GraphQLSchema({
@@ -50,7 +49,6 @@ const createValidationRules = (
 }
 
 export const Server = async ({
-  arango = {},
   maxDepth,
   complexityCost,
   scalarCost,
@@ -70,8 +68,6 @@ export const Server = async ({
       languages: ['en', 'fr'],
     }),
   )
-
-  app.use(arangodb(arango))
 
   app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
 
