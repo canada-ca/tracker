@@ -1,6 +1,7 @@
 import 'dotenv-safe/config'
 import { Database, aql } from 'arangojs'
 import { Server } from './src/server'
+import { createContext } from './src/create-context'
 
 const {
   PORT = 4000,
@@ -67,17 +68,19 @@ const collections = [
   }
 
   const server = await Server({
+    // TODO: createContext accepts a context and returns a context. This is not
+    // amazing.
+    context: createContext({
+      query,
+      collections,
+      transaction,
+    }),
     maxDepth,
     complexityCost,
     scalarCost,
     objectCost,
     listFactor,
     tracing,
-    context: {
-      query,
-      collections,
-      transaction,
-    },
   })
 
   console.log(
