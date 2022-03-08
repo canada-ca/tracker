@@ -15,10 +15,6 @@ import { createContext } from './create-context'
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
 import { createSubscriptionSchema } from './subscription'
-import { createI18n } from './create-i18n'
-import { verifyToken, userRequired, verifiedRequired } from './auth'
-import { loadUserByKey } from './user/loaders'
-import { customOnConnect } from './on-connect'
 
 const createSchema = () =>
   new GraphQLSchema({
@@ -125,15 +121,6 @@ export const Server = async ({
       schema,
       execute,
       subscribe,
-      onConnect: customOnConnect({
-        createContext,
-        serverContext: context,
-        createI18n,
-        verifyToken,
-        userRequired,
-        loadUserByKey,
-        verifiedRequired,
-      }),
     },
     {
       server: httpServer,
