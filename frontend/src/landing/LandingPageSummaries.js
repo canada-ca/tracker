@@ -9,7 +9,7 @@ export function LandingPageSummaries() {
   const { _loading, _error, data } = useQuery(HTTPS_AND_DMARC_SUMMARY)
 
   return (
-    <Box w="100%" px="4">
+    <Box w="100%">
       <SummaryGroup
         dmarcPhases={data?.dmarcPhaseSummary}
         https={data?.httpsSummary}

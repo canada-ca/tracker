@@ -60,7 +60,7 @@ describe('<App/>', () => {
   describe('routes', () => {
     describe('/', () => {
       it('renders the main page', async () => {
-        const { getByText } = render(
+        const { getAllByText } = render(
           <MockedProvider mocks={mocks}>
             <UserVarProvider
               userVar={makeVar({
@@ -79,7 +79,7 @@ describe('<App/>', () => {
             </UserVarProvider>
           </MockedProvider>,
         )
-        await waitFor(() => expect(getByText(/Track digital security/i)))
+        await waitFor(() => expect(getAllByText(/Track digital security/i)))
       })
     })
 

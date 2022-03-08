@@ -22,27 +22,22 @@ msgid ". Personal information will not be disclosed by Treasury Board Secretaria
 msgstr ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 
 #: src/summaries/RadialBarChart.js:25
-#: src/summaries/SummaryGroup.js:49
 msgid "0. Not Implemented"
 msgstr "0. Not Implemented"
 
 #: src/summaries/RadialBarChart.js:27
-#: src/summaries/SummaryGroup.js:53
 msgid "1. Assess"
 msgstr "1. Assess"
 
 #: src/summaries/RadialBarChart.js:31
-#: src/summaries/SummaryGroup.js:57
 msgid "2. Deploy"
 msgstr "2. Deploy"
 
 #: src/summaries/RadialBarChart.js:35
-#: src/summaries/SummaryGroup.js:61
 msgid "3. Enforce"
 msgstr "3. Enforce"
 
 #: src/summaries/RadialBarChart.js:39
-#: src/summaries/SummaryGroup.js:65
 msgid "4. Maintain"
 msgstr "4. Maintain"
 
@@ -86,7 +81,7 @@ msgstr "Account"
 msgid "Account Closed Successfully"
 msgstr "Account Closed Successfully"
 
-#: src/app/App.js:125
+#: src/app/App.js:122
 #: src/app/FloatingMenu.js:177
 #: src/user/UserPage.js:152
 msgid "Account Settings"
@@ -134,7 +129,7 @@ msgstr "Add Domain Details"
 msgid "Add User"
 msgstr "Add User"
 
-#: src/app/App.js:253
+#: src/app/App.js:250
 msgid "Admin"
 msgstr "Admin"
 
@@ -142,7 +137,7 @@ msgstr "Admin"
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
-#: src/app/App.js:131
+#: src/app/App.js:128
 msgid "Admin Profile"
 msgstr "Admin Profile"
 
@@ -167,7 +162,7 @@ msgid "An error has occurred."
 msgstr "An error has occurred."
 
 #: src/app/FloatingMenu.js:38
-#: src/app/TopBanner.js:25
+#: src/app/TopBanner.js:22
 msgid "An error occured when you attempted to sign out"
 msgstr "An error occured when you attempted to sign out"
 
@@ -253,11 +248,11 @@ msgstr "Assess current state;"
 msgid "August"
 msgstr "August"
 
-#: src/app/App.js:198
+#: src/app/App.js:195
 msgid "Authenticate"
 msgstr "Authenticate"
 
-#: src/app/App.js:98
+#: src/app/TopBanner.js:45
 msgid "BETA"
 msgstr "BETA"
 
@@ -282,7 +277,7 @@ msgstr "By accessing, browsing, or using our website or our services, you acknow
 msgid "CCS Injection Vulnerability:"
 msgstr "CCS Injection Vulnerability:"
 
-#: src/landing/LandingPage.js:36
+#: src/app/SlideMessage.js:51
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
@@ -385,7 +380,7 @@ msgstr "Code field must not be empty"
 msgid "Collect and analyze DMARC reports."
 msgstr "Collect and analyze DMARC reports."
 
-#: src/summaries/SummaryGroup.js:23
+#: src/summaries/SummaryGroup.js:24
 msgid "Compliant"
 msgstr "Compliant"
 
@@ -426,9 +421,9 @@ msgstr "Confirm removal of user:"
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:222
-#: src/app/App.js:380
+#: src/app/App.js:219
 #: src/app/ContactUsPage.js:39
+#: src/app/SlideMessage.js:107
 msgid "Contact Us"
 msgstr "Contact Us"
 
@@ -468,18 +463,18 @@ msgid "Country:"
 msgstr "Country:"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:92
+#: src/app/TopBanner.js:82
 #: src/auth/CreateUserPage.js:225
 msgid "Create Account"
 msgstr "Create Account"
 
 #: src/admin/AdminPage.js:112
-#: src/app/App.js:335
+#: src/app/App.js:332
 #: src/createOrganization/CreateOrganizationPage.js:245
 msgid "Create Organization"
 msgstr "Create Organization"
 
-#: src/app/App.js:174
+#: src/app/App.js:171
 msgid "Create an Account"
 msgstr "Create an Account"
 
@@ -590,7 +585,7 @@ msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
 #: src/organizationDetails/OrganizationDetails.js:176
-#: src/summaries/SummaryGroup.js:45
+#: src/summaries/SummaryGroup.js:46
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
 
@@ -609,15 +604,15 @@ msgstr "DMARC Report for {domainSlug}"
 msgid "DMARC Status"
 msgstr "DMARC Status"
 
-#: src/app/App.js:118
-#: src/app/App.js:309
+#: src/app/App.js:115
+#: src/app/App.js:306
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:183
 #: src/dmarc/DmarcByDomainPage.js:285
 msgid "DMARC Summaries"
 msgstr "DMARC Summaries"
 
-#: src/summaries/SummaryGroup.js:46
+#: src/summaries/SummaryGroup.js:47
 msgid "DMARC phase summary"
 msgstr "DMARC phase summary"
 
@@ -734,8 +729,8 @@ msgid "Domain:"
 msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:25
-#: src/app/App.js:115
-#: src/app/App.js:270
+#: src/app/App.js:112
+#: src/app/App.js:267
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:82
 #: src/domains/DomainsPage.js:116
@@ -802,7 +797,7 @@ msgstr "Email Sent"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:331
+#: src/app/App.js:328
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -912,7 +907,7 @@ msgstr "For in-depth CCCS implementation guidance:"
 msgid "For technical implementation guidance:"
 msgstr "For technical implementation guidance:"
 
-#: src/app/App.js:204
+#: src/app/App.js:201
 #: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Forgot Password"
@@ -1014,7 +1009,7 @@ msgstr "HSTS Status:"
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/summaries/SummaryGroup.js:15
+#: src/summaries/SummaryGroup.js:16
 msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
@@ -1032,7 +1027,7 @@ msgstr "HTTPS Scan Complete"
 msgid "HTTPS Status"
 msgstr "HTTPS Status"
 
-#: src/summaries/SummaryGroup.js:16
+#: src/summaries/SummaryGroup.js:17
 msgid "HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)"
 msgstr "HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)"
 
@@ -1048,8 +1043,8 @@ msgstr "Header From"
 msgid "Heartbleed Vulnerability:"
 msgstr "Heartbleed Vulnerability:"
 
-#: src/app/App.js:106
-#: src/app/App.js:168
+#: src/app/App.js:103
+#: src/app/App.js:165
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Home"
@@ -1094,6 +1089,10 @@ msgstr "If you believe this was caused by a problem with Tracker, please use the
 #: src/guidance/ScanCategoryDetails.js:67
 msgid "Implementation:"
 msgstr "Implementation:"
+
+#: src/summaries/SummaryGroup.js:58
+msgid "Implemented"
+msgstr "Implemented"
 
 #: src/auth/TwoFactorAuthenticatePage.js:78
 msgid "Incorrect authenticate.result typename."
@@ -1390,7 +1389,7 @@ msgstr "Next"
 msgid "No"
 msgstr "No"
 
-#: src/summaries/SummaryGroup.js:78
+#: src/summaries/SummaryGroup.js:67
 msgid "No DMARC phase information available for this organization."
 msgstr "No DMARC phase information available for this organization."
 
@@ -1400,7 +1399,7 @@ msgstr "No DMARC phase information available for this organization."
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/summaries/SummaryGroup.js:36
+#: src/summaries/SummaryGroup.js:37
 msgid "No HTTPS configuration information available for this organization."
 msgstr "No HTTPS configuration information available for this organization."
 
@@ -1444,7 +1443,7 @@ msgstr "No guidance tags were found for this scan category"
 msgid "No scan data available for {0}."
 msgstr "No scan data available for {0}."
 
-#: src/summaries/Doughnut.js:89
+#: src/summaries/Doughnut.js:45
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
@@ -1456,7 +1455,7 @@ msgstr "No users"
 msgid "No values were supplied when attempting to update organization details."
 msgstr "No values were supplied when attempting to update organization details."
 
-#: src/summaries/SummaryGroup.js:19
+#: src/summaries/SummaryGroup.js:20
 msgid "Non-compliant"
 msgstr "Non-compliant"
 
@@ -1464,6 +1463,10 @@ msgstr "Non-compliant"
 #: src/user/EditableUserTFAMethod.js:152
 msgid "None"
 msgstr "None"
+
+#: src/summaries/SummaryGroup.js:50
+msgid "Not Implemented"
+msgstr "Not Implemented"
 
 #: src/app/ContactUsPage.js:24
 msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
@@ -1520,8 +1523,8 @@ msgstr "Organization not updated"
 msgid "Organization:"
 msgstr "Organization:"
 
-#: src/app/App.js:112
-#: src/app/App.js:228
+#: src/app/App.js:109
+#: src/app/App.js:225
 #: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:82
 #: src/organizations/Organizations.js:122
@@ -1635,8 +1638,8 @@ msgstr "Preloaded Status:"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/app/App.js:364
 #: src/app/FloatingMenu.js:219
+#: src/app/SlideMessage.js:91
 #: src/termsConditions/TermsConditionsPage.js:40
 msgid "Privacy"
 msgstr "Privacy"
@@ -1707,8 +1710,8 @@ msgstr "Remove User"
 msgid "Removed Organization"
 msgstr "Removed Organization"
 
-#: src/app/App.js:376
 #: src/app/FloatingMenu.js:230
+#: src/app/SlideMessage.js:103
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
@@ -1716,7 +1719,7 @@ msgstr "Report an Issue"
 msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
-#: src/app/App.js:210
+#: src/app/App.js:207
 msgid "Reset Password"
 msgstr "Reset Password"
 
@@ -1990,9 +1993,9 @@ msgstr "Shows the percentage of emails from the domain that have passed both SPF
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
-#: src/app/App.js:181
+#: src/app/App.js:178
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:82
+#: src/app/TopBanner.js:73
 #: src/auth/SignInPage.js:188
 msgid "Sign In"
 msgstr "Sign In"
@@ -2003,12 +2006,12 @@ msgid "Sign In."
 msgstr "Sign In."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:70
+#: src/app/TopBanner.js:62
 msgid "Sign Out"
 msgstr "Sign Out"
 
 #: src/app/FloatingMenu.js:48
-#: src/app/TopBanner.js:35
+#: src/app/TopBanner.js:32
 msgid "Sign Out."
 msgstr "Sign Out."
 
@@ -2016,7 +2019,7 @@ msgstr "Sign Out."
 #~ msgid "Sign in with your username and password."
 #~ msgstr "Sign in with your username and password."
 
-#: src/app/App.js:96
+#: src/app/App.js:97
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -2075,12 +2078,12 @@ msgstr "TBS reserves the right to refuse service, and may reject your applicatio
 msgid "Termination"
 msgstr "Termination"
 
-#: src/app/App.js:216
+#: src/app/App.js:213
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/app/App.js:368
 #: src/app/FloatingMenu.js:225
+#: src/app/SlideMessage.js:95
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -2143,15 +2146,15 @@ msgstr "This could be due to improper configuration, or could be the result of a
 msgid "This field cannot be empty"
 msgstr "This field cannot be empty"
 
-#: src/app/App.js:99
+#: src/app/TopBanner.js:46
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
 
-#: src/app/App.js:139
+#: src/app/App.js:136
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 
-#: src/app/App.js:154
+#: src/app/App.js:151
 msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 msgstr "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 
@@ -2166,7 +2169,8 @@ msgstr "Total Messages"
 msgid "Total users"
 msgstr "Total users"
 
-#: src/landing/LandingPage.js:32
+#: src/app/SlideMessage.js:47
+#: src/landing/LandingPage.js:11
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
 
@@ -2303,8 +2307,8 @@ msgid "Unable to verify your phone number, please try again."
 msgstr "Unable to verify your phone number, please try again."
 
 #: src/summaries/RadialBarChart.js:43
-#: src/summaries/SummaryGroup.js:27
-#: src/summaries/SummaryGroup.js:69
+#: src/summaries/SummaryGroup.js:28
+#: src/summaries/SummaryGroup.js:54
 msgid "Unscanned"
 msgstr "Unscanned"
 
@@ -2465,7 +2469,7 @@ msgid "You agree to use our website, products and services only for lawful purpo
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
 #: src/app/FloatingMenu.js:49
-#: src/app/TopBanner.js:36
+#: src/app/TopBanner.js:33
 msgid "You have successfully been signed out."
 msgstr "You have successfully been signed out."
 
@@ -2514,7 +2518,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:319
+#: src/app/App.js:316
 msgid "Your Account"
 msgstr "Your Account"
 

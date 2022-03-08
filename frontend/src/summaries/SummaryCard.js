@@ -12,13 +12,33 @@ export function SummaryCard({
   data,
   ...props
 }) {
+  let dmarcCompliantCount = 0
+  let dmarcCompliantPercentage = 0.0
+  let { categories } = data
+  if (id === 'dmarcPhases') {
+    data.categories.forEach(({ name, count, percentage }) => {
+      if (name !== 'not implemented') {
+        dmarcCompliantCount += count
+        dmarcCompliantPercentage += percentage
+      }
+    })
+    categories = [
+      {
+        name: 'implemented',
+        count: dmarcCompliantCount,
+        percentage: dmarcCompliantPercentage,
+      },
+      categories[0],
+    ]
+  }
+
   return (
     <Box
       rounded="lg"
       overflow="hidden"
       borderWidth="1px"
       borderColor="black"
-      width={{ md: '100%', lg: '35%' }}
+      width={{ base: '100%', lg: '35%' }}
       {...props}
     >
       <Box px="8">
@@ -44,7 +64,7 @@ export function SummaryCard({
         <Doughnut
           id={id}
           title={title}
-          data={data.categories.map(({ name, count, percentage }) => ({
+          data={categories.map(({ name, count, percentage }) => ({
             title: categoryDisplay[name].name,
             color: categoryDisplay[name].color,
             count,

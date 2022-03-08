@@ -69,7 +69,7 @@ export function App() {
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } =
     useUserVar()
 
-  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: false })
+  const { isOpen, onToggle } = useDisclosure()
 
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
 
@@ -83,12 +83,13 @@ export function App() {
   }, [currentUser.jwt])
 
   return (
-    <>
+    <Flex minHeight="100vh" bg="gray.50" direction="row">
+      <SlideMessage isOpen={isOpen} onToggle={onToggle} />
       <Flex
+        style={{ zIndex: 10 }}
         direction="column"
-        minHeight="100vh"
-        bg="gray.50"
-        ml={isOpen && '25%'}
+        w={{ base: '100%', md: isOpen ? '75%' : '100%' }}
+        ml={isOpen ? '25%' : 0}
       >
         <header>
           <CSSReset />
@@ -350,6 +351,6 @@ export function App() {
 
         <Footer display={{ base: 'none', md: 'inline' }} />
       </Flex>
-    </>
+    </Flex>
   )
 }
