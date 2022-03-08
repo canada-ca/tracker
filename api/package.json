@@ -10,7 +10,7 @@
   "scripts": {
     "build": "npm run clean && babel ./src --out-dir dist/src --ignore 'src/**/*.spec.js','src/**/*.test.js' && babel index.js --out-dir dist/",
     "start": "node ./dist/index.js",
-    "dev": "NODE_OPTIONS=--dns-result-order=ipv4first nodemon --exec babel-node index.js",
+    "dev": "NODE_OPTIONS=--dns-result-order=ipv4first babel-node index.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "NODE_OPTIONS=--dns-result-order=ipv4first jest --testPathIgnorePatterns=.*-scan-data.*",
     "test-coverage": "jest --coverage",
@@ -77,7 +77,6 @@
     "jest": "^27.4.7",
     "jest-fetch-mock": "^3.0.3",
     "jest-matcher-utils": "^27.4.6",
-    "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "supertest": "^6.2.1"
   }
