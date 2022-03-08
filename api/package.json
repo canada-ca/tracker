@@ -46,6 +46,7 @@
     "ioredis": "^4.28.3",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
+    "make-plural": "^7.1.0",
     "moment": "^2.29.1",
     "notifications-node-client": "^5.1.0",
     "subscriptions-transport-ws": "^0.11.0",
