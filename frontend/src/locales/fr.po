@@ -45,6 +45,10 @@ msgstr "4. Maintenir"
 msgid "404 - Page Not Found"
 msgstr "404 - Page non trouvée"
 
+#: src/summaries/SummaryGroup.js:47
+msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
+msgstr "Une politique DMARC minimale de "p=none" avec au moins une adresse définie comme destinataire des rapports agrégés."
+
 #: src/dmarc/DmarcByDomainPage.js:319
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "Une ventilation plus détaillée de chaque domaine peut être trouvée en cliquant sur son adresse dans la première colonne."
@@ -566,6 +570,10 @@ msgstr "DMARC"
 msgid "DMARC Configuration"
 msgstr "Configuration de DMARC"
 
+#: src/summaries/SummaryGroup.js:46
+msgid "DMARC Configuration Summary"
+msgstr "Résumé de la configuration DMARC"
+
 #: src/organizations/OrganizationCard.js:127
 msgid "DMARC Configured"
 msgstr "DMARC configuré"
@@ -585,7 +593,6 @@ msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
 #: src/organizationDetails/OrganizationDetails.js:176
-#: src/summaries/SummaryGroup.js:46
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
 
@@ -613,8 +620,8 @@ msgid "DMARC Summaries"
 msgstr "Résumés DMARC"
 
 #: src/summaries/SummaryGroup.js:47
-msgid "DMARC phase summary"
-msgstr "Résumé de la phase DMARC"
+#~ msgid "DMARC phase summary"
+#~ msgstr "Résumé de la phase DMARC"
 
 #: src/dmarc/DmarcReportPage.js:234
 msgid "DNS Host"

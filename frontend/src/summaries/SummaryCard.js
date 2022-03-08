@@ -51,11 +51,7 @@ export function SummaryCard({
         >
           {title}
         </Text>
-        <Text
-          fontSize="md"
-          wordBreak="break-word"
-          mb={id === 'dmarcPhases' ? '8' : '2'}
-        >
+        <Text fontSize="md" wordBreak="break-word" mb="2">
           {description}
         </Text>
       </Box>

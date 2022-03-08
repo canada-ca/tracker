@@ -43,8 +43,8 @@ export function SummaryGroup({ https, dmarcPhases }) {
   const dmarcPhaseCard = dmarcPhases ? (
     <SummaryCard
       id="dmarcPhases"
-      title={t`DMARC Phases`}
-      description={t`DMARC phase summary`}
+      title={t`DMARC Configuration Summary`}
+      description={t`A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports`}
       categoryDisplay={{
         'not implemented': {
           name: t`Not Implemented`,
