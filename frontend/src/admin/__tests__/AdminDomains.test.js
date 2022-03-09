@@ -452,11 +452,11 @@ describe('<AdminDomains />', () => {
         expect(getByText(/Selector cannot be empty/)).toBeInTheDocument(),
       )
 
-      fireEvent.change(selectorInput, { target: { value: 'selector1' } })
+      fireEvent.change(selectorInput, { target: { value: 'selector1.' } })
 
       await waitFor(() =>
         expect(
-          getByText(/Selector must be string ending in ''/),
+          getByText(/Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters/),
         ).toBeInTheDocument(),
       )
 
