@@ -47,6 +47,14 @@ const getSchema = (options) => {
       )
       .max(50, i18n._(t`Acronyms must be at most 50 characters`)),
     field: string().required(i18n._(t`This field cannot be empty`)),
+    selectors: array().of(
+      string()
+        .required(i18n._(t`Selector cannot be empty`))
+        .matches(
+          /^[a-zA-Z0-9](\.?[a-zA-Z0-9])*$/gm,
+          i18n._(t`Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters`),
+        ),
+    ),
   }
 }
 
