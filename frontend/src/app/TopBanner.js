@@ -68,6 +68,7 @@ export const TopBanner = (props) => {
               as={RouteLink}
               to="/sign-in"
               px="3"
+              mr="2"
               display={{ base: 'none', md: 'inline' }}
             >
               <Trans>Sign In</Trans>
