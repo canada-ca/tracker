@@ -305,16 +305,17 @@ export default function DmarcReportPage() {
     ]
 
     // Convert boolean values to string and properly format
-    const dkimFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
-      (edge) => {
-        const node = { ...edge.node }
-        node.dkimAligned = node.dkimAligned.toString()
-        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
-        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
-        node.dkimResults = node.dkimResults.replace(/,/g, ', ')
-        return node
-      },
-    )
+    const dkimFailureNodes =
+      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
+        (edge) => {
+          const node = { ...edge.node }
+          node.dkimAligned = node.dkimAligned.toString()
+          node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+          node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+          node.dkimResults = node.dkimResults.replace(/,/g, ', ')
+          return node
+        },
+      )
 
     const failDkimInfoPanel = (
       <InfoPanel state={failDkimState}>
@@ -431,15 +432,16 @@ export default function DmarcReportPage() {
     ]
 
     // Convert boolean values to string and properly format
-    const fullPassNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
-      (edge) => {
-        const node = { ...edge.node }
-        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
-        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
-        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
-        return node
-      },
-    )
+    const fullPassNodes =
+      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
+        (edge) => {
+          const node = { ...edge.node }
+          node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+          node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+          node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+          return node
+        },
+      )
 
     const fullPassInfoPanel = (
       <InfoPanel state={fullPassState}>
@@ -538,14 +540,15 @@ export default function DmarcReportPage() {
       },
     ]
     // Convert boolean values to string and properly format
-    const spfFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
-      (edge) => {
-        const node = { ...edge.node }
-        node.spfAligned = node.spfAligned.toString()
-        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
-        return node
-      },
-    )
+    const spfFailureNodes =
+      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
+        (edge) => {
+          const node = { ...edge.node }
+          node.spfAligned = node.spfAligned.toString()
+          node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+          return node
+        },
+      )
 
     const failSpfInfoPanel = (
       <InfoPanel state={failSpfState}>
@@ -656,15 +659,16 @@ export default function DmarcReportPage() {
     ]
 
     // Convert boolean values to string and properly format
-    const dmarcFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
-      (edge) => {
-        const node = { ...edge.node }
-        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
-        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
-        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
-        return node
-      },
-    )
+    const dmarcFailureNodes =
+      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
+        (edge) => {
+          const node = { ...edge.node }
+          node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+          node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+          node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+          return node
+        },
+      )
 
     const fullFailInfoPanel = (
       <InfoPanel state={fullFailState}>
@@ -753,7 +757,7 @@ export default function DmarcReportPage() {
     <Box width="100%" px="2" mx="auto" overflow="hidden" pb="4">
       <Box d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
         <Box />
-        <Heading as="h1" textAlign="center">
+        <Heading as="h1" textAlign="center" mb="4">
           {domainSlug.toUpperCase()}
         </Heading>
         <Flex>

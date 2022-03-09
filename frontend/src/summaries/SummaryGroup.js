@@ -12,16 +12,17 @@ export function SummaryGroup({ https, dmarcPhases }) {
 
   const httpsCard = https ? (
     <SummaryCard
+      id="httpsStatus"
       title={t`HTTPS Configuration Summary`}
       description={t`HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)`}
       categoryDisplay={{
         fail: {
           name: t`Non-compliant`,
-          color: colors.weak,
+          color: '#22485B',
         },
         pass: {
           name: t`Compliant`,
-          color: colors.strong,
+          color: '#F15E6B',
         },
         unscanned: {
           name: t`Unscanned`,
@@ -42,32 +43,20 @@ export function SummaryGroup({ https, dmarcPhases }) {
   const dmarcPhaseCard = dmarcPhases ? (
     <SummaryCard
       id="dmarcPhases"
-      title={t`DMARC Phases`}
-      description={t`DMARC phase summary`}
+      title={t`DMARC Configuration Summary`}
+      description={t`A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports`}
       categoryDisplay={{
         'not implemented': {
-          name: t`0. Not Implemented`,
-          color: colors.weak,
-        },
-        assess: {
-          name: t`1. Assess`,
-          color: colors.weak,
-        },
-        deploy: {
-          name: t`2. Deploy`,
-          color: colors.moderateAlt,
-        },
-        enforce: {
-          name: t`3. Enforce`,
-          color: colors.moderate,
-        },
-        maintain: {
-          name: t`4. Maintain`,
-          color: colors.strong,
+          name: t`Not Implemented`,
+          color: '#22485B',
         },
         unscanned: {
           name: t`Unscanned`,
           color: colors.gray['400'],
+        },
+        implemented: {
+          name: t`Implemented`,
+          color: '#F15E6B',
         },
       }}
       data={dmarcPhases}

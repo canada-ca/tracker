@@ -7,7 +7,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 
-import { TopBanner } from '../TopBanner'
+import { SlideMessage } from '../SlideMessage'
 
 import { UserVarProvider } from '../../utilities/userState'
 
@@ -21,10 +21,10 @@ const i18n = setupI18n({
   },
 })
 
-describe('<TopBanner />', () => {
+describe('<SlideMessage />', () => {
   afterEach(cleanup)
 
-  it('renders using the language prop correctly', () => {
+  it('renders using the in (isOpen) prop correctly', () => {
     const { getByText } = render(
       <MockedProvider>
         <UserVarProvider
@@ -33,13 +33,13 @@ describe('<TopBanner />', () => {
           <ChakraProvider theme={theme}>
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
-                <TopBanner lang="en" />
+                <SlideMessage in={true} />
               </I18nProvider>
             </MemoryRouter>
           </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
-    expect(getByText('This is a new service, we are constantly improving.'))
+    expect(getByText('Track Digital Security'))
   })
 })

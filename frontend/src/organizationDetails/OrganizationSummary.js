@@ -13,7 +13,7 @@ export function OrganizationSummary({
 }) {
   return (
     <Box w="100%" px={4}>
-      <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }}>
+      <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }} mb="8">
         <Stack isInline align="center">
           <Text>
             <Trans>Based in:</Trans>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { object, string } from 'yup'
 import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="4" mx="auto" overflow="hidden" w={{ base: '100%', md: '60%' }}>
+    <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
@@ -66,30 +66,42 @@ export default function ForgotPasswordPage() {
             aria-label="form"
             name="form"
           >
-            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
-              <Trans>
-                Enter your user account's verified email address and we will
-                send you a password reset link.
-              </Trans>
+            <Heading
+              as="h1"
+              fontSize="3xl"
+              mb="8"
+              textAlign={{ lg: 'left', md: 'center' }}
+            >
+              <Trans>Forgot Password</Trans>
             </Heading>
 
-            <EmailField name="email" mb="4" />
+            <Box mb="8">
+              <Text fontSize="lg" mb="2">
+                <Trans>
+                  Enter your user account's verified email address and we will
+                  send you a password reset link.
+                </Trans>
+              </Text>
+            </Box>
 
-            <Stack spacing={4} isInline justifyContent="space-between">
-              <Button
-                variant="primary"
-                aria-label="forgot-password-submit"
-                type="submit"
-                id="submitBtn"
-                isLoading={isSubmitting}
-              >
-                <Trans>Submit</Trans>
-              </Button>
+            <Box w={{ md: '100%', lg: '33%' }}>
+              <EmailField name="email" mb="4" />
+              <Stack spacing={4} isInline justifyContent="space-between">
+                <Button
+                  variant="primary"
+                  aria-label="forgot-password-submit"
+                  type="submit"
+                  id="submitBtn"
+                  isLoading={isSubmitting}
+                >
+                  <Trans>Submit</Trans>
+                </Button>
 
-              <Button as={RouteLink} to="/sign-in" variant="primaryOutline">
-                <Trans>Back</Trans>
-              </Button>
-            </Stack>
+                <Button as={RouteLink} to="/sign-in" variant="primaryOutline">
+                  <Trans>Back</Trans>
+                </Button>
+              </Stack>
+            </Box>
           </form>
         )}
       </Formik>

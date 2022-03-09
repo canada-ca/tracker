@@ -1,16 +1,13 @@
 import React from 'react'
 import { arrayOf, func, number, object, string } from 'prop-types'
 import { Box, Image, Stack, Text } from '@chakra-ui/react'
-import { scaleOrdinal } from 'd3'
 import { Trans } from '@lingui/macro'
-
-import { CrossHatch, Dots, Stripes, ZigZag } from './patterns'
 
 import { useArcs } from '../utilities/useArcs'
 import trackerLogo from '../images/tracker_v-03.png'
 
 export const Doughnut = ({
-  id, // id is required as svg defs can conflict
+  // id, // id is required as svg defs can conflict
   data,
   height,
   width,
@@ -30,53 +27,12 @@ export const Doughnut = ({
     valueAccessor,
   })
 
-  const patterns = scaleOrdinal().range([
-    data[0] ? data[0].color : '#000',
-    `url(#stripes-${id})`,
-    `url(#dots-${id})`,
-    `url(#crossHatch-${id})`,
-    `url(#zigZag-${id})`,
-  ])
-
-  const patternDefs = (
-    <defs>
-      <Stripes
-        id={`stripes-${id}`}
-        angle={45}
-        background={data[1] ? data[1].color : '#000'}
-        color="#fff"
-      />
-      <Dots
-        id={`dots-${id}`}
-        size={1}
-        background={data[2] ? data[2].color : '#000'}
-        color="#fff"
-      />
-      <CrossHatch
-        id={`crossHatch-${id}`}
-        width={0.8}
-        background={data[3] ? data[3].color : '#000'}
-        color="#fff"
-      />
-      <ZigZag
-        id={`zigZag-${id}`}
-        width={0.4}
-        background={data[4] ? data[4].color : '#000'}
-        color="#fff"
-      />
-    </defs>
-  )
-
   const doughnutChart = (
     <svg height={height} width={width}>
       <title>{title}</title>
-      {patternDefs}
       <g transform={`translate(${width / 2},${height / 2})`}>
         {arcs.map((arc, index) => {
-          return children(
-            { d: arc.d, fill: patterns(index / data.length - 1) },
-            index,
-          )
+          return children({ d: arc.d, fill: data[index].color }, index)
         })}
       </g>
     </svg>
@@ -124,14 +80,13 @@ export const Doughnut = ({
               style={{ display: 'inline', marginRight: '1em' }}
               aria-hidden="true"
             >
-              {patternDefs}
               <g>
                 <rect
                   stroke="#fff"
                   strokeWidth="2"
                   width="30"
                   height="30"
-                  fill={patterns(index / data.length - 1)}
+                  fill={data[index].color}
                 />
               </g>
             </svg>
@@ -152,7 +107,7 @@ export const Doughnut = ({
 }
 
 Doughnut.propTypes = {
-  id: string.isRequired,
+  id: string,
   data: arrayOf(object),
   title: string,
   children: func,

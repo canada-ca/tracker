@@ -54,13 +54,12 @@ const Button = {
     primaryWhite: {
       ...commonProps,
       color: 'primary',
-      bg: 'gray.50',
-      borderColor: 'gray.50',
+      bg: 'transparent',
       borderWidth: '1px',
+      borderColor: 'gray.300',
       _hover: {
         color: 'primary',
-        bg: 'accent',
-        borderColor: 'accent',
+        bg: 'gray.200',
       },
     },
     outline: {
@@ -103,6 +102,15 @@ const Button = {
       bg: 'weak',
       _hover: {
         bg: 'red.400',
+      },
+    },
+    locale: {
+      ...commonProps,
+      // _focus: {
+      //   outline: `3px solid accent`,
+      // },
+      _hover: {
+        bg: 'gray.200',
       },
     },
   },
