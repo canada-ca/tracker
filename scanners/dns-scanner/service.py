@@ -75,11 +75,10 @@ async def run(loop):
             if len(selectors) != 0:
                 # DKIM scan
                 dkim_start_time = time.time()
-                print(f"starting dmarc scanner")
-                with ThreadPoolExecutor() as executor:
-                    dkim_scanner = DKIMScanner(domain, selectors)
-                    scan_results["dkim"] = await loop.run_in_executor(executor, scanner.run)
-                print(f"dkim scan elapsed time: {time.monotonic() - dkim_start_time}")
+                print(f"starting DKIM scanner")
+                dkim_scanner = DKIMScanner(domain, selectors)
+                scan_result.dkim = dkim_scanner.run()
+                print(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
             else:
                 scan_results["dkim"] = {"error": "missing"}
 
