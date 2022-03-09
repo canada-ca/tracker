@@ -1,7 +1,7 @@
 import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
-  const SLUG_REGEX = /\w+/
+  const SLUG_REGEX = /^[a-zA-Z0-9](\.?[a-zA-Z0-9])*$/
   if (typeof value !== typeof 'string') {
     throw new TypeError(`Value is not a string: ${typeof value}`)
   }
