@@ -82,7 +82,7 @@ export function DmarcReportSummaryGraph({ ...props }) {
   const ResponsiveVerticalGraph = withScreenSize(VerticalGraph)
 
   return (
-    <Stack w="100%" align={{ base: 'center', md: 'flex-start' }}>
+    <Stack w="100%">
       <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
         <Stack
           isInline
@@ -122,11 +122,13 @@ export function DmarcReportSummaryGraph({ ...props }) {
           </Select>
         </Stack>
       </Flex>
-      {isHorizontal ? (
-        <ResponsiveHorizontalGraph data={data} keys={keys} />
-      ) : (
-        <ResponsiveVerticalGraph data={data} keys={keys} />
-      )}
+      <Stack align="center">
+        {isHorizontal ? (
+          <ResponsiveHorizontalGraph data={data} keys={keys} />
+        ) : (
+          <ResponsiveVerticalGraph data={data} keys={keys} />
+        )}
+      </Stack>
     </Stack>
   )
 }
