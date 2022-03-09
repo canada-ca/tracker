@@ -327,7 +327,7 @@ export const getTypeNames = () => gql`
   # String that conforms to a domain structure.
   scalar DomainScalar
 
-  # A field that conforms to a string, with strings ending in ._domainkey.
+  # A field that conforms to a string.
   scalar Selector
 
   # This object contains how the domain is doing on the various scans we preform, based on the latest scan data.

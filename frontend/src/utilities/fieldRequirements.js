@@ -48,14 +48,6 @@ const getSchema = (options) => {
       )
       .max(50, i18n._(t`Acronyms must be at most 50 characters`)),
     field: string().required(i18n._(t`This field cannot be empty`)),
-    selectors: array().of(
-      string()
-        .required(i18n._(t`Selector cannot be empty`))
-        .matches(
-          /^([\S]+)([.]_domainkey)$/gm,
-          i18n._(t`Selector must be string ending in '._domainkey'`),
-        ),
-    ),
   }
 }
 

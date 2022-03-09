@@ -91,7 +91,7 @@ describe('given findMyDomainsQuery', () => {
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -103,7 +103,7 @@ describe('given findMyDomainsQuery', () => {
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -195,7 +195,7 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domain', domainOne._key),
                     domain: 'test1.gc.ca',
                     lastRan: null,
-                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    selectors: ['selector1', 'selector2'],
                   },
                 },
                 {
@@ -204,7 +204,7 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domain', domainTwo._key),
                     domain: 'test2.gc.ca',
                     lastRan: null,
-                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    selectors: ['selector1', 'selector2'],
                   },
                 },
               ],

@@ -91,7 +91,7 @@ describe('given findVerifiedDomains query', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',

@@ -382,7 +382,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
-              selectors: ['selector1._domainkey'],
+              selectors: ['selector1'],
             },
           },
           result: {
@@ -456,12 +456,12 @@ describe('<AdminDomains />', () => {
 
       await waitFor(() =>
         expect(
-          getByText(/Selector must be string ending in '._domainkey'/),
+          getByText(/Selector must be string ending in ''/),
         ).toBeInTheDocument(),
       )
 
       fireEvent.change(selectorInput, {
-        target: { value: 'selector1._domainkey' },
+        target: { value: 'selector1' },
       })
 
       const confirmBtn = getByText(/Confirm/)

@@ -1,7 +1,7 @@
 import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
-  const SLUG_REGEX = /\w+\._domainkey/
+  const SLUG_REGEX = /\w+/
   if (typeof value !== typeof 'string') {
     throw new TypeError(`Value is not a string: ${typeof value}`)
   }
@@ -15,7 +15,7 @@ const validate = (value) => {
 export const Selectors = new GraphQLScalarType({
   name: 'Selector',
   description:
-    'A field that conforms to a string, with strings ending in ._domainkey.',
+    'A field that conforms to a string.',
   serialize: validate,
   parseValue: validate,
 

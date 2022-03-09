@@ -124,7 +124,7 @@ describe('updating a domain', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
       })
       await collections.claims.save({
         _to: domain._id,
@@ -203,7 +203,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                 },
               },
             },
@@ -226,8 +226,8 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', domain._key)}"
                   orgId: "${toGlobalId('organization', org._key)}"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -276,7 +276,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector3._domainkey', 'selector4._domainkey'],
+                  selectors: ['selector3', 'selector4'],
                 },
               },
             },
@@ -300,8 +300,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -350,7 +350,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
-                  selectors: ['selector3._domainkey', 'selector4._domainkey'],
+                  selectors: ['selector3', 'selector4'],
                 },
               },
             },
@@ -429,7 +429,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                 },
               },
             },
@@ -452,8 +452,8 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', domain._key)}"
                   orgId: "${toGlobalId('organization', org._key)}"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -502,7 +502,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector3._domainkey', 'selector4._domainkey'],
+                  selectors: ['selector3', 'selector4'],
                 },
               },
             },
@@ -526,8 +526,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -576,7 +576,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
-                  selectors: ['selector3._domainkey', 'selector4._domainkey'],
+                  selectors: ['selector3', 'selector4'],
                 },
               },
             },
@@ -655,7 +655,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                 },
               },
             },
@@ -678,8 +678,8 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', domain._key)}"
                   orgId: "${toGlobalId('organization', org._key)}"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -728,7 +728,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector3._domainkey', 'selector4._domainkey'],
+                  selectors: ['selector3', 'selector4'],
                 },
               },
             },
@@ -752,8 +752,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -802,7 +802,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
-                  selectors: ['selector3._domainkey', 'selector4._domainkey'],
+                  selectors: ['selector3', 'selector4'],
                 },
               },
             },
@@ -845,8 +845,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -923,8 +923,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -1001,8 +1001,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
@@ -1080,8 +1080,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', 123)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -1160,8 +1160,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
@@ -1233,8 +1233,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
@@ -1309,8 +1309,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
@@ -1401,8 +1401,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -1480,8 +1480,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -1559,8 +1559,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
@@ -1638,8 +1638,8 @@ describe('updating a domain', () => {
                   orgId: "${toGlobalId('organization', 123)}"
                   domain: "test.canada.ca"
                   selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
+                    "selector3",
+                    "selector4"
                   ]
                 }
               ) {
@@ -1718,8 +1718,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
@@ -1793,8 +1793,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
@@ -1871,8 +1871,8 @@ describe('updating a domain', () => {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
                     selectors: [
-                      "selector3._domainkey",
-                      "selector4._domainkey"
+                      "selector3",
+                      "selector4"
                     ]
                   }
                 ) {
