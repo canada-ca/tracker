@@ -2,6 +2,7 @@ import { array, number, object, ref, string } from 'yup'
 import { t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
 import {
+  array as arrayProp,
   object as objectProp,
   string as stringProp,
 } from 'prop-types'
