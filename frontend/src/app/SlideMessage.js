@@ -124,7 +124,6 @@ export function SlideMessage({ isOpen, onToggle, ...props }) {
         left={isOpen ? '25%' : 0}
         top="50%"
         position="sticky"
-        // px="1"
         _hover={{ color: 'accent', borderColor: 'accent', bgColor: 'black' }}
       />
     </Flex>

@@ -28,6 +28,7 @@ const tooltipStyles = {
   borderColor: 'black',
   borderWidth: '1px',
   fontSize: '1.1rem',
+  zIndex: 11,
 }
 
 const totalKeys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
