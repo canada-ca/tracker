@@ -15,7 +15,7 @@ const validate = (value) => {
 export const Selectors = new GraphQLScalarType({
   name: 'Selector',
   description:
-    'A field that conforms to a string.',
+    'A field that conforms to a DKIM selector. Only alphanumeric characters and periods are allowed, string must also start and end with alphanumeric characters',
   serialize: validate,
   parseValue: validate,
 
