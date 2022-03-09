@@ -148,7 +148,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -229,7 +229,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                   status: {
                     dkim: null,
                     dmarc: null,
@@ -301,7 +301,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -383,7 +383,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                   status: {
                     dkim: null,
                     dmarc: null,
@@ -431,7 +431,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -513,7 +513,7 @@ describe('create a domain', () => {
                 id: toGlobalId('domain', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
-                selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                selectors: ['selector1', 'selector2'],
                 status: {
                   dkim: null,
                   dmarc: null,
@@ -560,7 +560,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -642,7 +642,7 @@ describe('create a domain', () => {
                 id: toGlobalId('domain', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
-                selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                selectors: ['selector1', 'selector2'],
                 status: {
                   dkim: null,
                   dmarc: null,
@@ -709,7 +709,7 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            selectors: ['selector1', 'selector2'],
             lastRan: null,
             status: {
               dkim: null,
@@ -814,7 +814,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                   status: {
                     dkim: null,
                     dmarc: null,
@@ -854,7 +854,7 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            selectors: ['selector1', 'selector2'],
             lastRan: null,
             status: {
               dkim: null,
@@ -878,7 +878,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -960,7 +960,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                   status: {
                     dkim: null,
                     dmarc: null,
@@ -1000,7 +1000,7 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            selectors: ['selector1', 'selector2'],
             lastRan: null,
             status: {
               dkim: null,
@@ -1024,7 +1024,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector3._domainkey", "selector4._domainkey"]
+                  selectors: ["selector3", "selector4"]
                 }
               ) {
                 result {
@@ -1107,10 +1107,10 @@ describe('create a domain', () => {
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: [
-                    'selector1._domainkey',
-                    'selector2._domainkey',
-                    'selector3._domainkey',
-                    'selector4._domainkey',
+                    'selector1',
+                    'selector2',
+                    'selector3',
+                    'selector4',
                   ],
                   status: {
                     dkim: null,
@@ -1151,7 +1151,7 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            selectors: ['selector1', 'selector2'],
             lastRan: '2021-01-01 12:00:00.000000',
             status: {
               dkim: null,
@@ -1175,7 +1175,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -1257,7 +1257,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: '2021-01-01 12:00:00.000000',
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                   status: {
                     dkim: null,
                     dmarc: null,
@@ -1297,7 +1297,7 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            selectors: ['selector1', 'selector2'],
             lastRan: '',
             status: {
               dkim: 'fail',
@@ -1321,7 +1321,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -1403,7 +1403,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: '',
-                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  selectors: ['selector1', 'selector2'],
                   status: {
                     dkim: 'FAIL',
                     dmarc: 'FAIL',
@@ -1468,7 +1468,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "b3JnYW5pemF0aW9uOjE="
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -1562,7 +1562,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -1658,7 +1658,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -1757,7 +1757,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -1849,7 +1849,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -1941,7 +1941,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -2040,7 +2040,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2134,7 +2134,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2233,7 +2233,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2332,7 +2332,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2435,7 +2435,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2552,7 +2552,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "b3JnYW5pemF0aW9uOjE="
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -2646,7 +2646,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -2742,7 +2742,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -2841,7 +2841,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -2935,7 +2935,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -3029,7 +3029,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -3130,7 +3130,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3226,7 +3226,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3327,7 +3327,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3428,7 +3428,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3533,7 +3533,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {

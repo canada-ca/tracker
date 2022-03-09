@@ -80,7 +80,7 @@ describe('given the load domain connections by user id function', () => {
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
         lastRan: '2021-01-01 12:12:12.000000',
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'fail',
           dmarc: 'fail',
@@ -92,7 +92,7 @@ describe('given the load domain connections by user id function', () => {
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: '2021-01-02 12:12:12.000000',
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -350,7 +350,7 @@ describe('given the load domain connections by user id function', () => {
           domainThree = await collections.domains.save({
             domain: 'test3.gc.ca',
             lastRan: null,
-            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+            selectors: ['selector1', 'selector2'],
           })
           await collections.claims.save({
             _to: domainThree._id,

@@ -478,7 +478,7 @@ const mocks = {
     }
   },
   Selector: () =>
-    'selector' + faker.datatype.number({ min: 1, max: 9 }) + '._domainkey',
+    'selector' + faker.datatype.number({ min: 1, max: 9 }),
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),

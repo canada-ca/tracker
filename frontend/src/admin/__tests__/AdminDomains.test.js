@@ -382,7 +382,7 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
-              selectors: ['selector1._domainkey'],
+              selectors: ['selector1'],
             },
           },
           result: {
@@ -452,16 +452,16 @@ describe('<AdminDomains />', () => {
         expect(getByText(/Selector cannot be empty/)).toBeInTheDocument(),
       )
 
-      fireEvent.change(selectorInput, { target: { value: 'selector1' } })
+      fireEvent.change(selectorInput, { target: { value: 'selector1.' } })
 
       await waitFor(() =>
         expect(
-          getByText(/Selector must be string ending in '._domainkey'/),
+          getByText(/Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters/),
         ).toBeInTheDocument(),
       )
 
       fireEvent.change(selectorInput, {
-        target: { value: 'selector1._domainkey' },
+        target: { value: 'selector1' },
       })
 
       const confirmBtn = getByText(/Confirm/)

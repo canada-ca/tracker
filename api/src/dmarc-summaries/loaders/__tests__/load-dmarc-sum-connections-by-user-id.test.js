@@ -94,7 +94,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
       domain1 = await collections.domains.save({
         domain: 'test1.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
       })
       await collections.ownership.save({
         _to: domain1._id,
@@ -103,7 +103,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
       domain2 = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
       })
       await collections.ownership.save({
         _to: domain2._id,
