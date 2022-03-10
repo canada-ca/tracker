@@ -191,10 +191,12 @@ class DKIMScanner():
         for selector in self.selectors:
             record[selector] = {}
             try:
+                # Add period at end of name for DNS query, otherwise it may not resolve in containers due to search in /etc/resolv.conf
+                lookup_url = f"{selector}._domainkey.{self.domain}."
                 # Retrieve public key from DNS
-                pk_txt = dnsplug.get_txt_dnspython(f"{selector}._domainkey.{self.domain}")
+                pk_txt = dnsplug.get_txt_dnspython(lookup_url)
 
-                pk, keysize, ktag = self.load_pk(f"{selector}._domainkey.{self.domain}", pk_txt)
+                pk, keysize, ktag = self.load_pk(lookup_url, pk_txt)
 
                 # Parse values and convert to dictionary
                 pub = dkim.util.parse_tag_value(pk_txt)
