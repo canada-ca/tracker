@@ -2,6 +2,7 @@ import 'dotenv-safe/config'
 import { Database, aql } from 'arangojs'
 import { Server } from './src/server'
 import { createContext } from './src/create-context'
+import { createI18n } from './src/create-i18n'
 
 const {
   PORT = 4000,
@@ -68,13 +69,19 @@ const collections = [
   }
 
   const server = await Server({
-    // TODO: createContext accepts a context and returns a context. This is not
-    // amazing.
-    context: createContext({
-      query,
-      collections,
-      transaction,
-    }),
+    context: async ({ req, res, connection }) => {
+      if (connection) {
+        // XXX: assigning over req?
+        req = {
+          headers: {
+            authorization: connection.authorization,
+          },
+          language: connection.language,
+        }
+      }
+      const i18n = createI18n(req.language)
+      return createContext({ query, transaction, collections, req, res, i18n })
+    },
     maxDepth,
     complexityCost,
     scalarCost,

@@ -35,4 +35,4 @@ COPY --from=builder /app/dist ./dist
 USER node
 EXPOSE 4000
 
-CMD ["npm", "start"]
+CMD ["npm", "start", "--node-options=--dns-result-order=ipv4first"]
