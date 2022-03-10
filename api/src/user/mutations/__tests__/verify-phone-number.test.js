@@ -4,13 +4,46 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadUserByKey } from '../../loaders'
 import { userRequired } from '../../../auth'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('user send password reset email', () => {
   let query, drop, truncate, collections, transaction, schema, i18n, user
@@ -35,11 +68,15 @@ describe('user send password reset email', () => {
   describe('given a successful phone number verification', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
     })
     beforeEach(async () => {
@@ -99,7 +136,7 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               userRequired: userRequired({
@@ -158,7 +195,7 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               userRequired: userRequired({
@@ -226,7 +263,7 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               userRequired: userRequired({
@@ -285,7 +322,7 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
-            collections,
+            collections: collectionNames,
             transaction,
             auth: {
               userRequired: userRequired({
@@ -356,7 +393,7 @@ describe('user send password reset email', () => {
               i18n,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 userRequired: jest.fn().mockReturnValue({
@@ -416,7 +453,7 @@ describe('user send password reset email', () => {
               i18n,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 userRequired: jest.fn().mockReturnValue({
@@ -478,7 +515,7 @@ describe('user send password reset email', () => {
                 i18n,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -539,7 +576,7 @@ describe('user send password reset email', () => {
                 i18n,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest
@@ -616,7 +653,7 @@ describe('user send password reset email', () => {
               i18n,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 userRequired: jest.fn().mockReturnValue({
@@ -676,7 +713,7 @@ describe('user send password reset email', () => {
               i18n,
               userKey: 123,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               auth: {
                 userRequired: jest.fn().mockReturnValue({
@@ -738,7 +775,7 @@ describe('user send password reset email', () => {
                 i18n,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
@@ -799,7 +836,7 @@ describe('user send password reset email', () => {
                 i18n,
                 userKey: 123,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
                   commit: jest

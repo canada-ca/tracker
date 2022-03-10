@@ -28,6 +28,7 @@ const tooltipStyles = {
   borderColor: 'black',
   borderWidth: '1px',
   fontSize: '1.1rem',
+  zIndex: 11,
 }
 
 const totalKeys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
@@ -81,7 +82,7 @@ export function DmarcReportSummaryGraph({ ...props }) {
   const ResponsiveVerticalGraph = withScreenSize(VerticalGraph)
 
   return (
-    <Stack w="100%" align={{ base: 'center', md: 'flex-start' }}>
+    <Stack w="100%">
       <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
         <Stack
           isInline
@@ -121,11 +122,13 @@ export function DmarcReportSummaryGraph({ ...props }) {
           </Select>
         </Stack>
       </Flex>
-      {isHorizontal ? (
-        <ResponsiveHorizontalGraph data={data} keys={keys} />
-      ) : (
-        <ResponsiveVerticalGraph data={data} keys={keys} />
-      )}
+      <Stack align="center">
+        {isHorizontal ? (
+          <ResponsiveHorizontalGraph data={data} keys={keys} />
+        ) : (
+          <ResponsiveVerticalGraph data={data} keys={keys} />
+        )}
+      </Stack>
     </Stack>
   )
 }

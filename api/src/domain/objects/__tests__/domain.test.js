@@ -193,11 +193,11 @@ describe('given the domain object', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        const selectors = ['selector1._domainkey', 'selector2._domainkey']
+        const selectors = ['selector1', 'selector2']
 
         expect(demoType.selectors.resolve({ selectors })).toEqual([
-          'selector1._domainkey',
-          'selector2._domainkey',
+          'selector1',
+          'selector2',
         ])
       })
     })

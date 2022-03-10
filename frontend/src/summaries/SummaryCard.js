@@ -5,46 +5,62 @@ import { arrayOf, number, objectOf, shape, string } from 'prop-types'
 import { Doughnut, Segment } from './Doughnut'
 
 export function SummaryCard({
+  id,
   title,
   categoryDisplay,
   description,
   data,
   ...props
 }) {
+  let dmarcCompliantCount = 0
+  let dmarcCompliantPercentage = 0.0
+  let { categories } = data
+  if (id === 'dmarcPhases') {
+    data.categories.forEach(({ name, count, percentage }) => {
+      if (name !== 'not implemented') {
+        dmarcCompliantCount += count
+        dmarcCompliantPercentage += percentage
+      }
+    })
+    categories = [
+      {
+        name: 'implemented',
+        count: dmarcCompliantCount,
+        percentage: dmarcCompliantPercentage,
+      },
+      categories[0],
+    ]
+  }
+
   return (
     <Box
-      bg="primary"
       rounded="lg"
       overflow="hidden"
-      boxShadow="medium"
-      width="min-content"
-      height="auto"
+      borderWidth="1px"
+      borderColor="black"
+      width={{ base: '100%', lg: '35%' }}
       {...props}
     >
-      <Box bg="primary" px="8">
+      <Box px="8">
         <Text
           fontSize="xl"
           fontWeight="semibold"
-          textAlign="center"
-          color="white"
+          textAlign="left"
+          color="primary"
+          my="2"
         >
           {title}
         </Text>
-        <Text
-          fontSize="md"
-          textAlign="center"
-          color="white"
-          wordBreak="break-word"
-        >
+        <Text fontSize="md" wordBreak="break-word" mb="2">
           {description}
         </Text>
       </Box>
 
-      <Box width="boxes.2" bg="white">
+      <Box align="center" borderTop="1px" borderColor="black">
         <Doughnut
-          id={title.replace(/ /g, '')} // id is required as svg defs can conflict
+          id={id}
           title={title}
-          data={data.categories.map(({ name, count, percentage }) => ({
+          data={categories.map(({ name, count, percentage }) => ({
             title: categoryDisplay[name].name,
             color: categoryDisplay[name].color,
             count,
@@ -65,6 +81,7 @@ export function SummaryCard({
 }
 
 SummaryCard.propTypes = {
+  id: string,
   title: string.isRequired,
   description: string.isRequired,
   // An object of keys whose values have a shape:

@@ -7,6 +7,8 @@ import {
   Stack,
   Text,
   useToast,
+  Checkbox,
+  Link,
 } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { Link as RouteLink, useParams } from 'react-router-dom'
@@ -23,7 +25,6 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { useUserVar } from '../utilities/userState'
 import { activate } from '../utilities/i18n.config'
-import TermsConditionsPage from '../termsConditions/TermsConditionsPage'
 import { SIGN_UP } from '../graphql/mutations'
 
 export default function CreateUserPage() {
@@ -131,7 +132,7 @@ export default function CreateUserPage() {
   )
 
   return (
-    <Box px="4" mx="auto" overflow="hidden">
+    <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
         validationSchema={createValidationSchema([
           'email',
@@ -162,47 +163,75 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
-              <Trans>
-                Create an account by entering an email and password.
-              </Trans>
+            <Heading
+              as="h1"
+              fontSize="3xl"
+              mb="8"
+              textAlign={{ lg: 'left', md: 'center' }}
+            >
+              <Trans>Register</Trans>
             </Heading>
 
-            {addUserToOrgText}
-
-            <EmailField w="100%" mb="4" />
-
-            <DisplayNameField w="100%" mb="4" />
-
-            <PasswordConfirmation w="100%" mb="4" />
-
-            <LanguageSelect name="lang" width="100%" mb="4" />
-
-            <Box
-              overflow="scroll"
-              height="20em"
-              border="1px"
-              borderColor="gray.200"
-              p={4}
-              m={4}
-            >
-              <TermsConditionsPage />
+            <Box mb="4">
+              <Text fontWeight="bold" mb="2" fontSize="lg">
+                <Trans>Welcome to Tracker, please enter your details.</Trans>
+              </Text>
+              <Text>
+                <Trans>
+                  Let's get you set up so you can verify your account
+                  information and begin using Tracker.
+                </Trans>
+              </Text>
+              {addUserToOrgText}
             </Box>
 
-            <Stack spacing={4} isInline justifyContent="space-between">
-              <Button variant="primaryOutline" as={RouteLink} to="/sign-in">
-                <Trans>Back</Trans>
-              </Button>
-
-              <Button
-                variant="primary"
-                type="submit"
-                id="submitBtn"
-                isLoading={isSubmitting}
-              >
-                <Trans>Create Account</Trans>
-              </Button>
+            <Stack
+              direction={['column', 'row']}
+              mb="4"
+              w={{ lg: '50%', md: '100%' }}
+            >
+              <EmailField />
+              <DisplayNameField />
             </Stack>
+
+            <PasswordConfirmation
+              direction={['column', 'row']}
+              w={{ lg: '50%', md: '100%' }}
+              mb="2"
+            />
+
+            <LanguageSelect name="lang" w={{ lg: '25%', md: '50%' }} mb="6" />
+
+            <Box ml={{ lg: '12', md: '0' }} mb="4">
+              <Checkbox
+                colorScheme="orange"
+                isRequired
+                mb="4"
+                borderColor="black"
+              >
+                I agree to all Terms, Privacy Policy & Code of Conduct
+                Guidelines
+              </Checkbox>
+
+              <Box>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  id="submitBtn"
+                  isLoading={isSubmitting}
+                  w={['100%', '25%']}
+                  mb="4"
+                >
+                  <Trans>Create Account</Trans>
+                </Button>
+              </Box>
+              <Text>
+                Already have an account?{' '}
+                <Link as={RouteLink} to="/sign-in">
+                  Log in
+                </Link>
+              </Text>
+            </Box>
           </form>
         )}
       </Formik>

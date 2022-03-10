@@ -5,13 +5,13 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
 import { loadDomainConnectionsByUserId } from '../../loaders'
 import { loadUserByKey } from '../../../user'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -40,12 +40,16 @@ describe('given findMyDomainsQuery', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -87,7 +91,7 @@ describe('given findMyDomainsQuery', () => {
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -99,7 +103,7 @@ describe('given findMyDomainsQuery', () => {
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -191,7 +195,7 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domain', domainOne._key),
                     domain: 'test1.gc.ca',
                     lastRan: null,
-                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    selectors: ['selector1', 'selector2'],
                   },
                 },
                 {
@@ -200,7 +204,7 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domain', domainTwo._key),
                     domain: 'test2.gc.ca',
                     lastRan: null,
-                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    selectors: ['selector1', 'selector2'],
                   },
                 },
               ],

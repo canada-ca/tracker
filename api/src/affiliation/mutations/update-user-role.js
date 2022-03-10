@@ -158,14 +158,8 @@ given organization.`,
       )
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Transaction
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     // Only super admins can create new super admins
     let edge

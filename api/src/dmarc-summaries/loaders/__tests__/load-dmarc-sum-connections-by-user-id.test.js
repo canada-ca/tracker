@@ -5,12 +5,12 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadDmarcSummaryConnectionsByUserId,
   loadDmarcSummaryByKey,
 } from '../index'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -43,12 +43,16 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -90,7 +94,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
       domain1 = await collections.domains.save({
         domain: 'test1.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
       })
       await collections.ownership.save({
         _to: domain1._id,
@@ -99,7 +103,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
       domain2 = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
       })
       await collections.ownership.save({
         _to: domain2._id,

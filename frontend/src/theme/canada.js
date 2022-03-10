@@ -23,8 +23,7 @@ export default extendTheme({
   fonts: {
     heading: '"Noto Sans", sans-serif',
     body: '"Noto Sans", sans-serif',
-    mono:
-      'Noto Mono,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace',
+    mono: 'Noto Mono,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace',
   },
   fontSizes: {
     xs: '0.75rem',

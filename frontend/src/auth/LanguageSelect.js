@@ -17,7 +17,7 @@ export function LanguageSelect({ name, ...props }) {
       <FormLabel htmlFor="lang" fontWeight="bold">
         <Trans>Language:</Trans>
       </FormLabel>
-      <Select {...field} id="lang">
+      <Select {...field} id="lang" borderColor="black">
         <option hidden value="">
           {t`Select Preferred Language`}
         </option>

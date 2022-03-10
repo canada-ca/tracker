@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
-import { Box, VisuallyHidden } from '@chakra-ui/react'
+import { Box, Text, VisuallyHidden } from '@chakra-ui/react'
 import { useApolloClient } from '@apollo/client'
 
 import { activate, locales } from '../utilities/i18n.config'
@@ -21,24 +21,27 @@ const Toggler = (props) => {
       _focus={{
         outline: `3px solid accent`,
       }}
-      bg="primary"
-      color="#fff"
+      _hover={{
+        bg: 'gray.200',
+      }}
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
       <Box
+        borderWidth="1px"
+        borderColor="gray.300"
         aria-hidden
         d="flex"
-        bg="gray.100"
         color="primary"
         textTransform="uppercase"
         fontWeight="bold"
         fontSize="lg"
-        boxSize={10}
         alignItems="center"
         justifyContent="center"
         borderRadius="0.25rem"
       >
-        {locale}
+        <Text py="1" px="4">
+          {locale}
+        </Text>
       </Box>
     </Box>
   )

@@ -20,6 +20,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
@@ -37,6 +38,7 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { ORG_DETAILS_PAGE } from '../graphql/queries'
 import { LEAVE_ORG } from '../graphql/mutations'
 import { bool } from 'prop-types'
+import { RadialBarChart } from '../summaries/RadialBarChart'
 
 export default function OrganizationDetails({ isLoginRequired }) {
   const { orgSlug } = useParams()
@@ -171,6 +173,9 @@ export default function OrganizationDetails({ isLoginRequired }) {
             <Trans>Summary</Trans>
           </Tab>
           <Tab>
+            <Trans>DMARC Phases</Trans>
+          </Tab>
+          <Tab>
             <Trans>Domains</Trans>
           </Tab>
           {!isNaN(data?.organization?.affiliations?.totalCount) && (
@@ -190,6 +195,18 @@ export default function OrganizationDetails({ isLoginRequired }) {
                 city={data?.organization?.city}
                 province={data?.organization?.province}
               />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Box>
+                <Text fontSize="3xl">DMARC Phases</Text>
+                <RadialBarChart
+                  height={600}
+                  width={600}
+                  data={data?.organization?.summaries?.dmarcPhase?.categories}
+                />
+              </Box>
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>

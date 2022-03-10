@@ -5,12 +5,12 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadVerifiedOrgConnectionsByDomainId } from '../../../verified-organizations/loaders'
 import { loadVerifiedDomainsById } from '../../loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -51,12 +51,16 @@ describe('given findVerifiedDomainByDomain query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       org = await collections.organizations.save({
@@ -87,7 +91,7 @@ describe('given findVerifiedDomainByDomain query', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',

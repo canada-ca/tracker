@@ -1,14 +1,12 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
-import { i18n } from '@lingui/core'
-import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
+import { CSSReset, Flex, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useQuery } from '@apollo/client'
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
-import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { SkipLink } from './SkipLink'
@@ -25,6 +23,7 @@ import { lazyWithRetry } from '../utilities/lazyWithRetry'
 import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
+import { SlideMessage } from './SlideMessage'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
@@ -67,12 +66,10 @@ const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const {
-    currentUser,
-    isLoggedIn,
-    isEmailValidated,
-    currentTFAMethod,
-  } = useUserVar()
+  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } =
+    useUserVar()
+
+  const { isOpen, onToggle } = useDisclosure()
 
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
 
@@ -85,22 +82,22 @@ export function App() {
     }
   }, [currentUser.jwt])
 
-  console.log(currentTFAMethod())
-
   return (
-    <>
-      <Flex direction="column" minHeight="100vh" bg="gray.50">
+    <Flex minHeight="100vh" bg="gray.50" direction="row">
+      <SlideMessage isOpen={isOpen} onToggle={onToggle} />
+      <Flex
+        style={{ zIndex: 10 }}
+        direction="column"
+        w={{ base: '100%', md: isOpen ? '75%' : '100%' }}
+        ml={isOpen ? '25%' : 0}
+      >
         <header>
           <CSSReset />
           <SkipLink invisible href="#main">
             <Trans>Skip to main content</Trans>
           </SkipLink>
-          <PhaseBanner phase={<Trans>BETA</Trans>}>
-            <Trans>This is a new service, we are constantly improving.</Trans>
-          </PhaseBanner>
           <TopBanner />
         </header>
-
         <Navigation>
           <RouteLink to="/">
             <Trans>Home</Trans>
@@ -352,35 +349,8 @@ export function App() {
         </Main>
         <FloatingMenu />
 
-        <Footer display={{ base: 'none', md: 'inline' }}>
-          <Link
-            isExternal={true}
-            href={
-              i18n.locale === 'en'
-                ? 'https://www.canada.ca/en/transparency/privacy.html'
-                : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-            }
-          >
-            <Trans>Privacy</Trans>
-          </Link>
-
-          <Link as={RouteLink} to="/terms-and-conditions" ml={4}>
-            <Trans>Terms & conditions</Trans>
-          </Link>
-
-          <Link
-            ml={4}
-            href={'https://github.com/canada-ca/tracker/issues'}
-            isExternal={true}
-          >
-            <Trans>Report an Issue</Trans>
-          </Link>
-
-          <Link as={RouteLink} to="/contact-us" ml={4}>
-            <Trans>Contact Us</Trans>
-          </Link>
-        </Footer>
+        <Footer display={{ base: 'none', md: 'inline' }} />
       </Flex>
-    </>
+    </Flex>
   )
 }

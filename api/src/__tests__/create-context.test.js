@@ -2,10 +2,6 @@ const { createContext } = require('../create-context')
 const { tokenize } = require('../auth')
 
 describe('given the create context function', () => {
-  const consoleOut = []
-  const mockedWarn = (output) => consoleOut.push(output)
-  console.warn = mockedWarn
-
   describe('request authorization token is not set', () => {
     it('returns object with userKey as "NO_USER"', async () => {
       const context = await createContext({})({

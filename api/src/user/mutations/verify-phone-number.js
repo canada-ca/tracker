@@ -64,14 +64,8 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       }
     }
 
-    // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
-
     // Setup Transaction
-    const trx = await transaction(collectionStrings)
+    const trx = await transaction(collections)
 
     // Update phoneValidated to be true
     try {
