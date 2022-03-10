@@ -88,7 +88,8 @@ const collections = [
         req,
         res,
         i18n,
-        loginRequiredBool: LOGIN_REQUIRED == 'true', // bool not string
+        loginRequiredBool: LOGIN_REQUIRED === 'true', // bool not string
+        salt: HASHING_SALT,
       })
     },
     maxDepth,
