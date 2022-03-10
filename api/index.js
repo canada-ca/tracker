@@ -15,7 +15,8 @@ const {
   OBJECT_COST: objectCost,
   LIST_FACTOR: listFactor,
   TRACING_ENABLED: tracing,
-  LOGIN_REQUIRED,
+  HASHING_SALT,
+  LOGIN_REQUIRED = 'true',
 } = process.env
 
 const collections = [
@@ -80,7 +81,16 @@ const collections = [
         }
       }
       const i18n = createI18n(req.language)
-      return createContext({ query, transaction, collections, req, res, i18n })
+      return createContext({
+        query,
+        transaction,
+        collections,
+        req,
+        res,
+        i18n,
+        loginRequiredBool: LOGIN_REQUIRED === 'true', // bool not string
+        salt: HASHING_SALT,
+      })
     },
     maxDepth,
     complexityCost,

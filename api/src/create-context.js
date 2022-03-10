@@ -33,8 +33,6 @@ import {
   sendVerificationEmail,
 } from './notify'
 
-const { HASHING_SALT, LOGIN_REQUIRED = 'true' } = process.env
-
 export async function createContext({
   query,
   transaction,
@@ -42,6 +40,8 @@ export async function createContext({
   req: request,
   res: response,
   i18n,
+  loginRequiredBool,
+  salt,
 }) {
   const verify = verifyToken({ i18n })
 
@@ -53,8 +53,6 @@ export async function createContext({
   } else {
     userKey = 'NO_USER'
   }
-
-  const loginRequiredBool = LOGIN_REQUIRED !== 'false'
 
   return {
     query,
@@ -89,7 +87,7 @@ export async function createContext({
       loginRequiredBool,
       tokenize,
       tfaRequired: tfaRequired({ i18n }),
-      saltedHash: saltedHash(HASHING_SALT),
+      saltedHash: saltedHash(salt),
       userRequired: userRequired({
         i18n,
         userKey,
