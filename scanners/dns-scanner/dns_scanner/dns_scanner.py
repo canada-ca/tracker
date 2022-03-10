@@ -140,12 +140,12 @@ class DKIMScanner():
         self.domain = target_domain
         self.selectors = target_selectors
 
-
+    @staticmethod
     def bitsize(x):
         """Return size of long in bits."""
         return len(bin(x)) - 2
 
-
+    @staticmethod
     def load_pk(name, s=None):
         """
         Load the corresponding public key from DNS records
