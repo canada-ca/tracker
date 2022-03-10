@@ -42,7 +42,7 @@ export function SlideMessage({ isOpen, onToggle, ...props }) {
               alt={'Symbol of the Government of Canada'}
             />
           </Box>
-          <Box px="12">
+          <Box px="12" mb="100%">
             <Text fontSize="lg" fontWeight="semibold" color="white">
               <Trans>Track Digital Security</Trans>
             </Text>
@@ -72,42 +72,33 @@ export function SlideMessage({ isOpen, onToggle, ...props }) {
               </Trans>
             </Text>
           </Box>
-          <Box mt="100%">
-            <Flex
-              fontSize="sm"
-              justifyContent="space-around"
-              px="4"
-              align="center"
-              direction="row"
+          <Flex fontSize="xs" justifyContent="space-evenly" px="2">
+            <Link
+              isExternal={true}
+              href={
+                i18n.locale === 'en'
+                  ? 'https://www.canada.ca/en/transparency/privacy.html'
+                  : 'https://www.canada.ca/fr/transparence/confidentialite.html'
+              }
             >
-              <Link
-                isExternal={true}
-                href={
-                  i18n.locale === 'en'
-                    ? 'https://www.canada.ca/en/transparency/privacy.html'
-                    : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-                }
-              >
-                <Trans>Privacy</Trans>
-              </Link>
+              <Trans>Privacy</Trans>
+            </Link>
 
-              <Link as={RouteLink} to="/terms-and-conditions" ml={4}>
-                <Trans>Terms & conditions</Trans>
-              </Link>
+            <Link as={RouteLink} to="/terms-and-conditions">
+              <Trans>Terms & conditions</Trans>
+            </Link>
 
-              <Link
-                ml={4}
-                href={'https://github.com/canada-ca/tracker/issues'}
-                isExternal={true}
-              >
-                <Trans>Report an Issue</Trans>
-              </Link>
+            <Link
+              href={'https://github.com/canada-ca/tracker/issues'}
+              isExternal={true}
+            >
+              <Trans>Report an Issue</Trans>
+            </Link>
 
-              <Link as={RouteLink} to="/contact-us" ml={4}>
-                <Trans>Contact Us</Trans>
-              </Link>
-            </Flex>
-          </Box>
+            <Link as={RouteLink} to="/contact-us">
+              <Trans>Contact Us</Trans>
+            </Link>
+          </Flex>
         </Box>
       </Slide>
       <IconButton

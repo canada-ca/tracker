@@ -4,8 +4,8 @@ import { Flex } from '@chakra-ui/react'
 
 export const Main = ({ children }) => (
   <Flex
-    // layerStyle="pageLayout"
-    mx="10%"
+    layerStyle="pageLayout"
+    mx="auto"
     as="main"
     id="main"
     fontFamily="body"

@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
-import { CSSReset, Flex, Link, Text, useDisclosure } from '@chakra-ui/react'
+import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useQuery } from '@apollo/client'
@@ -23,7 +23,8 @@ import { lazyWithRetry } from '../utilities/lazyWithRetry'
 import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
-import { SlideMessage } from './SlideMessage'
+// import { SlideMessage } from './SlideMessage'
+import { useLingui } from '@lingui/react'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
@@ -68,9 +69,7 @@ export function App() {
   // Hooks to be used with this functional component
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } =
     useUserVar()
-
-  const { isOpen, onToggle } = useDisclosure()
-
+  const { i18n } = useLingui()
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
 
   // Close websocket on user jwt change (refresh/logout)
@@ -84,13 +83,7 @@ export function App() {
 
   return (
     <Flex minHeight="100vh" bg="gray.50" direction="row">
-      <SlideMessage isOpen={isOpen} onToggle={onToggle} />
-      <Flex
-        style={{ zIndex: 10 }}
-        direction="column"
-        w={{ base: '100%', md: isOpen ? '75%' : '100%' }}
-        ml={isOpen ? '25%' : 0}
-      >
+      <Flex style={{ zIndex: 10 }} direction="column" w="100%">
         <header>
           <CSSReset />
           <SkipLink invisible href="#main">
@@ -159,7 +152,7 @@ export function App() {
           </NotificationBanner>
         )}
 
-        <Main marginBottom={{ base: '40px', md: 'none' }}>
+        <Main mb={{ base: '40px', md: 'none' }}>
           <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>
@@ -349,7 +342,35 @@ export function App() {
         </Main>
         <FloatingMenu />
 
-        <Footer display={{ base: 'none', md: 'inline' }} />
+        <Footer display={{ base: 'none', md: 'inline' }}>
+          <Link
+            isExternal={true}
+            href={
+              i18n.locale === 'en'
+                ? 'https://www.canada.ca/en/transparency/privacy.html'
+                : 'https://www.canada.ca/fr/transparence/confidentialite.html'
+            }
+            ml="4"
+          >
+            <Trans>Privacy</Trans>
+          </Link>
+
+          <Link as={RouteLink} to="/terms-and-conditions" ml="4">
+            <Trans>Terms & conditions</Trans>
+          </Link>
+
+          <Link
+            href={'https://github.com/canada-ca/tracker/issues'}
+            isExternal={true}
+            ml="4"
+          >
+            <Trans>Report an Issue</Trans>
+          </Link>
+
+          <Link as={RouteLink} to="/contact-us" ml="4">
+            <Trans>Contact Us</Trans>
+          </Link>
+        </Footer>
       </Flex>
     </Flex>
   )

@@ -12,7 +12,7 @@ export const Navigation = ({ children, ...props }) => {
       borderBottom="2px solid"
       borderBottomColor="black"
       display={{ base: 'none', md: 'flex' }}
-      mr="12"
+      mx="12"
       {...props}
     >
       <Stack

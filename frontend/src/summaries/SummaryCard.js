@@ -38,7 +38,8 @@ export function SummaryCard({
       overflow="hidden"
       borderWidth="1px"
       borderColor="black"
-      width={{ base: '100%', lg: '35%' }}
+      width={['100%', '100%', '45%', '45%', '35%', '35%']}
+      mx="4"
       {...props}
     >
       <Box px="8">
