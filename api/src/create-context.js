@@ -4,7 +4,6 @@ import fetch from 'isomorphic-fetch'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
-import { createI18n } from './create-i18n'
 import { cleanseInput, decryptPhoneNumber, slugify } from './validators'
 import {
   checkDomainOwnership,
@@ -107,26 +106,14 @@ import { loadChartSummaryByKey } from './summaries/loaders'
 
 const { HASHING_SALT, LOGIN_REQUIRED = 'true' } = process.env
 
-export const createContext =
-  (context) =>
-  async ({ req, res, connection }) => {
-    if (connection) {
-      req = {
-        headers: {
-          authorization: connection.authorization,
-        },
-        language: connection.language,
-      }
-      return createContextObject({ context, req })
-    } else {
-      return createContextObject({ context, req, res })
-    }
-  }
-
-const createContextObject = ({ context, req: request, res: response }) => {
-  const { query } = context
-
-  const i18n = createI18n(request.language)
+export async function createContext({
+  query,
+  transaction,
+  collections,
+  req: request,
+  res: response,
+  i18n,
+}) {
 
   const verify = verifyToken({ i18n })
 
@@ -142,7 +129,9 @@ const createContextObject = ({ context, req: request, res: response }) => {
   const loginRequiredBool = LOGIN_REQUIRED !== 'false'
 
   return {
-    ...context,
+    query,
+    transaction,
+    collections,
     i18n,
     request,
     response,
