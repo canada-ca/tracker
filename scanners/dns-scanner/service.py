@@ -78,9 +78,10 @@ async def run(loop):
                 print(f"starting DKIM scanner")
                 try:
                     dkim_scanner = DKIMScanner(domain, selectors)
-                    scan_result.dkim = dkim_scanner.run()
+                    scan_results["dkim"] = dkim_scanner.run()
                 except:
                     logging.error(f'Error while running DKIM scanner on domain "{domain}" with selectors "{selectors}."', exc_info=True)
+                    scan_results["dkim"] = {"error": "error while scanning"}
                 print(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
             else:
                 scan_results["dkim"] = {"error": "missing"}
