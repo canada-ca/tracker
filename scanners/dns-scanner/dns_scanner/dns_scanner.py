@@ -175,7 +175,7 @@ class DKIMScanner():
         if pub[b"k"] == b"rsa":
             try:
                 pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
-                keysize = bitsize(pk["modulus"])
+                keysize = dkim.bitsize(pk["modulus"])
             except KeyError:
                 raise KeyFormatError(f"incomplete public key: {s}")
             except (TypeError, UnparsableKeyError) as e:
@@ -194,7 +194,7 @@ class DKIMScanner():
                 # Retrieve public key from DNS
                 pk_txt = dnsplug.get_txt_dnspython(f"{selector}._domainkey.{self.domain}")
 
-                pk, keysize, ktag = load_pk(f"{selector}._domainkey.{self.domain}", pk_txt)
+                pk, keysize, ktag = self.load_pk(f"{selector}._domainkey.{self.domain}", pk_txt)
 
                 # Parse values and convert to dictionary
                 pub = dkim.util.parse_tag_value(pk_txt)
