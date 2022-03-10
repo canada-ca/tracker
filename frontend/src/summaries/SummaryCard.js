@@ -38,7 +38,7 @@ export function SummaryCard({
       overflow="hidden"
       borderWidth="1px"
       borderColor="black"
-      width={['100%', '100%', '45%', '45%', '35%', '30%']}
+      width={['100%', '100%', '45%', '45%', '35%', '35%']}
       mx="4"
       {...props}
     >
