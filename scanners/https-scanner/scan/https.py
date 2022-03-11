@@ -131,9 +131,9 @@ def result_for(domain):
 
     # First, the basic fields the CSV will use.
     result = {
-        "Domain": domain.request_uri,
+        "Domain": domain.hostname,
         "Totally unreachable": domain.totally_unreachable(),
-        "Base Domain": parent_domain_for(domain.request_uri),
+        "Base Domain": parent_domain_for(domain.hostname),
         "Canonical URL": domain.canonical.url,
         "Live": is_live(domain),
         "Redirect": is_redirect_domain(domain),
@@ -695,7 +695,7 @@ def is_hsts_preload_pending(domain):
             "using this function"
         )
 
-    return domain.request_uri in preload_pending
+    return domain.hostname in preload_pending
 
 
 def is_hsts_preloaded(domain):
@@ -710,14 +710,14 @@ def is_hsts_preloaded(domain):
             "using this function"
         )
 
-    return domain.request_uri in preload_list
+    return domain.hostname in preload_list
 
 
 def is_parent_hsts_preloaded(domain):
     """
     Whether a domain's parent domain is in Chrome's HSTS preload list.
     """
-    return is_hsts_preloaded(Domain(parent_domain_for(domain.request_uri)))
+    return is_hsts_preloaded(Domain(parent_domain_for(domain.hostname)))
 
 
 def parent_domain_for(hostname):

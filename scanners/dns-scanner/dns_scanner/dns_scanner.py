@@ -1,5 +1,7 @@
 import json
 import os
+from dataclasses import dataclass
+
 import sys
 import logging
 import nacl
@@ -8,15 +10,25 @@ import tldextract
 import dkim
 from checkdmarc import *
 from dns import resolver
-from dkim import dnsplug, crypto, KeyFormatError
+from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
 
+@dataclass
+class DNSScanResult:
+    record_exists: bool = None
+    resolve_chain: [str] = None
+    resolve_ips: [str] = None
+    mx_records: [str] = None
+    cname_record: str = None
+    dkim: dict = None
+    dmarc: dict = None
 
-class DMARCScanner():
+
+class DMARCScanner:
     domain = None
 
 
@@ -72,7 +84,7 @@ class DMARCScanner():
                 else:
                     try:
                         # Request txt record to ensure that "rua" domain accepts DMARC reports.
-                        rua_scan_result = resolver.query(
+                        rua_scan_result = resolver.resolve(
                             f"{self.domain}._report._dmarc.{rua_domain}", "TXT"
                         )
                         rua_txt_value = (
@@ -112,7 +124,7 @@ class DMARCScanner():
                 else:
                     try:
                         # Request txt record to ensure that "ruf" domain accepts DMARC reports.
-                        ruf_scan_result = resolver.query(
+                        ruf_scan_result = resolver.resolve(
                             f"{self.domain}._report._dmarc.{ruf_domain}", "TXT"
                         )
                         ruf_txt_value = (
@@ -131,10 +143,9 @@ class DMARCScanner():
         return scan_result
 
 
-class DKIMScanner():
+class DKIMScanner:
     domain = None
     selectors = None
-
 
     def __init__(self, target_domain, target_selectors):
         self.domain = target_domain
@@ -182,7 +193,6 @@ class DKIMScanner():
                 raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
             ktag = b"rsa"
         return pk, keysize, ktag
-
 
     def run(self):
 

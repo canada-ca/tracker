@@ -1,3 +1,4 @@
+import json
 import os
 import time
 import argparse
@@ -97,26 +98,20 @@ def scan_domain(domain, dkim_selectors=None):
     scan_result.dmarc = dmarc_scanner.run()
     logging.info(f"DMARC scan elapsed time: {time.monotonic() - dmarc_start_time}")
 
-    # Run DKIM scan
-    if len(dkim_selectors) != 0:
-        # DKIM scan
-        dkim_start_time = time.time()
-        logging.info(f"Starting DKIM scanner for '{domain}'")
-        dkim_scanner = DKIMScanner(domain, dkim_selectors)
-        scan_result.dkim = dkim_scanner.run()
-        logging.info(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
-    else:
-        scan_result.dkim = {"error": "missing"}
+    try:
+        # Run DKIM scan
+        if len(dkim_selectors) != 0:
+            # DKIM scan
+            dkim_start_time = time.time()
+            logging.info(f"Starting DKIM scanner for '{domain}'")
+            dkim_scanner = DKIMScanner(domain, dkim_selectors)
+            scan_result.dkim = dkim_scanner.run()
+            logging.info(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
+        else:
+            scan_result.dkim = {"error": "missing"}
+    except TimeoutError:
+        print("TIMEOUT")
 
     logging.info(f"DNS results for '{domain}': {scan_result.__dict__}")
 
     return scan_result.__dict__
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Scan a domain for DNS records.')
-    parser.add_argument('domain', metavar='domain', type=str,
-                        help='the domain to scan')
-
-    args = parser.parse_args()
-    print(scan_domain(args.domain))
