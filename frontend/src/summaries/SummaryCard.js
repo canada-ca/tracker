@@ -3,6 +3,7 @@ import { Box, Text } from '@chakra-ui/react'
 import { arrayOf, number, objectOf, shape, string } from 'prop-types'
 
 import { Doughnut, Segment } from './Doughnut'
+import { useLingui } from '@lingui/react'
 
 export function SummaryCard({
   id,
@@ -12,6 +13,7 @@ export function SummaryCard({
   data,
   ...props
 }) {
+  const { i18n } = useLingui()
   let dmarcCompliantCount = 0
   let dmarcCompliantPercentage = 0.0
   let { categories } = data
@@ -42,7 +44,14 @@ export function SummaryCard({
       mx="4"
       {...props}
     >
-      <Box px="8">
+      <Box
+        px="8"
+        mb={
+          id === 'httpsStatus'
+            ? ['2', '2', i18n.locale === 'fr' ? '8' : '2', '8']
+            : '2'
+        }
+      >
         <Text
           fontSize="xl"
           fontWeight="semibold"
