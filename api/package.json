@@ -13,6 +13,7 @@
     "dev": "NODE_OPTIONS=--dns-result-order=ipv4first babel-node index.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "NODE_OPTIONS=--dns-result-order=ipv4first jest --testPathIgnorePatterns=.*-scan-data.*",
+    "only": "NODE_OPTIONS=--dns-result-order=ipv4first jest",
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "prettier": "prettier --write \"**/*.js\"",
