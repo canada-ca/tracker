@@ -4,13 +4,17 @@ import { Box, Button, Flex, useToast, Image } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
+import sigEn from '../images/goc-header-logo-dark-en.svg'
+import sigFr from '../images/goc-header-logo-dark-fr.svg'
+import trackerLogo from '../images/Asset6.svg'
+import trackerText from '../images/Asset3.svg'
+
 import { LocaleSwitcher } from './LocaleSwitcher'
 
 import { Layout } from '../components/Layout'
 import { useUserVar } from '../utilities/userState'
 import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
-import trackerLogo from '../images/Asset4.svg'
 import { useLingui } from '@lingui/react'
 
 export const TopBanner = (props) => {
@@ -46,20 +50,33 @@ export const TopBanner = (props) => {
     <Layout>
       <Flex align="center" fontFamily="body" {...props}>
         <Box
-          mt={{ base: '4', lg: '8' }}
-          mb="4"
-          mx="4"
-          w="15%"
+          px="8"
+          width={{ base: 272, md: 360 }}
           display={{ base: 'none', md: 'initial' }}
         >
           <Image
-            src={trackerLogo}
-            alt={
-              i18n.locale === 'en'
-                ? 'Symbol of the Government of Canada'
-                : 'Symbole du gouvernement du Canada'
-            }
+            src={i18n.locale === 'en' ? sigEn : sigFr}
+            pr="auto"
+            py="6"
+            minHeight="41px"
+            alt={'Symbol of the Government of Canada'}
           />
+        </Box>
+        <Box
+          my="4"
+          ml="4"
+          width={{ base: 0, md: 125 }}
+          display={{ base: 'none', md: 'initial' }}
+        >
+          <Image src={trackerLogo} />
+        </Box>
+        <Box
+          mr="4"
+          my="4"
+          width={{ base: 0, md: 125 }}
+          display={{ base: 'none', md: 'initial' }}
+        >
+          <Image src={trackerText} />
         </Box>
 
         <PhaseBanner
