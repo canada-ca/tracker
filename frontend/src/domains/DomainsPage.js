@@ -1,25 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import {
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Link,
-  Select,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  ExternalLinkIcon,
-  SearchIcon,
-} from '@chakra-ui/icons'
+import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -32,6 +14,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_DOMAINS as FORWARD } from '../graphql/queries'
+import { SearchBox } from '../components/SearchBox'
 
 export default function DomainsPage() {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -45,9 +28,6 @@ export default function DomainsPage() {
   }, [searchTerm])
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
-
-  const orderIconName =
-    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
   const {
     loading,
@@ -76,6 +56,19 @@ export default function DomainsPage() {
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
+
+  const orderByOptions = [
+    { value: 'DOMAIN', text: t`Domain` },
+    { value: 'POLICY_STATUS', text: t`ITPIN Status` },
+    { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
+    { value: 'HSTS_STATUS', text: t`HSTS Status` },
+    { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
+    { value: 'CURVES_STATUS', text: t`Curves Status` },
+    { value: 'PROTOCOLS_STATUS', text: t`Protocols Status` },
+    { value: 'SPF_STATUS', text: t`SPF Status` },
+    { value: 'DKIM_STATUS', text: t`DKIM Status` },
+    { value: 'DMARC_STATUS', text: t`DMARC Status` },
+  ]
 
   const domainList = loading ? (
     <LoadingMessage>
@@ -176,91 +169,22 @@ export default function DomainsPage() {
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <Flex
-          direction={{ base: 'column', md: 'row' }}
-          alignItems={{ base: 'stretch', md: 'center' }}
-          mb={{ base: '4', md: '8' }}
-        >
-          <Flex
-            direction="row"
-            minW={{ base: '100%', md: '50%' }}
-            alignItems="center"
-            flexGrow={1}
-            mb={2}
-          >
-            <Text
-              as="label"
-              htmlFor="Search-for-field"
-              fontSize="md"
-              fontWeight="bold"
-              textAlign="center"
-              mr={2}
-            >
-              <Trans>Search: </Trans>
-            </Text>
-            <InputGroup flexGrow={1}>
-              <InputLeftElement aria-hidden="true">
-                <SearchIcon color="gray.300" />
-              </InputLeftElement>
-              <Input
-                id="Search-for-field"
-                type="text"
-                placeholder={t`Search for a domain`}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value)
-                  resetToFirstPage()
-                }}
-              />
-            </InputGroup>
-          </Flex>
-
-          <Stack isInline align="center" ml={{ md: '10%' }}>
-            <Text
-              as="label"
-              htmlFor="Sort-by-field"
-              fontSize="md"
-              fontWeight="bold"
-              textAlign="center"
-            >
-              <Trans>Sort by:</Trans>
-            </Text>
-            <Select
-              id="Sort-by-field"
-              data-testid="sort-select"
-              width="fit-content"
-              size="md"
-              variant="filled"
-              value={orderField}
-              onChange={(e) => {
-                setOrderField(e.target.value)
-                resetToFirstPage()
-              }}
-            >
-              <option value="DOMAIN">{t`Domain`}</option>
-              <option value="POLICY_STATUS">{t`ITPIN Status`}</option>
-              <option value="HTTPS_STATUS">{t`HTTPS Status`}</option>
-              <option value="HSTS_STATUS">{t`HSTS Status`}</option>
-              <option value="CIPHERS_STATUS">{t`Ciphers Status`}</option>
-              <option value="CURVES_STATUS">{t`Curves Status`}</option>
-              <option value="PROTOCOLS_STATUS">{t`Protocols Status`}</option>
-              <option value="SPF_STATUS">{t`SPF Status`}</option>
-              <option value="DKIM_STATUS">{t`DKIM Status`}</option>
-              <option value="DMARC_STATUS">{t`DMARC Status`}</option>{' '}
-            </Select>
-            <IconButton
-              aria-label="Toggle sort direction"
-              icon={orderIconName}
-              color="primary"
-              onClick={() => {
-                const newOrderDirection =
-                  orderDirection === 'ASC' ? 'DESC' : 'ASC'
-                setOrderDirection(newOrderDirection)
-                resetToFirstPage()
-              }}
-            />
-          </Stack>
-        </Flex>
-
+        <SearchBox
+          selectedDisplayLimit={domainsPerPage}
+          setSelectedDisplayLimit={setDomainsPerPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+          orderDirection={orderDirection}
+          setSearchTerm={setSearchTerm}
+          setOrderField={setOrderField}
+          setOrderDirection={setOrderDirection}
+          resetToFirstPage={resetToFirstPage}
+          orderByOptions={orderByOptions}
+          placeholder={t`Search for a domain`}
+        />
         {domainList}
 
         <RelayPaginationControls

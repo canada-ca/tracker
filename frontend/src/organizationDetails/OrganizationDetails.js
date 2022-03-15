@@ -121,7 +121,7 @@ export default function OrganizationDetails({ isLoginRequired }) {
   const orgName = data?.organization?.name ?? ''
 
   return (
-    <Box w="100%" px={4}>
+    <Box w="100%">
       <Flex
         flexDirection="row"
         align="center"
