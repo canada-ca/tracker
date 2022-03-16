@@ -369,7 +369,7 @@ describe('<DomainsPage />', () => {
 
       describe('sort by select', () => {
         it('changes sorting order', async () => {
-          const { getByTestId } = render(
+          const { getByLabelText } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
               <UserVarProvider
                 userVar={makeVar({
@@ -393,7 +393,7 @@ describe('<DomainsPage />', () => {
           )
 
           await waitFor(() => {
-            const sortSelect = getByTestId('sort-select')
+            const sortSelect = getByLabelText('Sort by field')
             fireEvent.change(sortSelect, { target: { value: 'LAST_RAN' } })
           })
         })

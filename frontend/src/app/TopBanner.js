@@ -50,7 +50,8 @@ export const TopBanner = (props) => {
     <Layout>
       <Flex align="center" fontFamily="body" {...props}>
         <Box
-          px="8"
+          ml="8"
+          mr="4"
           width={{ base: 272, md: 360 }}
           display={{ base: 'none', md: 'initial' }}
         >
@@ -59,7 +60,7 @@ export const TopBanner = (props) => {
             pr="auto"
             py="6"
             minHeight="41px"
-            alt={'Symbol of the Government of Canada'}
+            alt={t`Symbol of the Government of Canada`}
           />
         </Box>
         <Box
@@ -68,7 +69,7 @@ export const TopBanner = (props) => {
           width={{ base: 0, md: 125 }}
           display={{ base: 'none', md: 'initial' }}
         >
-          <Image src={trackerLogo} />
+          <Image src={trackerLogo} alt={t`Tracker logo outline`} />
         </Box>
         <Box
           mr="4"
@@ -76,7 +77,7 @@ export const TopBanner = (props) => {
           width={{ base: 0, md: 125 }}
           display={{ base: 'none', md: 'initial' }}
         >
-          <Image src={trackerText} />
+          <Image src={trackerText} alt={t`Tracker logo text`} />
         </Box>
 
         <PhaseBanner
