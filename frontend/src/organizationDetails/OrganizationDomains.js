@@ -179,6 +179,7 @@ export function OrganizationDomains({ orgSlug }) {
         setOrderDirection={setOrderDirection}
         resetToFirstPage={resetToFirstPage}
         orderByOptions={orderByOptions}
+        placeholder={t`Search for a domain`}
       />
       {domainList}
       <RelayPaginationControls
