@@ -135,12 +135,12 @@ class TLSScanner:
         #     }
         # }
 
-        print(scan_results.scan_result.ssl_2_0_cipher_suites)
-
         def get_cipher_names(cipher_suites):
             return [suite.cipher_suite.name for suite in cipher_suites]
 
         result = {
+            "domain": scan_results.server_location.hostname,
+            "ipaddress": scan_results.server_location.ip_address,
             "TLS": {
                 "accepted_cipher_list": get_cipher_names(
                     scan_results.scan_result.ssl_2_0_cipher_suites.result.accepted_cipher_suites
