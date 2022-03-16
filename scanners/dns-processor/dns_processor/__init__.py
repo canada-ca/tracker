@@ -500,6 +500,8 @@ def process_results(results, domain_key, user_key, shared_id):
     dkimResults = {}
     if not results["dkim"].get("error"):
         for selector in results["dkim"].keys():
+            # store key_modulus as string, ArangoDB is not capable or storing numbers this size
+            results["dkim"][selector]["public_key_modulus"] = str(results["dkim"][selector]["public_key_modulus"])
             keyModulus = results["dkim"][selector]["public_key_modulus"]
             # going to the database to find previous results by keyModulus
             # From the test data:
