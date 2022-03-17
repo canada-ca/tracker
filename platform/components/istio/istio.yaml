@@ -106,6 +106,7 @@ rules:
   - namespaces
   - pods
   - pods/proxy
+  - pods/portforward
   - persistentvolumeclaims
   - secrets
   - services
@@ -147,7 +148,7 @@ spec:
       serviceAccountName: istio-operator
       containers:
         - name: istio-operator
-          image: docker.io/istio/operator:1.11.4
+          image: docker.io/istio/operator:1.13.2
           command:
           - operator
           - server
@@ -171,7 +172,7 @@ spec:
               memory: 128Mi
           env:
             - name: WATCH_NAMESPACE
-              value: 
+              value: "istio-system"
             - name: LEADER_ELECTION_NAMESPACE
               value: "istio-operator"
             - name: POD_NAME
@@ -184,14 +185,6 @@ spec:
               value: "300s"
             - name: REVISION
               value: ""
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: istio-operator
-  labels:
-    istio-operator-managed: Reconcile
-    istio-injection: disabled
 ---
 apiVersion: v1
 kind: Service
@@ -263,3 +256,4 @@ spec:
     served: true
     storage: true
 ---
+
