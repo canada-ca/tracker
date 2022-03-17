@@ -11,7 +11,7 @@ spec:
   - suivi.alpha.canada.ca
   issuerRef:
     kind: Issuer
-    name: letsencrypt
+    name: letsencrypt-staging
   privateKey:
     algorithm: RSA
     encoding: PKCS8 # ITSP.40.062 6.2 Signature Algorithms
