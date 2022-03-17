@@ -12,9 +12,10 @@ spec:
       name: letsencrypt-prod
     server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
-    - http01:
-        ingress:
-          class: istio
+    - dns01:
+        cloudDNS:
+          # The ID of the GCP project
+          project: track-compliance
       selector: {}
 status: {}
 ---
@@ -32,9 +33,10 @@ spec:
       name: letsencrypt-staging
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     solvers:
-    - http01:
-        ingress:
-          class: istio
+    - dns01:
+        cloudDNS:
+          # The ID of the GCP project
+          project: track-compliance
       selector: {}
 status: {}
 ---
