@@ -48,10 +48,16 @@ class DMARCScanner():
                 "mx": {"error": "missing"},
             }
 
-        for rua in scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []):
+        # check_domains function does not always return an array for values in rua, account for this
+        if isinstance(scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []), str):
+            uris = scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []).split(',')
+            parsed_uris = [parse_dmarc_report_uri(uri) for uri in uris]
+            scan_result["dmarc"].get("tags", {}).get("rua", {})["value"] = parsed_uris
+
+        for rua_value in scan_result["dmarc"].get("tags", {}).get("rua", {}).get("value", []):
             try:
                 # Retrieve 'rua' tag address.
-                rua_addr = rua["address"]
+                rua_addr = rua_value["address"]
 
                 # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
                 rua_domain = rua_addr.split("@", 1)[1]
@@ -68,7 +74,7 @@ class DMARCScanner():
 
                 # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
                 if rua_org_domain == org_domain:
-                    rua["accepting"] = True
+                    rua_value["accepting"] = True
                 else:
                     try:
                         # Request txt record to ensure that "rua" domain accepts DMARC reports.
@@ -84,9 +90,16 @@ class DMARCScanner():
                         )
                     except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
                         logging.error(f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={self.domain}: {e}")
-                        rua["accepting"] = "undetermined"
+                        rua_value["accepting"] = "undetermined"
             except (TypeError, KeyError) as e:
                 logging.error(f"Error `{e}` while validating rua for domain: {self.domain}. scan_result: {json.dumps(scan_result, indent=2)}" )
+
+
+        # check_domains function does not always return an array for values in ruf, account for this
+        if isinstance(scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []), str):
+            uris = scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []).split(',')
+            parsed_uris = [parse_dmarc_report_uri(uri) for uri in uris]
+            scan_result["dmarc"].get("tags", {}).get("ruf", {})["value"] = parsed_uris
 
         for ruf in scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []):
             try:
