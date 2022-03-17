@@ -10,6 +10,7 @@ from checkdmarc import *
 from dns import resolver
 from dkim import dnsplug, crypto, KeyFormatError
 from dkim.util import InvalidTagValueList
+from dns.resolver import NoAnswer
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -88,7 +89,7 @@ class DMARCScanner():
                         scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
                             rua_txt_value == "v=DMARC1"
                         )
-                    except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
+                    except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN, NoAnswer) as e:
                         logging.error(f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={self.domain}: {e}")
                         rua_value["accepting"] = "undetermined"
             except (TypeError, KeyError) as e:
@@ -135,7 +136,7 @@ class DMARCScanner():
                         scan_result["dmarc"]["tags"]["ruf"]["accepting"] = (
                             ruf_txt_value == "v=DMARC1"
                         )
-                    except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
+                    except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN, NoAnswer) as e:
                         logging.error(f"Failed to validate external reporting arrangement between ruf address={ruf_domain} and domain={self.domain}: {e}")
                         ruf["accepting"] = "undetermined"
             except (TypeError, KeyError) as e:
