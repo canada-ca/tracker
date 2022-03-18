@@ -46,7 +46,7 @@ export function LandingPage() {
           </Trans>
         </Text>
       </Box>
-      {document.location.origin.match(/(suivi|tracker).alpha.canada.ca$/) && (
+      {!document.location.origin.match(/(suivi|tracker).alpha.canada.ca$/) && (
         <LandingPageSummaries />
       )}
     </Stack>
