@@ -4,6 +4,15 @@ import time
 
 import dns.resolver
 import logging
+import nacl
+import base64
+import tldextract
+import dkim
+from checkdmarc import *
+from dns import resolver
+from dkim import dnsplug, crypto, KeyFormatError
+from dkim.util import InvalidTagValueList
+from dns.resolver import NoAnswer
 from dns.resolver import NXDOMAIN, NoAnswer
 
 from .email_scanners import DKIMScanner, DMARCScanner

@@ -1,8 +1,13 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Flex, useToast } from '@chakra-ui/react'
+import { Box, Button, Flex, useToast, Image } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
+
+import sigEn from '../images/goc-header-logo-dark-en.svg'
+import sigFr from '../images/goc-header-logo-dark-fr.svg'
+import trackerLogo from '../images/Asset6.svg'
+import trackerText from '../images/Asset3.svg'
 
 import { LocaleSwitcher } from './LocaleSwitcher'
 
@@ -10,10 +15,12 @@ import { Layout } from '../components/Layout'
 import { useUserVar } from '../utilities/userState'
 import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
+import { useLingui } from '@lingui/react'
 
 export const TopBanner = (props) => {
   const { isLoggedIn, logout } = useUserVar()
   const toast = useToast()
+  const { i18n } = useLingui()
 
   const [signOut] = useMutation(SIGN_OUT, {
     onError(error) {
@@ -42,11 +49,46 @@ export const TopBanner = (props) => {
   return (
     <Layout>
       <Flex align="center" fontFamily="body" {...props}>
-        <PhaseBanner phase={<Trans>BETA</Trans>} ml="auto" mr="2">
+        <Box
+          ml="8"
+          mr="4"
+          width={{ base: 272, md: 360 }}
+          display={{ base: 'none', md: 'initial' }}
+        >
+          <Image
+            src={i18n.locale === 'en' ? sigEn : sigFr}
+            pr="auto"
+            py="6"
+            minHeight="41px"
+            alt={t`Symbol of the Government of Canada`}
+          />
+        </Box>
+        <Box
+          my="4"
+          ml="4"
+          width={{ base: 0, md: 125 }}
+          display={{ base: 'none', md: 'initial' }}
+        >
+          <Image src={trackerLogo} alt={t`Tracker logo outline`} />
+        </Box>
+        <Box
+          mr="4"
+          my="4"
+          width={{ base: 0, md: 125 }}
+          display={{ base: 'none', md: 'initial' }}
+        >
+          <Image src={trackerText} alt={t`Tracker logo text`} />
+        </Box>
+
+        <PhaseBanner
+          phase={<Trans>BETA</Trans>}
+          ml={{ base: '0', md: 'auto' }}
+          mr="2"
+        >
           <Trans>This is a new service, we are constantly improving.</Trans>
         </PhaseBanner>
 
-        <Box py="4" mx="2">
+        <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
           <LocaleSwitcher />
         </Box>
 

@@ -1,20 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import {
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Select,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
-import { SearchIcon, ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
+import { Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -26,6 +13,7 @@ import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
+import { SearchBox } from '../components/SearchBox'
 
 export default function Organizations() {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -39,9 +27,6 @@ export default function Organizations() {
   }, [searchTerm])
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
-
-  const orderIconName =
-    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
 
   const [infoState, changeInfoState] = useState({
     isVisible: false,
@@ -72,6 +57,13 @@ export default function Organizations() {
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
+
+  const orderByOptions = [
+    { value: 'NAME', text: t`Name` },
+    { value: 'ACRONYM', text: t`Acronym` },
+    { value: 'DOMAIN_COUNT', text: t`Services` },
+    { value: 'VERIFIED', text: t`Verified` },
+  ]
 
   // Set the list contents only to loading message when loading
   // Prevents select active option from resetting when loading
@@ -154,91 +146,22 @@ export default function Organizations() {
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <Flex
-          direction={{ base: 'column', md: 'row' }}
-          alignItems={{ base: 'stretch', md: 'center' }}
-          mb={{ base: '4', md: '8' }}
-        >
-          <Flex
-            direction="row"
-            minW={{ base: '100%', md: '50%' }}
-            alignItems="center"
-            flexGrow={1}
-            mb={2}
-          >
-            <Text
-              as="label"
-              htmlFor="Search-for-field"
-              fontSize="md"
-              fontWeight="bold"
-              textAlign="center"
-              mr={2}
-            >
-              <Trans>Search: </Trans>
-            </Text>
-            <InputGroup flexGrow={1}>
-              <InputLeftElement aria-hidden="true">
-                <SearchIcon color="gray.300" />
-              </InputLeftElement>
-              <Input
-                id="Search-for-field"
-                type="text"
-                placeholder={t`Search for an organization`}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value)
-                  resetToFirstPage()
-                }}
-                aria-label="Organization Search Bar"
-              />
-            </InputGroup>
-          </Flex>
-          <Stack isInline align="center" ml={{ md: '5%' }}>
-            <Text
-              as="label"
-              htmlFor="Sort-by-field"
-              fontSize="md"
-              fontWeight="bold"
-              textAlign="center"
-            >
-              <Trans>Sort by: </Trans>
-            </Text>
-            <Select
-              id="Sort-by-field"
-              aria-label="Sort by field"
-              w="fit-content"
-              size="md"
-              variant="filled"
-              onChange={(e) => {
-                setOrderField(e.target.value)
-                resetToFirstPage()
-              }}
-            >
-              <option key="NAME" value="NAME">
-                {t`Name`}
-              </option>
-              <option key="ACRONYM" value="ACRONYM">
-                {t`Acronym`}
-              </option>
-              <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
-                {t`Services`}
-              </option>
-              <option key="VERIFIED" value="VERIFIED">
-                {t`Verified`}
-              </option>
-            </Select>
-            <IconButton
-              aria-label="Toggle sort direction"
-              icon={orderIconName}
-              color="primary"
-              onClick={() => {
-                const newOrderDirection =
-                  orderDirection === 'ASC' ? 'DESC' : 'ASC'
-                setOrderDirection(newOrderDirection)
-                resetToFirstPage()
-              }}
-            />
-          </Stack>
-        </Flex>
+        <SearchBox
+          selectedDisplayLimit={orgsPerPage}
+          setSelectedDisplayLimit={setOrgsPerPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+          orderDirection={orderDirection}
+          setSearchTerm={setSearchTerm}
+          setOrderField={setOrderField}
+          setOrderDirection={setOrderDirection}
+          resetToFirstPage={resetToFirstPage}
+          orderByOptions={orderByOptions}
+          placeholder={t`Search for an organization`}
+        />
         {orgList}
         <RelayPaginationControls
           onlyPagination={false}

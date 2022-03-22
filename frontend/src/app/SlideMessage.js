@@ -31,7 +31,11 @@ export function SlideMessage({ isOpen, onToggle, ...props }) {
   const { i18n } = useLingui()
   return (
     <Flex direction="row" display={{ base: 'none', md: 'inline' }}>
-      <Slide direction="left" in={isOpen} style={{ zIndex: 0 }}>
+      <Slide
+        direction="left"
+        in={{ base: false, md: isOpen }}
+        style={{ zIndex: 0 }}
+      >
         <Box h="100%" w={isOpen ? '25%' : 0} color="white" bg="black">
           <Box px="8" width={{ base: 272, md: 360 }} mb="33%">
             <Image
