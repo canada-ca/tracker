@@ -5,7 +5,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import { any, array, bool, func, number, shape, string } from 'prop-types'
+import { array, bool, func, number, string } from 'prop-types'
 import {
   Box,
   Flex,
@@ -38,8 +38,6 @@ import { useLingui } from '@lingui/react'
 
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
 
-import { InfoButton } from './InfoPanel'
-
 export function TrackerTable({ ...props }) {
   const { i18n } = useLingui()
   const {
@@ -53,11 +51,8 @@ export function TrackerTable({ ...props }) {
       ? 5
       : 10,
     onSort,
-    infoPanel,
     manualSort,
     manualFilters,
-    infoState,
-    changeInfoState,
     searchPlaceholder,
   } = props
 
@@ -125,18 +120,7 @@ export function TrackerTable({ ...props }) {
             placeholder={searchPlaceholder}
           />
         )}
-
-        {infoState && (
-          <InfoButton
-            ml="auto"
-            label="Glossary"
-            state={infoState}
-            changeState={changeInfoState}
-          />
-        )}
       </Flex>
-
-      {infoPanel}
 
       <Table variant="med" {...getTableProps()}>
         <Thead>
@@ -224,7 +208,7 @@ export function TrackerTable({ ...props }) {
                   previousPage()
                 }}
                 disabled={!canPreviousPage}
-                icon={<ChevronLeftIcon />}
+                icon={<ChevronLeftIcon boxSize="2rem" />}
                 aria-label="Go to previous page"
               />
               <IconButton
@@ -233,7 +217,7 @@ export function TrackerTable({ ...props }) {
                   nextPage()
                 }}
                 disabled={!canNextPage}
-                icon={<ChevronRightIcon />}
+                icon={<ChevronRightIcon boxSize="2rem" />}
                 aria-label="Go to next page"
               />
               <IconButton
@@ -306,11 +290,6 @@ TrackerTable.propTypes = {
   title: string,
   initialSort: array.isRequired,
   frontendPagination: bool,
-  infoPanel: any,
-  infoState: shape({
-    isVisible: bool,
-  }),
-  changeInfoState: func,
   searchPlaceholder: string,
   onSort: func,
   selectedDisplayLimit: number,

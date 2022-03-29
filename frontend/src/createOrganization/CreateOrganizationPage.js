@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   Heading,
   Stack,
   useToast,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
@@ -29,9 +30,7 @@ export default function CreateOrganizationPage() {
   const history = useHistory()
   const { i18n } = useLingui()
 
-  const [infoState, changeInfoState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   const fieldRequirement = getRequirement('field')
   const acronymRequirement = getRequirement('acronym').required(
@@ -141,16 +140,9 @@ export default function CreateOrganizationPage() {
               <Heading as="h1" fontSize="2xl" textAlign="center">
                 <Trans>Create an organization</Trans>
               </Heading>
-              <InfoButton
-                label="Glossary"
-                state={infoState}
-                changeState={changeInfoState}
-                ml="auto"
-                display="block"
-              />
             </Flex>
 
-            <InfoPanel state={infoState}>
+            <InfoPanel isOpen={isOpen} onToggle={onToggle}>
               <InfoBox title="Name" info="The name of the Organization." />
               <InfoBox
                 title="Acronym"
@@ -248,6 +240,7 @@ export default function CreateOrganizationPage() {
           </form>
         )}
       </Formik>
+      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }

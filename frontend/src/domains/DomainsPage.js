@@ -1,6 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Heading,
+  Link,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -51,9 +58,7 @@ export default function DomainsPage() {
     nextFetchPolicy: 'cache-first',
   })
 
-  const [infoState, changeInfoState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -104,19 +109,11 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
-      <Stack direction="row" justify="space-between" mb="4">
-        <Heading as="h1" textAlign="left">
-          <Trans>Domains</Trans>
-        </Heading>
+      <Heading as="h1" textAlign="left" mb="4">
+        <Trans>Domains</Trans>
+      </Heading>
 
-        <InfoButton
-          label={t`Glossary`}
-          state={infoState}
-          changeState={changeInfoState}
-        />
-      </Stack>
-
-      <InfoPanel state={infoState}>
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
           title={t`ITPIN`}
@@ -199,6 +196,7 @@ export default function DomainsPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
+        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
       </ErrorBoundary>
     </Box>
   )

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Divider, Heading, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -28,9 +28,7 @@ export default function Organizations() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const [infoState, changeInfoState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   const {
     loading,
@@ -108,20 +106,12 @@ export default function Organizations() {
   }
 
   return (
-    <Box w="100%" px={4}>
-      <Stack direction="row" justify="space-between" mb="4">
-        <Heading as="h1" textAlign="left">
-          <Trans>Organizations</Trans>
-        </Heading>
+    <Box w="100%" px="4">
+      <Heading as="h1" textAlign="left" mb="4">
+        <Trans>Organizations</Trans>
+      </Heading>
 
-        <InfoButton
-          label={t`Glossary`}
-          state={infoState}
-          changeState={changeInfoState}
-        />
-      </Stack>
-
-      <InfoPanel state={infoState}>
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox
           title={t`Organization Name`}
           info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
@@ -176,6 +166,7 @@ export default function Organizations() {
           isLoadingMore={isLoadingMore}
         />
       </ErrorBoundary>
+      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }

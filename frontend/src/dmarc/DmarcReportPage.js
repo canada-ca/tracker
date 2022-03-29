@@ -9,6 +9,7 @@ import {
   Link,
   Select,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
@@ -20,7 +21,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 
 import { TrackerTable } from '../components/TrackerTable'
-import { InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel, InfoButton } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
@@ -42,18 +43,7 @@ export default function DmarcReportPage() {
     `${selectedPeriod}, ${selectedYear}`,
   )
 
-  const [fullPassState, changeFullPassState] = useState({
-    isVisible: false,
-  })
-  const [failDkimState, changeFailDkimState] = useState({
-    isVisible: false,
-  })
-  const [failSpfState, changeFailSpfState] = useState({
-    isVisible: false,
-  })
-  const [fullFailState, changeFullFailState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   // Allows the use of forward/backward navigation
   if (selectedPeriod !== period) setSelectedPeriod(period)
@@ -317,58 +307,6 @@ export default function DmarcReportPage() {
         },
       )
 
-    const failDkimInfoPanel = (
-      <InfoPanel state={failDkimState}>
-        <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
-        />
-        <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox
-          title="DKIM Domains"
-          info="The domains used for DKIM validation."
-        />
-        <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
-        />
-        <InfoBox
-          title="DKIM Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
-        />
-        <InfoBox
-          title="DKIM Aligned"
-          info="Is DKIM aligned. Can be true or false."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-        <InfoBox
-          title="Guidance"
-          info="Details for a given guidance tag can be found on the wiki, see below."
-        />
-        <Divider borderColor="gray.500" />
-        <Link
-          isExternal
-          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
-        >
-          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
-        </Link>
-      </InfoPanel>
-    )
-
     dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
@@ -377,9 +315,6 @@ export default function DmarcReportPage() {
           title={i18n._(t`DKIM Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={failDkimInfoPanel}
-          infoState={failDkimState}
-          changeInfoState={changeFailDkimState}
           searchPlaceholder={i18n._(t`Search DKIM Failing Items`)}
         />
       </ErrorBoundary>
@@ -443,40 +378,6 @@ export default function DmarcReportPage() {
         },
       )
 
-    const fullPassInfoPanel = (
-      <InfoPanel state={fullPassState}>
-        <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
-        />
-        <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="DKIM Domains"
-          info="Domains used for DKIM validation."
-        />
-        <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-      </InfoPanel>
-    )
-
     fullPassTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
@@ -485,9 +386,6 @@ export default function DmarcReportPage() {
           title={i18n._(t`Fully Aligned by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={fullPassInfoPanel}
-          infoState={fullPassState}
-          changeInfoState={changeFullPassState}
           searchPlaceholder={i18n._(t`Search Fully Aligned Items`)}
         />
       </ErrorBoundary>
@@ -550,51 +448,6 @@ export default function DmarcReportPage() {
         },
       )
 
-    const failSpfInfoPanel = (
-      <InfoPanel state={failSpfState}>
-        <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
-        />
-        <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="SPF Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
-        />
-        <InfoBox
-          title="SPF Aligned"
-          info="Is SPF aligned. Can be true or false."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-        <InfoBox
-          title="Guidance"
-          info="Details for a given guidance tag can be found on the wiki, see below."
-        />
-        <Divider borderColor="gray.500" />
-        <Link
-          isExternal
-          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
-        >
-          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
-        </Link>
-      </InfoPanel>
-    )
-
     spfFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
@@ -603,9 +456,6 @@ export default function DmarcReportPage() {
           title={i18n._(t`SPF Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={failSpfInfoPanel}
-          infoState={failSpfState}
-          changeInfoState={changeFailSpfState}
           searchPlaceholder={i18n._(t`Search SPF Failing Items`)}
         />
       </ErrorBoundary>
@@ -670,41 +520,6 @@ export default function DmarcReportPage() {
         },
       )
 
-    const fullFailInfoPanel = (
-      <InfoPanel state={fullFailState}>
-        <InfoBox title="Source IP Address" info="The domain address." />
-        <InfoBox
-          title="DNS Host"
-          info="Shows the total number of emails that have been sent by this domain during the selected time range."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="DKIM Domains"
-          info="The domains used for DKIM validation."
-        />
-        <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
-        />
-        <InfoBox
-          title="Disposition"
-          info="The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-      </InfoPanel>
-    )
-
     dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
@@ -713,9 +528,6 @@ export default function DmarcReportPage() {
           title={i18n._(t`DMARC Failures by IP Address`)}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={fullFailInfoPanel}
-          infoState={fullFailState}
-          changeInfoState={changeFullFailState}
           searchPlaceholder={i18n._(t`Search DMARC Failing Items`)}
         />
       </ErrorBoundary>
@@ -798,6 +610,70 @@ export default function DmarcReportPage() {
       </Flex>
 
       {tableDisplay}
+      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+        <InfoBox
+          title="Source IP Address"
+          info="The IP address of sending server."
+        />
+        <InfoBox
+          title="DNS Host"
+          info="Host from reverse DNS of source IP address."
+        />
+        <InfoBox
+          title="Envelope From"
+          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
+        />
+        <InfoBox
+          title="Header From"
+          info='The address/domain used in the "From" field.'
+        />
+        <InfoBox
+          title="Total Messages"
+          info="The Total Messages from this sender."
+        />
+        <InfoBox
+          title="DKIM Domains"
+          info="The domains used for DKIM validation."
+        />
+        <InfoBox
+          title="DKIM Selectors"
+          info="Pointer to a DKIM public key record in DNS."
+        />
+        <InfoBox
+          title="DKIM Results"
+          info="The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
+        />
+        <InfoBox
+          title="DKIM Aligned"
+          info="Is DKIM aligned. Can be true or false."
+        />
+        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
+        <InfoBox
+          title="SPF Results"
+          info="The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
+        />
+        <InfoBox
+          title="SPF Aligned"
+          info="Is SPF aligned. Can be true or false."
+        />
+        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
+        <InfoBox
+          title="Disposition"
+          info="The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
+        />
+        <InfoBox
+          title="Guidance"
+          info="Details for a given guidance tag can be found on the wiki, see below."
+        />
+        <Divider borderColor="gray.500" />
+        <Link
+          isExternal
+          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+        >
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
     </Box>
   )
 }

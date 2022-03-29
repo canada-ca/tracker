@@ -23,7 +23,6 @@ import { lazyWithRetry } from '../utilities/lazyWithRetry'
 import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
-// import { SlideMessage } from './SlideMessage'
 import { useLingui } from '@lingui/react'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))

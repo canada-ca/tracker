@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Divider, Link, Text } from '@chakra-ui/react'
+import { Box, Divider, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { number, string } from 'prop-types'
 
@@ -52,9 +52,7 @@ export function OrganizationDomains({ orgSlug }) {
     nextFetchPolicy: 'cache-first',
   })
 
-  const [infoState, changeInfoState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -105,15 +103,7 @@ export function OrganizationDomains({ orgSlug }) {
 
   return (
     <Box>
-      <InfoButton
-        w="100%"
-        label="Glossary"
-        state={infoState}
-        changeState={changeInfoState}
-        mb="2"
-      />
-
-      <InfoPanel state={infoState}>
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
           title={t`ITPIN`}
@@ -194,6 +184,7 @@ export function OrganizationDomains({ orgSlug }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
+      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }
