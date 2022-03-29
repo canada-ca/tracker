@@ -21,16 +21,6 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
 
 
-class TlsVersionEnum(Enum):
-    """SSL version constants. (Sourced from OpenSSL)"""
-
-    SSLV2 = 1
-    SSLV3 = 2
-    TLSV1 = 3
-    TLSV1_1 = 4
-    TLSV1_2 = 5
-
-
 class TLSScanner:
     domain: str
     ip: str
@@ -102,8 +92,10 @@ class TLSScanner:
         # Scan for common vulnerabilities, certificate info, elliptic curves
         designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
         designated_scans.add(ScanCommand.HEARTBLEED)
+        designated_scans.add(ScanCommand.ROBOT)
         designated_scans.add(ScanCommand.CERTIFICATE_INFO)
         designated_scans.add(ScanCommand.ELLIPTIC_CURVES)
+
 
         # Test supported SSL/TLS
         designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
@@ -142,23 +134,17 @@ class TLSScanner:
             "domain": scan_results.server_location.hostname,
             "ipaddress": scan_results.server_location.ip_address,
             "TLS": {
-                "accepted_cipher_list": get_cipher_names(
-                    scan_results.scan_result.ssl_2_0_cipher_suites.result.accepted_cipher_suites
-                    + scan_results.scan_result.ssl_3_0_cipher_suites.result.accepted_cipher_suites
-                    + scan_results.scan_result.tls_1_0_cipher_suites.result.accepted_cipher_suites
-                    + scan_results.scan_result.tls_1_1_cipher_suites.result.accepted_cipher_suites
-                    + scan_results.scan_result.tls_1_2_cipher_suites.result.accepted_cipher_suites
-                    + scan_results.scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites),
-                "rejected_cipher_list": get_cipher_names(
-                    scan_results.scan_result.ssl_2_0_cipher_suites.result.rejected_cipher_suites
-                    + scan_results.scan_result.ssl_3_0_cipher_suites.result.rejected_cipher_suites
-                    + scan_results.scan_result.tls_1_0_cipher_suites.result.rejected_cipher_suites
-                    + scan_results.scan_result.tls_1_1_cipher_suites.result.rejected_cipher_suites
-                    + scan_results.scan_result.tls_1_2_cipher_suites.result.rejected_cipher_suites
-                    + scan_results.scan_result.tls_1_3_cipher_suites.result.rejected_cipher_suites),
+                "ssl_2_0_cipher_suites": get_cipher_names(scan_results.scan_result.ssl_2_0_cipher_suites.result.accepted_cipher_suites),
+                "ssl_3_0_cipher_suites": get_cipher_names(scan_results.scan_result.ssl_3_0_cipher_suites.result.accepted_cipher_suites),
+                "tls_1_0_cipher_suites": get_cipher_names(scan_results.scan_result.tls_1_0_cipher_suites.result.accepted_cipher_suites),
+                "tls_1_1_cipher_suites": get_cipher_names(scan_results.scan_result.tls_1_1_cipher_suites.result.accepted_cipher_suites),
+                "tls_1_2_cipher_suites": get_cipher_names(scan_results.scan_result.tls_1_2_cipher_suites.result.accepted_cipher_suites),
+                "tls_1_3_cipher_suites": get_cipher_names(scan_results.scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites),
             },
+            "certificate_info": json.loads(ServerScanResultAsJson.from_orm(scan_results).json()),
             "is_vulnerable_to_ccs_injection": scan_results.scan_result.openssl_ccs_injection.result.is_vulnerable_to_ccs_injection,
             "is_vulnerable_to_heartbleed": scan_results.scan_result.heartbleed.result.is_vulnerable_to_heartbleed,
+            "is_vulnerable_to_robot": scan_results.scan_result.robot.result.robot_result,
             "supports_ecdh_key_exchange": scan_results.scan_result.elliptic_curves.result.supports_ecdh_key_exchange
         }
 
@@ -174,7 +160,7 @@ class TLSScanner:
         result["supported_curves"] = []
         if scan_results.scan_result.elliptic_curves.result.supported_curves is not None:
             for curve in scan_results.scan_result.elliptic_curves.result.supported_curves:
-                # sslyze returns ANSI curve names occaisionally
+                # sslyze returns ANSI curve names occasionally
                 # In at least these two cases we can simply convert to
                 # using the equivalent SECG name, so that this aligns
                 # with CCCS guidance:
