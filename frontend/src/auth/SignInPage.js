@@ -190,7 +190,10 @@ export default function SignInPage() {
 
               <Text textAlign="center">
                 <Trans>
-                  Don't have an account? <Link as={RouteLink}>Sign up</Link>
+                  Don't have an account?{' '}
+                  <Link as={RouteLink} to="/create-user">
+                    Sign up
+                  </Link>
                 </Trans>
               </Text>
             </Box>

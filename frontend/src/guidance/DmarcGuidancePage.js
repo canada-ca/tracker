@@ -10,9 +10,15 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  IconButton,
 } from '@chakra-ui/react'
-import { LinkIcon } from '@chakra-ui/icons'
-import { Link as RouteLink, useParams } from 'react-router-dom'
+import { ArrowLeftIcon, LinkIcon } from '@chakra-ui/icons'
+import {
+  Link as RouteLink,
+  useParams,
+  useLocation,
+  useHistory,
+} from 'react-router-dom'
 import { Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -25,6 +31,9 @@ import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 
 export default function DmarcGuidancePage() {
   const { domainSlug } = useParams()
+  const history = useHistory()
+  const location = useLocation()
+  const { from } = location.state || { from: { pathname: '/domains' } }
 
   useDocumentTitle(`${domainSlug}`)
 
@@ -49,10 +58,17 @@ export default function DmarcGuidancePage() {
   const emailScan = data.findDomainByDomain.email
   const webStatus = data.findDomainByDomain.status
   const dmarcPhase = data.findDomainByDomain.dmarcPhase
-
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
       <Box d={{ md: 'flex' }}>
+        <IconButton
+          icon={<ArrowLeftIcon />}
+          onClick={() => history.push(from)}
+          color="gray.900"
+          fontSize="2xl"
+          aria-label="back"
+          mr="0.5rem"
+        />
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>

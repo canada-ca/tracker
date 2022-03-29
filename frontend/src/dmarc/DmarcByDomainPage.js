@@ -13,6 +13,7 @@ import {
   Spinner,
   Stack,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { LinkIcon, SearchIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
@@ -50,9 +51,7 @@ export default function DmarcByDomainPage() {
     direction: 'DESC',
   })
 
-  const [infoState, changeInfoState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   const {
     loading,
@@ -280,47 +279,9 @@ export default function DmarcByDomainPage() {
 
   return (
     <Box width="100%" px="2">
-      <Flex mb="4">
-        <Heading as="h1" textAlign="left">
-          <Trans>DMARC Summaries</Trans>
-        </Heading>
-
-        <InfoButton
-          ml="auto"
-          label={t`Glossary`}
-          state={infoState}
-          changeState={changeInfoState}
-        />
-      </Flex>
-
-      <InfoPanel state={infoState}>
-        <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Total Messages`}
-          info={t`Shows the total number of emails that have been sent by this domain during the selected time range.`}
-        />
-        <InfoBox
-          title={t`Full Pass %`}
-          info={t`Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.`}
-        />
-        <InfoBox
-          title={t`Fail SPF %`}
-          info={t`Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments.`}
-        />
-        <InfoBox
-          title={t`Fail DKIM %`}
-          info={t`Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments.`}
-        />
-        <InfoBox
-          title={t`Full Fail %`}
-          info={t`Shows the percentage of emails from the domain that fail both SPF and DKIM requirments.`}
-        />
-        <Divider borderColor="gray.500" />
-        <Trans>
-          A more detailed breakdown of each domain can be found by clicking on
-          its address in the first column.
-        </Trans>
-      </InfoPanel>
+      <Heading as="h1" textAlign="left" mb="4">
+        <Trans>DMARC Summaries</Trans>
+      </Heading>
 
       <Flex align="center" mb={2}>
         <Text
@@ -390,6 +351,35 @@ export default function DmarcByDomainPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
+        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
+        <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+          <InfoBox title={t`Domain`} info={t`The domain address.`} />
+          <InfoBox
+            title={t`Total Messages`}
+            info={t`Shows the total number of emails that have been sent by this domain during the selected time range.`}
+          />
+          <InfoBox
+            title={t`Full Pass %`}
+            info={t`Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.`}
+          />
+          <InfoBox
+            title={t`Fail SPF %`}
+            info={t`Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments.`}
+          />
+          <InfoBox
+            title={t`Fail DKIM %`}
+            info={t`Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments.`}
+          />
+          <InfoBox
+            title={t`Full Fail %`}
+            info={t`Shows the percentage of emails from the domain that fail both SPF and DKIM requirments.`}
+          />
+          <Divider borderColor="gray.500" />
+          <Trans>
+            A more detailed breakdown of each domain can be found by clicking on
+            its address in the first column.
+          </Trans>
+        </InfoPanel>
       </ErrorBoundary>
     </Box>
   )
