@@ -22,5 +22,9 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
-    # scan_http(domain=args.domain, ip_address=args.ip)
-    print(json.dumps(scan_http(domain=args.domain, ip_address=args.ip).dict()["http_chain_scan_result"], indent=4))
+    scan_data = scan_http(domain=args.domain, ip_address=args.ip).dict()
+    scan_data["sslyze_scan_result"]["scan_result"] = {
+        "certificate_info": scan_data.get("sslyze_scan_result", {}).get("scan_result", {}).get("certificate_info", {})
+    }
+
+    print(json.dumps(scan_data, indent=4))
