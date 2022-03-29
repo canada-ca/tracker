@@ -76,26 +76,6 @@ export const HTTPS_AND_DMARC_SUMMARY = gql`
   }
 `
 
-export const ORGANIZATION_BY_SLUG = gql`
-  query FindOrganizationDetailBySlug($slug: Slug!) {
-    organization: findOrganizationDetailBySlug(slug: $slug) {
-      id
-      name
-      acronym
-      province
-      domains {
-        edges {
-          node {
-            id
-            url
-            lastRan
-          }
-        }
-      }
-    }
-  }
-`
-
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client
@@ -492,20 +472,6 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
   }
 `
 
-export const ORGANIZATIONS = gql`
-  query Organisations {
-    organizations: findMyOrganizations(first: 10) {
-      edges {
-        node {
-          name
-          domainCount
-          slug
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
   query PaginatedOrgAffiliations(
     $orgSlug: Slug!
@@ -723,50 +689,6 @@ export const PAGINATED_DOMAINS = gql`
   }
 `
 
-export const DOMAINS = gql`
-  query Domains($number: Int, $cursor: String) {
-    domains: findMyDomains(first: $number, after: $cursor) {
-      edges {
-        node {
-          url
-          slug
-          lastRan
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-  }
-`
-
-export const GENERATE_OTP_URL = gql`
-  query GenerateOtpUrl($email: EmailAddress!) {
-    generateOtpUrl(email: $email)
-  }
-`
-
-export const QUERY_USERLIST = gql`
-  query UserList($slug: Slug!) {
-    userList(orgSlug: $slug) {
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-      }
-      edges {
-        node {
-          id
-          userName
-          displayName
-          role
-          tfa
-        }
-      }
-    }
-  }
-`
-
 export const QUERY_CURRENT_USER = gql`
   query UserPage {
     userPage: findMe {
@@ -780,60 +702,6 @@ export const QUERY_CURRENT_USER = gql`
       emailValidated
     }
     isUserAdmin
-  }
-`
-
-export const DMARC_REPORT_SUMMARY_LIST = gql`
-  query DmarcReportSummaryList($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      id
-      yearlyDmarcSummaries {
-        month
-        year
-        categoryTotals {
-          passSpfOnly
-          passDkimOnly
-          fullPass
-          fail
-        }
-      }
-    }
-  }
-`
-
-export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
-  query DemoDmarcReportSummaryList($domainSlug: Slug!) {
-    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
-      month
-      year
-      categoryTotals {
-        fullPass
-        passSpfOnly
-        passDkimOnly
-        fail
-        total
-      }
-    }
-  }
-`
-
-export const DMARC_REPORT_SUMMARY = gql`
-  query DmarcReportSummary(
-    $domainSlug: Slug!
-    $period: PeriodEnums!
-    $year: Year!
-  ) {
-    dmarcReportSummary(domainSlug: $domainSlug, period: $period, year: $year) {
-      month
-      year
-      categoryTotals {
-        fullPass
-        passSpfOnly
-        passDkimOnly
-        fail
-        total
-      }
-    }
   }
 `
 
@@ -986,271 +854,6 @@ export const PAGINATED_DMARC_REPORT = gql`
   }
 `
 
-// export const DMARC_REPORT_PAGE = gql`
-//   query DmarcReportPage(
-//     $domain: DomainScalar!
-//     $month: PeriodEnums!
-//     $year: Year!
-//   ) {
-//     findDomainByDomain(domain: $domain) {
-//       id
-//       yearlyDmarcSummaries {
-//         month
-//         year
-//         categoryTotals {
-//           passSpfOnly
-//           passDkimOnly
-//           fullPass
-//           fail
-//         }
-//       }
-//       dmarcSummaryByPeriod(month: $month, year: $year) {
-//         detailTables {
-//           dkimFailure {
-//             edges {
-//               node {
-//                 dkimAligned
-//                 dkimDomains
-//                 dkimResults
-//                 dkimSelectors
-//                 dnsHost
-//                 envelopeFrom
-//                 guidance
-//                 headerFrom
-//                 sourceIpAddress
-//                 totalMessages
-//               }
-//             }
-//           }
-//           dmarcFailure {
-//             edges {
-//               node {
-//                 dkimDomains
-//                 dkimSelectors
-//                 disposition
-//                 dnsHost
-//                 envelopeFrom
-//                 headerFrom
-//                 sourceIpAddress
-//                 spfDomains
-//                 totalMessages
-//               }
-//             }
-//           }
-//           fullPass {
-//             edges {
-//               node {
-//                 sourceIpAddress
-//                 envelopeFrom
-//                 dkimDomains
-//                 dkimSelectors
-//                 dnsHost
-//                 headerFrom
-//                 spfDomains
-//                 totalMessages
-//               }
-//             }
-//           }
-//           spfFailure {
-//             edges {
-//               node {
-//                 dnsHost
-//                 envelopeFrom
-//                 guidance
-//                 headerFrom
-//                 sourceIpAddress
-//                 spfAligned
-//                 spfDomains
-//                 spfResults
-//                 totalMessages
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// `
-
-export const DEMO_DMARC_REPORT_SUMMARY = gql`
-  query DmarcReportSummary(
-    $domainSlug: Slug!
-    $period: PeriodEnums!
-    $year: Year!
-  ) {
-    demoDmarcReportSummary(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
-    ) {
-      month
-      year
-      categoryTotals {
-        fullPass
-        passSpfOnly
-        passDkimOnly
-        fail
-        total
-      }
-    }
-  }
-`
-
-export const DMARC_REPORT_DETAIL_TABLES = gql`
-  query DmarcReportDetailTables(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        detailTables {
-          dkimFailure {
-            edges {
-              node {
-                dkimAligned
-                dkimDomains
-                dkimResults
-                dkimSelectors
-                dnsHost
-                envelopeFrom
-                guidance
-                headerFrom
-                sourceIpAddress
-                totalMessages
-              }
-            }
-          }
-          dmarcFailure {
-            edges {
-              node {
-                dkimDomains
-                dkimSelectors
-                disposition
-                dnsHost
-                envelopeFrom
-                headerFrom
-                sourceIpAddress
-                spfDomains
-                totalMessages
-              }
-            }
-          }
-          fullPass {
-            edges {
-              node {
-                sourceIpAddress
-                envelopeFrom
-                dkimDomains
-                dkimSelectors
-                dnsHost
-                headerFrom
-                spfDomains
-                totalMessages
-              }
-            }
-          }
-          spfFailure {
-            edges {
-              node {
-                dnsHost
-                envelopeFrom
-                guidance
-                headerFrom
-                sourceIpAddress
-                spfAligned
-                spfDomains
-                spfResults
-                totalMessages
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
-  query DemoDmarcReportDetailTables(
-    $domainSlug: Slug!
-    $period: PeriodEnums!
-    $year: Year!
-  ) {
-    demoDmarcReportDetailTables(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
-    ) {
-      month
-      year
-      detailTables {
-        fullPass {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-          dkimDomains
-          dkimSelectors
-        }
-        spfFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-        }
-        spfMisaligned {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-        }
-        dkimFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          dkimDomains
-          dkimSelectors
-        }
-        dkimMisaligned {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          dkimDomains
-          dkimSelectors
-        }
-        dmarcFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-          dkimDomains
-          dkimSelectors
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
   query PaginatedDmarcReportSummaryTable(
     $month: PeriodEnums!
@@ -1288,38 +891,6 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
             passDkimOnlyPercentage
             passSpfOnlyPercentage
             totalMessages
-          }
-        }
-      }
-    }
-  }
-`
-
-export const USER_AFFILIATIONS = gql`
-  query UserAffiliations(
-    $after: String
-    $first: Int
-    $before: String
-    $last: Int
-    $orderBy: AffiliationOrgOrder
-  ) {
-    findMe {
-      id
-      affiliations(
-        after: $after
-        first: $first
-        before: $before
-        last: $last
-        orderBy: $orderBy
-      ) {
-        edges {
-          node {
-            organization {
-              id
-              acronym
-              slug
-            }
-            permission
           }
         }
       }
@@ -1381,6 +952,12 @@ export const ADMIN_PAGE = gql`
 export const IS_USER_ADMIN = gql`
   query IsUserAdmin($orgId: ID!) {
     isUserAdmin(orgId: $orgId)
+  }
+`
+
+export const IS_USER_SUPER_ADMIN = gql`
+  query isUserSuperAdmin {
+    isUserSuperAdmin
   }
 `
 
