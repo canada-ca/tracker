@@ -5,8 +5,6 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
-import { useQuery } from '@apollo/client'
-import { IS_USER_SUPER_ADMIN } from '../graphql/queries'
 
 const emailUrlEn = 'https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27600'
 const itpinUrlEn =
@@ -17,7 +15,6 @@ const itpinUrlFr =
 
 export function LandingPage({ isLoggedIn }) {
   const { i18n } = useLingui()
-  const { _loading, _error, data } = useQuery(IS_USER_SUPER_ADMIN)
   return (
     <Stack w="100%">
       <Box mb="16" textAlign="left" px="4">
@@ -51,7 +48,7 @@ export function LandingPage({ isLoggedIn }) {
         </Text>
       </Box>
       {(!document.location.origin.match(/(suivi|tracker).alpha.canada.ca$/) ||
-        (isLoggedIn && data?.isUserSuperAdmin)) && <LandingPageSummaries />}
+        isLoggedIn) && <LandingPageSummaries />}
     </Stack>
   )
 }
