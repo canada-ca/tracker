@@ -18,7 +18,6 @@ const itpinUrlFr =
 export function LandingPage({ isLoggedIn }) {
   const { i18n } = useLingui()
   const { _loading, _error, data } = useQuery(IS_USER_SUPER_ADMIN)
-  console.log(data)
   return (
     <Stack w="100%">
       <Box mb="16" textAlign="left" px="4">
