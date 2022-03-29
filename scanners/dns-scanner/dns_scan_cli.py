@@ -23,7 +23,5 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
-    # scan_http(domain=args.domain, ip_address=args.ip)
     res = scan_domain(domain=args.domain, dkim_selectors=args.selectors)
-    print(res)
     print(json.dumps(res, indent=4))

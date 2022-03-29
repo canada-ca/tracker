@@ -1,9 +1,13 @@
 import base64
+import logging
+import os
+import json
 
 import dkim
 import nacl
 import tldextract
-from checkdmarc import *
+from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
+    parse_dmarc_report_uri
 from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 from dns import resolver
