@@ -5,16 +5,12 @@ resources:
 - storage-classes.yaml
 - backup-service-account.yaml
 - backup-cronjob.yaml
-- log4shell-processor-deployment.yaml
-- log4shell-scanner-deployment.yaml
 patchesStrategicMerge:
 - arangodb-deployment.yaml
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
 - publicgateway.yaml
 - certificate.yaml
-- log4shell-scanner-deployment.yaml
-- log4shell-processor-deployment.yaml
 
 replicas:
 - count: 2
@@ -27,7 +23,5 @@ replicas:
   name: arango-deployment-operator
 - count: 1
   name: arango-storage-operator
-- name: log4shell-scanner
-  count: 4
 components:
 - ../namespaces
