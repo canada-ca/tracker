@@ -9,13 +9,13 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
+import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 
 export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
-  const { path, _url } = useRouteMatch()
+  const location = useLocation()
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
     border: '1px solid',
@@ -75,7 +75,10 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           <Button
             variant="primary"
             as={RouteLink}
-            to={`${path}/${url}`}
+            to={{
+              pathname: `/domains/${url}`,
+              state: { from: location.pathname },
+            }}
             px="10"
           >
             <Text whiteSpace="noWrap">

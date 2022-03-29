@@ -33,7 +33,7 @@ export default function DmarcGuidancePage() {
   const { domainSlug } = useParams()
   const history = useHistory()
   const location = useLocation()
-  const { from } = location.state
+  const { from } = location.state || { from: { pathname: '/domains' } }
 
   useDocumentTitle(`${domainSlug}`)
 
