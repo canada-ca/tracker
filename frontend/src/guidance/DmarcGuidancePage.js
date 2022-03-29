@@ -13,7 +13,12 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, LinkIcon } from '@chakra-ui/icons'
-import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
+import {
+  Link as RouteLink,
+  useParams,
+  useLocation,
+  useHistory,
+} from 'react-router-dom'
 import { Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -27,6 +32,8 @@ import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 export default function DmarcGuidancePage() {
   const { domainSlug } = useParams()
   const history = useHistory()
+  const location = useLocation()
+  const { from } = location.state
 
   useDocumentTitle(`${domainSlug}`)
 
@@ -56,14 +63,11 @@ export default function DmarcGuidancePage() {
       <Box d={{ md: 'flex' }}>
         <IconButton
           icon={<ArrowLeftIcon />}
-          onClick={() =>
-            history.length > 0 ? history.goBack() : history.push('/domains')
-          }
+          onClick={() => history.push(from)}
           color="gray.900"
           fontSize="2xl"
           aria-label="back"
           mr="0.5rem"
-          order={0}
         />
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}

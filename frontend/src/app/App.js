@@ -239,6 +239,19 @@ export function App() {
                 )}
               </PrivatePage>
 
+              <PrivatePage
+                isLoginRequired={data?.loginRequired}
+                path="/organizations/:orgSlug/:domainSlug"
+                setTitle={false}
+                exact
+              >
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcGuidancePage />
+                  </ErrorBoundary>
+                )}
+              </PrivatePage>
+
               <Page path="/admin" title={t`Admin`}>
                 {isLoggedIn() &&
                 isEmailValidated() &&
