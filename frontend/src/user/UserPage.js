@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   Box,
   Button,
-  Divider,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -182,23 +181,15 @@ export default function UserPage() {
         <Stack py={25} px="4">
           <EditableUserDisplayName detailValue={displayName} />
 
-          <Divider />
-
           <EditableUserEmail detailValue={userName} />
 
-          <Divider />
-
           <EditableUserPassword />
-
-          <Divider />
 
           <EditableUserLanguage currentLang={preferredLang} />
         </Stack>
 
         <Stack p={25} spacing={4}>
           <EditableUserPhoneNumber detailValue={phoneNumber} />
-
-          <Divider />
 
           <EditableUserTFAMethod
             isUserAdmin={queryUserData?.isUserAdmin}
@@ -219,8 +210,6 @@ export default function UserPage() {
               <Trans>Verify Account</Trans>
             </Button>
           )}
-
-          <Divider />
 
           <Button
             variant="danger"

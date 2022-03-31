@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -15,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { LockIcon } from '@chakra-ui/icons'
+import { EditIcon } from '@chakra-ui/icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
@@ -24,6 +25,7 @@ import { PasswordField } from '../components/fields/PasswordField'
 import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PASSWORD } from '../graphql/mutations'
+import { LockIcon } from '../theme/Icons'
 
 export function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -84,13 +86,19 @@ export function EditableUserPassword() {
   )
 
   return (
-    <Stack>
-      <Heading as="h3" size="md">
+    <Box mb="4">
+      <Heading as="h3" size="md" mb="1">
         <Trans>Password:</Trans>
       </Heading>
 
-      <Flex align="center">
-        <LockIcon color="gray.300" mr={2} aria-hidden="true" />
+      <Flex
+        align="center"
+        borderWidth="1px"
+        borderColor="gray.500"
+        rounded="md"
+        p="1"
+      >
+        <LockIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
         <Button
           variant="primary"
@@ -99,6 +107,7 @@ export function EditableUserPassword() {
           fontSize="sm"
           px="3"
         >
+          <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
         </Button>
       </Flex>
@@ -177,6 +186,6 @@ export function EditableUserPassword() {
           </Formik>
         </ModalContent>
       </Modal>
-    </Stack>
+    </Box>
   )
 }

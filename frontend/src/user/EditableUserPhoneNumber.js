@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -15,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { PhoneIcon } from '@chakra-ui/icons'
+import { PhoneIcon } from '../theme/Icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
@@ -26,6 +27,7 @@ import { PhoneNumberField } from '../components/fields/PhoneNumberField'
 import { AuthenticateField } from '../components/fields/AuthenticateField'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from '../graphql/mutations'
+import { EditIcon } from '@chakra-ui/icons'
 
 export function EditableUserPhoneNumber({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -254,13 +256,19 @@ export function EditableUserPhoneNumber({ detailValue }) {
   const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
 
   return (
-    <Stack>
-      <Heading as="h3" size="md">
+    <Box mb="4">
+      <Heading as="h3" size="md" mb="1">
         <Trans>Phone Number:</Trans>
       </Heading>
 
-      <Flex align="center">
-        <PhoneIcon color="gray.300" mr={2} aria-hidden="true" />
+      <Flex
+        align="center"
+        borderWidth="1px"
+        borderColor="gray.500"
+        rounded="md"
+        p="1"
+      >
+        <PhoneIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
         {detailValue ? (
           <Text>{detailValue}</Text>
         ) : (
@@ -273,11 +281,12 @@ export function EditableUserPhoneNumber({ detailValue }) {
           fontSize="sm"
           px="3"
         >
+          <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
         </Button>
       </Flex>
       {modalContent}
-    </Stack>
+    </Box>
   )
 }
 

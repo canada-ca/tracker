@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, Heading, Select, Stack, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Select, Flex, useToast } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
@@ -62,8 +62,8 @@ export function EditableUserLanguage({ currentLang }) {
   )
 
   return (
-    <Stack spacing="4">
-      <Heading as="h3" size="md">
+    <Box>
+      <Heading as="h3" size="md" mb="1">
         <Trans>Language:</Trans>
       </Heading>
 
@@ -82,7 +82,13 @@ export function EditableUserLanguage({ currentLang }) {
       >
         {({ handleSubmit, isSubmitting, getFieldProps }) => (
           <form id="langForm" onSubmit={handleSubmit}>
-            <Stack isInline align="center" justifyContent="space-between">
+            <Flex
+              align="center"
+              borderWidth="1px"
+              borderColor="gray.500"
+              rounded="md"
+              p="1"
+            >
               <Field
                 data-testid="user-language-select"
                 id="lang"
@@ -97,14 +103,15 @@ export function EditableUserLanguage({ currentLang }) {
                 variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}
+                ml="auto"
               >
-                <Trans>Save Language</Trans>
+                <Trans>Save</Trans>
               </Button>
-            </Stack>
+            </Flex>
           </form>
         )}
       </Formik>
-    </Stack>
+    </Box>
   )
 }
 
