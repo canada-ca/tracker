@@ -88,12 +88,12 @@ export default function DmarcGuidancePage() {
           </Link>
         )}
       </Box>
-      <Tabs isFitted>
+      <Tabs isFitted variant="enclosed-colored">
         <TabList mb="4">
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Web Guidance</Trans>
           </Tab>
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Email Guidance</Trans>
           </Tab>
         </TabList>
