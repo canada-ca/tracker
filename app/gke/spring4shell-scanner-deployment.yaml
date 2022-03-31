@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spring4shell-scanner
+  name: spring4shell-scanner
+  namespace: scanners
+spec:
+  selector:
+    matchLabels:
+      app: spring4shell-scanner
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: spring4shell-scanner
+    spec:
+      containers:
+        - name: spring4shell-scanner
+          image: gcr.io/track-compliance/spring4shell-scanner:master-000002 # {"$imagepolicy": "flux-system:spring4shell-scanner"}
+          env:
+            - name: SUBSCRIBE_TO
+              value: domains.*
+            - name: NATS_URL
+              value: nats://nats.pubsub:4222
+          imagePullPolicy: Always
+          resources: {}
+status: {}
