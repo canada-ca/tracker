@@ -37,7 +37,7 @@ update-flux:
 
 .PHONY: update-istio
 update-istio:
-		istioctl operator dump > platform/components/istio/istio.yaml
+		istioctl manifest generate > platform/components/istio/istio-crds.yaml
 
 .PHONY: print-arango-deployment
 print-arango-deployment:

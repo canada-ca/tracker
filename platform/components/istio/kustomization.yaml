@@ -3,4 +3,4 @@ kind: Component
 resources:
 # envoy-gzip.yaml is still breaking one-time scans, re-add once fixed
 - envoy-security-headers-filter.yaml
-- istio.yaml
+- istio-crds.yaml
