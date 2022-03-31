@@ -1,6 +1,5 @@
 import { config } from 'dotenv-safe'
 import { connect, JSONCodec } from 'nats'
-// import https from 'https'
 
 config()
 
@@ -28,27 +27,6 @@ process.on('SIGINT', () => process.exit(0))
   const sub = nc.subscribe(topic, { queue: 'spring4shell-scanner' })
   for await (const m of sub) {
     const { domain } = jc.decode(m.data)
-
-    // const get = await fetch(`https://${domain}`)
-    // console.log(JSON.stringify({ domain: domain, httpStatus: get.status }))
-    // const options = {
-    //   hostname: domain,
-    //   port: 443,
-    //   headers: headers,
-    //   method: 'POST',
-    //   body,
-    // }
-    // const req = https.request(options, (res) => {
-    //   const { statusCode } = res
-    //   console.log(`statusCode: ${res.statusCode}`)
-    //   if (statusCode === 200) {
-    //     console.log('uh oh')
-    //   }
-    // })
-
-    // req.on('error', (error) => {
-    //   console.error(error)
-    // })
     try {
       const res = await fetch(`https://${domain}`, {
         method: 'POST',
