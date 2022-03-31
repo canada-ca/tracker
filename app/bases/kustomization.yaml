@@ -17,3 +17,4 @@ resources:
 - dmarc-report-cronjob.yaml
 - scan-dispatcher-cronjob.yaml
 - database-configmap.yaml
+- spring4shell-scanner-registry.yaml
