@@ -39,7 +39,7 @@ describe('<EditableUserLanguage />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => expect(getByText(/Save Language/i)).toBeInTheDocument())
+    await waitFor(() => expect(getByText(/Save/i)).toBeInTheDocument())
   })
 
   it('successfully changes languages', async () => {
@@ -87,7 +87,7 @@ describe('<EditableUserLanguage />', () => {
       </MockedProvider>,
     )
 
-    const saveBtn = getByText(/Save Language/i)
+    const saveBtn = getByText(/Save/i)
     const languageSelect = getByTestId(/user-language-select/)
     fireEvent.change(languageSelect, { target: { value: 'FRENCH' } })
     fireEvent.click(saveBtn)
@@ -136,7 +136,7 @@ describe('<EditableUserLanguage />', () => {
       </MockedProvider>,
     )
 
-    const saveBtn = getByText(/Save Language/i)
+    const saveBtn = getByText(/Save/i)
     const languageSelect = getByTestId(/user-language-select/)
     fireEvent.change(languageSelect, { target: { value: 'FRENCH' } })
     fireEvent.click(saveBtn)

@@ -167,15 +167,15 @@ export default function OrganizationDetails({ isLoginRequired }) {
           </Button>
         )}
       </Flex>
-      <Tabs isFitted>
+      <Tabs isFitted variant="enclosed-colored">
         <TabList mb="4">
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Summary</Trans>
           </Tab>
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>DMARC Phases</Trans>
           </Tab>
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
           {!isNaN(data?.organization?.affiliations?.totalCount) && (
