@@ -27,7 +27,7 @@ import { EmailField } from '../components/fields/EmailField'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { EmailIcon } from '../theme/Icons'
 
-export function EditableUserEmail({ detailValue }) {
+export function EditableUserEmail({ detailValue, ...props }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -83,7 +83,7 @@ export function EditableUserEmail({ detailValue }) {
   )
 
   return (
-    <Box mb="4">
+    <Box {...props}>
       <Heading as="h3" size="md" mb="1">
         <Trans>Email:</Trans>
       </Heading>

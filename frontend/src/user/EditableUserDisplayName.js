@@ -27,7 +27,7 @@ import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { EditIcon } from '@chakra-ui/icons'
 
-export function EditableUserDisplayName({ detailValue }) {
+export function EditableUserDisplayName({ detailValue, ...props }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -83,7 +83,7 @@ export function EditableUserDisplayName({ detailValue }) {
   )
 
   return (
-    <Box mb="4">
+    <Box {...props}>
       <Heading as="h3" size="md" mb="1">
         <Trans>Display Name:</Trans>
       </Heading>

@@ -27,7 +27,7 @@ import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PASSWORD } from '../graphql/mutations'
 import { LockIcon } from '../theme/Icons'
 
-export function EditableUserPassword() {
+export function EditableUserPassword({ ...props }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -86,7 +86,7 @@ export function EditableUserPassword() {
   )
 
   return (
-    <Box mb="4">
+    <Box {...props}>
       <Heading as="h3" size="md" mb="1">
         <Trans>Password:</Trans>
       </Heading>
@@ -98,7 +98,7 @@ export function EditableUserPassword() {
         rounded="md"
         p="1"
       >
-        <LockIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
+        <LockIcon mr="2" ml="1" boxSize="1.3rem" aria-hidden="true" />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
         <Button
           variant="primary"

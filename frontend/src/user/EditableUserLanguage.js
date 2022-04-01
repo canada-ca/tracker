@@ -9,7 +9,7 @@ import { string } from 'prop-types'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 
-export function EditableUserLanguage({ currentLang }) {
+export function EditableUserLanguage({ currentLang, ...props }) {
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
@@ -62,7 +62,7 @@ export function EditableUserLanguage({ currentLang }) {
   )
 
   return (
-    <Box>
+    <Box {...props}>
       <Heading as="h3" size="md" mb="1">
         <Trans>Language:</Trans>
       </Heading>

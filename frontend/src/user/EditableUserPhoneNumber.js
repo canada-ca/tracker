@@ -29,7 +29,7 @@ import { createValidationSchema } from '../utilities/fieldRequirements'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from '../graphql/mutations'
 import { EditIcon } from '@chakra-ui/icons'
 
-export function EditableUserPhoneNumber({ detailValue }) {
+export function EditableUserPhoneNumber({ detailValue, ...props }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -256,7 +256,7 @@ export function EditableUserPhoneNumber({ detailValue }) {
   const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
 
   return (
-    <Box mb="4">
+    <Box {...props}>
       <Heading as="h3" size="md" mb="1">
         <Trans>Phone Number:</Trans>
       </Heading>
@@ -268,7 +268,7 @@ export function EditableUserPhoneNumber({ detailValue }) {
         rounded="md"
         p="1"
       >
-        <PhoneIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
+        <PhoneIcon mr="2" ml="1" boxSize="1.2rem" aria-hidden="true" />
         {detailValue ? (
           <Text>{detailValue}</Text>
         ) : (

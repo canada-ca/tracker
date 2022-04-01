@@ -16,13 +16,19 @@ import { useMutation } from '@apollo/client'
 
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { useUserVar } from '../utilities/userState'
-import { RadioCheckedIcon, RadioUncheckedIcon } from '../theme/Icons'
+import {
+  EmailIcon,
+  PhoneIcon,
+  RadioCheckedIcon,
+  RadioUncheckedIcon,
+} from '../theme/Icons'
 
 export function EditableUserTFAMethod({
   currentTFAMethod,
   isUserAdmin,
   emailValidated,
   phoneValidated,
+  ...props
 }) {
   const toast = useToast()
   const { login, currentUser } = useUserVar()
@@ -81,11 +87,11 @@ export function EditableUserTFAMethod({
   )
 
   return (
-    <Box mb="4">
-      <Heading as="h3" size="md" mb="1">
+    <Box {...props}>
+      <Heading as="h3" size="md" mb="3">
         <Trans>Two-Factor Authentication:</Trans>
       </Heading>
-      <Stack isInline mb="12">
+      <Stack isInline mb="4">
         <Box p="1">
           {emailValidated ? (
             <RadioCheckedIcon
@@ -100,7 +106,8 @@ export function EditableUserTFAMethod({
               aria-label="Email is not validated"
             />
           )}
-          <Badge variant="outline" color="gray.900">
+          <Badge variant="outline" color="gray.900" p="1">
+            <EmailIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
             <Trans>Email Validated</Trans>
           </Badge>
         </Box>
@@ -118,7 +125,8 @@ export function EditableUserTFAMethod({
               aria-label="Email is not validated"
             />
           )}
-          <Badge variant="outline" color="gray.900">
+          <Badge variant="outline" color="gray.900" p="1.5">
+            <PhoneIcon mr="2" ml="1" boxSize="1.1rem" aria-hidden="true" />
             <Trans>Phone Validated</Trans>
           </Badge>
         </Box>
@@ -143,7 +151,6 @@ export function EditableUserTFAMethod({
               borderColor="gray.500"
               rounded="md"
               p="1"
-              mb="8"
             >
               <Field
                 data-testid="tfa-method-select"
