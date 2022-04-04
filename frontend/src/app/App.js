@@ -232,9 +232,7 @@ export function App() {
               >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <OrganizationDetails
-                      isLoginRequired={data?.loginRequired}
-                    />
+                    <OrganizationDetails />
                   </ErrorBoundary>
                 )}
               </PrivatePage>

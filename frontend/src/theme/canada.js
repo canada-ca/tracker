@@ -51,6 +51,10 @@ export default extendTheme({
     infoMuted: '#d2e7fc',
     moderateMuted: '#FFE6C0',
     unknown: '#6C6C6C',
+    btnMain: '#000000',
+    btnHover: '#767676',
+    btnActive: '#aeaeae',
+    btnDisabled: '#e6e6e6',
     green: {
       50: '#F2FFF0',
       100: '#C3EEBF',
