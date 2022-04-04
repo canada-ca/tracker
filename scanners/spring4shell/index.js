@@ -24,7 +24,13 @@ process.on('SIGINT', () => process.exit(0))
     const { domain } = jc.decode(m.data)
     try {
       const res1 = await fetch(`https://${domain}`)
-      console.log(JSON.stringify({ domain: domain, httpStatus: res1.status }))
+      console.log(
+        JSON.stringify({
+          domain: domain,
+          method: 'GET',
+          httpStatus: res1.status,
+        }),
+      )
     } catch (error) {
       console.error(error)
     }
@@ -35,7 +41,15 @@ process.on('SIGINT', () => process.exit(0))
         headers,
       })
       const data = await res2.text()
-      console.log({ data })
+      console.log(
+        JSON.stringify({
+          domain: domain,
+          method: 'POST',
+          httpStatus: res2.status,
+          data: data,
+        }),
+      )
+      if (res2.status === 400) console.log('hit!')
     } catch (err) {
       console.error(err)
     }
