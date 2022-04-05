@@ -1755,8 +1755,11 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
-#: src/app/App.js:218
 #: src/app/ReadGuidancePage.js:19
+msgid "Read Guidance"
+msgstr "Conseils de lecture"
+
+#: src/app/App.js:218
 msgid "Read guidance"
 msgstr "Conseils de lecture"
 

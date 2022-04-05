@@ -16,7 +16,7 @@ export default function ReadGuidancePage() {
   return (
     <Box w="100%" p="4">
       <Heading>
-        <Trans>Read guidance</Trans>
+        <Trans>Read Guidance</Trans>
       </Heading>
       <Divider borderBottomColor="gray.900" mb="2" />
       <Text fontSize="xl">
@@ -25,7 +25,7 @@ export default function ReadGuidancePage() {
           following steps to become compliant with the Government of Canada's
           web security standards. If you have any questions about this process,
           please{' '}
-          <Link color="blue.500" as={RouteLink}>
+          <Link color="blue.500" as={RouteLink} to="/contact-us">
             contact us
           </Link>
           .
