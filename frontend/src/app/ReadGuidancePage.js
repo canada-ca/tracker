@@ -19,7 +19,7 @@ export default function ReadGuidancePage() {
         <Trans>Read guidance</Trans>
       </Heading>
       <Divider borderBottomColor="gray.900" mb="2" />
-      <Text mb="4" fontSize="xl">
+      <Text fontSize="xl">
         <Trans>
           Help us make government websites more secure. Please complete the
           following steps to become compliant with the Government of Canada's
