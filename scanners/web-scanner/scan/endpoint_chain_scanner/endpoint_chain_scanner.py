@@ -1,38 +1,18 @@
 import re
-import traceback
-from http.client import HTTPResponse
-from typing import List, Optional, Union
+from typing import Optional, Union
 from urllib.parse import urlsplit
 
-import sys
 import logging
-import json
 import requests
 from requests import Response
 from requests_toolbelt.adapters import host_header_ssl
 from dataclasses import dataclass, field, asdict
-from sslyze import Scanner, ServerScanRequest, ServerScanResultAsJson, \
-    ScanCommandResult, ServerScanResult
-from sslyze.connection_helpers.http_request_generator import \
-    HttpRequestGenerator
-from sslyze.connection_helpers.http_response_parser import HttpResponseParser
-from sslyze.plugins.scan_commands import ScanCommand
-from sslyze.errors import ServerHostnameCouldNotBeResolved
-from sslyze.server_connectivity import check_connectivity_to_server, \
-    ServerConnectivityInfo
-from sslyze.server_setting import (
-    ServerNetworkLocation,
-    ServerNetworkConfiguration,
-)
 
 logger = logging.getLogger(__name__)
 
 
-# from scan import https
-
 TIMEOUT = 10
 
-# logger.error()
 
 @dataclass
 class HTTPConnection:
@@ -77,7 +57,7 @@ class HTTPConnectionRequest:
     uri: str
     ip_address: Optional[str]
     connection: HTTPConnection = field(init=False, default=None)
-    error: Optional[BaseException]
+    error: Optional[str]
     scheme: str = "http"
 
     def __init__(self, uri: str, ip_address: Optional[str] = None,
@@ -85,7 +65,7 @@ class HTTPConnectionRequest:
                  error: Optional[BaseException] = None):
         self.uri = uri
         self.ip_address = ip_address
-        self.error = error
+        self.error = str(error)
         if error:
             return
         if self.scheme == "http":
@@ -195,7 +175,7 @@ class ChainResult:
 
 
 @dataclass
-class HTTPChainScanResult:
+class EndpointChainScanResult:
     # Use asdict() from dataclasses for dict output of this class
 
     domain: str
@@ -212,70 +192,8 @@ class HTTPChainScanResult:
                                               ip_address=self.ip_address)
 
 
-class SslyzeScanRequest:
-    def __init__(self, sslyze_scan_result: Optional[ServerScanResult] = None,
-                 error: Optional[BaseException] = None):
-        self.error = error
-        if error:
-            return
-        self.sslyze_scan_result = sslyze_scan_result
+def scan_chain(domain, ip_address) -> EndpointChainScanResult:
+    endpoint_scan_result = EndpointChainScanResult(domain=domain,
+                                           ip_address=ip_address)
 
-
-class HTTPScanResult:
-    http_chain_scan_result: HTTPChainScanResult
-    sslyze_scan_result: SslyzeScanRequest
-
-    def __init__(self, http_chain_scan_result: HTTPChainScanResult,
-                 sslyze_scan_result: SslyzeScanRequest):
-        self.http_chain_scan_result = http_chain_scan_result
-        self.sslyze_scan_result = sslyze_scan_result
-
-    def dict(self):
-        sslyze_scan_result_dict = json.loads(ServerScanResultAsJson.from_orm(
-            self.sslyze_scan_result.sslyze_scan_result).json())
-        http__chain_scan_result_dict = asdict(self.http_chain_scan_result)
-
-        return {"sslyze_scan_result": sslyze_scan_result_dict,
-                "http_chain_scan_result": http__chain_scan_result_dict}
-
-
-def run_http_chain_scan(domain, ip_address) -> HTTPChainScanResult:
-    http_chain_result = HTTPChainScanResult(domain=domain,
-                                            ip_address=ip_address)
-
-    return http_chain_result
-
-
-def run_sslyze_scan(domain, ip_address) -> SslyzeScanRequest:
-    try:
-        server_location = ServerNetworkLocation(
-            hostname=domain, ip_address=ip_address)
-        network_configuration = ServerNetworkConfiguration.default_for_server_location(
-            server_location)
-
-        all_scan_requests = [
-            ServerScanRequest(server_location=server_location,
-                              network_configuration=network_configuration,
-                              scan_commands={ScanCommand.CERTIFICATE_INFO}),
-        ]
-    except ServerHostnameCouldNotBeResolved as e:
-        # Handle bad input ie. invalid hostnames
-        logger.error(f"Sslyze could not resolve hostname: {e}")
-        return SslyzeScanRequest(error=e)
-
-    scanner = Scanner()
-    scanner.queue_scans(all_scan_requests)
-
-    # We only scan one domain at a time, so we get the first entry
-    return SslyzeScanRequest(
-        sslyze_scan_result=[result for result in scanner.get_results()][0])
-
-
-def scan_http(domain, ip_address=None):
-    sslyze_scan_result = run_sslyze_scan(domain=domain, ip_address=ip_address)
-    http_chain_scan_result = run_http_chain_scan(domain=domain,
-                                                 ip_address=ip_address)
-
-    res = HTTPScanResult(sslyze_scan_result=sslyze_scan_result,
-                         http_chain_scan_result=http_chain_scan_result)
-    return res
+    return endpoint_scan_result
