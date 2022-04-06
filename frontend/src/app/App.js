@@ -63,6 +63,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
   import('../createOrganization/CreateOrganizationPage'),
 )
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
+const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
 
 export function App() {
   // Hooks to be used with this functional component
@@ -211,6 +212,12 @@ export function App() {
                 title={t`Contact Us`}
               />
 
+              <Page
+                path="/guidance"
+                component={ReadGuidancePage}
+                title={t`Read guidance`}
+              />
+
               <PrivatePage
                 isLoginRequired={data?.loginRequired}
                 path="/organizations"
@@ -232,9 +239,7 @@ export function App() {
               >
                 {() => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <OrganizationDetails
-                      isLoginRequired={data?.loginRequired}
-                    />
+                    <OrganizationDetails />
                   </ErrorBoundary>
                 )}
               </PrivatePage>
@@ -368,6 +373,10 @@ export function App() {
 
           <Link as={RouteLink} to="/contact-us" ml="4">
             <Trans>Contact Us</Trans>
+          </Link>
+
+          <Link as={RouteLink} to="/guidance" ml="4">
+            <Trans>Guidance</Trans>
           </Link>
         </Footer>
       </Flex>
