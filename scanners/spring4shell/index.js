@@ -32,7 +32,9 @@ process.on('SIGINT', () => process.exit(0))
         }),
       )
     } catch (error) {
-      console.error(JSON.stringify({ domain, error }))
+      console.error(
+        JSON.stringify({ domain, method: 'GET', error: error?.message }),
+      )
     }
     try {
       const res2 = await fetch(`https://${domain}`, {
@@ -51,7 +53,9 @@ process.on('SIGINT', () => process.exit(0))
       )
       if (res2.status === 400) console.info(`!!!${domain} returned code 400!!!`)
     } catch (error) {
-      console.error(JSON.stringify({ domain, error }))
+      console.error(
+        JSON.stringify({ domain, method: 'POST', error: error?.message }),
+      )
     }
   }
   console.log('subscription closed')

@@ -6,6 +6,7 @@ metadata:
   name: spring4shell-scanner
   namespace: scanners
 spec:
+  replicas: 4
   selector:
     matchLabels:
       app: spring4shell-scanner
