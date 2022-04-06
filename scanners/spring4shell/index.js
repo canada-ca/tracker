@@ -1,13 +1,15 @@
 import { config } from 'dotenv-safe'
-import { connect, JSONCodec, StringCodec } from 'nats'
-// import fetch from 'node-fetch'
-import { logger } from './src/logger.js'
+import { connect, JSONCodec } from 'nats'
 
 config()
 
 const { SUBSCRIBE_TO: topic, NATS_URL } = process.env
-// console.log(NATS_URL, topic)
 
+const headers = {
+  DNT: '1',
+  'Content-Type': 'application/x-www-form-urlencoded',
+}
+const body = 'class.module.classLoader.DefaultAssertionStatus=nonsense'
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
@@ -19,11 +21,38 @@ process.on('SIGINT', () => process.exit(0))
   // matching the subscription
   const sub = nc.subscribe(topic, { queue: 'spring4shell-scanner' })
   for await (const m of sub) {
-    // console.log({ m: JSON.stringify(jc.decode(m.data)) })
     const { domain } = jc.decode(m.data)
-    // console.log(domain)
-    const res = await fetch(`https://${domain}`)
-    console.log(JSON.stringify({ domain: domain, httpStatus: res.status }))
+    try {
+      const res1 = await fetch(`https://${domain}`)
+      console.log(
+        JSON.stringify({
+          domain,
+          method: 'GET',
+          httpStatus: res1.status,
+        }),
+      )
+    } catch (error) {
+      console.error(JSON.stringify({ domain, error }))
+    }
+    try {
+      const res2 = await fetch(`https://${domain}`, {
+        method: 'POST',
+        body,
+        headers,
+      })
+      const data = await res2.text()
+      console.log(
+        JSON.stringify({
+          domain,
+          method: 'POST',
+          httpStatus: res2.status,
+          data,
+        }),
+      )
+      if (res2.status === 400) console.info(`!!!${domain} returned code 400!!!`)
+    } catch (error) {
+      console.error(JSON.stringify({ domain, error }))
+    }
   }
   console.log('subscription closed')
 
@@ -35,6 +64,5 @@ process.on('SIGINT', () => process.exit(0))
   // the connection closes.
   await nc.drain()
 
-  // logger.info(`Dispatched ${count} domains in ${(stop - start) / 1000} seconds`)
   process.exit(0)
 })()
