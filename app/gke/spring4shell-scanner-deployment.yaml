@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: spring4shell-scanner
-          image: gcr.io/track-compliance/spring4shell-scanner:master-000002 # {"$imagepolicy": "flux-system:spring4shell-scanner"}
+          image: gcr.io/track-compliance/spring4shell-scanner:master-3d57390-1649277424 # {"$imagepolicy": "flux-system:spring4shell-scanner"}
           env:
             - name: SUBSCRIBE_TO
               value: domains.*
