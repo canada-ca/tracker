@@ -42,13 +42,11 @@ process.on('SIGINT', () => process.exit(0))
         body,
         headers,
       })
-      const data = await res2.text()
       console.log(
         JSON.stringify({
           domain,
           method: 'POST',
           httpStatus: res2.status,
-          data,
         }),
       )
       if (res2.status === 400) console.info(`!!!${domain} returned code 400!!!`)
