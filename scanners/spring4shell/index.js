@@ -26,13 +26,13 @@ process.on('SIGINT', () => process.exit(0))
       const res1 = await fetch(`https://${domain}`)
       console.log(
         JSON.stringify({
-          domain: domain,
+          domain,
           method: 'GET',
           httpStatus: res1.status,
         }),
       )
     } catch (error) {
-      console.error(error)
+      console.error(JSON.stringify({ domain, error }))
     }
     try {
       const res2 = await fetch(`https://${domain}`, {
@@ -43,15 +43,15 @@ process.on('SIGINT', () => process.exit(0))
       const data = await res2.text()
       console.log(
         JSON.stringify({
-          domain: domain,
+          domain,
           method: 'POST',
           httpStatus: res2.status,
-          data: data,
+          data,
         }),
       )
-      if (res2.status === 400) console.log('hit!')
-    } catch (err) {
-      console.error(err)
+      if (res2.status === 400) console.info(`!!!${domain} returned code 400!!!`)
+    } catch (error) {
+      console.error(JSON.stringify({ domain, error }))
     }
   }
   console.log('subscription closed')
