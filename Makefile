@@ -84,6 +84,10 @@ guidance:
 summaries:
 		kubectl apply -f services/summaries/summaries-job.yaml
 
+.PHONY: reports
+reports:
+		kubectl create job dmarc-summaries-manual --from=cronjob/dmarc-report -n scanners
+
 .ONESHELL:
 .PHONY: credentials
 credentials:
