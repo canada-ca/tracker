@@ -316,6 +316,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={i18n._(t`Search DKIM Failing Items`)}
+          fileName={`${domainSlug}-${period}-${year}`}
         />
       </ErrorBoundary>
     )
@@ -387,6 +388,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={i18n._(t`Search Fully Aligned Items`)}
+          fileName={`${domainSlug}-${period}-${year}`}
         />
       </ErrorBoundary>
     )
@@ -457,6 +459,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={i18n._(t`Search SPF Failing Items`)}
+          fileName={`${domainSlug}-${period}-${year}`}
         />
       </ErrorBoundary>
     )
@@ -529,6 +532,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={i18n._(t`Search DMARC Failing Items`)}
+          fileName={`${domainSlug}-${period}-${year}`}
         />
       </ErrorBoundary>
     )
