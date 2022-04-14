@@ -8,18 +8,12 @@ export function ExportButton({ jsonData, fileName, ...props }) {
   const download = async () => {
     try {
       const csv = await json2csvAsync(jsonData)
-
-      // print CSV string
-      console.log(csv)
-
       const a = document.createElement('a')
       a.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv)
       a.download = `${fileName}.csv`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
-
-      // write CSV to a file
     } catch (err) {
       console.log(err)
     }
