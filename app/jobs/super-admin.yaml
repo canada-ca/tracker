@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: super-admin
-          image: gcr.io/track-compliance/super-admin:master-21b0f7a-1643820832 # {"$imagepolicy": "flux-system:super-admin"}
+          image: gcr.io/track-compliance/super-admin:master-f06358f-1650214240 # {"$imagepolicy": "flux-system:super-admin"}
           env:
             - name: DB_PASS
               valueFrom:
