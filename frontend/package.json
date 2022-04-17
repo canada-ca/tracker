@@ -42,7 +42,7 @@
     "framer-motion": "^4.1.17",
     "graphql-tag": "^2.12.6",
     "isomorphic-unfetch": "^3.1.0",
-    "make-plural": "^6.2.2",
+    "make-plural": "^7.1.0",
     "prop-types": "^15.8.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
