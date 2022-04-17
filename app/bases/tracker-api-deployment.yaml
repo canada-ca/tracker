@@ -50,7 +50,7 @@ spec:
             - name: database-config
               mountPath: /app
       containers:
-        - image: gcr.io/track-compliance/api-js:master-ec2cde1-1649446828 # {"$imagepolicy": "flux-system:api"}
+        - image: gcr.io/track-compliance/api-js:master-da9cfee-1650214120 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
