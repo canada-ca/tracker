@@ -122,7 +122,7 @@ export function TrackerTable({ ...props }) {
             placeholder={searchPlaceholder}
           />
         )}
-        {title !== 'dmarcSummaries' && (
+        {fileName && (
           <ExportButton
             ml="auto"
             jsonData={data}
