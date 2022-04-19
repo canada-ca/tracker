@@ -618,7 +618,7 @@ msgstr "Phases DMARC"
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
-#: src/dmarc/DmarcReportPage.js:36
+#: src/dmarc/DmarcReportPage.js:37
 msgid "DMARC Report for {domainSlug}"
 msgstr "Rapport DMARC pour {domainSlug}"
 
@@ -2530,8 +2530,12 @@ msgid "View Details"
 msgstr "Voir les détails"
 
 #: src/dmarc/DmarcReportPage.js:547
-msgid "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
-msgstr "Volume de messages usurpant {domainSlug} (rejet + quarantaine + aucun) :"
+msgid "Volume of messages spoofing domain (reject + quarantine + none):"
+msgstr "Volume de messages usurpant domaine (rejet + quarantaine + aucun) :"
+
+#: src/dmarc/DmarcReportPage.js:547
+#~ msgid "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
+#~ msgstr "Volume de messages usurpant {domainSlug} (rejet + quarantaine + aucun) :"
 
 #: src/termsConditions/TermsConditionsPage.js:366
 msgid "We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change."
