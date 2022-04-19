@@ -11,6 +11,9 @@ displayname=admin
 SA_USER_USERNAME=admin@example.com
 SA_USER_PASSWORD=admin
 
+kube_arangodb_version=1.2.6
+arango_operator_manifest_url_prefix=https://raw.githubusercontent.com/arangodb/kube-arangodb/$(kube_arangodb_version)/manifests
+
 define scanners =
 endef
 
@@ -30,6 +33,11 @@ dbdump:
 .PHONY: restore
 restore:
 		arangorestore --server.database track_dmarc --create-collection false --include-system-collections true --input-directory $(from)
+
+.PHONY: install-arango-operator
+install-arango-operator:
+		kubectl apply -f $(arango_operator_manifest_url_prefix)/arango-crd.yaml
+		kubectl apply -f $(arango_operator_manifest_url_prefix)/arango-deployment.yaml
 
 .PHONY: update-flux
 update-flux:
