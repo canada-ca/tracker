@@ -7,7 +7,6 @@ import {
   Flex,
   Heading,
   Link,
-  Select,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -25,18 +24,18 @@ import { InfoBox, InfoPanel, InfoButton } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
-import { months } from '../utilities/months'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
+import { MonthSelect } from '../components/MonthSelect'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
+  const fileName = `${domainSlug}_${period}-${year}`
   const history = useHistory()
   const { i18n } = useLingui()
 
-  useDocumentTitle(i18n._(t`DMARC Report for ${domainSlug}`))
+  useDocumentTitle(t`DMARC Report for ${domainSlug}`)
 
-  const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period)
   const [selectedYear, setSelectedYear] = useState(year)
   const [selectedDate, setSelectedDate] = useState(
@@ -74,47 +73,6 @@ export default function DmarcReportPage() {
       after: '',
     },
   })
-
-  const options = [
-    <option
-      key="LAST30DAYS"
-      value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
-    >
-      {i18n._(t`Last 30 Days`)}
-    </option>,
-  ]
-
-  // add dmarc date selection options
-  for (let i = currentDate.getMonth(), j = 13; j > 0; i--, j--) {
-    // handle previous year
-    if (i < 0) {
-      const value = `${months[months.length + i].toUpperCase()}, ${
-        currentDate.getFullYear() - 1
-      }`
-      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
-        currentDate.getFullYear() - 1
-      }`
-
-      options.push(
-        <option key={value} value={value}>
-          {translatedValue}
-        </option>,
-      )
-    }
-    // handle current year
-    else {
-      const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${months[
-        i
-      ].toUpperCase()}, ${currentDate.getFullYear()}`
-
-      options.push(
-        <option key={value} value={value}>
-          {translatedValue}
-        </option>,
-      )
-    }
-  }
 
   // Show data for newly selected date
   const handleChange = (e) => {
@@ -156,17 +114,17 @@ export default function DmarcReportPage() {
   // Set graph display using data if data exists
   else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
-      fullPass: i18n._(t`Pass`),
-      fullPassPercentage: i18n._(t`Pass`),
+      fullPass: t`Pass`,
+      fullPassPercentage: t`Pass`,
 
-      passSpfOnly: i18n._(t`Fail DKIM`),
-      passSpfOnlyPercentage: i18n._(t`Fail DKIM`),
+      passSpfOnly: t`Fail DKIM`,
+      passSpfOnlyPercentage: t`Fail DKIM`,
 
-      passDkimOnly: i18n._(t`Fail SPF`),
-      passDkimOnlyPercentage: i18n._(t`Fail SPF`),
+      passDkimOnly: t`Fail SPF`,
+      passDkimOnlyPercentage: t`Fail SPF`,
 
-      fail: i18n._(t`Fail`),
-      failPercentage: i18n._(t`Fail`),
+      fail: t`Fail`,
+      failPercentage: t`Fail`,
     }
 
     const formattedGraphData = {
@@ -198,61 +156,61 @@ export default function DmarcReportPage() {
   }
 
   const sourceIpAddress = {
-    Header: i18n._(t`Source IP Address`),
+    Header: t`Source IP Address`,
     accessor: 'sourceIpAddress',
     style: { whiteSpace: 'nowrap' },
   }
   const envelopeFrom = {
-    Header: i18n._(t`Envelope From`),
+    Header: t`Envelope From`,
     accessor: 'envelopeFrom',
     style: { whiteSpace: 'nowrap' },
   }
   const dkimDomains = {
-    Header: i18n._(t`DKIM Domains`),
+    Header: t`DKIM Domains`,
     accessor: 'dkimDomains',
   }
   const dkimSelectors = {
-    Header: i18n._(t`DKIM Selectors`),
+    Header: t`DKIM Selectors`,
     accessor: 'dkimSelectors',
   }
   const totalMessages = {
-    Header: i18n._(t`Total Messages`),
+    Header: t`Total Messages`,
     accessor: 'totalMessages',
     Cell: ({ value }) => value.toLocaleString(i18n.locale),
     style: { textAlign: 'right' },
   }
-  const dnsHost = { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' }
+  const dnsHost = { Header: t`DNS Host`, accessor: 'dnsHost' }
   const spfDomains = {
-    Header: i18n._(t`SPF Domains`),
+    Header: t`SPF Domains`,
     accessor: 'spfDomains',
   }
   const headerFrom = {
-    Header: i18n._(t`Header From`),
+    Header: t`Header From`,
     accessor: 'headerFrom',
     style: { whiteSpace: 'nowrap' },
   }
   const guidance = {
-    Header: i18n._(t`Guidance`),
+    Header: t`Guidance`,
     accessor: 'guidanceTag',
   }
   const spfAligned = {
-    Header: i18n._(t`SPF Aligned`),
+    Header: t`SPF Aligned`,
     accessor: 'spfAligned',
   }
   const spfResults = {
-    Header: i18n._(t`SPF Results`),
+    Header: t`SPF Results`,
     accessor: 'spfResults',
   }
   const dkimAligned = {
-    Header: i18n._(t`DKIM Aligned`),
+    Header: t`DKIM Aligned`,
     accessor: 'dkimAligned',
   }
   const dkimResults = {
-    Header: i18n._(t`DKIM Results`),
+    Header: t`DKIM Results`,
     accessor: 'dkimResults',
   }
   const disposition = {
-    Header: i18n._(t`Disposition`),
+    Header: t`Disposition`,
     accessor: 'disposition',
   }
 
@@ -277,7 +235,7 @@ export default function DmarcReportPage() {
   ) {
     const dkimFailureColumns = [
       {
-        Header: i18n._(t`DKIM Failures by IP Address`),
+        Header: t`DKIM Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -312,10 +270,11 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
-          title={i18n._(t`DKIM Failures by IP Address`)}
+          title={t`DKIM Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          searchPlaceholder={i18n._(t`Search DKIM Failing Items`)}
+          searchPlaceholder={t`Search DKIM Failing Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -351,7 +310,7 @@ export default function DmarcReportPage() {
   ) {
     const fullPassColumns = [
       {
-        Header: i18n._(t`Fully Aligned by IP Address`),
+        Header: t`Fully Aligned by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -383,10 +342,11 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={fullPassNodes}
           columns={fullPassColumns}
-          title={i18n._(t`Fully Aligned by IP Address`)}
+          title={t`Fully Aligned by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          searchPlaceholder={i18n._(t`Search Fully Aligned Items`)}
+          searchPlaceholder={t`Search Fully Aligned Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -422,7 +382,7 @@ export default function DmarcReportPage() {
   ) {
     const spfFailureColumns = [
       {
-        Header: i18n._(t`SPF Failures by IP Address`),
+        Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -453,10 +413,11 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={spfFailureNodes}
           columns={spfFailureColumns}
-          title={i18n._(t`SPF Failures by IP Address`)}
+          title={t`SPF Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          searchPlaceholder={i18n._(t`Search SPF Failing Items`)}
+          searchPlaceholder={t`Search SPF Failing Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -476,6 +437,11 @@ export default function DmarcReportPage() {
 
   // DMARC Failure Table setup
   let dmarcFailureTable
+  const dmarcFailStats = {
+    none: 0,
+    reject: 0,
+    quarantine: 0,
+  }
 
   // Set DMARC Failure Table Loading
   if (tableLoading) {
@@ -492,7 +458,7 @@ export default function DmarcReportPage() {
   ) {
     const dmarcFailureColumns = [
       {
-        Header: i18n._(t`DMARC Failures by IP Address`),
+        Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -513,6 +479,10 @@ export default function DmarcReportPage() {
       tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
         (edge) => {
           const node = { ...edge.node }
+
+          // calculate dmarcFailStats totals
+          dmarcFailStats[node.disposition] += node.totalMessages
+
           node.spfDomains = node.spfDomains.replace(/,/g, ', ')
           node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
           node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
@@ -525,10 +495,11 @@ export default function DmarcReportPage() {
         <TrackerTable
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
-          title={i18n._(t`DMARC Failures by IP Address`)}
+          title={t`DMARC Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          searchPlaceholder={i18n._(t`Search DMARC Failing Items`)}
+          searchPlaceholder={t`Search DMARC Failing Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -546,20 +517,41 @@ export default function DmarcReportPage() {
     )
   }
 
+  const fakeEmailDomainBlocks =
+    dmarcFailStats.reject + dmarcFailStats.quarantine
+  const domainSpoofingVolume = fakeEmailDomainBlocks + dmarcFailStats.none
+
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
       <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
-        <AccordionItem buttonLabel="Fully Aligned by IP Address">
+        <AccordionItem buttonLabel={t`Fully Aligned by IP Address`}>
           {fullPassTable}
         </AccordionItem>
-        <AccordionItem buttonLabel="DKIM Failures by IP Address">
+        <AccordionItem buttonLabel={t`DKIM Failures by IP Address`}>
           {dkimFailureTable}
         </AccordionItem>
-        <AccordionItem buttonLabel="SPF Failures by IP Address">
+        <AccordionItem buttonLabel={t`SPF Failures by IP Address`}>
           {spfFailureTable}
         </AccordionItem>
-        <AccordionItem buttonLabel="DMARC Failures by IP Address">
+        <AccordionItem buttonLabel={t`DMARC Failures by IP Address`}>
           {dmarcFailureTable}
+          <Box py="2">
+            <Flex>
+              <Text fontWeight="bold" mr="1">
+                <Trans>Fake email domain blocks (reject + quarantine):</Trans>
+              </Text>
+              <Text>{fakeEmailDomainBlocks}</Text>
+            </Flex>
+            <Flex>
+              <Text fontWeight="bold" mr="1">
+                <Trans>
+                  Volume of messages spoofing domain (reject + quarantine +
+                  none):
+                </Trans>
+              </Text>
+              <Text>{domainSpoofingVolume}</Text>
+            </Flex>
+          </Box>
         </AccordionItem>
       </Accordion>
     </ErrorBoundary>
@@ -599,14 +591,12 @@ export default function DmarcReportPage() {
         >
           <Trans>Showing data for period: </Trans>
         </Text>
-        <Select
+        <MonthSelect
           id="data-date-range"
           width="fit-content"
-          onChange={(e) => handleChange(e)}
-          value={selectedDate}
-        >
-          {options}
-        </Select>
+          handleChange={handleChange}
+          selectedValue={selectedDate}
+        />
       </Flex>
 
       {tableDisplay}
