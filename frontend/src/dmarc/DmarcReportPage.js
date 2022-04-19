@@ -30,12 +30,12 @@ import { MonthSelect } from '../components/MonthSelect'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
+  const fileName = `${domainSlug}_${period}-${year}`
   const history = useHistory()
   const { i18n } = useLingui()
 
   useDocumentTitle(t`DMARC Report for ${domainSlug}`)
 
-  // const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period)
   const [selectedYear, setSelectedYear] = useState(year)
   const [selectedDate, setSelectedDate] = useState(
@@ -274,7 +274,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={t`Search DKIM Failing Items`}
-          fileName={`${domainSlug}-${period}-${year}`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -346,7 +346,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={t`Search Fully Aligned Items`}
-          fileName={`${domainSlug}-${period}-${year}`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -417,7 +417,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={t`Search SPF Failing Items`}
-          fileName={`${domainSlug}-${period}-${year}`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -499,7 +499,7 @@ export default function DmarcReportPage() {
           initialSort={initialSort}
           frontendPagination={true}
           searchPlaceholder={t`Search DMARC Failing Items`}
-          fileName={`${domainSlug}-${period}-${year}`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -545,8 +545,8 @@ export default function DmarcReportPage() {
             <Flex>
               <Text fontWeight="bold" mr="1">
                 <Trans>
-                  Volume of messages spoofing {domainSlug} (reject + quarantine
-                  + none):
+                  Volume of messages spoofing domain (reject + quarantine +
+                  none):
                 </Trans>
               </Text>
               <Text>{domainSpoofingVolume}</Text>

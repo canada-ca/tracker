@@ -126,7 +126,7 @@ export function TrackerTable({ ...props }) {
           <ExportButton
             ml="auto"
             jsonData={data}
-            fileName={`${fileName}-${title}`}
+            fileName={`${fileName}_${title}`}
           />
         )}
       </Flex>
