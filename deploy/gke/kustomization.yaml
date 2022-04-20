@@ -17,5 +17,6 @@ resources:
 - log4shell-processor-image-policy.yaml
 - log4shell-scanner-image-policy.yaml
 - spring4shell-image-policy.yaml
+- spring4shell-scanner-registry.yaml
 patchesStrategicMerge:
 - tracker-repo.yaml
