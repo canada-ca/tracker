@@ -43,6 +43,10 @@ update-istio:
 print-arango-deployment:
 		kustomize build app/$(env) | yq -y '. | select(.kind == "ArangoDeployment" and .metadata.name == "arangodb")'
 
+.PHONY: print-istio-operator
+print-istio-operator:
+		kustomize build platform/$(env) | yq -y '. | select(.kind == "IstioOperator" and .metadata.name == "istio-controlplane")'
+
 .PHONY: platform
 platform:
 		kustomize build platform/$(env) | kubectl apply -f -
