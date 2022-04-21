@@ -232,7 +232,7 @@ export function App() {
 
             <PrivatePage
               isLoginRequired={data?.loginRequired}
-              path="/organizations/:orgSlug"
+              path="/organizations/:orgSlug/:activeTab?"
               setTitle={false}
               exact
             >
@@ -272,7 +272,7 @@ export function App() {
 
             <PrivatePage
               isLoginRequired={data?.loginRequired}
-              path="/domains/:domainSlug"
+              path="/domains/:domainSlug/:activeTab?"
               setTitle={false}
               exact
             >
