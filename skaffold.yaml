@@ -2,6 +2,8 @@ apiVersion: skaffold/v2beta27
 kind: Config
 metadata:
   name: tracker
+#requires:
+#  - configs: ["arangodb-platform"]
 build:
   artifacts:
 #  - image: gcr.io/track-compliance/api-js
@@ -25,9 +27,9 @@ build:
 #  - image: gcr.io/track-compliance/domain-dispatcher
 #    context: scanners/domain-dispatcher
 #    docker: {}
-  - image: gcr.io/track-compliance/frontend
-    context: frontend
-    docker: {}
+#  - image: gcr.io/track-compliance/frontend
+#    context: frontend
+#    docker: {}
 #  - image: gcr.io/track-compliance/https-processor
 #    context: scanners/https-processor
 #    docker: {}
@@ -63,286 +65,27 @@ build:
 #    docker: {}
 deploy:
   kustomize:
+#    hooks:
+#      before:
+#        - host:
+#            command: [ "./istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
     paths:
-    - platform/creds/dev
-profiles:
-- name: aks
-  deploy:
-    kustomize:
-      paths:
-      - app/aks
-- name: arangodb
-  deploy:
-    kustomize:
-      paths:
-      - app/arangodb
-- name: bases
-  deploy:
-    kustomize:
-      paths:
-      - app/bases
-- name: dev
-  deploy:
-    kustomize:
-      paths:
-      - app/creds/dev
-- name: prod
-  deploy:
-    kustomize:
-      paths:
-      - app/creds/prod
-- name: gke
-  deploy:
-    kustomize:
-      paths:
-      - app/gke
-- name: aks
-  deploy:
-    kustomize:
-      paths:
-      - app/jobs/backup/aks
-- name: base
-  deploy:
-    kustomize:
-      paths:
-      - app/jobs/backup/base
-- name: gke
-  deploy:
-    kustomize:
-      paths:
-      - app/jobs/backup/gke
-- name: staging
-  deploy:
-    kustomize:
-      paths:
-      - app/jobs/backup/staging
-- name: test
-  deploy:
-    kustomize:
-      paths:
-      - app/jobs/backup/test
-- name: minikube
-  deploy:
-    kustomize:
-      paths:
-      - app/minikube
-- name: namespaces
-  deploy:
-    kustomize:
-      paths:
-      - app/namespaces
-- name: production
-  deploy:
-    kustomize:
-      paths:
-      - app/production
-- name: staging
-  deploy:
-    kustomize:
-      paths:
-      - app/staging
-- name: test
-  deploy:
-    kustomize:
-      paths:
-      - app/test
-- name: aks
-  deploy:
-    kustomize:
-      paths:
-      - deploy/aks
-- name: bases
-  deploy:
-    kustomize:
-      paths:
-      - deploy/bases
-- name: creds
-  deploy:
-    kustomize:
-      paths:
-      - deploy/creds
-- name: bases
-  deploy:
-    kustomize:
-      paths:
-      - deploy/creds/bases
-- name: readwrite
-  deploy:
-    kustomize:
-      paths:
-      - deploy/creds/readwrite
-- name: gke
-  deploy:
-    kustomize:
-      paths:
-      - deploy/gke
-- name: minikube
-  deploy:
-    kustomize:
-      paths:
-      - deploy/minikube
-- name: production
-  deploy:
-    kustomize:
-      paths:
-      - deploy/production
-- name: staging
-  deploy:
-    kustomize:
-      paths:
-      - deploy/staging
-- name: test
-  deploy:
-    kustomize:
-      paths:
-      - deploy/test
-- name: aks
-  deploy:
-    kustomize:
-      paths:
-      - platform/aks
-- name: base
-  deploy:
-    kustomize:
-      paths:
-      - platform/base
-- name: cert-manager
-  deploy:
-    kustomize:
-      paths:
-      - platform/components/cert-manager
-- name: istio
-  deploy:
-    kustomize:
-      paths:
-      - platform/components/istio
-- name: namespaces
-  deploy:
-    kustomize:
-      paths:
-      - platform/components/namespaces
-- name: prod
-  deploy:
-    kustomize:
-      paths:
-      - platform/creds/prod
-- name: gke
-  deploy:
-    kustomize:
-      paths:
-      - platform/gke
-- name: minikube
-  deploy:
-    kustomize:
-      paths:
-      - platform/minikube
-- name: production
-  deploy:
-    kustomize:
-      paths:
-      - platform/production
-- name: staging
-  deploy:
-    kustomize:
-      paths:
-      - platform/staging
-- name: test
-  deploy:
-    kustomize:
-      paths:
-      - platform/test
-- name: scanners
-  deploy:
-    kustomize:
-      paths:
-      - scanners
-- name: arangodb
-  deploy:
-    kustomize:
-      paths:
-      - scanners/arangodb
-- name: counter
-  deploy:
-    kustomize:
-      paths:
-      - scanners/counter
-- name: dns-processor
-  deploy:
-    kustomize:
-      paths:
-      - scanners/dns-processor
-- name: dns-scanner
-  deploy:
-    kustomize:
-      paths:
-      - scanners/dns-scanner
-- name: domain-dispatcher
-  deploy:
-    kustomize:
-      paths:
-      - scanners/domain-dispatcher
-- name: https-processor
-  deploy:
-    kustomize:
-      paths:
-      - scanners/https-processor
-- name: https-scanner
-  deploy:
-    kustomize:
-      paths:
-      - scanners/https-scanner
-- name: log4shell-processor
-  deploy:
-    kustomize:
-      paths:
-      - scanners/log4shell-processor
-- name: log4shell-scanner
-  deploy:
-    kustomize:
-      paths:
-      - scanners/log4shell-scanner
-- name: nats
-  deploy:
-    kustomize:
-      paths:
-      - scanners/nats
-- name: spring4shell
-  deploy:
-    kustomize:
-      paths:
-      - scanners/spring4shell
-- name: tls-processor
-  deploy:
-    kustomize:
-      paths:
-      - scanners/tls-processor
-- name: tls-scanner
-  deploy:
-    kustomize:
-      paths:
-      - scanners/tls-scanner
-- name: web-scanner
-  deploy:
-    kustomize:
-      paths:
-      - scanners/web-scanner
-- name: minikube-platform
-  deploy:
-    kustomize:
-      hooks:
-        before:
-          - host:
-              command: ["make", "install-arango-operator"]
-          - host:
-              command: [ "./istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
-      paths:
-        - k8s/infrastructure/arangodb/overlays/minikube
+      - k8s/infrastructure/arangodb/overlays/minikube
+      - k8s/infrastructure/nats/bases
+portForward:
+  - resourceType: service
+    resourceName: arangodb
+    namespace: db
+    port: 8529
+    localPort: 8529
 
-#- name: minikube-app
-#  deploy:
-#    kustomize:
-#      paths: ["app/creds/dev", "platform/minikube", "app/minikube"]
-#- name: minikube-kustomize
-#  deploy:
-#    kustomize:
-#      paths: ["app/creds/dev", "platform/minikube", "app/minikube"]
+---
+
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: arangodb-platform
+deploy:
+  kustomize:
+    paths:
+    - k8s/infrastructure/arangodb/platform

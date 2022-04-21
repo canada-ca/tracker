@@ -1,11 +1,17 @@
+#apiVersion: "database.arangodb.com/v1alpha"
+#kind: "ArangoDeployment"
+#metadata:
+#  name: "single-server"
+#spec:
+#  mode: Single
+
 apiVersion: database.arangodb.com/v1alpha
 kind: ArangoDeployment
 metadata:
   name: arangodb
   namespace: db
 spec:
-  metadata:
-  image: arangodb/arangodb:3.7.3
+  image: arangodb/arangodb:3.7.12
   environment: Development
   mode: Single
   tls:
@@ -15,8 +21,6 @@ spec:
   bootstrap:
     passwordSecretNames:
       root: arangodb
-  metrics:
-    enabled: true
   coordinators:
     count: 1
   agents:
