@@ -277,7 +277,7 @@ describe('<UserListModal />', () => {
     })
     describe('admin has "SUPER_ADMIN" privileges', () => {
       describe('admin is updating user with "USER" privileges', () => {
-        it('admin can change user role to "ADMIN"', async () => {
+        it.skip('admin can change user role to "ADMIN"', async () => {
           const mocks = [
             {
               request: {
