@@ -9,7 +9,6 @@ import {
   InputGroup,
   InputLeftElement,
   Link,
-  Select,
   Spinner,
   Stack,
   Text,
@@ -24,11 +23,11 @@ import { Link as RouteLink } from 'react-router-dom'
 import { TrackerTable } from '../components/TrackerTable'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
-import { months } from '../utilities/months'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { toConstantCase } from '../helpers/toConstantCase'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
+import { MonthSelect } from '../components/MonthSelect'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -236,47 +235,6 @@ export default function DmarcByDomainPage() {
     resetToFirstPage()
   }
 
-  const options = [
-    <option
-      key="LAST30DAYS"
-      value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
-    >
-      {t`Last 30 Days`}
-    </option>,
-  ]
-
-  // add dmarc date selection options
-  for (let i = currentDate.getMonth(), j = 13; j > 0; i--, j--) {
-    // handle previous year
-    if (i < 0) {
-      const value = `${months[months.length + i].toUpperCase()}, ${
-        currentDate.getFullYear() - 1
-      }`
-      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
-        currentDate.getFullYear() - 1
-      }`
-
-      options.push(
-        <option key={value} value={value}>
-          {translatedValue}
-        </option>,
-      )
-    }
-    // handle current year
-    else {
-      const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${months[
-        i
-      ].toUpperCase()}, ${currentDate.getFullYear()}`
-
-      options.push(
-        <option key={value} value={value}>
-          {translatedValue}
-        </option>,
-      )
-    }
-  }
-
   return (
     <Box width="100%" px="2">
       <Heading as="h1" textAlign="left" mb="4">
@@ -293,14 +251,12 @@ export default function DmarcByDomainPage() {
         >
           <Trans>Showing data for period: </Trans>
         </Text>
-        <Select
+        <MonthSelect
           id="data-date-range"
           width="fit-content"
-          onChange={(e) => handleChange(e)}
-          value={selectedDate}
-        >
-          {options}
-        </Select>
+          handleChange={handleChange}
+          selectedValue={selectedDate}
+        />
 
         {loading && (
           <Stack

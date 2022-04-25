@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: domain-dispatcher
-          image: gcr.io/track-compliance/domain-dispatcher:master-52b9d02-1640363926 # {"$imagepolicy": "flux-system:domain-dispatcher"}
+          image: gcr.io/track-compliance/domain-dispatcher:master-dcfb2c6-1650214041 # {"$imagepolicy": "flux-system:domain-dispatcher"}
           env:
             - name: DB_PASS
               valueFrom:

@@ -35,6 +35,7 @@ import {
 } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { ExportButton } from './ExportButton'
 
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
 
@@ -54,6 +55,7 @@ export function TrackerTable({ ...props }) {
     manualSort,
     manualFilters,
     searchPlaceholder,
+    fileName,
   } = props
 
   const [firstRender, setFirstRender] = React.useState(true)
@@ -110,7 +112,7 @@ export function TrackerTable({ ...props }) {
 
   return (
     <Box>
-      <Flex direction="row" my={2}>
+      <Flex direction="row" my="2">
         {!manualFilters && (
           <ReactTableGlobalFilter
             title={title}
@@ -118,6 +120,13 @@ export function TrackerTable({ ...props }) {
             globalFilter={state.globalFilter}
             setGlobalFilter={setGlobalFilter}
             placeholder={searchPlaceholder}
+          />
+        )}
+        {fileName && (
+          <ExportButton
+            ml="auto"
+            jsonData={data}
+            fileName={`${fileName}_${title}`}
           />
         )}
       </Flex>
@@ -295,4 +304,5 @@ TrackerTable.propTypes = {
   selectedDisplayLimit: number,
   manualSort: bool,
   manualFilters: bool,
+  fileName: string,
 }
