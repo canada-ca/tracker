@@ -35,9 +35,9 @@ export default function OrganizationDetails() {
 
   useDocumentTitle(`${orgSlug}`)
 
-  const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
+  const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },
-    errorPolicy: 'ignore', // allow partial success
+    // errorPolicy: 'ignore', // allow partial success
   })
 
   useEffect(() => {
@@ -52,6 +52,10 @@ export default function OrganizationDetails() {
         <Trans>Organization Details</Trans>
       </LoadingMessage>
     )
+  }
+
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
   }
 
   const orgName = data?.organization?.name ?? ''

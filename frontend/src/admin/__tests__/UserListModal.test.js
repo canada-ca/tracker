@@ -277,7 +277,7 @@ describe('<UserListModal />', () => {
     })
     describe('admin has "SUPER_ADMIN" privileges', () => {
       describe('admin is updating user with "USER" privileges', () => {
-        it.skip('admin can change user role to "ADMIN"', async () => {
+        it('admin can change user role to "ADMIN"', async () => {
           const mocks = [
             {
               request: {
@@ -302,7 +302,7 @@ describe('<UserListModal />', () => {
             },
           ]
 
-          const { getAllByText, queryByRole, getByRole, queryByText } = render(
+          const { getAllByText, getByRole, queryByText } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
               <UserVarProvider
                 userVar={makeVar({
@@ -358,13 +358,6 @@ describe('<UserListModal />', () => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
             ).toBeVisible()
-          })
-
-          // wait for modal to close
-          await waitFor(() => {
-            expect(
-              queryByRole('combobox', { name: /Role:/ }),
-            ).not.toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
