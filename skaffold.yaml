@@ -65,13 +65,21 @@ build:
 #    docker: {}
 deploy:
   kustomize:
-#    hooks:
-#      before:
-#        - host:
-#            command: [ "./istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
+    hooks:
+      before:
+        - host:
+            command: [ "./istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
     paths:
       - k8s/infrastructure/arangodb/overlays/minikube
       - k8s/infrastructure/nats/bases
+
+profiles:
+- name: arangodb-platform
+  deploy:
+    kustomize:
+      paths:
+        - k8s/infrastructure/arangodb/platform
+
 portForward:
   - resourceType: service
     resourceName: arangodb
@@ -79,13 +87,39 @@ portForward:
     port: 8529
     localPort: 8529
 
----
+#---
+#
+#apiVersion: skaffold/v2beta27
+#kind: Config
+#metadata:
+#  name: arangodb-platform
+#deploy:
+#  kustomize:
+#    paths:
+#    - k8s/infrastructure/arangodb/platform
 
-apiVersion: skaffold/v2beta27
-kind: Config
-metadata:
-  name: arangodb-platform
-deploy:
-  kustomize:
-    paths:
-    - k8s/infrastructure/arangodb/platform
+#---
+#
+#apiVersion: skaffold/v2beta27
+#kind: Config
+#metadata:
+#  name: istio
+#deploy:
+#  kubectl:
+#    hooks:
+#      before:
+#        - host:
+#            command: [ "./istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
+#
+#---
+#
+#apiVersion: skaffold/v2beta27
+#kind: Config
+#metadata:
+#  name: remove-istio
+#deploy:
+#  kubectl:
+#    hooks:
+#      before:
+#        - host:
+#            command: [ "./istioctl", "x", "uninstall", "--purge" ]
