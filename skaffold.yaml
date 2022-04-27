@@ -68,12 +68,20 @@ deploy:
     hooks:
       before:
         - host:
-            command: [ "./istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
+              command: [ "which", "istioctl" ]
+        - host:
+            command: [ "istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
     paths:
-      - k8s/infrastructure/arangodb/overlays/minikube
+#      - k8s/infrastructure/istio/overlays/minikube
+#      - k8s/infrastructure/arangodb/overlays/minikube
       - k8s/infrastructure/nats/bases
 
 profiles:
+#- name: istio-platform
+#  deploy:
+#    kustomize:
+#      paths:
+#        - k8s/infrastructure/istio/platform
 - name: arangodb-platform
   deploy:
     kustomize:
