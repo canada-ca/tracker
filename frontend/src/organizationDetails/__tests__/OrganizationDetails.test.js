@@ -61,6 +61,7 @@ describe('<OrganizationDetails />', () => {
               organization: {
                 id: 'ODk3MDg5MzI2MA==',
                 name,
+                lastRan: 'today',
                 acronym: 'TBS',
                 domainCount: 1,
                 city: 'Ottawa',
@@ -187,6 +188,7 @@ describe('<OrganizationDetails />', () => {
               organization: {
                 id: 'b3JnYW5pemF0aW9uczoyMTY2MDUy',
                 name: 'Treasury Board of Canada Secretariat',
+                lastRan: 'today',
                 acronym: 'TBS',
                 domainCount: 82,
                 city: 'Ottawa',
@@ -257,7 +259,7 @@ describe('<OrganizationDetails />', () => {
         },
       ]
 
-      const { getByText } = render(
+      const { queryByText } = render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MockedProvider mocks={mocks} addTypename={false}>
@@ -285,7 +287,7 @@ describe('<OrganizationDetails />', () => {
       )
 
       await waitFor(() => {
-        expect(getByText(/Ottawa/)).toBeTruthy()
+        expect(queryByText(/Ottawa/)).not.toBeInTheDocument()
       })
     })
   })
