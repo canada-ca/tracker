@@ -64,16 +64,15 @@ build:
 #    context: scanners/tls-scanner
 #    docker: {}
 deploy:
+  kubeContext: minikube
   kustomize:
-    hooks:
-      before:
-        - host:
-              command: [ "which", "istioctl" ]
-        - host:
-            command: [ "istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
+#    hooks:
+#      before:
+#        - host:
+#            command: [ "istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
     paths:
 #      - k8s/infrastructure/istio/overlays/minikube
-#      - k8s/infrastructure/arangodb/overlays/minikube
+      - k8s/infrastructure/arangodb/overlays/minikube
       - k8s/infrastructure/nats/bases
 
 profiles:
@@ -84,6 +83,7 @@ profiles:
 #        - k8s/infrastructure/istio/platform
 - name: arangodb-platform
   deploy:
+    kubeContext: minikube
     kustomize:
       paths:
         - k8s/infrastructure/arangodb/platform
