@@ -63,7 +63,7 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
           <Text fontWeight="semibold">
             <Trans>Last Scanned:</Trans>
           </Text>
-          <Text>{lastRan}</Text>
+          <Text>{lastRan?.substring(0, 16)}</Text>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
         <Flex {...statusGroupingProps} px="1">
