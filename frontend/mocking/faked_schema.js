@@ -122,6 +122,27 @@ export const getTypeNames = () => gql`
     # Query the currently logged in user.
     findMe: PersonalUser
 
+    # Select users an admin has access to.
+    findMyUsers(
+      # Ordering options for user affiliation
+      orderBy: AffiliationUserOrder
+
+      # String used to search for users.
+      search: String
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): PersonalUser
+
     # Query a specific user by user name.
     findUserByUsername(
       # Email address of user you wish to gather data for.
@@ -676,6 +697,15 @@ export const getTypeNames = () => gql`
   enum AffiliationUserOrderField {
     # Order affiliation edges by username.
     USER_USERNAME
+
+    # Order affiliation edges by displayName
+    USER_DISPLAYNAME
+
+    # Order affiliation edges by user verification status
+    USER_EMAIL_VALIDATED
+
+    # Order affiliation edges by amount of total affiliations
+    USER_AFFILIATIONS_COUNT
   }
 
   # Ordering options for organization connections
