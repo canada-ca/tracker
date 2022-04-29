@@ -37,7 +37,7 @@
     "eslint-plugin-jest": "^26.1.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "jest": "27.5.1",
+    "jest": "28.0.3",
     "jest-fetch-mock": "^3.0.3",
     "jest-matcher-utils": "^27.5.1",
     "prettier": "^2.6.2",
