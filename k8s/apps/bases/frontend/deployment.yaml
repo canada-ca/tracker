@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-frontend
+  name: tracker-frontend
+  namespace: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-frontend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tracker-frontend
+    spec:
+      containers:
+        - image: gcr.io/track-compliance/frontend:master-e821df2-1650379602 # {"$imagepolicy": "flux-system:frontend"}
+          name: frontend
+          resources:
+            limits:
+              cpu: 200m
+              memory: 45Mi
+            requests:
+              cpu: 200m
+              memory: 45Mi
+status: {}
