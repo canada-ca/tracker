@@ -14,7 +14,7 @@ import { bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 
-export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
+export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
   const location = useLocation()
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
@@ -52,18 +52,6 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
             <Trans>Domain:</Trans>
           </Text>
           <Text isTruncated>{url}</Text>
-        </Box>
-        <Box
-          flexGrow={{ md: '2' }}
-          flexBasis={{ md: '5em' }}
-          mr={{ md: '1em' }}
-          flexShrink={{ md: '0.5' }}
-          minWidth={{ md: '3em' }}
-        >
-          <Text fontWeight="semibold">
-            <Trans>Last Scanned:</Trans>
-          </Text>
-          <Text>{lastRan?.substring(0, 16)}</Text>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
         <Flex {...statusGroupingProps} px="1">
@@ -120,7 +108,6 @@ export function DomainCard({ url, lastRan, status, hasDMARCReport, ...rest }) {
 
 DomainCard.propTypes = {
   url: string.isRequired,
-  lastRan: string,
   status: object,
   hasDMARCReport: bool,
 }

@@ -57,7 +57,7 @@ export default function DomainsPage() {
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    { value: 'POLICY_STATUS', text: t`ITPIN Status` },
+    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -82,14 +82,13 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, lastRan, status, hasDMARCReport }, index) => (
+      {({ id, domain, status, hasDMARCReport }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
           <DomainCard
             url={domain}
-            lastRan={lastRan}
             status={status}
             hasDMARCReport={hasDMARCReport}
             mb="3"
