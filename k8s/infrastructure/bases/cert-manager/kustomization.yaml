@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+- cert-manager.yaml
+patchesJSON6902:
+# Add an argument to the cert-manager deployment to enable Workload identity
+# This is needed because cert-manager needs permission to manipulate DNS records
+# to complete a DNS01 challenge. Google's workload identity links K8s accounts
+# to IAM accounts/roles.
+# https://cert-manager.io/docs/configuration/acme/dns01/google/#gke-workload-identity
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: cert-manager
+    namespace: cert-manager
+  patch: |-
+    - op: add
+      # args/0 would prepend to the array, args/- appends
+      path: /spec/template/spec/containers/0/args/-
+      value: --issuer-ambient-credentials=true
