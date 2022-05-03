@@ -4,4 +4,4 @@ namespace: scanners
 commonLabels:
   app: tls-processor
 resources:
-- tls-processor-deployment.yaml
+- deployment.yaml

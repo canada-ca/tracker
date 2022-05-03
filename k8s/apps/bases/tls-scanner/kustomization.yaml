@@ -4,4 +4,4 @@ namespace: scanners
 commonLabels:
   app: tls-scanner
 resources:
-- tls-scanner-deployment.yaml
+- deployment.yaml
