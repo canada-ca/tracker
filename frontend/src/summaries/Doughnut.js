@@ -28,10 +28,55 @@ export const Doughnut = ({
   })
   const { i18n } = useLingui()
 
-  const centerMessage = title.includes('DMARC') ? (
-    <Trans>Email-hosting domains</Trans>
+  const domainContext = title.includes('DMARC') ? (
+    <Trans>Email-hosting</Trans>
   ) : (
-    <Trans>Web-hosting domains</Trans>
+    <Trans>Web-hosting</Trans>
+  )
+
+  const centerMessage = (
+    <>
+      <text
+        display={i18n.locale === 'en' ? 'none' : 'inline'}
+        x={0}
+        y={15}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={
+          // `${width / 256}rem`
+          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
+        }
+        transform={`translate(${width / 2}, ${height / 2})`}
+      >
+        <Trans>Domains</Trans>
+      </text>
+      <text
+        x={0}
+        y={i18n.locale === 'en' ? 20 : 30}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={
+          // `${width / 256}rem`
+          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
+        }
+        transform={`translate(${width / 2}, ${height / 2})`}
+      >
+        {domainContext}
+      </text>
+      <text
+        display={i18n.locale === 'en' ? 'inline' : 'none'}
+        x={0}
+        y={40}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={
+          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 512}rem`
+        }
+        transform={`translate(${width / 2}, ${height / 2})`}
+      >
+        <Trans>Domains</Trans>
+      </text>
+    </>
   )
 
   let chartContent
@@ -50,18 +95,7 @@ export const Doughnut = ({
         >
           {data[0].total}
         </text>
-        <text
-          x={0}
-          y={20}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize={
-            i18n.locale === 'en' ? `${width / 256}rem` : `${width / 512}rem`
-          }
-          transform={`translate(${width / 2}, ${height / 2})`}
-        >
-          {centerMessage}
-        </text>
+        {centerMessage}
         <g transform={`translate(${width / 2},${height / 2})`}>
           {arcs.map((arc, index) => {
             return children({ d: arc.d, fill: data[index].color }, index)
