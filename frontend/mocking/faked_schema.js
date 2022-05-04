@@ -141,7 +141,7 @@ export const getTypeNames = () => gql`
 
       # Returns the last n items from the list.
       last: Int
-    ): PersonalUser
+    ): UserConnection
 
     # Query a specific user by user name.
     findUserByUsername(
@@ -2369,6 +2369,27 @@ export const getTypeNames = () => gql`
 
     # Order affiliations by org domain count.
     ORG_DOMAIN_COUNT
+  }
+
+  # A connection to a list of items.
+  type UserConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [UserEdge]
+
+    # The total amount of users the user has access to.
+    totalCount: Int
+  }
+
+  # An edge in a connection.
+  type UserEdge {
+    # The item at the end of the edge
+    node: PersonalUser
+
+    # A cursor for use in pagination
+    cursor: String!
   }
 
   # Domain object containing information for a given domain.

@@ -2,10 +2,10 @@ import { GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { affiliationUserOrder } from '../../affiliation/inputs'
-import { userPersonalType } from '../objects'
+import { userConnection } from '../objects/user-connection'
 
 export const findMyUsers = {
-  type: userPersonalType,
+  type: userConnection.connectionType,
   description: 'Select users an admin has access to.',
   args: {
     orderBy: {
