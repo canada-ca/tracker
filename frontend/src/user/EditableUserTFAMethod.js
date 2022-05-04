@@ -153,6 +153,7 @@ export function EditableUserTFAMethod({
               p="1"
             >
               <Field
+                aria-label="TFA Method Select"
                 data-testid="tfa-method-select"
                 id="tfaMethod"
                 component={Select}
@@ -166,6 +167,7 @@ export function EditableUserTFAMethod({
                 {phoneValidated && <option value="PHONE">{t`Phone`}</option>}
               </Field>
               <Button
+                aria-label="Save TFA Method"
                 variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}

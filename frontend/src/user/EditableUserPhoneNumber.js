@@ -275,6 +275,7 @@ export function EditableUserPhoneNumber({ detailValue, ...props }) {
           <Trans>No current phone number</Trans>
         )}
         <Button
+          aria-label="Edit User Phone Number"
           variant="primary"
           ml="auto"
           onClick={onOpen}

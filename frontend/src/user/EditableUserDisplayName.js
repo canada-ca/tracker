@@ -98,6 +98,7 @@ export function EditableUserDisplayName({ detailValue, ...props }) {
         <UserIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
         <Text>{detailValue}</Text>
         <Button
+          aria-label="Edit Display Name"
           variant="primary"
           ml="auto"
           onClick={onOpen}
