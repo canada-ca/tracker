@@ -45,7 +45,7 @@ window.resizeTo = function resizeTo(width, height) {
 
 describe('<OrganizationDetails />', () => {
   describe('given the url /organisations/tbs-sct-gc-ca', () => {
-    it.skip('displays details using the tbs-sct-gc-ca slug', async () => {
+    it('displays details using the tbs-sct-gc-ca slug', async () => {
       window.resizeTo(1024, 768)
 
       const name = 'Treasury Board Secretariat'
@@ -61,6 +61,7 @@ describe('<OrganizationDetails />', () => {
               organization: {
                 id: 'ODk3MDg5MzI2MA==',
                 name,
+                lastRan: 'today',
                 acronym: 'TBS',
                 domainCount: 1,
                 city: 'Ottawa',
@@ -156,7 +157,7 @@ describe('<OrganizationDetails />', () => {
 
       await waitFor(() => {
         expect(getByText(name)).toBeInTheDocument()
-        expect(getByText('Users')).toBeInTheDocument()
+        expect(getByText('Summary')).toBeInTheDocument()
       })
     })
   })
@@ -187,6 +188,7 @@ describe('<OrganizationDetails />', () => {
               organization: {
                 id: 'b3JnYW5pemF0aW9uczoyMTY2MDUy',
                 name: 'Treasury Board of Canada Secretariat',
+                lastRan: 'today',
                 acronym: 'TBS',
                 domainCount: 82,
                 city: 'Ottawa',
@@ -257,7 +259,7 @@ describe('<OrganizationDetails />', () => {
         },
       ]
 
-      const { getByText } = render(
+      const { queryByText } = render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MockedProvider mocks={mocks} addTypename={false}>
@@ -285,7 +287,7 @@ describe('<OrganizationDetails />', () => {
       )
 
       await waitFor(() => {
-        expect(getByText(/Ottawa/)).toBeTruthy()
+        expect(queryByText(/Ottawa/)).not.toBeInTheDocument()
       })
     })
   })

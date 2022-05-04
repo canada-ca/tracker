@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Divider, Link, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { number, string } from 'prop-types'
 
@@ -58,7 +58,7 @@ export function OrganizationDomains({ orgSlug }) {
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    { value: 'POLICY_STATUS', text: t`ITPIN Status` },
+    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -88,14 +88,12 @@ export function OrganizationDomains({ orgSlug }) {
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
-          <Box>
-            <DomainCard
-              url={domain}
-              status={status}
-              hasDMARCReport={hasDMARCReport}
-            />
-            <Divider borderColor="gray.900" />
-          </Box>
+          <DomainCard
+            url={domain}
+            status={status}
+            hasDMARCReport={hasDMARCReport}
+            mb="3"
+          />
         </ErrorBoundary>
       )}
     </ListOf>
