@@ -66,27 +66,35 @@ build:
 deploy:
   kubeContext: minikube
   kustomize:
-#    hooks:
-#      before:
+    flags:
+      delete:
+        - --field-selector=metadata.namespace!$(echo -e "\x3D")db
+        - -v $(echo -e '\x3D')db
+
+        #      delete: ""--field-selector metadata.namespace!=db
+    hooks:
+      before:
+        - host:
+            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/arangodb/platform" ]
 #        - host:
-#            command: [ "istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
+#            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/istio/platform" ]
     paths:
+      - k8s/infrastructure/overlays/minikube
 #      - k8s/infrastructure/istio/overlays/minikube
-      - k8s/infrastructure/arangodb/overlays/minikube
-      - k8s/infrastructure/nats/bases
+#      - k8s/infrastructure/arangodb/overlays/minikube
+#      - k8s/infrastructure/nats/bases
 
 profiles:
-#- name: istio-platform
-#  deploy:
-#    kustomize:
-#      paths:
-#        - k8s/infrastructure/istio/platform
-- name: arangodb-platform
+- name: arangodb
   deploy:
     kubeContext: minikube
     kustomize:
+      hooks:
+        before:
+          - host:
+              command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/arangodb/platform" ]
       paths:
-        - k8s/infrastructure/arangodb/platform
+        - k8s/infrastructure/overlays/minikube
 
 portForward:
   - resourceType: service

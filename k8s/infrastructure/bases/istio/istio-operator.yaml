@@ -1,0 +1,91 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istio-controlplane
+  namespace: istio-operator
+spec:
+  # https://istio.io/latest/news/releases/1.9.x/announcing-1.9/#mirroring-of-images-on-gcr-io
+  hub: gcr.io/istio-release
+  tag: 1.13.2-distroless
+  meshConfig:
+    accessLogFile: /dev/stdout
+    enableTracing: true
+    defaultConfig:
+      tracing:
+        sampling: 100.0
+    accessLogEncoding: JSON
+  components:
+    pilot:
+      k8s:
+        replicaCount: 2
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - istiod
+                  topologyKey: kubernetes.io/hostname
+                weight: 1
+        hpaSpec:
+          maxReplicas: 2
+          minReplicas: 2
+        podDisruptionBudget:
+          minAvailable: 1
+          selector:
+            matchLabels:
+              app: istiod
+        strategy:
+          rollingUpdate:
+            maxSurge: 100%
+            maxUnavailable: 50%
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: true
+      k8s:
+        replicaCount: 2
+        podDisruptionBudget:
+          minAvailable: 1
+          selector:
+            matchLabels:
+              app: istio-ingressgateway
+              istio: ingressgateway
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - istio-ingressgateway
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        hpaSpec:
+          maxReplicas: 2
+          minReplicas: 2
+        strategy:
+          rollingUpdate:
+            maxSurge: 100%
+            maxUnavailable: 50%
+        resources:
+          limits:
+            cpu: 200m
+            memory: 400Mi
+          requests:
+            cpu: 200m
+            memory: 400Mi
+        service:
+            # only allow these ports
+            ports:
+            - name: http
+              port: 80
+              targetPort: 8080
+            - name: https
+              port: 443
+              targetPort: 8443
+            externalTrafficPolicy: Cluster

@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - api
   - frontend
-  - tls-processor
-  - tls-scanner
+  - scanners/tls-processor
+  - scanners/tls-scanner
