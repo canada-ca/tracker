@@ -8,10 +8,3 @@ resources:
 #- ../../bases/nats
 patchesStrategicMerge:
 - arangodb-deployment.yaml
-#replicas:
-#- name: arango-deployment-replication-operator
-#  count: 1
-#- name: arango-deployment-operator
-#  count: 1
-#- name: arango-storage-operator
-#  count: 1
