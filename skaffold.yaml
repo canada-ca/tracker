@@ -67,11 +67,7 @@ deploy:
   kubeContext: minikube
   kustomize:
     flags:
-      delete:
-        - --field-selector=metadata.namespace!$(echo -e "\x3D")db
-        - -v $(echo -e '\x3D')db
-
-        #      delete: ""--field-selector metadata.namespace!=db
+      delete: [ "-l app!=arangodb" ]
     hooks:
       before:
         - host:
