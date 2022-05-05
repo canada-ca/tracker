@@ -3,10 +3,9 @@ kind: ArangoDeployment
 metadata:
   name: arangodb
   namespace: db
-  labels:
-    app: arangodb
 spec:
-  image: arangodb/arangodb:3.7.12
+  metadata:
+  image: arangodb/arangodb:3.7.3
   environment: Development
   mode: Single
   tls:
@@ -16,6 +15,8 @@ spec:
   bootstrap:
     passwordSecretNames:
       root: arangodb
+  metrics:
+    enabled: true
   coordinators:
     count: 1
   agents:
