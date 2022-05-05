@@ -62,7 +62,7 @@ export default function OrganizationDetails() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.push(`/organizations/${orgSlug}/${tab}`)
+      history.replace(`/organizations/${orgSlug}/${tab}`)
     }
   }
 

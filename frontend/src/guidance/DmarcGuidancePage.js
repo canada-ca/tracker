@@ -72,7 +72,7 @@ export default function DmarcGuidancePage() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.push(`/domains/${domainSlug}/${tab}`)
+      history.replace(`/domains/${domainSlug}/${tab}`)
     }
   }
   return (
