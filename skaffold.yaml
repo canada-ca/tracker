@@ -1,9 +1,9 @@
 apiVersion: skaffold/v2beta27
 kind: Config
 metadata:
-  name: tracker
-#requires:
-#  - configs: ["arangodb-platform"]
+  name: apps
+requires:
+  - configs: ["infrastructure"]
 build:
   artifacts:
 #  - image: gcr.io/track-compliance/api-js
@@ -66,72 +66,47 @@ build:
 deploy:
   kubeContext: minikube
   kustomize:
+    paths:
+      - k8s/apps/overlays/minikube
+
+portForward:
+  - resourceType: service
+    resourceName: istio-ingressgateway
+    namespace: istio-system
+    port: 80
+    localPort: 30080
+  - resourceType: service
+    resourceName: istio-ingressgateway
+    namespace: istio-system
+    port: 443
+    localPort: 30443
+
+---
+
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: infrastructure
+deploy:
+  kustomize:
     flags:
       delete: [ "-l app!=arangodb" ]
     hooks:
       before:
         - host:
             command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/arangodb/platform" ]
-#        - host:
-#            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/istio/platform" ]
+        - host:
+            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/istio/platform" ]
     paths:
       - k8s/infrastructure/overlays/minikube
-#      - k8s/infrastructure/istio/overlays/minikube
-#      - k8s/infrastructure/arangodb/overlays/minikube
-#      - k8s/infrastructure/nats/bases
-
-profiles:
-- name: arangodb
-  deploy:
-    kubeContext: minikube
-    kustomize:
-      hooks:
-        before:
-          - host:
-              command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/arangodb/platform" ]
-      paths:
-        - k8s/infrastructure/overlays/minikube
-
 portForward:
   - resourceType: service
     resourceName: arangodb
     namespace: db
     port: 8529
     localPort: 8529
-
-#---
-#
-#apiVersion: skaffold/v2beta27
-#kind: Config
-#metadata:
-#  name: arangodb-platform
-#deploy:
-#  kustomize:
-#    paths:
-#    - k8s/infrastructure/arangodb/platform
-
-#---
-#
-#apiVersion: skaffold/v2beta27
-#kind: Config
-#metadata:
-#  name: istio
-#deploy:
-#  kubectl:
-#    hooks:
-#      before:
-#        - host:
-#            command: [ "./istioctl", "install", "-y", "-f", "./k8s/infrastructure/istio/istio-config.yaml" ]
-#
-#---
-#
-#apiVersion: skaffold/v2beta27
-#kind: Config
-#metadata:
-#  name: remove-istio
-#deploy:
-#  kubectl:
-#    hooks:
-#      before:
-#        - host:
-#            command: [ "./istioctl", "x", "uninstall", "--purge" ]
+  - resourceType: service
+    resourceName: kiali
+    namespace: istio-system
+    port: 20001
+    localPort: 20001

@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: log4shell-processor
   name: log4shell-processor
   namespace: scanners
 spec:

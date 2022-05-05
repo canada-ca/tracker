@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: tls-processor
   name: tls-processor
   namespace: scanners
 spec:

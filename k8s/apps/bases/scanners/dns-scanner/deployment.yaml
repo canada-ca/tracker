@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: dns-scanner
   name: dns-scanner
   namespace: scanners
 spec:

@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: tls-scanner
   name: tls-scanner
   namespace: scanners
 spec:

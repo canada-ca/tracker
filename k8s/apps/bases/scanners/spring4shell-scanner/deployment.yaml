@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: spring4shell-scanner
   name: spring4shell-scanner
   namespace: scanners
 spec:
