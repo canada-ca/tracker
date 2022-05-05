@@ -116,7 +116,7 @@ export function App() {
         )}
 
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
-          <RouteLink to="/admin">
+          <RouteLink to="/admin/users">
             <Trans>Admin Profile</Trans>
           </RouteLink>
         )}
@@ -243,7 +243,10 @@ export function App() {
               )}
             </PrivatePage>
 
-            <Page path="/admin" title={t`Admin`}>
+            <Page
+              path="/admin/:activeMenu?/:orgSlug?/:activeTab?"
+              title={t`Admin`}
+            >
               {isLoggedIn() &&
               isEmailValidated() &&
               currentTFAMethod() !== 'NONE' ? (

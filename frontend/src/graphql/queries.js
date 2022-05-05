@@ -980,18 +980,24 @@ export const FIND_MY_USERS = gql`
       after: $after
       search: $search
     ) {
-      id
-      userName
-      displayName
-      emailValidated
-      affiliations(first: 10) {
-        totalCount
-        edges {
-          node {
-            organization {
-              id
-              name
-              acronym
+      edges {
+        node {
+          id
+          userName
+          displayName
+          emailValidated
+          affiliations(first: 10) {
+            totalCount
+            edges {
+              node {
+                permission
+                organization {
+                  id
+                  acronym
+                  name
+                  slug
+                }
+              }
             }
           }
         }

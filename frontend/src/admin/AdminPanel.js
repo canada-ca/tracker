@@ -16,7 +16,7 @@ import { UserList } from './UserList'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 
-export function AdminPanel({ orgSlug, permission, orgId }) {
+export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
   return (
     <Stack spacing={10}>
       <Tabs isFitted variant="enclosed-colored">
@@ -42,6 +42,7 @@ export function AdminPanel({ orgSlug, permission, orgId }) {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <UserList
+                activeMenu={activeMenu}
                 permission={permission}
                 orgSlug={orgSlug}
                 usersPerPage={10}
@@ -56,6 +57,7 @@ export function AdminPanel({ orgSlug, permission, orgId }) {
 }
 
 AdminPanel.propTypes = {
+  activeMenu: string,
   orgSlug: string.isRequired,
   permission: string.isRequired,
   orgId: string,

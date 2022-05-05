@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react'
-import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
+import React, { useCallback, useState, useEffect } from 'react'
+import { Button, Flex, Stack, Text, useToast, Select } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useQuery } from '@apollo/client'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 
 import { AdminPanel } from './AdminPanel'
@@ -14,13 +14,18 @@ import { Dropdown } from '../components/Dropdown'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { bool } from 'prop-types'
+import { LoadingMessage } from '../components/LoadingMessage'
+import { NewUserList } from './NewUserList'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
   const [orgDetails, setOrgDetails] = useState({})
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+
+  const { activeMenu, orgSlug } = useParams()
   const toast = useToast()
+  const history = useHistory()
   const { i18n } = useLingui()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
@@ -51,6 +56,14 @@ export default function AdminPage({ isLoginRequired }) {
       })
     },
   })
+
+  useEffect(() => {
+    if (!activeMenu && !orgSlug) {
+      history.push(`/admin/organizations`)
+    } else if (activeMenu === 'organizations' && orgSlug) {
+      history.push(`/admin/organizations/${orgSlug}`)
+    }
+  }, [activeMenu, history, orgSlug])
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
@@ -87,13 +100,20 @@ export default function AdminPage({ isLoginRequired }) {
         onChange={(opt) => {
           setOrgDetails(opt.value)
           setSelectedOrg(opt.label)
+          history.push(`/admin/${activeMenu}/${opt.value.slug}`)
         }}
       />
     )
   }
 
-  return (
-    <Stack spacing={10} w="100%" px={4}>
+  const changeActiveMenu = (val) => {
+    if (activeMenu !== val) {
+      history.push(`/admin/${val}`)
+    }
+  }
+
+  const orgPanel = (
+    <>
       <Flex
         direction={{ base: 'column', md: 'row' }}
         align="center"
@@ -123,6 +143,7 @@ export default function AdminPage({ isLoginRequired }) {
             isLoginRequired={isLoginRequired}
           />
           <AdminPanel
+            activeMenu={activeMenu}
             orgSlug={orgDetails.slug}
             orgId={orgDetails.id}
             permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
@@ -134,6 +155,45 @@ export default function AdminPage({ isLoginRequired }) {
           <Trans>Select an organization to view admin options</Trans>
         </Text>
       )}
+    </>
+  )
+
+  const userPanel = (
+    <NewUserList
+      activeMenu={activeMenu}
+      usersPerPage={10}
+      permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
+    />
+  )
+
+  let adminPanel
+  if (activeMenu === 'organizations') {
+    adminPanel = orgPanel
+  } else if (activeMenu === 'users') {
+    adminPanel = userPanel
+  } else {
+    adminPanel = <LoadingMessage />
+  }
+
+  return (
+    <Stack spacing={10} w="100%" px={4}>
+      <label>
+        <Flex align="center">
+          <Text fontSize="lg" fontWeight="bold" ml="2">
+            <Trans>Menu:</Trans>
+          </Text>
+          <Select
+            w="20%"
+            defaultValue={activeMenu}
+            onChange={(e) => changeActiveMenu(e.target.value)}
+          >
+            <option value="organizations">{t`Organizations`}</option>
+            <option value="users">{t`Users`}</option>
+            <option value="domains">{t`Domains`}</option>
+          </Select>
+        </Flex>
+      </label>
+      {adminPanel}
     </Stack>
   )
 }
