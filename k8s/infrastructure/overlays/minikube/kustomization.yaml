@@ -9,3 +9,10 @@ resources:
 - https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/kiali.yaml
 patchesStrategicMerge:
 - arangodb-deployment.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+secretGenerator:
+- envs:
+  - arangodb.env
+  name: arangodb
+  namespace: db
