@@ -4,4 +4,4 @@ resources:
 #- envoy-gzip.yaml
 - envoy-security-headers-filter.yaml
 - istio-operator.yaml
-- publicgateway.yaml
+- ingress-gateway.yaml
