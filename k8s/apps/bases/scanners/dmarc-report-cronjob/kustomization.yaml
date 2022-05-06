@@ -3,3 +3,8 @@ kind: Kustomization
 namespace: scanners
 resources:
 - cronjob.yaml
+secretGenerator:
+- envs:
+  - dmarc.env
+  name: dmarc
+  namespace: scanners
