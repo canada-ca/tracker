@@ -42,7 +42,7 @@ export default function OrganizationDetails() {
 
   useEffect(() => {
     if (!activeTab) {
-      history.push(`/organizations/${orgSlug}/${defaultActiveTab}`)
+      history.replace(`/organizations/${orgSlug}/${defaultActiveTab}`)
     }
   }, [activeTab, history, orgSlug, defaultActiveTab])
 
@@ -62,7 +62,7 @@ export default function OrganizationDetails() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.push(`/organizations/${orgSlug}/${tab}`)
+      history.replace(`/organizations/${orgSlug}/${tab}`)
     }
   }
 
@@ -103,7 +103,7 @@ export default function OrganizationDetails() {
       <Tabs
         isFitted
         variant="enclosed-colored"
-        defaultIndex={tabNames.indexOf(activeTab)}
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
         onChange={(i) => changeActiveTab(i)}
       >
         <TabList mb="4">

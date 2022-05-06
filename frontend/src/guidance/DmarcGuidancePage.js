@@ -49,7 +49,7 @@ export default function DmarcGuidancePage() {
 
   useEffect(() => {
     if (!activeTab) {
-      history.push(`/domains/${domainSlug}/${defaultActiveTab}`)
+      history.replace(`/domains/${domainSlug}/${defaultActiveTab}`)
     }
   }, [activeTab, history, domainSlug, defaultActiveTab])
 
@@ -72,7 +72,7 @@ export default function DmarcGuidancePage() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.push(`/domains/${domainSlug}/${tab}`)
+      history.replace(`/domains/${domainSlug}/${tab}`)
     }
   }
   return (
@@ -108,7 +108,7 @@ export default function DmarcGuidancePage() {
       <Tabs
         isFitted
         variant="enclosed-colored"
-        defaultIndex={tabNames.indexOf(activeTab)}
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
         onChange={(i) => changeActiveTab(i)}
       >
         <TabList mb="4">
