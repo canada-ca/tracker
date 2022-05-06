@@ -981,6 +981,7 @@ export const FIND_MY_USERS = gql`
       search: $search
     ) {
       edges {
+        cursor
         node {
           id
           userName
@@ -996,11 +997,19 @@ export const FIND_MY_USERS = gql`
                   acronym
                   name
                   slug
+                  verified
                 }
               }
             }
           }
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+        __typename
       }
     }
   }
