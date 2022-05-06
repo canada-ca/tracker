@@ -3,6 +3,8 @@ apiVersion: database.arangodb.com/v1alpha
 metadata:
   name: arangodb
   namespace: db
+  labels:
+    app: 'arangodb'
 spec:
   image: arangodb/arangodb:3.7.12
   environment: Production
