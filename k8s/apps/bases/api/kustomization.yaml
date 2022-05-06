@@ -7,3 +7,8 @@ resources:
 - service.yaml
 - virtual-service.yaml
 - database-configmap.yaml
+secretGenerator:
+- envs:
+  - api.env
+  name: api
+  namespace: api
