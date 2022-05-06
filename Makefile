@@ -74,7 +74,8 @@ app:
 
 .PHONY: scan
 scan:
-		kustomize build scanners/domain-dispatcher | kubectl apply -f -
+		kubectl delete job domain-dispatcher-manual -n scanners --ignore-not-found &&
+		kubectl create job domain-dispatcher-manual --from=cronjob/domain-dispatcher -n scanners
 
 .PHONY: scanners
 scanners:
