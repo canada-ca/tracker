@@ -99,6 +99,7 @@ summaries:
 
 .PHONY: reports
 reports:
+		kubectl delete job dmarc-summaries-manual -n scanners --ignore-not-found &&
 		kubectl create job dmarc-summaries-manual --from=cronjob/dmarc-report -n scanners
 
 .ONESHELL:
