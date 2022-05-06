@@ -95,7 +95,8 @@ guidance:
 
 .PHONY: summaries
 summaries:
-		kubectl apply -f services/summaries/summaries-job.yaml
+		kubectl delete job summaries-manual -n scanners --ignore-not-found &&
+		kubectl create job summaries-manual --from=cronjob/summaries -n scanners
 
 .PHONY: reports
 reports:
