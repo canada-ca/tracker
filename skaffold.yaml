@@ -96,6 +96,8 @@ deploy:
         - host:
             command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/arangodb/platform" ]
         - host:
+            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/cert-manager/platform" ]
+        - host:
             command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/istio/platform" ]
     paths:
       - k8s/infrastructure/overlays/minikube
