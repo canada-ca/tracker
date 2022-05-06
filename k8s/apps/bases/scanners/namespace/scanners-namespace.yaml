@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: scanners
   labels:
-      istio-injection: disabled
+    istio-injection: enabled

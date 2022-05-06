@@ -108,6 +108,11 @@ portForward:
     port: 8529
     localPort: 8529
   - resourceType: service
+    resourceName: nats
+    namespace: pubsub
+    port: 4222
+    localPort: 4222
+  - resourceType: service
     resourceName: kiali
     namespace: istio-system
     port: 20001
