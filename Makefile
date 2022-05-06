@@ -87,7 +87,7 @@ backup:
 
 .PHONY: superadmin
 superadmin:
-		kubectl apply -k -f k8s/jobs/super-admin
+		kubectl apply -k k8s/jobs/super-admin
 
 .PHONY: guidance
 guidance:
