@@ -53,22 +53,6 @@ const collections = [
 ]
 
 ;(async () => {
-  const db = new Database({
-    url,
-    databaseName,
-    auth: { username: 'root', password: rootPass },
-  })
-
-  const query = async function query(strings, ...vars) {
-    return db.query(aql(strings, ...vars), {
-      count: true,
-    })
-  }
-
-  const transaction = async function transaction(collections) {
-    return db.beginTransaction(collections)
-  }
-
   const server = await Server({
     context: async ({ req, res, connection }) => {
       if (connection) {
@@ -80,6 +64,50 @@ const collections = [
           language: connection.language,
         }
       }
+
+      const dboptions = {}
+      // pass through trace headers if they exist.
+      for (const header of [
+        'x-request-id',
+        'x-b3-traceid',
+        'x-b3-spanid',
+        'x-b3-parentspanid',
+        'x-b3-sampled',
+        'x-b3-flags',
+        'x-ot-span-context',
+        'x-cloud-trace-context',
+        'traceparent',
+      ]) {
+        // N.B.: node lowercases all headers!
+        if (req.headers[header]) {
+          dboptions.headers = {
+            [header]: req.headers[header],
+          }
+        }
+      }
+
+      const db = new Database({
+        url,
+        databaseName,
+        auth: { username: 'root', password: rootPass },
+        ...dboptions,
+      })
+
+      const query = async function query(strings, ...vars) {
+        return db.query(aql(strings, ...vars), {
+          count: true,
+        })
+      }
+
+      const transaction = async function transaction(collections) {
+        return db.beginTransaction(collections)
+      }
+
+      // let's close this connection since we create a new one on each request.
+      res.on('finish', function cleanup() {
+        db.close()
+      })
+
       const i18n = createI18n(req.language)
       return createContext({
         query,
