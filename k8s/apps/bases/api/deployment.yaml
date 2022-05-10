@@ -11,7 +11,11 @@ spec:
   selector:
     matchLabels:
       app: tracker-api
-  strategy: {}
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
   template:
     metadata:
       creationTimestamp: null

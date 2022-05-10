@@ -9,7 +9,11 @@ spec:
   selector:
     matchLabels:
       app: tracker-frontend
-  strategy: {}
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
   template:
     metadata:
       labels:
