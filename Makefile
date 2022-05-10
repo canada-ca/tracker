@@ -202,4 +202,4 @@ credentials:
 		SA_ORG_FR_PROVINCE=Ontario
 		SA_ORG_FR_CITY=Ottawa
 		EOF
-		echo "Credentials written to app/creds/$(mode)"
+		echo "Credentials written"
