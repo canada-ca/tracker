@@ -10,7 +10,7 @@ resources:
 - storage-classes.yaml
 patchesStrategicMerge:
   - arangodb-retain-storage-patch.yaml
-  - certificate.yaml
+  - certificate-issuer-patch.yaml
 patchesJSON6902:
 # Patch the operator so that our IP is used.
 - target:
