@@ -1,0 +1,63 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    job: backup
+  name: backup
+  namespace: db
+spec:
+  concurrencyPolicy: Replace
+  failedJobsHistoryLimit: 0
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - args:
+                - rclone copy /tmp/dump :gcs:gc-tracker-backups/tracker-backup-$(date
+                  -Iminutes)
+              command:
+                - /bin/sh
+                - -c
+              env:
+                - name: RCLONE_GCS_PROJECT_NUMBER
+                  value: '958151870606'
+                - name: RCLONE_GCS_BUCKET_POLICY_ONLY
+                  value: 'true'
+              image: rclone/rclone
+              name: upload
+              volumeMounts:
+                - mountPath: /tmp/dump
+                  name: dump
+          initContainers:
+            - args:
+                - arangodump
+                - --server.endpoint=tcp://arangodb:8529
+                - --server.username=$(DB_USER)
+                - --server.password=$(DB_PASS)
+                - --server.database=track_dmarc
+                - --output-directory=/tmp/dump
+              env:
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: username
+                      name: arangodb
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: arangodb
+              image: arangodb:3.7.11
+              name: dump
+              volumeMounts:
+                - mountPath: /tmp/dump
+                  name: dump
+          restartPolicy: Never
+          serviceAccountName: backup-service
+          volumes:
+            - emptyDir: {}
+              name: dump
+  schedule: 59 3 * * *
+  startingDeadlineSeconds: 180
+  successfulJobsHistoryLimit: 0
