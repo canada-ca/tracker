@@ -220,17 +220,15 @@ export const loadUserConnectionsByUserId =
     let userKeysQuery
     if (isSuperAdmin) {
       userKeysQuery = aql`
-      WITH affiliations, organizations, users, userSearch
-      LET userKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (FOR org IN organizations RETURN org._id)
-        FOR orgId IN orgIds
-            RETURN APPEND(keys, claimUserKeys)
-      ))
-    `
+        WITH users, userSearch, claims, organizations
+        LET userKeys = (
+          FOR user IN users
+            RETURN user._key
+        )
+      `
     } else {
       userKeysQuery = aql`
-      WITH affiliations, organizations, users, userSearch
+      WITH affiliations, organizations, users, userSearch, claims
       LET userKeys = UNIQUE(FLATTEN(
         LET keys = []
         LET orgIds = (
@@ -239,7 +237,12 @@ export const loadUserConnectionsByUserId =
             RETURN e._from
         )
         FOR orgId IN orgIds
-            RETURN APPEND(keys, claimUserKeys)
+          LET affiliationUserKeys = (
+            FOR v, e IN 1..1 OUTBOUND orgId affiliations
+              OPTIONS {bfs: true}
+              return v._key
+          )
+          RETURN APPEND(keys, affiliationUserKeys)
       ))
     `
     }

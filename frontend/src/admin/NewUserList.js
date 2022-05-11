@@ -8,9 +8,6 @@ import {
   Box,
   Flex,
   IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Stack,
   Text,
 } from '@chakra-ui/react'
@@ -22,21 +19,19 @@ import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { Trans, t } from '@lingui/macro'
-import {
-  CheckCircleIcon,
-  EditIcon,
-  EmailIcon,
-  MinusIcon,
-} from '@chakra-ui/icons'
+import { CheckCircleIcon, EditIcon, MinusIcon } from '@chakra-ui/icons'
+import { SearchBox } from '../components/SearchBox'
 
 export function NewUserList() {
-  const [addedUserName, setAddedUserName] = useState('')
-
-  const [debouncedSearchUser, setDebouncedSearchUser] = useState('')
+  const [orderDirection, setOrderDirection] = useState('ASC')
+  const [orderField, setOrderField] = useState('USER_USERNAME')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [usersPerPage, setUsersPerPage] = useState(10)
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
-    setDebouncedSearchUser(addedUserName)
-  }, [addedUserName])
+    setDebouncedSearchTerm(searchTerm)
+  }, [searchTerm])
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
@@ -47,18 +42,30 @@ export function NewUserList() {
     nodes,
     next,
     previous,
+    resetToFirstPage,
     hasNextPage,
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FIND_MY_USERS,
-    recordsPerPage: 10,
-    variables: { search: debouncedSearchUser },
+    recordsPerPage: usersPerPage,
     relayRoot: 'findMyUsers',
+    variables: {
+      orderBy: { field: orderField, direction: orderDirection },
+      search: debouncedSearchTerm,
+    },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
+    errorPolicy: 'ignore', // allow partial success
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
+
+  const orderByOptions = [
+    { value: 'USER_USERNAME', text: t`Email` },
+    { value: 'USER_DISPLAYNAME', text: t`Display Name` },
+    { value: 'USER_EMAIL_VALIDATED', text: t`Verified` },
+    // { value: 'USER_AFFILIATIONS_COUNT', text: t`Affiliation Count` },
+  ]
 
   const userList =
     loading || isLoadingMore ? (
@@ -95,16 +102,7 @@ export function NewUserList() {
                     verified,
                   } = organization
                   return (
-                    <Flex
-                      key={orgId}
-                      // justify="space-around"
-                      // borderColor="black"
-                      // borderWidth="1px"
-                      // rounded="md"
-                      align="center"
-                      p="1"
-                      w="100%"
-                    >
+                    <Flex key={orgId} align="center" p="1" w="100%">
                       <Stack direction="row" flexGrow="0" mr="auto">
                         <IconButton
                           aria-label="Remove User"
@@ -215,33 +213,22 @@ export function NewUserList() {
 
   return (
     <Box>
-      <Flex align="center" flexDirection={{ base: 'column', md: 'row' }} mb="2">
-        <Text
-          as="label"
-          htmlFor="Search-for-user-field"
-          fontSize="md"
-          fontWeight="bold"
-          textAlign="center"
-          mr={2}
-        >
-          <Trans>Search: </Trans>
-        </Text>
-        <InputGroup
-          width={{ base: '100%', md: '75%' }}
-          mb={{ base: '8px', md: '0' }}
-          mr={{ base: '0', md: '4' }}
-        >
-          <InputLeftElement aria-hidden="true">
-            <EmailIcon color="gray.300" />
-          </InputLeftElement>
-          <Input
-            id="Search-for-user-field"
-            aria-label="new-user-input"
-            placeholder={t`user email`}
-            onChange={(e) => setAddedUserName(e.target.value)}
-          />
-        </InputGroup>
-      </Flex>
+      <SearchBox
+        selectedDisplayLimit={usersPerPage}
+        setSelectedDisplayLimit={setUsersPerPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+        orderDirection={orderDirection}
+        setSearchTerm={setSearchTerm}
+        setOrderField={setOrderField}
+        setOrderDirection={setOrderDirection}
+        resetToFirstPage={resetToFirstPage}
+        orderByOptions={orderByOptions}
+        placeholder={t`Search for a user (email)`}
+      />
       <Accordion allowMultiple defaultIndex={[]}>
         {userList}
       </Accordion>

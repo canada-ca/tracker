@@ -20,6 +20,6 @@ export const userSharedType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: `This object is used for showing none personal user details, 
+  description: `This object is used for showing none personal user details,
 and is used for limiting admins to the personal details of users.`,
 })
