@@ -71,7 +71,6 @@ deploy:
 profiles:
   - name: gke
     deploy:
-      kubeContext: gke_track-compliance_northamerica-northeast1_tracker
       kustomize:
         paths:
           - k8s/apps/overlays/gke
@@ -93,7 +92,6 @@ profiles:
           - k8s/apps/overlays/staging
   - name: test
     deploy:
-      kubeContext: gke_track-compliance_northamerica-northeast1_test
       kustomize:
         paths:
           - k8s/apps/overlays/test
@@ -128,7 +126,7 @@ deploy:
             command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/cert-manager/platform" ]
         - host:
             command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/istio/platform" ]
-    manifests: [ ]
+    manifests: [ "k8s/*.yaml" ]
 
 ---
 
@@ -148,30 +146,38 @@ deploy:
 profiles:
   - name: gke
     deploy:
-      kubeContext: gke_track-compliance_northamerica-northeast1_tracker
       kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
         paths:
           - k8s/infrastructure/overlays/gke
   - name: minikube
     deploy:
       kubeContext: minikube
       kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
         paths:
           - k8s/infrastructure/overlays/minikube
   - name: production
     deploy:
       kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
         paths:
           - k8s/infrastructure/overlays/production
   - name: staging
     deploy:
       kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
         paths:
           - k8s/infrastructure/overlays/staging
   - name: test
     deploy:
-      kubeContext: gke_track-compliance_northamerica-northeast1_test
       kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
         paths:
           - k8s/infrastructure/overlays/test
 portForward:
