@@ -68,6 +68,35 @@ deploy:
   kustomize:
     paths:
       - k8s/apps/overlays/minikube
+profiles:
+  - name: gke
+    deploy:
+      kubeContext: gke_track-compliance_northamerica-northeast1_tracker
+      kustomize:
+        paths:
+          - k8s/apps/overlays/gke
+  - name: minikube
+    deploy:
+      kubeContext: minikube
+      kustomize:
+        paths:
+          - k8s/apps/overlays/minikube
+  - name: production
+    deploy:
+      kustomize:
+        paths:
+          - k8s/apps/overlays/production
+  - name: staging
+    deploy:
+      kustomize:
+        paths:
+          - k8s/apps/overlays/staging
+  - name: test
+    deploy:
+      kubeContext: gke_track-compliance_northamerica-northeast1_test
+      kustomize:
+        paths:
+          - k8s/apps/overlays/test
 
 portForward:
   - resourceType: service
@@ -86,9 +115,9 @@ portForward:
 apiVersion: skaffold/v2beta27
 kind: Config
 metadata:
-  name: infrastructure
+  name: infrastructure-platform
 deploy:
-  kustomize:
+  kubectl:
     flags:
       delete: [ "-l app!=arangodb" ]
     hooks:
@@ -99,8 +128,52 @@ deploy:
             command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/cert-manager/platform" ]
         - host:
             command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/istio/platform" ]
+    manifests: [ ]
+
+---
+
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: infrastructure
+requires:
+  - configs: ["infrastructure-platform"]
+deploy:
+  kubeContext: minikube
+  kustomize:
+    flags:
+      delete: [ "-l app!=arangodb" ]
     paths:
       - k8s/infrastructure/overlays/minikube
+profiles:
+  - name: gke
+    deploy:
+      kubeContext: gke_track-compliance_northamerica-northeast1_tracker
+      kustomize:
+        paths:
+          - k8s/infrastructure/overlays/gke
+  - name: minikube
+    deploy:
+      kubeContext: minikube
+      kustomize:
+        paths:
+          - k8s/infrastructure/overlays/minikube
+  - name: production
+    deploy:
+      kustomize:
+        paths:
+          - k8s/infrastructure/overlays/production
+  - name: staging
+    deploy:
+      kustomize:
+        paths:
+          - k8s/infrastructure/overlays/staging
+  - name: test
+    deploy:
+      kubeContext: gke_track-compliance_northamerica-northeast1_test
+      kustomize:
+        paths:
+          - k8s/infrastructure/overlays/test
 portForward:
   - resourceType: service
     resourceName: arangodb
