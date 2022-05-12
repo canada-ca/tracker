@@ -1,11 +1,11 @@
 import { GraphQLInt } from 'graphql'
 import { connectionDefinitions } from 'graphql-relay'
 
-import { userPersonalType } from './user-personal'
+import { userSharedType } from './user-shared'
 
 export const userConnection = connectionDefinitions({
   name: 'User',
-  nodeType: userPersonalType,
+  nodeType: userSharedType,
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,

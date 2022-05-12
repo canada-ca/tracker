@@ -679,6 +679,30 @@ export const getTypeNames = () => gql`
 
     # Users email address.
     userName: EmailAddress
+
+    # Has the user email verified their account.
+    emailValidated: Boolean
+
+    # Users affiliations to various organizations.
+    affiliations(
+      # Ordering options for affiliation connections.
+      orderBy: AffiliationOrgOrder
+
+      # String used to search for affiliated organizations.
+      search: String
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): AffiliationConnection
   }
 
   # A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
@@ -2386,7 +2410,7 @@ export const getTypeNames = () => gql`
   # An edge in a connection.
   type UserEdge {
     # The item at the end of the edge
-    node: PersonalUser
+    node: SharedUser
 
     # A cursor for use in pagination
     cursor: String!

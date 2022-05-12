@@ -23,12 +23,7 @@ export const findMyUsers = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        // superAdminRequired,
-      },
+      auth: { checkSuperAdmin, userRequired, verifiedRequired },
       loaders: { loadUserConnectionsByUserId },
     },
   ) => {
@@ -36,7 +31,6 @@ export const findMyUsers = {
     verifiedRequired({ user })
 
     const isSuperAdmin = await checkSuperAdmin()
-    // superAdminRequired({ user, isSuperAdmin })
 
     const userConnections = await loadUserConnectionsByUserId({
       isSuperAdmin,

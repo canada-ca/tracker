@@ -5,7 +5,7 @@ import { t } from '@lingui/macro'
 export const loadUserConnectionsByUserId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({ after, before, first, last, orderBy, isSuperAdmin, search }) => {
-    const userDBId = `users/${userKey}`
+    // const userDBId = `users/${userKey}`
 
     let afterTemplate = aql``
     let afterVar = aql``
@@ -226,26 +226,27 @@ export const loadUserConnectionsByUserId =
             RETURN user._key
         )
       `
-    } else {
-      userKeysQuery = aql`
-      WITH affiliations, organizations, users, userSearch, claims
-      LET userKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (
-          FOR v, e IN 1..1 ANY ${userDBId} affiliations
-            OPTIONS {bfs: true}
-            RETURN e._from
-        )
-        FOR orgId IN orgIds
-          LET affiliationUserKeys = (
-            FOR v, e IN 1..1 OUTBOUND orgId affiliations
-              OPTIONS {bfs: true}
-              return v._key
-          )
-          RETURN APPEND(keys, affiliationUserKeys)
-      ))
-    `
     }
+    // else {
+    //   userKeysQuery = aql`
+    //   WITH affiliations, organizations, users, userSearch, claims
+    //   LET userKeys = UNIQUE(FLATTEN(
+    //     LET keys = []
+    //     LET orgIds = (
+    //       FOR v, e IN 1..1 ANY ${userDBId} affiliations
+    //         OPTIONS {bfs: true}
+    //         RETURN e._from
+    //     )
+    //     FOR orgId IN orgIds
+    //       LET affiliationUserKeys = (
+    //         FOR v, e IN 1..1 OUTBOUND orgId affiliations
+    //           OPTIONS {bfs: true}
+    //           return v._key
+    //       )
+    //       RETURN APPEND(keys, affiliationUserKeys)
+    //   ))
+    // `
+    // }
 
     let userQuery = aql``
     let loopString = aql`FOR user IN users`

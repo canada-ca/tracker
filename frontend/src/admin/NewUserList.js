@@ -94,6 +94,15 @@ export function NewUserList() {
             userAffiliations = (
               <Stack>
                 {orgNodes.map(({ permission: role, organization }) => {
+                  if (!organization) {
+                    return (
+                      <Box>
+                        <Text>
+                          <Trans>This Organization is not valid</Trans>
+                        </Text>
+                      </Box>
+                    )
+                  }
                   const {
                     id: orgId,
                     name: orgName,
@@ -233,7 +242,11 @@ export function NewUserList() {
         {userList}
       </Accordion>
       <RelayPaginationControls
-        onlyPagination={true}
+        onlyPagination={false}
+        selectedDisplayLimit={usersPerPage}
+        setSelectedDisplayLimit={setUsersPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
         next={next}
