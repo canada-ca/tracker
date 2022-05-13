@@ -20,7 +20,11 @@ import { useMutation } from '@apollo/client'
 import { bool, func, string } from 'prop-types'
 
 import { EmailField } from '../components/fields/EmailField'
-import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../graphql/mutations'
+import {
+  UPDATE_USER_ROLE,
+  INVITE_USER_TO_ORG,
+  REMOVE_USER_FROM_ORG,
+} from '../graphql/mutations'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 
 export function UserListModal({
@@ -29,7 +33,9 @@ export function UserListModal({
   orgId,
   editingUserRole,
   editingUserName,
+  editingUserId,
   orgSlug,
+  orgName,
   mutation,
   permission,
 }) {
@@ -87,53 +93,92 @@ export function UserListModal({
     },
   )
 
-  const [
-    updateUserRole,
-    { loading: _updateLoading, error: _updateError },
-  ] = useMutation(UPDATE_USER_ROLE, {
-    onError(updateError) {
-      toast({
-        title: updateError.message,
-        description: t`Unable to change user role, please try again.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-    onCompleted({ updateUserRole }) {
-      if (updateUserRole.result.__typename === 'UpdateUserRoleResult') {
+  const [updateUserRole, { loading: _updateLoading, error: _updateError }] =
+    useMutation(UPDATE_USER_ROLE, {
+      onError(updateError) {
         toast({
-          title: t`Role updated`,
-          description: t`The user's role has been successfully updated`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        onClose()
-      } else if (updateUserRole.result.__typename === 'AffiliationError') {
-        toast({
-          title: t`Unable to update user role.`,
-          description: updateUserRole.result.description,
+          title: updateError.message,
+          description: t`Unable to change user role, please try again.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      } else {
+      },
+      onCompleted({ updateUserRole }) {
+        if (updateUserRole.result.__typename === 'UpdateUserRoleResult') {
+          toast({
+            title: t`Role updated`,
+            description: t`The user's role has been successfully updated`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          onClose()
+        } else if (updateUserRole.result.__typename === 'AffiliationError') {
+          toast({
+            title: t`Unable to update user role.`,
+            description: updateUserRole.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserRole.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserRole.result typename.')
+        }
+      },
+    })
+
+  const [removeUser, { loading: _removeUserLoading }] = useMutation(
+    REMOVE_USER_FROM_ORG,
+    {
+      refetchQueries: ['FindMyUsers'],
+      awaitRefetchQueries: true,
+
+      onError(error) {
         toast({
-          title: t`Incorrect send method received.`,
-          description: t`Incorrect updateUserRole.result typename.`,
+          title: t`An error occurred.`,
+          description: error.message,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-        console.log('Incorrect updateUserRole.result typename.')
-      }
+      },
+      onCompleted({ removeUserFromOrg }) {
+        if (removeUserFromOrg.result.__typename === 'RemoveUserFromOrgResult') {
+          onClose()
+          toast({
+            title: t`User removed.`,
+            description: t`Successfully removed user ${removeUserFromOrg.result.user.userName}.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (removeUserFromOrg.result.__typename === 'AffiliationError') {
+          toast({
+            title: t`Unable to remove user.`,
+            description: removeUserFromOrg.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        }
+      },
     },
-  })
+  )
 
   return (
     <Modal
@@ -170,6 +215,13 @@ export function UserListModal({
                   preferredLang: 'ENGLISH',
                 },
               })
+            } else if (mutation === 'remove') {
+              removeUser({
+                variables: {
+                  userId: editingUserId,
+                  orgId: orgId,
+                },
+              })
             }
           }}
         >
@@ -178,50 +230,62 @@ export function UserListModal({
               <ModalHeader>
                 {mutation === 'update' ? (
                   <Trans>Edit User</Trans>
+                ) : mutation === 'remove' ? (
+                  <Trans>Remove User</Trans>
                 ) : (
                   <Trans>Add User</Trans>
                 )}
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {mutation === 'update' ? (
+                {mutation === 'create' ? (
+                  <EmailField />
+                ) : (
                   <Stack isInline align="center" mb="2">
                     <Text fontWeight="bold">
                       <Trans>User: </Trans>
                     </Text>
                     <Text>{editingUserName}</Text>
                   </Stack>
-                ) : (
-                  <EmailField />
                 )}
-                <Stack isInline align="center">
-                  <FormLabel htmlFor="role" fontWeight="bold" mt="2">
-                    <Trans>Role:</Trans>
-                  </FormLabel>
-                  <Select
-                    w="auto"
-                    id="role"
-                    size="sm"
-                    name="role"
-                    defaultValue={editingUserRole}
-                    onChange={handleChange}
-                  >
-                    {(editingUserRole === 'USER' ||
-                      (permission === 'SUPER_ADMIN' &&
-                        editingUserRole === 'ADMIN')) && (
-                      <option value="USER">{t`USER`}</option>
-                    )}
-                    {(editingUserRole === 'USER' ||
-                      editingUserRole === 'ADMIN') && (
-                      <option value="ADMIN">{t`ADMIN`}</option>
-                    )}
-                    {(editingUserRole === 'SUPER_ADMIN' ||
-                      (permission === 'SUPER_ADMIN' &&
-                        ['super-admin', 'sa'].includes(orgSlug))) && (
-                      <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
-                    )}
-                  </Select>
-                </Stack>
+                {orgName !== null && (
+                  <Stack isInline align="center" mb="2">
+                    <Text fontWeight="bold">
+                      <Trans>Organization: </Trans>
+                    </Text>
+                    <Text>{orgName}</Text>
+                  </Stack>
+                )}
+                {mutation !== 'remove' && (
+                  <Stack isInline align="center">
+                    <FormLabel htmlFor="role" fontWeight="bold" mt="2">
+                      <Trans>Role:</Trans>
+                    </FormLabel>
+                    <Select
+                      w="auto"
+                      id="role"
+                      size="sm"
+                      name="role"
+                      defaultValue={editingUserRole}
+                      onChange={handleChange}
+                    >
+                      {(editingUserRole === 'USER' ||
+                        (permission === 'SUPER_ADMIN' &&
+                          editingUserRole === 'ADMIN')) && (
+                        <option value="USER">{t`USER`}</option>
+                      )}
+                      {(editingUserRole === 'USER' ||
+                        editingUserRole === 'ADMIN') && (
+                        <option value="ADMIN">{t`ADMIN`}</option>
+                      )}
+                      {(editingUserRole === 'SUPER_ADMIN' ||
+                        (permission === 'SUPER_ADMIN' &&
+                          ['super-admin', 'sa'].includes(orgSlug))) && (
+                        <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+                      )}
+                    </Select>
+                  </Stack>
+                )}
               </ModalBody>
 
               <ModalFooter>
@@ -248,7 +312,9 @@ UserListModal.propTypes = {
   orgId: string,
   editingUserRole: string,
   editingUserName: string,
+  editingUserId: string,
   orgSlug: string,
+  orgName: string,
   mutation: string,
   permission: string,
 }

@@ -15,7 +15,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { bool } from 'prop-types'
 import { LoadingMessage } from '../components/LoadingMessage'
-import { NewUserList } from './NewUserList'
+import { SuperAdminUserList } from './SuperAdminUserList'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -158,41 +158,39 @@ export default function AdminPage({ isLoginRequired }) {
     </>
   )
 
-  const userPanel = (
-    <NewUserList
-      activeMenu={activeMenu}
-      usersPerPage={10}
-      permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
-    />
-  )
-
   let adminPanel
   if (activeMenu === 'organizations') {
     adminPanel = orgPanel
-  } else if (activeMenu === 'users') {
-    adminPanel = userPanel
+  } else if (activeMenu === 'users' && data?.isUserSuperAdmin) {
+    adminPanel = (
+      <SuperAdminUserList
+        permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
+      />
+    )
   } else {
     adminPanel = <LoadingMessage />
   }
 
   return (
     <Stack spacing={10} w="100%" px={4}>
-      <label>
-        <Flex align="center">
-          <Text fontSize="lg" fontWeight="bold" ml="2">
-            <Trans>Menu:</Trans>
-          </Text>
-          <Select
-            w="20%"
-            defaultValue={activeMenu}
-            onChange={(e) => changeActiveMenu(e.target.value)}
-          >
-            <option value="organizations">{t`Organizations`}</option>
-            <option value="users">{t`Users`}</option>
-            <option value="domains">{t`Domains`}</option>
-          </Select>
-        </Flex>
-      </label>
+      {data?.isUserSuperAdmin && (
+        <label>
+          <Flex align="center">
+            <Text fontSize="lg" fontWeight="bold" ml="2">
+              <Trans>Menu:</Trans>
+            </Text>
+            <Select
+              w="20%"
+              defaultValue={activeMenu}
+              onChange={(e) => changeActiveMenu(e.target.value)}
+            >
+              <option value="organizations">{t`Organizations`}</option>
+              <option value="users">{t`Users`}</option>
+              {/* <option value="domains">{t`Domains`}</option> */}
+            </Select>
+          </Flex>
+        </label>
+      )}
       {adminPanel}
     </Stack>
   )
