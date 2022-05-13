@@ -95,11 +95,21 @@ export function SuperAdminUserList({ permission }) {
           let userAffiliations
           if (totalCount === 0) {
             userAffiliations = (
-              <Text>
-                <Trans>
-                  This user is not affiliated with any organizations
-                </Trans>
-              </Text>
+              <Box
+                justify="space-between"
+                borderColor="black"
+                borderWidth="1px"
+                rounded="md"
+                align="center"
+                p="2"
+                w="100%"
+              >
+                <Text>
+                  <Trans>
+                    This user is not affiliated with any organizations
+                  </Trans>
+                </Text>
+              </Box>
             )
           } else {
             userAffiliations = (

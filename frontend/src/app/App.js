@@ -116,7 +116,7 @@ export function App() {
         )}
 
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() === 'NONE' && (
-          <RouteLink to="/admin/users">
+          <RouteLink to="/admin">
             <Trans>Admin Profile</Trans>
           </RouteLink>
         )}

@@ -23,7 +23,7 @@ export default function AdminPage({ isLoginRequired }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
-  const { activeMenu, orgSlug } = useParams()
+  const { activeMenu } = useParams()
   const toast = useToast()
   const history = useHistory()
   const { i18n } = useLingui()
@@ -58,12 +58,10 @@ export default function AdminPage({ isLoginRequired }) {
   })
 
   useEffect(() => {
-    if (!activeMenu && !orgSlug) {
-      history.push(`/admin/organizations`)
-    } else if (activeMenu === 'organizations' && orgSlug) {
-      history.push(`/admin/organizations/${orgSlug}`)
+    if (!activeMenu) {
+      history.replace(`/admin/organizations`)
     }
-  }, [activeMenu, history, orgSlug])
+  }, [activeMenu, history])
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
@@ -100,7 +98,6 @@ export default function AdminPage({ isLoginRequired }) {
         onChange={(opt) => {
           setOrgDetails(opt.value)
           setSelectedOrg(opt.label)
-          history.push(`/admin/${activeMenu}/${opt.value.slug}`)
         }}
       />
     )
@@ -108,7 +105,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   const changeActiveMenu = (val) => {
     if (activeMenu !== val) {
-      history.push(`/admin/${val}`)
+      history.replace(`/admin/${val}`)
     }
   }
 
@@ -186,7 +183,6 @@ export default function AdminPage({ isLoginRequired }) {
             >
               <option value="organizations">{t`Organizations`}</option>
               <option value="users">{t`Users`}</option>
-              {/* <option value="domains">{t`Domains`}</option> */}
             </Select>
           </Flex>
         </label>
