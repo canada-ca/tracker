@@ -87,6 +87,7 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
+                  setMutation('remove')
                   onOpen()
                 }}
                 p={2}
@@ -189,7 +190,9 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         isOpen={isOpen}
         onClose={onClose}
         orgId={orgId}
-        editingUserName={editingUserName}
+        editingUserName={
+          mutation === 'remove' ? selectedRemoveUser.userName : editingUserName
+        }
         editingUserRole={editingUserRole}
         editingUserId={selectedRemoveUser.id}
         orgSlug={orgSlug}

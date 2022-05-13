@@ -248,7 +248,7 @@ export function UserListModal({
                     <Text>{editingUserName}</Text>
                   </Stack>
                 )}
-                {orgName !== null && (
+                {orgName && (
                   <Stack isInline align="center" mb="2">
                     <Text fontWeight="bold">
                       <Trans>Organization: </Trans>

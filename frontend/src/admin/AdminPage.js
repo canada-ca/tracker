@@ -14,7 +14,6 @@ import { Dropdown } from '../components/Dropdown'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { bool } from 'prop-types'
-import { LoadingMessage } from '../components/LoadingMessage'
 import { SuperAdminUserList } from './SuperAdminUserList'
 
 export default function AdminPage({ isLoginRequired }) {
@@ -165,7 +164,7 @@ export default function AdminPage({ isLoginRequired }) {
       />
     )
   } else {
-    adminPanel = <LoadingMessage />
+    history.replace('/admin/organizations')
   }
 
   return (
