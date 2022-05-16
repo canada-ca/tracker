@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:17-alpine
 
 ENV NODE_ENV production
 
@@ -14,5 +14,4 @@ COPY ./.env.example .
 
 USER node
 
-
-CMD ["npm", "start"]
+CMD ["npm", "start", "--node-options=--dns-result-order=ipv4first"]

@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test": "node --experimental-vm-modules --dns-result-order=ipv4first node_modules/jest/bin/jest.js --coverage",
     "lint": "eslint src",
-    "start": "node --experimental-vm-modules index.js"
+    "start": "node --dns-result-order=ipv4first --experimental-vm-modules index.js"
   },
   "keywords": [],
   "author": "Mike Williamson",
