@@ -112,119 +112,116 @@ export function SuperAdminUserList({ permission }) {
               </Box>
             )
           } else {
-            userAffiliations = (
-              <Stack>
-                {orgNodes.map(({ permission: userRole, organization }) => {
-                  if (!organization) {
-                    return (
-                      <Box
-                        justify="space-between"
-                        borderColor="black"
-                        borderWidth="1px"
-                        rounded="md"
-                        align="center"
-                        p="2"
-                        w="100%"
-                      >
-                        <Text>
-                          <Trans>
-                            An error occured when fetching this organization's
-                            information
-                          </Trans>
-                        </Text>
-                      </Box>
-                    )
-                  }
-                  const {
-                    id: orgId,
-                    name: orgName,
-                    acronym,
-                    slug,
-                    verified,
-                  } = organization
+            userAffiliations = orgNodes.map(
+              ({ permission: userRole, organization }) => {
+                if (!organization) {
                   return (
-                    <>
-                      <Flex key={orgId} align="center" p="1" w="100%">
-                        <Stack direction="row" flexGrow="0" mr="2">
-                          <IconButton
-                            aria-label="Remove User"
-                            variant="danger"
-                            onClick={() => {
-                              setMutation('remove')
-                              onOpen()
-                              console.log(`Removed user from org ${orgName}`)
-                            }}
-                            p={2}
-                            m={0}
-                            icon={<MinusIcon />}
-                          />
-                          <IconButton
-                            aria-label="Edit User"
-                            variant="primary"
-                            onClick={() => {
-                              setMutation('update')
-                              onOpen()
-                              console.log(`Edit user in org ${orgName}`)
-                            }}
-                            p={2}
-                            m={0}
-                            icon={<EditIcon />}
-                          />
-                        </Stack>
-                        <Flex
-                          justify="space-between"
-                          borderColor="black"
-                          borderWidth="1px"
-                          rounded="md"
-                          align="center"
-                          p="2"
-                          w="100%"
-                        >
-                          <Text fontWeight="bold">
-                            {orgName} ({acronym}){' '}
-                            {verified && (
-                              <CheckCircleIcon
-                                color="blue.500"
-                                size="icons.sm"
-                                aria-label="Verified Organization"
-                              />
-                            )}
-                          </Text>
-                          <Badge
-                            variant="solid"
-                            bg={
-                              userRole === 'USER'
-                                ? 'primary'
-                                : userRole === 'ADMIN'
-                                ? 'info'
-                                : 'weak'
-                            }
-                            pt={1}
-                            mr={{ md: '1rem' }}
-                            justifySelf={{ base: 'start', md: 'end' }}
-                          >
-                            {userRole}
-                          </Badge>
-                        </Flex>
-                      </Flex>
-                      <UserListModal
-                        isOpen={isOpen}
-                        onClose={onClose}
-                        orgId={orgId}
-                        editingUserName={userName}
-                        editingUserRole={userRole}
-                        editingUserId={userId}
-                        orgSlug={slug}
-                        orgName={orgName}
-                        permission={permission}
-                        mutation={mutation}
-                      />
-                    </>
+                    <Box
+                      justify="space-between"
+                      borderColor="black"
+                      borderWidth="1px"
+                      rounded="md"
+                      align="center"
+                      p="2"
+                      w="100%"
+                    >
+                      <Text>
+                        <Trans>
+                          An error occured when fetching this organization's
+                          information
+                        </Trans>
+                      </Text>
+                    </Box>
                   )
-                })}
-              </Stack>
+                }
+                const {
+                  id: orgId,
+                  name: orgName,
+                  acronym,
+                  slug,
+                  verified,
+                } = organization
+                return (
+                  <Flex key={orgId} align="center" p="1" w="100%">
+                    <Stack direction="row" flexGrow="0" mr="2">
+                      <IconButton
+                        aria-label={`Remove ${userName} from ${orgName}`}
+                        variant="danger"
+                        onClick={() => {
+                          setMutation('remove')
+                          onOpen()
+                          console.log(`Removed user from org ${orgName}`)
+                        }}
+                        p={2}
+                        m={0}
+                        icon={<MinusIcon />}
+                      />
+                      <IconButton
+                        aria-label={`Edit ${userName} in ${orgName}`}
+                        variant="primary"
+                        onClick={() => {
+                          setMutation('update')
+                          onOpen()
+                          console.log(`Edit user in org ${orgName}`)
+                        }}
+                        p={2}
+                        m={0}
+                        icon={<EditIcon />}
+                      />
+                    </Stack>
+                    <Flex
+                      justify="space-between"
+                      borderColor="black"
+                      borderWidth="1px"
+                      rounded="md"
+                      align="center"
+                      p="2"
+                      w="100%"
+                    >
+                      <Text fontWeight="bold">
+                        {orgName} ({acronym}){' '}
+                        {verified && (
+                          <CheckCircleIcon
+                            color="blue.500"
+                            size="icons.sm"
+                            aria-label="Verified Organization"
+                          />
+                        )}
+                      </Text>
+                      <Badge
+                        variant="solid"
+                        bg={
+                          userRole === 'USER'
+                            ? 'primary'
+                            : userRole === 'ADMIN'
+                            ? 'info'
+                            : 'weak'
+                        }
+                        pt={1}
+                        mr={{ md: '1rem' }}
+                        justifySelf={{ base: 'start', md: 'end' }}
+                      >
+                        {userRole}
+                      </Badge>
+                    </Flex>
+                    <UserListModal
+                      isOpen={isOpen}
+                      onClose={onClose}
+                      orgId={orgId}
+                      editingUserName={userName}
+                      editingUserRole={userRole}
+                      editingUserId={userId}
+                      orgSlug={slug}
+                      orgName={orgName}
+                      permission={permission}
+                      mutation={mutation}
+                    />
+                  </Flex>
+                )
+              },
             )
           }
+
           return (
             <AccordionItem key={userId}>
               <AccordionButton
