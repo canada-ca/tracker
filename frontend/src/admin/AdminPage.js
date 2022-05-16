@@ -163,8 +163,6 @@ export default function AdminPage({ isLoginRequired }) {
         permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
       />
     )
-  } else {
-    history.replace('/admin/organizations')
   }
 
   return (
