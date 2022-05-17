@@ -17,7 +17,6 @@ spec:
   components:
     pilot:
       k8s:
-        replicaCount: 2
         affinity:
           podAntiAffinity:
             preferredDuringSchedulingIgnoredDuringExecution:
@@ -46,7 +45,6 @@ spec:
     - name: istio-ingressgateway
       enabled: true
       k8s:
-        replicaCount: 2
         podDisruptionBudget:
           minAvailable: 1
           selector:
