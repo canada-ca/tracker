@@ -696,7 +696,7 @@ export const QUERY_CURRENT_USER = gql`
       userName
       displayName
       preferredLang
-      # phoneNumber
+      phoneNumber
       tfaSendMethod
       phoneValidated
       emailValidated
