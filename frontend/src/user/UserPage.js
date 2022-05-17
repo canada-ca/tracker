@@ -29,7 +29,7 @@ import { EditableUserDisplayName } from './EditableUserDisplayName'
 import { EditableUserEmail } from './EditableUserEmail'
 import { EditableUserPassword } from './EditableUserPassword'
 import { EditableUserTFAMethod } from './EditableUserTFAMethod'
-// import { EditableUserPhoneNumber } from './EditableUserPhoneNumber'
+import { EditableUserPhoneNumber } from './EditableUserPhoneNumber'
 
 import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -159,10 +159,10 @@ export default function UserPage() {
     displayName,
     userName,
     preferredLang,
-    // phoneNumber,
+    phoneNumber,
     tfaSendMethod,
     emailValidated,
-    // phoneValidated,
+    phoneValidated,
   } = queryUserData?.userPage
 
   return (
@@ -187,13 +187,13 @@ export default function UserPage() {
         </Box>
 
         <Box mt={25} px="4">
-          {/* <EditableUserPhoneNumber detailValue={phoneNumber} mb="8" /> */}
+          <EditableUserPhoneNumber detailValue={phoneNumber} mb="8" />
 
           <EditableUserTFAMethod
             isUserAdmin={queryUserData?.isUserAdmin}
             currentTFAMethod={tfaSendMethod}
             emailValidated={emailValidated}
-            phoneValidated={false}
+            phoneValidated={phoneValidated}
             mb="16"
           />
 
