@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tls-processor
+  name: tls-processor
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tls-processor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tls-processor
+    spec:
+      containers:
+        - name: tls-processor
+          image: gcr.io/track-compliance/tls-processor:master-092e37d-1642707941 # {"$imagepolicy": "flux-system:tls-processor"}
+          env:
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              value: http://arangodb.db:8529
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*.tls
+            - name: QUEUE_GROUP
+              value: tlsprocessor
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+          resources: {}
+status: {}
