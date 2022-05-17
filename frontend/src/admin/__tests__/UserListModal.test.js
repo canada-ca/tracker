@@ -10,7 +10,11 @@ import { en } from 'make-plural/plurals'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
-import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../../graphql/mutations'
+import {
+  UPDATE_USER_ROLE,
+  INVITE_USER_TO_ORG,
+  REMOVE_USER_FROM_ORG,
+} from '../../graphql/mutations'
 import { UserListModal } from '../UserListModal'
 import userEvent from '@testing-library/user-event'
 import canada from '../../theme/canada'

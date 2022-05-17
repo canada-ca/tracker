@@ -243,7 +243,7 @@ export function App() {
               )}
             </PrivatePage>
 
-            <Page path="/admin" title={t`Admin`}>
+            <Page path="/admin/:activeMenu?" title={t`Admin`}>
               {isLoggedIn() &&
               isEmailValidated() &&
               currentTFAMethod() !== 'NONE' ? (
