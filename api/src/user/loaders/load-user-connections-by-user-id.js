@@ -315,7 +315,7 @@ export const loadUserConnectionsByUserId =
     `
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userKey} was trying to query users in loadUsersByUser, error: ${err}`,
+        `Database error occurred while user: ${userKey} was trying to query users in loadUserConnectionsByUserId, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to query user(s). Please try again.`))
     }
@@ -325,7 +325,7 @@ export const loadUserConnectionsByUserId =
       usersInfo = await requestedUserInfo.next()
     } catch (err) {
       console.error(
-        `Cursor error occurred while user: ${userKey} was trying to gather users in loadUsersByUser, error: ${err}`,
+        `Cursor error occurred while user: ${userKey} was trying to gather users in loadUserConnectionsByUserId, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load user(s). Please try again.`))
     }
