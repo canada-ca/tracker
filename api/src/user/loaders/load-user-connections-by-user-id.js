@@ -247,18 +247,21 @@ export const loadUserConnectionsByUserId =
     `
     }
 
-    let userQuery = aql``
+    let userSearchQuery = aql``
     let loopString = aql`FOR user IN users`
     let totalCount = aql`LENGTH(userKeys)`
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
-      userQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
+      userSearchQuery = aql`
+      LET tokenArr = TOKENS(${search}, "text_en")
       LET searchedUsers = (
         FOR tokenItem in tokenArr
           LET token = LOWER(tokenItem)
           FOR user IN userSearch
-            SEARCH ANALYZER(user.userName LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+            SEARCH ANALYZER(
+              user.displayName LIKE CONCAT("%", token, "%")
+              OR user.userName LIKE CONCAT("%", token, "%")
+            , "text_en")
             FILTER user._key IN userKeys
             RETURN user
       )
@@ -272,7 +275,7 @@ export const loadUserConnectionsByUserId =
       requestedUserInfo = await query`
       ${userKeysQuery}
 
-      ${userQuery}
+      ${userSearchQuery}
 
       ${afterVar}
       ${beforeVar}
