@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: https-scanner
   name: https-scanner
   namespace: scanners
 spec:

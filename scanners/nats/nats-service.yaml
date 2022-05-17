@@ -7,7 +7,7 @@ metadata:
   namespace: pubsub
 spec:
   ports:
-  - name: tcp-4222
+  - name: nats-4222
     port: 4222
     protocol: TCP
     targetPort: 4222
