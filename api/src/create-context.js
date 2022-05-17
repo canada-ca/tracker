@@ -17,6 +17,7 @@ import {
   checkUserIsAdminForUser,
   tokenize,
   saltedHash,
+  superAdminRequired,
   userRequired,
   verifiedRequired,
   verifyToken,
@@ -88,6 +89,7 @@ export async function createContext({
       tokenize,
       tfaRequired: tfaRequired({ i18n }),
       saltedHash: saltedHash(salt),
+      superAdminRequired: superAdminRequired({ i18n }),
       userRequired: userRequired({
         i18n,
         userKey,

@@ -50,7 +50,11 @@ import {
   loadOrgConnectionsByDomainId,
   loadOrgConnectionsByUserId,
 } from './organization/loaders'
-import { loadUserByUserName, loadUserByKey } from './user/loaders'
+import {
+  loadUserByUserName,
+  loadUserByKey,
+  loadUserConnectionsByUserId,
+} from './user/loaders'
 import {
   loadHttpsByKey,
   loadHttpsConnectionsByDomainId,
@@ -298,6 +302,12 @@ export function initializeLoaders({
       auth: { loginRequiredBool },
     }),
     loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
+    loadUserConnectionsByUserId: loadUserConnectionsByUserId({
+      query,
+      userKey,
+      cleanseInput,
+      i18n,
+    }),
     loadUserByKey: loadUserByKey({ query, userKey, i18n }),
     loadAffiliationByKey: loadAffiliationByKey({ query, userKey, i18n }),
     loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({

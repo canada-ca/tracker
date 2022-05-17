@@ -90,6 +90,7 @@ export function EditableUserLanguage({ currentLang, ...props }) {
               p="1"
             >
               <Field
+                aria-label="User Language Select"
                 data-testid="user-language-select"
                 id="lang"
                 component={Select}
@@ -100,6 +101,7 @@ export function EditableUserLanguage({ currentLang, ...props }) {
                 <option value="FRENCH">Français</option>
               </Field>
               <Button
+                aria-label="Save User Language"
                 variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}

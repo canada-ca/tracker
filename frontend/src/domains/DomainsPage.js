@@ -1,13 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import {
-  Box,
-  Divider,
-  Heading,
-  Link,
-  Text,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Box, Heading, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -64,7 +57,7 @@ export default function DomainsPage() {
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    { value: 'POLICY_STATUS', text: t`ITPIN Status` },
+    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -94,14 +87,12 @@ export default function DomainsPage() {
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
-          <Box>
-            <DomainCard
-              url={domain}
-              status={status}
-              hasDMARCReport={hasDMARCReport}
-            />
-            <Divider borderColor="gray.900" />
-          </Box>
+          <DomainCard
+            url={domain}
+            status={status}
+            hasDMARCReport={hasDMARCReport}
+            mb="3"
+          />
         </ErrorBoundary>
       )}
     </ListOf>

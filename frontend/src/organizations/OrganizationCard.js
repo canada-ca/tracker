@@ -56,6 +56,9 @@ export function OrganizationCard({
     <ListItem {...rest}>
       <Flex
         width="100%"
+        borderWidth="1px"
+        borderColor="black"
+        rounded="md"
         direction={{ base: 'column', md: 'row' }}
         alignItems={{ base: 'flex-start', md: 'center' }}
         _hover={{ md: { bg: ['', 'gray.100'] } }}

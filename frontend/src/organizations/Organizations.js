@@ -88,17 +88,15 @@ export default function Organizations() {
             key={`${slug}:${index}`}
             FallbackComponent={ErrorFallbackMessage}
           >
-            <Box>
-              <OrganizationCard
-                slug={slug}
-                name={name}
-                acronym={acronym}
-                domainCount={domainCount}
-                verified={verified}
-                summaries={summaries}
-              />
-              <Divider borderColor="gray.900" />
-            </Box>
+            <OrganizationCard
+              slug={slug}
+              name={name}
+              acronym={acronym}
+              domainCount={domainCount}
+              verified={verified}
+              summaries={summaries}
+              mb="3"
+            />
           </ErrorBoundary>
         )}
       </ListOf>

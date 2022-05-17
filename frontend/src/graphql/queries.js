@@ -966,3 +966,51 @@ export const IS_LOGIN_REQUIRED = gql`
     loginRequired
   }
 `
+
+export const FIND_MY_USERS = gql`
+  query FindMyUsers(
+    $first: Int
+    $after: String
+    $orderBy: AffiliationUserOrder
+    $search: String
+  ) {
+    findMyUsers(
+      orderBy: $orderBy
+      first: $first
+      after: $after
+      search: $search
+    ) {
+      edges {
+        cursor
+        node {
+          id
+          userName
+          displayName
+          emailValidated
+          affiliations(first: 10) {
+            totalCount
+            edges {
+              node {
+                permission
+                organization {
+                  id
+                  acronym
+                  name
+                  slug
+                  verified
+                }
+              }
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+        __typename
+      }
+    }
+  }
+`
