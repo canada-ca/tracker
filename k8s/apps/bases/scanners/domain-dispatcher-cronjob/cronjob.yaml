@@ -1,19 +1,22 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: batch/v1beta1
+kind: CronJob
 metadata:
-  name: dispatcher
+  name: domain-dispatcher
   namespace: scanners
 spec:
-  ttlSecondsAfterFinished: 21600
-  template:
-    metadata:
-      labels:
-        app: domain-dispatcher
+  schedule: "0 0 * * *"
+  jobTemplate:
     spec:
-      containers:
-        - name: domain-dispatcher
-          image: gcr.io/track-compliance/domain-dispatcher:master-e50740d-1652728047 # {"$imagepolicy": "flux-system:domain-dispatcher"}
-          env:
+      ttlSecondsAfterFinished: 21600
+      template:
+        metadata:
+          labels:
+            app: domain-dispatcher
+        spec:
+          containers:
+          - name: domain-dispatcher
+            image: gcr.io/track-compliance/domain-dispatcher:master-e50740d-1652728047 # {"$imagepolicy": "flux-system:domain-dispatcher"}
+            env:
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
@@ -36,5 +39,5 @@ spec:
               value: domains
             - name: NATS_URL
               value: nats://nats.pubsub:4222
-      restartPolicy: Never
-  backoffLimit: 4
+          restartPolicy: Never
+      backoffLimit: 4

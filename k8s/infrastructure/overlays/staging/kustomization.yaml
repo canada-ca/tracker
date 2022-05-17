@@ -12,7 +12,7 @@ patchesJSON6902:
     version: v1alpha1
     kind: IstioOperator
     name: istio-controlplane
-    namespace: istio-system
+    namespace: istio-operator
   patch: |-
     - op: add
       path: /spec/components/ingressGateways/0/k8s/service/loadBalancerIP
