@@ -40,7 +40,7 @@ update-flux:
 # CRD
 .PHONY: update-istio
 update-istio:
-		istioctl manifest generate --dry-run | yq -y 'select(.kind != "CustomResourceDefinition" and .metadata.name != "istiooperators.install.istio.io") | select (.!=null)' > platform/components/istio/istio-manifests.yaml
+		istioctl manifest generate --dry-run | yq 'select(.metadata.name != "istiooperators.install.istio.io" or .kind != "CustomResourceDefinition") | select (.!=null)' > platform/components/istio/istio-manifests.yaml
 
 # This regenerates the istio operator manifests, which include the IstioOperator
 # CRD that we omitted above
