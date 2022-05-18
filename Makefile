@@ -112,17 +112,17 @@ reports:
 .ONESHELL:
 .PHONY: credentials
 credentials:
-		@cat <<-'EOF' > k8s/apps/bases/scanners/scanner-platform/scanners.env
+		@cat <<-'EOF' > k8s/apps/bases/scanners/scanner-platform/creds/scanners.env
 		DB_PASS=test
 		DB_HOST=arangodb.db
 		DB_USER=root
 		DB_NAME=track_dmarc
 		EOF
-		cat <<-'EOF' > k8s/infrastructure/bases/arangodb/arangodb.env
+		cat <<-'EOF' > k8s/infrastructure/bases/arangodb/creds/arangodb.env
 		username=root
 		password=test
 		EOF
-		cat <<-'EOF' > k8s/apps/bases/scanners/dmarc-report-cronjob/dmarc.env
+		cat <<-'EOF' > k8s/apps/bases/scanners/dmarc-report-cronjob/creds/dmarc.env
 		DB_PASS=dbpass
 		DB_URL=http://arangodb.db:8529/
 		DB_NAME=track_dmarc
@@ -136,7 +136,7 @@ credentials:
 		DATABASE=tbs-tracker
 		SUMMARIES_CONTAINER=tbs-tracker-summaries
 		EOF
-		cat <<-'EOF' > k8s/apps/bases/api/api.env
+		cat <<-'EOF' > k8s/apps/bases/api/creds/api.env
 		DB_PASS=test
 		DB_URL=http://arangodb.db:8529
 		DB_NAME=track_dmarc
@@ -183,7 +183,7 @@ credentials:
 		TRACING_ENABLED=false
 		HASHING_SALT=somerandomvalue
 		EOF
-		cat <<-'EOF' > k8s/jobs/super-admin/super-admin.env
+		cat <<-'EOF' > k8s/jobs/super-admin/creds/super-admin.env
 		DB_PASS=test
 		DB_URL=arangodb.db:8529
 		DB_NAME=track_dmarc
